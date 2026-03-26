@@ -1,5 +1,5 @@
 import { TrendingUp, Users, Clock, DollarSign, BarChart3 } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import { Badge } from '@nexu/ui-web'
 
 const STATS = [
   { label: '今日执行成功', value: '47', sub: '成功率 94%', icon: TrendingUp },

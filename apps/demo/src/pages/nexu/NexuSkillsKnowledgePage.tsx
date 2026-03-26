@@ -1,6 +1,5 @@
 import { Sparkles, BookOpen, Plus, Wrench, FileText } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { Badge, Button } from '@nexu/ui-web'
 
 const SKILLS_BY_AVATAR = [
   { avatar: '研发助手', skills: ['Linear 同步', 'Git 操作', '代码摘要', '文档生成', 'PR Review 助手'] },
@@ -44,14 +43,14 @@ export default function NexuSkillsKnowledgePage() {
                 <div className='text-[13px] font-medium text-text-primary'>{row.avatar}</div>
                 <div className='mt-2 flex flex-wrap gap-2'>
                   {row.skills.map((s) => (
-                    <Badge key={s} variant='brand' className='gap-1 rounded-lg px-2.5 py-1.5 text-[12px]'>
+                    <Badge key={s} variant='brand' size='lg'>
                       <Wrench size={12} />
                       {s}
                     </Badge>
                   ))}
                   <Button
                     variant='outline'
-                    size='sm'
+                    size='xs'
                     className='rounded-lg border-dashed px-2.5 py-1.5 text-[12px] text-text-muted hover:border-accent hover:text-accent'
                   >
                     <Plus size={12} />
@@ -86,7 +85,7 @@ export default function NexuSkillsKnowledgePage() {
                     <div className='text-[11px] text-text-muted'>{m.count} 条</div>
                   </div>
                 </div>
-                <Button variant='outline' size='sm' className='rounded-lg px-3 py-1.5 text-[11px]'>
+                <Button variant='outline' size='xs' className='px-3 py-1.5'>
                   管理
                 </Button>
               </li>

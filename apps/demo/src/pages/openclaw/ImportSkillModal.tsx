@@ -8,11 +8,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogBody,
-} from '@/components/ui/dialog';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '@nexu/ui-web';
+import { Tabs, TabsList, TabsTrigger, TabsContent, Button, Input, Label } from '@nexu/ui-web';
 
 type ImportTab = 'folder' | 'github';
 
@@ -89,21 +86,21 @@ export default function ImportSkillModal({ open, onClose }: ImportSkillModalProp
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) handleClose(); }}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle className="text-[16px]">Import Skill</DialogTitle>
+          <DialogTitle>Import Skill</DialogTitle>
           <DialogDescription>Add a custom skill from a folder or GitHub repository</DialogDescription>
         </DialogHeader>
 
-        <Tabs value={tab} onValueChange={(v) => { setTab(v as ImportTab); setDone(false); }} className="px-6">
-          <TabsList className="w-full bg-transparent p-0 gap-0 border-b border-[var(--color-border)] rounded-none">
+          <Tabs value={tab} onValueChange={(v) => { setTab(v as ImportTab); setDone(false); }} className="px-6">
+          <TabsList variant="underline">
             <TabsTrigger
               value="folder"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+              variant="underline"
             >
               Upload Folder
             </TabsTrigger>
             <TabsTrigger
               value="github"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+              variant="underline"
             >
               GitHub Link
             </TabsTrigger>

@@ -1,9 +1,7 @@
 import { useState, type FormEvent, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Users, Clock, Zap, Sparkles } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Textarea } from '@/components/ui/textarea'
+import { Badge, Button, Textarea } from '@nexu/ui-web'
 
 const AVATAR_OPTIONS = [
   { id: 'auto', name: '自动分配', desc: '由系统根据任务类型选择最合适分身' },
@@ -81,7 +79,7 @@ export default function NexuTaskPage() {
                     <div className='text-[11px] text-text-secondary'>{a.desc}</div>
                   </div>
                   {selectedAvatar === a.id && (
-                    <Badge variant='brand' className='bg-accent text-accent-fg text-[10px]'>
+                    <Badge variant='accent' size='sm'>
                       已选
                     </Badge>
                   )}
@@ -95,7 +93,7 @@ export default function NexuTaskPage() {
               <Sparkles size={16} />
               立即下达
             </Button>
-            <Button variant='outline' className='rounded-xl hover:border-accent/40 hover:text-accent'>
+            <Button variant='outline' className='rounded-xl'>
               <Clock size={16} />
               设为自动化
             </Button>

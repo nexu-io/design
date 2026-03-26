@@ -14,9 +14,7 @@ import {
   Zap,
   LayoutDashboard,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
+import { Badge, Button, Input } from '@nexu/ui-web'
 
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false)
@@ -58,7 +56,7 @@ function FeatureCard({
           <Icon size={20} className='text-accent' />
         </div>
         {badge && (
-          <Badge variant='brand' className='text-[10px]'>
+          <Badge variant='brand' size='sm'>
             {badge}
           </Badge>
         )}
@@ -162,7 +160,7 @@ export default function NexuLanding() {
             <span className='text-sm font-semibold tracking-tight text-text-primary'>
               nexu
             </span>
-            <Badge variant='brand' className='text-[10px]'>
+            <Badge variant='brand' size='sm'>
               分身监控管理
             </Badge>
           </div>
@@ -197,7 +195,7 @@ export default function NexuLanding() {
         />
         <div className='absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(30,171,96,0.06)_0%,transparent_50%)]' />
         <div className='relative mx-auto max-w-4xl px-6 pt-24 pb-20 text-center'>
-          <Badge variant='brand' className='mb-8 gap-2 border border-accent/20 bg-accent/5 px-3 py-1 text-xs'>
+          <Badge variant='brand' size='lg' className='mb-8 text-xs'>
             <Zap size={12} /> 基于 Refly 能力 · 多数字员工，赛博工作室
           </Badge>
           <h1 className='mb-6 text-[48px] font-bold leading-[1.1] tracking-tight text-text-primary'>
@@ -216,9 +214,9 @@ export default function NexuLanding() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder='输入你的邮箱'
-              className='flex-1 h-auto px-4 py-3 text-sm'
+              className='flex-1 h-auto'
             />
-            <Button asChild size='lg' className='shrink-0 font-semibold shadow-sm hover:shadow-lg hover:shadow-accent/20'>
+            <Button asChild size='lg' className='shrink-0'>
               <Link to='/nexu'>
                 免费开始 <ArrowRight size={14} />
               </Link>
@@ -440,7 +438,7 @@ export default function NexuLanding() {
           <p className='mb-8 text-base text-text-tertiary'>
             预设角色、即时下达、审批与进度 — 在 Slack / 飞书里随时调用。
           </p>
-          <Button asChild size='lg' className='px-8 font-semibold shadow-sm hover:shadow-lg hover:shadow-accent/20'>
+          <Button asChild size='lg' className='px-8'>
             <Link to='/nexu'>
               进入 nexu 工作台 <ArrowRight size={14} />
             </Link>

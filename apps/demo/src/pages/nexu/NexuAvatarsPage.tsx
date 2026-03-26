@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { Users, ChevronRight, Plus, Zap } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import { Badge } from '@nexu/ui-web'
 
 const PRESET_ROLES = [
   {

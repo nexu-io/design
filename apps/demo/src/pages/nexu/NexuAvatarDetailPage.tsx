@@ -8,8 +8,7 @@ import {
   GitBranch,
   Shield,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { Badge, Button } from '@nexu/ui-web'
 
 const MOCK_AVATAR = {
   id: 'dev',
@@ -60,7 +59,7 @@ export default function NexuAvatarDetailPage() {
               </div>
             </div>
           </div>
-          <Button onClick={() => navigate('/nexu/task')} className='rounded-xl font-semibold'>
+          <Button onClick={() => navigate('/nexu/task')}>
             <Send size={16} />
             下达任务
           </Button>
@@ -104,9 +103,9 @@ export default function NexuAvatarDetailPage() {
               >
                 <span className='text-text-muted'>{s.time}</span>
                 <span className='text-text-primary'>{s.step}</span>
-                <Badge variant='default' className='ml-auto text-[10px]'>
-                  {s.skill}
-                </Badge>
+                  <Badge variant='default' size='sm' className='ml-auto'>
+                    {s.skill}
+                  </Badge>
               </li>
             ))}
           </ul>
@@ -123,7 +122,7 @@ export default function NexuAvatarDetailPage() {
             </div>
             <div className='mt-2 flex flex-wrap gap-1.5'>
               {avatar.skills.map((skill) => (
-                <Badge key={skill} variant='brand' className='rounded-md px-2 py-1 text-[11px]'>
+                <Badge key={skill} variant='brand' radius='md'>
                   {skill}
                 </Badge>
               ))}
@@ -165,7 +164,7 @@ export default function NexuAvatarDetailPage() {
             </div>
             <div className='mt-2 flex flex-wrap gap-1.5'>
               {avatar.permissions.map((p) => (
-                <Badge key={p} variant='default' className='rounded-md px-2 py-1 text-[11px]'>
+                <Badge key={p} variant='default' radius='md'>
                   {p}
                 </Badge>
               ))}

@@ -9,8 +9,7 @@ import {
   MessageSquare,
   BarChart3,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { Badge, Button, SectionHeader } from '@nexu/ui-web'
 
 const PRESET_AVATARS = [
   { id: 'ops', name: '运营助手', desc: '日报、周报、指标跟进', status: 'idle', roleColor: 'role-ops' },
@@ -100,19 +99,19 @@ export default function NexuDashboardPage() {
         <div className='grid gap-6 lg:grid-cols-[1fr_320px]'>
           {/* 我的分身 */}
           <section className='space-y-3'>
-            <div className='flex items-center justify-between'>
-              <h3 className='text-xs font-medium uppercase tracking-wider text-text-muted'>
-                我的分身
-              </h3>
-              <Button
-                variant='ghost'
-                size='sm'
-                onClick={() => navigate('/nexu/avatars')}
-                className='text-[11px] text-text-muted hover:text-accent h-auto px-0'
-              >
-                管理全部
-              </Button>
-            </div>
+            <SectionHeader
+              title={<span className='text-xs font-medium uppercase tracking-wider text-text-muted'>我的分身</span>}
+              action={
+                <Button
+                  variant='ghost'
+                  size='inline'
+                  onClick={() => navigate('/nexu/avatars')}
+                  className='text-[11px] hover:text-accent'
+                >
+                  管理全部
+                </Button>
+              }
+            />
             <div className='grid gap-3 sm:grid-cols-2'>
               {PRESET_AVATARS.map((a) => (
                 <button
@@ -129,7 +128,7 @@ export default function NexuDashboardPage() {
                       <span className='text-[13px] font-medium text-text-primary'>{a.name}</span>
                       <Badge
                         variant={a.status === 'busy' ? 'warning' : a.status === 'waiting' ? 'brand' : 'success'}
-                        className='text-[9px] px-1.5'
+                        size='xs'
                       >
                         {a.status === 'busy' ? '执行中' : a.status === 'waiting' ? '待审批' : '空闲'}
                       </Badge>
@@ -144,21 +143,19 @@ export default function NexuDashboardPage() {
 
           {/* 待审批 */}
           <section className='space-y-3'>
-            <div className='flex items-center justify-between'>
-              <h3 className='text-xs font-medium uppercase tracking-wider text-text-muted'>
-                关键节点审批
-              </h3>
-              {PENDING_APPROVALS.length > 0 && (
+            <SectionHeader
+              title={<span className='text-xs font-medium uppercase tracking-wider text-text-muted'>关键节点审批</span>}
+              action={PENDING_APPROVALS.length > 0 ? (
                 <Button
                   variant='link'
-                  size='sm'
+                  size='inline'
                   onClick={() => navigate('/nexu/approvals')}
-                  className='text-[11px] h-auto px-0'
+                  className='text-[11px]'
                 >
                   全部处理
                 </Button>
-              )}
-            </div>
+              ) : undefined}
+            />
             <div className='card p-4'>
               {PENDING_APPROVALS.length === 0 ? (
                 <p className='text-[12px] text-text-muted'>暂无待审批项</p>
@@ -179,10 +176,10 @@ export default function NexuDashboardPage() {
                         <div className='mt-1 text-[10px] text-text-muted'>{item.at}</div>
                       </div>
                       <div className='flex shrink-0 gap-1.5'>
-                        <Button size='sm' className='rounded-lg px-2.5 py-1.5 text-[11px]'>
+                        <Button size='xs'>
                           批准
                         </Button>
-                        <Button variant='outline' size='sm' className='rounded-lg px-2.5 py-1.5 text-[11px]'>
+                        <Button variant='outline' size='xs'>
                           驳回
                         </Button>
                       </div>

@@ -14,10 +14,7 @@ import {
   Lock,
 } from 'lucide-react';
 import { SKILL_CATEGORIES, findSkillById, DEFAULT_AUTHORIZED_TOOLS, type OAuthTool, type SkillDef } from './skillData';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
+import { Badge, Button, Separator, Switch } from '@nexu/ui-web';
 
 /* ------------------------------------------------------------------ */
 /*  Platform icons                                                      */
@@ -404,7 +401,7 @@ export default function SkillDetailPage() {
                       </div>
                     </div>
                     {isAuthed ? (
-                      <Badge variant="success" className="gap-1.5 px-3 py-1.5 text-[12px]">
+                      <Badge variant="success" size="lg">
                         <Check size={12} /> Connected
                       </Badge>
                     ) : (

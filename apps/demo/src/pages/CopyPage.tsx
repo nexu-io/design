@@ -1,3 +1,5 @@
+import { Button } from '@nexu/ui-web'
+
 import { PageShell, PageHeader, Section } from "../components/Section";
 
 function ChatBubble({
@@ -55,12 +57,12 @@ export default function CopyPage() {
             每个人有一个分身 — 记住你说过的每句话、帮你做事、和团队协作。人走了，分身留下，知识永不流失。
           </p>
           <div className="flex gap-3 justify-center">
-            <button className="px-6 py-2.5 bg-accent hover:bg-accent-hover text-accent-fg rounded-md text-sm font-medium transition-colors">
+            <Button>
               立即认识你的分身
-            </button>
-            <button className="px-6 py-2.5 border border-border text-text-secondary hover:text-text-primary rounded-md text-sm transition-colors">
+            </Button>
+            <Button variant='outline'>
               加入共存网络
-            </button>
+            </Button>
           </div>
           <div className="mt-6 text-xs text-text-muted">
             已有 89,536 人与分身共存中
@@ -95,12 +97,12 @@ export default function CopyPage() {
             每个人有一个分身，分身记住一切。人走了，知识留下 — 新人第一天就有前任的判断力。
           </p>
           <div className="flex gap-3 justify-center">
-            <button className="px-6 py-2.5 bg-accent hover:bg-accent-hover text-accent-fg rounded-md text-sm font-medium transition-colors">
+            <Button>
               免费邀请团队
-            </button>
-            <button className="px-6 py-2.5 border border-border text-text-secondary hover:text-text-primary rounded-md text-sm transition-colors">
+            </Button>
+            <Button variant='outline'>
               看看团队分身怎么工作
-            </button>
+            </Button>
           </div>
         </div>
       </Section>
@@ -390,12 +392,12 @@ export default function CopyPage() {
           <p className="mb-4 text-sm font-medium text-text-primary">
             拯救你的分身，让我们继续一起工作吧！
           </p>
-          <button className="w-full px-4 py-2.5 bg-accent text-accent-fg rounded-md text-sm font-medium mb-2">
+          <Button className='mb-2 w-full'>
             给分身充能 ⚡ ¥29/月
-          </button>
-          <button className="px-4 py-2 w-full text-xs transition-colors text-text-secondary hover:text-text-primary">
+          </Button>
+          <Button variant='ghost' size='inline' className='w-full justify-center px-4 py-2 text-xs'>
             先买个能量包 → ¥10 / 1000 能量
-          </button>
+          </Button>
           <div className="text-[11px] text-text-muted mt-3">
             你的所有记忆都会保留，充能后立刻恢复工作
           </div>
@@ -483,15 +485,12 @@ export default function CopyPage() {
                   </div>
                 ))}
               </div>
-              <button
-                className={`w-full py-2 rounded-md text-sm font-medium transition-colors ${
-                  plan.highlight
-                    ? "bg-accent text-accent-fg hover:bg-accent-hover"
-                    : "border border-border text-text-secondary hover:text-text-primary hover:bg-surface-3"
-                }`}
+              <Button
+                variant={plan.highlight ? 'default' : 'outline'}
+                className='w-full'
               >
                 {plan.cta}
-              </button>
+              </Button>
             </div>
           ))}
         </div>
@@ -520,9 +519,9 @@ export default function CopyPage() {
                 <br />
                 加入后你和 TA 各得 200 能量 ⚡
               </div>
-              <button className="py-2 w-full text-sm font-medium rounded-md bg-accent text-accent-fg">
+              <Button className='w-full'>
                 让我的分身上岗
-              </button>
+              </Button>
             </div>
           </div>
           <div className="overflow-hidden mx-auto max-w-sm rounded-xl border bg-surface-2 border-border">
@@ -574,9 +573,9 @@ export default function CopyPage() {
                 <br />
                 邀请 3 人可免费升级 Pro ⚡
               </div>
-              <button className="py-2 w-full text-sm font-medium rounded-md bg-accent text-accent-fg">
+              <Button className='w-full'>
                 加入团队
-              </button>
+              </Button>
             </div>
           </div>
           <div className="overflow-hidden max-w-sm rounded-xl border bg-surface-2 border-border">

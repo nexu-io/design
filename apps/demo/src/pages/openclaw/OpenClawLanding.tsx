@@ -27,8 +27,7 @@ import {
 } from 'lucide-react';
 import SlackDemo, { DEMO_SCENARIOS } from '../../components/SlackDemo';
 import { TOOL_TAG_LABELS } from './skillData';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Badge, Button } from '@nexu/ui-web';
 
 /* ------------------------------------------------------------------ */
 /*  IM platform icons                                                  */
@@ -219,7 +218,7 @@ function FeatureCard({
           <Icon size={20} className="text-accent" />
         </div>
         {badge && (
-          <Badge variant="brand" className="text-[10px]">
+          <Badge variant="brand" size="sm">
             {badge}
           </Badge>
         )}
@@ -292,7 +291,7 @@ export default function OpenClawLanding() {
           }}
         />
         <div className="relative px-6 pt-16 pb-12 sm:pt-24 sm:pb-20 mx-auto max-w-4xl text-center">
-          <Badge variant="outline" className="gap-2 px-3 py-1.5 text-[12px] font-semibold mb-6">
+          <Badge variant="outline" size="lg" className="mb-6 font-semibold">
             <Zap size={14} className="text-text-primary" />
             Free during beta
           </Badge>
@@ -315,7 +314,7 @@ export default function OpenClawLanding() {
               { icon: Users, label: 'Zero data loss' },
               { icon: Clock, label: 'Always on, 24/7' },
             ].map((cap) => (
-              <Badge key={cap.label} variant="outline" className="gap-1.5 px-3 py-1.5 text-[13px] font-medium hover:border-border-hover transition-colors">
+              <Badge key={cap.label} variant="outline" size="lg" className="text-[13px] font-medium hover:border-border-hover transition-colors">
                 <cap.icon size={14} />
                 {cap.label}
               </Badge>
@@ -324,7 +323,7 @@ export default function OpenClawLanding() {
 
           {/* CTA */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center mx-auto mb-6 max-w-md">
-            <Button onClick={goToAuth} size="lg" className="hover:shadow-lg hover:shadow-accent/20">
+            <Button onClick={goToAuth} size="lg">
               Get started free <ArrowRight size={14} />
             </Button>
             <Button variant="outline" size="lg" asChild>
@@ -654,7 +653,7 @@ export default function OpenClawLanding() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex gap-2 items-center mb-1.5">
-                  <Badge variant="brand" className="text-[10px]">
+                  <Badge variant="brand" size="sm">
                     {c.tag}
                   </Badge>
                 </div>
@@ -664,7 +663,7 @@ export default function OpenClawLanding() {
                 <div className="text-[13px] text-text-muted mb-2">
                   {c.result}
                 </div>
-                <Badge variant="brand" className="gap-1 text-[11px]">
+                <Badge variant="brand">
                   <Clock size={10} /> {c.time}
                 </Badge>
               </div>
@@ -752,7 +751,7 @@ export default function OpenClawLanding() {
             Free to get started. Works in Slack, Discord & Telegram.
           </p>
           <div className="flex gap-3 justify-center">
-            <Button onClick={goToAuth} size="lg" className="hover:shadow-lg hover:shadow-accent/20">
+            <Button onClick={goToAuth} size="lg">
               Get started free <ArrowRight size={14} />
             </Button>
           </div>

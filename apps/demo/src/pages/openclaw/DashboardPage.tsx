@@ -25,8 +25,7 @@ import {
   type Deployment,
   type Activity,
 } from './data';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Badge, Button, SectionHeader } from '@nexu/ui-web';
 
 function StatCard({ label, value, sub, icon: Icon, iconColor }: {
   label: string; value: string; sub: string; icon: typeof Globe; iconColor: string;
@@ -59,7 +58,7 @@ function DeploymentRow({ dep }: { dep: Deployment }) {
         <div className="flex gap-2 items-center">
           <span className="text-[13px] font-medium text-text-primary truncate">{dep.title}</span>
           {dep.source === 'content' && (
-            <Badge className="bg-[rgba(217,153,247,0.10)] text-[var(--color-pink)] text-[9px]">Content</Badge>
+            <Badge variant="brand" size="xs">Content</Badge>
           )}
         </div>
         <div className="text-[11px] text-text-muted">{dep.createdAt}</div>
@@ -152,7 +151,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-2">
             <Zap size={14} className="text-accent" />
             <h2 className="text-sm font-semibold text-text-primary">Credit usage this month</h2>
-            <Badge className="text-[9px]">Free Plan</Badge>
+            <Badge size="xs">Free Plan</Badge>
           </div>
           <Button variant="link" size="sm" onClick={() => navigate('/openclaw/workspace/billing')} className="text-[11px]">
             View details <ArrowUpRight size={12} />
@@ -182,7 +181,7 @@ export default function DashboardPage() {
         </div>
         <div className="mt-4 pt-3 border-t border-border/50 flex flex-col sm:flex-row gap-3 sm:gap-0 sm:items-center sm:justify-between">
           <div className="text-[11px] text-text-muted">3,000 credits left this month · ~12 days remaining</div>
-          <Button variant="ghost" size="sm" onClick={() => navigate('/openclaw/workspace/billing')} className="text-[11px] font-semibold text-accent bg-accent/10 hover:bg-accent/20">
+          <Button variant="soft" size="xs" onClick={() => navigate('/openclaw/workspace/billing')} className="font-semibold">
             <Crown size={10} /> Upgrade to Pro for 10x credits
           </Button>
         </div>
@@ -191,10 +190,11 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-3 space-y-6">
           <div className="card p-5">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-sm font-semibold text-text-primary">Recent activity</h2>
-              <span className="text-[11px] text-text-muted">{MOCK_ACTIVITIES.length} items</span>
-            </div>
+            <SectionHeader
+              className="mb-4"
+              title={<span className="text-sm font-semibold text-text-primary">Recent activity</span>}
+              action={<span className="text-[11px] text-text-muted">{MOCK_ACTIVITIES.length} items</span>}
+            />
             <div>
               {MOCK_ACTIVITIES.map(a => (
                 <ActivityRow key={a.id} activity={a}
@@ -203,10 +203,11 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="card p-5">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-sm font-semibold text-text-primary">All outputs</h2>
-              <span className="text-[11px] text-text-muted">{MOCK_DEPLOYMENTS.length} total</span>
-            </div>
+            <SectionHeader
+              className="mb-4"
+              title={<span className="text-sm font-semibold text-text-primary">All outputs</span>}
+              action={<span className="text-[11px] text-text-muted">{MOCK_DEPLOYMENTS.length} total</span>}
+            />
             <div>
               {MOCK_DEPLOYMENTS.map(d => (<DeploymentRow key={d.id} dep={d} />))}
             </div>
@@ -215,10 +216,11 @@ export default function DashboardPage() {
 
         <div className="lg:col-span-2 space-y-6">
           <div className="card p-5">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-sm font-semibold text-text-primary">Usage this week</h2>
-              <div className="flex gap-1 items-center text-[11px] text-text-muted"><Clock size={10} /> 128 requests</div>
-            </div>
+            <SectionHeader
+              className="mb-4"
+              title={<span className="text-sm font-semibold text-text-primary">Usage this week</span>}
+              action={<div className="flex gap-1 items-center text-[11px] text-text-muted"><Clock size={10} /> 128 requests</div>}
+            />
             <UsageChart />
           </div>
           <div className="card p-5">

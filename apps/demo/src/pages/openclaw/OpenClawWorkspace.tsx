@@ -42,7 +42,7 @@ import { SKILL_CATEGORIES, type SkillDef } from './skillData';
 import ChannelDetailPage from './ChannelDetailPage';
 import ImportSkillModal from './ImportSkillModal';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
-import { Switch } from '../../components/ui/switch';
+import { Switch } from '@nexu/ui-web';
 import { useGitHubStars } from '../../hooks/useGitHubStars';
 import { useLocale } from '../../hooks/useLocale';
 import { Star } from 'lucide-react';

@@ -2,9 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, Check } from 'lucide-react';
 import { usePageTitle } from '../../hooks/usePageTitle';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button, Input, Label } from '@nexu/ui-web';
 
 /* ------------------------------------------------------------------ */
 /*  Design tokens (nexu Design System)                                 */

@@ -1,8 +1,6 @@
 import { Check, Crown, ArrowRight, Code2, Sparkles, Globe, TrendingUp, ChevronRight } from 'lucide-react';
 import { usePageTitle } from '../../hooks/usePageTitle';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Badge, Button, Tabs, TabsList, TabsTrigger, TabsContent } from '@nexu/ui-web';
 
 const PLANS = [
   {
@@ -38,11 +36,11 @@ export default function BillingPage() {
       </div>
 
       <Tabs defaultValue="overview">
-        <TabsList className="mb-6 w-fit">
-          <TabsTrigger value="overview" className="gap-1.5">
+        <TabsList variant="default" className="mb-6 w-fit">
+          <TabsTrigger value="overview">
             <TrendingUp size={14} /> Usage overview
           </TabsTrigger>
-          <TabsTrigger value="plans" className="gap-1.5">
+          <TabsTrigger value="plans">
             <Crown size={14} /> Plan comparison
           </TabsTrigger>
         </TabsList>

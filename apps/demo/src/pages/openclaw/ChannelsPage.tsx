@@ -16,9 +16,7 @@ import {
 } from 'lucide-react';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { getPlatformConfig } from './data';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button, Input, Label } from '@nexu/ui-web';
 
 const NEXU_EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
 

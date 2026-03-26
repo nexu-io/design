@@ -12,8 +12,7 @@ import {
   type Platform,
   type BotMessage,
 } from './data';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Badge, Button } from '@nexu/ui-web';
 
 function SlackIcon({ size = 16 }: { size?: number }) {
   return (

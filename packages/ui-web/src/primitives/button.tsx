@@ -6,29 +6,36 @@ import { LoaderCircle } from "lucide-react";
 import { cn } from "../lib/cn";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[8px] text-[13px] font-medium transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*=size-])]:size-4",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-[13px] font-medium transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*=size-])]:size-4",
   {
     variants: {
       variant: {
-        default: "bg-[var(--color-accent)] text-[var(--color-accent-fg)] hover:bg-[var(--color-accent-hover)]",
+        default:
+          "bg-[var(--color-accent)] text-[var(--color-accent-fg)] shadow-sm hover:bg-[var(--color-accent-hover)] hover:shadow-md hover:shadow-accent/20",
         brand: "bg-primary text-primary-foreground hover:bg-primary/90",
         primary: "bg-primary text-primary-foreground hover:bg-primary/90",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        outline: "border bg-background hover:bg-accent hover:text-accent-foreground",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        outline:
+          "border border-border bg-background text-foreground hover:border-accent hover:bg-accent/5 hover:text-accent",
+        ghost:
+          "text-[var(--color-text-muted)] hover:bg-accent/5 hover:text-[var(--color-text-secondary)]",
+        soft: "bg-accent/10 text-accent hover:bg-accent/20",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         link: "h-auto p-0 text-primary underline-offset-4 hover:underline",
       },
       size: {
+        xs: "h-7 rounded-md px-3 text-[12px] font-semibold",
         default: "h-9 px-4 py-2",
-        sm: "h-8 px-3 text-xs",
-        md: "h-10 px-4 py-2",
-        lg: "h-11 px-5 text-base",
+        sm: "h-8 px-3 text-xs font-semibold",
+        md: "h-10 rounded-xl px-4 py-2 font-semibold",
+        lg: "h-12 rounded-xl px-6 text-[14px] font-semibold shadow-sm hover:shadow-lg hover:shadow-accent/20",
+        inline: "h-auto px-0",
         icon: "size-10 p-0",
+        'icon-sm': "size-6 p-0",
       },
     },
     defaultVariants: {
-      variant: "primary",
+      variant: "default",
       size: "md",
     },
   },

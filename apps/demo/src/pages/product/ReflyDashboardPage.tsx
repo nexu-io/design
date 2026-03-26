@@ -6,8 +6,7 @@ import {
   MoreVertical,
   Eye,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Button, Tabs, TabsList, TabsTrigger } from '@nexu/ui-web'
 
 const MY_WORKFLOWS = [
   {
@@ -98,7 +97,7 @@ export default function ReflyDashboardPage() {
             <h2 className='text-[18px] font-semibold text-[var(--color-text-primary)] font-[Manrope]'>
               My Workflows
             </h2>
-            <Button variant='ghost' className='text-[13px] text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] h-auto px-0'>
+            <Button variant='ghost' size='inline' className='text-[13px]'>
               more
             </Button>
           </div>
@@ -147,7 +146,7 @@ export default function ReflyDashboardPage() {
                   <span className='text-[12px] text-[var(--color-text-muted)]'>
                     {wf.date}
                   </span>
-                  <Button variant='ghost' size='icon' className='h-6 w-6 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'>
+                  <Button variant='ghost' size='icon-sm'>
                     <MoreVertical size={16} />
                   </Button>
                 </div>
@@ -162,19 +161,19 @@ export default function ReflyDashboardPage() {
             <h2 className='text-[18px] font-semibold text-[var(--color-text-primary)] font-[Manrope]'>
               Marketplace
             </h2>
-            <Button variant='ghost' className='text-[13px] text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] h-auto px-0'>
+            <Button variant='ghost' size='inline' className='text-[13px]'>
               more
             </Button>
           </div>
 
           {/* Category tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className='bg-transparent gap-2 p-0'>
+            <TabsList variant='pill'>
               {MARKETPLACE_TABS.map((tab) => (
                 <TabsTrigger
                   key={tab}
                   value={tab}
-                  className='rounded-full px-4 py-1.5 text-[13px] font-medium text-[var(--color-text-secondary)] data-[state=active]:bg-[var(--color-brand-primary)] data-[state=active]:text-white data-[state=active]:shadow-sm hover:bg-[var(--color-surface-2)]'
+                  variant='pill'
                 >
                   {tab}
                 </TabsTrigger>

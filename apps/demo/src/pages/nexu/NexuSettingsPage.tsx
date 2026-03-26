@@ -1,6 +1,5 @@
 import { MessageSquare, Mail, Calendar, Shield, Link2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { Badge, Button } from '@nexu/ui-web'
 
 const INTEGRATIONS = [
   { id: 'slack', name: 'Slack', desc: 'IM 远程指派、代办回复、状态同步', icon: MessageSquare, connected: true },
@@ -44,10 +43,10 @@ export default function NexuSettingsPage() {
                   </div>
                 </div>
                 <div className='flex items-center gap-2'>
-                  <Badge variant={i.connected ? 'success' : 'default'} className='text-[10px]'>
+                  <Badge variant={i.connected ? 'success' : 'default'} size='sm'>
                     {i.connected ? '已连接' : '未连接'}
                   </Badge>
-                  <Button variant='outline' size='sm' className='rounded-lg px-3 py-1.5 text-[11px] hover:border-accent hover:text-accent'>
+                  <Button variant='outline' size='xs'>
                     {i.connected ? '管理' : '连接'}
                   </Button>
                 </div>
@@ -68,7 +67,7 @@ export default function NexuSettingsPage() {
             <p className='text-[12px] text-text-muted'>
               在分身详情页可单独配置该分身可访问的 Linear 项目、Slack 频道等。
             </p>
-            <Button size='sm' className='mt-3 rounded-lg text-[12px]'>
+            <Button size='xs' className='mt-3'>
               前往分身管理
             </Button>
           </div>

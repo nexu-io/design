@@ -35,10 +35,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { Badge, Button, Input, Label } from '@nexu/ui-web';
 
 /* ------------------------------------------------------------------ */
 /*  Types & Data                                                       */
@@ -1105,7 +1102,7 @@ function SetupStep({ onComplete }: { onComplete: () => void }) {
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mb-8 justify-center">
                 {['Deploy in 1 min', '1,000+ tools', 'Zero data loss', '24/7 always on'].map(tag => (
-                  <Badge key={tag} variant="outline" className="px-3 py-1.5 text-[12px]">
+                  <Badge key={tag} variant="outline" size="lg">
                     {tag}
                   </Badge>
                 ))}

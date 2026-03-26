@@ -3,9 +3,7 @@ import { ArrowLeft, ArrowRight, Compass, Search, Settings2 } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { SKILL_CATEGORIES, TOOL_TAG_LABELS, type ToolTag } from './skillData';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge, Button, Input } from '@nexu/ui-web';
 
 type TagFilter = 'all' | ToolTag;
 type TopTab = 'explore' | 'yours';
@@ -80,7 +78,7 @@ export default function OpenClawSkillsPage() {
         }}
       >
         <div className="h-full max-w-5xl mx-auto px-6 flex items-center gap-3">
-          <Button variant="ghost" size="icon" asChild className="shrink-0 size-8">
+          <Button variant="ghost" size="icon-sm" asChild className="shrink-0 size-8">
             <Link to="/openclaw" title="Back">
               <ArrowLeft size={16} />
             </Link>

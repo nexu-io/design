@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/cn";
 
 const inputShellVariants = cva(
-  "flex w-full items-center gap-2 rounded-lg border border-input bg-card text-foreground transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] focus-within:border-primary/30 focus-within:ring-2 focus-within:ring-primary/20",
+  "flex w-full items-center gap-2 rounded-lg border border-input bg-surface-0 text-foreground transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/20",
   {
     variants: {
       size: {

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Check, Loader2, Settings, Sparkles, Brain } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePageTitle } from '../../hooks/usePageTitle';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@nexu/ui-web';
 
 function SlackIcon({ size = 20 }: { size?: number }) {
   return (
@@ -123,7 +123,7 @@ export default function PostAuthSetupPage() {
               {/* Inline highlights */}
               <div className="flex flex-wrap gap-2 mb-8 justify-center">
                 {['Deploy in 1 min', '1,000+ tools', 'Zero data loss', '24/7 always on'].map(tag => (
-                  <Badge key={tag} variant="outline" className="px-3 py-1.5 text-[12px]">
+                  <Badge key={tag} variant="outline" size="lg">
                     {tag}
                   </Badge>
                 ))}

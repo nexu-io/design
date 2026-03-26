@@ -1,6 +1,5 @@
 import { ClipboardCheck, Check, X, Users } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button, Input } from '@nexu/ui-web'
 
 const MOCK_ITEMS = [
   {
@@ -70,11 +69,11 @@ export default function NexuApprovalsPage() {
                     </div>
                   </div>
                   <div className='flex shrink-0 gap-2'>
-                    <Button size='sm' className='rounded-lg px-3 text-[12px]'>
+                    <Button size='xs' className='px-3 text-[12px]'>
                       <Check size={14} />
                       批准
                     </Button>
-                    <Button variant='outline' size='sm' className='rounded-lg px-3 text-[12px] hover:border-danger hover:text-danger'>
+                    <Button variant='outline' size='xs' className='px-3 text-[12px] hover:border-danger hover:text-danger'>
                       <X size={14} />
                       驳回
                     </Button>

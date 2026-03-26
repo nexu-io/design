@@ -5,8 +5,7 @@ import { usePageTitle } from '../../hooks/usePageTitle';
 import { useLocale } from '../../hooks/useLocale';
 
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button, Input } from '@nexu/ui-web';
 
 function FadeIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   return (
@@ -191,11 +190,11 @@ export default function ClientWelcomePage() {
 
                   <FadeIn delay={380}>
                     <div className="mt-4 flex items-center justify-center gap-4 text-[12px] text-text-muted">
-                      <Button variant="ghost" size="sm" onClick={() => navigate('/openclaw/terms')} className="text-[12px] text-text-muted hover:text-text-secondary">
+                      <Button variant="ghost" size="inline" onClick={() => navigate('/openclaw/terms')} className="text-[12px]">
                         {t('auth.terms')}
                       </Button>
                       <span className="select-none text-border-hover">·</span>
-                      <Button variant="ghost" size="sm" onClick={() => navigate('/openclaw/privacy')} className="text-[12px] text-text-muted hover:text-text-secondary">
+                      <Button variant="ghost" size="inline" onClick={() => navigate('/openclaw/privacy')} className="text-[12px]">
                         {t('auth.privacy')}
                       </Button>
                     </div>
@@ -209,9 +208,9 @@ export default function ClientWelcomePage() {
                 <div className="rounded-[28px] border border-border bg-white p-5 shadow-card sm:p-7">
                   <Button
                     variant="ghost"
-                    size="sm"
+                    size="inline"
                     onClick={() => setMode('choose')}
-                    className="mb-6 text-[13px] text-text-muted hover:text-text-secondary"
+                    className="mb-6 text-[13px]"
                   >
                     <ChevronLeft size={14} />
                     {t('welcome.back')}

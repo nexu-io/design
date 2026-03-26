@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Hash, ChevronDown, Search, Bookmark } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge, Button } from '@nexu/ui-web';
 
 const SLACK_BG = '#1a1d21';
 const SLACK_SIDEBAR = '#19171D';

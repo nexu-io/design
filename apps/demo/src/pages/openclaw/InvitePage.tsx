@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { AlertCircle, Check } from 'lucide-react';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+import { Button, Label } from '@nexu/ui-web';
 
 const VALID_CODES = ['NEXU2026', 'OPENCLAW', 'LOBSTER', 'EARLY-ACCESS'];
 
