@@ -1,3 +1,5 @@
+import { Button } from '@nexu/ui-web'
+
 import { PageShell, PageHeader, Section } from '../components/Section'
 import { Zap, Brain, Sparkles, ArrowRight, Lightbulb, CheckCircle2, AlertTriangle, XCircle, FileText, Users, Bot, Layers, MessageSquare } from 'lucide-react'
 import ChatCardGroup from './product/ChatCards'
@@ -25,32 +27,32 @@ export default function ComponentsPage() {
       <Section title='Buttons'>
         <div className='space-y-4'>
           <div className='flex flex-wrap gap-3 items-center'>
-            <button className='px-4 py-2 bg-accent hover:bg-accent-hover text-accent-fg rounded-md text-sm font-medium transition-colors'>给分身充能 ⚡</button>
-            <button className='px-4 py-2 bg-accent hover:bg-accent-hover text-accent-fg rounded-md text-sm font-medium transition-colors'>开始吧 👋</button>
-            <button className='px-4 py-2 bg-accent hover:bg-accent-hover text-accent-fg rounded-md text-sm font-medium transition-colors'>让分身上岗</button>
-            <button className='px-4 py-2 bg-accent hover:bg-accent-hover text-accent-fg rounded-md text-sm font-medium transition-colors'>解锁完整分身</button>
+            <Button>给分身充能 ⚡</Button>
+            <Button>开始吧 👋</Button>
+            <Button>让分身上岗</Button>
+            <Button>解锁完整分身</Button>
           </div>
           <div className='flex flex-wrap gap-3 items-center'>
-            <button className='px-4 py-2 border border-border-hover text-text-primary hover:bg-accent-subtle rounded-md text-sm font-medium transition-colors'>查看详情</button>
-            <button className='px-4 py-2 border border-border-hover text-text-primary hover:bg-accent-subtle rounded-md text-sm font-medium transition-colors'>教分身新技能</button>
+            <Button variant='outline'>查看详情</Button>
+            <Button variant='outline'>教分身新技能</Button>
           </div>
           <div className='flex flex-wrap gap-3 items-center'>
-            <button className='px-4 py-2 text-text-secondary hover:text-text-primary hover:bg-surface-3 rounded-md text-sm transition-colors'>下次再说</button>
-            <button className='px-4 py-2 text-text-secondary hover:text-text-primary hover:bg-surface-3 rounded-md text-sm transition-colors'>先用基础版</button>
-            <button className='px-4 py-2 text-text-secondary hover:text-text-primary hover:bg-surface-3 rounded-md text-sm transition-colors'>不了</button>
+            <Button variant='ghost'>下次再说</Button>
+            <Button variant='ghost'>先用基础版</Button>
+            <Button variant='ghost'>不了</Button>
           </div>
           <div className='flex flex-wrap gap-3 items-center'>
-            <button className='px-4 py-2 bg-danger hover:bg-red-600 text-white rounded-md text-sm font-medium transition-colors'>确定让分身休息</button>
-            <button className='px-4 py-2 bg-accent hover:bg-accent-hover text-accent-fg rounded-md text-sm font-medium transition-colors'>开始吧 👋</button>
+            <Button variant='destructive'>确定让分身休息</Button>
+            <Button>开始吧 👋</Button>
           </div>
           <div>
             <div className='text-[11px] text-text-muted mb-2'>Size Variants</div>
             <div className='flex gap-3 items-center'>
-              <button className='px-2 py-1 bg-accent text-accent-fg rounded text-[12px] font-medium'>XS</button>
-              <button className='px-3 py-1.5 bg-accent text-accent-fg rounded-md text-[13px] font-medium'>SM</button>
-              <button className='px-4 py-2 bg-accent text-accent-fg rounded-md text-sm font-medium'>MD</button>
-              <button className='px-5 py-2.5 bg-accent text-accent-fg rounded-md text-sm font-medium'>LG</button>
-              <button className='px-6 py-3 bg-accent text-accent-fg rounded-md text-base font-medium'>XL</button>
+              <Button size='xs'>XS</Button>
+              <Button size='sm'>SM</Button>
+              <Button size='md'>MD</Button>
+              <Button size='lg'>LG</Button>
+              <Button size='lg' className='px-7 text-base'>XL</Button>
             </div>
           </div>
         </div>
@@ -139,8 +141,8 @@ export default function ComponentsPage() {
                 <div className='text-xs text-text-secondary'>💡 你 3 天前的想法还没展开</div>
               </div>
               <div className='flex gap-2'>
-                <button className='px-3 py-1 bg-accent text-accent-fg rounded text-[11px]'>查看全部</button>
-                <button className='px-3 py-1 border border-border text-text-secondary rounded text-[11px]'>查看日程</button>
+                 <Button size='xs'>查看全部</Button>
+                 <Button variant='outline' size='xs'>查看日程</Button>
               </div>
               <div className='mt-3 text-[11px] text-text-muted'>⚡ 3,200 / 5,000</div>
             </div>
@@ -160,8 +162,8 @@ export default function ComponentsPage() {
               </div>
               <div className='text-xs text-warning mb-3'>能量用完后这些都会暂停……</div>
               <div className='flex gap-2'>
-                <button className='px-3 py-1 bg-accent text-accent-fg rounded text-[11px]'>给分身充能 ⚡</button>
-                <button className='px-3 py-1 border border-border text-text-secondary rounded text-[11px]'>查看明细</button>
+                 <Button size='xs'>给分身充能 ⚡</Button>
+                 <Button variant='outline' size='xs'>查看明细</Button>
               </div>
             </div>
           </div>
@@ -179,8 +181,8 @@ export default function ComponentsPage() {
                 <div className='ml-2 text-xs text-accent'>· 关联你之前说的："注册要尽量简单"</div>
               </div>
               <div className='flex gap-2'>
-                <button className='px-3 py-1 bg-accent text-accent-fg rounded text-[11px]'>查看完整方案</button>
-                <button className='px-3 py-1 bg-success text-accent-fg rounded text-[11px]'>直接执行</button>
+                 <Button size='xs'>查看完整方案</Button>
+                 <Button size='xs' className='bg-success text-accent-fg hover:bg-success/90'>直接执行</Button>
               </div>
             </div>
           </div>
@@ -199,8 +201,8 @@ export default function ComponentsPage() {
                 <div className='text-xs text-text-secondary mt-1'>帮你自动搜索和分析竞品，生成对比报告。</div>
               </div>
               <div className='flex gap-2'>
-                <button className='px-3 py-1 bg-accent text-accent-fg rounded text-[11px]'>试用这个技能</button>
-                <button className='px-3 py-1 border border-border text-text-secondary rounded text-[11px]'>所有技能</button>
+                 <Button size='xs'>试用这个技能</Button>
+                 <Button variant='outline' size='xs'>所有技能</Button>
               </div>
             </div>
           </div>
@@ -263,9 +265,9 @@ export default function ComponentsPage() {
               placeholder='有什么想法随时跟我说……'
               className='flex-1 px-3 py-2 bg-surface-3 border border-border-subtle rounded-md text-[13px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[var(--color-brand-primary)]/30 focus:ring-1 focus:ring-[var(--color-brand-primary)]/20 transition-colors'
             />
-            <button className='w-9 h-9 bg-accent rounded-md flex items-center justify-center'>
-              <ArrowRight size={16} className='text-accent-fg' />
-            </button>
+             <Button size='icon'>
+               <ArrowRight size={16} className='text-accent-fg' />
+             </Button>
           </div>
         </div>
       </Section>
@@ -350,10 +352,10 @@ export default function ComponentsPage() {
             { label: '问问团队', icon: Users },
             { label: '设个提醒', icon: Bot },
           ].map(a => (
-            <button key={a.label} className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-3 border border-border text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors'>
+            <Button key={a.label} variant='outline' size='sm' className='gap-1.5 rounded-lg bg-surface-3 text-[12px] text-text-secondary'>
               <a.icon size={13} />
               {a.label}
-            </button>
+            </Button>
           ))}
         </div>
       </Section>
@@ -386,8 +388,8 @@ export default function ComponentsPage() {
           </div>
           <div className='text-xs text-text-tertiary mb-4'>取消后：你的记忆会保留 30 天，定时任务会暂停。</div>
           <div className='flex gap-2 justify-end'>
-            <button className='px-4 py-2 text-text-secondary hover:text-text-primary hover:bg-surface-4 rounded-md text-sm transition-colors'>确定让分身休息</button>
-            <button className='px-4 py-2 bg-accent text-accent-fg rounded-md text-sm font-medium'>我再想想</button>
+            <Button variant='ghost'>确定让分身休息</Button>
+            <Button>我再想想</Button>
           </div>
         </div>
       </Section>

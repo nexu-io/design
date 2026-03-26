@@ -6,6 +6,7 @@ import {
   Plus, Star, Download, Code, Wrench,
   ToggleRight, MessageSquare,
 } from 'lucide-react'
+import { Button } from '@nexu/ui-web'
 import ChatCardGroup from '../product/ChatCards'
 import type { ChatCard } from '../product/sessionsData'
 
@@ -285,7 +286,7 @@ export default function StepAutomation() {
 
           {/* Builder tools */}
           <div className='grid grid-cols-2 gap-3'>
-            <button className='flex items-center gap-3 p-3 bg-surface-2 border border-border rounded-xl hover:border-border-hover transition-colors text-left'>
+            <Button variant='outline' className='h-auto justify-start gap-3 p-3 bg-surface-2 border-border hover:border-border-hover text-left'>
               <div className='w-9 h-9 rounded-lg bg-clone/10 flex items-center justify-center shrink-0'>
                 <Wrench size={16} className='text-clone' />
               </div>
@@ -293,8 +294,8 @@ export default function StepAutomation() {
                 <div className='text-[12px] font-semibold text-text-primary'>Skill Creator</div>
                 <div className='text-[10px] text-text-muted'>Create or update a skill</div>
               </div>
-            </button>
-            <button className='flex items-center gap-3 p-3 bg-surface-2 border border-border rounded-xl hover:border-border-hover transition-colors text-left'>
+            </Button>
+            <Button variant='outline' className='h-auto justify-start gap-3 p-3 bg-surface-2 border-border hover:border-border-hover text-left'>
               <div className='w-9 h-9 rounded-lg bg-info-subtle flex items-center justify-center shrink-0'>
                 <Zap size={16} className='text-info' />
               </div>
@@ -302,7 +303,7 @@ export default function StepAutomation() {
                 <div className='text-[12px] font-semibold text-text-primary'>Workflow Editor</div>
                 <div className='text-[10px] text-text-muted'>Build visual skill workflows</div>
               </div>
-            </button>
+            </Button>
           </div>
         </div>
       )}

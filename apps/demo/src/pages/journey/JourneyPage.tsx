@@ -5,6 +5,7 @@ import {
   Globe, MessageSquare, User, Monitor, Users,
   Zap, Link2, Eye, Crown,
 } from 'lucide-react'
+import { Button } from '@nexu/ui-web'
 import StepLanding from './StepLanding'
 import StepOnboarding from './StepOnboarding'
 import StepClone from './StepClone'
@@ -143,10 +144,12 @@ export default function JourneyPage() {
 
       {/* Bottom nav */}
       <footer className='h-14 border-t border-border bg-surface-0/90 backdrop-blur-md flex items-center justify-between px-6 shrink-0'>
-        <button
+        <Button
           onClick={prev}
           disabled={isFirst}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-[13px] font-medium transition-colors ${
+          variant='ghost'
+          size='sm'
+          className={`gap-1.5 px-4 text-[13px] ${
             isFirst
               ? 'text-text-muted cursor-not-allowed'
               : 'text-text-secondary hover:text-text-primary hover:bg-surface-3'
@@ -154,15 +157,16 @@ export default function JourneyPage() {
         >
           <ArrowLeft size={14} />
           上一步
-        </button>
+        </Button>
 
         <div className='text-[12px] text-text-muted'>
           {STEPS[currentStep].desc}
         </div>
 
-        <button
+        <Button
           onClick={isLast ? () => navigate('/overview') : next}
-          className={`flex items-center gap-1.5 px-5 py-2 rounded-lg text-[13px] font-medium transition-colors ${
+          size='sm'
+          className={`gap-1.5 px-5 text-[13px] ${
             isLast
               ? 'bg-success text-white hover:bg-success/90'
               : 'bg-accent text-accent-fg hover:bg-accent-hover'
@@ -170,7 +174,7 @@ export default function JourneyPage() {
         >
           {isLast ? '完成旅程' : '下一步'}
           <ArrowRight size={14} />
-        </button>
+        </Button>
       </footer>
     </div>
   )

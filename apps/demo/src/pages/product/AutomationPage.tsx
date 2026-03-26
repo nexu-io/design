@@ -9,6 +9,7 @@ import {
   MessageSquare, TrendingUp, Search,
   FolderOpen, X, ExternalLink, Send,
 } from 'lucide-react'
+import { Button } from '@nexu/ui-web'
 import { useProductLayout } from './ProductLayoutContext'
 
 type TabId = 'schedules' | 'proactive' | 'logs'
@@ -339,25 +340,29 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
               rows={1}
               className='flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed'
             />
-            <button
+            <Button
+              type='button'
+              size='inline'
               onClick={handleFollowUp}
               className='p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors'
             >
               <Send size={12} />
-            </button>
+            </Button>
           </div>
           <div className='flex items-center gap-2'>
-            <button
+            <Button
+              type='button'
+              size='inline'
               onClick={() => navigate('/app/sessions')}
               className='flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors'
             >
               <ExternalLink size={11} />
               在 Session 中编辑
-            </button>
-            <button className='flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors'>
+            </Button>
+            <Button type='button' size='inline' className='flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors'>
               {item.enabled ? <Pause size={11} /> : <Play size={11} />}
               {item.enabled ? '暂停' : '启动'}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -448,10 +453,10 @@ function SchedulesTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
           </div>
         </div>
       ))}
-      <button className='w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-sm text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors'>
+      <Button type='button' size='inline' className='w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-sm text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors'>
         <Plus size={16} />
         新建定时任务
-      </button>
+      </Button>
     </div>
   )
 }
@@ -563,22 +568,26 @@ export default function AutomationPage() {
             <h1 className='text-xl font-bold text-text-primary'>Automation</h1>
             <p className='text-sm text-text-secondary mt-1'>
               设置自动任务，让分身帮你全天候工作。
-              <button
+              <Button
+                type='button'
+                size='inline'
                 onClick={expandFileTree}
                 className='font-mono text-text-primary hover:text-accent transition-colors ml-1 inline-flex items-center gap-1'
               >
                 <FolderOpen size={12} />
                 ~/clone/automation/
-              </button>
+              </Button>
             </p>
           </div>
-          <button
+          <Button
+            type='button'
+            size='inline'
             onClick={() => navigate('/app/sessions')}
             className='flex items-center gap-1.5 px-4 py-2 bg-accent text-accent-fg rounded-lg text-[13px] font-medium hover:bg-accent-hover transition-colors'
           >
             <Plus size={14} />
             New automation
-          </button>
+          </Button>
         </div>
 
         {/* Stats */}

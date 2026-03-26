@@ -10,6 +10,7 @@ import {
   Phone,
   Sparkles,
 } from "lucide-react";
+import { Button } from "@nexu/ui-web";
 import ChatCardGroup from "../product/ChatCards";
 import type { ChatCard } from "../product/sessionsData";
 
@@ -228,9 +229,9 @@ function ChannelCard({ ch }: { ch: Channel }) {
             </span>
           )}
           {ch.status === "pending" && (
-            <button className="flex items-center gap-1 text-[11px] text-accent bg-accent-subtle px-2.5 py-1 rounded-md hover:bg-accent-glow transition-colors font-medium">
+            <Button variant="ghost" size="xs" className="h-auto gap-1 bg-accent-subtle px-2.5 py-1 text-[11px] font-medium text-accent hover:bg-accent-glow">
               <Settings size={11} /> 配置
-            </button>
+            </Button>
           )}
           {ch.status === "coming" && (
             <span className="text-[11px] text-text-muted">即将支持</span>
@@ -301,9 +302,9 @@ function ChannelCard({ ch }: { ch: Channel }) {
                 </div>
               ))}
             </div>
-            <button className="mt-2 w-full flex items-center justify-center gap-1 px-3 py-1.5 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors">
+            <Button size="sm" className="mt-2 w-full gap-1 px-3 text-[11px]">
               <Link2 size={11} /> 开始配置
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -422,10 +423,10 @@ export default function StepIM() {
         </div>
       </div>
 
-      <button className="w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors mb-6">
+      <Button variant="outline" className="mb-6 h-auto w-full gap-2 border-dashed p-3 text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover">
         <Plus size={14} />
         添加渠道
-      </button>
+      </Button>
 
       {/* Key features */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

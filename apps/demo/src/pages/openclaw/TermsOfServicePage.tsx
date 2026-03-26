@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { Button } from '@nexu/ui-web';
 import { usePageTitle } from '../../hooks/usePageTitle';
 
 export default function TermsOfServicePage() {
@@ -10,13 +11,13 @@ export default function TermsOfServicePage() {
     <div className="min-h-full bg-surface-0">
       <nav className="sticky top-0 z-50 border-b backdrop-blur-md border-border bg-surface-0/85">
         <div className="flex justify-between items-center px-6 mx-auto max-w-3xl h-14">
-          <button
+          <Button
             onClick={() => navigate('/openclaw')}
             className="flex items-center gap-1.5 text-[13px] text-text-tertiary hover:text-text-primary transition-colors"
           >
             <ArrowLeft size={14} />
             Back to nexu
-          </button>
+          </Button>
           <div className="flex items-center gap-2.5">
             <div className="flex justify-center items-center w-7 h-7 rounded-lg bg-accent">
               <span className="text-xs font-bold text-accent-fg">N</span>

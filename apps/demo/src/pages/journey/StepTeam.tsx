@@ -3,6 +3,7 @@ import {
   CheckCircle, Target, BarChart3, Circle, Clock, Bot, ArrowUp, Minus,
 } from 'lucide-react'
 import { useState } from 'react'
+import { Button } from '@nexu/ui-web'
 import ChatCardGroup from '../product/ChatCards'
 import type { ChatCard } from '../product/sessionsData'
 
@@ -209,9 +210,9 @@ export default function StepTeam() {
                 <span className='text-[13px] font-semibold text-text-primary'>团队分身</span>
                 <span className='text-[10px] text-text-muted'>3/4 在线</span>
               </div>
-              <button className='flex items-center gap-1 px-2 py-1 bg-accent/10 text-accent rounded-md text-[10px] font-medium'>
+              <Button variant='ghost' size='xs' className='h-auto gap-1 bg-accent/10 px-2 py-1 text-[10px] font-medium text-accent'>
                 <UserPlus size={10} /> 邀请
-              </button>
+              </Button>
             </div>
             <div className='p-3 space-y-2'>
               {TEAM_MEMBERS.map(m => (

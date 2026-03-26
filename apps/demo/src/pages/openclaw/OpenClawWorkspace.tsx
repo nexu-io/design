@@ -42,7 +42,7 @@ import { SKILL_CATEGORIES, type SkillDef } from './skillData';
 import ChannelDetailPage from './ChannelDetailPage';
 import ImportSkillModal from './ImportSkillModal';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
-import { Switch } from '@nexu/ui-web';
+import { Button, Switch } from '@nexu/ui-web';
 import { useGitHubStars } from '../../hooks/useGitHubStars';
 import { useLocale } from '../../hooks/useLocale';
 import { Star } from 'lucide-react';
@@ -257,13 +257,14 @@ function SkillsPanel() {
                 className="w-48 pl-9 pr-3 py-1.5 rounded-lg border border-border bg-surface-1 text-[13px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[var(--color-brand-primary)]/30 focus:ring-1 focus:ring-[var(--color-brand-primary)]/20 transition-colors"
               />
             </div>
-            <button
+            <Button
+              size="inline"
               onClick={() => setImportModalOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-text-primary text-white text-[12px] font-medium hover:opacity-85 transition-opacity"
             >
               <Plus size={12} />
               {t('ws.skills.import')}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -395,12 +396,15 @@ function SkillsPanel() {
                   {skill.source === 'custom' ? (
                     <>
                       <Switch size="xs" checked={enabled} onCheckedChange={() => handleToggleSkill(skill)} />
-                      <button
+                      <Button
+                        type="button"
+                        size="inline"
+                        variant="ghost"
                         onClick={(e) => { e.stopPropagation(); }}
                         className="text-[12px] font-medium text-text-muted hover:text-[var(--color-danger)] transition-colors"
                       >
                         {t('ws.skills.uninstall')}
-                      </button>
+                      </Button>
                     </>
                   ) : (
                     <>
@@ -411,12 +415,15 @@ function SkillsPanel() {
                           {t('ws.skills.installing')}
                         </span>
                       ) : (
-                        <button
+                        <Button
+                          type="button"
+                          size="inline"
+                          variant="ghost"
                           onClick={(e) => { e.stopPropagation(); handleInstallSkill(skill); }}
                           className="rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium border border-border text-text-primary hover:bg-surface-2 hover:border-border-hover transition-colors"
                         >
                           {t('ws.skills.install')}
-                        </button>
+                        </Button>
                       )}
                     </>
                   )}
@@ -762,19 +769,22 @@ function HomeDashboard({ onNavigate, showTyping: _showTyping, onTypingComplete: 
                 </div>
                 {/* Footer */}
                 <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-border">
-                  <button
+                  <Button
+                    size="inline"
+                    variant="ghost"
                     onClick={handleCloseConfig}
                     className="px-4 py-2 rounded-lg text-[13px] font-medium text-text-secondary hover:bg-surface-2 transition-colors"
                   >
                     {t('ws.common.cancel')}
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    size="inline"
                     onClick={() => handleConnectChannel(configChannel)}
                     disabled={!allFilled}
                     className="px-4 py-2 rounded-lg text-[13px] font-medium bg-accent text-accent-fg hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     {t('ws.common.connect')}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -962,12 +972,14 @@ function HomeDashboard({ onNavigate, showTyping: _showTyping, onTypingComplete: 
                             <span className="text-[13px] font-semibold text-text-primary">{ch.name}</span>
                             <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] shrink-0" />
                           </div>
-                          <button
+                          <Button
+                            size="inline"
+                            variant="ghost"
                             onClick={(e) => { e.stopPropagation(); handleDisconnectChannel(ch.id); }}
                             className="rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium bg-surface-2 text-text-secondary hover:text-[var(--color-danger)] hover:bg-surface-3 transition-colors shrink-0"
                           >
                             {t('ws.home.connected')}
-                          </button>
+                          </Button>
                           <span className="inline-flex items-center gap-1 text-[12px] font-medium text-text-secondary hover:text-text-primary transition-colors ml-3 shrink-0 leading-none">
                             {t('ws.home.chat')}
                             <ArrowUpRight size={12} className="-mt-px" />
@@ -1092,16 +1104,17 @@ function HomeDashboard({ onNavigate, showTyping: _showTyping, onTypingComplete: 
                 </a>
               </div>
               <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-border">
-                <button onClick={handleCloseConfig} className="px-4 py-2 rounded-lg text-[13px] font-medium text-text-secondary hover:bg-surface-2 transition-colors">
+                <Button size="inline" variant="ghost" onClick={handleCloseConfig} className="px-4 py-2 rounded-lg text-[13px] font-medium text-text-secondary hover:bg-surface-2 transition-colors">
                   {t('ws.common.cancel')}
-                </button>
-                <button
+                </Button>
+                <Button
+                  size="inline"
                   onClick={() => handleConnectChannel(configChannel)}
                   disabled={!allFilled}
                   className="px-4 py-2 rounded-lg text-[13px] font-medium bg-accent text-accent-fg hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   {t('ws.common.connect')}
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -1340,14 +1353,16 @@ function SettingsView({
               {t('ws.common.starOnGitHub')}
               <ArrowUpRight size={11} className="shrink-0 translate-y-px" />
             </a>
-            <button
+            <Button
+              size="inline"
+              variant="outline"
               onClick={() => openExternal('file:///Users/chaoxiaoche/Desktop/agent-digital-cowork/clone/')}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-[12px] font-medium text-text-primary hover:border-border-hover hover:bg-surface-1 transition-colors"
             >
               <FolderOpen size={13} />
               {t('ws.settings.workspace')}
               <ArrowUpRight size={12} className="text-text-muted" />
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -1471,13 +1486,14 @@ function SettingsView({
                   <div className="text-[12px] leading-[1.7] text-text-secondary mt-1.5">
                     {t('ws.settings.signInDesc')}
                   </div>
-                  <button
+                  <Button
+                    size="inline"
                     onClick={() => openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)}
                     className="mt-4 inline-flex items-center gap-2 rounded-lg bg-accent px-3.5 py-2 text-[12px] font-medium text-accent-fg transition-colors hover:bg-accent/90 cursor-pointer"
                   >
                     {t('ws.settings.signInBtn')}
                     <ArrowUpRight size={12} />
-                  </button>
+                  </Button>
                 </div>
               )}
 
@@ -1507,7 +1523,9 @@ function SettingsView({
                     />
                   </div>
                   <div className="flex items-center justify-end gap-3 flex-wrap">
-                    <button
+                    <Button
+                      size="inline"
+                      variant="ghost"
                       type="button"
                       onClick={() => handleCheck(activeProvider.id)}
                       disabled={checkState === 'checking' || saveState === 'saving'}
@@ -1517,8 +1535,9 @@ function SettingsView({
                       {checkState === 'success' && t('ws.settings.connectedStatus')}
                       {checkState === 'error' && t('ws.settings.retryTest')}
                       {checkState === 'idle' && t('ws.settings.testConnection')}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      size="inline"
                       onClick={() => handleSave(activeProvider.id)}
                       disabled={saveState === 'saving' || showSaved}
                       className={`w-[120px] shrink-0 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2 text-[12px] font-medium transition-all ${
@@ -1532,7 +1551,7 @@ function SettingsView({
                       {!showSaved && saveState !== 'saving' && t('ws.common.save')}
                       {saveState === 'saving' && t('ws.common.saving')}
                       {showSaved && t('ws.common.saved')}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
@@ -1883,7 +1902,9 @@ export default function OpenClawWorkspace() {
             {/* Available — Download + Changelog */}
             {!updating && !updateReady && !updateError && (
               <div className="flex items-center gap-2 pl-4">
-                <button
+                <Button
+                  type="button"
+                  size="inline"
                   onClick={() => {
                     setUpdating(true);
                     setDownloadProgress(0);
@@ -1902,49 +1923,62 @@ export default function OpenClawWorkspace() {
                   className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[11px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
                 >
                   {t('ws.update.download')}
-                </button>
-                <button
+                </Button>
+                <Button
+                  type="button"
+                  size="inline"
+                  variant="ghost"
                   onClick={() => void openExternal('https://github.com/nexu-io/nexu/releases')}
                   className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[11px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
                 >
                   {t('ws.update.changelog')}
-                </button>
+                </Button>
               </div>
             )}
 
             {/* Ready — Restart + Changelog */}
             {updateReady && (
               <div className="flex items-center gap-2 pl-4">
-                <button
+                <Button
+                  type="button"
+                  size="inline"
                   onClick={() => { setUpdateReady(false); setHasUpdate(false); }}
                   className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[11px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
                 >
                   {t('ws.update.restart')}
-                </button>
-                <button
+                </Button>
+                <Button
+                  type="button"
+                  size="inline"
+                  variant="ghost"
                   onClick={() => void openExternal('https://github.com/nexu-io/nexu/releases')}
                   className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[11px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
                 >
                   {t('ws.update.changelog')}
-                </button>
+                </Button>
               </div>
             )}
 
             {/* Error — Retry + Changelog */}
             {updateError && (
               <div className="flex items-center gap-2 pl-4">
-                <button
+                <Button
+                  type="button"
+                  size="inline"
                   onClick={() => { setUpdateError(false); setHasUpdate(true); }}
                   className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[11px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
                 >
                   {t('ws.update.retry')}
-                </button>
-                <button
+                </Button>
+                <Button
+                  type="button"
+                  size="inline"
+                  variant="ghost"
                   onClick={() => void openExternal('https://github.com/nexu-io/nexu/releases')}
                   className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[11px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
                 >
                   {t('ws.update.changelog')}
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -2151,13 +2185,14 @@ export default function OpenClawWorkspace() {
             )}
 
             {showUpToDate && (
-              <button
+              <Button
+                size="inline"
                 onClick={() => setShowUpToDate(false)}
                 className="w-full py-[7px] rounded-lg bg-[#3478f6] text-white text-[13px] font-medium hover:bg-[#2563eb] transition-colors border-none cursor-pointer mt-1"
                 type="button"
               >
                 OK
-              </button>
+              </Button>
             )}
           </div>
         </div>

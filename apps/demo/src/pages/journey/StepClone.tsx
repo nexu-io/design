@@ -15,6 +15,7 @@ import {
   Phone,
   Database,
 } from "lucide-react";
+import { Button } from "@nexu/ui-web";
 import ChatCardGroup from "../product/ChatCards";
 import type { ChatCard } from "../product/sessionsData";
 
@@ -239,10 +240,10 @@ export default function StepClone() {
               </span>
             </div>
 
-            <button className="mt-2.5 w-full flex items-center justify-center gap-1 px-3 py-1.5 bg-clone/10 border border-clone/20 rounded-lg text-[11px] text-clone font-medium hover:bg-clone/15 transition-colors">
+            <Button variant="outline" size="sm" className="mt-2.5 w-full gap-1 border-clone/20 bg-clone/10 px-3 text-[11px] text-clone hover:bg-clone/15">
               <Wrench size={11} />
               初始化 / 编辑分身
-            </button>
+            </Button>
 
             <div className="mt-2.5 px-1">
               <div className="flex items-center justify-between text-[10px] mb-1">
@@ -439,9 +440,9 @@ export default function StepClone() {
               </div>
 
               <div className="text-center py-3">
-                <button className="flex items-center gap-1 mx-auto text-[11px] text-text-muted hover:text-text-secondary transition-colors">
+                <Button variant="ghost" size="sm" className="mx-auto gap-1 text-[11px] text-text-muted hover:text-text-secondary">
                   <Plus size={11} /> 加载更多
-                </button>
+                </Button>
               </div>
             </>
           )}
@@ -544,9 +545,9 @@ export default function StepClone() {
                 </div>
               </div>
 
-              <button className="w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors">
+              <Button variant="outline" className="h-auto w-full gap-2 border-dashed p-3 text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover">
                 <Plus size={14} /> 添加渠道
-              </button>
+              </Button>
             </div>
           )}
 
@@ -589,9 +590,9 @@ export default function StepClone() {
                 ))}
               </div>
 
-              <button className="w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors">
+              <Button variant="outline" className="h-auto w-full gap-2 border-dashed p-3 text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover">
                 <Plus size={14} /> 查看全部记忆
-              </button>
+              </Button>
             </div>
           )}
         </div>

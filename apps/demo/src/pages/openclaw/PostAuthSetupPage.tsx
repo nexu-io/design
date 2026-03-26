@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Check, Loader2, Settings, Sparkles, Brain } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePageTitle } from '../../hooks/usePageTitle';
-import { Badge } from '@nexu/ui-web';
+import { Badge, Button } from '@nexu/ui-web';
 
 function SlackIcon({ size = 20 }: { size?: number }) {
   return (
@@ -85,9 +85,15 @@ export default function PostAuthSetupPage() {
 
       {/* Nav */}
       <nav className="relative z-10 flex items-center justify-between px-6 sm:px-10 h-14 shrink-0">
-        <button onClick={() => navigate('/openclaw')} className="flex items-center gap-2.5">
+        <Button
+          type="button"
+          variant="ghost"
+          size="inline"
+          onClick={() => navigate('/openclaw')}
+          className="h-auto p-0 hover:bg-transparent"
+        >
           <img src="/brand/nexu logo-black4.svg" alt="nexu" className="h-6 w-auto object-contain" />
-        </button>
+        </Button>
       </nav>
 
       {/* Main */}
@@ -130,7 +136,7 @@ export default function PostAuthSetupPage() {
               </div>
 
               {/* CTA */}
-              <button
+              <Button
                 onClick={handleAddToSlack}
                 onMouseEnter={() => setHovering(true)}
                 onMouseLeave={() => setHovering(false)}
@@ -142,7 +148,7 @@ export default function PostAuthSetupPage() {
                   Add to Slack
                   <ArrowRight size={15} className={`transition-transform duration-200 ${hovering ? 'translate-x-0.5' : ''}`} />
                 </div>
-              </button>
+              </Button>
 
               <p className="text-[11px] text-text-muted mt-4 max-w-[380px] mx-auto leading-relaxed">
                 Free during beta. Only accesses channels it's invited to.

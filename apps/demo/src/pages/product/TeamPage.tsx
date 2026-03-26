@@ -40,6 +40,7 @@ import OKRTab from "./TeamOKR";
 import SprintTabEnhanced from "./TeamSprint";
 import TeamTasks from "./TeamTasks";
 import TeamInsightsChat from "./TeamInsightsChat";
+import { Button } from "@nexu/ui-web";
 
 type TabId = "okr" | "cards" | "members" | "alignments" | "sprint" | "tasks";
 
@@ -150,7 +151,9 @@ function CardButton({
     danger: "bg-danger-subtle text-danger hover:bg-danger/20",
   };
   return (
-    <button
+    <Button
+      type="button"
+      size="inline"
       onClick={(e) => {
         e.stopPropagation();
         onClick?.(e);
@@ -158,7 +161,7 @@ function CardButton({
       className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${styles[variant]}`}
     >
       {children}
-    </button>
+    </Button>
   );
 }
 
@@ -436,12 +439,14 @@ function GrowthTriggerIMCard({
           💡 本周已帮{card.from.replace("的分身", "")}完成{" "}
           {card.weeklyStats.tasks} 项任务 · 节省约 {card.weeklyStats.hours}h
         </div>
-        <button
+        <Button
+          type="button"
+          size="inline"
           onClick={(e) => e.stopPropagation()}
           className="w-full py-2 bg-accent text-accent-fg rounded-lg text-[12px] font-medium hover:bg-accent-hover transition-colors flex items-center justify-center gap-1.5"
         >
           🤖 我也想要一个分身
-        </button>
+        </Button>
       </div>
     </CardWrapper>
   );

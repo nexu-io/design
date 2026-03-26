@@ -3,6 +3,7 @@ import {
   Zap, Brain, Shield, BarChart3, UserPlus,
   Rocket, Gift,
 } from 'lucide-react'
+import { Button } from '@nexu/ui-web'
 
 const VALUE_ITEMS = [
   { icon: Brain, label: '无限记忆', free: '50 条', pro: '无限制', team: '无限制 + 共享' },
@@ -168,20 +169,22 @@ export default function StepUpgrade() {
                 </div>
               ))}
             </div>
-            <button
+            <Button
               disabled={p.disabled}
-              className={`w-full py-2 rounded-lg text-[12px] font-medium transition-all ${
+              variant={p.disabled ? 'outline' : p.highlight ? 'default' : 'outline'}
+              size='sm'
+              className={`w-full text-[12px] font-medium ${
                 p.disabled
                   ? 'bg-surface-3 text-text-muted cursor-default'
-                  : p.highlight
-                    ? 'bg-accent text-accent-fg hover:bg-accent-hover'
-                    : 'border border-border text-text-secondary hover:text-text-primary hover:border-border-hover'
+                : p.highlight
+                  ? 'bg-accent text-accent-fg hover:bg-accent-hover'
+                  : 'border border-border text-text-secondary hover:text-text-primary hover:border-border-hover'
               }`}
             >
               {p.name === '团队版' && <UserPlus size={12} className='inline mr-1.5' />}
               {p.cta}
               {!p.disabled && <ArrowRight size={12} className='inline ml-1' />}
-            </button>
+            </Button>
           </div>
         ))}
       </div>
@@ -201,9 +204,9 @@ export default function StepUpgrade() {
               团队越大，每个分身获得的共享知识越多，协作效率越高。
             </div>
             <div className='flex items-center gap-3'>
-              <button className='px-4 py-2 bg-accent hover:bg-accent-hover text-accent-fg rounded-lg text-[12px] font-semibold transition-all flex items-center gap-1.5'>
+              <Button size='sm' className='gap-1.5 px-4 text-[12px] font-semibold'>
                 <UserPlus size={12} /> 生成邀请链接
-              </button>
+              </Button>
               <div className='text-[11px] text-text-muted'>
                 或直接在飞书/Slack 群里 @分身，说 "邀请 XXX"
               </div>

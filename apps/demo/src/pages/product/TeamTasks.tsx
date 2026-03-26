@@ -6,6 +6,7 @@ import {
   FileText, Link2, MessageSquare, Target,
   ArrowUp, ArrowDown, Minus,
 } from 'lucide-react'
+import { Button } from '@nexu/ui-web'
 import {
   TASK_BOARD,
   type TaskItem,
@@ -295,12 +296,14 @@ function ActionBtn({ icon: Icon, label, variant = 'default' }: {
     success: 'bg-success-subtle text-success hover:bg-success/20',
   }
   return (
-    <button
+    <Button
+      type='button'
+      size='inline'
       onClick={e => e.stopPropagation()}
       className={`px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-colors flex items-center gap-1.5 ${styles[variant]}`}
     >
       <Icon size={12} /> {label}
-    </button>
+    </Button>
   )
 }
 
@@ -423,9 +426,9 @@ export default function TeamTasks({
                 </div>
               )}
             </div>
-            <button className='flex items-center gap-1 px-2.5 py-1.5 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors'>
+            <Button type='button' size='inline' className='flex items-center gap-1 px-2.5 py-1.5 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors'>
               <Plus size={12} /> 新建任务
-            </button>
+            </Button>
           </div>
         </div>
 

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { Button } from '@nexu/ui-web';
 import { usePageTitle } from '../../hooks/usePageTitle';
 
 const CAPABILITY_PILLS = [
@@ -56,13 +57,13 @@ export default function WhatsAppQRPage() {
       <div className="flex-1 flex flex-col bg-surface-0">
         {/* Top bar with back button */}
         <div className="flex items-center px-6 h-14 border-b border-border">
-          <button
+          <Button
             onClick={() => navigate('/openclaw')}
             className="flex items-center gap-2 text-sm text-text-muted hover:text-text-primary transition-colors cursor-pointer"
           >
             <ArrowLeft size={16} />
             Back
-          </button>
+          </Button>
         </div>
 
         {/* Centered QR content */}

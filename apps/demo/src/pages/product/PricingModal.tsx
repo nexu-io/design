@@ -1,4 +1,5 @@
 import { X, Check, Crown, Sparkles, Users } from 'lucide-react'
+import { Button } from '@nexu/ui-web'
 
 const PLANS = [
   {
@@ -77,9 +78,9 @@ export default function PricingModal({ open, onClose }: { open: boolean; onClose
                     </div>
                   ))}
                 </div>
-                <button className={`w-full py-2 rounded-lg text-[12px] font-medium transition-colors ${plan.ctaStyle}`}>
+                <Button className={`w-full text-[12px] ${plan.ctaStyle}`}>
                   {plan.cta}
-                </button>
+                </Button>
               </div>
             )
           })}
@@ -92,9 +93,9 @@ export default function PricingModal({ open, onClose }: { open: boolean; onClose
               <div className='text-[12px] font-medium text-text-primary'>邀请 3 位同事，免费获得 Pro 30 天</div>
               <div className='text-[10px] text-text-muted'>每成功邀请 1 位，双方各获 10 天 Pro 体验</div>
             </div>
-            <button className='px-3 py-1.5 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent/90 transition-colors'>
+            <Button size='xs'>
               生成邀请链接
-            </button>
+            </Button>
           </div>
         </div>
       </div>

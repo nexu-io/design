@@ -18,6 +18,7 @@ import {
   Hash,
   Globe,
 } from 'lucide-react'
+import { Button } from '@nexu/ui-web'
 
 const SEGMENTS = [
   {
@@ -159,9 +160,9 @@ export default function GrowthLanding() {
             <a href='#segments' className='text-xs text-text-secondary hover:text-text-primary transition-colors'>Use Cases</a>
             <a href='#how' className='text-xs text-text-secondary hover:text-text-primary transition-colors'>How It Works</a>
             <a href='#pricing' className='text-xs text-text-secondary hover:text-text-primary transition-colors'>Pricing</a>
-            <button className='px-4 py-1.5 rounded-lg bg-accent text-accent-fg text-xs font-medium hover:bg-accent-hover transition-colors'>
+            <Button size='sm'>
               Add to Slack
-            </button>
+            </Button>
           </div>
         </div>
       </nav>
@@ -182,12 +183,12 @@ export default function GrowthLanding() {
             Automatically. Every day.
           </p>
           <div className='flex items-center justify-center gap-3'>
-            <button className='px-6 py-2.5 rounded-lg bg-accent text-accent-fg text-sm font-medium hover:bg-accent-hover transition-colors flex items-center gap-2'>
+            <Button size='lg'>
               Request Early Access <ArrowRight size={14} />
-            </button>
-            <button className='px-6 py-2.5 rounded-lg border border-border text-text-secondary text-sm font-medium hover:bg-surface-2 transition-colors'>
+            </Button>
+            <Button variant='outline' size='lg'>
               Watch Demo
-            </button>
+            </Button>
           </div>
           <p className='text-[11px] text-text-muted mt-4'>Invite-only early access · Free to start · 2 min setup</p>
         </div>
@@ -452,13 +453,13 @@ export default function GrowthLanding() {
                     </div>
                   ))}
                 </div>
-                <button className={`w-full py-2 rounded-lg text-xs font-medium transition-colors ${
-                  plan.primary
-                    ? 'bg-white text-accent hover:bg-white/90'
-                    : 'bg-accent text-accent-fg hover:bg-accent-hover'
-                }`}>
+                <Button
+                  variant={plan.primary ? 'secondary' : 'default'}
+                  size='sm'
+                  className='w-full'
+                >
                   {plan.cta}
-                </button>
+                </Button>
               </div>
             ))}
           </div>
@@ -485,9 +486,9 @@ export default function GrowthLanding() {
             <span className='text-clone'>How many will you remember tomorrow?</span>
           </h2>
           <p className='text-sm text-text-secondary mb-8'>Join the early access. Your first digest is free.</p>
-          <button className='px-8 py-3 rounded-lg bg-accent text-accent-fg text-sm font-medium hover:bg-accent-hover transition-colors inline-flex items-center gap-2'>
+          <Button size='lg'>
             Request Early Access <ArrowRight size={14} />
-          </button>
+          </Button>
         </div>
       </section>
 

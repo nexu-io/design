@@ -9,6 +9,7 @@ import {
   Palette,
   Server,
 } from 'lucide-react';
+import { Button } from '@nexu/ui-web';
 import { usePageTitle } from '../../hooks/usePageTitle';
 
 interface ChangelogEntry {
@@ -219,14 +220,14 @@ export default function DocsChangelogPage() {
 
           {hasMore && (
             <div className="flex justify-center pt-6">
-              <button
+              <Button
                 type="button"
                 onClick={() => setVisibleRows((v) => v + ROWS_PER_PAGE)}
-                className="flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold bg-accent hover:bg-accent-hover text-accent-fg shadow-sm hover:shadow-md hover:shadow-accent/15 transition-all"
+                className="gap-2 px-6 py-3 text-sm font-semibold shadow-sm transition-all hover:shadow-md hover:shadow-accent/15"
               >
                 <ChevronDown size={16} />
                 Load more
-              </button>
+              </Button>
             </div>
           )}
         </div>

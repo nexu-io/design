@@ -10,6 +10,7 @@ import {
   GitBranch, Zap, Settings,
   Pencil, RefreshCw, FolderOpen,
 } from 'lucide-react'
+import { Button } from '@nexu/ui-web'
 import { useProductLayout } from './ProductLayoutContext'
 
 type TabId = 'installed' | 'featured' | 'explore'
@@ -190,18 +191,24 @@ function SkillDetailPanel({ skill, onClose }: { skill: Skill; onClose: () => voi
                 <span className='flex items-center gap-1.5 px-4 py-2 bg-success-subtle text-success rounded-lg text-[13px] font-medium'>
                   <Check size={14} /> 已安装
                 </span>
-                <button className='px-4 py-2 bg-surface-3 text-text-secondary rounded-lg text-[13px] hover:bg-surface-4 transition-colors'>
+                <Button variant='ghost' className='px-4 py-2 text-[13px]'>
                   卸载
-                </button>
+                </Button>
               </>
             ) : (
-              <button className='flex items-center gap-1.5 px-5 py-2 bg-accent text-accent-fg rounded-lg text-[13px] font-medium hover:bg-accent-hover transition-colors'>
+              <Button className='px-5 py-2 text-[13px]'>
                 <Download size={14} /> 安装此 Skill
-              </button>
+              </Button>
             )}
-            <button onClick={expandFileTree} className='ml-auto p-2 rounded-lg hover:bg-surface-3 text-text-muted hover:text-accent transition-colors' title='在文件树中查看'>
+            <Button
+              type='button'
+              size='inline'
+              onClick={expandFileTree}
+              className='ml-auto p-2 rounded-lg hover:bg-surface-3 text-text-muted hover:text-accent transition-colors'
+              title='在文件树中查看'
+            >
               <FolderOpen size={14} />
-            </button>
+            </Button>
           </div>
 
           <div className='px-6 py-4 border-b border-border'>
@@ -323,12 +330,12 @@ function ChatCreatorModal({ onClose }: { onClose: () => void }) {
               <div>tools: [github_api, markdown_write]</div>
             </div>
             <div className='flex items-center gap-2 mt-3'>
-              <button className='flex-1 px-3 py-1.5 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors'>
+              <Button size='xs' className='flex-1'>
                 保存并激活
-              </button>
-              <button className='px-3 py-1.5 bg-surface-4 text-text-secondary rounded-lg text-[11px] font-medium hover:bg-surface-5 transition-colors'>
+              </Button>
+              <Button variant='ghost' size='xs'>
                 继续调整
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -341,9 +348,9 @@ function ChatCreatorModal({ onClose }: { onClose: () => void }) {
               rows={1}
               className='flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed'
             />
-            <button className='p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors'>
+            <Button type='button' size='inline' className='p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors'>
               <Send size={12} />
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -377,12 +384,12 @@ function WorkflowEditorModal({ onClose }: { onClose: () => void }) {
             </span>
           </div>
           <div className='flex items-center gap-2'>
-            <button className='px-3 py-1.5 bg-surface-3 text-text-secondary rounded-lg text-[11px] font-medium hover:bg-surface-4 transition-colors'>
+            <Button variant='ghost' size='xs'>
               预览 SKILL.md
-            </button>
-            <button className='px-3 py-1.5 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors'>
+            </Button>
+            <Button size='xs'>
               保存
-            </button>
+            </Button>
             <button onClick={onClose} className='p-1 rounded-md hover:bg-surface-3 text-text-muted transition-colors'>
               <X size={14} />
             </button>
@@ -413,10 +420,10 @@ function WorkflowEditorModal({ onClose }: { onClose: () => void }) {
                 <div className='text-[10px] text-text-muted'>{n.desc}</div>
               </div>
             ))}
-            <button className='absolute bottom-4 right-4 flex items-center gap-1.5 px-3 py-1.5 bg-surface-1 border border-dashed border-border rounded-lg text-[11px] text-text-secondary hover:border-border-hover transition-colors'>
+            <Button variant='outline' size='xs' className='absolute bottom-4 right-4 border-dashed bg-surface-1 text-[11px] text-text-secondary'>
               <Plus size={12} />
               添加节点
-            </button>
+            </Button>
           </div>
           <div className='w-52 border-l border-border/50 p-3 overflow-y-auto'>
             <div className='text-[10px] font-medium text-text-muted uppercase tracking-wider mb-3'>节点配置</div>
@@ -498,7 +505,9 @@ function InstalledTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) 
     <div>
       {/* Builder tools — elevated priority */}
       <div className='grid grid-cols-2 gap-3 mb-6'>
-        <button
+        <Button
+          type='button'
+          size='inline'
           onClick={() => setChatModal(true)}
           className='flex items-center gap-3 p-4 bg-surface-2 border border-border rounded-xl hover:border-border-hover transition-colors text-left'
         >
@@ -509,8 +518,10 @@ function InstalledTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) 
             <div className='text-[13px] font-semibold text-text-primary'>Skill Creator</div>
             <div className='text-[11px] text-text-muted'>Create or update a skill</div>
           </div>
-        </button>
-        <button
+        </Button>
+        <Button
+          type='button'
+          size='inline'
           onClick={() => setWorkflowModal(true)}
           className='flex items-center gap-3 p-4 bg-surface-2 border border-border rounded-xl hover:border-border-hover transition-colors text-left'
         >
@@ -521,7 +532,7 @@ function InstalledTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) 
             <div className='text-[13px] font-semibold text-text-primary'>Workflow Editor</div>
             <div className='text-[11px] text-text-muted'>Build visual skill workflows</div>
           </div>
-        </button>
+        </Button>
       </div>
 
       {/* Installed skills list */}
@@ -619,22 +630,26 @@ export default function SkillsPage() {
             <h1 className='text-xl font-bold text-text-primary'>Skills</h1>
             <p className='text-sm text-text-secondary mt-1'>
               Give your clone superpowers.
-              <button
+              <Button
+                type='button'
+                size='inline'
                 onClick={expandFileTree}
                 className='font-mono text-text-primary hover:text-accent transition-colors ml-1 inline-flex items-center gap-1'
               >
                 <FolderOpen size={12} />
                 ~/clone/skills/
-              </button>
+              </Button>
             </p>
           </div>
-          <button
+          <Button
+            type='button'
+            size='inline'
             onClick={() => navigate('/app/sessions')}
             className='flex items-center gap-1.5 px-4 py-2 bg-accent text-accent-fg rounded-lg text-[13px] font-medium hover:bg-accent-hover transition-colors'
           >
             <Plus size={14} />
             New skill
-          </button>
+          </Button>
         </div>
 
         {/* Tabs + inline search */}

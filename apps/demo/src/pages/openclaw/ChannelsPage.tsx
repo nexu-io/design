@@ -105,7 +105,7 @@ function SlackOAuthView() {
           <p style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 20, lineHeight: 1.6, maxWidth: 300, marginLeft: 'auto', marginRight: 'auto', fontFamily: FONT }}>
             One-click auth. nexu Bot joins your Slack workspace — everyone on your team can use it.
           </p>
-          <button
+          <Button
             onClick={handleAddToSlack}
             className="flex gap-2 items-center justify-center mx-auto"
             style={{
@@ -128,7 +128,7 @@ function SlackOAuthView() {
               <path d={SLACK_ICON_PATH} />
             </svg>
             Add to Slack
-          </button>
+          </Button>
           <div className="flex gap-2 items-center justify-center mt-4" style={{ fontSize: 11, color: 'var(--color-text-muted)', fontFamily: FONT }}>
             <Shield size={10} />
             <span>After auth, teammates join with zero config. Each has their own memory.</span>
@@ -431,7 +431,7 @@ function SlackOAuthView() {
                   </div>
                 ))}
               </div>
-              <button
+              <Button
                 className="flex gap-1.5 items-center"
                 style={{
                   padding: '0 20px',
@@ -451,7 +451,7 @@ function SlackOAuthView() {
               >
                 <Check size={14} />
                 Verify & connect
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -466,7 +466,7 @@ function SlackOAuthView() {
             {manualStep === 0 ? 'Back to one-click auth' : 'Previous'}
           </Button>
           {manualStep < manualSteps.length - 1 && (
-            <button
+            <Button
               onClick={() => setManualStep(manualStep + 1)}
               className="flex gap-1.5 items-center"
               style={{
@@ -487,7 +487,7 @@ function SlackOAuthView() {
             >
               Next
               <ChevronRight size={13} />
-            </button>
+            </Button>
           )}
         </div>
 

@@ -121,16 +121,19 @@ export default function InvitePage() {
           className="lg:hidden flex items-center px-6 h-14"
           style={{ borderBottom: `1px solid ${TOKENS.borderInput}` }}
         >
-          <button
+          <Button
+            type="button"
+            variant="ghost"
+            size="inline"
             onClick={() => navigate('/openclaw')}
-            className="flex items-center"
+            className="h-auto p-0 hover:bg-transparent"
           >
             <img
               src="/brand/nexu logo-black1.svg"
               alt="nexu"
               className="h-6 w-auto object-contain"
             />
-          </button>
+          </Button>
         </nav>
 
         <div className="flex-1 flex items-center justify-center px-6 py-16">

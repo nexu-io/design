@@ -27,6 +27,7 @@ import {
 } from "./LandingParts";
 import ChatCardGroup from "./product/ChatCards";
 import type { ChatCard } from "./product/sessionsData";
+import { Button } from '@nexu/ui-web'
 
 const LANDING_CARDS: Record<string, ChatCard[]> = {
   scenario1a: [
@@ -87,9 +88,9 @@ export default function LandingPreview() {
             <a href="#" className="transition-colors hover:text-text-primary">
               文档
             </a>
-            <button className="px-4 py-1.5 bg-accent hover:bg-accent-hover text-accent-fg rounded-md text-[13px] font-medium transition-colors flex items-center gap-1.5">
+            <Button size='sm'>
               免费开始 <ArrowRight size={14} />
-            </button>
+            </Button>
           </div>
         </div>
       </nav>
@@ -127,12 +128,12 @@ export default function LandingPreview() {
             人走了，分身留下，知识永不流失。
           </p>
           <div className="flex gap-3 justify-center mb-6">
-            <button className="flex gap-2 items-center px-7 py-3 text-sm font-semibold rounded-lg transition-all bg-accent hover:bg-accent-hover text-accent-fg hover:shadow-lg hover:shadow-black/10">
+            <Button size='lg'>
               免费开始 <ArrowRight size={14} />
-            </button>
-            <button className="flex gap-2 items-center px-7 py-3 text-sm rounded-lg border transition-colors border-border text-text-secondary hover:text-text-primary hover:border-border-hover">
+            </Button>
+            <Button variant='outline' size='lg'>
               <UserPlus size={14} /> 邀请同事一起用
-            </button>
+            </Button>
           </div>
           <div className="flex items-center justify-center gap-4 text-[13px] text-text-muted">
             <span>✓ 免费开始</span>
@@ -627,9 +628,9 @@ export default function LandingPreview() {
               邀请 3 位同事加入，每人免费获得 Pro 版 30 天体验
             </div>
           </div>
-          <button className="px-6 py-2.5 bg-accent hover:bg-accent-hover text-accent-fg rounded-lg text-sm font-semibold transition-all flex items-center gap-2 shrink-0">
+          <Button className='shrink-0'>
             <UserPlus size={14} /> 邀请同事
-          </button>
+          </Button>
         </div>
       </section>
 
@@ -1016,15 +1017,12 @@ export default function LandingPreview() {
                   </div>
                 ))}
               </div>
-              <button
-                className={`w-full py-2.5 rounded-lg text-sm font-medium transition-all ${
-                  p.hl
-                    ? "bg-accent text-accent-fg hover:bg-accent-hover"
-                    : "border border-border text-text-secondary hover:text-text-primary hover:border-border-hover"
-                }`}
+              <Button
+                variant={p.hl ? 'default' : 'outline'}
+                className='w-full'
               >
                 {p.cta}
-              </button>
+              </Button>
             </div>
           ))}
         </div>
@@ -1044,12 +1042,12 @@ export default function LandingPreview() {
             免费开始，3 分钟上手。员工会辞职，分身不会。
           </p>
           <div className="flex gap-3 justify-center">
-            <button className="flex gap-2 items-center px-8 py-3 text-sm font-semibold rounded-lg transition-all bg-accent hover:bg-accent-hover text-accent-fg hover:shadow-lg hover:shadow-black/10">
+            <Button size='lg'>
               免费开始 <ArrowRight size={14} />
-            </button>
-            <button className="flex gap-2 items-center px-8 py-3 text-sm font-medium rounded-lg border transition-colors border-border text-text-secondary hover:text-text-primary hover:border-border-hover">
+            </Button>
+            <Button variant='outline' size='lg'>
               <UserPlus size={14} /> 邀请同事
-            </button>
+            </Button>
           </div>
           <div className="flex gap-0 justify-center mt-10">
             {[0, 1, 2, 3, 4, 5, 6].map((i) => (

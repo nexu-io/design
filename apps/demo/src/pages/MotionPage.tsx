@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Button } from '@nexu/ui-web'
 import { PageShell, PageHeader, Section } from '../components/Section'
 import NexuLoader, { NexuLoadingScreen } from '../components/NexuLoader'
 
@@ -36,12 +37,12 @@ export default function MotionPage() {
             <div className='text-xs text-text-secondary mt-3'>40px — 按钮/行内</div>
           </div>
         </div>
-        <button
+        <Button
           onClick={() => setShowFullscreen(true)}
-          className='mt-6 px-4 py-2 rounded-lg bg-accent text-accent-fg text-sm font-medium hover:bg-accent-hover transition-colors'
+          className='mt-6 rounded-lg text-sm'
         >
           预览全屏加载效果（4s 后自动关闭）
-        </button>
+        </Button>
       </Section>
 
       <Section title='Clone Breath — 分身呼吸'>

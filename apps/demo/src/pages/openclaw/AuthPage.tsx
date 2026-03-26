@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Mail, Check } from 'lucide-react';
+import { Button } from '@nexu/ui-web';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { useLocale } from '../../hooks/useLocale';
 import { GitHubIcon } from '../../components/openclaw/OpenClawBrandRail';
@@ -89,12 +90,12 @@ export default function AuthPage() {
             <p className="text-[12px] text-text-muted mb-4">
               {t('auth.success.countdown').replace('{n}', String(countdown))}
             </p>
-            <button
+            <Button
               onClick={() => { if (isDesktopFlow) window.close(); else navigate('/openclaw/workspace'); }}
               className="flex items-center justify-center gap-2 w-full h-11 rounded-lg text-[14px] font-medium border border-border bg-surface-0 text-text-primary hover:bg-surface-2 hover:border-border-hover active:scale-[0.98] transition-all cursor-pointer"
             >
               {t('auth.success.backToApp')}
-            </button>
+            </Button>
           </div>
         </FadeIn>
       </div>
@@ -130,7 +131,7 @@ export default function AuthPage() {
                 {/* Auth buttons */}
                 <div className="space-y-2.5">
                   {/* Google */}
-                  <button
+                  <Button
                     onClick={handleGoogleAuth}
                     disabled={loading !== null}
                     className="group flex items-center justify-center gap-2 w-full h-11 rounded-lg text-[14px] font-medium border border-border bg-surface-0 text-text-primary hover:bg-surface-2 hover:border-border-hover active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
@@ -149,10 +150,10 @@ export default function AuthPage() {
                         <ArrowRight size={14} className="opacity-0 -ml-1 group-hover:opacity-60 group-hover:ml-0 transition-all" />
                       </>
                     )}
-                  </button>
+                  </Button>
 
                   {/* GitHub */}
-                  <button
+                  <Button
                     onClick={handleGitHubAuth}
                     disabled={loading !== null}
                     className="group flex items-center justify-center gap-2 w-full h-11 rounded-lg text-[14px] font-semibold bg-[#111] text-white hover:bg-[#222] active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
@@ -166,7 +167,7 @@ export default function AuthPage() {
                         <ArrowRight size={14} className="opacity-0 -ml-1 group-hover:opacity-60 group-hover:ml-0 transition-all" />
                       </>
                     )}
-                  </button>
+                  </Button>
 
                   {/* Divider */}
                   <div className="flex items-center gap-3 py-1">
@@ -197,7 +198,7 @@ export default function AuthPage() {
                         {emailError && (
                           <p className="text-[12px] text-red-500 pl-0.5">{emailError}</p>
                         )}
-                        <button
+                        <Button
                           type="submit"
                           disabled={loading !== null}
                           className="flex items-center justify-center w-full h-11 rounded-lg text-[14px] font-medium bg-[#111] text-white hover:bg-[#222] active:scale-[0.98] transition-all disabled:opacity-40 cursor-pointer"
@@ -207,23 +208,26 @@ export default function AuthPage() {
                           ) : (
                             <span>{mode === 'register' ? t('auth.submit.register') : t('auth.submit.login')}</span>
                           )}
-                        </button>
+                        </Button>
                       </form>
-                      <button
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="inline"
                         onClick={() => setShowEmailForm(false)}
-                        className="w-full mt-3 text-[12px] text-text-muted hover:text-text-secondary transition-colors cursor-pointer"
+                        className="mt-3 w-full justify-center text-[12px] text-text-muted transition-colors hover:text-text-secondary"
                       >
                         {t('auth.otherMethods')}
-                      </button>
+                      </Button>
                     </div>
                   ) : (
-                    <button
+                    <Button
                       onClick={() => setShowEmailForm(true)}
                       className="flex items-center justify-center gap-2 w-full h-11 rounded-lg text-[14px] font-medium border border-border bg-surface-0 text-text-primary hover:bg-surface-2 hover:border-border-hover active:scale-[0.98] transition-all cursor-pointer"
                     >
                       <Mail size={15} />
                       <span>{mode === 'register' ? t('auth.emailRegister') : t('auth.emailLogin')}</span>
-                    </button>
+                    </Button>
                   )}
                 </div>
 
@@ -232,12 +236,15 @@ export default function AuthPage() {
                   <span className="text-[13px] text-text-muted">
                     {mode === 'register' ? t('auth.hasAccount') : t('auth.noAccount')}
                   </span>
-                  <button
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="inline"
                     onClick={() => { setMode(mode === 'register' ? 'login' : 'register'); setShowEmailForm(false); setEmailError(''); }}
-                    className="text-[13px] text-text-primary font-medium hover:underline underline-offset-2 cursor-pointer"
+                    className="h-auto p-0 text-[13px] font-medium text-text-primary hover:bg-transparent hover:underline underline-offset-2"
                   >
                     {mode === 'register' ? t('auth.login') : t('auth.register')}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </FadeIn>
@@ -245,13 +252,25 @@ export default function AuthPage() {
             {/* Footer */}
             <FadeIn delay={300}>
               <div className="flex items-center justify-center gap-4 mt-6 text-[12px] text-text-muted">
-                <button onClick={() => navigate('/openclaw/terms')} className="hover:text-text-secondary transition-colors cursor-pointer">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="inline"
+                  onClick={() => navigate('/openclaw/terms')}
+                  className="h-auto p-0 text-[12px] text-text-muted transition-colors hover:bg-transparent hover:text-text-secondary"
+                >
                   {t('auth.terms')}
-                </button>
+                </Button>
                 <span className="text-border select-none">·</span>
-                <button onClick={() => navigate('/openclaw/privacy')} className="hover:text-text-secondary transition-colors cursor-pointer">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="inline"
+                  onClick={() => navigate('/openclaw/privacy')}
+                  className="h-auto p-0 text-[12px] text-text-muted transition-colors hover:bg-transparent hover:text-text-secondary"
+                >
                   {t('auth.privacy')}
-                </button>
+                </Button>
               </div>
             </FadeIn>
     </div>

@@ -32,6 +32,7 @@ import {
   type FileOp,
   type ActivityItem,
 } from "./teamData";
+import { Button } from '@nexu/ui-web'
 
 // ─── Shared Components ─────────────────────────────────────
 
@@ -252,12 +253,14 @@ function FollowUpInput({
         rows={1}
         className="flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed"
       />
-      <button
+      <Button
+        type="button"
+        size="inline"
         onClick={handleSend}
         className="p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors"
       >
         <Send size={12} />
-      </button>
+      </Button>
     </div>
   );
 }
@@ -310,12 +313,12 @@ export function CardDetailPanel({
         <div className="space-y-2">
           <FollowUpInput placeholder="追问详情、调整排期..." />
           <div className="flex gap-2 items-center">
-            <button className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors">
+            <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors">
               <ExternalLink size={10} /> 在 Session 中展开
-            </button>
-            <button className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent/10 border border-accent/20 rounded-lg text-[11px] text-accent hover:bg-accent/15 transition-colors">
+            </Button>
+            <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent/10 border border-accent/20 rounded-lg text-[11px] text-accent hover:bg-accent/15 transition-colors">
               <ArrowRight size={10} /> 查看相关任务
-            </button>
+            </Button>
           </div>
         </div>
       }
@@ -511,12 +514,12 @@ export function MemberDetailPanel({
       onClose={onClose}
       footer={
         <div className="flex gap-2 items-center">
-          <button className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors">
+          <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors">
             <MessageSquare size={11} /> 查询进度
-          </button>
-          <button className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors">
+          </Button>
+          <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors">
             <GitPullRequest size={11} /> 发起对齐
-          </button>
+          </Button>
         </div>
       }
     >
@@ -666,12 +669,12 @@ export function AlignmentDetailPanel({
       onClose={onClose}
       footer={
         <div className="flex gap-2 items-center">
-          <button className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors">
+          <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors">
             <ExternalLink size={10} /> 查看相关对话
-          </button>
-          <button className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent/10 border border-accent/20 rounded-lg text-[11px] text-accent hover:bg-accent/15 transition-colors">
+          </Button>
+          <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent/10 border border-accent/20 rounded-lg text-[11px] text-accent hover:bg-accent/15 transition-colors">
             <GitPullRequest size={10} /> 重新发起
-          </button>
+          </Button>
         </div>
       }
     >
@@ -818,9 +821,9 @@ export function TaskDetailPanel({
         <div className="space-y-2">
           <FollowUpInput placeholder="调整排期、追问进度、分配子任务..." />
           <div className="flex gap-2 items-center">
-            <button className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors">
+            <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors">
               <MessageSquare size={10} /> 查询详细进度
-            </button>
+            </Button>
           </div>
         </div>
       }
@@ -1095,12 +1098,12 @@ export function StatsDetailPanel({
               来自张三的分身 · 紧急程度：高
             </div>
             <div className="flex gap-2 items-center mt-2">
-              <button className="px-2.5 py-1 bg-success-subtle text-success rounded-lg text-[10px] font-medium">
+              <Button type="button" size="inline" className="px-2.5 py-1 bg-success-subtle text-success rounded-lg text-[10px] font-medium">
                 ✅ 同意
-              </button>
-              <button className="px-2.5 py-1 bg-danger-subtle text-danger rounded-lg text-[10px]">
+              </Button>
+              <Button type="button" size="inline" className="px-2.5 py-1 bg-danger-subtle text-danger rounded-lg text-[10px]">
                 ❌ 拒绝
-              </button>
+              </Button>
             </div>
           </div>
           <div className="text-[10px] text-text-muted font-medium uppercase tracking-wider mb-2 mt-4">
@@ -1340,12 +1343,12 @@ export function OKRDetailPanel({
       onClose={onClose}
       footer={
         <div className="flex gap-2 items-center">
-          <button className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors">
+          <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors">
             <MessageSquare size={10} /> 讨论 OKR
-          </button>
-          <button className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors">
+          </Button>
+          <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors">
             <ExternalLink size={10} /> 编辑目标
-          </button>
+          </Button>
         </div>
       }
     >
@@ -1558,14 +1561,14 @@ export function TaskItemDetailPanel({
           <FollowUpInput placeholder="追问进度、委托 Agent、调整排期..." />
           <div className="flex gap-2 items-center">
             {task.status === "in_progress" && (
-              <button className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-success text-white rounded-lg text-[11px] font-medium hover:bg-success/90 transition-colors">
+              <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-success text-white rounded-lg text-[11px] font-medium hover:bg-success/90 transition-colors">
                 <CheckCircle size={10} /> 标记完成
-              </button>
+              </Button>
             )}
             {task.executor !== "agent" && (
-              <button className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-clone/10 text-clone rounded-lg text-[11px] font-medium hover:bg-clone/20 transition-colors">
+              <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-clone/10 text-clone rounded-lg text-[11px] font-medium hover:bg-clone/20 transition-colors">
                 🤖 委托给 Agent
-              </button>
+              </Button>
             )}
           </div>
         </div>

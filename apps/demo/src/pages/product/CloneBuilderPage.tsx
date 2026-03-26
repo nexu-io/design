@@ -7,6 +7,7 @@ import {
   ArrowUpRight, Sparkles, X, ExternalLink,
   Rss, Send, Brain, Activity, Wrench,
 } from 'lucide-react'
+import { Button } from '@nexu/ui-web'
 import { useProductLayout } from './ProductLayoutContext'
 import OnboardingChat from './OnboardingChat'
 
@@ -531,32 +532,38 @@ function FeedDetailPanel({ item, onClose }: { item: FeedItem; onClose: () => voi
             rows={1}
             className='flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed'
           />
-          <button
+          <Button
+            type='button'
+            size='inline'
             onClick={handleFollowUp}
             className='p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors'
           >
             <Send size={12} />
-          </button>
+          </Button>
         </div>
 
         {/* Action buttons */}
         <div className='flex items-center gap-2'>
           {detail.sessionId && (
-            <button
+            <Button
+              type='button'
+              size='inline'
               onClick={() => navigate('/app/sessions')}
               className='flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors'
             >
               <ExternalLink size={11} />
               在 Session 中展开
-            </button>
+            </Button>
           )}
-          <button
+          <Button
+            type='button'
+            size='inline'
             onClick={() => navigate('/app/sessions')}
             className='flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-accent/10 border border-accent/20 rounded-lg text-[11px] text-accent hover:bg-accent/15 transition-colors'
           >
             <Plus size={11} />
             新 Session 继续
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -590,12 +597,14 @@ function FeedsTab() {
                 className='w-full bg-surface-0 border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[var(--color-brand-primary)]/30 focus:ring-1 focus:ring-[var(--color-brand-primary)]/20 transition-colors'
               />
             </div>
-            <button
+            <Button
+              type='button'
+              size='inline'
               onClick={handleSend}
               className='w-9 h-9 flex items-center justify-center rounded-lg bg-accent text-white hover:bg-accent/90 transition-colors'
             >
               <Send size={16} />
-            </button>
+            </Button>
           </div>
           <div className='flex items-center gap-2 mt-2.5'>
             <span className='text-[11px] text-text-muted'>快捷：</span>
@@ -696,9 +705,9 @@ function FeedsTab() {
 
         {/* Load more */}
         <div className='text-center py-2'>
-          <button className='text-[12px] text-text-muted hover:text-text-secondary transition-colors'>
+          <Button type='button' size='inline' className='text-[12px] text-text-muted hover:text-text-secondary transition-colors'>
             加载更多...
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -738,11 +747,11 @@ function ChannelCard({ ch }: { ch: Channel }) {
               <Check size={12} /> 已连接
             </span>
           )}
-          {ch.status === 'pending' && (
-            <button className='text-xs text-accent bg-accent-subtle px-2.5 py-1 rounded-md hover:bg-accent-glow transition-colors font-medium'>
-              配置
-            </button>
-          )}
+            {ch.status === 'pending' && (
+              <Button type='button' size='inline' className='text-xs text-accent bg-accent-subtle px-2.5 py-1 rounded-md hover:bg-accent-glow transition-colors font-medium'>
+                配置
+              </Button>
+            )}
           {ch.status === 'off' && (
             <span className='text-xs text-text-muted'>—</span>
           )}
@@ -823,10 +832,10 @@ function ChannelsTab() {
         </div>
       </div>
 
-      <button className='w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-sm text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors'>
+      <Button type='button' size='inline' className='w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-sm text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors'>
         <Plus size={16} />
         添加渠道
-      </button>
+      </Button>
     </div>
   )
 }
@@ -868,10 +877,10 @@ function ContactsTab() {
       <div>
         <div className='flex items-center justify-between mb-3'>
           <div className='text-sm font-medium text-text-primary'>~/clone/contacts/</div>
-          <button className='flex items-center gap-1 text-xs text-text-secondary hover:text-text-primary transition-colors'>
+          <Button type='button' size='inline' className='flex items-center gap-1 text-xs text-text-secondary hover:text-text-primary transition-colors'>
             <RefreshCw size={12} />
             同步通讯录
-          </button>
+          </Button>
         </div>
         <div className='space-y-2'>
           {CONTACTS.map(c => (
@@ -907,10 +916,10 @@ function ContactsTab() {
         </div>
       </div>
 
-      <button className='w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-sm text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors'>
+      <Button type='button' size='inline' className='w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-sm text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors'>
         <Plus size={16} />
         添加联系人
-      </button>
+      </Button>
     </div>
   )
 }
@@ -1019,10 +1028,10 @@ function MemoryTab() {
 
       {/* Fine-tune button */}
       <div className='flex justify-center pt-2'>
-        <button className='flex items-center gap-2 px-5 py-2.5 bg-accent text-accent-fg rounded-full text-[13px] font-medium hover:bg-accent-hover transition-colors shadow-sm'>
+        <Button type='button' size='inline' className='flex items-center gap-2 px-5 py-2.5 bg-accent text-accent-fg rounded-full text-[13px] font-medium hover:bg-accent-hover transition-colors shadow-sm'>
           <Sparkles size={14} />
           记忆微调
-        </button>
+        </Button>
       </div>
     </div>
   )
@@ -1054,10 +1063,10 @@ function ArtifactsTab() {
           </div>
         ))}
       </div>
-      <button className='w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-sm text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors'>
+      <Button type='button' size='inline' className='w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-sm text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors'>
         <Plus size={16} />
         添加产物文件夹
-      </button>
+      </Button>
     </div>
   )
 }
@@ -1083,13 +1092,15 @@ function PersonaPanel({ onOpenOnboarding }: { onOpenOnboarding: () => void }) {
         </div>
 
         {/* Onboarding entry */}
-        <button
+        <Button
+          type='button'
+          size='inline'
           onClick={onOpenOnboarding}
           className='mt-3 w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-clone/10 border border-clone/20 rounded-xl text-[12px] text-clone font-medium hover:bg-clone/15 transition-colors'
         >
           <Wrench size={13} />
           初始化 / 编辑分身
-        </button>
+        </Button>
 
         {/* Alignment rate */}
         <div className='mt-3 px-2'>
@@ -1188,10 +1199,10 @@ function WorldviewTab() {
           <div className='text-[13px] text-text-secondary pl-7 leading-relaxed'>{w.value}</div>
         </div>
       ))}
-      <button className='w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-sm text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors'>
+      <Button type='button' size='inline' className='w-full flex items-center justify-center gap-2 p-3 border border-dashed border-border rounded-xl text-sm text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors'>
         <Plus size={16} />
         添加世界观条目
-      </button>
+      </Button>
     </div>
   )
 }
@@ -1227,13 +1238,15 @@ export default function CloneBuilderPage() {
           <h1 className='text-xl font-bold text-text-primary'>分身搭建</h1>
           <p className='text-sm text-text-secondary mt-1'>
             配置你的数字分身 — 所有配置存储在
-            <button
+            <Button
+              type='button'
+              size='inline'
               onClick={expandFileTree}
               className='font-mono text-text-primary hover:text-accent transition-colors ml-1 inline-flex items-center gap-1'
             >
               <FolderOpen size={12} />
               ~/clone/
-            </button>
+            </Button>
             文件系统中
           </p>
         </div>

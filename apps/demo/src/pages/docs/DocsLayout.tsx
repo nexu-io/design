@@ -9,6 +9,7 @@ import {
   X,
   ChevronRight as BreadcrumbSep,
 } from 'lucide-react';
+import { Button } from '@nexu/ui-web'
 import { SIDEBAR_GROUPS, getPageNav, getBreadcrumbs, type SidebarItem, type SidebarGroup } from '../../config/docsConfig';
 import TableOfContents from '../../components/docs/TableOfContents';
 
@@ -158,10 +159,10 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
             >
               {mobileOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
-            <button onClick={() => navigate('/openclaw')} className="flex items-center gap-1.5 text-[13px] text-text-tertiary hover:text-text-primary transition-colors">
+            <Button type="button" variant="ghost" size="inline" onClick={() => navigate('/openclaw')} className="text-[13px] text-text-tertiary">
               <ArrowLeft size={14} />
               <span className="hidden sm:inline">Back to nexu</span>
-            </button>
+            </Button>
           </div>
           <div className="flex items-center gap-2.5">
             <img src="/brand/nexu logo-black1.svg" alt="nexu" className="w-7 h-7" />
@@ -219,8 +220,8 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                   <>
                     <div className="text-sm font-semibold text-text-primary">Was this page helpful?</div>
                     <div className="mt-1 flex gap-2">
-                      <button type="button" onClick={() => setFeedback('yes')} className={`inline-flex flex-1 justify-center items-center gap-1.5 px-3 py-1.5 rounded-md border text-[13px] font-medium transition-colors ${feedback === 'yes' ? 'bg-accent text-accent-fg border-accent' : 'bg-surface-0 text-text-secondary border-border hover:border-border-hover hover:text-text-primary'}`}>Yes</button>
-                      <button type="button" onClick={() => setFeedback('no')} className={`inline-flex flex-1 justify-center items-center gap-1.5 px-3 py-1.5 rounded-md border text-[13px] font-medium transition-colors ${feedback === 'no' ? 'bg-accent text-accent-fg border-accent' : 'bg-surface-0 text-text-secondary border-border hover:border-border-hover hover:text-text-primary'}`}>No</button>
+                      <Button type="button" variant={feedback === 'yes' ? 'default' : 'outline'} size="sm" onClick={() => setFeedback('yes')} className="flex-1 text-[13px]">Yes</Button>
+                      <Button type="button" variant={feedback === 'no' ? 'default' : 'outline'} size="sm" onClick={() => setFeedback('no')} className="flex-1 text-[13px]">No</Button>
                     </div>
                     {feedback === 'no' && (
                       <div className="mt-2 space-y-2">
@@ -231,13 +232,14 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                           rows={3}
                           className="w-full rounded-lg border border-border bg-surface-0 px-3 py-2 text-[13px] text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30 resize-none"
                         />
-                        <button
+                        <Button
                           type="button"
+                          size="sm"
                           onClick={() => { setFeedback('submitted'); setFeedbackText(''); }}
-                          className="w-full px-3 py-1.5 rounded-md bg-accent text-accent-fg text-[13px] font-medium hover:bg-accent-hover transition-colors"
+                          className="w-full text-[13px]"
                         >
                           Submit
-                        </button>
+                        </Button>
                       </div>
                     )}
                     {feedback === 'yes' && (

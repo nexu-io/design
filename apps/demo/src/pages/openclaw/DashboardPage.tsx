@@ -83,9 +83,8 @@ function ActivityRow({ activity, onNavigate }: { activity: Activity; onNavigate?
   };
   const t = typeConfig[activity.type];
 
-  return (
-    <div onClick={onNavigate}
-      className={`flex gap-3 items-start py-3 border-b border-border last:border-0 ${onNavigate ? 'cursor-pointer hover:bg-surface-2/50 -mx-2 px-2 rounded-lg' : ''}`}>
+  const content = (
+    <>
       <div className="flex justify-center items-center w-7 h-7 rounded-[12px] shrink-0 mt-0.5 bg-white border border-border">
         <t.icon size={13} className={t.iconColor} />
       </div>
@@ -98,6 +97,26 @@ function ActivityRow({ activity, onNavigate }: { activity: Activity; onNavigate?
           <span className="text-[11px] text-text-muted">· {activity.time}</span>
         </div>
       </div>
+    </>
+  );
+
+  if (onNavigate) {
+    return (
+      <Button
+        type="button"
+        variant="ghost"
+        size="inline"
+        onClick={onNavigate}
+        className="-mx-2 flex w-[calc(100%+1rem)] items-start gap-3 rounded-lg border-b border-border px-2 py-3 text-left last:border-0 hover:bg-surface-2/50"
+      >
+        {content}
+      </Button>
+    );
+  }
+
+  return (
+    <div className="flex gap-3 items-start border-b border-border py-3 last:border-0">
+      {content}
     </div>
   );
 }
@@ -227,15 +246,15 @@ export default function DashboardPage() {
             <h2 className="text-sm font-semibold text-text-primary mb-3">Channels</h2>
             <div className="space-y-2">
               {MOCK_CHANNELS.map(ch => (
-                <button key={ch.id} onClick={() => navigate(`/openclaw/workspace/channels/${ch.id}`)}
-                  className="flex gap-3 items-center py-2 px-2 -mx-2 w-full text-left rounded-lg transition-colors hover:bg-surface-3 cursor-pointer group">
+                <Button key={ch.id} variant="ghost" size="inline" onClick={() => navigate(`/openclaw/workspace/channels/${ch.id}`)}
+                  className="group -mx-2 flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-surface-3">
                   <div className={`w-2 h-2 rounded-full shrink-0 ${ch.status === 'active' ? 'bg-[var(--color-success)]' : 'bg-surface-3'}`} />
                   <div className="flex-1 min-w-0">
                     <div className="text-[13px] font-medium text-text-primary truncate">{ch.name}</div>
                     <div className="text-[11px] text-text-muted">{getPlatformLabel(ch.platform)} · {ch.messageCount} messages</div>
                   </div>
                   <ArrowUpRight size={12} className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -247,11 +266,11 @@ export default function DashboardPage() {
                 { label: 'View all outputs', action: () => navigate('/openclaw/workspace/channels'), icon: Globe },
                 { label: 'Docs', action: () => {}, icon: ExternalLink },
               ].map(a => (
-                <button key={a.label} onClick={a.action}
-                  className="flex gap-2.5 items-center py-2 px-2 -mx-2 w-full text-left rounded-lg transition-colors hover:bg-surface-3 cursor-pointer text-[13px] text-text-secondary hover:text-text-primary">
+                <Button key={a.label} variant="ghost" size="inline" onClick={a.action}
+                  className="-mx-2 flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-[13px] text-text-secondary hover:bg-surface-3 hover:text-text-primary">
                   <a.icon size={14} className="text-text-muted" />
                   {a.label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>

@@ -44,6 +44,7 @@ import ChatCardGroup from "./ChatCards";
 import type { CardAction } from "./ChatCards";
 import PricingModal from "./PricingModal";
 import { useProductLayout } from "./ProductLayoutContext";
+import { Button } from '@nexu/ui-web'
 
 const QUICK_ACTIONS = [
   { label: "帮我写一份 PRD", icon: FileText, color: "text-emerald-400" },
@@ -332,10 +333,10 @@ function NewSessionView({
               </button>
             ))}
             <div className="border-t border-border mt-1 pt-1">
-              <button className="w-full text-left px-3 py-2 rounded-lg text-[12px] text-text-secondary hover:bg-surface-3 transition-colors flex items-center gap-1.5">
+              <Button size="inline" className="w-full text-left px-3 py-2 rounded-lg text-[12px] text-text-secondary hover:bg-surface-3 transition-colors flex items-center justify-start gap-1.5">
                 <Plus size={12} />
                 浏览 Skills Store...
-              </button>
+              </Button>
             </div>
           </div>
         )}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from "@nexu/ui-web";
 import { PageShell, PageHeader, Section } from "../components/Section";
 
 const SKIN_TONES = [
@@ -197,10 +198,12 @@ export default function AvatarPage() {
                 <div>配饰: {ACCESSORIES[accessory]}</div>
                 <div>表情: {EXPRESSIONS[expression]}</div>
               </div>
-              <button className="px-4 py-2 mt-4 w-full text-sm font-medium rounded-md bg-accent text-accent-fg">
+              <Button size="sm" className="mt-4 w-full text-sm font-medium">
                 保存
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 className="mt-2 px-4 py-1.5 text-text-secondary text-xs hover:text-text-primary transition-colors"
                 onClick={() => {
                   setSkin(Math.floor(Math.random() * SKIN_TONES.length));
@@ -211,7 +214,7 @@ export default function AvatarPage() {
                 }}
               >
                 随机生成 🎲
-              </button>
+              </Button>
             </div>
           </div>
 

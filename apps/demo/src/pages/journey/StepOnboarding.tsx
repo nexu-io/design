@@ -5,6 +5,7 @@ import {
   CheckCircle, RefreshCw, Upload, Users, UserPlus,
   MessageSquare, Wrench, ArrowRight,
 } from 'lucide-react'
+import { Button } from '@nexu/ui-web'
 import ChatCardGroup from '../product/ChatCards'
 import type { ChatCard } from '../product/sessionsData'
 
@@ -158,9 +159,9 @@ function IntegrationsWidget() {
               </div>
             )}
             {item.status === 'available' && (
-              <button className='mt-1.5 w-full flex items-center justify-center gap-1 px-2 py-1 bg-accent/10 text-accent rounded-md text-[10px] font-medium hover:bg-accent/15 transition-colors'>
+              <Button variant='ghost' size='xs' className='mt-1.5 h-auto w-full gap-1 bg-accent/10 px-2 py-1 text-[10px] font-medium text-accent hover:bg-accent/15'>
                 <Link2 size={9} /> 授权连接
-              </button>
+              </Button>
             )}
           </div>
         ))}
@@ -253,9 +254,9 @@ function TeamSetupWidget() {
             </div>
           ))}
         </div>
-        <button className='mt-2.5 w-full flex items-center justify-center gap-1.5 py-2 bg-accent/10 text-accent rounded-lg text-[11px] font-medium hover:bg-accent/15 transition-colors'>
+        <Button variant='ghost' size='sm' className='mt-2.5 w-full gap-1.5 bg-accent/10 text-[11px] font-medium text-accent hover:bg-accent/15'>
           <UserPlus size={12} /> 通过飞书/Slack 邀请更多成员
-        </button>
+        </Button>
       </div>
       <div className='p-3 bg-clone/5 border border-clone/10 rounded-xl'>
         <div className='text-[12px] font-medium text-text-primary mb-1.5'>🤖 团队分身网络</div>
@@ -448,10 +449,10 @@ export default function StepOnboarding() {
               <MessageSquare size={10} />
               这是一个持续对话 — 随时回来继续补充信息
             </div>
-            <button className='text-[10px] text-text-muted hover:text-accent transition-colors flex items-center gap-1'>
+            <Button variant='ghost' size='xs' className='h-auto gap-1 px-0 text-[10px] text-text-muted hover:text-accent'>
               跳过初始化，直接使用
               <ArrowRight size={9} />
-            </button>
+            </Button>
           </div>
         </div>
       </div>
