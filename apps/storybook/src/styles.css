@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "@nexu/tokens/styles.css";
+@source "../../../packages/ui-web/src/**/*.{ts,tsx}";
+@source "./**/*.{ts,tsx,mdx}";
+
+@layer base {
+  body {
+    @apply p-6;
+  }
+}

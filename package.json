@@ -1,0 +1,22 @@
+{
+  "name": "nexu-ui",
+  "private": true,
+  "packageManager": "pnpm@10.16.1",
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @nexu/storybook storybook",
+    "build": "pnpm --filter @nexu/storybook build-storybook",
+    "build:packages": "pnpm --filter @nexu/tokens build && pnpm --filter @nexu/ui-web build",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "biome:check": "biome check .",
+    "pack:check": "pnpm --filter @nexu/tokens pack:check && pnpm --filter @nexu/ui-web pack:check",
+    "release:check": "pnpm build:packages && pnpm typecheck && pnpm test && pnpm pack:check",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "clean": "rm -rf node_modules apps/storybook/node_modules packages/ui-web/node_modules packages/tokens/node_modules apps/storybook/storybook-static"
+  }
+}

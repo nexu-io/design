@@ -1,0 +1,32 @@
+{
+  "name": "@nexu/tokens",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Nexu design tokens and shared styles",
+  "license": "UNLICENSED",
+  "files": ["dist", "README.md"],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && cp src/styles.css dist/styles.css",
+    "clean": "rm -rf dist",
+    "pack:check": "pnpm run build && npm pack --dry-run",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
