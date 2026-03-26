@@ -6,8 +6,14 @@
     "@biomejs/biome": "^1.9.4"
   },
   "scripts": {
-    "dev": "pnpm --filter @nexu/storybook storybook",
-    "build": "pnpm --filter @nexu/storybook build-storybook",
+    "dev": "pnpm --filter @nexu/storybook storybook & pnpm --filter @nexu/demo dev & wait",
+    "dev:storybook": "pnpm --filter @nexu/storybook storybook",
+    "dev:demo": "pnpm --filter @nexu/demo dev",
+    "dev:demo:web": "pnpm --filter @nexu/demo dev:web",
+    "build": "pnpm build:storybook",
+    "build:storybook": "pnpm --filter @nexu/storybook build-storybook",
+    "build:demo": "pnpm --filter @nexu/demo build",
+    "build:tauri": "pnpm --filter @nexu/demo tauri:build",
     "build:packages": "pnpm --filter @nexu/tokens build && pnpm --filter @nexu/ui-web build",
     "format": "biome format --write .",
     "format:check": "biome format .",
@@ -17,6 +23,6 @@
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
     "lint": "pnpm -r lint",
-    "clean": "rm -rf node_modules apps/storybook/node_modules packages/ui-web/node_modules packages/tokens/node_modules apps/storybook/storybook-static"
+    "clean": "rm -rf node_modules apps/storybook/node_modules apps/demo/node_modules packages/ui-web/node_modules packages/tokens/node_modules apps/storybook/storybook-static apps/demo/dist"
   }
 }

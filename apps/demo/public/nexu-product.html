@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nexu — Product MVP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+/* ====== 0. DESIGN TOKENS ====== */
+:root {
+  --brand-50:#fafdfe;--brand-100:#f2fafb;--brand-200:#def7f9;--brand-300:#caf1f5;
+  --brand-400:#b5e9f0;--brand-500:#9ddde7;--brand-600:#7dcedc;--brand-700:#3db9ce;
+  --brand:#3db9ce;--brand-800:#00a2c7;--brand-900:#0897b9;--brand-950:#007da4;
+  --neutral-0:#fff;--neutral-50:#f9f9f9;--neutral-100:#f3f3f3;--neutral-200:#eee;
+  --neutral-300:#d4d4d4;--neutral-400:#909599;--neutral-500:#787c80;--neutral-600:#6c7073;
+  --neutral-700:#545659;--neutral-800:#222b39;--neutral-900:#042028;
+  /* Surface — DESIGN-SYSTEM-NEXU-2.0: 严禁偏色，纯中性灰 */
+  --surface-0:#FAFAFA;--surface-1:#FFFFFF;--surface-2:#F5F5F5;--surface-3:#EEEEEE;
+  --surface-4:#e5e5e5;--surface-5:#d4d4d4;
+  --brand-subtle:rgba(61,185,206,0.08);
+  --text-primary:#1c1f23;--text-secondary:#545659;--text-tertiary:#909599;
+  --text-placeholder:#8f959e;--text-muted:#d4d4d4;
+  --success:#95de64;--warning:#ffc53d;--error:#ff7875;--link:#91caff;--danger:#f93920;
+  --border-card:rgba(0,0,0,0.06);--border-field:rgba(0,0,0,0.06);--border-input:rgba(0,0,0,0.12);--border-line:rgba(0,0,0,0.08);
+  --shadow-rest:0 1px 3px rgba(0,0,0,0.04);
+  --shadow-card:0 4px 8px 0 rgba(0,0,0,0.08);--shadow-m:0 2px 20px 4px rgba(0,0,0,0.04);
+  --shadow-refine:0 10px 20px -5px rgba(0,0,0,0.06);
+  --shadow-focus:0 0 0 2px rgba(61,185,206,0.25);
+  --sp-0:0;--sp-2:2px;--sp-4:4px;--sp-6:6px;--sp-8:8px;--sp-10:10px;--sp-12:12px;
+  --sp-14:14px;--sp-16:16px;--sp-18:18px;--sp-20:20px;--sp-22:22px;--sp-24:24px;
+  --sp-26:26px;--sp-28:28px;--sp-30:30px;--sp-32:32px;
+  --r-2:2px;--r-4:4px;--r-8:8px;--r-12:12px;--r-16:16px;--r-20:20px;--r-22:22px;
+  --r-24:24px;--r-28:28px;--r-32:32px;--r-38:38px;--r-pill:100px;--r-circle:50%;
+  --fs-10:10px;--fs-12:12px;--fs-13:13px;--fs-14:14px;--fs-16:16px;--fs-18:18px;
+  --fs-20:20px;--fs-24:24px;--fs-32:32px;--fs-36:36px;--fs-48:48px;--fs-52:52px;
+  --ff-en:'Manrope',sans-serif;--ff-cjk:'PingFang SC','Noto Sans SC',sans-serif;
+  --ease-page:cubic-bezier(0.16,1,0.3,1);--dur-page:0.3s;--dur-fade:0.2s;--dur-hover:0.15s;--dur-slide:0.25s;
+}
+
+/* ====== 1. RESET ====== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--ff-en),var(--ff-cjk);background:var(--surface-0);color:var(--text-primary);line-height:1.3;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:none;background:none}
+input,textarea,select{font:inherit;outline:none}
+
+/* ====== 2. COMPONENTS ====== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-8);font-weight:600;font-size:var(--fs-14);border-radius:var(--r-8);padding:var(--sp-10) var(--sp-20);transition:all var(--dur-hover) ease;white-space:nowrap;line-height:1}
+.btn-primary{background:var(--text-primary);color:#fff}
+.btn-primary:hover{background:var(--neutral-800)}
+.btn-secondary{background:var(--surface-1);color:var(--text-primary);border:1px solid var(--border-input)}
+.btn-secondary:hover{background:var(--surface-3)}
+.btn-ghost{background:transparent;color:var(--text-secondary)}
+.btn-ghost:hover{background:var(--surface-2)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-lg{padding:var(--sp-14) var(--sp-28);font-size:var(--fs-16);border-radius:var(--r-12)}
+.btn-sm{padding:var(--sp-6) var(--sp-12);font-size:var(--fs-13)}
+.btn-pill{border-radius:var(--r-pill)}
+.btn:disabled{background:var(--neutral-200);color:var(--text-muted);cursor:not-allowed}
+
+.input{width:100%;padding:var(--sp-10) var(--sp-14);font-size:var(--fs-14);background:var(--surface-1);border:1px solid var(--border-input);border-radius:var(--r-8);color:var(--text-primary);transition:border-color var(--dur-hover) ease,box-shadow var(--dur-hover) ease;outline:none}
+.input::placeholder{color:var(--text-placeholder)}
+.input:focus{border-color:var(--brand-700);box-shadow:var(--shadow-focus)}
+.input-error{border-color:var(--error)}
+
+.card{background:var(--surface-1);border:1px solid var(--border-card);border-radius:var(--r-16);padding:var(--sp-24);box-shadow:var(--shadow-rest);transition:box-shadow var(--dur-hover) ease,border-color var(--dur-hover) ease,transform var(--dur-hover) ease}
+.card:hover{box-shadow:var(--shadow-refine);transform:translateY(-1px)}
+.card-compact{border-radius:var(--r-16);padding:var(--sp-20)}
+
+.tag{display:inline-flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-12);border-radius:var(--r-pill);font-size:var(--fs-12);font-weight:500;background:var(--neutral-100);border:.5px solid var(--border-input);color:var(--text-secondary)}
+.tag-brand{background:var(--surface-2);color:var(--text-primary);border-color:var(--text-primary)}
+
+.divider{height:1px;background:var(--border-input)}
+
+.toggle{position:relative;width:40px;height:22px;border-radius:11px;background:var(--neutral-300);cursor:pointer;transition:background var(--dur-hover) ease}
+.toggle.active{background:var(--text-primary)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform var(--dur-hover) ease}
+.toggle.active::after{transform:translateX(18px)}
+
+/* ====== 3. PAGE SYSTEM ====== */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* Auth / Invite / Onboarding — split layout */
+.split-layout{display:flex;min-height:calc(100vh - 48px)}
+.split-left{width:400px;flex-shrink:0;background:var(--neutral-900);padding:var(--sp-32);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.split-left::before{content:'';position:absolute;top:-120px;right:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(61,185,206,.15) 0%,transparent 70%);pointer-events:none}
+.split-left::after{content:'';position:absolute;bottom:-60px;left:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(61,185,206,.08) 0%,transparent 70%);pointer-events:none}
+.split-right{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--surface-0);padding:var(--sp-24);min-height:100%}
+
+/* Workspace layout — YouMind style: 全白 + 分割线层级 */
+.ws-layout{display:flex;width:100%;min-height:100vh}
+.ws-sidebar{width:240px;flex-shrink:0;background:var(--surface-1);border-right:1px solid rgba(0,0,0,0.06);display:flex;flex-direction:column;overflow:hidden}
+.ws-sidebar svg path{fill:#1C1F23}
+.ws-main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--surface-1)}
+
+/* Sidebar items — YouMind style: 选中仅靠字重+色阶 */
+.ws-sidebar-item{display:flex;align-items:center;gap:var(--sp-8);padding:var(--sp-8) var(--sp-12);border-radius:var(--r-8);font-size:var(--fs-13);font-weight:400;color:var(--text-secondary);cursor:pointer;transition:all var(--dur-hover) ease}
+.ws-sidebar-item:hover{background:var(--surface-2);color:var(--text-primary)}
+.ws-sidebar-item.active{color:var(--text-primary);font-weight:500}
+.ws-sidebar-item .badge{margin-left:auto;font-size:var(--fs-10);background:var(--neutral-200);color:var(--text-secondary);padding:1px 6px;border-radius:var(--r-pill);font-weight:600}
+.ws-sidebar-section{padding:var(--sp-4) var(--sp-12);font-size:var(--fs-10);font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-tertiary)}
+
+/* Content area — pure white main, DESIGN-SYSTEM-NEXU-2.0 */
+.content-area{flex:1;overflow-y:auto;padding:var(--sp-24);background:var(--surface-1)}
+.content-max{max-width:960px;margin:0 auto}
+
+/* Stat cards */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-16)}
+.stat-card{background:var(--surface-1);border:1px solid var(--border-card);border-radius:var(--r-16);padding:var(--sp-20);box-shadow:var(--shadow-rest);transition:box-shadow var(--dur-hover) ease,transform var(--dur-hover) ease}
+.stat-card:hover{box-shadow:var(--shadow-refine);transform:translateY(-1px)}
+.stat-card .icon-wrap{width:40px;height:40px;border-radius:var(--r-12);display:flex;align-items:center;justify-content:center;margin-bottom:var(--sp-12);font-size:18px}
+.stat-card .value{font-size:var(--fs-24);font-weight:700;color:var(--text-primary)}
+.stat-card .label{font-size:var(--fs-13);color:var(--text-secondary);margin-top:var(--sp-2)}
+.stat-card .sub{font-size:var(--fs-12);color:var(--text-tertiary);margin-top:var(--sp-4)}
+
+/* Activity feed */
+.activity-item{display:flex;gap:var(--sp-12);padding:var(--sp-12) 0;border-bottom:1px solid var(--border-field)}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.activity-content{flex:1;font-size:var(--fs-13);color:var(--text-secondary)}
+.activity-time{font-size:var(--fs-12);color:var(--text-tertiary);white-space:nowrap}
+
+/* Chat UI */
+.chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chat-header{height:56px;border-bottom:1px solid var(--border-field);display:flex;align-items:center;padding:0 var(--sp-24);gap:var(--sp-12);flex-shrink:0;background:var(--surface-1)}
+.chat-messages{flex:1;overflow-y:auto;padding:var(--sp-24);display:flex;flex-direction:column;gap:var(--sp-16);background:var(--surface-1)}
+.chat-input-area{padding:var(--sp-16) var(--sp-24);border-top:1px solid var(--border-field);flex-shrink:0;background:var(--surface-1)}
+.chat-bubble{max-width:80%;padding:var(--sp-12) var(--sp-16);border-radius:var(--r-16);font-size:var(--fs-14);line-height:1.5}
+.chat-bubble.user{background:var(--brand-700);color:#fff;align-self:flex-end;border-bottom-right-radius:var(--r-4)}
+.chat-bubble.bot{background:var(--surface-2);color:var(--text-primary);align-self:flex-start;border-bottom-left-radius:var(--r-4)}
+.chat-bubble .deploy-link{display:inline-flex;align-items:center;gap:var(--sp-4);margin-top:var(--sp-8);padding:var(--sp-6) var(--sp-12);background:rgba(61,185,206,.12);border-radius:var(--r-8);font-size:var(--fs-12);color:var(--brand-700);font-weight:500}
+
+/* Progress bar for onboarding */
+.progress-bar{display:flex;gap:var(--sp-4);max-width:520px;margin:0 auto var(--sp-32)}
+.progress-seg{flex:1;height:3px;border-radius:2px;background:var(--neutral-200);transition:background var(--dur-hover) ease}
+.progress-seg.done{background:var(--text-primary)}
+.progress-seg.current{background:var(--text-primary)}
+
+/* Pill selector (onboarding) */
+.pill-grid{display:flex;flex-wrap:wrap;gap:var(--sp-8)}
+.pill{padding:var(--sp-8) var(--sp-16);border-radius:var(--r-pill);border:1px solid var(--border-input);font-size:var(--fs-14);cursor:pointer;transition:all var(--dur-hover) ease;background:var(--surface-1);color:var(--text-primary)}
+.pill:hover{border-color:var(--text-primary);background:var(--surface-2)}
+.pill.selected{background:var(--text-primary);color:#fff;border-color:var(--text-primary)}
+
+/* Skill card */
+.skill-card{background:var(--surface-1);border:1px solid var(--border-card);border-radius:var(--r-16);padding:var(--sp-16);box-shadow:var(--shadow-rest);transition:all var(--dur-hover) ease;cursor:pointer}
+.skill-card:hover{box-shadow:var(--shadow-refine);transform:translateY(-1px)}
+.skill-card .skill-icon{width:40px;height:40px;border-radius:var(--r-12);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:var(--sp-12)}
+.skill-card .skill-name{font-size:var(--fs-14);font-weight:500;color:var(--text-primary)}
+.skill-card .skill-desc{font-size:var(--fs-13);color:var(--text-secondary);margin-top:var(--sp-4);line-height:1.4}
+.skill-card .skill-tags{display:flex;gap:var(--sp-4);margin-top:var(--sp-12);flex-wrap:wrap}
+
+/* Channel config card */
+.platform-card{background:var(--surface-1);border:1px solid var(--border-card);border-radius:var(--r-16);padding:var(--sp-20);cursor:pointer;box-shadow:var(--shadow-rest);transition:all var(--dur-hover) ease;text-align:center}
+.platform-card:hover{box-shadow:var(--shadow-refine);transform:translateY(-1px)}
+.platform-card.selected{border-color:var(--text-primary);box-shadow:0 0 0 2px rgba(28,31,35,0.15)}
+.platform-card .platform-icon{width:48px;height:48px;border-radius:var(--r-12);margin:0 auto var(--sp-12);display:flex;align-items:center;justify-content:center;font-size:24px}
+
+/* Avatar carousel */
+.avatar-carousel{display:flex;align-items:center;gap:var(--sp-24);justify-content:center;padding:var(--sp-32) 0}
+.avatar-card{width:128px;height:128px;border-radius:var(--r-24);border:2px solid var(--border-input);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:48px;transition:all var(--dur-hover) ease;position:relative}
+.avatar-card.selected-avatar{border-color:var(--text-primary);box-shadow:0 0 0 2px rgba(28,31,35,0.15)}
+.avatar-card .coming-soon-overlay{position:absolute;inset:0;border-radius:var(--r-24);background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:var(--fs-12);font-weight:600}
+
+/* Usage chart */
+.chart-bar-group{display:flex;align-items:flex-end;gap:var(--sp-8);height:128px;padding-top:var(--sp-8)}
+.chart-bar{flex:1;background:var(--brand-400);border-radius:var(--r-4) var(--r-4) 0 0;min-height:4px;transition:background var(--dur-hover) ease;position:relative}
+.chart-bar:hover{background:var(--text-primary)}
+.chart-bar-label{text-align:center;font-size:var(--fs-10);color:var(--text-tertiary);margin-top:var(--sp-4)}
+
+/* Credit bar */
+.credit-bar{height:8px;border-radius:4px;background:var(--neutral-100);overflow:hidden;display:flex}
+.credit-seg{height:100%;transition:width var(--dur-page) var(--ease-page)}
+
+/* Search box */
+.search-box{position:relative}
+.search-box input{padding-left:36px}
+.search-box .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);font-size:var(--fs-16)}
+
+/* Toast */
+.toast{position:fixed;top:var(--sp-16);right:var(--sp-16);max-width:360px;background:var(--surface-1);border:1px solid var(--border-card);border-radius:var(--r-12);padding:var(--sp-12) var(--sp-16);box-shadow:var(--shadow-m);z-index:1000;display:none;animation:slideIn var(--dur-slide) var(--ease-page)}
+.toast.show{display:flex;align-items:center;gap:var(--sp-8)}
+.toast .toast-bar{width:3px;height:24px;border-radius:2px;flex-shrink:0}
+
+/* Nav for pages — main content header, pure white */
+.page-nav{height:56px;border-bottom:1px solid var(--border-field);display:flex;align-items:center;padding:0 var(--sp-24);gap:var(--sp-12);flex-shrink:0;background:var(--surface-1)}
+.page-nav .back-btn{display:flex;align-items:center;gap:var(--sp-4);font-size:var(--fs-13);color:var(--text-secondary);cursor:pointer;padding:var(--sp-4) var(--sp-8);border-radius:var(--r-8);transition:all var(--dur-hover) ease}
+.page-nav .back-btn:hover{background:var(--surface-3);color:var(--text-primary)}
+
+/* Tabs */
+.tabs{display:flex;gap:var(--sp-4);border-bottom:1px solid var(--border-field)}
+.tab{padding:var(--sp-8) var(--sp-16);font-size:var(--fs-13);color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;transition:all var(--dur-hover) ease;font-weight:500}
+.tab:hover{color:var(--text-primary)}
+.tab.active{color:var(--text-primary);border-bottom-color:var(--text-primary)}
+
+/* Config steps */
+.step-indicator{display:flex;gap:var(--sp-8);margin-bottom:var(--sp-24)}
+.step-dot{width:32px;height:4px;border-radius:2px;background:var(--neutral-200);transition:background var(--dur-hover) ease}
+.step-dot.done,.step-dot.current{background:var(--text-primary)}
+
+/* Animations */
+@keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn var(--dur-page) var(--ease-page)}
+
+/* Responsive */
+@media(max-width:1024px){
+  .split-left{display:none}
+  .ws-sidebar{width:56px}
+  .ws-sidebar .sidebar-label,.ws-sidebar .ws-sidebar-section{display:none}
+  .ws-sidebar-item{justify-content:center;padding:var(--sp-8)}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .ws-sidebar{display:none}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .skill-grid{grid-template-columns:1fr!important}
+}
+  </style>
+</head>
+<body>
+
+<!-- ========== NAVIGATION BAR (global) ========== -->
+<nav id="globalNav" style="position:fixed;top:0;left:0;right:0;height:48px;background:var(--neutral-900);display:flex;align-items:center;padding:0 var(--sp-16);z-index:999;gap:var(--sp-16);border-bottom:1px solid rgba(255,255,255,0.1)">
+  <div style="display:flex;align-items:center;gap:var(--sp-8)">
+    <img src="brand/nexu logo-white4.svg" alt="Nexu" style="height:20px;width:auto" />
+    <span style="font-size:var(--fs-12);font-weight:500;color:var(--neutral-400)">Product MVP</span>
+  </div>
+  <div style="display:flex;gap:var(--sp-4);margin-left:auto;align-items:center">
+    <a href="nexu-preview.html" class="btn btn-ghost btn-sm" style="color:var(--brand-500);font-size:var(--fs-12);border:1px solid rgba(61,185,206,.3);border-radius:var(--r-pill)">🌐 Landing</a>
+    <span style="width:1px;height:16px;background:var(--neutral-700);margin:0 4px"></span>
+    <button onclick="showPage('auth')" class="btn btn-ghost btn-sm" style="color:var(--neutral-400);font-size:var(--fs-12)">Auth</button>
+    <button onclick="showPage('invite')" class="btn btn-ghost btn-sm" style="color:var(--neutral-400);font-size:var(--fs-12)">Invite</button>
+    <button onclick="showPage('onboarding')" class="btn btn-ghost btn-sm" style="color:var(--neutral-400);font-size:var(--fs-12)">Onboard</button>
+    <button onclick="showPage('workspace')" class="btn btn-ghost btn-sm" style="color:var(--neutral-400);font-size:var(--fs-12)">Workspace</button>
+    <button onclick="showPage('dashboard')" class="btn btn-ghost btn-sm" style="color:var(--neutral-400);font-size:var(--fs-12)">Dashboard</button>
+    <button onclick="showPage('channels')" class="btn btn-ghost btn-sm" style="color:var(--neutral-400);font-size:var(--fs-12)">Channels</button>
+    <button onclick="showPage('skills')" class="btn btn-ghost btn-sm" style="color:var(--neutral-400);font-size:var(--fs-12)">Skills</button>
+    <button onclick="showPage('skill-detail')" class="btn btn-ghost btn-sm" style="color:var(--neutral-400);font-size:var(--fs-12)">Skill Detail</button>
+  </div>
+</nav>
+
+<!-- ========================================== -->
+<!-- PAGE 1: AUTH                                -->
+<!-- ========================================== -->
+<div id="page-auth" class="page active" style="padding-top:48px">
+  <div class="split-layout">
+    <!-- Left dark panel -->
+    <div class="split-left">
+      <div>
+        <div style="display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-32)">
+          <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center">
+            <svg width="28" height="28" viewBox="77 78 85 85" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M97.5645 78C108.922 78 118.129 87.207 118.129 98.5645V114.723C118.129 117.156 116.156 119.129 113.723 119.129H98.9355V99.9355H96.1934V119.129H81.4062C78.9728 119.129 77.0001 117.156 77 114.723V98.5645C77 87.207 86.207 78 97.5645 78Z" fill="#fff"/><path d="M141.436 163C130.078 163 120.871 153.793 120.871 142.436L120.871 126.277C120.871 123.844 122.844 121.871 125.277 121.871L140.064 121.871L140.064 141.064L142.807 141.064L142.807 121.871L157.594 121.871C160.027 121.871 162 123.844 162 126.277L162 142.436C162 153.793 152.793 163 141.436 163Z" fill="#fff"/><path d="M120.871 98.5659C120.871 87.2085 130.078 78.0015 141.436 78.0015C152.332 78.0015 161.247 86.4761 161.953 97.1938L142.807 97.1938L142.807 99.9351L161.953 99.9351C161.248 110.654 152.333 119.13 141.436 119.13C130.078 119.13 120.871 109.923 120.871 98.5659Z" fill="#fff"/><path d="M77 142.437C77 137.251 78.9192 132.514 82.0859 128.896L92.7773 139.587L94.7168 137.648L84.0254 126.958C87.6429 123.791 92.3797 121.871 97.5654 121.871C102.534 121.871 107.091 123.634 110.646 126.567L99.5625 137.65L101.501 139.589L112.64 128.451C116.045 132.121 118.129 137.034 118.129 142.435C118.129 147.62 116.209 152.358 113.042 155.976L101.203 144.136L99.2637 146.074L111.103 157.914C107.485 161.08 102.749 163 97.5645 163C92.1634 163 87.2486 160.917 83.5791 157.512L95.0146 146.077L93.0762 144.138L81.6963 155.518C78.7624 151.963 77 147.405 77 142.437Z" fill="#fff"/></svg>
+          </div>
+          <span style="font-size:var(--fs-14);font-weight:600;color:#fff">Nexu</span>
+        </div>
+        <h1 style="font-size:var(--fs-32);font-weight:700;color:#fff;line-height:1.15;margin-bottom:var(--sp-16)">
+          Your AI office twin<br/>in team chat,<br/>24/7 next to you.
+        </h1>
+        <p style="font-size:var(--fs-13);color:rgba(255,255,255,.45);max-width:280px;line-height:1.5;margin-bottom:var(--sp-24)">
+          Your AI office twin lives in team chat — 24/7 next to you, with memory, a cloud computer & 1000+ tools. No replacement, just support.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--sp-8)">
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">🚀 Deploy in 3 sentences</span>
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">💻 Computer + 1000+ tools</span>
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">👥 Understands your team</span>
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">⏰ Always-on 24/7</span>
+        </div>
+      </div>
+      <div style="font-size:var(--fs-12);color:rgba(255,255,255,.3)">© 2026 Nexu by Refly</div>
+    </div>
+    <!-- Right form -->
+    <div class="split-right">
+      <div style="max-width:360px;width:100%">
+        <div style="font-size:var(--fs-10);font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-secondary);margin-bottom:var(--sp-8)">Sign In</div>
+        <h2 id="authTitle" style="font-size:var(--fs-24);font-weight:700;margin-bottom:var(--sp-4)">Welcome back</h2>
+        <p id="authSubtitle" style="font-size:var(--fs-14);color:var(--text-secondary);margin-bottom:var(--sp-24)">Log in to your AI office twin</p>
+
+        <button class="btn btn-lg" style="width:100%;background:var(--neutral-900);color:#fff;border-radius:var(--r-8);margin-bottom:var(--sp-16)" onclick="showPage('invite')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Continue with Google
+        </button>
+
+        <div style="display:flex;align-items:center;gap:var(--sp-12);margin-bottom:var(--sp-16)">
+          <div class="divider" style="flex:1"></div>
+          <span style="font-size:var(--fs-12);color:var(--text-tertiary)">or</span>
+          <div class="divider" style="flex:1"></div>
+        </div>
+
+        <div style="margin-bottom:var(--sp-12)">
+          <label style="font-size:var(--fs-13);font-weight:500;margin-bottom:var(--sp-4);display:block">Email</label>
+          <input class="input" type="email" placeholder="you@example.com" />
+        </div>
+        <div style="margin-bottom:var(--sp-20)">
+          <label style="font-size:var(--fs-13);font-weight:500;margin-bottom:var(--sp-4);display:block">Password</label>
+          <input id="authPwInput" class="input" type="password" placeholder="Enter your password" />
+        </div>
+        <button class="btn btn-primary btn-lg" id="authSubmitBtn" style="width:100%" onclick="showPage('invite')">Log in with email</button>
+
+        <p style="font-size:var(--fs-13);color:var(--text-secondary);margin-top:var(--sp-16);text-align:center">
+          <span id="authToggleQ">Don't have an account?</span>
+          <button id="authToggleBtn" style="color:var(--text-primary);font-weight:600;margin-left:var(--sp-4)" onclick="toggleAuthMode()">Sign up</button>
+        </p>
+
+        <div style="margin-top:var(--sp-32);display:flex;gap:var(--sp-16);justify-content:center;font-size:var(--fs-12);color:var(--text-tertiary)">
+          <a href="#" style="color:var(--text-tertiary)">Terms of service</a>
+          <a href="#" style="color:var(--text-tertiary)">Privacy policy</a>
+        </div>
+        <p style="text-align:center;font-size:var(--fs-12);color:var(--text-muted);margin-top:var(--sp-8)">© 2026 Powerformer, Inc.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- PAGE 2: INVITE CODE                        -->
+<!-- ========================================== -->
+<div id="page-invite" class="page" style="padding-top:48px">
+  <div class="split-layout">
+    <div class="split-left">
+      <div>
+        <div style="display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-32)">
+          <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center">
+            <svg width="28" height="28" viewBox="77 78 85 85" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M97.5645 78C108.922 78 118.129 87.207 118.129 98.5645V114.723C118.129 117.156 116.156 119.129 113.723 119.129H98.9355V99.9355H96.1934V119.129H81.4062C78.9728 119.129 77.0001 117.156 77 114.723V98.5645C77 87.207 86.207 78 97.5645 78Z" fill="#fff"/><path d="M141.436 163C130.078 163 120.871 153.793 120.871 142.436L120.871 126.277C120.871 123.844 122.844 121.871 125.277 121.871L140.064 121.871L140.064 141.064L142.807 141.064L142.807 121.871L157.594 121.871C160.027 121.871 162 123.844 162 126.277L162 142.436C162 153.793 152.793 163 141.436 163Z" fill="#fff"/><path d="M120.871 98.5659C120.871 87.2085 130.078 78.0015 141.436 78.0015C152.332 78.0015 161.247 86.4761 161.953 97.1938L142.807 97.1938L142.807 99.9351L161.953 99.9351C161.248 110.654 152.333 119.13 141.436 119.13C130.078 119.13 120.871 109.923 120.871 98.5659Z" fill="#fff"/><path d="M77 142.437C77 137.251 78.9192 132.514 82.0859 128.896L92.7773 139.587L94.7168 137.648L84.0254 126.958C87.6429 123.791 92.3797 121.871 97.5654 121.871C102.534 121.871 107.091 123.634 110.646 126.567L99.5625 137.65L101.501 139.589L112.64 128.451C116.045 132.121 118.129 137.034 118.129 142.435C118.129 147.62 116.209 152.358 113.042 155.976L101.203 144.136L99.2637 146.074L111.103 157.914C107.485 161.08 102.749 163 97.5645 163C92.1634 163 87.2486 160.917 83.5791 157.512L95.0146 146.077L93.0762 144.138L81.6963 155.518C78.7624 151.963 77 147.405 77 142.437Z" fill="#fff"/></svg>
+          </div>
+          <span style="font-size:var(--fs-14);font-weight:600;color:#fff">Nexu</span>
+        </div>
+        <h1 style="font-size:var(--fs-32);font-weight:700;color:#fff;line-height:1.15;margin-bottom:var(--sp-16)">
+          Welcome to<br/>the early access<br/>program.
+        </h1>
+        <p style="font-size:var(--fs-13);color:rgba(255,255,255,.45);max-width:280px;line-height:1.5;margin-bottom:var(--sp-24)">
+          Enter your invite code to get started. Early access members help shape the future of Nexu.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--sp-8)">
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">🚀 Deploy in 3 sentences</span>
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">💻 Computer + 1000+ tools</span>
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">👥 Understands your team</span>
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">⏰ Always-on 24/7</span>
+        </div>
+      </div>
+      <div style="font-size:var(--fs-12);color:rgba(255,255,255,.3)">© 2026 Nexu by Refly</div>
+    </div>
+    <div class="split-right">
+      <div id="inviteFormArea" style="max-width:360px;width:100%">
+        <div style="font-size:var(--fs-10);font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-secondary);margin-bottom:var(--sp-8)">Early Access</div>
+        <h2 style="font-size:var(--fs-24);font-weight:700;margin-bottom:var(--sp-4)">Enter invite code</h2>
+        <p style="font-size:var(--fs-14);color:var(--text-secondary);margin-bottom:var(--sp-24)">Paste the code you received</p>
+
+        <div style="margin-bottom:var(--sp-20)">
+          <input id="inviteInput" class="input" type="text" placeholder="e.g. NEXU2026" style="font-size:var(--fs-16);text-align:center;letter-spacing:.1em;font-weight:600" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'')" />
+          <p id="inviteError" style="font-size:var(--fs-12);color:var(--error);margin-top:var(--sp-6);display:none"></p>
+        </div>
+        <button class="btn btn-primary btn-lg" style="width:100%" onclick="validateInvite()">Continue</button>
+
+        <div style="margin-top:var(--sp-24);padding:var(--sp-16);background:var(--surface-2);border-radius:var(--r-12);text-align:center">
+          <p style="font-size:var(--fs-13);color:var(--text-secondary);margin-bottom:var(--sp-8)">Don't have an invite code?</p>
+          <a href="#" style="font-size:var(--fs-13);color:var(--text-primary);font-weight:600">Join our Discord to get one →</a>
+        </div>
+      </div>
+      <div id="inviteSuccessArea" style="max-width:360px;width:100%;display:none;text-align:center">
+        <div style="width:64px;height:64px;border-radius:var(--r-16);background:var(--surface-2);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-16);font-size:32px;color:var(--text-primary)">✓</div>
+        <h2 style="font-size:var(--fs-24);font-weight:700;margin-bottom:var(--sp-8)">You're in!</h2>
+        <p style="font-size:var(--fs-14);color:var(--text-secondary)">Setting up your workspace...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- PAGE 3: ONBOARDING                         -->
+<!-- ========================================== -->
+<div id="page-onboarding" class="page" style="padding-top:48px">
+  <div class="split-layout">
+    <div class="split-left">
+      <div>
+        <div style="display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-32)">
+          <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center">
+            <svg width="28" height="28" viewBox="77 78 85 85" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M97.5645 78C108.922 78 118.129 87.207 118.129 98.5645V114.723C118.129 117.156 116.156 119.129 113.723 119.129H98.9355V99.9355H96.1934V119.129H81.4062C78.9728 119.129 77.0001 117.156 77 114.723V98.5645C77 87.207 86.207 78 97.5645 78Z" fill="#fff"/><path d="M141.436 163C130.078 163 120.871 153.793 120.871 142.436L120.871 126.277C120.871 123.844 122.844 121.871 125.277 121.871L140.064 121.871L140.064 141.064L142.807 141.064L142.807 121.871L157.594 121.871C160.027 121.871 162 123.844 162 126.277L162 142.436C162 153.793 152.793 163 141.436 163Z" fill="#fff"/><path d="M120.871 98.5659C120.871 87.2085 130.078 78.0015 141.436 78.0015C152.332 78.0015 161.247 86.4761 161.953 97.1938L142.807 97.1938L142.807 99.9351L161.953 99.9351C161.248 110.654 152.333 119.13 141.436 119.13C130.078 119.13 120.871 109.923 120.871 98.5659Z" fill="#fff"/><path d="M77 142.437C77 137.251 78.9192 132.514 82.0859 128.896L92.7773 139.587L94.7168 137.648L84.0254 126.958C87.6429 123.791 92.3797 121.871 97.5654 121.871C102.534 121.871 107.091 123.634 110.646 126.567L99.5625 137.65L101.501 139.589L112.64 128.451C116.045 132.121 118.129 137.034 118.129 142.435C118.129 147.62 116.209 152.358 113.042 155.976L101.203 144.136L99.2637 146.074L111.103 157.914C107.485 161.08 102.749 163 97.5645 163C92.1634 163 87.2486 160.917 83.5791 157.512L95.0146 146.077L93.0762 144.138L81.6963 155.518C78.7624 151.963 77 147.405 77 142.437Z" fill="#fff"/></svg>
+          </div>
+          <span style="font-size:var(--fs-14);font-weight:600;color:#fff">Nexu</span>
+        </div>
+        <h1 style="font-size:var(--fs-32);font-weight:700;color:#fff;line-height:1.15;margin-bottom:var(--sp-16)">
+          Almost there.<br/>Let's set up<br/>your clone.
+        </h1>
+        <p style="font-size:var(--fs-13);color:rgba(255,255,255,.45);max-width:280px;line-height:1.5;margin-bottom:var(--sp-24)">
+          A few quick questions so your digital coworker knows how to help you best.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--sp-8)">
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">💻 Code & Deploy</span>
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">📊 Data Analysis</span>
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">✍️ Content</span>
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">🔍 Research</span>
+          <span style="padding:6px 12px;border-radius:var(--r-pill);font-size:var(--fs-12);background:rgba(61,185,206,.12);border:1px solid rgba(61,185,206,.15);color:rgba(61,185,206,.85)">⚙️ Automation</span>
+        </div>
+      </div>
+      <div style="font-size:var(--fs-12);color:rgba(255,255,255,.3)">© 2026 Nexu by Refly</div>
+    </div>
+    <div class="split-right" style="justify-content:flex-start;padding-top:48px">
+      <div style="max-width:520px;width:100%">
+        <!-- Progress bar -->
+        <div class="progress-bar" id="obProgress">
+          <div class="progress-seg current"></div>
+          <div class="progress-seg"></div>
+          <div class="progress-seg"></div>
+          <div class="progress-seg"></div>
+          <div class="progress-seg"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;max-width:520px;margin:-24px auto var(--sp-24);font-size:var(--fs-10);color:var(--text-tertiary)">
+          <span>Profile</span><span>Use cases</span><span>Referral</span><span>Channels</span><span>Avatar</span>
+        </div>
+
+        <!-- Step containers -->
+        <div id="obStep0" class="fade-in">
+          <h2 style="font-size:var(--fs-20);font-weight:700;margin-bottom:var(--sp-4)">What's your role?</h2>
+          <p style="font-size:var(--fs-14);color:var(--text-secondary);margin-bottom:var(--sp-20)">This helps us personalize your experience</p>
+          <div class="pill-grid" id="roleGrid"></div>
+          <div style="margin-top:var(--sp-20)">
+            <label style="font-size:var(--fs-13);font-weight:500;color:var(--text-secondary);margin-bottom:var(--sp-4);display:block">Company / Organization (optional)</label>
+            <input class="input" placeholder="Where do you work?" />
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:var(--sp-24)">
+            <button class="btn btn-primary" onclick="obNext()">Continue →</button>
+          </div>
+        </div>
+
+        <div id="obStep1" style="display:none" class="fade-in">
+          <h2 style="font-size:var(--fs-20);font-weight:700;margin-bottom:var(--sp-4)">What will you use Nexu for?</h2>
+          <p style="font-size:var(--fs-14);color:var(--text-secondary);margin-bottom:var(--sp-20)">Select all that apply</p>
+          <div class="pill-grid" id="useCaseGrid"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:var(--sp-24)">
+            <button class="btn btn-ghost" onclick="obBack()">← Back</button>
+            <button class="btn btn-primary" onclick="obNext()">Continue →</button>
+          </div>
+        </div>
+
+        <div id="obStep2" style="display:none" class="fade-in">
+          <h2 style="font-size:var(--fs-20);font-weight:700;margin-bottom:var(--sp-4)">How did you hear about Nexu?</h2>
+          <p style="font-size:var(--fs-14);color:var(--text-secondary);margin-bottom:var(--sp-20)">Help us understand what's working</p>
+          <div class="pill-grid" id="referralGrid"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:var(--sp-24)">
+            <button class="btn btn-ghost" onclick="obBack()">← Back</button>
+            <button class="btn btn-primary" onclick="obNext()">Continue →</button>
+          </div>
+        </div>
+
+        <div id="obStep3" style="display:none" class="fade-in">
+          <h2 style="font-size:var(--fs-20);font-weight:700;margin-bottom:var(--sp-4)">Connect your channels</h2>
+          <p style="font-size:var(--fs-14);color:var(--text-secondary);margin-bottom:var(--sp-20)">Connect or vote for channels you'd like supported</p>
+          <div id="channelList" style="display:flex;flex-direction:column;gap:var(--sp-8);max-height:340px;overflow-y:auto"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:var(--sp-24)">
+            <button class="btn btn-ghost" onclick="obBack()">← Back</button>
+            <button class="btn btn-primary" onclick="obNext()">Continue →</button>
+          </div>
+        </div>
+
+        <div id="obStep4" style="display:none" class="fade-in">
+          <h2 style="font-size:var(--fs-20);font-weight:700;margin-bottom:var(--sp-4)">Meet your AI team</h2>
+          <p style="font-size:var(--fs-14);color:var(--text-secondary);margin-bottom:var(--sp-20)">Pick who you'd like to work with first</p>
+          <div class="avatar-carousel" id="avatarCarousel"></div>
+          <div id="avatarInfo" style="text-align:center;margin-bottom:var(--sp-24)"></div>
+          <div style="display:flex;justify-content:space-between">
+            <button class="btn btn-ghost" onclick="obBack()">← Back</button>
+            <button class="btn btn-primary" onclick="obComplete()">Complete setup</button>
+          </div>
+        </div>
+
+        <div id="obComplete" style="display:none;text-align:center;padding:var(--sp-32) 0" class="fade-in">
+          <div style="width:64px;height:64px;border-radius:var(--r-16);background:var(--surface-2);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-16);font-size:32px;color:var(--text-primary)">✓</div>
+          <h2 style="font-size:var(--fs-24);font-weight:700;margin-bottom:var(--sp-8)">You're all set!</h2>
+          <p style="font-size:var(--fs-14);color:var(--text-secondary)">Preparing your workspace...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- PAGE 4: WORKSPACE                          -->
+<!-- ========================================== -->
+<div id="page-workspace" class="page" style="padding-top:48px">
+  <div class="ws-layout">
+    <!-- Sidebar -->
+    <div class="ws-sidebar">
+      <div style="padding:var(--sp-16) var(--sp-12);border-bottom:1px solid rgba(0,0,0,0.06)">
+        <div style="display:flex;align-items:center;gap:var(--sp-8)">
+          <img src="brand/nexu logo-black4.svg" alt="Nexu" style="height:24px;width:auto" />
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:var(--sp-8)">
+        <div class="ws-sidebar-section">Navigation</div>
+        <div class="ws-sidebar-item" onclick="showPage('dashboard')"><span>📊</span><span class="sidebar-label">Dashboard</span></div>
+        <div class="ws-sidebar-item" onclick="showPage('skills')"><span>⚡</span><span class="sidebar-label">Skills</span></div>
+        <div class="ws-sidebar-item" onclick="showPage('channels')"><span>🔗</span><span class="sidebar-label">Channels</span></div>
+        <div style="height:var(--sp-8)"></div>
+        <div class="ws-sidebar-section">Conversations</div>
+        <div class="ws-sidebar-item active" onclick="wsShowChat('1')">
+          <span>💬</span><span class="sidebar-label">#product-dev</span><span class="badge">128</span>
+        </div>
+        <div class="ws-sidebar-item" onclick="wsShowChat('2')">
+          <span>🎮</span><span class="sidebar-label">#engineering</span><span class="badge">76</span>
+        </div>
+        <div class="ws-sidebar-item" onclick="wsShowChat('3')">
+          <span>💬</span><span class="sidebar-label">@张三</span><span class="badge">34</span>
+        </div>
+        <div class="ws-sidebar-item" onclick="wsShowChat('4')">
+          <span>📱</span><span class="sidebar-label">Product Team</span><span class="badge">45</span>
+        </div>
+        <div class="ws-sidebar-item" onclick="wsShowChat('5')" style="opacity:.5">
+          <span>🎮</span><span class="sidebar-label">@alice</span>
+        </div>
+      </div>
+      <div style="padding:var(--sp-12);border-top:1px solid rgba(0,0,0,0.06)">
+        <div class="ws-sidebar-item" style="gap:var(--sp-8)">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--neutral-500);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:600">S</div>
+          <span class="sidebar-label" style="font-size:var(--fs-12);color:var(--text-secondary)">s@nexu.dev</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main chat area -->
+    <div class="ws-main">
+      <div class="chat-header">
+        <span style="font-size:18px" id="wsChatIcon">💬</span>
+        <div>
+          <div style="font-size:var(--fs-14);font-weight:600" id="wsChatName">#product-dev</div>
+          <div style="font-size:var(--fs-12);color:var(--text-tertiary)" id="wsChatSub">Slack · Group · 128 messages</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:var(--sp-8)">
+          <span class="tag tag-brand" style="font-size:var(--fs-10)">● Active</span>
+        </div>
+      </div>
+      <div class="chat-messages" id="wsChatMessages">
+        <div class="chat-bubble user">帮我写一个产品 Landing Page，要现代风格，有 Hero、Features、CTA 三个部分</div>
+        <div class="chat-bubble bot">收到！Nexu 分身正在帮你生成 React + Tailwind 的 Landing Page ⚡</div>
+        <div class="chat-bubble bot">
+          ✅ 已完成！写了 320 行代码，已部署上线。
+          <div class="deploy-link">🔗 landing-abc.nexu.dev — 产品 Landing Page</div>
+        </div>
+        <div class="chat-bubble user">能不能把 Hero 的标题改大一点，加个渐变色？</div>
+        <div class="chat-bubble bot">
+          已更新！标题现在使用 48px + 渐变色，已重新部署 ✅
+          <div class="deploy-link">🔗 landing-abc.nexu.dev — 产品 Landing Page (更新)</div>
+        </div>
+        <div class="chat-bubble user">帮我把这份数据做成可视化看板</div>
+        <div class="chat-bubble bot">收到数据文件。Nexu 分身正在生成 Chart.js 看板...</div>
+        <div class="chat-bubble bot">
+          ✅ 数据看板已上线！
+          <div class="deploy-link">🔗 dashboard-xyz.nexu.dev — 数据看板 Dashboard</div>
+        </div>
+        <div class="chat-bubble bot">
+          📬 [内容自动化] Weekly Newsletter 已自动执行
+          <div class="deploy-link">📰 newsletter-w8.nexu.dev — Nexu Weekly #8</div>
+        </div>
+        <div class="chat-bubble bot">
+          🐦 [内容自动化] Twitter Thread 已触发
+          <div class="deploy-link">🐦 thread-v03.nexu.dev — v0.3 发布公告 Thread</div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <div style="display:flex;gap:var(--sp-8);align-items:flex-end">
+          <div style="flex:1;position:relative">
+            <input class="input" placeholder="给 Nexu 发消息..." style="padding-right:44px;border-radius:var(--r-16);padding:var(--sp-12)" />
+          </div>
+          <button style="width:36px;height:36px;border-radius:50%;background:var(--text-primary);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- PAGE 5: DASHBOARD                          -->
+<!-- ========================================== -->
+<div id="page-dashboard" class="page" style="padding-top:48px">
+  <div class="ws-layout">
+    <!-- Sidebar (reuse structure) -->
+    <div class="ws-sidebar">
+      <div style="padding:var(--sp-16) var(--sp-12);border-bottom:1px solid rgba(0,0,0,0.06)">
+        <div style="display:flex;align-items:center;gap:var(--sp-8)">
+          <img src="brand/nexu logo-black4.svg" alt="Nexu" style="height:24px;width:auto" />
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:var(--sp-8)">
+        <div class="ws-sidebar-section">Navigation</div>
+        <div class="ws-sidebar-item active"><span>📊</span><span class="sidebar-label">Dashboard</span></div>
+        <div class="ws-sidebar-item" onclick="showPage('skills')"><span>⚡</span><span class="sidebar-label">Skills</span></div>
+        <div class="ws-sidebar-item" onclick="showPage('channels')"><span>🔗</span><span class="sidebar-label">Channels</span></div>
+        <div style="height:var(--sp-8)"></div>
+        <div class="ws-sidebar-section">Conversations</div>
+        <div class="ws-sidebar-item" onclick="showPage('workspace')"><span>💬</span><span class="sidebar-label">#product-dev</span></div>
+        <div class="ws-sidebar-item" onclick="showPage('workspace')"><span>🎮</span><span class="sidebar-label">#engineering</span></div>
+      </div>
+      <div style="padding:var(--sp-12);border-top:1px solid rgba(0,0,0,0.06)">
+        <div class="ws-sidebar-item"><div style="width:24px;height:24px;border-radius:50%;background:var(--neutral-500);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:600">S</div><span class="sidebar-label" style="font-size:var(--fs-12);color:var(--text-secondary)">s@nexu.dev</span></div>
+      </div>
+    </div>
+
+    <!-- Dashboard content -->
+    <div class="ws-main">
+      <div class="content-area">
+        <div class="content-max">
+          <h1 style="font-size:var(--fs-24);font-weight:700;margin-bottom:var(--sp-4)">Dashboard</h1>
+          <p style="font-size:var(--fs-14);color:var(--text-secondary);margin-bottom:var(--sp-24)">赛博办公室概览 — 龙虾 🦞 的工作汇报。</p>
+
+          <!-- Stat cards -->
+          <div class="stat-grid" style="margin-bottom:var(--sp-24)">
+            <div class="stat-card">
+              <div class="icon-wrap" style="background:var(--surface-2)">💬</div>
+              <div class="value">4</div>
+              <div class="label">活跃频道</div>
+              <div class="sub">共 5 个频道</div>
+            </div>
+            <div class="stat-card">
+              <div class="icon-wrap" style="background:var(--surface-2)">🚀</div>
+              <div class="value">7</div>
+              <div class="label">在线部署</div>
+              <div class="sub">编程 + 内容产出</div>
+            </div>
+            <div class="stat-card">
+              <div class="icon-wrap" style="background:var(--surface-2)">⚡</div>
+              <div class="value">4</div>
+              <div class="label">内容 Workflows</div>
+              <div class="sub">5 个总计</div>
+            </div>
+            <div class="stat-card">
+              <div class="icon-wrap" style="background:var(--surface-2)">💎</div>
+              <div class="value">3,000</div>
+              <div class="label">Credits 余额</div>
+              <div class="sub">5,000 总额度</div>
+            </div>
+          </div>
+
+          <!-- Credit usage -->
+          <div class="card" style="margin-bottom:var(--sp-24)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-16)">
+              <h3 style="font-size:var(--fs-16);font-weight:600">本月 Credit 使用</h3>
+              <span class="tag tag-brand">Free Plan</span>
+            </div>
+            <div class="credit-bar" style="margin-bottom:var(--sp-12)">
+              <div class="credit-seg" style="width:25.6%;background:var(--brand-700)"></div>
+              <div class="credit-seg" style="width:12.4%;background:#8b5cf6"></div>
+              <div class="credit-seg" style="width:2%;background:var(--success)"></div>
+            </div>
+            <div style="display:flex;gap:var(--sp-24);font-size:var(--fs-13);color:var(--text-secondary);margin-bottom:var(--sp-12)">
+              <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--brand-700);margin-right:var(--sp-4)"></span>AI 编程 1,280</span>
+              <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#8b5cf6;margin-right:var(--sp-4)"></span>内容自动化 620</span>
+              <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--success);margin-right:var(--sp-4)"></span>部署 100</span>
+            </div>
+            <p style="font-size:var(--fs-12);color:var(--text-tertiary)">本月还剩 3,000 credits · 预计可用 12 天</p>
+          </div>
+
+          <!-- Main grid -->
+          <div style="display:grid;grid-template-columns:3fr 2fr;gap:var(--sp-24)">
+            <!-- Left column -->
+            <div>
+              <!-- Recent activity -->
+              <div class="card" style="margin-bottom:var(--sp-24)">
+                <h3 style="font-size:var(--fs-16);font-weight:600;margin-bottom:var(--sp-16)">最近动态</h3>
+                <div class="activity-item"><div class="activity-dot" style="background:var(--success)"></div><div class="activity-content">部署了「产品 Landing Page」到 landing-abc.nexu.dev<br/><span style="font-size:var(--fs-12);color:var(--text-tertiary)">#product-dev</span></div><div class="activity-time">2 分钟前</div></div>
+                <div class="activity-item"><div class="activity-dot" style="background:var(--neutral-400)"></div><div class="activity-content">收到新消息：帮我写一个 API health checker<br/><span style="font-size:var(--fs-12);color:var(--text-tertiary)">#engineering</span></div><div class="activity-time">15 分钟前</div></div>
+                <div class="activity-item"><div class="activity-dot" style="background:#8b5cf6"></div><div class="activity-content">Nexu 分身生成了 Twitter Thread「v0.3 发布公告」<br/><span style="font-size:var(--fs-12);color:var(--text-tertiary)">#product-dev</span></div><div class="activity-time">30 分钟前</div></div>
+                <div class="activity-item"><div class="activity-dot" style="background:var(--success)"></div><div class="activity-content">部署了「数据看板 Dashboard」到 dashboard-xyz.nexu.dev<br/><span style="font-size:var(--fs-12);color:var(--text-tertiary)">#product-dev</span></div><div class="activity-time">3 小时前</div></div>
+                <div class="activity-item"><div class="activity-dot" style="background:var(--error)"></div><div class="activity-content">「内部工具 - 审批流」构建失败<br/><span style="font-size:var(--fs-12);color:var(--text-tertiary)">#product-dev</span></div><div class="activity-time">昨天 09:45</div></div>
+              </div>
+
+              <!-- Deployments -->
+              <div class="card">
+                <h3 style="font-size:var(--fs-16);font-weight:600;margin-bottom:var(--sp-16)">全部产出</h3>
+                <div id="deploymentsList"></div>
+              </div>
+            </div>
+
+            <!-- Right column -->
+            <div>
+              <!-- Usage chart -->
+              <div class="card" style="margin-bottom:var(--sp-24)">
+                <h3 style="font-size:var(--fs-16);font-weight:600;margin-bottom:var(--sp-16)">本周用量</h3>
+                <div class="chart-bar-group">
+                  <div style="flex:1;text-align:center"><div class="chart-bar" style="height:34%"></div><div class="chart-bar-label">Mon</div></div>
+                  <div style="flex:1;text-align:center"><div class="chart-bar" style="height:80%"></div><div class="chart-bar-label">Tue</div></div>
+                  <div style="flex:1;text-align:center"><div class="chart-bar" style="height:23%"></div><div class="chart-bar-label">Wed</div></div>
+                  <div style="flex:1;text-align:center"><div class="chart-bar" style="height:100%"></div><div class="chart-bar-label">Thu</div></div>
+                  <div style="flex:1;text-align:center"><div class="chart-bar" style="height:63%"></div><div class="chart-bar-label">Fri</div></div>
+                  <div style="flex:1;text-align:center"><div class="chart-bar" style="height:14%"></div><div class="chart-bar-label">Sat</div></div>
+                  <div style="flex:1;text-align:center"><div class="chart-bar" style="height:51%"></div><div class="chart-bar-label">Sun</div></div>
+                </div>
+              </div>
+
+              <!-- Channels -->
+              <div class="card" style="margin-bottom:var(--sp-24)">
+                <h3 style="font-size:var(--fs-16);font-weight:600;margin-bottom:var(--sp-16)">频道</h3>
+                <div style="display:flex;flex-direction:column;gap:var(--sp-8)" id="dashChannelList"></div>
+              </div>
+
+              <!-- Quick actions -->
+              <div class="card">
+                <h3 style="font-size:var(--fs-16);font-weight:600;margin-bottom:var(--sp-16)">快捷操作</h3>
+                <div style="display:flex;flex-direction:column;gap:var(--sp-8)">
+                  <button class="btn btn-secondary btn-sm" style="justify-content:flex-start" onclick="showPage('channels')">🔗 添加新频道</button>
+                  <button class="btn btn-secondary btn-sm" style="justify-content:flex-start">📦 查看全部产出</button>
+                  <button class="btn btn-secondary btn-sm" style="justify-content:flex-start">📖 使用文档</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- PAGE 6: CHANNELS CONFIG                    -->
+<!-- ========================================== -->
+<div id="page-channels" class="page" style="padding-top:48px">
+  <div class="ws-layout">
+    <div class="ws-sidebar">
+      <div style="padding:var(--sp-16) var(--sp-12);border-bottom:1px solid rgba(0,0,0,0.06)">
+        <div style="display:flex;align-items:center;gap:var(--sp-8)">
+          <img src="brand/nexu logo-black4.svg" alt="Nexu" style="height:24px;width:auto" />
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:var(--sp-8)">
+        <div class="ws-sidebar-section">Navigation</div>
+        <div class="ws-sidebar-item" onclick="showPage('dashboard')"><span>📊</span><span class="sidebar-label">Dashboard</span></div>
+        <div class="ws-sidebar-item" onclick="showPage('skills')"><span>⚡</span><span class="sidebar-label">Skills</span></div>
+        <div class="ws-sidebar-item active"><span>🔗</span><span class="sidebar-label">Channels</span></div>
+        <div style="height:var(--sp-8)"></div>
+        <div class="ws-sidebar-section">Conversations</div>
+        <div class="ws-sidebar-item" onclick="showPage('workspace')"><span>💬</span><span class="sidebar-label">#product-dev</span></div>
+        <div class="ws-sidebar-item" onclick="showPage('workspace')"><span>🎮</span><span class="sidebar-label">#engineering</span></div>
+      </div>
+      <div style="padding:var(--sp-12);border-top:1px solid rgba(0,0,0,0.06)">
+        <div class="ws-sidebar-item"><div style="width:24px;height:24px;border-radius:50%;background:var(--neutral-500);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:600">S</div><span class="sidebar-label" style="font-size:var(--fs-12);color:var(--text-secondary)">s@nexu.dev</span></div>
+      </div>
+    </div>
+
+    <div class="ws-main">
+      <div class="content-area">
+        <div style="max-width:800px;margin:0 auto">
+          <h1 style="font-size:var(--fs-24);font-weight:700;margin-bottom:var(--sp-4)">Channel 配置</h1>
+          <p style="font-size:var(--fs-14);color:var(--text-secondary);margin-bottom:var(--sp-24)">连接你的 IM 平台，让 Nexu 成为你的团队成员</p>
+
+          <!-- Platform cards -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-16);margin-bottom:var(--sp-24)">
+            <div class="platform-card selected" id="pSlack" onclick="selectPlatform('slack')">
+              <div class="platform-icon" style="background:#4A154B20"><span style="font-size:20px">#</span></div>
+              <div style="font-size:var(--fs-14);font-weight:600">Slack</div>
+              <div style="font-size:var(--fs-12);color:var(--text-tertiary)">Workspace Bot</div>
+              <span class="tag tag-brand" style="margin-top:var(--sp-8);font-size:var(--fs-10)">● Connected</span>
+            </div>
+            <div class="platform-card" id="pDiscord" onclick="selectPlatform('discord')">
+              <div class="platform-icon" style="background:#5865F220"><span style="font-size:20px">🎮</span></div>
+              <div style="font-size:var(--fs-14);font-weight:600">Discord</div>
+              <div style="font-size:var(--fs-12);color:var(--text-tertiary)">Server Bot</div>
+              <span class="tag tag-brand" style="margin-top:var(--sp-8);font-size:var(--fs-10)">● Connected</span>
+            </div>
+            <div class="platform-card" id="pWhatsapp" onclick="selectPlatform('whatsapp')">
+              <div class="platform-icon" style="background:#25D36620"><span style="font-size:20px">💬</span></div>
+              <div style="font-size:var(--fs-14);font-weight:600">WhatsApp</div>
+              <div style="font-size:var(--fs-12);color:var(--text-tertiary)">Business API</div>
+              <span class="tag" style="margin-top:var(--sp-8);font-size:var(--fs-10)">Not configured</span>
+            </div>
+          </div>
+
+          <!-- Coming soon -->
+          <p style="font-size:var(--fs-12);color:var(--text-tertiary);margin-bottom:var(--sp-12)">Coming soon</p>
+          <div style="display:flex;gap:var(--sp-8);margin-bottom:var(--sp-32);flex-wrap:wrap">
+            <span class="tag">📬 Telegram</span>
+            <span class="tag">👥 Microsoft Teams</span>
+            <span class="tag">📘 LINE</span>
+            <span class="tag">🐦 Feishu / Lark</span>
+            <span class="tag">🟢 Google Chat</span>
+          </div>
+
+          <!-- Platform config area -->
+          <div id="platformConfigArea">
+            <div class="card" id="slackConfig">
+              <div style="display:flex;align-items:center;gap:var(--sp-12);margin-bottom:var(--sp-20)">
+                <div style="width:12px;height:12px;border-radius:50%;background:var(--success)"></div>
+                <span style="font-size:var(--fs-14);font-weight:600">Slack — Connected</span>
+                <span style="font-size:var(--fs-12);color:var(--text-tertiary);margin-left:auto">配置于 2026-02-18</span>
+              </div>
+              <div style="margin-bottom:var(--sp-16)">
+                <label style="font-size:var(--fs-12);color:var(--text-tertiary);margin-bottom:var(--sp-4);display:block">Webhook URL</label>
+                <div style="display:flex;gap:var(--sp-8)">
+                  <input class="input" value="https://api.nexu.dev/webhook/slack/tk_abc123" readonly style="font-size:var(--fs-12);background:var(--surface-2)" />
+                  <button class="btn btn-secondary btn-sm" onclick="copyText('https://api.nexu.dev/webhook/slack/tk_abc123')">Copy</button>
+                </div>
+              </div>
+              <div style="display:flex;gap:var(--sp-8)">
+                <button class="btn btn-secondary btn-sm">测试连接</button>
+                <button class="btn btn-ghost btn-sm" style="color:var(--error)">重置并重新配置</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- PAGE 7: SKILLS HUB                         -->
+<!-- ========================================== -->
+<div id="page-skills" class="page" style="padding-top:48px">
+  <div class="ws-layout">
+    <div class="ws-sidebar">
+      <div style="padding:var(--sp-16) var(--sp-12);border-bottom:1px solid rgba(0,0,0,0.06)">
+        <div style="display:flex;align-items:center;gap:var(--sp-8)">
+          <img src="brand/nexu logo-black4.svg" alt="Nexu" style="height:24px;width:auto" />
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:var(--sp-8)">
+        <div class="ws-sidebar-section">Navigation</div>
+        <div class="ws-sidebar-item" onclick="showPage('dashboard')"><span>📊</span><span class="sidebar-label">Dashboard</span></div>
+        <div class="ws-sidebar-item active"><span>⚡</span><span class="sidebar-label">Skills</span></div>
+        <div class="ws-sidebar-item" onclick="showPage('channels')"><span>🔗</span><span class="sidebar-label">Channels</span></div>
+        <div style="height:var(--sp-8)"></div>
+        <div class="ws-sidebar-section">Conversations</div>
+        <div class="ws-sidebar-item" onclick="showPage('workspace')"><span>💬</span><span class="sidebar-label">#product-dev</span></div>
+        <div class="ws-sidebar-item" onclick="showPage('workspace')"><span>🎮</span><span class="sidebar-label">#engineering</span></div>
+      </div>
+      <div style="padding:var(--sp-12);border-top:1px solid rgba(0,0,0,0.06)">
+        <div class="ws-sidebar-item"><div style="width:24px;height:24px;border-radius:50%;background:var(--neutral-500);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:600">S</div><span class="sidebar-label" style="font-size:var(--fs-12);color:var(--text-secondary)">s@nexu.dev</span></div>
+      </div>
+    </div>
+
+    <div class="ws-main">
+      <div class="content-area">
+        <div style="max-width:960px;margin:0 auto">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4)">
+            <h1 style="font-size:var(--fs-24);font-weight:700">Skills 集合</h1>
+            <span class="tag" id="skillCount">63 skills</span>
+          </div>
+          <p style="font-size:var(--fs-14);color:var(--text-secondary);margin-bottom:var(--sp-20)">发现和管理 Nexu 的技能 — 每个 Skill 是一种能力</p>
+
+          <!-- Search -->
+          <div class="search-box" style="margin-bottom:var(--sp-16)">
+            <span class="search-icon">🔍</span>
+            <input class="input" placeholder="搜索 Skills..." oninput="filterSkills()" id="skillSearch" />
+          </div>
+
+          <!-- Source tabs -->
+          <div class="tabs" style="margin-bottom:var(--sp-16)">
+            <div class="tab active" onclick="setSkillSource('official',this)">Nexu 官方 <span style="font-size:var(--fs-10);color:var(--text-tertiary)">(63)</span></div>
+            <div class="tab" onclick="setSkillSource('custom',this)">自定义 <span style="font-size:var(--fs-10);color:var(--text-tertiary)">(0)</span></div>
+          </div>
+
+          <!-- Tag filter -->
+          <div style="display:flex;gap:var(--sp-6);flex-wrap:wrap;margin-bottom:var(--sp-20)" id="skillTagFilter">
+            <button class="tag tag-brand" onclick="setSkillTag('all',this)" data-tag="all">全部</button>
+            <button class="tag" onclick="setSkillTag('office-collab',this)" data-tag="office-collab">办公与协作 (11)</button>
+            <button class="tag" onclick="setSkillTag('file-knowledge',this)" data-tag="file-knowledge">文件与知识库 (12)</button>
+            <button class="tag" onclick="setSkillTag('creative-design',this)" data-tag="creative-design">创意与设计 (6)</button>
+            <button class="tag" onclick="setSkillTag('biz-analysis',this)" data-tag="biz-analysis">商业分析 (9)</button>
+            <button class="tag" onclick="setSkillTag('av-generation',this)" data-tag="av-generation">音视频生成 (7)</button>
+            <button class="tag" onclick="setSkillTag('info-content',this)" data-tag="info-content">信息源与内容获取 (13)</button>
+            <button class="tag" onclick="setSkillTag('dev-tools',this)" data-tag="dev-tools">开发与工具 (5)</button>
+          </div>
+
+          <!-- Skills grid -->
+          <div class="skill-grid" id="skillGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-12)"></div>
+
+          <!-- Empty state for custom -->
+          <div id="skillEmpty" style="display:none;text-align:center;padding:var(--sp-32) 0">
+            <div style="font-size:48px;margin-bottom:var(--sp-16)">🦞</div>
+            <h3 style="font-size:var(--fs-16);font-weight:600;margin-bottom:var(--sp-4)">还没有自定义 Skill</h3>
+            <p style="font-size:var(--fs-14);color:var(--text-secondary)">创建你自己的 Skill 来扩展 Nexu 的能力</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- PAGE 8: SKILL DETAIL                       -->
+<!-- ========================================== -->
+<div id="page-skill-detail" class="page" style="padding-top:48px;flex-direction:column">
+  <!-- Nav -->
+  <div class="page-nav">
+    <div class="back-btn" onclick="showPage('skills')">← Skills</div>
+    <div style="margin-left:auto">
+      <button class="btn btn-primary btn-sm" onclick="showPage('auth')">Get started free</button>
+    </div>
+  </div>
+
+  <div style="flex:1;overflow-y:auto">
+    <div style="max-width:800px;margin:0 auto;padding:var(--sp-32) var(--sp-24)">
+      <!-- Hero -->
+      <div style="display:flex;gap:var(--sp-24);margin-bottom:var(--sp-32)">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:var(--sp-12);margin-bottom:var(--sp-16)">
+            <div style="width:56px;height:56px;border-radius:var(--r-16);background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:28px">📧</div>
+            <div>
+              <h1 style="font-size:var(--fs-24);font-weight:700">Gmail</h1>
+              <div style="display:flex;gap:var(--sp-6);margin-top:var(--sp-4)">
+                <span class="tag" style="font-size:var(--fs-10)">🔑 OAuth</span>
+                <span class="tag" style="font-size:var(--fs-10)">办公与协作</span>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:var(--fs-14);color:var(--text-secondary);line-height:1.6;margin-bottom:var(--sp-20)">
+            连接 Gmail 后，Nexu 可以帮你撰写、发送、搜索和管理邮件。支持智能回复建议、邮件摘要、批量操作等。
+          </p>
+          <div style="display:flex;gap:var(--sp-8)">
+            <button class="btn btn-primary" onclick="showPage('auth')">Get started free</button>
+            <button class="btn btn-secondary">Try it now ↓</button>
+          </div>
+        </div>
+        <!-- Quick info card -->
+        <div class="card-compact card" style="width:280px;flex-shrink:0">
+          <h4 style="font-size:var(--fs-13);font-weight:600;margin-bottom:var(--sp-12)">Quick Info</h4>
+          <div style="display:flex;flex-direction:column;gap:var(--sp-10);font-size:var(--fs-13)">
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-tertiary)">Category</span><span>办公与协作</span></div>
+            <div class="divider"></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-tertiary)">Auth</span><span>OAuth (Google)</span></div>
+            <div class="divider"></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-tertiary)">Works in</span><span>Slack · Discord · Telegram</span></div>
+            <div class="divider"></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-tertiary)">Managed by</span><span>Nexu</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connect -->
+      <div class="card" style="margin-bottom:var(--sp-24)">
+        <h3 style="font-size:var(--fs-16);font-weight:600;margin-bottom:var(--sp-16)">Connect</h3>
+        <div style="display:flex;align-items:center;gap:var(--sp-12);padding:var(--sp-12);background:var(--surface-2);border-radius:var(--r-12)">
+          <div style="width:36px;height:36px;border-radius:var(--r-8);background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px">📧</div>
+          <div style="flex:1">
+            <div style="font-size:var(--fs-14);font-weight:500">Gmail</div>
+            <div style="font-size:var(--fs-12);color:var(--text-tertiary)">Google</div>
+          </div>
+          <button class="btn btn-primary btn-sm" id="sdConnectBtn" onclick="sdConnect()">Connect</button>
+        </div>
+      </div>
+
+      <!-- Try prompts -->
+      <div class="card" style="margin-bottom:var(--sp-24)" id="try">
+        <h3 style="font-size:var(--fs-16);font-weight:600;margin-bottom:var(--sp-16)">试试这样说</h3>
+        <div style="display:flex;flex-direction:column;gap:var(--sp-8)">
+          <div style="display:flex;align-items:center;gap:var(--sp-12);padding:var(--sp-12);background:var(--surface-2);border-radius:var(--r-12);cursor:pointer" onclick="copyPrompt(this,'帮我给 john@example.com 发一封邮件，主题是项目进度更新')">
+            <span style="flex:1;font-size:var(--fs-13);color:var(--text-secondary)">帮我给 john@example.com 发一封邮件，主题是项目进度更新</span>
+            <span style="font-size:var(--fs-12);color:var(--text-tertiary)">📋</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--sp-12);padding:var(--sp-12);background:var(--surface-2);border-radius:var(--r-12);cursor:pointer" onclick="copyPrompt(this,'帮我搜索最近一周来自 HR 的邮件')">
+            <span style="flex:1;font-size:var(--fs-13);color:var(--text-secondary)">帮我搜索最近一周来自 HR 的邮件</span>
+            <span style="font-size:var(--fs-12);color:var(--text-tertiary)">📋</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--sp-12);padding:var(--sp-12);background:var(--surface-2);border-radius:var(--r-12);cursor:pointer" onclick="copyPrompt(this,'帮我回复这封邮件，语气正式一些')">
+            <span style="flex:1;font-size:var(--fs-13);color:var(--text-secondary)">帮我回复这封邮件，语气正式一些</span>
+            <span style="font-size:var(--fs-12);color:var(--text-tertiary)">📋</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Integrations -->
+      <div class="card" style="margin-bottom:var(--sp-24)">
+        <h3 style="font-size:var(--fs-16);font-weight:600;margin-bottom:var(--sp-16)">Available Integrations</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-12)">
+          <div style="padding:var(--sp-16);background:var(--surface-2);border-radius:var(--r-12);text-align:center">
+            <div style="font-size:24px;margin-bottom:var(--sp-8)">#</div>
+            <div style="font-size:var(--fs-13);font-weight:600">Slack</div>
+            <div style="font-size:var(--fs-12);color:var(--text-tertiary)">DM 或频道内使用</div>
+          </div>
+          <div style="padding:var(--sp-16);background:var(--surface-2);border-radius:var(--r-12);text-align:center">
+            <div style="font-size:24px;margin-bottom:var(--sp-8)">🎮</div>
+            <div style="font-size:var(--fs-13);font-weight:600">Discord</div>
+            <div style="font-size:var(--fs-12);color:var(--text-tertiary)">服务器内使用</div>
+          </div>
+          <div style="padding:var(--sp-16);background:var(--surface-2);border-radius:var(--r-12);text-align:center">
+            <div style="font-size:24px;margin-bottom:var(--sp-8)">✈️</div>
+            <div style="font-size:var(--fs-13);font-weight:600">Telegram</div>
+            <div style="font-size:var(--fs-12);color:var(--text-tertiary)">Bot 聊天内使用</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related skills -->
+      <div style="margin-bottom:var(--sp-24)">
+        <h3 style="font-size:var(--fs-16);font-weight:600;margin-bottom:var(--sp-16)">Related Skills</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-12)" id="relatedSkillsGrid"></div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="card" style="margin-bottom:var(--sp-32)">
+        <h3 style="font-size:var(--fs-16);font-weight:600;margin-bottom:var(--sp-16)">FAQ</h3>
+        <div id="sdFAQ"></div>
+      </div>
+
+      <!-- Footer -->
+      <div style="text-align:center;padding:var(--sp-24) 0;border-top:1px solid var(--border-field)">
+        <p style="font-size:var(--fs-12);color:var(--text-tertiary)">© 2026 Nexu by Refly · <a href="#" style="color:var(--text-tertiary)">Privacy</a> · <a href="#" style="color:var(--text-tertiary)">Terms</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><div class="toast-bar" style="background:var(--brand-700)"></div><span id="toastMsg" style="font-size:var(--fs-13)"></span></div>
+
+<script>
+/* ====== DATA ====== */
+const SKILLS_DATA = [
+  {id:'gmail',name:'Gmail',desc:'邮件收发、搜索、联系人管理',icon:'📧',tag:'office-collab'},
+  {id:'gcal',name:'谷歌日历',desc:'日程和会议管理',icon:'📅',tag:'office-collab'},
+  {id:'slack',name:'Slack',desc:'团队消息协作平台',icon:'💬',tag:'office-collab'},
+  {id:'notion',name:'Notion',desc:'文档和知识库管理',icon:'📝',tag:'office-collab'},
+  {id:'github',name:'GitHub',desc:'代码仓库和协作',icon:'🐙',tag:'office-collab'},
+  {id:'linear',name:'Linear',desc:'项目管理和 Issue 追踪',icon:'📐',tag:'office-collab'},
+  {id:'zoom',name:'Zoom',desc:'视频会议和录制',icon:'📹',tag:'office-collab'},
+  {id:'jira',name:'Jira',desc:'敏捷项目管理',icon:'📋',tag:'office-collab'},
+  {id:'trello',name:'Trello',desc:'看板式任务管理',icon:'📌',tag:'office-collab'},
+  {id:'asana',name:'Asana',desc:'团队工作管理平台',icon:'✅',tag:'office-collab'},
+  {id:'monday',name:'Monday.com',desc:'团队协作和工作流',icon:'📊',tag:'office-collab'},
+  {id:'gdocs',name:'Google Docs',desc:'文档创建和协作编辑',icon:'📄',tag:'file-knowledge'},
+  {id:'gsheets',name:'Google Sheets',desc:'电子表格和数据分析',icon:'📊',tag:'file-knowledge'},
+  {id:'gdrive',name:'Google Drive',desc:'云存储和文件管理',icon:'☁️',tag:'file-knowledge'},
+  {id:'dropbox',name:'Dropbox',desc:'文件同步和共享',icon:'📦',tag:'file-knowledge'},
+  {id:'onedrive',name:'OneDrive',desc:'微软云存储',icon:'🌐',tag:'file-knowledge'},
+  {id:'confluence',name:'Confluence',desc:'团队知识库',icon:'📚',tag:'file-knowledge'},
+  {id:'airtable',name:'Airtable',desc:'灵活数据库',icon:'🗄️',tag:'file-knowledge'},
+  {id:'coda',name:'Coda',desc:'灵活文档和应用',icon:'📃',tag:'file-knowledge'},
+  {id:'evernote',name:'Evernote',desc:'笔记和知识管理',icon:'🐘',tag:'file-knowledge'},
+  {id:'obsidian',name:'Obsidian',desc:'本地知识图谱',icon:'💎',tag:'file-knowledge'},
+  {id:'roam',name:'Roam Research',desc:'思维网络笔记',icon:'🧠',tag:'file-knowledge'},
+  {id:'bear',name:'Bear',desc:'优雅的 Markdown 笔记',icon:'🐻',tag:'file-knowledge'},
+  {id:'figma',name:'Figma',desc:'协作界面设计工具',icon:'🎨',tag:'creative-design'},
+  {id:'canva',name:'Canva',desc:'在线图形设计平台',icon:'🖼️',tag:'creative-design'},
+  {id:'midjourney',name:'Midjourney',desc:'AI 图像生成',icon:'🎭',tag:'creative-design'},
+  {id:'dall-e',name:'DALL-E',desc:'OpenAI 图像生成',icon:'🖌️',tag:'creative-design'},
+  {id:'adobe-cc',name:'Adobe Creative Cloud',desc:'专业创意工具套件',icon:'🎯',tag:'creative-design'},
+  {id:'sketch',name:'Sketch',desc:'矢量设计工具',icon:'✏️',tag:'creative-design'},
+  {id:'ganalytics',name:'Google Analytics',desc:'网站流量和用户行为分析',icon:'📈',tag:'biz-analysis'},
+  {id:'stripe',name:'Stripe',desc:'支付和收入分析',icon:'💳',tag:'biz-analysis'},
+  {id:'hubspot',name:'HubSpot',desc:'CRM 和营销分析',icon:'🧲',tag:'biz-analysis'},
+  {id:'salesforce',name:'Salesforce',desc:'企业 CRM 平台',icon:'☁️',tag:'biz-analysis'},
+  {id:'mixpanel',name:'Mixpanel',desc:'产品分析和用户行为',icon:'🔬',tag:'biz-analysis'},
+  {id:'amplitude',name:'Amplitude',desc:'产品数据分析',icon:'📉',tag:'biz-analysis'},
+  {id:'segment',name:'Segment',desc:'客户数据平台',icon:'🔀',tag:'biz-analysis'},
+  {id:'tableau',name:'Tableau',desc:'数据可视化',icon:'📊',tag:'biz-analysis'},
+  {id:'powerbi',name:'Power BI',desc:'商业智能分析',icon:'📐',tag:'biz-analysis'},
+  {id:'elevenlabs',name:'ElevenLabs',desc:'AI 语音合成',icon:'🎙️',tag:'av-generation'},
+  {id:'descript',name:'Descript',desc:'音视频编辑',icon:'🎬',tag:'av-generation'},
+  {id:'synthesia',name:'Synthesia',desc:'AI 数字人视频',icon:'🤖',tag:'av-generation'},
+  {id:'loom',name:'Loom',desc:'屏幕录制和视频消息',icon:'📹',tag:'av-generation'},
+  {id:'spotify',name:'Spotify',desc:'音乐和播客平台',icon:'🎵',tag:'av-generation'},
+  {id:'youtube',name:'YouTube',desc:'视频平台管理',icon:'▶️',tag:'av-generation'},
+  {id:'podcast',name:'Podcast Tools',desc:'播客录制和分发',icon:'🎧',tag:'av-generation'},
+  {id:'twitter',name:'X / Twitter',desc:'社交媒体发布和监控',icon:'🐦',tag:'info-content'},
+  {id:'linkedin',name:'LinkedIn',desc:'职业社交和内容发布',icon:'💼',tag:'info-content'},
+  {id:'reddit',name:'Reddit',desc:'社区讨论和信息获取',icon:'🔥',tag:'info-content'},
+  {id:'hackernews',name:'Hacker News',desc:'技术新闻和讨论',icon:'📰',tag:'info-content'},
+  {id:'rss',name:'RSS Reader',desc:'订阅源聚合',icon:'📡',tag:'info-content'},
+  {id:'web-scraper',name:'Web Scraper',desc:'网页数据抓取',icon:'🕷️',tag:'info-content'},
+  {id:'arxiv',name:'arXiv',desc:'学术论文搜索',icon:'📑',tag:'info-content'},
+  {id:'wikipedia',name:'Wikipedia',desc:'百科知识查询',icon:'📖',tag:'info-content'},
+  {id:'news-api',name:'News API',desc:'新闻聚合和搜索',icon:'📰',tag:'info-content'},
+  {id:'producthunt',name:'Product Hunt',desc:'产品发现和发布',icon:'🚀',tag:'info-content'},
+  {id:'medium',name:'Medium',desc:'内容发布平台',icon:'✍️',tag:'info-content'},
+  {id:'substack',name:'Substack',desc:'Newsletter 平台',icon:'📬',tag:'info-content'},
+  {id:'devto',name:'Dev.to',desc:'开发者内容社区',icon:'👩‍💻',tag:'info-content'},
+  {id:'vscode',name:'VS Code',desc:'代码编辑器集成',icon:'💻',tag:'dev-tools'},
+  {id:'vercel',name:'Vercel',desc:'部署和托管平台',icon:'▲',tag:'dev-tools'},
+  {id:'docker',name:'Docker',desc:'容器化和部署',icon:'🐳',tag:'dev-tools'},
+  {id:'aws',name:'AWS',desc:'云服务管理',icon:'☁️',tag:'dev-tools'},
+  {id:'sentry',name:'Sentry',desc:'错误监控和性能分析',icon:'🐛',tag:'dev-tools'},
+];
+
+const TAG_LABELS = {
+  'office-collab':'办公与协作','file-knowledge':'文件与知识库','creative-design':'创意与设计',
+  'biz-analysis':'商业分析','av-generation':'音视频生成','info-content':'信息源与内容获取','dev-tools':'开发与工具'
+};
+
+const ROLES = [
+  {v:'ecommerce',l:'🛒 E-commerce'},{v:'content-creator',l:'✍️ Content Creator'},{v:'designer',l:'🎨 Designer'},
+  {v:'pm',l:'📌 Product Manager'},{v:'ops-marketing',l:'📈 Ops / Marketing'},{v:'developer',l:'💻 Developer'},
+  {v:'educator',l:'📚 Educator'},{v:'founder',l:'🌱 Founder'},{v:'research',l:'🔍 Research'},
+  {v:'student',l:'🧑‍🎓 Student'},{v:'finance',l:'💼 Finance'},{v:'other',l:'🌿 Other'}
+];
+const USE_CASES = [
+  {v:'coding',l:'💻 Code & Deploy'},{v:'content',l:'✍️ Content Creation'},{v:'data',l:'📊 Data Analysis'},
+  {v:'customer',l:'🎧 Customer Support'},{v:'sales',l:'🤝 Sales & Outreach'},{v:'ops',l:'⚙️ Operations'},
+  {v:'research',l:'🔍 Research'},{v:'other',l:'✨ Other'}
+];
+const REFERRALS = [
+  {v:'producthunt',l:'🚀 Product Hunt'},{v:'twitter',l:'🐦 X / Twitter'},{v:'instagram',l:'📸 Instagram'},
+  {v:'youtube',l:'▶️ YouTube'},{v:'reddit',l:'🔥 Reddit'},{v:'discord',l:'💬 Discord'},
+  {v:'github',l:'🧑‍💻 GitHub'},{v:'search',l:'🔍 Search engine'},{v:'friend',l:'👥 Friend'},
+  {v:'podcast',l:'🎧 Podcast'},{v:'other',l:'📝 Other'}
+];
+const OB_CHANNELS = [
+  {id:'slack',name:'Slack',color:'#4A154B',connectable:true,rec:true},
+  {id:'discord',name:'Discord',color:'#5865F2',connectable:true},
+  {id:'whatsapp',name:'WhatsApp',color:'#25D366',connectable:true},
+  {id:'telegram',name:'Telegram',color:'#26A5E4'},
+  {id:'google-chat',name:'Google Chat',color:'#00AC47'},
+  {id:'feishu',name:'Feishu / Lark',color:'#3370FF'},
+  {id:'teams',name:'Microsoft Teams',color:'#6264A7'},
+  {id:'line',name:'LINE',color:'#06C755'},
+];
+const AVATARS = [
+  {id:'nexu-alpha',name:'Nexu Alpha',tagline:'Does a bit of everything — seriously',emoji:'🦞',avail:true,color:'#6366f1'},
+  {id:'ai-sales',name:'AI Sales',tagline:'Find customers & close deals',emoji:'🤝',avail:false,color:'#10b981'},
+  {id:'ai-support',name:'AI Support',tagline:'Reply to customers 24/7',emoji:'🎧',avail:false,color:'#3b82f6'},
+  {id:'ai-pm',name:'AI Product Manager',tagline:'Figure out what to build & why',emoji:'📌',avail:false,color:'#ec4899'},
+  {id:'ai-marketing',name:'AI Marketing',tagline:'Get more people to know your product',emoji:'📣',avail:false,color:'#f59e0b'},
+];
+const DEPLOYMENTS = [
+  {title:'产品 Landing Page',url:'landing-abc.nexu.dev',status:'live',time:'2026-02-25 14:32',source:'coding'},
+  {title:'数据看板 Dashboard',url:'dashboard-xyz.nexu.dev',status:'live',time:'2026-02-25 11:05',source:'coding'},
+  {title:'Team Wiki',url:'wiki-eng.nexu.dev',status:'live',time:'2026-02-24 16:20',source:'coding'},
+  {title:'API Monitor',url:'',status:'building',time:'2026-02-25 15:10',source:'coding'},
+  {title:'内部工具 - 审批流',url:'',status:'failed',time:'2026-02-24 09:45',source:'coding'},
+  {title:'Nexu Weekly #8',url:'newsletter-w8.nexu.dev',status:'live',time:'2026-02-21 18:00',source:'content'},
+  {title:'v0.3 发布公告 Thread',url:'thread-v03.nexu.dev',status:'live',time:'2026-02-25 10:15',source:'content'},
+  {title:'How We Built a Cyber Office with AI',url:'blog-cyber-office.nexu.dev',status:'live',time:'2026-02-24 14:30',source:'content'},
+];
+const CHANNELS_LIST = [
+  {id:'1',platform:'slack',name:'#product-dev',status:'active',msgs:128,last:'2 分钟前'},
+  {id:'2',platform:'discord',name:'#engineering',status:'active',msgs:76,last:'15 分钟前'},
+  {id:'3',platform:'slack',name:'@张三',status:'active',msgs:34,last:'1 小时前'},
+  {id:'4',platform:'whatsapp',name:'Product Team',status:'active',msgs:45,last:'30 分钟前'},
+  {id:'5',platform:'discord',name:'@alice',status:'inactive',msgs:8,last:'—'},
+];
+
+/* ====== PAGE NAVIGATION ====== */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+  const el = document.getElementById('page-' + id);
+  if (el) {
+    el.classList.add('active');
+    el.style.display = 'block';
+  }
+  document.querySelectorAll('#globalNav button').forEach(b => {
+    const btnId = b.getAttribute('onclick')?.match(/showPage\('(.+?)'\)/)?.[1] || '';
+    b.style.color = btnId === id ? 'var(--text-primary)' : 'var(--neutral-400)';
+  });
+}
+
+/* ====== AUTH ====== */
+let authMode = 'login';
+function toggleAuthMode() {
+  authMode = authMode === 'login' ? 'register' : 'login';
+  document.getElementById('authTitle').textContent = authMode === 'login' ? 'Welcome back' : 'Create your account';
+  document.getElementById('authSubtitle').textContent = authMode === 'login' ? 'Log in to your AI office twin' : 'Sign up to get your Nexu AI office twin';
+  document.getElementById('authPwInput').placeholder = authMode === 'login' ? 'Enter your password' : 'At least 6 characters';
+  document.getElementById('authSubmitBtn').textContent = authMode === 'login' ? 'Log in with email' : 'Sign up with email';
+  document.getElementById('authToggleQ').textContent = authMode === 'login' ? "Don't have an account?" : 'Already have an account?';
+  document.getElementById('authToggleBtn').textContent = authMode === 'login' ? 'Sign up' : 'Log in';
+}
+
+/* ====== INVITE ====== */
+const VALID_CODES = ['NEXU2026','OPENCLAW','LOBSTER','EARLY-ACCESS'];
+function validateInvite() {
+  const v = document.getElementById('inviteInput').value.trim();
+  const err = document.getElementById('inviteError');
+  if (!v) { err.textContent = 'Please enter an invite code'; err.style.display = 'block'; return; }
+  if (!VALID_CODES.includes(v)) { err.textContent = 'Invalid invite code. Please try again.'; err.style.display = 'block'; return; }
+  err.style.display = 'none';
+  document.getElementById('inviteFormArea').style.display = 'none';
+  document.getElementById('inviteSuccessArea').style.display = 'block';
+  setTimeout(() => showPage('onboarding'), 1200);
+}
+
+/* ====== ONBOARDING ====== */
+let obStep = 0;
+function renderPills(containerId, items, multi) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = items.map(i => `<button class="pill" data-val="${i.v}" onclick="togglePill(this,${multi})">${i.l}</button>`).join('');
+}
+function togglePill(el, multi) {
+  if (multi) { el.classList.toggle('selected'); }
+  else {
+    el.parentElement.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+}
+function updateObProgress() {
+  document.querySelectorAll('#obProgress .progress-seg').forEach((s, i) => {
+    s.className = 'progress-seg' + (i < obStep ? ' done' : i === obStep ? ' current' : '');
+  });
+}
+function obNext() {
+  document.getElementById('obStep' + obStep).style.display = 'none';
+  obStep++;
+  updateObProgress();
+  const next = document.getElementById('obStep' + obStep);
+  if (next) { next.style.display = 'block'; next.classList.add('fade-in'); }
+  if (obStep === 3) renderChannelList();
+  if (obStep === 4) renderAvatarCarousel();
+}
+function obBack() {
+  document.getElementById('obStep' + obStep).style.display = 'none';
+  obStep--;
+  updateObProgress();
+  document.getElementById('obStep' + obStep).style.display = 'block';
+}
+function obComplete() {
+  document.getElementById('obStep4').style.display = 'none';
+  document.getElementById('obProgress').style.display = 'none';
+  document.getElementById('obComplete').style.display = 'block';
+  setTimeout(() => showPage('workspace'), 1500);
+}
+
+function renderChannelList() {
+  const c = document.getElementById('channelList');
+  c.innerHTML = OB_CHANNELS.map(ch => `
+    <div style="display:flex;align-items:center;gap:var(--sp-12);padding:var(--sp-12);border:1px solid var(--border-card);border-radius:var(--r-12)">
+      <div style="width:36px;height:36px;border-radius:var(--r-8);background:${ch.color}20;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:${ch.color}">${ch.name[0]}</div>
+      <div style="flex:1"><div style="font-size:var(--fs-14);font-weight:500">${ch.name}</div></div>
+      ${ch.rec ? '<span class="tag tag-brand" style="font-size:var(--fs-10)">recommended</span>' : ''}
+      ${ch.connectable ? `<button class="btn btn-primary btn-sm" onclick="this.textContent='Connected';this.disabled=true;this.style.background='var(--success)';this.style.color='#fff'">Connect</button>` : `<button class="btn btn-ghost btn-sm" onclick="this.textContent='✓ Voted'">Vote</button>`}
+    </div>
+  `).join('');
+}
+
+let avatarIdx = 0;
+function renderAvatarCarousel() {
+  const c = document.getElementById('avatarCarousel');
+  const a = AVATARS[avatarIdx];
+  c.innerHTML = `
+    <button class="btn btn-ghost" onclick="avatarIdx=(avatarIdx-1+AVATARS.length)%AVATARS.length;renderAvatarCarousel()" style="font-size:24px">←</button>
+    <div class="avatar-card ${a.avail ? 'selected-avatar' : ''}" style="border-color:${a.color}">
+      <span style="font-size:48px">${a.emoji}</span>
+      ${!a.avail ? '<div class="coming-soon-overlay">Coming soon</div>' : ''}
+    </div>
+    <button class="btn btn-ghost" onclick="avatarIdx=(avatarIdx+1)%AVATARS.length;renderAvatarCarousel()" style="font-size:24px">→</button>
+  `;
+  const info = document.getElementById('avatarInfo');
+  info.innerHTML = `
+    <h3 style="font-size:var(--fs-18);font-weight:700;margin-bottom:var(--sp-4)">${a.name}</h3>
+    <p style="font-size:var(--fs-14);color:var(--text-secondary);margin-bottom:var(--sp-12)">${a.tagline}</p>
+    ${a.avail ? '<button class="btn btn-primary btn-sm btn-pill">Select this avatar</button>' : '<button class="btn btn-ghost btn-sm btn-pill">Vote for this role</button>'}
+  `;
+}
+
+/* ====== DASHBOARD ====== */
+function renderDeployments() {
+  const c = document.getElementById('deploymentsList');
+  c.innerHTML = DEPLOYMENTS.map(d => {
+    const statusColor = d.status === 'live' ? 'var(--success)' : d.status === 'building' ? 'var(--warning)' : 'var(--error)';
+    const icon = d.source === 'coding' ? '💻' : '📝';
+    return `<div class="activity-item" style="cursor:pointer">
+      <div class="activity-dot" style="background:${statusColor}"></div>
+      <div class="activity-content">
+        <span style="font-weight:500;color:var(--text-primary)">${icon} ${d.title}</span>
+        ${d.url ? `<br/><span style="font-size:var(--fs-12);color:var(--text-secondary)">${d.url}</span>` : ''}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+        <span class="tag" style="font-size:var(--fs-10);padding:2px 8px">${d.status}</span>
+        <span style="font-size:var(--fs-10);color:var(--text-tertiary)">${d.time}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderDashChannels() {
+  const c = document.getElementById('dashChannelList');
+  c.innerHTML = CHANNELS_LIST.filter(ch => ch.status === 'active').map(ch => {
+    const icon = ch.platform === 'slack' ? '💬' : ch.platform === 'discord' ? '🎮' : '📱';
+    return `<div style="display:flex;align-items:center;gap:var(--sp-8);padding:var(--sp-8) 0;cursor:pointer" onclick="showPage('workspace')">
+      <span>${icon}</span>
+      <span style="flex:1;font-size:var(--fs-13)">${ch.name}</span>
+      <span style="font-size:var(--fs-12);color:var(--text-tertiary)">${ch.last}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ====== CHANNELS CONFIG ====== */
+function selectPlatform(p) {
+  document.querySelectorAll('.platform-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('p' + p.charAt(0).toUpperCase() + p.slice(1)).classList.add('selected');
+  const area = document.getElementById('platformConfigArea');
+  if (p === 'slack') {
+    area.innerHTML = `<div class="card"><div style="display:flex;align-items:center;gap:var(--sp-12);margin-bottom:var(--sp-20)"><div style="width:12px;height:12px;border-radius:50%;background:var(--success)"></div><span style="font-size:var(--fs-14);font-weight:600">Slack — Connected</span><span style="font-size:var(--fs-12);color:var(--text-tertiary);margin-left:auto">配置于 2026-02-18</span></div><div style="margin-bottom:var(--sp-16)"><label style="font-size:var(--fs-12);color:var(--text-tertiary);margin-bottom:var(--sp-4);display:block">Webhook URL</label><div style="display:flex;gap:var(--sp-8)"><input class="input" value="https://api.nexu.dev/webhook/slack/tk_abc123" readonly style="font-size:var(--fs-12);background:var(--surface-2)"/><button class="btn btn-secondary btn-sm" onclick="copyText('https://api.nexu.dev/webhook/slack/tk_abc123')">Copy</button></div></div><div style="display:flex;gap:var(--sp-8)"><button class="btn btn-secondary btn-sm">测试连接</button><button class="btn btn-ghost btn-sm" style="color:var(--error)">重置并重新配置</button></div></div>`;
+  } else if (p === 'discord') {
+    area.innerHTML = `<div class="card"><div style="display:flex;align-items:center;gap:var(--sp-12);margin-bottom:var(--sp-20)"><div style="width:12px;height:12px;border-radius:50%;background:var(--success)"></div><span style="font-size:var(--fs-14);font-weight:600">Discord — Connected</span><span style="font-size:var(--fs-12);color:var(--text-tertiary);margin-left:auto">配置于 2026-02-20</span></div><div style="margin-bottom:var(--sp-16)"><label style="font-size:var(--fs-12);color:var(--text-tertiary);margin-bottom:var(--sp-4);display:block">Webhook URL</label><div style="display:flex;gap:var(--sp-8)"><input class="input" value="https://api.nexu.dev/webhook/discord/tk_def456" readonly style="font-size:var(--fs-12);background:var(--surface-2)"/><button class="btn btn-secondary btn-sm" onclick="copyText('https://api.nexu.dev/webhook/discord/tk_def456')">Copy</button></div></div><div style="display:flex;gap:var(--sp-8)"><button class="btn btn-secondary btn-sm">测试连接</button><button class="btn btn-ghost btn-sm" style="color:var(--error)">重置并重新配置</button></div></div>`;
+  } else {
+    area.innerHTML = `<div class="card" style="text-align:center;padding:var(--sp-32)"><div style="font-size:48px;margin-bottom:var(--sp-16)">💬</div><h3 style="font-size:var(--fs-16);font-weight:600;margin-bottom:var(--sp-8)">Connect WhatsApp</h3><p style="font-size:var(--fs-14);color:var(--text-secondary);margin-bottom:var(--sp-20)">Scan the QR code with your WhatsApp to connect</p><div style="width:160px;height:160px;background:var(--surface-2);border-radius:var(--r-12);margin:0 auto var(--sp-16);display:flex;align-items:center;justify-content:center"><span style="font-size:var(--fs-14);color:var(--text-tertiary)">QR Code</span></div><button class="btn btn-primary">I've scanned it</button></div>`;
+  }
+}
+
+/* ====== SKILLS ====== */
+let skillSource = 'official';
+let skillTag = 'all';
+
+function renderSkills() {
+  const grid = document.getElementById('skillGrid');
+  const empty = document.getElementById('skillEmpty');
+  if (skillSource === 'custom') {
+    grid.style.display = 'none'; empty.style.display = 'block'; return;
+  }
+  empty.style.display = 'none'; grid.style.display = 'grid';
+  const search = (document.getElementById('skillSearch').value || '').toLowerCase();
+  const filtered = SKILLS_DATA.filter(s => {
+    if (skillTag !== 'all' && s.tag !== skillTag) return false;
+    if (search && !s.name.toLowerCase().includes(search) && !s.desc.toLowerCase().includes(search)) return false;
+    return true;
+  });
+  document.getElementById('skillCount').textContent = filtered.length + ' skills';
+  grid.innerHTML = filtered.map(s => `
+    <div class="skill-card" onclick="showPage('skill-detail')">
+      <div class="skill-icon" style="background:var(--surface-2)">${s.icon}</div>
+      <div class="skill-name">${s.name}</div>
+      <div class="skill-desc">${s.desc}</div>
+      <div class="skill-tags"><span class="tag" style="font-size:var(--fs-10)">${TAG_LABELS[s.tag]}</span></div>
+    </div>
+  `).join('');
+}
+function filterSkills() { renderSkills(); }
+function setSkillSource(src, el) {
+  skillSource = src;
+  document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('skillTagFilter').style.display = src === 'official' ? 'flex' : 'none';
+  renderSkills();
+}
+function setSkillTag(tag, el) {
+  skillTag = tag;
+  document.querySelectorAll('#skillTagFilter .tag').forEach(t => {
+    t.className = 'tag' + (t.dataset.tag === tag ? ' tag-brand' : '');
+  });
+  renderSkills();
+}
+
+/* ====== SKILL DETAIL ====== */
+function sdConnect() {
+  const btn = document.getElementById('sdConnectBtn');
+  btn.textContent = 'Connecting...'; btn.disabled = true;
+  setTimeout(() => { btn.textContent = '✓ Connected'; btn.style.background = 'var(--success)'; }, 1500);
+}
+
+function renderRelatedSkills() {
+  const grid = document.getElementById('relatedSkillsGrid');
+  const related = SKILLS_DATA.filter(s => s.tag === 'office-collab' && s.id !== 'gmail').slice(0, 3);
+  grid.innerHTML = related.map(s => `
+    <div class="skill-card" onclick="showPage('skill-detail')">
+      <div class="skill-icon" style="background:var(--surface-2)">${s.icon}</div>
+      <div class="skill-name">${s.name}</div>
+      <div class="skill-desc">${s.desc}</div>
+    </div>
+  `).join('');
+}
+
+function renderFAQ() {
+  const faqs = [
+    {q:'How do I connect Gmail?', a:'Click the "Connect" button above and authorize Nexu to access your Gmail account via OAuth. Your credentials are never stored on our servers.'},
+    {q:'Is my data safe?', a:'Yes. Nexu uses OAuth for authentication and only accesses data you explicitly authorize. All connections are encrypted.'},
+    {q:'Can I revoke access?', a:'Yes. You can disconnect any tool at any time from your Google Account settings or from the Nexu Skills panel.'},
+  ];
+  const c = document.getElementById('sdFAQ');
+  c.innerHTML = faqs.map((f, i) => `
+    <div style="border-bottom:1px solid var(--border-field);padding:var(--sp-12) 0;cursor:pointer" onclick="this.querySelector('.faq-a').style.display=this.querySelector('.faq-a').style.display==='none'?'block':'none'">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:var(--fs-14);font-weight:500">${f.q}</span>
+        <span style="color:var(--text-tertiary);font-size:var(--fs-14)">▼</span>
+      </div>
+      <div class="faq-a" style="display:none;margin-top:var(--sp-8);font-size:var(--fs-13);color:var(--text-secondary);line-height:1.5">${f.a}</div>
+    </div>
+  `).join('');
+}
+
+/* ====== UTILS ====== */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => showToast('已复制'));
+}
+function copyPrompt(el, text) {
+  navigator.clipboard.writeText(text).then(() => showToast('已复制，去 IM 中发送给 Nexu 即可使用'));
+}
+
+/* ====== INIT ====== */
+function init() {
+  renderPills('roleGrid', ROLES, false);
+  renderPills('useCaseGrid', USE_CASES, true);
+  renderPills('referralGrid', REFERRALS, false);
+  renderSkills();
+  renderDeployments();
+  renderDashChannels();
+  renderRelatedSkills();
+  renderFAQ();
+}
+init();
+</script>
+</body>
+</html>

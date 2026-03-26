@@ -12,6 +12,6 @@ describe("Badge", () => {
   it("supports variants via className output", () => {
     render(<Badge variant="success">Healthy</Badge>);
 
-    expect(screen.getByText("Healthy")).toHaveClass("bg-success");
+    expect(screen.getByText("Healthy")).toHaveClass("bg-[var(--color-success-subtle)]");
   });
 });

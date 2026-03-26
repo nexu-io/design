@@ -4,13 +4,13 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/cn";
 
 const inputShellVariants = cva(
-  "flex w-full items-center gap-2 rounded-md border border-input bg-background text-foreground shadow-xs transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background",
+  "flex w-full items-center gap-2 rounded-lg border border-input bg-card text-foreground transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] focus-within:border-primary/30 focus-within:ring-2 focus-within:ring-primary/20",
   {
     variants: {
       size: {
         sm: "min-h-8 px-2.5 text-xs",
-        md: "min-h-10 px-3 text-sm",
-        lg: "min-h-11 px-3.5 text-base",
+        md: "min-h-9 px-3 text-[13px]",
+        lg: "min-h-11 px-3.5 text-sm",
       },
       invalid: {
         true: "border-destructive focus-within:ring-destructive",
@@ -49,6 +49,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div
         className={cn(inputShellVariants({ invalid, size }), className)}
+        data-slot="input"
         data-invalid={invalid ? "" : undefined}
       >
         {leadingIcon ? <span className="text-muted-foreground">{leadingIcon}</span> : null}

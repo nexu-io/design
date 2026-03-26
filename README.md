@@ -1,12 +1,13 @@
 # nexu-ui
 
-`nexu-ui` is a pnpm workspace for Nexu's React and TypeScript UI library, shared design tokens, and a Storybook app for local development and documentation.
+`nexu-ui` is a pnpm workspace for Nexu's React and TypeScript UI library, shared design tokens, a Storybook app, and a Tauri demo app.
 
 ## Workspace packages
 
 - `packages/ui-web` — `@nexu/ui-web`, the React component library
 - `packages/tokens` — `@nexu/tokens`, shared design tokens and CSS
 - `apps/storybook` — `@nexu/storybook`, the component playground and docs app
+- `apps/demo` — `@nexu/demo`, the Tauri demo app
 
 ## Stack
 
@@ -24,6 +25,7 @@
 
 - Node.js 20+
 - pnpm 10+
+- rustup / Rust toolchain (the Tauri demo pins its own version in `apps/demo/src-tauri/rust-toolchain.toml`)
 
 ### Install dependencies
 
@@ -31,13 +33,16 @@
 pnpm install
 ```
 
-### Start Storybook
+### Start local development
 
 ```bash
 pnpm dev
 ```
 
-Storybook runs from `apps/storybook` on port `6006` by default.
+This starts:
+
+- Storybook at `http://localhost:6006`
+- the Tauri demo from `apps/demo`
 
 ## Common commands
 
@@ -45,7 +50,12 @@ Storybook runs from `apps/storybook` on port `6006` by default.
 
 ```bash
 pnpm dev
+pnpm dev:storybook
+pnpm dev:demo
+pnpm dev:demo:web
 pnpm build
+pnpm build:storybook
+pnpm build:tauri
 pnpm build:packages
 pnpm typecheck
 pnpm test
@@ -63,6 +73,8 @@ pnpm --filter @nexu/ui-web test
 pnpm --filter @nexu/ui-web typecheck
 pnpm --filter @nexu/tokens build
 pnpm --filter @nexu/storybook build-storybook
+pnpm --filter @nexu/demo dev
+pnpm --filter @nexu/demo tauri:build
 ```
 
 ## Repository structure
@@ -70,6 +82,7 @@ pnpm --filter @nexu/storybook build-storybook
 ```text
 .
 ├── apps/
+│   ├── demo/
 │   └── storybook/
 ├── docs/
 ├── packages/
@@ -84,6 +97,7 @@ pnpm --filter @nexu/storybook build-storybook
 - Use `pnpm` only.
 - Source files are written in TypeScript and React.
 - Component stories live in `apps/storybook/src/stories`.
+- The desktop demo lives in `apps/demo`, with Rust sources in `apps/demo/src-tauri`.
 - Tests for `@nexu/ui-web` are co-located with source files and run with Vitest.
 - Formatting and code quality checks are managed with Biome and TypeScript.
 

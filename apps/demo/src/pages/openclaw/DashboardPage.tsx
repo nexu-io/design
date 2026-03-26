@@ -1,0 +1,260 @@
+import { useNavigate } from 'react-router-dom';
+import {
+  Globe,
+  Rocket,
+  MessageSquare,
+  Zap,
+  ExternalLink,
+  ArrowUpRight,
+  Clock,
+  AlertTriangle,
+  CheckCircle2,
+  Loader2,
+  Radio,
+  Sparkles,
+  Code2,
+  Crown,
+} from 'lucide-react';
+import { usePageTitle } from '../../hooks/usePageTitle';
+import {
+  MOCK_CHANNELS,
+  MOCK_DEPLOYMENTS,
+  MOCK_ACTIVITIES,
+  MOCK_WORKFLOWS,
+  getPlatformLabel,
+  type Deployment,
+  type Activity,
+} from './data';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+
+function StatCard({ label, value, sub, icon: Icon, iconColor }: {
+  label: string; value: string; sub: string; icon: typeof Globe; iconColor: string;
+}) {
+  return (
+    <div className="card p-5">
+      <div className="mb-3">
+        <div className="flex justify-center items-center w-10 h-10 rounded-[12px] bg-white border border-border">
+          <Icon size={18} className={iconColor} />
+        </div>
+      </div>
+      <div className="text-2xl font-bold tracking-tight text-text-primary">{value}</div>
+      <div className="text-[12px] text-text-muted mt-0.5">{label}</div>
+      <div className="text-[11px] text-[var(--color-success)] mt-1">{sub}</div>
+    </div>
+  );
+}
+
+function DeploymentRow({ dep }: { dep: Deployment }) {
+  const statusConfig: Record<string, { icon: typeof CheckCircle2; color: string }> = {
+    live: { icon: CheckCircle2, color: 'text-[var(--color-success)]' },
+    building: { icon: Loader2, color: 'text-[var(--color-warning)] animate-spin' },
+    failed: { icon: AlertTriangle, color: 'text-[var(--color-danger)]' },
+  };
+  const s = statusConfig[dep.status];
+  return (
+    <div className="flex gap-3 items-center py-3 border-b border-border last:border-0">
+      <s.icon size={14} className={s.color} />
+      <div className="flex-1 min-w-0">
+        <div className="flex gap-2 items-center">
+          <span className="text-[13px] font-medium text-text-primary truncate">{dep.title}</span>
+          {dep.source === 'content' && (
+            <Badge className="bg-[rgba(217,153,247,0.10)] text-[var(--color-pink)] text-[9px]">Content</Badge>
+          )}
+        </div>
+        <div className="text-[11px] text-text-muted">{dep.createdAt}</div>
+      </div>
+      {dep.url && (
+        <a href={dep.url} target="_blank" rel="noreferrer"
+          className="flex gap-1 items-center text-[11px] text-[var(--color-success)] hover:text-[var(--color-success)] font-medium shrink-0">
+          Preview <ExternalLink size={10} />
+        </a>
+      )}
+    </div>
+  );
+}
+
+function ActivityRow({ activity, onNavigate }: { activity: Activity; onNavigate?: () => void }) {
+  const typeConfig: Record<string, { icon: typeof Rocket; iconColor: string }> = {
+    deploy: { icon: Rocket, iconColor: 'text-[var(--color-success)]' },
+    message: { icon: MessageSquare, iconColor: 'text-[var(--color-info)]' },
+    config: { icon: Radio, iconColor: 'text-[var(--color-pink)]' },
+    error: { icon: AlertTriangle, iconColor: 'text-[var(--color-danger)]' },
+    content: { icon: Sparkles, iconColor: 'text-[var(--color-pink)]' },
+  };
+  const t = typeConfig[activity.type];
+
+  return (
+    <div onClick={onNavigate}
+      className={`flex gap-3 items-start py-3 border-b border-border last:border-0 ${onNavigate ? 'cursor-pointer hover:bg-surface-2/50 -mx-2 px-2 rounded-lg' : ''}`}>
+      <div className="flex justify-center items-center w-7 h-7 rounded-[12px] shrink-0 mt-0.5 bg-white border border-border">
+        <t.icon size={13} className={t.iconColor} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="text-[13px] text-text-primary leading-relaxed">{activity.content}</div>
+        <div className="flex gap-2 items-center mt-0.5">
+          {activity.channelName && (
+            <Badge className="text-[11px]">{activity.channelName}</Badge>
+          )}
+          <span className="text-[11px] text-text-muted">· {activity.time}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function UsageChart() {
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const values = [12, 28, 8, 35, 22, 5, 18];
+  const max = Math.max(...values);
+
+  return (
+    <div className="flex gap-3 items-end h-32">
+      {days.map((day, i) => (
+        <div key={day} className="flex flex-col flex-1 items-center gap-1.5">
+          <div className="relative w-full rounded-t-md bg-[var(--color-success)]/80 transition-all hover:bg-[var(--color-success)] group"
+            style={{ height: `${(values[i] / max) * 100}%`, minHeight: 4 }}>
+            <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 text-[10px] text-text-primary bg-surface-3 px-2 py-0.5 rounded transition-opacity whitespace-nowrap">
+              {values[i]} uses
+            </div>
+          </div>
+          <span className="text-[10px] text-text-muted">{day}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  usePageTitle('Dashboard');
+  const navigate = useNavigate();
+  const activeChannels = MOCK_CHANNELS.filter(c => c.status === 'active').length;
+  const liveDeployments = MOCK_DEPLOYMENTS.filter(d => d.status === 'live').length;
+  const activeWorkflows = MOCK_WORKFLOWS.filter(w => w.status === 'active').length;
+
+  return (
+    <div className="max-w-5xl p-4 sm:p-8 mx-auto">
+      <div className="mb-8">
+        <h1 className="heading-page">Dashboard</h1>
+        <p className="heading-page-desc">Cyber office overview — Lobster 🦞 status report.</p>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+        <StatCard label="Active channels" value={activeChannels.toString()} sub={`${MOCK_CHANNELS.length} total`} icon={Radio} iconColor="text-[var(--color-success)]" />
+        <StatCard label="Live deployments" value={liveDeployments.toString()} sub="Code + content" icon={Globe} iconColor="text-[var(--color-info)]" />
+        <StatCard label="Content Workflows" value={activeWorkflows.toString()} sub={`${MOCK_WORKFLOWS.length} total`} icon={Sparkles} iconColor="text-[var(--color-pink)]" />
+        <StatCard label="Credits balance" value="3,000" sub="5,000 total" icon={Zap} iconColor="text-[var(--color-warning)]" />
+      </div>
+
+      {/* Credit usage */}
+      <div className="card mb-8 p-5">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Zap size={14} className="text-accent" />
+            <h2 className="text-sm font-semibold text-text-primary">Credit usage this month</h2>
+            <Badge className="text-[9px]">Free Plan</Badge>
+          </div>
+          <Button variant="link" size="sm" onClick={() => navigate('/openclaw/workspace/billing')} className="text-[11px]">
+            View details <ArrowUpRight size={12} />
+          </Button>
+        </div>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-4">
+          <div className="flex-1 relative h-2.5 rounded-full bg-surface-3 overflow-hidden">
+            <div className="absolute inset-y-0 left-0 rounded-full bg-[var(--color-info)]/80" style={{ width: '25.6%' }} />
+            <div className="absolute inset-y-0 rounded-full bg-[var(--color-pink)]/80" style={{ left: '25.6%', width: '12.4%' }} />
+            <div className="absolute inset-y-0 rounded-full bg-[var(--color-success)]/80" style={{ left: '38%', width: '2%' }} />
+          </div>
+          <span className="text-[12px] font-medium text-text-primary shrink-0">2,000 / 5,000</span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            { label: 'AI coding', used: 1280, icon: Code2, color: 'text-[var(--color-info)]', bg: 'bg-[var(--color-info)]' },
+            { label: 'Content automation', used: 620, icon: Sparkles, color: 'text-[var(--color-pink)]', bg: 'bg-[var(--color-pink)]' },
+            { label: 'Deployments', used: 100, icon: Globe, color: 'text-[var(--color-success)]', bg: 'bg-[var(--color-success)]' },
+          ].map(cat => (
+            <div key={cat.label} className="flex items-center gap-2.5">
+              <div className={`w-2 h-2 rounded-full ${cat.bg} shrink-0`} />
+              <cat.icon size={12} className={cat.color} />
+              <span className="text-[12px] text-text-secondary">{cat.label}</span>
+              <span className="text-[12px] font-semibold text-text-primary ml-auto">{cat.used.toLocaleString()}</span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 pt-3 border-t border-border/50 flex flex-col sm:flex-row gap-3 sm:gap-0 sm:items-center sm:justify-between">
+          <div className="text-[11px] text-text-muted">3,000 credits left this month · ~12 days remaining</div>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/openclaw/workspace/billing')} className="text-[11px] font-semibold text-accent bg-accent/10 hover:bg-accent/20">
+            <Crown size={10} /> Upgrade to Pro for 10x credits
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="lg:col-span-3 space-y-6">
+          <div className="card p-5">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-sm font-semibold text-text-primary">Recent activity</h2>
+              <span className="text-[11px] text-text-muted">{MOCK_ACTIVITIES.length} items</span>
+            </div>
+            <div>
+              {MOCK_ACTIVITIES.map(a => (
+                <ActivityRow key={a.id} activity={a}
+                  onNavigate={a.channelId ? () => navigate(`/openclaw/workspace/channels/${a.channelId}`) : undefined} />
+              ))}
+            </div>
+          </div>
+          <div className="card p-5">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-sm font-semibold text-text-primary">All outputs</h2>
+              <span className="text-[11px] text-text-muted">{MOCK_DEPLOYMENTS.length} total</span>
+            </div>
+            <div>
+              {MOCK_DEPLOYMENTS.map(d => (<DeploymentRow key={d.id} dep={d} />))}
+            </div>
+          </div>
+        </div>
+
+        <div className="lg:col-span-2 space-y-6">
+          <div className="card p-5">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-sm font-semibold text-text-primary">Usage this week</h2>
+              <div className="flex gap-1 items-center text-[11px] text-text-muted"><Clock size={10} /> 128 requests</div>
+            </div>
+            <UsageChart />
+          </div>
+          <div className="card p-5">
+            <h2 className="text-sm font-semibold text-text-primary mb-3">Channels</h2>
+            <div className="space-y-2">
+              {MOCK_CHANNELS.map(ch => (
+                <button key={ch.id} onClick={() => navigate(`/openclaw/workspace/channels/${ch.id}`)}
+                  className="flex gap-3 items-center py-2 px-2 -mx-2 w-full text-left rounded-lg transition-colors hover:bg-surface-3 cursor-pointer group">
+                  <div className={`w-2 h-2 rounded-full shrink-0 ${ch.status === 'active' ? 'bg-[var(--color-success)]' : 'bg-surface-3'}`} />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[13px] font-medium text-text-primary truncate">{ch.name}</div>
+                    <div className="text-[11px] text-text-muted">{getPlatformLabel(ch.platform)} · {ch.messageCount} messages</div>
+                  </div>
+                  <ArrowUpRight size={12} className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="card p-5">
+            <h2 className="text-sm font-semibold text-text-primary mb-3">Quick actions</h2>
+            <div className="space-y-2">
+              {[
+                { label: 'Add channel', action: () => navigate('/openclaw/workspace/channels'), icon: Radio },
+                { label: 'View all outputs', action: () => navigate('/openclaw/workspace/channels'), icon: Globe },
+                { label: 'Docs', action: () => {}, icon: ExternalLink },
+              ].map(a => (
+                <button key={a.label} onClick={a.action}
+                  className="flex gap-2.5 items-center py-2 px-2 -mx-2 w-full text-left rounded-lg transition-colors hover:bg-surface-3 cursor-pointer text-[13px] text-text-secondary hover:text-text-primary">
+                  <a.icon size={14} className="text-text-muted" />
+                  {a.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

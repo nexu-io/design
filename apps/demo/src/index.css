@@ -1,0 +1,1371 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* ═══════════════════════════════════════════════════════════════════
+   nexu Design System 2.0 — Single Source of Truth
+   ═══════════════════════════════════════════════════════════════════ */
+
+@theme {
+
+  /* ── Typography ── */
+  --font-sans: 'Digits', 'Manrope', 'Inter', 'PingFang SC', -apple-system, 'Noto Sans SC';
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  --font-heading: 'Georgia', 'Times New Roman', serif;
+  --font-script: 'Caveat', cursive;
+
+  /* ── Brand Teal — 10% rule ── */
+  --color-brand-primary: #3DB9CE;
+  --color-brand-subtle: rgba(61, 185, 206, 0.08);
+
+  /* ── Neutral palette ── */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f9f9f9;
+  --color-neutral-100: #f3f3f3;
+  --color-neutral-200: #eeeeee;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #909599;
+  --color-neutral-500: #787c80;
+  --color-neutral-600: #6c7073;
+  --color-neutral-700: #545659;
+  --color-neutral-800: #222b39;
+  --color-neutral-900: #042028;
+
+  /* ── Surface — pure neutral gray, no tint ── */
+  --color-surface-0: #FAFAFA;
+  --color-surface-1: #FFFFFF;
+  --color-surface-2: #F5F5F5;
+  --color-surface-3: #EEEEEE;
+  --color-surface-4: #e5e5e5;
+  --color-surface-5: #d4d4d4;
+
+  /* ── Dark surfaces — brand panels ── */
+  --color-dark-bg: #0d0d10;
+  --color-dark-surface: #1a1a1f;
+  --color-dark-surface-hover: #242429;
+  --color-dark-border: rgba(255, 255, 255, 0.08);
+
+  /* ── Warm surfaces — welcome page ── */
+  --color-warm-bg: #f7f5ef;
+  --color-warm-surface: #f6f3ec;
+  --color-warm-surface-hover: #f2eee4;
+
+  /* ── Alpha Border ── */
+  --color-border-subtle: rgba(0, 0, 0, 0.06);
+  --color-border-strong: rgba(0, 0, 0, 0.12);
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(0, 0, 0, 0.10);
+  --color-border-card: rgba(0, 0, 0, 0.06);
+
+  /* ── Text ── */
+  --color-text-heading: #001217;
+  --color-text-primary: #1C1F23;
+  --color-text-secondary: #545659;
+  --color-text-tertiary: #787c80;
+  --color-text-placeholder: #787c80;
+  --color-text-disabled: rgba(28, 31, 35, 0.38);
+  --color-text-muted: #787c80;
+
+  /* ── Accent (primary button) ── */
+  --color-accent: #1C1F23;
+  --color-accent-hover: #222b39;
+  --color-accent-subtle: rgba(28, 31, 35, 0.06);
+  --color-accent-glow: rgba(28, 31, 35, 0.12);
+  --color-accent-fg: #ffffff;
+
+  /* ── Functional ── */
+  --color-error: #F8672F;
+  --color-error-subtle: rgba(248, 103, 47, 0.08);
+  --color-success: #346E58;
+  --color-success-subtle: rgba(52, 110, 88, 0.08);
+  --color-warning: #EDC337;
+  --color-warning-subtle: rgba(237, 195, 55, 0.08);
+  --color-danger: #f93920;
+  --color-danger-subtle: rgba(249, 57, 32, 0.08);
+  --color-link: #2657BB;
+  --color-info: #2657BB;
+  --color-info-subtle: rgba(38, 87, 187, 0.08);
+  --color-pink: #D999F7;
+
+  /* ── Toggle (exclusive — do not reuse for other components) ── */
+  --color-toggle-on: #007AFF;
+
+  /* ── Radius ── */
+  --radius-4: 4px;
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+  --radius-24: 24px;
+  --radius-28: 28px;
+  --radius-32: 32px;
+  --radius-pill: 100px;
+  --radius-circle: 50%;
+
+  /* ── Shadow ── */
+  --shadow-rest: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 4px 8px 0 rgba(0, 0, 0, 0.08);
+  --shadow-refine: 0 10px 20px -5px rgba(0, 0, 0, 0.06);
+  --shadow-elevated: 0 18px 60px rgba(0, 0, 0, 0.08);
+  --shadow-dropdown: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-dropdown-dark: 0 8px 24px rgba(0, 0, 0, 0.18);
+  --shadow-overlay: 0 18px 38px rgba(0, 0, 0, 0.10);
+  --shadow-m: 0 2px 20px 4px rgba(0, 0, 0, 0.04);
+  --shadow-focus: 0 0 0 2px rgba(61, 185, 206, 0.25);
+  --shadow-input-inset: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   Tabular digits — all numbers render in JetBrains Mono
+   ═══════════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: 'Digits';
+  src: local('JetBrains Mono'), url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+003A;
+  font-weight: 400;
+  font-display: swap;
+  size-adjust: 88%;
+}
+@font-face {
+  font-family: 'Digits';
+  src: local('JetBrains Mono Medium'), url('/fonts/JetBrainsMono-Medium.woff2') format('woff2');
+  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+003A;
+  font-weight: 500;
+  font-display: swap;
+  size-adjust: 88%;
+}
+@font-face {
+  font-family: 'Digits';
+  src: local('JetBrains Mono Bold'), url('/fonts/JetBrainsMono-Bold.woff2') format('woff2');
+  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+003A;
+  font-weight: 600 900;
+  font-display: swap;
+  size-adjust: 88%;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   Global resets
+   ═══════════════════════════════════════════════════════════════════ */
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background-color: transparent;
+  color: var(--color-text-primary);
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { scrollbar-width: thin; scrollbar-color: var(--color-surface-4) transparent; }
+*::-webkit-scrollbar { width: 6px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background-color: var(--color-surface-4); border-radius: 3px; }
+
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   Typography — heading levels
+   ═══════════════════════════════════════════════════════════════════ */
+
+.heading-page {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-heading);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.heading-page-desc {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-text-tertiary);
+  line-height: 1.4;
+  margin-bottom: 0;
+}
+.heading-section {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-heading);
+  line-height: 1.4;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   Component primitives — reusable across pages
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── GLOBAL RULE: Pill / Badge / Capsule vertical centering ──
+   ALL rounded-full pill elements with small text (10–12px) MUST include
+   `leading-none` to prevent browser line-height from pushing text upward.
+   Without it, text appears visually off-center (shifted up) inside the pill.
+
+   Checklist for every pill/badge/capsule:
+   - rounded-full + text-[10px..12px] → MUST add `leading-none`
+   - py padding should be symmetric (py-0.5, py-1, py-1.5)
+   - If text still looks off, increase py by 0.5 (e.g. py-1 → py-1.5)
+   - The Badge component (ui/badge.tsx) already has leading-none baked in
+
+   Applies to: status badges, category tags, highlight pills, notification
+   counts, feature tags on landing pages, integration pills, etc.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── Card container (generic) ── */
+
+.card {
+  border-radius: var(--radius-16);
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-1);
+  box-shadow: var(--shadow-rest);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card:hover:not(.card-static) {
+  box-shadow: var(--shadow-refine);
+  transform: translateY(-1px);
+}
+
+/* ── Underline Tabs — Design Spec (implement with Tailwind) ──
+ *  container : flex, border-bottom 1px border, gap 20px, overflow-x-auto
+ *
+ *  tab item  : relative, shrink-0, cursor-pointer
+ *    padding   : 8px 4px
+ *    font-size : 13px
+ *    active    : font-weight 600, color text-primary
+ *    inactive  : font-weight 500, color text-secondary
+ *    background: transparent (never filled)
+ *    border    : none
+ *
+ *  underline (active only) :
+ *    absolute bottom-0, left-1 right-1
+ *    height    : 2px, border-radius 1px
+ *    color     : var(--color-text-primary) — ALWAYS darkest, never brand color
+ *
+ *  RULE: Tab underlines use text-primary (#1C1F23), not brand-primary.
+ *        Brand color is reserved for CTAs and selection highlights.
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ── Filter Pills — Design Spec (implement with Tailwind) ──
+ *  container : flex, gap 8px, flex-wrap, overflow-x-auto
+ *
+ *  pill (active) :
+ *    rounded-full, h-8, px-3
+ *    background : var(--color-accent) (#1C1F23) — near-black, NOT brand color
+ *    hover      : var(--color-accent-hover)
+ *    color      : white
+ *    font       : 13px / semibold
+ *
+ *  pill (inactive) :
+ *    rounded-full, h-8, px-3
+ *    background : var(--color-surface-2) — lightest gray, NO border
+ *    color      : var(--color-text-secondary)
+ *    font       : 13px / normal
+ *    hover      : bg-surface-3
+ *
+ *  count badge : ml-1, tabular-nums, 12px, opacity 0.9 (active) / 0.5 (inactive)
+ *
+ *  RULE: Inactive pills are borderless gray fills, never outline/stroke.
+ *  RULE: Active pill uses accent (near-black), not brand-primary (blue).
+ *        Brand color is reserved for CTAs and highlights, not navigation filters.
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ── Tags ── */
+
+/* Normal tag: neutral category label */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  color: var(--color-text-tertiary);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+  border: none;
+}
+
+/* Highlight tag: important call-to-action / recommendation label — uses brand color */
+.tag-highlight {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--color-brand-subtle);
+  color: var(--color-brand-primary);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  border: none;
+}
+
+/* ── Modal Dialog — Design Spec (implement with Tailwind inline) ──
+ *  overlay   : fixed inset-0 z-50  bg-black/40  backdrop-blur-sm
+ *  container : max-w-md  rounded-2xl  border-border  bg-white  shadow-2xl
+ *  ⚠️ GLOBAL RULE — Modal/Dialog bg = white, Input bg = surface-0 (#FAFAFA light gray)
+ *
+ *  header    : px-6 py-4  border-b border-border  flex items-center justify-between
+ *    ├─ icon : 32×32  rounded-lg  border-border  bg-white  icon 18px
+ *    ├─ title: 14px / semibold / text-primary
+ *    ├─ desc : 11px / text-muted
+ *    └─ close: p-1.5  rounded-lg  hover→bg-surface-2  text-muted  X 16px
+ *
+ *  body      : px-6 py-5  space-y-4
+ *    field-label : 12px / font-medium / text-primary (deepest color) / mb-1.5
+ *    input       : px-3 py-2  rounded-lg  border-border  bg-surface-1
+ *                  13px / text-primary / placeholder:text-muted/50 / font-mono (secrets)
+ *                  focus → ring-2 brand-primary (blue), border transparent
+ *    suffix      : rounded-r-lg  bg-surface-2  border-border  13px / text-muted / font-medium
+ *    help-text   : 11px / text-muted / mt-1
+ *    eye-toggle  : absolute right-2.5  text-muted  hover→text-secondary  14px icon
+ *
+ *  text-link : 12px / color: brand-primary (blue) / hover:underline
+ *              single icon before text (e.g. FileText 13px), NO trailing icon
+ *
+ *  footer    : px-6 py-4  border-t border-border  flex justify-end gap-2
+ *    cancel  : 13px / font-medium / text-secondary / hover→bg-surface-2  rounded-lg
+ *    confirm : 13px / font-medium / bg-accent / text-accent-fg / hover→bg-accent-hover
+ *              disabled → opacity-40 cursor-not-allowed
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ── Text Link ── */
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-brand-primary);
+  text-decoration: none;
+  transition: text-decoration 0.15s ease;
+}
+.text-link:hover {
+  text-decoration: underline;
+}
+
+/* ── GitHub Star Link — Design Spec ─────────────────────────────────
+ *  Purpose   : External link to GitHub repo — distinct from action buttons
+ *              Used in Settings header, Skills header, etc.
+ *
+ *  class     : .link-github-star
+ *
+ *  style     : pill button, amber/gold accent — different from primary (black)
+ *              rounded-lg px-3 py-1.5
+ *              bg-amber-50 border border-amber-200/60
+ *              text-amber-800 (or amber-700)
+ *              hover: bg-amber-100 border-amber-300
+ *  content   : Star icon (amber-500, hover:fill) + "Star on GitHub" + ArrowUpRight
+ *  RULE      : Always target="_blank" rel="noopener noreferrer"
+ * ─────────────────────────────────────────────────────────────────── */
+.link-github-star {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #b45309;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.link-github-star:hover {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.6);
+  color: #92400e;
+}
+
+/* ── Home GitHub Star Banner — Design Spec (implement with Tailwind inline) ──
+ *  Purpose   : CTA at bottom of Home — disappears after user stars
+ *
+ *  layout    : left: Star icon (amber) | center: title + desc | right: [stars count] + btn
+ *  container : rounded-2xl border-amber-200/60 bg-amber/8 p-5
+ *              shadow-rest, hover: scale-[1.01] shadow-refine cursor-pointer
+ *  left icon : w-10 h-10 rounded-[12px] bg-amber-50 border-amber-200/60
+ *              Star size=20 amber-500, hover:fill
+ *  title     : 14px/600 text-text-primary "Star nexu on GitHub"
+ *  desc      : 12px text-secondary
+ *  btn       : GitHub logo + "github" + ArrowUpRight (no star in btn)
+ *              amber pill style, same palette as link-github-star
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ── Form Field — Design Spec (implement with Tailwind inline) ────
+ *  label     : 12px / font-medium / text-text-primary / mb-1.5
+ *              Always use deepest text color for field titles
+ *
+ *  input     : 13px / text-text-primary / placeholder:text-text-muted
+ *              border: border-border (rest) → var(--color-brand-primary)/30 (focus)
+ *              ring:   none (rest) → ring-2 var(--color-brand-primary)/20 (focus)
+ *              bg: surface-1 / rounded-lg / px-3 py-2
+ *              Font: mono for keys/secrets, sans for names
+ *
+ *  ⚠️ GLOBAL RULE — Input focus color = brand-primary (blue) EVERYWHERE
+ *     NEVER use focus:border-accent or focus:ring-accent (black) on inputs
+ *     Pattern: focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20
+ *              focus:border-[var(--color-brand-primary)]/30
+ *     Applies to: <Input />, <Textarea />, raw <input>, raw <textarea>
+ *
+ *  text-link : use .text-link class — brand-primary blue, hover underline
+ *              Never use accent (black) for clickable text links
+ *
+ *  ⚠️ GLOBAL RULE — ArrowUpRight (external-link jump icon) = size={12} EVERYWHERE
+ *     NEVER use size={10}, size={11}, size={13}, or any other value.
+ *     Inside <Button> (shadcn): add className="size-3" to override the
+ *     component's [&_svg:not([class*=size-])]:size-4 default (16px).
+ *     Color: text-text-muted (default) or inherit from parent.
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ── Skill Card — Design Spec (implement with Tailwind inline) ────
+ *  container : .card flex flex-col p-4
+ *              installed + disabled → opacity-55
+ *
+ *  header    : flex items-center gap-3 mb-2
+ *    ├─ icon : 36×36 (w-9 h-9) rounded-[10px] bg-white border-border
+ *    │         logo 18×18 object-contain / lucide size={18} text-secondary
+ *    │         brand logos use own brand color (not black)
+ *    └─ text : flex-1 min-w-0
+ *       ├─ name : 13px / 600 / text-heading / truncate
+ *       └─ cat  : 11px / 400 / text-muted (category label from SKILL_CATEGORIES)
+ *
+ *  desc      : 12px / 400 / text-tertiary / line-clamp-2 / leading-[1.5] / mb-3
+ *
+ *  footer    : mt-auto flex items-center justify-between
+ *    Installed card (source === 'custom'):
+ *      ├─ left  : <Switch size="xs" /> enable/disable toggle
+ *      └─ right : "Uninstall" text btn  12px/500 text-muted  hover→text-danger
+ *    Store card (source === 'official'):
+ *      ├─ left  : empty <span /> for alignment
+ *      └─ right : "Install" border btn  r-[8px] px-[14px] py-[5px] 12px/500
+ *                 border-border text-primary  hover→bg-surface-2
+ *                 Loading state: <Loader2 animate-spin /> + "Installing…"
+ *                 text-muted cursor-default (non-clickable)
+ *
+ * ── Skills Page Layout ───────────────────────────────────────────
+ *  Header row : mb-10 (40px) — matches Settings page
+ *    ├─ left  : .heading-page + .heading-page-desc
+ *    └─ right : flex items-center gap-2
+ *       ├─ search : w-48 pl-9 pr-3 py-1.5 r-lg border bg-surface-1 13px
+ *       └─ + Import : dark solid btn (bg-text-primary text-white 12px/500)
+ *                     hover→opacity-85
+ *
+ *  Top-level tabs : Yours / Explore — segment control style (default: Yours)
+ *    ├─ order     : Yours left, Explore right
+ *    ├─ container : inline-flex gap-1 p-1 rounded-full bg-surface-2
+ *    ├─ tab btn   : flex items-center gap-1.5 px-4 py-1.5 rounded-full 13px/500
+ *    ├─ active    : bg-white text-primary shadow-rest (elevated pill)
+ *    ├─ inactive  : transparent text-secondary hover→text-primary
+ *    ├─ icon      : Settings2 (Yours), Compass (Explore), size=14
+ *    └─ Yours count : tabular-nums 12px text-secondary/tertiary
+ *
+ *  Yours sub-tabs : All / Personal / Installed — pill button style
+ *    ├─ container : flex gap-2 mb-3
+ *    ├─ btn       : inline-flex items-center justify-center h-7 px-3 rounded-full 11px/500 leading-none
+ *    ├─ active    : bg-accent text-white
+ *    ├─ inactive  : border border-border bg-surface-1 text-secondary hover→border-hover+text-primary
+ *    └─ count     : ml-1 tabular-nums (active: opacity-80, inactive: opacity-50)
+ *
+ *  Category pills (Explore only) : pill button style, same as Yours sub-tabs
+ *    ├─ container : relative wrapper, inner flex gap-2 overflow-x-auto no-scrollbar
+ *    ├─ btn style : same as Yours sub-tabs (h-7 px-3 rounded-full 11px/500)
+ *    ├─ fade mask : conditional gradient overlays (from-white to-transparent, w-12)
+ *    │    left fade  : visible when scrollLeft > 2 (content hidden on left)
+ *    │    right fade : visible when scrollWidth > clientWidth and not scrolled to end
+ *    │    both       : pointer-events-none, absolute, z-[1]
+ *    └─ detection : useRef + onScroll + resize listener, checkPillOverflow callback
+ *
+ *  Grid       : grid-cols-1 sm:2 lg:3 gap-3
+ *
+ * ── Switch sizes: see "Toggle (macOS 26)" Design Spec below ──
+ *  Usage   : <Switch size="xs" /> for dense lists (skill cards)
+ *            <Switch size="sm" /> for compact contexts (settings provider list)
+ *            <Switch /> for standard forms
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ── Toggle (macOS 26 Liquid Glass) — Design Spec (implement with Tailwind) ──
+ *  Reference : macOS 26 (Tahoe) system toggle
+ *  Component : design-system/src/components/ui/switch.tsx
+ *  Primitive : @radix-ui/react-switch
+ *
+ *  ┌─── Visual Language ─────────────────────────────────────────────┐
+ *  │  Shape   : Capsule (pill) — both track and thumb are capsule    │
+ *  │  ON bg   : #007AFF  (macOS system blue, --color-toggle-on)      │
+ *  │  OFF bg  : #e5e5e5  (neutral grey)                              │
+ *  │  Thumb   : white capsule, inset 2px from track edge             │
+ *  │  Shadow  : 0 1px 3px rgba(0,0,0,0.12), 0 0 0 0.5px rgba(0,0,0,0.04) │
+ *  │  No border on track — clean edge, overflow-hidden               │
+ *  └─────────────────────────────────────────────────────────────────┘
+ *
+ *  ┌─── State Indicators ────────────────────────────────────────────┐
+ *  │  ON  : small white vertical bar (left of thumb)                 │
+ *  │         bg-white/90, rounded-[1px]                              │
+ *  │  OFF : small hollow grey circle (right of thumb)                │
+ *  │         border-[1.5px] border-[#b0b0b0], rounded-full          │
+ *  │  Indicators fade in/out with opacity transition (200ms)         │
+ *  └─────────────────────────────────────────────────────────────────┘
+ *
+ *  ┌─── Sizes ───────────────────────────────────────────────────────┐
+ *  │                                                                  │
+ *  │  default (standard forms, settings page general):                │
+ *  │    track  : h-[24px] w-[50px] rounded-[12px] p-[2px]            │
+ *  │    thumb  : h-[20px] w-[32px] rounded-[10px]                    │
+ *  │             translate-x: 14px (checked) / 0 (unchecked)         │
+ *  │    ON bar : left-[8px] w-[2px] h-[9px]                          │
+ *  │    OFF dot: right-[6px] w-[6px] h-[6px]                         │
+ *  │                                                                  │
+ *  │  sm (compact — settings provider list, table rows):              │
+ *  │    track  : h-[18px] w-[38px] rounded-[9px] p-[2px]             │
+ *  │    thumb  : h-[14px] w-[24px] rounded-[7px]                     │
+ *  │             translate-x: 10px (checked) / 0 (unchecked)         │
+ *  │    ON bar : left-[5px] w-[1.5px] h-[7px]                        │
+ *  │    OFF dot: right-[4px] w-[5px] h-[5px]                         │
+ *  │                                                                  │
+ *  │  xs (dense lists — skill cards, batch toggles):                  │
+ *  │    track  : h-[14px] w-[28px] rounded-[7px] p-[1.5px]           │
+ *  │    thumb  : h-[11px] w-[17px] rounded-[5.5px]                   │
+ *  │             translate-x: 8px (checked) / 0 (unchecked)          │
+ *  │    ON bar : left-[4px] w-[1px] h-[5px]                          │
+ *  │    OFF dot: right-[3px] w-[4px] h-[4px] border-[1px]            │
+ *  │                                                                  │
+ *  └─────────────────────────────────────────────────────────────────┘
+ *
+ *  ┌─── Animation ───────────────────────────────────────────────────┐
+ *  │  Thumb   : transform 250ms cubic-bezier(0.4, 0, 0.2, 1)        │
+ *  │  Track   : background-color 250ms same easing                   │
+ *  │  Focus   : ring-2 ring-[#007AFF]/40 ring-offset-2               │
+ *  │  Disabled: cursor-not-allowed opacity-50                         │
+ *  └─────────────────────────────────────────────────────────────────┘
+ *
+ *  ┌─── Usage Map ───────────────────────────────────────────────────┐
+ *  │  <Switch />             → default — general settings, forms     │
+ *  │  <Switch size="sm" />   → sm — provider enable/disable toggle   │
+ *  │  <Switch size="xs" />   → xs — skill card toggles               │
+ *  └─────────────────────────────────────────────────────────────────┘
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ── Data table ── */
+
+/* ── Deployments Table — Design Spec (columns via inline style) ───
+ *  wrapper   : .data-table
+ *  columns   : grid-template-columns: 1fr 88px 112px 140px 40px
+ *              gap: 0 16px (from .data-table-header / .data-table-row)
+ *
+ *  header    : .data-table-header — Name | Status | Channel | Deployed | (link)
+ *  row       : .data-table-row
+ *
+ *  col-name  : 13px / font-medium / text-primary / truncate + title tooltip
+ *              NO icon — plain text only
+ *  col-status: .status-dot (6px) + 12px / font-medium / text-success|warning|danger
+ *  col-channel: 11px / pill(r-full) / bg-surface-2 / text-muted / px-2 py-0.5
+ *  col-time  : 12px / tabular-nums / text-muted
+ *  col-link  : 24×24 icon btn / ArrowUpRight 12px / text-muted
+ *              hover → bg-surface-2 + tooltip(bg-neutral-800 white 10px) showing domain
+ * ─────────────────────────────────────────────────────────────────── */
+
+.data-table {
+  border-radius: var(--radius-12);
+  border: 1px solid var(--color-border-subtle);
+  overflow: hidden;
+  background: var(--color-surface-1);
+}
+.data-table-header {
+  display: grid;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-0);
+  gap: 0 16px;
+}
+.data-table-header span {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.data-table-row {
+  display: grid;
+  align-items: center;
+  padding: 12px 20px;
+  gap: 0 16px;
+  transition: background 0.15s ease;
+}
+.data-table-row:not(:last-child) {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.data-table-row:hover {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+/* Status dot — pair with .data-table */
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-dot-live { background: var(--color-success); }
+.status-dot-building { background: var(--color-warning); }
+.status-dot-failed { background: var(--color-danger); }
+
+/* ── Layout — sidebar + main content ──
+ *
+ *  Sidebar  : bg-surface-0 (#FAFAFA) — no border-right, no dividers
+ *  Main     : bg-surface-1 (#FFFFFF) — white, contrasts with sidebar
+ *
+ *  Separation is achieved via background contrast, not borders.
+ *  All inner sections use spacing (pt/pb/mt) instead of <Separator> or border-t/b.
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ═══════════════════════════════════════════════════════════════
+   Desktop Client — Immersive Window Spec (macOS HIG compliant)
+   ═══════════════════════════════════════════════════════════════
+ *
+ *  Follows Apple Human Interface Guidelines for window controls:
+ *  https://developer.apple.com/design/human-interface-guidelines/toolbars
+ *
+ *  ┌─── Core Principles (macOS HIG) ─────────────────────────────┐
+ *  │                                                              │
+ *  │  1. NO VISIBLE TITLEBAR                                     │
+ *  │     No top bar, no border, no chrome. Content extends to    │
+ *  │     the top edge. Traffic lights float over sidebar bg.     │
+ *  │                                                              │
+ *  │  2. SIDEBAR TOGGLE PINNED TO WINDOW CONTROLS                │
+ *  │     Per HIG (ref: Apple Passwords, Finder, ChatGPT,        │
+ *  │     Claude): the sidebar toggle button must be "pinned"     │
+ *  │     left-aligned next to traffic lights, NOT floating with  │
+ *  │     toolbar/sidebar content. This prevents the button from  │
+ *  │     becoming a moving target on resize.                     │
+ *  │     → Position: fixed, horizontally aligned with traffic    │
+ *  │       lights center, immediately to their right.            │
+ *  │                                                              │
+ *  │  3. SIDEBAR FULLY HIDES ON COLLAPSE                         │
+ *  │     Collapsed = width 0, completely gone. Toggle button     │
+ *  │     stays in place (fixed position, window-level element).  │
+ *  │                                                              │
+ *  └──────────────────────────────────────────────────────────────┘
+ *
+ *  ┌─── Tauri Config (tauri.conf.json) ──────────────────────────┐
+ *  │  titleBarStyle       : "Overlay"                             │
+ *  │  hiddenTitle         : true                                  │
+ *  │  decorations         : true                                  │
+ *  │  trafficLightPosition: { x: 16, y: 18 }                     │
+ *  └──────────────────────────────────────────────────────────────┘
+ *
+ *  ┌─── Layout Implementation ───────────────────────────────────┐
+ *  │                                                              │
+ *  │  Sidebar toggle (window-level, absolute in flex parent):     │
+ *  │    position: absolute, top-2, left-[88px]                     │
+ *  │    Use left offset (not pl-[80px]) so hover bg does not      │
+ *  │    cover traffic lights. Same position for expand/collapse.  │
+ *  │    z-index: 50                                               │
+ *  │    icon: PanelLeftClose (expanded) / PanelLeftOpen (closed)  │
+ *  │    style: WebkitAppRegion: no-drag                           │
+ *  │    no padding overlap — left-[88px] only, avoids covering    │
+ *  │    traffic lights with hover:bg-black/5                      │
+ *  │                                                              │
+ *  │  Sidebar (expanded w-48 / collapsed w-0):                    │
+ *  │    bg: surface-0                                             │
+ *  │    WebkitAppRegion: drag (entire sidebar is drag zone)       │
+ *  │    h-10 (40px) top clearance for traffic lights              │
+ *  │    All interactive children: WebkitAppRegion: no-drag        │
+ *  │    transition: width 200ms                                   │
+ *  │                                                              │
+ *  │  Content <main>:                                             │
+ *  │    No drag region, no spacer — fully immersive               │
+ *  │                                                              │
+ *  └──────────────────────────────────────────────────────────────┘
+ *
+ *  ┌─── Windows (TODO) ──────────────────────────────────────────┐
+ *  │  decorations: false + custom titlebar with min/max/close     │
+ *  │  Same fixed toggle approach, buttons at top-right            │
+ *  └──────────────────────────────────────────────────────────────┘
+ *
+ *  Window defaults: 1200×800, min 900×600, centered
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ── Sidebar navigation ── */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-surface-0);
+}
+.sidebar-section {
+  padding: 0 8px;
+}
+.sidebar-section-label {
+  padding: 0 10px;
+  margin-bottom: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+/* nav-item / nav-item-active: RULE — no padding in CSS
+ * Padding comes from inline (px-3 py-2 for nav tabs, px-3 py-1.5 for conv items).
+ * Hover and active must have identical height to prevent layout shift.
+ * font-weight: 500 for both (no 600 on active). */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border-radius: var(--radius-6);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  background: transparent;
+  transition: background 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+  border: none;
+  text-align: left;
+}
+.nav-item:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--color-text-primary);
+}
+.nav-item-active {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+/* ── Sidebar Bottom Bar — Design Spec (implement with Tailwind) ──
+ *  container : px-3 py-2, no border-top
+ *
+ *  account avatar : w-6/7 h-6/7 rounded-full bg-surface-3
+ *    text          : 10px / font-semibold / text-secondary
+ *  account email  : 11px / text-secondary (not muted/placeholder)
+ *
+ *  icon buttons (Help, GitHub) :
+ *    default  : text-tertiary
+ *    hover    : text-primary + bg-surface-2
+ *    active   : text-primary + bg-surface-2
+ *
+ *  Color hierarchy (sidebar overall):
+ *    active nav item    → text-primary  (darkest)
+ *    inactive nav item  → text-secondary
+ *    section label      → text-tertiary
+ *    bottom bar icons   → text-tertiary
+ *    count badge        → text-tertiary
+ *    account email      → text-secondary
+ *
+ *  NEVER use text-muted or text-placeholder for sidebar elements
+ *  — they appear "disabled". Use text-secondary minimum.
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ── Settings — Provider Panel Design Spec (implement with Tailwind) ──
+ *
+ *  container : .card + flex, min-height 520px, overflow hidden
+ *
+ *  ┌─── Left: Provider List ──────────────────────────────────────────┐
+ *  │  width    : w-56, bg-surface-0, NO border-right (bg contrast)   │
+ *  │  padding  : p-2                                                  │
+ *  │                                                                  │
+ *  │  section label : "Enabled" / "Providers"                         │
+ *  │    10px / font-semibold / text-tertiary / uppercase / tracking   │
+ *  │                                                                  │
+ *  │  provider item :                                                 │
+ *  │    icon 20×20 (full color, never dimmed)                         │
+ *  │    name 12px / font-medium / text-primary                        │
+ *  │    active state: bg-accent/10, text-accent                       │
+ *  │    enabled indicator: 6px green dot (bg-success) at far right    │
+ *  │                                                                  │
+ *  │  RULE: "Disabled" → "Providers" (avoid misleading label)         │
+ *  │  RULE: Icons always full opacity — distinguish by green dot only │
+ *  └──────────────────────────────────────────────────────────────────┘
+ *
+ *  ┌─── Right: Provider Detail ───────────────────────────────────────┐
+ *  │  header : flex justify-between, icon 32×32 + name 14px/semibold   │
+ *  │    Get API Key: right, 11px brand-primary, no-underline           │
+ *  │                                                                  │
+ *  │  API form (BYOK only) :                                          │
+ *  │    step hint : 10px uppercase tracking-wider text-text-muted     │
+ *  │      "1. Fill in API Key · 2. Save · 3. Select model in workspace"│
+ *  │    labels   : 13px font-semibold text-primary, mb-3               │
+ *  │    inputs   : API Key (password), API Proxy URL (text)            │
+ *  │    actions  : justify-end, Test connection (11px) + Save          │
+ *  │    Save btn : w-[120px] fixed, right-aligned                      │
+ *  │      idle   → "Save" (accent)  saving → spinner+"Saving"         │
+ *  │      saved  → "Saved" (green outline), disabled until dirty      │
+ *  │    RULE: Save = verify + save. Saved persists until form dirty.   │
+ *  │                                                                  │
+ *  │  nexu login card :                                               │
+ *  │    rounded-xl, border brand-primary/25, bg brand-subtle           │
+ *  │    title 13px/semibold/accent, desc 12px/text-secondary           │
+ *  │    "Sign in to nexu" button (default) with ArrowUpRight          │
+ *  │                                                                  │
+ *  │  Feedback (above Model list) : same pill for success/error        │
+ *  │    success: bg-success/8, Check, "Saved — select a model below"  │
+ *  │             auto-dismiss 2.5s                                    │
+ *  │    error  : bg-error/8, AlertCircle, next-step guidance          │
+ *  │                                                                  │
+ *  │  Model list : title "Model {n}" — n in text-tertiary              │
+ *  │    unselected: bg-surface-2 hover:bg-surface-3, border-none      │
+ *  │    selected  : ring-1 ring-brand-primary/50 bg-brand-subtle      │
+ *  │                                                                  │
+ *  │  Logic : only saved providers in top switcher; save→select first  │
+ *  └──────────────────────────────────────────────────────────────────┘
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ── Home Recent Deployments — Design Spec (implement with Tailwind) ──
+ *  wrapper   : .card (rounded-xl) + p-5
+ *
+ *  header    : flex items-center justify-between mb-4
+ *    ├─ title : 14px / semibold / text-primary — NO icon, plain text
+ *    └─ link  : "View all" 12px / medium / text-muted / hover:underline
+ *
+ *  list      : space-y-5 (20px between items)
+ *
+ *  item      : flex items-start gap-3
+ *    ├─ dot  : 6×6 rounded-full  mt-[7px]  shrink-0
+ *    │         deploy → success (green)
+ *    │         error  → danger (red)
+ *    │         other  → neutral-300 (gray)
+ *    └─ body : flex-1 min-w-0
+ *       ├─ text    : 13px / text-primary / leading-relaxed
+ *       └─ meta    : mt-1.5  flex gap-2
+ *          ├─ channel : 10px / pill(r-full) / bg-surface-2 / text-muted
+ *          └─ time    : 10px / text-muted
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ── Breathe Highlight — Design Spec (.animate-breathe) ──────────
+ *  Purpose   : Guide user attention to a recommended/primary card
+ *              without using a selected/active state.
+ *              Used on First-run onboarding to highlight Feishu card.
+ *
+ *  class     : .animate-breathe on any bordered card element
+ *
+ *  animation : 3s  cubic-bezier(0.4, 0, 0.2, 1)  infinite
+ *    keyframes "breathe":
+ *      0%, 100%  border-color: brand-primary / 12%
+ *                box-shadow:   0 1px 2px rgba(0,0,0,0.04)
+ *                transform:    translateY(0)
+ *      50%       border-color: brand-primary / 35%
+ *                box-shadow:   0 4px 16px brand-primary/10, 0 0 0 1px brand-primary/8
+ *                transform:    translateY(-1px)
+ *
+ *  initial   : border-color set to brand-primary/12 (subtle teal tint at rest)
+ *
+ *  Design rationale:
+ *    - Border gradient > box-shadow spread (more refined, less "glow blob")
+ *    - Micro float (-1px) adds depth without being distracting
+ *    - Slow 3s cycle feels calm, not urgent
+ *    - cubic-bezier(0.4,0,0.2,1) = Tailwind standard ease-out
+ *
+ *  ⚠️ Do NOT combine with selected/active border states.
+ *     Breathe = "suggestion", not "selection".
+ * ─────────────────────────────────────────────────────────────────── */
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   Animations — core (used by MVP workspace)
+   ═══════════════════════════════════════════════════════════════════ */
+
+@keyframes nexu-bounce { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-5px); } 60% { transform: translateY(1px); } }
+@keyframes nexu-spring-in { 0% { transform: scale(0); } 60% { transform: scale(1.15); } 80% { transform: scale(0.95); } 100% { transform: scale(1); } }
+@keyframes nexu-wave { 0% { transform: rotate(0deg); } 15% { transform: rotate(14deg); } 30% { transform: rotate(-8deg); } 45% { transform: rotate(14deg); } 60% { transform: rotate(-4deg); } 75% { transform: rotate(10deg); } 100% { transform: rotate(0deg); } }
+@keyframes nexu-gradient-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes dot-fade { 0%, 20% { opacity: 0.15; } 50% { opacity: 1; } 80%, 100% { opacity: 0.15; } }
+
+.animate-nexu-bounce { animation: nexu-bounce 1.2s ease-in-out infinite; }
+.animate-dot-fade { animation: dot-fade 1.2s ease-in-out infinite; }
+
+@keyframes breathe {
+  0%, 100% {
+    border-color: rgba(61, 185, 206, 0.12);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 0 0 0 rgba(61, 185, 206, 0);
+    transform: translateY(0);
+  }
+  50% {
+    border-color: rgba(61, 185, 206, 0.35);
+    box-shadow: 0 4px 16px rgba(61, 185, 206, 0.10), 0 0 0 1px rgba(61, 185, 206, 0.08);
+    transform: translateY(-1px);
+  }
+}
+.animate-breathe {
+  animation: breathe 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  border-color: rgba(61, 185, 206, 0.12);
+}
+
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scale-in { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+@keyframes page-enter { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes fade-in-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* Update check dialog animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+@keyframes indeterminateSlide { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+@keyframes slide-in-right { from { transform: translateX(100%); opacity: 0.8; } to { transform: translateX(0); opacity: 1; } }
+@keyframes energy-pulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+@keyframes pulse-dot { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+
+.animate-fade-in { animation: fade-in 0.2s ease-out forwards; }
+.animate-scale-in { animation: scale-in 0.25s cubic-bezier(0.16,1,0.3,1) forwards; }
+.animate-page-enter { animation: page-enter 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+.animate-fade-in-up { animation: fade-in-up 0.35s ease-out forwards; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-slide-in-right { animation: slide-in-right 0.25s ease-out forwards; }
+.animate-energy-pulse { animation: energy-pulse 1.5s ease-in-out infinite; }
+
+.typing-dot { animation: pulse-dot 1.4s ease-in-out infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   Animations — landing / marketing (SlackClawReplicaPage etc.)
+   ═══════════════════════════════════════════════════════════════════ */
+
+@keyframes clone-breath { 0%, 100% { box-shadow: 0 0 0 2px rgba(192,138,37,0.25); } 50% { box-shadow: 0 0 16px 4px rgba(192,138,37,0.35); } }
+@keyframes clone-breath-subtle { 0%, 100% { box-shadow: 0 0 0 1px rgba(192,138,37,0.12); } 50% { box-shadow: 0 0 8px 2px rgba(192,138,37,0.25); } }
+@keyframes hero-glow { 0%, 100% { transform: scale(1) translateY(0); opacity: 0.35; } 50% { transform: scale(1.08) translateY(-8px); opacity: 0.6; } }
+@keyframes engine-breathe { 0%, 100% { background-position: 90% 0%; box-shadow: 0 0 0 rgba(0,0,0,0); } 50% { background-position: 82% 4%; box-shadow: 0 20px 40px rgba(1,55,50,0.14); } }
+@keyframes engine-card-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes timeline-line { 0%, 100% { opacity: 0.45; filter: drop-shadow(0 0 0 rgba(12,106,86,0)); } 50% { opacity: 0.9; filter: drop-shadow(0 0 6px rgba(12,106,86,0.22)); } }
+@keyframes timeline-dot { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(12,106,86,0); } 50% { transform: scale(1.16); box-shadow: 0 0 0 6px rgba(12,106,86,0.12); } }
+@keyframes feature-glow { 0%, 100% { box-shadow: 0 8px 24px rgba(0,0,0,0.22), inset 0 0 0 0 rgba(143,124,255,0); } 50% { box-shadow: 0 10px 28px rgba(0,0,0,0.26), inset 0 0 36px rgba(143,124,255,0.08); } }
+@keyframes usecase-panel { 0%, 100% { transform: translateY(0); box-shadow: 0 8px 24px rgba(0,0,0,0.2); } 50% { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(0,0,0,0.28); } }
+@keyframes usecase-orbit { 0%, 100% { transform: scale(1); opacity: 0.45; } 50% { transform: scale(1.05); opacity: 0.75; } }
+@keyframes usecase-core { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+@keyframes usecase-bar { 0%, 100% { opacity: 0.38; } 50% { opacity: 0.8; } }
+@keyframes integration-pill { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes chatcard-breathe { 0%, 100% { box-shadow: 0 1px 2px rgba(0,0,0,0.06); transform: translateY(0); } 50% { box-shadow: 0 10px 22px rgba(0,0,0,0.10); transform: translateY(-2px); } }
+@keyframes trust-breathe { 0%, 100% { background-position: 85% 0%; box-shadow: 0 8px 24px rgba(0,0,0,0.18); } 50% { background-position: 76% 6%; box-shadow: 0 14px 34px rgba(0,0,0,0.26); } }
+@keyframes trust-panel-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes status-dot { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(97,212,167,0); } 50% { transform: scale(1.25); box-shadow: 0 0 0 4px rgba(97,212,167,0.22); } }
+@keyframes underhood-card { 0%, 100% { transform: translateY(0); box-shadow: 0 8px 26px rgba(0,0,0,0.22), inset 0 0 0 rgba(73,211,168,0); } 50% { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.28), inset 0 0 24px rgba(73,211,168,0.06); } }
+@keyframes social-breathe { 0%, 100% { box-shadow: 0 10px 24px rgba(0,0,0,0.16); } 50% { box-shadow: 0 16px 34px rgba(0,0,0,0.24); } }
+@keyframes social-strip { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-12px); } }
+@keyframes impact-card { 0%, 100% { transform: translateY(0); box-shadow: 0 10px 26px rgba(0,58,57,0.28); } 50% { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(0,58,57,0.34); } }
+@keyframes pricing-breathe { 0%, 100% { box-shadow: 0 12px 26px rgba(0,0,0,0.16); } 50% { box-shadow: 0 18px 38px rgba(0,0,0,0.24); } }
+@keyframes pricing-card { 0%, 100% { transform: translateY(0); box-shadow: 0 8px 20px rgba(0,0,0,0.10); } 50% { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,0.16); } }
+@keyframes pricing-featured { 0%, 100% { transform: translateY(0); box-shadow: 0 12px 26px rgba(0,0,0,0.16), inset 0 0 0 rgba(134,96,199,0); } 50% { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(0,0,0,0.2), inset 0 0 24px rgba(134,96,199,0.08); } }
+@keyframes pricing-sheen { 0% { transform: translateX(-220%); opacity: 0; } 18% { opacity: 0.9; } 38% { transform: translateX(340%); opacity: 0; } 100% { transform: translateX(340%); opacity: 0; } }
+@keyframes final-cta-breathe { 0%, 100% { background-position: 50% 52%; box-shadow: 0 14px 30px rgba(0,0,0,0.22); } 50% { background-position: 48% 47%; box-shadow: 0 22px 46px rgba(0,0,0,0.3); } }
+@keyframes final-stars-drift { 0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.28; } 50% { transform: translate3d(-8px, -6px, 0); opacity: 0.46; } }
+@keyframes footer-brand-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+
+.animate-clone-breath { animation: clone-breath 3s ease-in-out infinite; }
+.animate-clone-breath-subtle { animation: clone-breath-subtle 4s ease-in-out infinite; }
+.animate-hero-glow { animation: hero-glow 6s ease-in-out infinite; }
+.animate-engine-breathe { animation: engine-breathe 8s ease-in-out infinite; background-size: 120% 140%; }
+.animate-engine-card-float { animation: engine-card-float 5.2s ease-in-out infinite; }
+.animate-timeline-line { animation: timeline-line 3.6s ease-in-out infinite; }
+.animate-timeline-dot { animation: timeline-dot 2.2s ease-in-out infinite; }
+.animate-feature-glow { animation: feature-glow 5.8s ease-in-out infinite; }
+.animate-usecase-panel { animation: usecase-panel 6.2s ease-in-out infinite; }
+.animate-usecase-orbit { animation: usecase-orbit 4.8s ease-in-out infinite; }
+.animate-usecase-core { animation: usecase-core 3.8s ease-in-out infinite; }
+.animate-usecase-bar { animation: usecase-bar 2.4s ease-in-out infinite; }
+.animate-integration-pill { animation: integration-pill 3.4s ease-in-out infinite; }
+.animate-chatcard-breathe { animation: chatcard-breathe 5.4s ease-in-out infinite; }
+.animate-trust-breathe { animation: trust-breathe 7.2s ease-in-out infinite; background-size: 130% 130%; }
+.animate-trust-panel-float { animation: trust-panel-float 5.6s ease-in-out infinite; }
+.animate-status-dot { animation: status-dot 2s ease-in-out infinite; }
+.animate-underhood-card { animation: underhood-card 6.2s ease-in-out infinite; }
+.animate-social-breathe { animation: social-breathe 6.4s ease-in-out infinite; }
+.animate-social-strip { animation: social-strip 22s ease-in-out infinite; }
+.animate-impact-card { animation: impact-card 5.6s ease-in-out infinite; }
+.animate-pricing-breathe { animation: pricing-breathe 7s ease-in-out infinite; }
+.animate-pricing-card { animation: pricing-card 5.6s ease-in-out infinite; }
+.animate-pricing-featured { animation: pricing-featured 5.4s ease-in-out infinite; }
+.animate-pricing-sheen { animation: pricing-sheen 6.8s ease-in-out infinite; }
+.animate-final-cta-breathe { animation: final-cta-breathe 7.8s ease-in-out infinite; background-size: 105% 105%; }
+.animate-final-stars-drift { animation: final-stars-drift 14s ease-in-out infinite; }
+.animate-footer-brand-float { animation: footer-brand-float 5s ease-in-out infinite; }
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   Markdown preview
+   ═══════════════════════════════════════════════════════════════════ */
+
+.markdown-preview { font-size: 13px; line-height: 1.7; color: var(--color-text-primary); }
+.markdown-preview h1 { font-size: 1.4em; font-weight: 700; margin: 0 0 0.6em; padding-bottom: 0.3em; border-bottom: 1px solid var(--color-border); }
+.markdown-preview h2 { font-size: 1.2em; font-weight: 600; margin: 1.2em 0 0.4em; }
+.markdown-preview h3 { font-size: 1.05em; font-weight: 600; margin: 1em 0 0.3em; }
+.markdown-preview p { margin: 0 0 0.7em; }
+.markdown-preview ul, .markdown-preview ol { margin: 0 0 0.7em; padding-left: 1.5em; }
+.markdown-preview li { margin: 0.15em 0; }
+.markdown-preview li::marker { color: var(--color-text-tertiary); }
+.markdown-preview strong { font-weight: 600; color: var(--color-text-primary); }
+.markdown-preview em { font-style: italic; }
+.markdown-preview a { color: var(--color-info); text-decoration: underline; text-underline-offset: 2px; }
+.markdown-preview a:hover { opacity: 0.8; }
+.markdown-preview blockquote { margin: 0.5em 0; padding: 0.4em 0.8em; border-left: 3px solid var(--color-border-hover); color: var(--color-text-secondary); background: var(--color-surface-2); border-radius: 0 4px 4px 0; }
+.markdown-preview code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.88em; padding: 0.15em 0.35em; background: var(--color-surface-3); border-radius: 3px; color: var(--color-text-primary); }
+.markdown-preview pre { margin: 0.5em 0; padding: 0.8em 1em; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: 6px; overflow-x: auto; }
+.markdown-preview pre code { padding: 0; background: none; font-size: 0.85em; line-height: 1.5; }
+.markdown-preview table { width: 100%; margin: 0.5em 0; border-collapse: collapse; font-size: 0.9em; }
+.markdown-preview th, .markdown-preview td { padding: 0.4em 0.6em; border: 1px solid var(--color-border); text-align: left; }
+.markdown-preview th { background: var(--color-surface-2); font-weight: 600; font-size: 0.88em; color: var(--color-text-secondary); }
+.markdown-preview hr { border: none; border-top: 1px solid var(--color-border); margin: 1em 0; }
+.markdown-preview input[type="checkbox"] { margin-right: 0.4em; accent-color: var(--color-accent); }
+
+.markdown-preview-compact { font-size: 11px; line-height: 1.6; }
+.markdown-preview-compact h1 { font-size: 1.2em; }
+.markdown-preview-compact h2 { font-size: 1.1em; }
+.markdown-preview-compact pre { padding: 0.5em 0.7em; }
+.markdown-preview-compact table { font-size: 0.85em; }
+
+/* ═══════════════════════════════════════════════════════════════
+   Home Page — Layout Architecture Design Spec (implement with Tailwind)
+   ═══════════════════════════════════════════════════════════════
+
+   Three-section immersive layout:
+
+   ┌──────────────────────────────────────┐
+   │  TOP: Hero — Bot Status Center       │
+   │  Bot avatar + model + status + CTA   │
+   ├──────────────────────────────────────┤
+   │  MIDDLE: Channels Panel              │
+   │  Connected list + unconnected grid   │
+   ├──────────────────────────────────────┤
+   │  BOTTOM: Activity Feed               │
+   │  Recent deployments with status      │
+   └──────────────────────────────────────┘
+
+   Container:  max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6
+
+   ── Scene A: First-run (no channels connected) ──
+   - Only Top + Middle visible (no Bottom)
+   - Bot avatar: w-32 h-32 (128px), mb-1 to name (tight spacing)
+   - IP name: 32px font-script, tracking-tight, leading-none m-0
+     RULE: h2 must have leading-none + m-0 to align capsule badges on same row
+   - Status: "Idle" amber badge with animate-pulse dot
+   - Speech bubble: rounded-full pill, bg-surface-1, border-border/60
+     - Pulsing brand dot (w-1.5 h-1.5, animate-pulse) + static text 12px
+   - Channels panel: "Choose a channel to get started"
+     - Grid: grid-cols-1 sm:grid-cols-3 gap-2.5
+     - Recommended channel: animate-breathe class (no tag, no selected border)
+     - Card: rounded-xl border px-3 py-3, icon 32px in white bg
+
+   ── Scene C: Operational (channels connected) ──
+   - All three sections visible
+   - Hero: horizontal layout (avatar left, info center, CTA right)
+     - Bot avatar: w-16 h-16 (64px), no ring/border
+     - Status: "Running" green badge — flex items-center gap-1 px-1.5 py-1
+       rounded-full bg-success/10 text-success text-[10px]/500 leading-none
+       Dot: w-1.5 h-1.5 rounded-full bg-success shrink-0
+     - Model selector: inline in status line, click to open dropdown
+     - CTA: "Chat in [Platform]" — bg-accent rounded-xl px-4 py-2
+       - Dynamic: switches text/icon based on activeChannelId
+       - Flip animation: scale-y-0/opacity-0 → scale-y-100/opacity-100, 300ms
+
+   ── Inline Model Selector (Hero status line) ──
+   - Trigger: click on model name in status bar (11px text-text-muted)
+   - Shows provider logo (11px) + model name + ChevronDown (9px)
+   - Dropdown: absolute z-50, w-[280px], rounded-xl, bg-surface-1, shadow-xl
+   - Search: bg-surface-0, border, 12px text, autoFocus
+   - Provider groups: collapsible, ChevronDown toggle, provider logo (13px)
+   - Model rows: pl-8, 12px font-medium, context window right-aligned
+   - Selected: bg-accent/5 + Check icon
+   - Footer: "Configure AI providers" → Settings link
+
+   ── Channels Panel (replaces old tabbed Control Panel) ──
+   - No tabs — dedicated to Channels only (model selector moved to Hero)
+   - Header: MessageSquare icon (12px) + "Channels" label, px-5 pt-4 pb-3
+   - Connected channels: rounded-xl border, clickable to switch active
+     - Active: border-brand-primary/25, bg-brand-subtle, "ACTIVE" label
+     - Disconnect button: 11px text-text-muted, hover:text-danger
+   - Unconnected: grid-cols-1 sm:grid-cols-2, Plus icon, opens config modal
+
+   ── card-static modifier ──
+   - Applied to Control Panel and Activity Feed modules
+   - Disables .card:hover effects (no shadow lift, no translateY)
+   - Rule: .card:hover:not(.card-static) { shadow + translateY }
+
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+   Interactive Element Color — Design Rule (implement with Tailwind)
+   ═══════════════════════════════════════════════════════════════
+
+   RULE: Clickable text, icons, and buttons must NEVER use text-text-muted
+   as their resting color. Use text-text-secondary (2nd deepest) minimum.
+
+   text-text-muted is reserved for:
+   - Truly disabled / non-interactive elements
+   - Placeholder text
+   - Decorative metadata (timestamps, counts, separator dots)
+   - Icons that are purely decorative (not clickable)
+
+   Clickable elements color hierarchy:
+   ┌─────────────────────────────────────────────────────┐
+   │  Resting       → text-text-secondary  (#6B7280)    │
+   │  Hover         → text-text-primary    (#1F2937)    │
+   │  Disabled      → text-text-muted      (#9CA3AF)    │
+   │  Destructive   → hover:text-danger                  │
+   │  Brand link    → text-[var(--color-info)]           │
+   └─────────────────────────────────────────────────────┘
+
+   Applies to:
+   - Button labels & icons (ghost, text-only, icon-only)
+   - Menu items (sidebar nav, dropdown items, context menu)
+   - Link text ("View all", "Configure", "Documentation")
+   - Action icons (close X, arrows, settings gear)
+   - Tab labels (inactive tabs)
+   - Disconnect / Remove actions
+
+   Anti-pattern (NEVER do this):
+   ✗ text-text-muted hover:text-text-secondary  ← looks disabled
+   ✓ text-text-secondary hover:text-text-primary ← looks clickable
+
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+   Channel Card — Design Spec (implement with Tailwind)
+   ═══════════════════════════════════════════════════════════════
+
+   Two distinct visual states: Connected vs Not-Connected.
+   Difference must be obvious at a glance (size, weight, color, border style).
+
+   ── Connected Channel Card ──
+
+   Container:
+   - flex items-center gap-3 rounded-xl
+   - border border-border bg-white
+   - px-4 py-3
+   - cursor-pointer → click opens external platform (chatUrl)
+   - hover:bg-surface-1
+
+   Icon container: w-8 h-8 rounded-[10px] border border-border bg-white
+   Icon size: 16px
+
+   Name: text-[13px] font-semibold text-text-primary
+   Status dot: w-1.5 h-1.5 rounded-full bg-success (green, inline after name)
+
+   Connected button (no border, filled):
+   - rounded-[8px] px-[14px] py-[5px]
+   - text-[12px] font-medium
+   - bg-surface-2 text-text-secondary
+   - Hover: text-danger + bg-surface-3 (signals destructive disconnect)
+
+   Chat link (rightmost):
+   - text-[12px] font-medium text-text-secondary
+   - hover:text-text-primary
+   - ArrowUpRight icon 12px
+   - ml-3 from Connected button
+
+   Layout:
+   ┌────────────────────────────────────────────────────────────────────────┐
+   │  [icon 32] Name (semibold) 🟢   [ Connected ]        Chat ↗         │
+   └────────────────────────────────────────────────────────────────────────┘
+
+   ── Not-Connected Channel Card ──
+
+   Container:
+   - flex items-center gap-2.5 rounded-lg
+   - border border-dashed border-border bg-surface-0
+   - px-3 py-2
+   - hover: border-solid border-border-hover bg-surface-1
+
+   Icon container: w-6 h-6 rounded-md bg-surface-1 (no border)
+   Icon size: 13px
+
+   Name: text-[12px] font-medium text-text-muted
+   - hover: text-text-secondary
+
+   Action icon: Cable 12px text-text-muted → hover:text-text-primary
+
+   Layout (grid: 1 col mobile, 2 col sm):
+   ┌──────────────────────────────┐  ┌──────────────────────────────┐
+   │  [icon 24] Name (muted)  🔗 │  │  [icon 24] Name (muted)  🔗 │
+   └──────────────────────────────┘  └──────────────────────────────┘
+
+   ── Key Visual Differences ──
+
+   | Property        | Connected              | Not-Connected           |
+   |-----------------|------------------------|-------------------------|
+   | Border          | solid                  | dashed                  |
+   | Background      | bg-white               | bg-surface-0            |
+   | Padding         | px-4 py-3              | px-3 py-2               |
+   | Icon size       | 32×32, 16px icon       | 24×24, 13px icon        |
+   | Name style      | 13px/semibold/primary  | 12px/medium/muted       |
+   | Status          | green dot              | none                    |
+   | Right actions   | Connected btn + Chat ↗ | Cable icon only         |
+
+   Anti-pattern:
+   ✗ Same visual weight for connected and not-connected
+   ✗ Only height difference between states
+   ✗ Border on Connected button (triple-border nesting with card + icon)
+   ✓ Multiple dimensions of contrast: size, weight, color, border style
+
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+   Home Page Content Width — Design Rule (implement with Tailwind)
+   ═══════════════════════════════════════════════════════════════
+
+   RULE: All main content views use the same max-width for consistency.
+   - max-w-4xl mx-auto
+   - Applies to: Home, Skills, Deployments, Settings
+
+   Anti-pattern:
+   ✗ max-w-2xl on Home while other pages use max-w-4xl
+   ✓ max-w-4xl on ALL content views for uniform feel
+
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+   Page Header Spacing — Design Rule
+   ═══════════════════════════════════════════════════════════════
+
+   RULE: All page headers use mb-10 (40px) spacing to content.
+   - .heading-page: 24px / 700 / margin-bottom: 4px
+   - .heading-page-desc: 12px / 400 / margin-bottom: 0
+   - Header container: mb-10 (40px) gap to next content section
+   - Applies to: Skills, Settings, and all future pages
+
+   Anti-pattern:
+   ✗ Different mb values per page (mb-4 on one, mb-6 on another)
+   ✓ Uniform mb-10 on the header row across ALL pages
+
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+   Auth Flow Transition — Design Rule (implement with Framer Motion)
+   ═══════════════════════════════════════════════════════════════
+
+   RULE: Welcome → Auth shares a single AuthShell layout.
+   Left side (BrandRail) stays static. Right side animates via
+   AnimatePresence with slide + fade transition.
+
+   AuthShell wraps both /welcome and /auth as nested routes.
+
+   Layout:
+   - Outer container: min-h-screen flex bg-[var(--color-dark-bg)]
+     Dark background ensures rounded corners on white panel are visible
+   - BrandRail: flex w-[46%] min-w-[320px] shrink-0 (ALWAYS visible)
+     NEVER use hidden lg:flex — nexu is a desktop client, no responsive hide
+   - Right panel: flex-1 bg-surface-0 rounded-l-[12px] overflow-hidden
+     Left rounded corners (12px) match workspace main panel style
+   - No mobile nav — removed. Logo + language switcher live in BrandRail only.
+
+   Transition config:
+   - initial: { opacity: 0, x: 40 }
+   - animate: { opacity: 1, x: 0 }
+   - exit:    { opacity: 0, x: -40 }
+   - duration: 0.3s, ease: [0.4, 0, 0.2, 1]
+   - AnimatePresence mode="wait"
+
+   Navigation: MUST use navigate() (client-side routing).
+   Anti-pattern:
+   ✗ window.open / href → causes full page reload, BrandRail flashes
+   ✗ hidden lg:flex on BrandRail → desktop client, always show
+   ✗ lg:hidden mobile nav → no mobile state, remove entirely
+   ✓ navigate('/openclaw/auth') → smooth right-panel-only transition
+
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+   Desktop Client Layout — Design Rule (implement with Tailwind)
+   ═══════════════════════════════════════════════════════════════
+
+   RULE: nexu is a desktop client. The layout is ALWAYS horizontal
+   (sidebar left + content right). Never use responsive breakpoints
+   that collapse sidebar below content.
+
+   Layout structure:
+   ┌────────┬──────────────────────────────────┐
+   │Sidebar │         Main Content             │
+   │ w-48   │      flex-1 rounded-l-[12px]     │
+   │(w-0    │      overflow-hidden min-h-0     │
+   │collapsed)│     bg-surface-1               │
+   └────────┴──────────────────────────────────┘
+
+   - Root container: flex flex-row h-full (NEVER flex-col or lg:flex-row)
+   - Sidebar: shrink-0, dynamic width via state (default 192px), bg transparent
+   - Main: flex-1 overflow-hidden min-h-0 bg-surface-1 rounded-l-[12px] pt-8
+     Left rounded corners (12px) create refined panel-over-sidebar effect
+     pt-8 (32px) top padding clears traffic light zone for all views
+   - Page inner padding: pt-2 pb-6 sm:pb-8 (Skills, Settings)
+     Reduced top padding to compensate for main pt-8
+   - Mobile header: hidden (desktop client has no mobile state)
+
+   Sidebar resizable drag handle:
+   - Position: between sidebar and main, w-[3px] shrink-0 cursor-col-resize
+   - Visual feedback: hover → brand-primary/20, active → brand-primary/40
+   - Hit area: absolute inset-y-0 -left-[2px] -right-[2px] (7px total)
+   - Sidebar width: min 160px, max 320px, default 192px
+   - Main min width: 480px (prevents sidebar from crushing content)
+   - Width persisted to localStorage key "nexu_sidebar_width"
+   - Transition disabled during drag (instant feedback), restored on mouseup
+   - Hidden when sidebar is collapsed
+
+   Sidebar toggle button:
+   - Position: fixed top-[6px] left-[80px] z-50 — next to macOS traffic lights
+   - Size: p-1.5 + 16px icon = 22px total, center ≈ 17px from top
+   - Visually aligned with macOS traffic light center (verified at 6px)
+   - Style: text-tertiary, hover → text-primary + bg-black/5
+   - Icon: PanelLeftClose (expanded) / PanelLeftOpen (collapsed)
+   - NEVER change top/left values — they are pixel-verified for alignment
+
+   Anti-pattern:
+   ✗ flex flex-col lg:flex-row  ← causes sidebar to stack on top at narrow width
+   ✗ lg:hidden / lg:flex        ← responsive show/hide for mobile adaptation
+   ✗ Changing toggle top-[6px]  ← pixel-verified, do not adjust
+   ✓ flex flex-row              ← always horizontal, sidebar always left
+
+   ── Update Banner — Design Spec (implement with Tailwind) ──────
+
+   Three-state system controlled by hasUpdate + updateDismissed:
+   - hasUpdate=true, updateDismissed=false → Bottom banner visible
+   - hasUpdate=true, updateDismissed=true  → Logo badge visible
+   - hasUpdate=false                       → Both hidden (installed / no update)
+
+   Bottom banner (sidebar bottom, above icon row):
+   - Container: mx-3 mb-2 px-3 py-2.5 rounded-[10px]
+     border border-border bg-surface-0/80 backdrop-blur-sm
+   - Animation: animate-float (3s ease-in-out infinite, translateY ±6px)
+   - Header row: flex items-center justify-between mb-1.5
+     - Left: green pulse dot (h-2 w-2, animate-ping) + text
+     - Right: X button (dismiss) or progress % (10px tabular-nums text-muted)
+   - Text: 12px/500 text-primary, whitespace-nowrap
+     - Available: "v0.2.0 available"
+     - Downloading: "Downloading…"
+     - Ready: "v0.2.0 ready"
+     - Error: "Update failed" (dot turns red)
+   - Progress row (downloading only):
+     - Bar: h-[6px] rounded-full bg-border, inner fill #1c1f23 (dark)
+       transition-all duration-300 ease-out, width driven by state %
+     - Percentage: text-[10px] tabular-nums text-muted, right-aligned below bar
+     - Container: pl-4 pr-1
+   - Buttons (h-7 for better click targets):
+     - Available: Download (primary) + Changelog (ghost)
+     - Ready: Restart (primary) + Changelog (ghost)
+     - Error: Retry (primary) + Changelog (ghost)
+     - Primary: rounded-[6px] h-7 px-2.5 text-[11px]/500 bg-accent text-white
+     - Ghost: rounded-[6px] h-7 px-2 text-[11px]/500 text-muted hover:text-primary
+   - X → setUpdateDismissed(true) (shows logo badge)
+   - Download → simulated progress 0→100%, then ready state
+
+   Update check dialog (centered modal):
+   - Triggered by "Check for Updates" menu action
+   - No background overlay/mask, transparent + pointer-events:none wrapper
+   - Dialog: w-[260px] px-6 py-6 rounded-[14px] bg-white
+     shadow: 0 24px 48px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06)
+   - Product logo: 44×44 rounded-[10px] bg-[#f5f5f5]
+   - Checking state: indeterminate progress bar (h-1, #1c1f23 fill, sliding)
+   - Up-to-date state: version subtitle + OK button (bg-[#3478f6])
+
+   Logo badge (Brand area, right-aligned):
+   - Container: Brand div uses flex items-center justify-between
+   - Badge: rounded-full px-2 py-1 text-[10px] leading-none font-semibold
+     bg-brand-primary text-white hover:opacity-85
+   - RULE: Always use leading-none + equal vertical padding (py-1) for text
+     centering inside small capsule badges
+   - Text: "Update" (i18n: ws.sidebar.update)
+   - Click → setUpdateDismissed(false) (re-shows bottom banner)
+
+   ═══════════════════════════════════════════════════════════════ */

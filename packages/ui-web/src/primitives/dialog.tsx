@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/cn";
 
 const dialogContentVariants = cva(
-  "fixed left-1/2 top-1/2 z-50 grid w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border bg-background p-6 shadow-md duration-[var(--duration-normal)] ease-[var(--ease-standard)] data-[state=open]:animate-in data-[state=closed]:animate-out",
+  "fixed left-1/2 top-1/2 z-50 grid w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl border bg-card p-6 shadow-md duration-[var(--duration-normal)] ease-[var(--ease-standard)] data-[state=open]:animate-in data-[state=closed]:animate-out",
   {
     variants: {
       size: {
@@ -39,6 +39,7 @@ const DialogOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
+    data-slot="dialog-overlay"
     className={cn(
       "fixed inset-0 z-50 bg-black/50 backdrop-blur-[1px] data-[state=open]:animate-in data-[state=closed]:animate-out",
       className,
@@ -61,6 +62,7 @@ const DialogContent = React.forwardRef<
       <DialogOverlay />
       <DialogPrimitive.Content
         ref={ref}
+        data-slot="dialog-content"
         className={cn(dialogContentVariants({ size }), className)}
         onPointerDownOutside={(event) => {
           if (!closeOnOverlayClick) {
@@ -84,16 +86,21 @@ const DialogContent = React.forwardRef<
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("flex flex-col gap-1.5 text-left", className)} {...props} />;
+  return <div data-slot="dialog-header" className={cn("flex flex-col gap-1.5 text-left", className)} {...props} />;
 }
 
 function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
+      data-slot="dialog-footer"
       className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
       {...props}
     />
   );
+}
+
+function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div data-slot="dialog-body" className={cn("space-y-4", className)} {...props} />;
 }
 
 const DialogTitle = React.forwardRef<
@@ -102,6 +109,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
+    data-slot="dialog-title"
     className={cn("text-lg font-semibold leading-none tracking-tight", className)}
     {...props}
   />
@@ -115,6 +123,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
+    data-slot="dialog-description"
     className={cn("text-sm text-muted-foreground", className)}
     {...props}
   />
@@ -126,6 +135,7 @@ export {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogBody,
   DialogDescription,
   DialogFooter,
   DialogHeader,

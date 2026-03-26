@@ -33,6 +33,26 @@
   --duration-fast: 120ms;
   --duration-normal: 200ms;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Demo-compatible semantic aliases */
+  --color-surface-0: hsl(var(--background));
+  --color-surface-1: hsl(var(--card));
+  --color-surface-2: hsl(var(--secondary));
+  --color-text-primary: hsl(var(--foreground));
+  --color-text-secondary: hsl(var(--secondary-foreground));
+  --color-text-muted: hsl(var(--muted-foreground));
+  --color-brand-primary: hsl(var(--primary));
+  --color-accent: hsl(var(--primary));
+  --color-accent-fg: hsl(var(--primary-foreground));
+  --color-accent-hover: hsl(var(--primary) / 0.9);
+  --color-border: hsl(var(--border));
+  --color-danger: hsl(var(--destructive));
+  --color-success: hsl(var(--success));
+  --color-warning: hsl(var(--warning));
+  --color-brand-subtle: hsl(var(--primary) / 0.12);
+  --color-success-subtle: hsl(var(--success) / 0.14);
+  --color-warning-subtle: hsl(var(--warning) / 0.18);
+  --color-danger-subtle: hsl(var(--destructive) / 0.14);
 }
 
 .dark {
@@ -59,6 +79,26 @@
   --border: 217.2 32.6% 17.5%;
   --input: 217.2 32.6% 17.5%;
   --ring: 224.3 76.3% 48%;
+
+  /* Demo-compatible semantic aliases */
+  --color-surface-0: hsl(var(--background));
+  --color-surface-1: hsl(var(--card));
+  --color-surface-2: hsl(var(--secondary));
+  --color-text-primary: hsl(var(--foreground));
+  --color-text-secondary: hsl(var(--secondary-foreground));
+  --color-text-muted: hsl(var(--muted-foreground));
+  --color-brand-primary: hsl(var(--primary));
+  --color-accent: hsl(var(--primary));
+  --color-accent-fg: hsl(var(--primary-foreground));
+  --color-accent-hover: hsl(var(--primary) / 0.88);
+  --color-border: hsl(var(--border));
+  --color-danger: hsl(var(--destructive));
+  --color-success: hsl(var(--success));
+  --color-warning: hsl(var(--warning));
+  --color-brand-subtle: hsl(var(--primary) / 0.2);
+  --color-success-subtle: hsl(var(--success) / 0.2);
+  --color-warning-subtle: hsl(var(--warning) / 0.22);
+  --color-danger-subtle: hsl(var(--destructive) / 0.24);
 }
 
 @theme inline {

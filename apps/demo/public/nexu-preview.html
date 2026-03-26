@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>nexu — Your AI Office Twin in Team Chat</title>
+  <meta name="description" content="Deploy your AI office twin in Slack, Discord & Telegram in under a minute. Persistent memory, 1000+ built-in tools, always on." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+/* ============================================================
+   0. DESIGN TOKENS — from DESIGN-SYSTEM-NEXU-2.0.md
+   ============================================================ */
+:root {
+  /* Brand Teal */
+  --brand-50: #fafdfe;
+  --brand-100: #f2fafb;
+  --brand-200: #def7f9;
+  --brand-300: #caf1f5;
+  --brand-400: #b5e9f0;
+  --brand-500: #9ddde7;
+  --brand-600: #7dcedc;
+  --brand-700: #3db9ce;
+  --brand: #3db9ce;
+  --brand-800: #00a2c7;
+  --brand-900: #0897b9;
+  --brand-950: #007da4;
+  --brand-primary: #3DB9CE;
+  --brand-subtle: rgba(61, 185, 206, 0.08);
+
+  /* Neutral */
+  --neutral-0: #ffffff;
+  --neutral-50: #f9f9f9;
+  --neutral-100: #f3f3f3;
+  --neutral-200: #eeeeee;
+  --neutral-300: #d4d4d4;
+  --neutral-400: #909599;
+  --neutral-500: #787c80;
+  --neutral-600: #6c7073;
+  --neutral-700: #545659;
+  --neutral-800: #222b39;
+  --neutral-900: #042028;
+
+  /* Surface */
+  --surface-0: #FAFAFA;
+  --surface-1: #ffffff;
+  --surface-2: #F5F5F5;
+  --surface-3: #EEEEEE;
+  --surface-4: #e5e5e5;
+  --surface-5: #d4d4d4;
+
+  /* Text */
+  --text-primary: #1c1f23;
+  --text-secondary: #545659;
+  --text-tertiary: #787c80;
+  --text-placeholder: #787c80;
+  --text-muted: #787c80;
+  --text-disabled: rgba(28, 31, 35, 0.38);
+
+  /* Accent */
+  --accent: #1C1F23;
+  --accent-hover: #222b39;
+  --accent-subtle: rgba(28, 31, 35, 0.06);
+  --accent-fg: #ffffff;
+
+  /* Functional */
+  --success: #346E58;
+  --success-subtle: rgba(52, 110, 88, 0.08);
+  --warning: #EDC337;
+  --warning-subtle: rgba(237, 195, 55, 0.08);
+  --error: #F8672F;
+  --error-subtle: rgba(248, 103, 47, 0.08);
+  --link: #2657BB;
+  --info: #2657BB;
+  --danger: #f93920;
+  --danger-subtle: rgba(249, 57, 32, 0.08);
+
+  /* Border */
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 0, 0, 0.10);
+  --border-strong: rgba(0, 0, 0, 0.12);
+  --border-card: rgba(0, 0, 0, 0.06);
+  --border-field: rgba(0, 0, 0, 0.06);
+  --border-input: rgba(0, 0, 0, 0.12);
+
+  /* Shadow */
+  --shadow-rest: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-refine: 0 10px 20px -5px rgba(0, 0, 0, 0.06);
+  --shadow-input-inset: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-card: 0 4px 8px 0 rgba(0,0,0,0.08);
+  --shadow-m: 0 2px 20px 4px rgba(0,0,0,0.04);
+  --shadow-focus: 0 0 0 2px rgba(61,185,206,0.25);
+
+  /* Spacing */
+  --sp-0: 0; --sp-2: 2px; --sp-4: 4px; --sp-6: 6px; --sp-8: 8px;
+  --sp-10: 10px; --sp-12: 12px; --sp-14: 14px; --sp-16: 16px;
+  --sp-18: 18px; --sp-20: 20px; --sp-22: 22px; --sp-24: 24px;
+  --sp-26: 26px; --sp-28: 28px; --sp-30: 30px; --sp-32: 32px;
+
+  /* Radius */
+  --r-2: 2px; --r-4: 4px; --r-6: 6px; --r-8: 8px; --r-12: 12px; --r-16: 16px;
+  --r-20: 20px; --r-22: 22px; --r-24: 24px; --r-28: 28px;
+  --r-32: 32px; --r-38: 38px; --r-pill: 100px; --r-circle: 50%;
+
+  /* Font size */
+  --fs-10: 10px; --fs-12: 12px; --fs-13: 13px; --fs-14: 14px;
+  --fs-16: 16px; --fs-18: 18px; --fs-20: 20px; --fs-24: 24px;
+  --fs-32: 32px; --fs-36: 36px; --fs-48: 48px; --fs-52: 52px;
+
+  /* Font family */
+  --ff-en: 'Manrope', 'PingFang SC', -apple-system, 'Noto Sans SC', sans-serif;
+  --ff-cjk: 'PingFang SC', 'Noto Sans SC', sans-serif;
+
+  /* Motion */
+  --ease-page: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-page: 0.3s;
+  --dur-fade: 0.2s;
+  --dur-hover: 0.15s;
+  --dur-slide: 0.25s;
+}
+
+/* ============================================================
+   1. RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--ff-en), var(--ff-cjk);
+  background: var(--surface-0);
+  color: var(--text-primary);
+  line-height: 1.3;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+input { font: inherit; }
+
+/* ============================================================
+   2. COMPONENT CLASSES
+   ============================================================ */
+
+/* --- Buttons --- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-8);
+  font-weight: 600; font-size: var(--fs-14); border-radius: var(--r-8);
+  padding: var(--sp-10) var(--sp-20); transition: all var(--dur-hover) ease;
+  white-space: nowrap; line-height: 1;
+}
+.btn-primary { background: var(--accent); color: var(--accent-fg); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-primary:active { background: var(--neutral-900); }
+.btn-primary:disabled { background: var(--neutral-200); color: var(--text-disabled); cursor: not-allowed; }
+
+.btn-secondary { background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border-input); }
+.btn-secondary:hover { background: var(--surface-3); }
+.btn-secondary:active { background: var(--surface-4); }
+
+.btn-ghost { background: transparent; color: var(--text-secondary); }
+.btn-ghost:hover { background: var(--surface-2); }
+
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: #d42f1a; }
+
+.btn-lg { padding: var(--sp-14) var(--sp-28); font-size: var(--fs-16); border-radius: var(--r-12); }
+.btn-sm { padding: var(--sp-6) var(--sp-12); font-size: var(--fs-13); }
+.btn-pill { border-radius: var(--r-pill); }
+
+/* --- Input --- */
+.input {
+  width: 100%; padding: var(--sp-10) var(--sp-14); font-size: var(--fs-14);
+  background: var(--surface-1); border: 1px solid var(--border-input);
+  border-radius: var(--r-8); color: var(--text-primary);
+  transition: border-color var(--dur-hover) ease, box-shadow var(--dur-hover) ease;
+  outline: none;
+}
+.input::placeholder { color: var(--text-placeholder); }
+.input:focus { border-color: var(--brand-primary); box-shadow: var(--shadow-focus); }
+.input-error { border-color: var(--error); }
+.input:disabled { background: var(--neutral-100); border-color: var(--neutral-200); color: var(--text-muted); }
+
+/* --- Card --- */
+.card {
+  background: var(--surface-1); border: 1px solid var(--border-card);
+  border-radius: var(--r-24); padding: var(--sp-24);
+  box-shadow: var(--shadow-rest);
+  transition: box-shadow var(--dur-hover) ease, border-color var(--dur-hover) ease, transform var(--dur-hover) ease;
+}
+.card:hover { box-shadow: var(--shadow-refine); transform: translateY(-1px); }
+.card-compact { border-radius: var(--r-16); padding: var(--sp-20); }
+
+/* --- Tag --- */
+.tag {
+  display: inline-flex; align-items: center; gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-12); border-radius: var(--r-pill);
+  font-size: var(--fs-12); font-weight: 500;
+  background: var(--neutral-100); border: 0.5px solid var(--border-input);
+  color: var(--text-secondary);
+}
+.tag-brand { background: rgba(61,185,206,0.08); color: var(--brand-primary); border-color: rgba(61,185,206,0.2); }
+
+/* --- Section label --- */
+.section-label {
+  font-size: var(--fs-12); font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--brand-primary); margin-bottom: var(--sp-12);
+}
+
+/* --- Divider --- */
+.divider { height: 1px; background: var(--border-input); }
+
+/* ============================================================
+   3. LAYOUT
+   ============================================================ */
+.container { max-width: 1152px; margin: 0 auto; padding: 0 var(--sp-24); }
+.section { padding: 80px 0; }
+.section-sm { padding: 48px 0; }
+
+/* ============================================================
+   4. NAV
+   ============================================================ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 56px; display: flex; align-items: center;
+  background: rgba(250,250,250,0.85); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-card);
+  padding: 0 var(--sp-24);
+}
+.nav-inner { max-width: 1152px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { display: flex; align-items: center; gap: var(--sp-10); font-weight: 700; font-size: var(--fs-16); }
+.nav-logo-icon {
+  width: 28px; height: 28px; border-radius: var(--r-8);
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-links { display: flex; align-items: center; gap: var(--sp-28); }
+.nav-links a { font-size: var(--fs-14); font-weight: 500; color: var(--text-secondary); transition: color var(--dur-hover) ease; }
+.nav-links a:hover { color: var(--text-primary); }
+.nav-cta { display: flex; align-items: center; gap: var(--sp-12); }
+.nav-mobile-toggle { display: none; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: var(--r-8); }
+.nav-mobile-toggle:hover { background: var(--surface-3); }
+
+/* ============================================================
+   5. HERO
+   ============================================================ */
+.hero {
+  padding-top: 136px; padding-bottom: 80px; text-align: center;
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-0) 60%);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+  width: 800px; height: 800px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(61,185,206,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: var(--sp-8);
+  padding: var(--sp-6) var(--sp-16); border-radius: var(--r-pill);
+  background: rgba(61,185,206,0.08); border: 1px solid rgba(61,185,206,0.15);
+  font-size: var(--fs-13); font-weight: 600; color: var(--brand-primary);
+  margin-bottom: var(--sp-24);
+}
+.hero h1 {
+  font-size: var(--fs-48); font-weight: 700; line-height: 1.1;
+  max-width: 720px; margin: 0 auto var(--sp-20);
+  letter-spacing: -0.02em;
+}
+.hero h1 .accent { color: var(--brand-primary); }
+.hero-sub {
+  font-size: var(--fs-18); font-weight: 400; color: var(--text-secondary);
+  max-width: 560px; margin: 0 auto var(--sp-32); line-height: 1.6;
+}
+.hero-ctas { display: flex; align-items: center; justify-content: center; gap: var(--sp-12); flex-wrap: wrap; }
+.hero-note { margin-top: var(--sp-16); font-size: var(--fs-13); color: var(--text-tertiary); }
+
+/* ============================================================
+   6. IM PLATFORMS
+   ============================================================ */
+.platforms { text-align: center; padding: 48px 0 0; }
+.platforms-label { font-size: var(--fs-14); color: var(--text-tertiary); margin-bottom: var(--sp-20); }
+.platforms-row { display: flex; align-items: center; justify-content: center; gap: var(--sp-32); flex-wrap: wrap; }
+.platform-item {
+  display: flex; flex-direction: column; align-items: center; gap: var(--sp-8);
+  font-size: var(--fs-12); font-weight: 500; color: var(--text-tertiary);
+  transition: color var(--dur-hover) ease;
+}
+.platform-item:hover { color: var(--text-secondary); }
+.platform-icon {
+  width: 48px; height: 48px; border-radius: var(--r-12);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-1); border: 1px solid var(--border-card);
+  transition: border-color var(--dur-hover) ease, box-shadow var(--dur-hover) ease;
+}
+.platform-item:hover .platform-icon { border-color: var(--brand-primary); box-shadow: 0 2px 8px rgba(61,185,206,0.1); }
+
+/* ============================================================
+   7. DEMO
+   ============================================================ */
+.demo-section { background: var(--surface-2); }
+.demo-header { text-align: center; margin-bottom: 48px; }
+.demo-header h2 { font-size: var(--fs-32); font-weight: 700; margin-bottom: var(--sp-12); }
+.demo-header p { font-size: var(--fs-16); color: var(--text-secondary); max-width: 480px; margin: 0 auto; line-height: 1.5; }
+.demo-tabs { display: flex; justify-content: center; gap: var(--sp-8); margin-bottom: var(--sp-32); flex-wrap: wrap; }
+.demo-tab {
+  padding: var(--sp-8) var(--sp-16); border-radius: var(--r-pill);
+  font-size: var(--fs-13); font-weight: 600; color: var(--text-secondary);
+  border: 1px solid var(--border-input); background: var(--surface-1);
+  transition: all var(--dur-hover) ease;
+}
+.demo-tab:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
+.demo-tab.active { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
+
+.slack-mock {
+  max-width: 800px; margin: 0 auto;
+  border-radius: var(--r-24); overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-card);
+}
+.slack-header {
+  height: 44px; background: var(--neutral-900);
+  display: flex; align-items: center; padding: 0 var(--sp-16);
+  gap: var(--sp-8);
+}
+.slack-dot { width: 10px; height: 10px; border-radius: 50%; }
+.slack-dot-r { background: #ff5f57; }
+.slack-dot-y { background: #ffbd2e; }
+.slack-dot-g { background: #28c840; }
+.slack-header-title { color: rgba(255,255,255,0.6); font-size: var(--fs-13); font-weight: 600; margin-left: var(--sp-12); }
+.slack-body { display: flex; min-height: 380px; background: var(--surface-1); }
+.slack-sidebar {
+  width: 200px; flex-shrink: 0; background: var(--neutral-800);
+  padding: var(--sp-12) var(--sp-8); border-right: 1px solid rgba(255,255,255,0.06);
+}
+.slack-ws { font-size: var(--fs-13); font-weight: 700; color: #fff; padding: var(--sp-4) var(--sp-8); margin-bottom: var(--sp-12); }
+.slack-ch-label { font-size: var(--fs-10); font-weight: 600; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: var(--sp-4) var(--sp-8); margin-top: var(--sp-8); }
+.slack-ch {
+  font-size: var(--fs-13); color: rgba(255,255,255,0.5);
+  padding: var(--sp-4) var(--sp-8); border-radius: var(--r-4);
+  cursor: pointer; transition: all var(--dur-hover) ease;
+}
+.slack-ch:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.8); }
+.slack-ch.active { background: var(--brand-primary); color: #fff; }
+.slack-main { flex: 1; display: flex; flex-direction: column; }
+.slack-main-header {
+  padding: var(--sp-12) var(--sp-16); border-bottom: 1px solid var(--border-card);
+  font-size: var(--fs-14); font-weight: 700;
+}
+.slack-messages { flex: 1; padding: var(--sp-16); overflow-y: auto; display: flex; flex-direction: column; gap: var(--sp-16); }
+.slack-msg { display: flex; gap: var(--sp-10); }
+.slack-avatar {
+  width: 32px; height: 32px; border-radius: var(--r-8); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--fs-14); font-weight: 700;
+}
+.slack-avatar-user { background: var(--neutral-200); color: var(--text-secondary); }
+.slack-avatar-bot { background: var(--brand-primary); color: #fff; }
+.slack-msg-body { flex: 1; min-width: 0; }
+.slack-msg-head { display: flex; align-items: baseline; gap: var(--sp-8); margin-bottom: var(--sp-4); }
+.slack-msg-name { font-size: var(--fs-13); font-weight: 700; }
+.slack-msg-name.bot { color: var(--brand-primary); }
+.slack-msg-time { font-size: var(--fs-10); color: var(--text-tertiary); }
+.slack-msg-badge { font-size: var(--fs-10); font-weight: 600; padding: 1px 6px; border-radius: var(--r-4); background: var(--brand-subtle); color: var(--brand-primary); }
+.slack-msg-text { font-size: var(--fs-13); color: var(--text-secondary); line-height: 1.5; }
+.slack-msg-card {
+  margin-top: var(--sp-8); padding: var(--sp-12);
+  border-radius: var(--r-12); background: var(--surface-2);
+  border-left: 3px solid var(--brand-primary);
+}
+.slack-msg-card-title { font-size: var(--fs-12); font-weight: 700; margin-bottom: var(--sp-4); }
+.slack-msg-card-desc { font-size: var(--fs-12); color: var(--text-tertiary); }
+.slack-msg-reactions { display: flex; gap: var(--sp-4); margin-top: var(--sp-8); }
+.slack-reaction {
+  padding: 2px 8px; border-radius: var(--r-pill); font-size: var(--fs-12);
+  background: var(--surface-2); border: 1px solid var(--border-card);
+}
+.slack-input-bar {
+  padding: var(--sp-12) var(--sp-16); border-top: 1px solid var(--border-card);
+  display: flex; align-items: center; gap: var(--sp-8);
+}
+.slack-input-fake {
+  flex: 1; padding: var(--sp-8) var(--sp-12); border-radius: var(--r-8);
+  border: 1px solid var(--border-input); font-size: var(--fs-13);
+  color: var(--text-placeholder); background: var(--surface-1);
+}
+.slack-send {
+  width: 32px; height: 32px; border-radius: var(--r-circle);
+  background: var(--text-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.demo-panel { display: none; }
+.demo-panel.active { display: block; }
+
+/* ============================================================
+   8. FEATURES
+   ============================================================ */
+.features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-24); }
+.feature-card { padding: var(--sp-32); }
+.feature-icon {
+  width: 48px; height: 48px; border-radius: var(--r-12);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: var(--sp-16); font-size: 22px;
+}
+.feature-icon-1 { background: rgba(61,185,206,0.1); }
+.feature-icon-2 { background: rgba(149,222,100,0.1); }
+.feature-icon-3 { background: rgba(255,197,61,0.1); }
+.feature-icon-4 { background: rgba(145,202,255,0.1); }
+.feature-card h3 { font-size: var(--fs-18); font-weight: 700; margin-bottom: var(--sp-8); }
+.feature-card p { font-size: var(--fs-14); color: var(--text-secondary); line-height: 1.6; }
+
+/* ============================================================
+   9. COMPARISON
+   ============================================================ */
+.compare-table {
+  width: 100%; border-collapse: collapse; border-radius: var(--r-16); overflow: hidden;
+  border: 1px solid var(--border-card);
+}
+.compare-table th, .compare-table td {
+  padding: var(--sp-14) var(--sp-20); text-align: left; font-size: var(--fs-14);
+  border-bottom: 1px solid var(--border-card);
+}
+.compare-table th { font-weight: 600; background: var(--surface-2); }
+.compare-table th:nth-child(2) { color: var(--brand-primary); }
+.compare-table td:nth-child(2) { font-weight: 500; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tbody tr { transition: background var(--dur-hover) ease; }
+.compare-table tbody tr:hover { background: var(--surface-2); }
+.check { color: var(--brand-primary); font-weight: 700; }
+.cross { color: var(--text-tertiary); }
+
+/* ============================================================
+   10. HOW IT WORKS
+   ============================================================ */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-24); counter-reset: step; }
+.step { text-align: center; }
+.step-num {
+  font-size: var(--fs-48); font-weight: 700; color: var(--brand-primary);
+  margin-bottom: var(--sp-12); line-height: 1; opacity: 0.3;
+}
+.step h3 { font-size: var(--fs-18); font-weight: 700; margin-bottom: var(--sp-8); }
+.step p { font-size: var(--fs-14); color: var(--text-secondary); line-height: 1.6; }
+
+/* ============================================================
+   11. USE CASES
+   ============================================================ */
+.usecases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-16); }
+.usecase-card { padding: var(--sp-24); position: relative; overflow: hidden; }
+.usecase-tag {
+  display: inline-block; font-size: var(--fs-10); font-weight: 600;
+  padding: var(--sp-2) var(--sp-8); border-radius: var(--r-pill);
+  margin-bottom: var(--sp-12);
+}
+.usecase-tag-startup { background: rgba(61,185,206,0.1); color: var(--brand-primary); }
+.usecase-tag-ecom { background: rgba(255,197,61,0.1); color: #c49000; }
+.usecase-tag-creator { background: rgba(145,202,255,0.1); color: #2563eb; }
+.usecase-card h3 { font-size: var(--fs-16); font-weight: 700; margin-bottom: var(--sp-8); }
+.usecase-card p { font-size: var(--fs-13); color: var(--text-secondary); line-height: 1.5; }
+.usecase-freq {
+  margin-top: var(--sp-12); font-size: var(--fs-12); font-weight: 600;
+  color: var(--text-tertiary);
+}
+
+/* ============================================================
+   12. NUMBERS
+   ============================================================ */
+.numbers-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-24); text-align: center; }
+.number-item .number-value { font-size: var(--fs-48); font-weight: 700; color: var(--brand-primary); line-height: 1; }
+.number-item .number-label { font-size: var(--fs-14); font-weight: 600; margin-top: var(--sp-8); }
+.number-item .number-desc { font-size: var(--fs-13); color: var(--text-tertiary); margin-top: var(--sp-4); }
+
+/* ============================================================
+   13. FAQ
+   ============================================================ */
+.faq-list { max-width: 720px; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid var(--border-card); }
+.faq-q {
+  width: 100%; display: flex; justify-content: space-between; align-items: center;
+  padding: var(--sp-20) 0; font-size: var(--fs-16); font-weight: 600;
+  text-align: left; color: var(--text-primary);
+  transition: color var(--dur-hover) ease;
+}
+.faq-q:hover { color: var(--brand-primary); }
+.faq-arrow {
+  width: 20px; height: 20px; flex-shrink: 0; transition: transform var(--dur-slide) ease;
+  color: var(--brand-primary);
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0; overflow: hidden; transition: max-height var(--dur-slide) ease;
+  font-size: var(--fs-14); color: var(--text-secondary); line-height: 1.6;
+}
+.faq-item.open .faq-a { max-height: 300px; }
+.faq-a-inner { padding-bottom: var(--sp-20); }
+
+/* ============================================================
+   14. FINAL CTA
+   ============================================================ */
+.final-cta {
+  background: var(--neutral-900); color: #fff; text-align: center;
+  padding: 80px var(--sp-24); border-radius: var(--r-32);
+  margin: 0 var(--sp-24);
+}
+.final-cta h2 { font-size: var(--fs-36); font-weight: 700; margin-bottom: var(--sp-12); }
+.final-cta p { font-size: var(--fs-16); color: rgba(255,255,255,0.5); margin-bottom: var(--sp-28); }
+.final-cta .btn-primary { background: var(--brand-primary); }
+.final-cta .btn-primary:hover { background: #2fa8bc; }
+
+/* ============================================================
+   15. FOOTER
+   ============================================================ */
+.footer {
+  padding: var(--sp-32) var(--sp-24);
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 1152px; margin: 0 auto;
+  font-size: var(--fs-12); color: var(--text-tertiary);
+}
+.footer-links { display: flex; gap: var(--sp-20); }
+.footer-links a:hover { color: var(--text-secondary); }
+
+/* ============================================================
+   16. AUTH PAGE
+   ============================================================ */
+.auth-page { display: none; min-height: 100vh; }
+.auth-page.active { display: flex; }
+.auth-left {
+  width: 400px; flex-shrink: 0; background: var(--neutral-900);
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: var(--sp-32); position: relative; overflow: hidden;
+}
+.auth-left::before {
+  content: ''; position: absolute; bottom: -100px; right: -100px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(61,185,206,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.auth-left-logo { display: flex; align-items: center; gap: var(--sp-10); }
+.auth-left-logo .nav-logo-icon { background: none; }
+.auth-left-logo span { font-size: var(--fs-14); font-weight: 700; color: rgba(255,255,255,0.9); }
+.auth-left h2 {
+  font-size: var(--fs-32); font-weight: 700; color: #fff;
+  line-height: 1.15; margin-bottom: var(--sp-16);
+}
+.auth-left-sub { font-size: var(--fs-13); color: rgba(255,255,255,0.4); line-height: 1.6; max-width: 280px; margin-bottom: var(--sp-24); }
+.auth-pills { display: flex; flex-wrap: wrap; gap: var(--sp-8); }
+.auth-pill {
+  display: inline-flex; align-items: center; gap: var(--sp-6);
+  padding: var(--sp-6) var(--sp-12); border-radius: var(--r-pill);
+  font-size: var(--fs-12); font-weight: 500;
+  background: rgba(61,185,206,0.08); color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(61,185,206,0.12);
+}
+.auth-left-footer { font-size: 11px; color: rgba(255,255,255,0.15); }
+.auth-right { flex: 1; display: flex; flex-direction: column; background: var(--surface-0); }
+.auth-form-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: var(--sp-24); }
+.auth-form { width: 100%; max-width: 360px; }
+.auth-form h1 { font-size: 22px; font-weight: 700; margin-bottom: var(--sp-6); }
+.auth-form .auth-sub { font-size: var(--fs-14); color: var(--text-tertiary); margin-bottom: var(--sp-28); }
+.auth-divider {
+  display: flex; align-items: center; gap: var(--sp-12); margin: var(--sp-24) 0;
+  font-size: var(--fs-12); color: var(--text-tertiary);
+}
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-input); }
+.auth-fields { display: flex; flex-direction: column; gap: var(--sp-12); }
+.auth-field label { display: block; font-size: var(--fs-13); font-weight: 500; color: var(--text-secondary); margin-bottom: var(--sp-6); }
+.auth-toggle { text-align: center; margin-top: var(--sp-28); font-size: var(--fs-13); color: var(--text-tertiary); }
+.auth-toggle button { color: var(--brand-primary); font-weight: 600; margin-left: var(--sp-4); }
+.auth-toggle button:hover { text-decoration: underline; }
+.auth-footer {
+  display: flex; align-items: center; justify-content: center; gap: var(--sp-12);
+  padding-bottom: var(--sp-24); font-size: var(--fs-12); color: var(--text-tertiary);
+}
+.auth-footer a:hover { color: var(--text-secondary); }
+
+/* Google button */
+.btn-google {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: var(--sp-10);
+  padding: var(--sp-12) var(--sp-20); border-radius: var(--r-8);
+  font-size: var(--fs-14); font-weight: 600;
+  background: var(--text-primary); color: #fff;
+  transition: background var(--dur-hover) ease;
+}
+.btn-google:hover { background: var(--neutral-800); }
+
+/* ============================================================
+   17. RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .nav-links { display: none; }
+  .nav-mobile-toggle { display: flex; }
+  .auth-left { display: none; }
+  .features-grid { grid-template-columns: 1fr; }
+  .slack-sidebar { display: none; }
+  .slack-mock { max-width: 100%; }
+}
+@media (max-width: 768px) {
+  .hero h1 { font-size: var(--fs-36); }
+  .hero-sub { font-size: var(--fs-16); }
+  .steps { grid-template-columns: 1fr; gap: var(--sp-32); }
+  .usecases-grid { grid-template-columns: 1fr; }
+  .numbers-grid { grid-template-columns: repeat(2, 1fr); }
+  .compare-table { font-size: var(--fs-13); }
+  .compare-table th, .compare-table td { padding: var(--sp-10) var(--sp-12); }
+  .final-cta { margin: 0; border-radius: 0; }
+  .final-cta h2 { font-size: var(--fs-24); }
+  .section { padding: 48px 0; }
+  .footer { flex-direction: column; gap: var(--sp-12); text-align: center; }
+}
+@media (max-width: 640px) {
+  .hero h1 { font-size: var(--fs-32); }
+  .hero-ctas { flex-direction: column; width: 100%; }
+  .hero-ctas .btn { width: 100%; }
+  .numbers-grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-16); }
+  .platforms-row { gap: var(--sp-20); }
+  .demo-section .container { padding: 0 var(--sp-12); }
+}
+
+/* ============================================================
+   18. ANIMATIONS
+   ============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: fadeUp var(--dur-page) var(--ease-page) both; }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+
+/* Page visibility */
+.landing-page { display: block; }
+.landing-page.hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo" onclick="showLanding()">
+      <div class="nav-logo-icon"><svg width="28" height="28" viewBox="77 78 85 85" fill="none"><path d="M97.5645 78C108.922 78 118.129 87.207 118.129 98.5645V114.723C118.129 117.156 116.156 119.129 113.723 119.129H98.9355V99.9355H96.1934V119.129H81.4062C78.9728 119.129 77.0001 117.156 77 114.723V98.5645C77 87.207 86.207 78 97.5645 78Z" fill="#2D2D2D"/><path d="M141.436 163C130.078 163 120.871 153.793 120.871 142.436L120.871 126.277C120.871 123.844 122.844 121.871 125.277 121.871L140.064 121.871L140.064 141.064L142.807 141.064L142.807 121.871L157.594 121.871C160.027 121.871 162 123.844 162 126.277L162 142.436C162 153.793 152.793 163 141.436 163Z" fill="#2D2D2D"/><path d="M120.871 98.5659C120.871 87.2085 130.078 78.0015 141.436 78.0015C152.332 78.0015 161.247 86.4761 161.953 97.1938L142.807 97.1938L142.807 99.9351L161.953 99.9351C161.248 110.654 152.333 119.13 141.436 119.13C130.078 119.13 120.871 109.923 120.871 98.5659Z" fill="#2D2D2D"/><path d="M77 142.437C77 137.251 78.9192 132.514 82.0859 128.896L92.7773 139.587L94.7168 137.648L84.0254 126.958C87.6429 123.791 92.3797 121.871 97.5654 121.871C102.534 121.871 107.091 123.634 110.646 126.567L99.5625 137.65L101.501 139.589L112.64 128.451C116.045 132.121 118.129 137.034 118.129 142.435C118.129 147.62 116.209 152.358 113.042 155.976L101.203 144.136L99.2637 146.074L111.103 157.914C107.485 161.08 102.749 163 97.5645 163C92.1634 163 87.2486 160.917 83.5791 157.512L95.0146 146.077L93.0762 144.138L81.6963 155.518C78.7624 151.963 77 147.405 77 142.437Z" fill="#2D2D2D"/></svg></div>
+      <span>nexu</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Why nexu</a>
+      <a href="#demo">Demo</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <button class="btn btn-ghost btn-sm" onclick="showAuth('login')">Log in</button>
+      <button class="btn btn-primary btn-sm btn-pill" onclick="showAuth('register')">Get started free</button>
+    </div>
+    <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('mobile-open')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ============================================================
+     LANDING PAGE
+     ============================================================ -->
+<div id="landing" class="landing-page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge animate-in">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Free during beta
+      </div>
+      <h1 class="animate-in delay-1">Your AI office twin,<br/>right in <span class="accent">team chat</span></h1>
+      <p class="hero-sub animate-in delay-2">Deploy to Slack, Discord or Telegram in under a minute. Persistent memory, 1,000+ built-in tools, always on 24/7.</p>
+      <div class="hero-ctas animate-in delay-3">
+        <button class="btn btn-primary btn-lg btn-pill" onclick="showAuth('register')">Get started free &rarr;</button>
+        <button class="btn btn-secondary btn-lg btn-pill">Add to your team chat</button>
+      </div>
+      <p class="hero-note animate-in delay-3">No credit card required &middot; Works with Slack, Discord & Telegram</p>
+    </div>
+  </section>
+
+  <!-- IM PLATFORMS -->
+  <section class="platforms">
+    <div class="container">
+      <p class="platforms-label">Works where your team already works</p>
+      <div class="platforms-row">
+        <div class="platform-item">
+          <div class="platform-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zm1.271 0a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313z" fill="#E01E5A"/><path d="M8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zm0 1.271a2.527 2.527 0 0 1 2.521 2.521 2.527 2.527 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312z" fill="#36C5F0"/><path d="M18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zm-1.27 0a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.163 0a2.528 2.528 0 0 1 2.523 2.522v6.312z" fill="#2EB67D"/><path d="M15.163 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.163 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zm0-1.27a2.527 2.527 0 0 1-2.52-2.523 2.527 2.527 0 0 1 2.52-2.52h6.315A2.528 2.528 0 0 1 24 15.163a2.528 2.528 0 0 1-2.522 2.523h-6.315z" fill="#ECB22E"/></svg>
+          </div>
+          <span>Slack</span>
+        </div>
+        <div class="platform-item">
+          <div class="platform-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+          </div>
+          <span>Discord</span>
+        </div>
+        <div class="platform-item">
+          <div class="platform-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#26A5E4"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          </div>
+          <span>Telegram</span>
+        </div>
+        <div class="platform-item">
+          <div class="platform-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          </div>
+          <span>WhatsApp</span>
+        </div>
+        <div class="platform-item">
+          <div class="platform-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#5059C9"><path d="M20.625 8.5h-3.75c.069-.248.125-.498.125-.75a2.75 2.75 0 0 0-5.5 0c0 .252.056.502.125.75H8.5a1.5 1.5 0 0 0-1.5 1.5v5.25A4.75 4.75 0 0 0 11.75 20h.5A4.75 4.75 0 0 0 17 15.25V12h3.625A1.375 1.375 0 0 0 22 10.625v-.75A1.375 1.375 0 0 0 20.625 8.5zM14.25 6a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5zM20 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM2 10.5a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v6.5a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 2 17v-6.5z"/></svg>
+          </div>
+          <span>Teams</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO -->
+  <section id="demo" class="demo-section section">
+    <div class="container">
+      <div class="demo-header">
+        <p class="section-label">Live demo</p>
+        <h2>See nexu in action</h2>
+        <p>Your AI teammate handles tasks right in team chat — coding, analysis, content, and more.</p>
+      </div>
+      <div class="demo-tabs">
+        <button class="demo-tab active" onclick="switchDemo(0, this)">Build &amp; Deploy</button>
+        <button class="demo-tab" onclick="switchDemo(1, this)">Data Analysis</button>
+        <button class="demo-tab" onclick="switchDemo(2, this)">Content Creation</button>
+      </div>
+
+      <!-- Demo 1: Build & Deploy -->
+      <div class="demo-panel active" id="demo-0">
+        <div class="slack-mock">
+          <div class="slack-header">
+            <div class="slack-dot slack-dot-r"></div>
+            <div class="slack-dot slack-dot-y"></div>
+            <div class="slack-dot slack-dot-g"></div>
+            <span class="slack-header-title"># product-dev</span>
+          </div>
+          <div class="slack-body">
+            <div class="slack-sidebar">
+              <div class="slack-ws">nexu Team</div>
+              <div class="slack-ch-label">Channels</div>
+              <div class="slack-ch active"># product-dev</div>
+              <div class="slack-ch"># data-insights</div>
+              <div class="slack-ch"># marketing</div>
+              <div class="slack-ch-label">Direct Messages</div>
+              <div class="slack-ch">nexu 🦞</div>
+            </div>
+            <div class="slack-main">
+              <div class="slack-main-header"># product-dev</div>
+              <div class="slack-messages">
+                <div class="slack-msg">
+                  <div class="slack-avatar slack-avatar-user">E</div>
+                  <div class="slack-msg-body">
+                    <div class="slack-msg-head"><span class="slack-msg-name">Eli</span><span class="slack-msg-time">2:30 PM</span></div>
+                    <div class="slack-msg-text">Build me a flashcard game for kids learning English — cute style, with pronunciation</div>
+                  </div>
+                </div>
+                <div class="slack-msg">
+                  <div class="slack-avatar slack-avatar-bot"><svg width="18" height="18" viewBox="77 78 85 85" fill="none"><path d="M97.5645 78C108.922 78 118.129 87.207 118.129 98.5645V114.723C118.129 117.156 116.156 119.129 113.723 119.129H98.9355V99.9355H96.1934V119.129H81.4062C78.9728 119.129 77.0001 117.156 77 114.723V98.5645C77 87.207 86.207 78 97.5645 78Z" fill="#fff"/><path d="M141.436 163C130.078 163 120.871 153.793 120.871 142.436L120.871 126.277C120.871 123.844 122.844 121.871 125.277 121.871L140.064 121.871L140.064 141.064L142.807 141.064L142.807 121.871L157.594 121.871C160.027 121.871 162 123.844 162 126.277L162 142.436C162 153.793 152.793 163 141.436 163Z" fill="#fff"/><path d="M120.871 98.5659C120.871 87.2085 130.078 78.0015 141.436 78.0015C152.332 78.0015 161.247 86.4761 161.953 97.1938L142.807 97.1938L142.807 99.9351L161.953 99.9351C161.248 110.654 152.333 119.13 141.436 119.13C130.078 119.13 120.871 109.923 120.871 98.5659Z" fill="#fff"/><path d="M77 142.437C77 137.251 78.9192 132.514 82.0859 128.896L92.7773 139.587L94.7168 137.648L84.0254 126.958C87.6429 123.791 92.3797 121.871 97.5654 121.871C102.534 121.871 107.091 123.634 110.646 126.567L99.5625 137.65L101.501 139.589L112.64 128.451C116.045 132.121 118.129 137.034 118.129 142.435C118.129 147.62 116.209 152.358 113.042 155.976L101.203 144.136L99.2637 146.074L111.103 157.914C107.485 161.08 102.749 163 97.5645 163C92.1634 163 87.2486 160.917 83.5791 157.512L95.0146 146.077L93.0762 144.138L81.6963 155.518C78.7624 151.963 77 147.405 77 142.437Z" fill="#fff"/></svg></div>
+                  <div class="slack-msg-body">
+                    <div class="slack-msg-head"><span class="slack-msg-name bot">nexu</span><span class="slack-msg-badge">APP</span><span class="slack-msg-time">2:31 PM</span></div>
+                    <div class="slack-msg-text">On it! Creating the English flashcard game now 🎴</div>
+                    <div class="slack-msg-card">
+                      <div class="slack-msg-card-title">✅ Code complete</div>
+                      <div class="slack-msg-card-desc">React flip-card game · 48 word cards · Audio pronunciation · Difficulty levels · Progress tracking</div>
+                    </div>
+                    <div class="slack-msg-reactions"><span class="slack-reaction">✅ 1</span><span class="slack-reaction">🚀 2</span></div>
+                  </div>
+                </div>
+                <div class="slack-msg">
+                  <div class="slack-avatar slack-avatar-user">E</div>
+                  <div class="slack-msg-body">
+                    <div class="slack-msg-head"><span class="slack-msg-name">Eli</span><span class="slack-msg-time">2:35 PM</span></div>
+                    <div class="slack-msg-text">Awesome! Deploy it — I want to share the link with my friend's kids</div>
+                  </div>
+                </div>
+                <div class="slack-msg">
+                  <div class="slack-avatar slack-avatar-bot"><svg width="18" height="18" viewBox="77 78 85 85" fill="none"><path d="M97.5645 78C108.922 78 118.129 87.207 118.129 98.5645V114.723C118.129 117.156 116.156 119.129 113.723 119.129H98.9355V99.9355H96.1934V119.129H81.4062C78.9728 119.129 77.0001 117.156 77 114.723V98.5645C77 87.207 86.207 78 97.5645 78Z" fill="#fff"/><path d="M141.436 163C130.078 163 120.871 153.793 120.871 142.436L120.871 126.277C120.871 123.844 122.844 121.871 125.277 121.871L140.064 121.871L140.064 141.064L142.807 141.064L142.807 121.871L157.594 121.871C160.027 121.871 162 123.844 162 126.277L162 142.436C162 153.793 152.793 163 141.436 163Z" fill="#fff"/><path d="M120.871 98.5659C120.871 87.2085 130.078 78.0015 141.436 78.0015C152.332 78.0015 161.247 86.4761 161.953 97.1938L142.807 97.1938L142.807 99.9351L161.953 99.9351C161.248 110.654 152.333 119.13 141.436 119.13C130.078 119.13 120.871 109.923 120.871 98.5659Z" fill="#fff"/><path d="M77 142.437C77 137.251 78.9192 132.514 82.0859 128.896L92.7773 139.587L94.7168 137.648L84.0254 126.958C87.6429 123.791 92.3797 121.871 97.5654 121.871C102.534 121.871 107.091 123.634 110.646 126.567L99.5625 137.65L101.501 139.589L112.64 128.451C116.045 132.121 118.129 137.034 118.129 142.435C118.129 147.62 116.209 152.358 113.042 155.976L101.203 144.136L99.2637 146.074L111.103 157.914C107.485 161.08 102.749 163 97.5645 163C92.1634 163 87.2486 160.917 83.5791 157.512L95.0146 146.077L93.0762 144.138L81.6963 155.518C78.7624 151.963 77 147.405 77 142.437Z" fill="#fff"/></svg></div>
+                  <div class="slack-msg-body">
+                    <div class="slack-msg-head"><span class="slack-msg-name bot">nexu</span><span class="slack-msg-badge">APP</span><span class="slack-msg-time">2:35 PM</span></div>
+                    <div class="slack-msg-text">Deployed! Share the link and start playing 🚀</div>
+                    <div class="slack-msg-card">
+                      <div class="slack-msg-card-title">🌐 Live · english-cards.nexu.dev</div>
+                      <div class="slack-msg-card-desc">Works on mobile & desktop · No install needed · Offline support</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="slack-input-bar">
+                <div class="slack-input-fake">Message #product-dev</div>
+                <div class="slack-send"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Demo 2: Data Analysis -->
+      <div class="demo-panel" id="demo-1">
+        <div class="slack-mock">
+          <div class="slack-header">
+            <div class="slack-dot slack-dot-r"></div><div class="slack-dot slack-dot-y"></div><div class="slack-dot slack-dot-g"></div>
+            <span class="slack-header-title"># data-insights</span>
+          </div>
+          <div class="slack-body">
+            <div class="slack-sidebar">
+              <div class="slack-ws">nexu Team</div>
+              <div class="slack-ch-label">Channels</div>
+              <div class="slack-ch"># product-dev</div>
+              <div class="slack-ch active"># data-insights</div>
+              <div class="slack-ch"># marketing</div>
+            </div>
+            <div class="slack-main">
+              <div class="slack-main-header"># data-insights</div>
+              <div class="slack-messages">
+                <div class="slack-msg">
+                  <div class="slack-avatar slack-avatar-user">S</div>
+                  <div class="slack-msg-body">
+                    <div class="slack-msg-head"><span class="slack-msg-name">Sarah</span><span class="slack-msg-time">10:15 AM</span></div>
+                    <div class="slack-msg-text">Analyze this quarter's sales data and find the fastest-growing categories 📎 sales-2026-Q1.csv</div>
+                  </div>
+                </div>
+                <div class="slack-msg">
+                  <div class="slack-avatar slack-avatar-bot"><svg width="18" height="18" viewBox="77 78 85 85" fill="none"><path d="M97.5645 78C108.922 78 118.129 87.207 118.129 98.5645V114.723C118.129 117.156 116.156 119.129 113.723 119.129H98.9355V99.9355H96.1934V119.129H81.4062C78.9728 119.129 77.0001 117.156 77 114.723V98.5645C77 87.207 86.207 78 97.5645 78Z" fill="#fff"/><path d="M141.436 163C130.078 163 120.871 153.793 120.871 142.436L120.871 126.277C120.871 123.844 122.844 121.871 125.277 121.871L140.064 121.871L140.064 141.064L142.807 141.064L142.807 121.871L157.594 121.871C160.027 121.871 162 123.844 162 126.277L162 142.436C162 153.793 152.793 163 141.436 163Z" fill="#fff"/><path d="M120.871 98.5659C120.871 87.2085 130.078 78.0015 141.436 78.0015C152.332 78.0015 161.247 86.4761 161.953 97.1938L142.807 97.1938L142.807 99.9351L161.953 99.9351C161.248 110.654 152.333 119.13 141.436 119.13C130.078 119.13 120.871 109.923 120.871 98.5659Z" fill="#fff"/><path d="M77 142.437C77 137.251 78.9192 132.514 82.0859 128.896L92.7773 139.587L94.7168 137.648L84.0254 126.958C87.6429 123.791 92.3797 121.871 97.5654 121.871C102.534 121.871 107.091 123.634 110.646 126.567L99.5625 137.65L101.501 139.589L112.64 128.451C116.045 132.121 118.129 137.034 118.129 142.435C118.129 147.62 116.209 152.358 113.042 155.976L101.203 144.136L99.2637 146.074L111.103 157.914C107.485 161.08 102.749 163 97.5645 163C92.1634 163 87.2486 160.917 83.5791 157.512L95.0146 146.077L93.0762 144.138L81.6963 155.518C78.7624 151.963 77 147.405 77 142.437Z" fill="#fff"/></svg></div>
+                  <div class="slack-msg-body">
+                    <div class="slack-msg-head"><span class="slack-msg-name bot">nexu</span><span class="slack-msg-badge">APP</span><span class="slack-msg-time">10:16 AM</span></div>
+                    <div class="slack-msg-text">Analyzing 12,847 sales records...</div>
+                    <div class="slack-msg-card">
+                      <div class="slack-msg-card-title">📊 Analysis complete</div>
+                      <div class="slack-msg-card-desc">Top category: Smart Home (+47% QoQ) · 3 emerging segments identified · Full report with charts attached</div>
+                    </div>
+                    <div class="slack-msg-reactions"><span class="slack-reaction">📊 3</span><span class="slack-reaction">🔥 1</span></div>
+                  </div>
+                </div>
+                <div class="slack-msg">
+                  <div class="slack-avatar slack-avatar-user">S</div>
+                  <div class="slack-msg-body">
+                    <div class="slack-msg-head"><span class="slack-msg-name">Sarah</span><span class="slack-msg-time">10:20 AM</span></div>
+                    <div class="slack-msg-text">Now do a competitor pricing analysis for Smart Home</div>
+                  </div>
+                </div>
+                <div class="slack-msg">
+                  <div class="slack-avatar slack-avatar-bot"><svg width="18" height="18" viewBox="77 78 85 85" fill="none"><path d="M97.5645 78C108.922 78 118.129 87.207 118.129 98.5645V114.723C118.129 117.156 116.156 119.129 113.723 119.129H98.9355V99.9355H96.1934V119.129H81.4062C78.9728 119.129 77.0001 117.156 77 114.723V98.5645C77 87.207 86.207 78 97.5645 78Z" fill="#fff"/><path d="M141.436 163C130.078 163 120.871 153.793 120.871 142.436L120.871 126.277C120.871 123.844 122.844 121.871 125.277 121.871L140.064 121.871L140.064 141.064L142.807 141.064L142.807 121.871L157.594 121.871C160.027 121.871 162 123.844 162 126.277L162 142.436C162 153.793 152.793 163 141.436 163Z" fill="#fff"/><path d="M120.871 98.5659C120.871 87.2085 130.078 78.0015 141.436 78.0015C152.332 78.0015 161.247 86.4761 161.953 97.1938L142.807 97.1938L142.807 99.9351L161.953 99.9351C161.248 110.654 152.333 119.13 141.436 119.13C130.078 119.13 120.871 109.923 120.871 98.5659Z" fill="#fff"/><path d="M77 142.437C77 137.251 78.9192 132.514 82.0859 128.896L92.7773 139.587L94.7168 137.648L84.0254 126.958C87.6429 123.791 92.3797 121.871 97.5654 121.871C102.534 121.871 107.091 123.634 110.646 126.567L99.5625 137.65L101.501 139.589L112.64 128.451C116.045 132.121 118.129 137.034 118.129 142.435C118.129 147.62 116.209 152.358 113.042 155.976L101.203 144.136L99.2637 146.074L111.103 157.914C107.485 161.08 102.749 163 97.5645 163C92.1634 163 87.2486 160.917 83.5791 157.512L95.0146 146.077L93.0762 144.138L81.6963 155.518C78.7624 151.963 77 147.405 77 142.437Z" fill="#fff"/></svg></div>
+                  <div class="slack-msg-body">
+                    <div class="slack-msg-head"><span class="slack-msg-name bot">nexu</span><span class="slack-msg-badge">APP</span><span class="slack-msg-time">10:22 AM</span></div>
+                    <div class="slack-msg-card">
+                      <div class="slack-msg-card-title">📋 Competitor Pricing Report</div>
+                      <div class="slack-msg-card-desc">12 competitors analyzed · Price gap opportunities found · Recommended pricing strategy included</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="slack-input-bar">
+                <div class="slack-input-fake">Message #data-insights</div>
+                <div class="slack-send"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Demo 3: Content Creation -->
+      <div class="demo-panel" id="demo-2">
+        <div class="slack-mock">
+          <div class="slack-header">
+            <div class="slack-dot slack-dot-r"></div><div class="slack-dot slack-dot-y"></div><div class="slack-dot slack-dot-g"></div>
+            <span class="slack-header-title"># marketing</span>
+          </div>
+          <div class="slack-body">
+            <div class="slack-sidebar">
+              <div class="slack-ws">nexu Team</div>
+              <div class="slack-ch-label">Channels</div>
+              <div class="slack-ch"># product-dev</div>
+              <div class="slack-ch"># data-insights</div>
+              <div class="slack-ch active"># marketing</div>
+            </div>
+            <div class="slack-main">
+              <div class="slack-main-header"># marketing</div>
+              <div class="slack-messages">
+                <div class="slack-msg">
+                  <div class="slack-avatar slack-avatar-user">M</div>
+                  <div class="slack-msg-body">
+                    <div class="slack-msg-head"><span class="slack-msg-name">Marc</span><span class="slack-msg-time">3:00 PM</span></div>
+                    <div class="slack-msg-text">Write a product update blog post based on this week's changelog 📎 changelog-v0.4.md</div>
+                  </div>
+                </div>
+                <div class="slack-msg">
+                  <div class="slack-avatar slack-avatar-bot"><svg width="18" height="18" viewBox="77 78 85 85" fill="none"><path d="M97.5645 78C108.922 78 118.129 87.207 118.129 98.5645V114.723C118.129 117.156 116.156 119.129 113.723 119.129H98.9355V99.9355H96.1934V119.129H81.4062C78.9728 119.129 77.0001 117.156 77 114.723V98.5645C77 87.207 86.207 78 97.5645 78Z" fill="#fff"/><path d="M141.436 163C130.078 163 120.871 153.793 120.871 142.436L120.871 126.277C120.871 123.844 122.844 121.871 125.277 121.871L140.064 121.871L140.064 141.064L142.807 141.064L142.807 121.871L157.594 121.871C160.027 121.871 162 123.844 162 126.277L162 142.436C162 153.793 152.793 163 141.436 163Z" fill="#fff"/><path d="M120.871 98.5659C120.871 87.2085 130.078 78.0015 141.436 78.0015C152.332 78.0015 161.247 86.4761 161.953 97.1938L142.807 97.1938L142.807 99.9351L161.953 99.9351C161.248 110.654 152.333 119.13 141.436 119.13C130.078 119.13 120.871 109.923 120.871 98.5659Z" fill="#fff"/><path d="M77 142.437C77 137.251 78.9192 132.514 82.0859 128.896L92.7773 139.587L94.7168 137.648L84.0254 126.958C87.6429 123.791 92.3797 121.871 97.5654 121.871C102.534 121.871 107.091 123.634 110.646 126.567L99.5625 137.65L101.501 139.589L112.64 128.451C116.045 132.121 118.129 137.034 118.129 142.435C118.129 147.62 116.209 152.358 113.042 155.976L101.203 144.136L99.2637 146.074L111.103 157.914C107.485 161.08 102.749 163 97.5645 163C92.1634 163 87.2486 160.917 83.5791 157.512L95.0146 146.077L93.0762 144.138L81.6963 155.518C78.7624 151.963 77 147.405 77 142.437Z" fill="#fff"/></svg></div>
+                  <div class="slack-msg-body">
+                    <div class="slack-msg-head"><span class="slack-msg-name bot">nexu</span><span class="slack-msg-badge">APP</span><span class="slack-msg-time">3:02 PM</span></div>
+                    <div class="slack-msg-card">
+                      <div class="slack-msg-card-title">✍️ Blog post ready</div>
+                      <div class="slack-msg-card-desc">"What's New in v0.4" · 800 words · SEO-optimized · 3 sections with feature highlights</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="slack-msg">
+                  <div class="slack-avatar slack-avatar-user">M</div>
+                  <div class="slack-msg-body">
+                    <div class="slack-msg-head"><span class="slack-msg-name">Marc</span><span class="slack-msg-time">3:05 PM</span></div>
+                    <div class="slack-msg-text">Also generate an investor weekly update email</div>
+                  </div>
+                </div>
+                <div class="slack-msg">
+                  <div class="slack-avatar slack-avatar-bot"><svg width="18" height="18" viewBox="77 78 85 85" fill="none"><path d="M97.5645 78C108.922 78 118.129 87.207 118.129 98.5645V114.723C118.129 117.156 116.156 119.129 113.723 119.129H98.9355V99.9355H96.1934V119.129H81.4062C78.9728 119.129 77.0001 117.156 77 114.723V98.5645C77 87.207 86.207 78 97.5645 78Z" fill="#fff"/><path d="M141.436 163C130.078 163 120.871 153.793 120.871 142.436L120.871 126.277C120.871 123.844 122.844 121.871 125.277 121.871L140.064 121.871L140.064 141.064L142.807 141.064L142.807 121.871L157.594 121.871C160.027 121.871 162 123.844 162 126.277L162 142.436C162 153.793 152.793 163 141.436 163Z" fill="#fff"/><path d="M120.871 98.5659C120.871 87.2085 130.078 78.0015 141.436 78.0015C152.332 78.0015 161.247 86.4761 161.953 97.1938L142.807 97.1938L142.807 99.9351L161.953 99.9351C161.248 110.654 152.333 119.13 141.436 119.13C130.078 119.13 120.871 109.923 120.871 98.5659Z" fill="#fff"/><path d="M77 142.437C77 137.251 78.9192 132.514 82.0859 128.896L92.7773 139.587L94.7168 137.648L84.0254 126.958C87.6429 123.791 92.3797 121.871 97.5654 121.871C102.534 121.871 107.091 123.634 110.646 126.567L99.5625 137.65L101.501 139.589L112.64 128.451C116.045 132.121 118.129 137.034 118.129 142.435C118.129 147.62 116.209 152.358 113.042 155.976L101.203 144.136L99.2637 146.074L111.103 157.914C107.485 161.08 102.749 163 97.5645 163C92.1634 163 87.2486 160.917 83.5791 157.512L95.0146 146.077L93.0762 144.138L81.6963 155.518C78.7624 151.963 77 147.405 77 142.437Z" fill="#fff"/></svg></div>
+                  <div class="slack-msg-body">
+                    <div class="slack-msg-head"><span class="slack-msg-name bot">nexu</span><span class="slack-msg-badge">APP</span><span class="slack-msg-time">3:06 PM</span></div>
+                    <div class="slack-msg-card">
+                      <div class="slack-msg-card-title">📧 Investor Update ready</div>
+                      <div class="slack-msg-card-desc">Key metrics · Product milestones · Growth highlights · Next week priorities</div>
+                    </div>
+                    <div class="slack-msg-reactions"><span class="slack-reaction">🎯 2</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="slack-input-bar">
+                <div class="slack-input-fake">Message #marketing</div>
+                <div class="slack-send"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="section">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:48px;">
+        <p class="section-label">Why nexu</p>
+        <h2 style="font-size:var(--fs-32); font-weight:700;">Built for teams who move fast</h2>
+        <p style="font-size:var(--fs-16); color:var(--text-secondary); max-width:480px; margin:var(--sp-12) auto 0; line-height:1.5;">An AI teammate ready in under a minute — with persistent memory and every tool your team needs.</p>
+      </div>
+      <div class="features-grid">
+        <div class="card card-compact feature-card">
+          <div class="feature-icon feature-icon-1">⚡</div>
+          <h3>Deploy in 1 minute</h3>
+          <p>No YAML, no config files. Add nexu to Slack, Discord or Telegram and start working together right away.</p>
+        </div>
+        <div class="card card-compact feature-card">
+          <div class="feature-icon feature-icon-2">🛠</div>
+          <h3>1,000+ built-in tools</h3>
+          <p>Build, analyze, automate — right from chat. No integrations to wire up, no plugins to install.</p>
+        </div>
+        <div class="card card-compact feature-card">
+          <div class="feature-icon feature-icon-3">🧠</div>
+          <h3>Persistent memory</h3>
+          <p>nexu remembers conversations, preferences, and context. The more your team uses it, the sharper it gets.</p>
+        </div>
+        <div class="card card-compact feature-card">
+          <div class="feature-icon feature-icon-4">🌐</div>
+          <h3>Always on, 24/7</h3>
+          <p>Fully hosted — no server to manage. Your AI teammate is there whenever your team is, never in the way.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VS COMPARISON -->
+  <section id="vs" class="section-sm" style="background:var(--surface-2);">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:40px;">
+        <p class="section-label">Compare</p>
+        <h2 style="font-size:var(--fs-32); font-weight:700;">nexu vs self-hosted OpenClaw</h2>
+      </div>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Feature</th><th>nexu</th><th>OpenClaw (Self-Hosted)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Setup time</td><td class="check">Under 1 minute</td><td class="cross">&gt;24 hours (YAML / env / keys)</td></tr>
+          <tr><td>Data &amp; memory</td><td class="check">Persistent, learns your team</td><td class="cross">Session stateless</td></tr>
+          <tr><td>Tools &amp; skills</td><td class="check">1,000+ built in</td><td class="cross">You build integrations</td></tr>
+          <tr><td>IM platforms</td><td class="check">Slack, Discord, Telegram</td><td class="cross">You build integrations</td></tr>
+          <tr><td>Hosting</td><td class="check">Fully hosted, 24/7</td><td class="cross">Self-hosted, your uptime</td></tr>
+          <tr><td>Updates</td><td class="check">Automatic</td><td class="cross">Manual pull / upgrade</td></tr>
+          <tr><td>Team context</td><td class="check">Multi-user, cross-channel</td><td class="cross">Mostly single-session</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="section">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:48px;">
+        <p class="section-label">How it works</p>
+        <h2 style="font-size:var(--fs-32); font-weight:700;">Get started in 3 steps</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Add to team chat</h3>
+          <p>Connect Slack, Discord, or Telegram. Your AI joins the channel in under a minute.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Say what you need</h3>
+          <p>Describe the task in natural language — no code, no config. nexu handles the rest.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Always available</h3>
+          <p>Persistent memory and 1,000+ tools. Your AI runs 24/7, never drops context.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section class="section-sm" style="background:var(--surface-2);">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:40px;">
+        <p class="section-label">Use cases</p>
+        <h2 style="font-size:var(--fs-32); font-weight:700;">You chat. nexu gets it done.</h2>
+        <p style="font-size:var(--fs-16); color:var(--text-secondary); max-width:480px; margin:var(--sp-12) auto 0; line-height:1.5;">Startup teams, e-commerce, creators — in Slack, Discord, Telegram.</p>
+      </div>
+      <div class="usecases-grid">
+        <div class="card card-compact usecase-card">
+          <span class="usecase-tag usecase-tag-startup">Startup / Remote</span>
+          <h3>Daily channel digest</h3>
+          <p>Turn hundreds of messages into one structured summary: decisions, progress, todos. Everyone catches up in 30 seconds.</p>
+          <div class="usecase-freq">⏱ Daily</div>
+        </div>
+        <div class="card card-compact usecase-card">
+          <span class="usecase-tag usecase-tag-ecom">E-commerce</span>
+          <h3>Customer feedback report</h3>
+          <p>Turn support messages into a daily customer feedback report. See what's working and what's not in 30 seconds.</p>
+          <div class="usecase-freq">⏱ Daily</div>
+        </div>
+        <div class="card card-compact usecase-card">
+          <span class="usecase-tag usecase-tag-startup">Startup / Remote</span>
+          <h3>Quotes to brand cards</h3>
+          <p>Auto-detect great quotes and turn them into shareable brand cards. Team thinking becomes external content.</p>
+          <div class="usecase-freq">⚡ Real-time</div>
+        </div>
+        <div class="card card-compact usecase-card">
+          <span class="usecase-tag usecase-tag-ecom">E-commerce</span>
+          <h3>24/7 support auto-reply</h3>
+          <p>Auto-answer FAQs in the group; escalate complex questions to humans. No more repeating answers.</p>
+          <div class="usecase-freq">🔄 24/7</div>
+        </div>
+        <div class="card card-compact usecase-card">
+          <span class="usecase-tag usecase-tag-creator">Content Creator</span>
+          <h3>Multi-group digest</h3>
+          <p>One digest across all your groups, ranked by importance. See every group's highlights in 5 minutes.</p>
+          <div class="usecase-freq">📋 On demand</div>
+        </div>
+        <div class="card card-compact usecase-card">
+          <span class="usecase-tag usecase-tag-creator">Content Creator</span>
+          <h3>Weekly newsletter draft</h3>
+          <p>Filter a week of group chat into highlights and get a newsletter draft. 2 hours of work in 5 minutes.</p>
+          <div class="usecase-freq">⏱ Weekly</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUMBERS -->
+  <section class="section">
+    <div class="container">
+      <div class="numbers-grid">
+        <div class="number-item">
+          <div class="number-value">24/7</div>
+          <div class="number-label">Always on</div>
+          <div class="number-desc">Your AI never sleeps</div>
+        </div>
+        <div class="number-item">
+          <div class="number-value">1,000+</div>
+          <div class="number-label">Built-in tools</div>
+          <div class="number-desc">No integrations needed</div>
+        </div>
+        <div class="number-item">
+          <div class="number-value">&lt;1</div>
+          <div class="number-label">Minute to start</div>
+          <div class="number-desc">No YAML, no setup</div>
+        </div>
+        <div class="number-item">
+          <div class="number-value">0</div>
+          <div class="number-label">Servers to manage</div>
+          <div class="number-desc">Fully hosted</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section-sm" style="background:var(--surface-2);">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:40px;">
+        <p class="section-label">FAQ</p>
+        <h2 style="font-size:var(--fs-32); font-weight:700;">Frequently asked questions</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What is nexu?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="faq-a"><div class="faq-a-inner">nexu is the simplest way to add an AI teammate to your team chat. Deploy to Slack, Discord or Telegram in under a minute — with persistent memory, 1,000+ built-in tools, and 24/7 availability.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">How is nexu different from self-hosting OpenClaw?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="faq-a"><div class="faq-a-inner">nexu is fully hosted and ready in under a minute — no YAML, no environment config. It comes with persistent memory, 1,000+ tools, automatic updates, and multi-user team context. Self-hosting OpenClaw requires 24+ hours of setup and ongoing maintenance.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Do I need to know how to code?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="faq-a"><div class="faq-a-inner">No. Just add nexu to your team chat and describe what you need in natural language. nexu handles the rest — building, analyzing, creating, automating.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Which platforms are supported?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="faq-a"><div class="faq-a-inner">Slack, Discord, and Telegram today. WhatsApp, Teams, and more are coming soon. Your nexu bot joins the channel in under a minute.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Is my data safe?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="faq-a"><div class="faq-a-inner">Yes. Code and data run in fully isolated cloud sandboxes. We never access your data. Enterprise plans include SOC 2 compliance and custom data residency.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="section">
+    <div class="final-cta">
+      <h2>Your AI office twin awaits</h2>
+      <p>Free to get started. Works in Slack, Discord &amp; Telegram.</p>
+      <button class="btn btn-primary btn-lg btn-pill" onclick="showAuth('register')">Get started free &rarr;</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>&copy; 2026 Powerformer, Inc.</span>
+    <div class="footer-links">
+      <a href="#">X / Twitter</a>
+      <a href="#">Docs</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </footer>
+
+</div><!-- /landing -->
+
+<!-- ============================================================
+     AUTH PAGE
+     ============================================================ -->
+<div id="auth" class="auth-page">
+  <div class="auth-left">
+    <div class="auth-left-logo">
+      <div class="nav-logo-icon"><svg width="28" height="28" viewBox="77 78 85 85" fill="none"><path d="M97.5645 78C108.922 78 118.129 87.207 118.129 98.5645V114.723C118.129 117.156 116.156 119.129 113.723 119.129H98.9355V99.9355H96.1934V119.129H81.4062C78.9728 119.129 77.0001 117.156 77 114.723V98.5645C77 87.207 86.207 78 97.5645 78Z" fill="#fff"/><path d="M141.436 163C130.078 163 120.871 153.793 120.871 142.436L120.871 126.277C120.871 123.844 122.844 121.871 125.277 121.871L140.064 121.871L140.064 141.064L142.807 141.064L142.807 121.871L157.594 121.871C160.027 121.871 162 123.844 162 126.277L162 142.436C162 153.793 152.793 163 141.436 163Z" fill="#fff"/><path d="M120.871 98.5659C120.871 87.2085 130.078 78.0015 141.436 78.0015C152.332 78.0015 161.247 86.4761 161.953 97.1938L142.807 97.1938L142.807 99.9351L161.953 99.9351C161.248 110.654 152.333 119.13 141.436 119.13C130.078 119.13 120.871 109.923 120.871 98.5659Z" fill="#fff"/><path d="M77 142.437C77 137.251 78.9192 132.514 82.0859 128.896L92.7773 139.587L94.7168 137.648L84.0254 126.958C87.6429 123.791 92.3797 121.871 97.5654 121.871C102.534 121.871 107.091 123.634 110.646 126.567L99.5625 137.65L101.501 139.589L112.64 128.451C116.045 132.121 118.129 137.034 118.129 142.435C118.129 147.62 116.209 152.358 113.042 155.976L101.203 144.136L99.2637 146.074L111.103 157.914C107.485 161.08 102.749 163 97.5645 163C92.1634 163 87.2486 160.917 83.5791 157.512L95.0146 146.077L93.0762 144.138L81.6963 155.518C78.7624 151.963 77 147.405 77 142.437Z" fill="#fff"/></svg></div>
+      <span>nexu</span>
+    </div>
+    <div>
+      <h2>Your AI office twin<br/>in team chat,<br/>24/7 next to you.</h2>
+      <p class="auth-left-sub">Persistent memory, a cloud computer &amp; 1,000+ tools. No replacement, just support.</p>
+      <div class="auth-pills">
+        <span class="auth-pill">⚡ Deploy in 1 min</span>
+        <span class="auth-pill">🛠 1,000+ tools</span>
+        <span class="auth-pill">🧠 Persistent memory</span>
+        <span class="auth-pill">🌐 Always on</span>
+      </div>
+    </div>
+    <div class="auth-left-footer">&copy; 2026 nexu by Refly</div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-form-wrap">
+      <div class="auth-form">
+        <h1 id="auth-title">Create your account</h1>
+        <p class="auth-sub" id="auth-subtitle">Sign up to get your AI office twin</p>
+
+        <button class="btn-google" onclick="handleAuthSubmit()">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+
+        <div class="auth-divider">or</div>
+
+        <div class="auth-fields">
+          <div class="auth-field">
+            <label for="auth-email">Email</label>
+            <input id="auth-email" type="email" class="input" placeholder="you@example.com" />
+          </div>
+          <div class="auth-field">
+            <label for="auth-pass">Password</label>
+            <input id="auth-pass" type="password" class="input" placeholder="At least 6 characters" />
+          </div>
+          <div id="auth-error" style="font-size:var(--fs-12); color:var(--error); display:none;"></div>
+          <button class="btn btn-secondary" style="width:100%; gap:var(--sp-8);" onclick="handleAuthSubmit()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>
+            <span id="auth-btn-text">Sign up with email</span>
+          </button>
+        </div>
+
+        <div class="auth-toggle">
+          <span id="auth-toggle-text">Already have an account?</span>
+          <button onclick="toggleAuthMode()" id="auth-toggle-btn">Log in</button>
+        </div>
+      </div>
+    </div>
+    <div class="auth-footer">
+      <a href="#">Terms of service</a>
+      <a href="#">Privacy policy</a>
+      <span>&copy; 2026 Powerformer, Inc.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<script>
+let authMode = 'register';
+
+function showLanding() {
+  document.getElementById('landing').classList.remove('hidden');
+  document.getElementById('auth').classList.remove('active');
+  window.scrollTo(0, 0);
+}
+
+function showAuth(mode) {
+  authMode = mode || 'register';
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('auth').classList.add('active');
+  updateAuthUI();
+}
+
+function updateAuthUI() {
+  const isReg = authMode === 'register';
+  document.getElementById('auth-title').textContent = isReg ? 'Create your account' : 'Welcome back';
+  document.getElementById('auth-subtitle').textContent = isReg ? 'Sign up to get your AI office twin' : 'Log in to your AI office twin';
+  document.getElementById('auth-btn-text').textContent = isReg ? 'Sign up with email' : 'Log in with email';
+  document.getElementById('auth-toggle-text').textContent = isReg ? 'Already have an account?' : "Don't have an account?";
+  document.getElementById('auth-toggle-btn').textContent = isReg ? 'Log in' : 'Sign up';
+  document.getElementById('auth-error').style.display = 'none';
+}
+
+function toggleAuthMode() {
+  authMode = authMode === 'register' ? 'login' : 'register';
+  updateAuthUI();
+}
+
+function handleAuthSubmit() {
+  window.location.href = 'nexu-product.html#auth';
+}
+
+function switchDemo(idx, btn) {
+  document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('demo-' + idx).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  item.classList.toggle('open');
+}
+
+// Handle hash navigation
+if (window.location.hash === '#auth' || window.location.hash === '#login') {
+  showAuth(window.location.hash === '#login' ? 'login' : 'register');
+}
+</script>
+
+</body>
+</html>

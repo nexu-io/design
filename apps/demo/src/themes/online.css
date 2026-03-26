@@ -1,0 +1,82 @@
+/**
+ * 线上版本 (Online) — Refly AI 线上产品设计系统
+ * 基于 Refly AI 工作流/Dashboard 界面提取的 light theme。
+ * 使用方式: 在 <html> 上设置 data-theme="online"
+ */
+
+[data-theme='online'] {
+  /* Surface — 白/浅灰，侧边栏与顶栏略深 */
+  --color-surface-0: #ffffff;
+  --color-surface-1: #ffffff;
+  --color-surface-2: #f6f8fa;
+  --color-surface-3: #f0f2f5;
+  --color-surface-4: #e8eaed;
+  --color-surface-5: #dfe1e5;
+
+  --color-border: #e8eaed;
+  --color-border-subtle: #f0f2f5;
+  --color-border-hover: #d0d4d9;
+
+  /* Text */
+  --color-text-primary: #333333;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #8a8a8a;
+  --color-text-muted: #bcbcb8;
+
+  /* Accent — 绿色主色 (Publish/Preview/Logo/输入框边框) */
+  --color-accent-50: #f0fdf4;
+  --color-accent-100: #dcfce7;
+  --color-accent-200: #bbf7d0;
+  --color-accent-300: #86efac;
+  --color-accent-400: #4ade80;
+  --color-accent: #1eab60;
+  --color-accent-600: #16a34a;
+  --color-accent-700: #15803d;
+  --color-accent-800: #166534;
+  --color-accent-900: #14532d;
+  --color-accent-hover: #189550;
+  --color-accent-subtle: rgba(30, 171, 96, 0.08);
+  --color-accent-glow: rgba(30, 171, 96, 0.12);
+  --color-accent-pulse: rgba(30, 171, 96, 0.05);
+  --color-accent-fg: #ffffff;
+
+  /* Clone / 高亮 — 沿用暖色但略偏绿以配合线上版 */
+  --color-clone: #1eab60;
+  --color-clone-light: #4ade80;
+  --color-clone-subtle: rgba(30, 171, 96, 0.10);
+  --color-clone-glow: rgba(30, 171, 96, 0.18);
+  --color-clone-pulse: rgba(30, 171, 96, 0.05);
+
+  /* Status */
+  --color-success: #1eab60;
+  --color-success-subtle: rgba(30, 171, 96, 0.08);
+  --color-warning: #ff8c00;
+  --color-warning-subtle: rgba(255, 140, 0, 0.08);
+  --color-danger: #dc2626;
+  --color-danger-subtle: rgba(220, 38, 38, 0.08);
+  --color-info: #2563eb;
+  --color-info-subtle: rgba(37, 99, 235, 0.08);
+
+  /* Energy */
+  --color-energy-full: #1eab60;
+  --color-energy-medium: #ff8c00;
+  --color-energy-low: #ea580c;
+  --color-energy-empty: #dc2626;
+
+  /* Roles */
+  --color-role-programmer: #059669;
+  --color-role-ops: #2563eb;
+  --color-role-designer: #db2777;
+  --color-role-founder: #d97706;
+  --color-role-general: #666666;
+}
+
+/* 线上版本 — 工作流节点等专用色 (可用 class 或 data 使用) */
+[data-theme='online'] {
+  /* User input 节点 — 浅黄 + 橙色描边 */
+  --color-node-user-bg: #fffceb;
+  --color-node-user-border: #ff8c00;
+  /* Action 节点 — 浅青绿 */
+  --color-node-action-bg: #e6f7f5;
+  --color-node-action-border: #99e5dd;
+}
