@@ -1,1 +1,1 @@
-export const tokenPackageName = '@nexu/tokens'
+export const tokenPackageName = "@nexu/tokens";

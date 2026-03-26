@@ -1,6 +1,6 @@
-import type { Preview } from '@storybook/react'
+import type { Preview } from "@storybook/react";
 
-import '../src/styles.css'
+import "../src/styles.css";
 
 const preview: Preview = {
   parameters: {
@@ -10,8 +10,8 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
-    layout: 'centered',
+    layout: "centered",
   },
-}
+};
 
-export default preview
+export default preview;

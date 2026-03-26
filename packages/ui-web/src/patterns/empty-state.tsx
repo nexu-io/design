@@ -1,12 +1,12 @@
-import * as React from 'react'
+import * as React from "react";
 
-import { cn } from '../lib/cn'
+import { cn } from "../lib/cn";
 
-export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
-  title: React.ReactNode
-  description?: React.ReactNode
-  icon?: React.ReactNode
-  action?: React.ReactNode
+export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+  title: React.ReactNode;
+  description?: React.ReactNode;
+  icon?: React.ReactNode;
+  action?: React.ReactNode;
 }
 
 export function EmptyState({
@@ -20,8 +20,8 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed p-8 text-center',
-        className
+        "flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed p-8 text-center",
+        className,
       )}
       {...props}
     >
@@ -32,5 +32,5 @@ export function EmptyState({
       </div>
       {action ? <div className="pt-1">{action}</div> : null}
     </div>
-  )
+  );
 }

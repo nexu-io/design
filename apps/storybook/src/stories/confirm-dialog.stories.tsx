@@ -1,18 +1,18 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Button, ConfirmDialog } from '@nexu/ui-web'
+import { Button, ConfirmDialog } from "@nexu/ui-web";
 
 const meta = {
-  title: 'Patterns/ConfirmDialog',
+  title: "Patterns/ConfirmDialog",
   component: ConfirmDialog,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
-    title: 'Confirm action',
+    title: "Confirm action",
   },
-} satisfies Meta<typeof ConfirmDialog>
+} satisfies Meta<typeof ConfirmDialog>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -23,4 +23,4 @@ export const Default: Story = {
       confirmLabel="Delete"
     />
   ),
-}
+};

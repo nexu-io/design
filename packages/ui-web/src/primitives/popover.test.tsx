@@ -1,19 +1,19 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen } from "@testing-library/react";
 
-import { Button } from './button'
-import { Popover, PopoverContent, PopoverTrigger } from './popover'
+import { Button } from "./button";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
-describe('Popover', () => {
-  it('renders content when opened by default', () => {
+describe("Popover", () => {
+  it("renders content when opened by default", () => {
     render(
       <Popover defaultOpen>
         <PopoverTrigger asChild>
           <Button>Open</Button>
         </PopoverTrigger>
         <PopoverContent>Workspace details</PopoverContent>
-      </Popover>
-    )
+      </Popover>,
+    );
 
-    expect(screen.getByText('Workspace details')).toBeInTheDocument()
-  })
-})
+    expect(screen.getByText("Workspace details")).toBeInTheDocument();
+  });
+});

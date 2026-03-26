@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
 import {
   Button,
@@ -8,16 +8,16 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@nexu/ui-web'
+} from "@nexu/ui-web";
 
 const meta = {
-  title: 'Primitives/Card',
+  title: "Primitives/Card",
   component: Card,
-  tags: ['autodocs'],
-} satisfies Meta<typeof Card>
+  tags: ["autodocs"],
+} satisfies Meta<typeof Card>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -36,4 +36,4 @@ export const Default: Story = {
       </CardFooter>
     </Card>
   ),
-}
+};

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
 import {
   Button,
@@ -10,16 +10,16 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@nexu/ui-web'
+} from "@nexu/ui-web";
 
 const meta = {
-  title: 'Primitives/Sheet',
+  title: "Primitives/Sheet",
   component: Sheet,
-  tags: ['autodocs'],
-} satisfies Meta<typeof Sheet>
+  tags: ["autodocs"],
+} satisfies Meta<typeof Sheet>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -43,4 +43,4 @@ export const Default: Story = {
       </SheetContent>
     </Sheet>
   ),
-}
+};

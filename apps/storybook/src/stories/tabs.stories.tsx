@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Card, CardContent, Tabs, TabsContent, TabsList, TabsTrigger } from '@nexu/ui-web'
+import { Card, CardContent, Tabs, TabsContent, TabsList, TabsTrigger } from "@nexu/ui-web";
 
 const meta = {
-  title: 'Primitives/Tabs',
+  title: "Primitives/Tabs",
   component: Tabs,
-  tags: ['autodocs'],
-} satisfies Meta<typeof Tabs>
+  tags: ["autodocs"],
+} satisfies Meta<typeof Tabs>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -42,4 +42,4 @@ export const Default: Story = {
       </TabsContent>
     </Tabs>
   ),
-}
+};

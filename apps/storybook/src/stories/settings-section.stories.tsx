@@ -1,19 +1,19 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Button, FormField, Input, SettingsSection } from '@nexu/ui-web'
+import { Button, FormField, Input, SettingsSection } from "@nexu/ui-web";
 
 const meta = {
-  title: 'Patterns/SettingsSection',
+  title: "Patterns/SettingsSection",
   component: SettingsSection,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
-    title: 'Settings',
+    title: "Settings",
     children: null,
   },
-} satisfies Meta<typeof SettingsSection>
+} satisfies Meta<typeof SettingsSection>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -29,4 +29,4 @@ export const Default: Story = {
       </SettingsSection>
     </div>
   ),
-}
+};

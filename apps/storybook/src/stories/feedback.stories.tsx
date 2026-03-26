@@ -1,14 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Separator, Skeleton, Spinner } from '@nexu/ui-web'
+import { Separator, Skeleton, Spinner } from "@nexu/ui-web";
 
 const meta = {
-  title: 'Primitives/Feedback',
-  tags: ['autodocs'],
-} satisfies Meta
+  title: "Primitives/Feedback",
+  tags: ["autodocs"],
+} satisfies Meta;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -27,4 +27,4 @@ export const Default: Story = {
       </div>
     </div>
   ),
-}
+};

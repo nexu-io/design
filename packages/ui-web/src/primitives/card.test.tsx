@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen } from "@testing-library/react";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./card";
 
-describe('Card', () => {
-  it('renders card sections', () => {
+describe("Card", () => {
+  it("renders card sections", () => {
     render(
       <Card>
         <CardHeader>
@@ -12,12 +12,12 @@ describe('Card', () => {
         </CardHeader>
         <CardContent>Body</CardContent>
         <CardFooter>Footer</CardFooter>
-      </Card>
-    )
+      </Card>,
+    );
 
-    expect(screen.getByText('Slack')).toBeInTheDocument()
-    expect(screen.getByText('Connect your workspace')).toBeInTheDocument()
-    expect(screen.getByText('Body')).toBeInTheDocument()
-    expect(screen.getByText('Footer')).toBeInTheDocument()
-  })
-})
+    expect(screen.getByText("Slack")).toBeInTheDocument();
+    expect(screen.getByText("Connect your workspace")).toBeInTheDocument();
+    expect(screen.getByText("Body")).toBeInTheDocument();
+    expect(screen.getByText("Footer")).toBeInTheDocument();
+  });
+});

@@ -1,6 +1,6 @@
-import * as React from 'react'
+import * as React from "react";
 
-import { Button, type ButtonProps } from '../primitives/button'
+import { Button, type ButtonProps } from "../primitives/button";
 import {
   Dialog,
   DialogClose,
@@ -10,28 +10,28 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../primitives/dialog'
+} from "../primitives/dialog";
 
 export interface ConfirmDialogProps {
-  title: React.ReactNode
-  description?: React.ReactNode
-  trigger?: React.ReactNode
-  confirmLabel?: React.ReactNode
-  cancelLabel?: React.ReactNode
-  confirmVariant?: ButtonProps['variant']
-  open?: boolean
-  defaultOpen?: boolean
-  onOpenChange?: (open: boolean) => void
-  onConfirm?: React.MouseEventHandler<HTMLButtonElement>
+  title: React.ReactNode;
+  description?: React.ReactNode;
+  trigger?: React.ReactNode;
+  confirmLabel?: React.ReactNode;
+  cancelLabel?: React.ReactNode;
+  confirmVariant?: ButtonProps["variant"];
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onConfirm?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export function ConfirmDialog({
   title,
   description,
   trigger,
-  confirmLabel = 'Confirm',
-  cancelLabel = 'Cancel',
-  confirmVariant = 'destructive',
+  confirmLabel = "Confirm",
+  cancelLabel = "Cancel",
+  confirmVariant = "destructive",
   open,
   defaultOpen,
   onOpenChange,
@@ -57,5 +57,5 @@ export function ConfirmDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

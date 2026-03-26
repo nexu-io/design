@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen } from "@testing-library/react";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 
-describe('Select', () => {
-  it('renders trigger with placeholder', () => {
+describe("Select", () => {
+  it("renders trigger with placeholder", () => {
     render(
       <Select>
         <SelectTrigger>
@@ -13,10 +13,10 @@ describe('Select', () => {
           <SelectItem value="gemini">Gemini</SelectItem>
           <SelectItem value="gpt">GPT</SelectItem>
         </SelectContent>
-      </Select>
-    )
+      </Select>,
+    );
 
-    expect(screen.getByRole('combobox')).toBeInTheDocument()
-    expect(screen.getByText('Choose a model')).toBeInTheDocument()
-  })
-})
+    expect(screen.getByRole("combobox")).toBeInTheDocument();
+    expect(screen.getByText("Choose a model")).toBeInTheDocument();
+  });
+});

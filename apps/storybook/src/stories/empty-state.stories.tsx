@@ -1,18 +1,18 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Button, EmptyState } from '@nexu/ui-web'
+import { Button, EmptyState } from "@nexu/ui-web";
 
 const meta = {
-  title: 'Patterns/EmptyState',
+  title: "Patterns/EmptyState",
   component: EmptyState,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
-    title: 'Empty',
+    title: "Empty",
   },
-} satisfies Meta<typeof EmptyState>
+} satisfies Meta<typeof EmptyState>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -25,4 +25,4 @@ export const Default: Story = {
       />
     </div>
   ),
-}
+};

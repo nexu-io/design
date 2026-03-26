@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@nexu/ui-web'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@nexu/ui-web";
 
 const meta = {
-  title: 'Primitives/Select',
+  title: "Primitives/Select",
   component: Select,
-  tags: ['autodocs'],
-} satisfies Meta<typeof Select>
+  tags: ["autodocs"],
+} satisfies Meta<typeof Select>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -26,4 +26,4 @@ export const Default: Story = {
       </Select>
     </div>
   ),
-}
+};

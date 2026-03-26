@@ -1,22 +1,22 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Button } from '@nexu/ui-web'
+import { Button } from "@nexu/ui-web";
 
 const meta = {
-  title: 'Primitives/Button',
+  title: "Primitives/Button",
   component: Button,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
-    children: 'Save changes',
-    variant: 'primary',
-    size: 'md',
+    children: "Save changes",
+    variant: "primary",
+    size: "md",
   },
-} satisfies Meta<typeof Button>
+} satisfies Meta<typeof Button>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {}
+export const Default: Story = {};
 
 export const Variants: Story = {
   render: () => (
@@ -29,7 +29,7 @@ export const Variants: Story = {
       <Button variant="link">View details</Button>
     </div>
   ),
-}
+};
 
 export const WithIcons: Story = {
   render: () => (
@@ -41,11 +41,11 @@ export const WithIcons: Story = {
       </Button>
     </div>
   ),
-}
+};
 
 export const Loading: Story = {
   args: {
     loading: true,
-    children: 'Saving...',
+    children: "Saving...",
   },
-}
+};

@@ -1,31 +1,31 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Input } from '@nexu/ui-web'
+import { Input } from "@nexu/ui-web";
 
 const meta = {
-  title: 'Primitives/Input',
+  title: "Primitives/Input",
   component: Input,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
-    placeholder: 'Enter API key',
+    placeholder: "Enter API key",
   },
-} satisfies Meta<typeof Input>
+} satisfies Meta<typeof Input>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {}
+export const Default: Story = {};
 
 export const WithLeadingIcon: Story = {
   args: {
     leadingIcon: <span aria-hidden="true">🔎</span>,
-    placeholder: 'Search skills',
+    placeholder: "Search skills",
   },
-}
+};
 
 export const Invalid: Story = {
   args: {
     invalid: true,
-    defaultValue: 'invalid-token',
+    defaultValue: "invalid-token",
   },
-}
+};

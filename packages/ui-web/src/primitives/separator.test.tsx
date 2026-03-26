@@ -1,11 +1,11 @@
-import { render } from '@testing-library/react'
+import { render } from "@testing-library/react";
 
-import { Separator } from './separator'
+import { Separator } from "./separator";
 
-describe('Separator', () => {
-  it('renders horizontal separator by default', () => {
-    const { container } = render(<Separator />)
+describe("Separator", () => {
+  it("renders horizontal separator by default", () => {
+    const { container } = render(<Separator />);
 
-    expect(container.firstChild).toHaveClass('h-px')
-  })
-})
+    expect(container.firstChild).toHaveClass("h-px");
+  });
+});

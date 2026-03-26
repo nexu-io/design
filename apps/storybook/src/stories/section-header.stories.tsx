@@ -1,18 +1,18 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Button, SectionHeader } from '@nexu/ui-web'
+import { Button, SectionHeader } from "@nexu/ui-web";
 
 const meta = {
-  title: 'Patterns/SectionHeader',
+  title: "Patterns/SectionHeader",
   component: SectionHeader,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
-    title: 'Section',
+    title: "Section",
   },
-} satisfies Meta<typeof SectionHeader>
+} satisfies Meta<typeof SectionHeader>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -24,4 +24,4 @@ export const Default: Story = {
       />
     </div>
   ),
-}
+};

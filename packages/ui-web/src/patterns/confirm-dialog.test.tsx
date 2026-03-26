@@ -1,12 +1,12 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
-import { ConfirmDialog } from './confirm-dialog'
+import { ConfirmDialog } from "./confirm-dialog";
 
-describe('ConfirmDialog', () => {
-  it('renders dialog content and calls onConfirm', async () => {
-    const user = userEvent.setup()
-    const onConfirm = vi.fn()
+describe("ConfirmDialog", () => {
+  it("renders dialog content and calls onConfirm", async () => {
+    const user = userEvent.setup();
+    const onConfirm = vi.fn();
 
     render(
       <ConfirmDialog
@@ -14,14 +14,14 @@ describe('ConfirmDialog', () => {
         title="Delete channel"
         description="This action cannot be undone."
         onConfirm={onConfirm}
-      />
-    )
+      />,
+    );
 
-    expect(screen.getByRole('dialog')).toBeInTheDocument()
-    expect(screen.getByText('Delete channel')).toBeInTheDocument()
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByText("Delete channel")).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Confirm' }))
+    await user.click(screen.getByRole("button", { name: "Confirm" }));
 
-    expect(onConfirm).toHaveBeenCalledTimes(1)
-  })
-})
+    expect(onConfirm).toHaveBeenCalledTimes(1);
+  });
+});

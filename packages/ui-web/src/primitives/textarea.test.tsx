@@ -1,17 +1,17 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen } from "@testing-library/react";
 
-import { Textarea } from './textarea'
+import { Textarea } from "./textarea";
 
-describe('Textarea', () => {
-  it('renders placeholder', () => {
-    render(<Textarea placeholder="Describe workflow" />)
+describe("Textarea", () => {
+  it("renders placeholder", () => {
+    render(<Textarea placeholder="Describe workflow" />);
 
-    expect(screen.getByPlaceholderText('Describe workflow')).toBeInTheDocument()
-  })
+    expect(screen.getByPlaceholderText("Describe workflow")).toBeInTheDocument();
+  });
 
-  it('applies invalid aria state', () => {
-    render(<Textarea invalid defaultValue="bad" />)
+  it("applies invalid aria state", () => {
+    render(<Textarea invalid defaultValue="bad" />);
 
-    expect(screen.getByDisplayValue('bad')).toHaveAttribute('aria-invalid', 'true')
-  })
-})
+    expect(screen.getByDisplayValue("bad")).toHaveAttribute("aria-invalid", "true");
+  });
+});

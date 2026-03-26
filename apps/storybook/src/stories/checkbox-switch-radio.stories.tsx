@@ -1,14 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Checkbox, Label, RadioGroup, RadioGroupItem, Switch } from '@nexu/ui-web'
+import { Checkbox, Label, RadioGroup, RadioGroupItem, Switch } from "@nexu/ui-web";
 
 const meta = {
-  title: 'Primitives/Selection Controls',
-  tags: ['autodocs'],
-} satisfies Meta
+  title: "Primitives/Selection Controls",
+  tags: ["autodocs"],
+} satisfies Meta;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -35,4 +35,4 @@ export const Default: Story = {
       </RadioGroup>
     </div>
   ),
-}
+};

@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen } from "@testing-library/react";
 
-import { Button } from './button'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip'
+import { Button } from "./button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
-describe('Tooltip', () => {
-  it('renders content when opened by default', () => {
+describe("Tooltip", () => {
+  it("renders content when opened by default", () => {
     render(
       <TooltipProvider>
         <Tooltip defaultOpen>
@@ -13,9 +13,9 @@ describe('Tooltip', () => {
           </TooltipTrigger>
           <TooltipContent>Helpful tip</TooltipContent>
         </Tooltip>
-      </TooltipProvider>
-    )
+      </TooltipProvider>,
+    );
 
-    expect(screen.getByRole('tooltip')).toHaveTextContent('Helpful tip')
-  })
-})
+    expect(screen.getByRole("tooltip")).toHaveTextContent("Helpful tip");
+  });
+});

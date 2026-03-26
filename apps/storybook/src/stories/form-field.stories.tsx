@@ -1,18 +1,18 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { FormField, Input } from '@nexu/ui-web'
+import { FormField, Input } from "@nexu/ui-web";
 
 const meta = {
-  title: 'Patterns/FormField',
+  title: "Patterns/FormField",
   component: FormField,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
     children: null,
   },
-} satisfies Meta<typeof FormField>
+} satisfies Meta<typeof FormField>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -22,7 +22,7 @@ export const Default: Story = {
       </FormField>
     </div>
   ),
-}
+};
 
 export const Invalid: Story = {
   render: () => (
@@ -38,4 +38,4 @@ export const Invalid: Story = {
       </FormField>
     </div>
   ),
-}
+};
