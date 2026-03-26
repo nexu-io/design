@@ -18,6 +18,7 @@ export * from "./primitives/sheet";
 export * from "./primitives/skeleton";
 export * from "./primitives/sonner";
 export * from "./primitives/spinner";
+export * from "./primitives/stat-card";
 export * from "./primitives/switch";
 export * from "./primitives/tabs";
 export * from "./primitives/textarea";

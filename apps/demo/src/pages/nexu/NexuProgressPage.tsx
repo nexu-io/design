@@ -1,4 +1,4 @@
-import { Badge, Progress } from "@nexu/ui-web";
+import { Badge, StatCard } from "@nexu/ui-web";
 import { BarChart3, Clock, DollarSign, TrendingUp, Users } from "lucide-react";
 
 const STATS = [
@@ -56,17 +56,19 @@ export default function NexuProgressPage() {
 
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {STATS.map((s) => (
-            <div key={s.label} className="card p-4">
-              <div className="flex items-center gap-2 text-text-muted">
-                <s.icon size={14} />
-                <span className="text-[11px] uppercase tracking-wider">{s.label}</span>
-              </div>
-              <div className="mt-2 text-2xl font-bold tabular-nums text-text-primary">
-                {s.value}
-              </div>
-              <div className="mt-0.5 text-[11px] text-text-muted">{s.sub}</div>
-              <Progress value={s.progress} variant={s.variant} className="mt-3 bg-surface-3" />
-            </div>
+            <StatCard
+              key={s.label}
+              label={s.label}
+              value={s.value}
+              icon={s.icon}
+              meta={s.sub}
+              progress={s.progress}
+              progressVariant={s.variant}
+              tone={
+                s.variant === "warning" ? "warning" : s.variant === "success" ? "success" : "accent"
+              }
+              className="p-4"
+            />
           ))}
         </section>
 

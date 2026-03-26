@@ -1,46 +1,46 @@
-import { useState } from "react";
+import { Button, StatCard } from "@nexu/ui-web";
 import {
-  Users,
-  GitPullRequest,
+  AlertTriangle,
   BarChart3,
   CheckCircle,
-  AlertTriangle,
-  Clock,
-  Sparkles,
   ChevronRight,
-  X,
-  Target,
-  Zap,
-  UserPlus,
+  Clock,
+  GitPullRequest,
   Radio,
+  Sparkles,
+  Target,
+  UserPlus,
+  Users,
+  X,
+  Zap,
 } from "lucide-react";
+import { useState } from "react";
 import {
-  TEAM_MEMBERS,
-  IM_CARDS,
-  ALIGNMENT_HISTORY,
-  OBJECTIVES,
-  TASK_BOARD,
-  type IMCard,
-  type TeamMember,
-  type SprintTask,
-  type TaskItem,
-  type Objective,
-  type KeyResult,
-} from "./teamData";
-import {
+  AlignmentDetailPanel,
   CardDetailPanel,
   MemberDetailPanel,
-  AlignmentDetailPanel,
+  OKRDetailPanel,
+  StatsDetailPanel,
   TaskDetailPanel,
   TaskItemDetailPanel,
-  StatsDetailPanel,
-  OKRDetailPanel,
 } from "./TeamDetailPanels";
+import TeamInsightsChat from "./TeamInsightsChat";
 import OKRTab from "./TeamOKR";
 import SprintTabEnhanced from "./TeamSprint";
 import TeamTasks from "./TeamTasks";
-import TeamInsightsChat from "./TeamInsightsChat";
-import { Button } from "@nexu/ui-web";
+import {
+  ALIGNMENT_HISTORY,
+  type IMCard,
+  IM_CARDS,
+  type KeyResult,
+  OBJECTIVES,
+  type Objective,
+  type SprintTask,
+  TASK_BOARD,
+  TEAM_MEMBERS,
+  type TaskItem,
+  type TeamMember,
+} from "./teamData";
 
 type TabId = "okr" | "cards" | "members" | "alignments" | "sprint" | "tasks";
 
@@ -69,10 +69,7 @@ const STATUS_COLORS: Record<string, string> = {
   offline: "bg-surface-4",
 };
 
-const URGENCY_STYLES: Record<
-  string,
-  { bg: string; text: string; label: string }
-> = {
+const URGENCY_STYLES: Record<string, { bg: string; text: string; label: string }> = {
   low: { bg: "bg-info-subtle", text: "text-info", label: "低" },
   medium: { bg: "bg-warning-subtle", text: "text-warning", label: "中" },
   high: { bg: "bg-danger-subtle", text: "text-danger", label: "高" },
@@ -88,9 +85,7 @@ function ProgressBar({
   className?: string;
 }) {
   return (
-    <div
-      className={`h-1.5 bg-surface-3 rounded-full overflow-hidden ${className}`}
-    >
+    <div className={`h-1.5 bg-surface-3 rounded-full overflow-hidden ${className}`}>
       <div
         className={`h-full rounded-full transition-all ${
           value >= 100 ? "bg-success" : value >= 50 ? "bg-clone" : "bg-warning"
@@ -201,18 +196,10 @@ function SummaryReportIMCard({
           {card.members.map((m) => (
             <div key={m.name} className="flex items-center gap-2 text-[12px]">
               <span>{m.avatar}</span>
-              <span className="w-10 font-medium text-text-primary">
-                {m.name}
-              </span>
-              <span className="flex-1 truncate text-text-secondary">
-                {m.summary}
-              </span>
-              {m.done && (
-                <CheckCircle size={12} className="text-success shrink-0" />
-              )}
-              {m.risk && (
-                <AlertTriangle size={12} className="text-warning shrink-0" />
-              )}
+              <span className="w-10 font-medium text-text-primary">{m.name}</span>
+              <span className="flex-1 truncate text-text-secondary">{m.summary}</span>
+              {m.done && <CheckCircle size={12} className="text-success shrink-0" />}
+              {m.risk && <AlertTriangle size={12} className="text-warning shrink-0" />}
             </div>
           ))}
         </div>
@@ -273,9 +260,7 @@ function StatusQueryIMCard({
         ))}
         {card.note && (
           <div className="p-2.5 bg-surface-2 rounded-lg">
-            <div className="text-[11px] text-text-secondary">
-              💬 分身备注：{card.note}
-            </div>
+            <div className="text-[11px] text-text-secondary">💬 分身备注：{card.note}</div>
           </div>
         )}
         <div className="flex gap-2 items-center pt-1">
@@ -302,11 +287,7 @@ function AlignmentRequestIMCard({
   const [responded, setResponded] = useState(card.status !== "pending");
   const urgency = URGENCY_STYLES[card.urgency];
   return (
-    <CardWrapper
-      accent="border-l-warning"
-      onClick={onSelect}
-      selected={selected}
-    >
+    <CardWrapper accent="border-l-warning" onClick={onSelect} selected={selected}>
       <div className="flex justify-between items-center px-4 py-3 border-b border-border/50">
         <div className="flex gap-2 items-center">
           <GitPullRequest size={14} className="text-warning" />
@@ -323,17 +304,13 @@ function AlignmentRequestIMCard({
       <div className="p-4 space-y-3">
         <div>
           <div className="text-[12px] text-text-muted mb-1">话题</div>
-          <div className="text-[13px] text-text-primary font-medium">
-            {card.topic}
-          </div>
+          <div className="text-[13px] text-text-primary font-medium">{card.topic}</div>
         </div>
         <div className="p-2.5 bg-surface-2 rounded-lg">
           <div className="text-[11px] text-text-muted mb-0.5">📎 背景</div>
           <div className="text-[12px] text-text-secondary">{card.reason}</div>
         </div>
-        <div className="text-[12px] text-text-secondary">
-          🎯 建议：{card.suggestion}
-        </div>
+        <div className="text-[12px] text-text-secondary">🎯 建议：{card.suggestion}</div>
         {!responded ? (
           <div className="flex gap-2 items-center pt-1">
             <CardButton variant="success" onClick={() => setResponded(true)}>
@@ -368,25 +345,16 @@ function EventNotificationIMCard({
   selected: boolean;
 }) {
   return (
-    <CardWrapper
-      accent="border-l-success"
-      onClick={onSelect}
-      selected={selected}
-    >
+    <CardWrapper accent="border-l-success" onClick={onSelect} selected={selected}>
       <div className="flex gap-2 items-center px-4 py-3 border-b border-border/50">
         <CheckCircle size={14} className="text-success" />
-        <span className="text-[13px] font-semibold text-text-primary">
-          {card.event}
-        </span>
+        <span className="text-[13px] font-semibold text-text-primary">{card.event}</span>
       </div>
       <div className="p-4 space-y-3">
         <div className="text-[13px] text-text-primary">{card.impact}</div>
         <div className="space-y-1.5">
           {card.updates.map((u, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-2 text-[12px] text-text-secondary"
-            >
+            <div key={i} className="flex items-center gap-2 text-[12px] text-text-secondary">
               <div className="w-1 h-1 rounded-full bg-success shrink-0" /> {u}
             </div>
           ))}
@@ -413,19 +381,13 @@ function GrowthTriggerIMCard({
     <CardWrapper onClick={onSelect} selected={selected}>
       <div className="flex gap-2 items-center px-4 py-3 border-b border-border/50">
         <CheckCircle size={14} className="text-success" />
-        <span className="text-[13px] font-semibold text-text-primary">
-          {card.from}完成了任务
-        </span>
+        <span className="text-[13px] font-semibold text-text-primary">{card.from}完成了任务</span>
       </div>
       <div className="p-4 space-y-3">
-        <span className="text-[13px] text-text-primary">
-          📝 {card.taskTitle}已生成
-        </span>
+        <span className="text-[13px] text-text-primary">📝 {card.taskTitle}已生成</span>
         <div className="grid grid-cols-2 gap-3">
           <div className="p-2.5 bg-success-subtle/50 rounded-lg text-center">
-            <div className="text-[18px] font-bold text-success">
-              {card.timeSaved}
-            </div>
+            <div className="text-[18px] font-bold text-success">{card.timeSaved}</div>
             <div className="text-[10px] text-text-muted">实际耗时</div>
           </div>
           <div className="p-2.5 bg-surface-2 rounded-lg text-center">
@@ -436,8 +398,8 @@ function GrowthTriggerIMCard({
           </div>
         </div>
         <div className="p-2.5 bg-clone/5 rounded-lg text-[12px] text-text-secondary">
-          💡 本周已帮{card.from.replace("的分身", "")}完成{" "}
-          {card.weeklyStats.tasks} 项任务 · 节省约 {card.weeklyStats.hours}h
+          💡 本周已帮{card.from.replace("的分身", "")}完成 {card.weeklyStats.tasks} 项任务 · 节省约{" "}
+          {card.weeklyStats.hours}h
         </div>
         <Button
           type="button"
@@ -463,45 +425,15 @@ function IMCardRenderer({
 }) {
   switch (card.type) {
     case "summary_report":
-      return (
-        <SummaryReportIMCard
-          card={card}
-          onSelect={onSelect}
-          selected={selected}
-        />
-      );
+      return <SummaryReportIMCard card={card} onSelect={onSelect} selected={selected} />;
     case "status_query":
-      return (
-        <StatusQueryIMCard
-          card={card}
-          onSelect={onSelect}
-          selected={selected}
-        />
-      );
+      return <StatusQueryIMCard card={card} onSelect={onSelect} selected={selected} />;
     case "alignment_request":
-      return (
-        <AlignmentRequestIMCard
-          card={card}
-          onSelect={onSelect}
-          selected={selected}
-        />
-      );
+      return <AlignmentRequestIMCard card={card} onSelect={onSelect} selected={selected} />;
     case "event_notification":
-      return (
-        <EventNotificationIMCard
-          card={card}
-          onSelect={onSelect}
-          selected={selected}
-        />
-      );
+      return <EventNotificationIMCard card={card} onSelect={onSelect} selected={selected} />;
     case "growth_trigger":
-      return (
-        <GrowthTriggerIMCard
-          card={card}
-          onSelect={onSelect}
-          selected={selected}
-        />
-      );
+      return <GrowthTriggerIMCard card={card} onSelect={onSelect} selected={selected} />;
   }
 }
 
@@ -523,9 +455,7 @@ function IMMessage({
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1.5">
-          <span className="text-[12px] font-semibold text-text-primary">
-            {card.from}
-          </span>
+          <span className="text-[12px] font-semibold text-text-primary">{card.from}</span>
           <span className="text-[9px] px-1.5 py-0.5 bg-clone/10 text-clone rounded font-medium">
             BOT
           </span>
@@ -554,24 +484,17 @@ function CardsTab({
           <span className="text-[11px] px-2 py-0.5 bg-clone/10 text-clone rounded font-medium">
             📱 飞书
           </span>
-          <span className="text-[13px] font-medium text-text-primary">
-            #product-team
-          </span>
+          <span className="text-[13px] font-medium text-text-primary">#product-team</span>
           <span className="text-[11px] text-text-muted">
-            · {TEAM_MEMBERS.filter((m) => m.status === "online").length}{" "}
-            个分身在线
+            · {TEAM_MEMBERS.filter((m) => m.status === "online").length} 个分身在线
           </span>
         </div>
-        <span className="text-[10px] text-text-muted">
-          今日 {IM_CARDS.length} 条卡片
-        </span>
+        <span className="text-[10px] text-text-muted">今日 {IM_CARDS.length} 条卡片</span>
       </div>
       <div className="overflow-y-auto flex-1 p-5 space-y-5">
         <div className="flex gap-3 items-center py-1">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-[10px] text-text-muted shrink-0">
-            2026-02-23 周一
-          </span>
+          <span className="text-[10px] text-text-muted shrink-0">2026-02-23 周一</span>
           <div className="flex-1 h-px bg-border" />
         </div>
         {IM_CARDS.map((card) => (
@@ -625,9 +548,7 @@ function MemberCard({
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex gap-2 items-center">
-            <span className="text-[13px] font-semibold text-text-primary">
-              {member.name}
-            </span>
+            <span className="text-[13px] font-semibold text-text-primary">{member.name}</span>
             <span className="text-[10px] px-1.5 py-0.5 bg-clone/10 text-clone rounded font-medium">
               Lv.{member.level}
             </span>
@@ -638,21 +559,15 @@ function MemberCard({
       </div>
       <div className="grid grid-cols-3 gap-2 mb-3">
         <div className="p-2 text-center rounded-lg bg-surface-2">
-          <div className="text-[14px] font-bold text-text-primary">
-            {member.tasksInProgress}
-          </div>
+          <div className="text-[14px] font-bold text-text-primary">{member.tasksInProgress}</div>
           <div className="text-[9px] text-text-muted">进行中</div>
         </div>
         <div className="p-2 text-center rounded-lg bg-surface-2">
-          <div className="text-[14px] font-bold text-success">
-            {member.tasksCompleted}
-          </div>
+          <div className="text-[14px] font-bold text-success">{member.tasksCompleted}</div>
           <div className="text-[9px] text-text-muted">已完成</div>
         </div>
         <div className="p-2 text-center rounded-lg bg-surface-2">
-          <div className="text-[14px] font-bold text-clone">
-            {member.alignmentRate}%
-          </div>
+          <div className="text-[14px] font-bold text-clone">{member.alignmentRate}%</div>
           <div className="text-[9px] text-text-muted">默契度</div>
         </div>
       </div>
@@ -679,9 +594,7 @@ function MembersTab({
     <div className="overflow-y-auto h-full">
       <div className="flex justify-between items-center px-5 py-3 border-b border-border bg-surface-1/50">
         <div className="flex gap-3 items-center">
-          <span className="text-[13px] font-medium text-text-primary">
-            团队分身
-          </span>
+          <span className="text-[13px] font-medium text-text-primary">团队分身</span>
           <span className="text-[11px] text-text-muted">
             {online}/{total} 在线
           </span>
@@ -703,9 +616,7 @@ function MembersTab({
           <div className="flex justify-center items-center w-10 h-10 rounded-full bg-clone/10">
             <UserPlus size={18} className="text-clone" />
           </div>
-          <div className="text-[12px] font-medium text-text-primary">
-            邀请成员
-          </div>
+          <div className="text-[12px] font-medium text-text-primary">邀请成员</div>
           <div className="text-[10px] text-text-muted text-center">
             发送飞书/Slack 邀请
             <br />1 分钟创建分身
@@ -727,15 +638,14 @@ function AlignmentsTab({
   onSelectCard: (c: IMCard) => void;
   onSelectAlignment: (a: (typeof ALIGNMENT_HISTORY)[number]) => void;
 }) {
-  const pendingCards = IM_CARDS.filter(
-    (c) => c.type === "alignment_request"
-  ) as Extract<IMCard, { type: "alignment_request" }>[];
+  const pendingCards = IM_CARDS.filter((c) => c.type === "alignment_request") as Extract<
+    IMCard,
+    { type: "alignment_request" }
+  >[];
   return (
     <div className="overflow-y-auto h-full">
       <div className="px-5 py-3 border-b border-border bg-surface-1/50">
-        <span className="text-[13px] font-medium text-text-primary">
-          对齐请求
-        </span>
+        <span className="text-[13px] font-medium text-text-primary">对齐请求</span>
       </div>
       <div className="p-5 space-y-6">
         {pendingCards.length > 0 && (
@@ -781,9 +691,7 @@ function AlignmentsTab({
                   <X size={14} className="text-danger shrink-0" />
                 )}
                 <div className="flex-1 min-w-0">
-                  <div className="text-[12px] text-text-primary font-medium">
-                    {a.topic}
-                  </div>
+                  <div className="text-[12px] text-text-primary font-medium">{a.topic}</div>
                   <div className="text-[10px] text-text-muted">
                     来自 {a.from}的分身 · {a.time}
                   </div>
@@ -820,51 +728,49 @@ function StatsBar({
 }) {
   const online = TEAM_MEMBERS.filter((m) => m.status === "online").length;
   const okrProgress = Math.round(
-    OBJECTIVES.reduce((s, o) => s + o.progress, 0) / OBJECTIVES.length
+    OBJECTIVES.reduce((s, o) => s + o.progress, 0) / OBJECTIVES.length,
   );
   const stats = [
     {
       id: "okr",
       label: "OKR",
       value: `${okrProgress}%`,
-      color: "text-accent",
+      tone: "accent" as const,
       tab: "okr" as TabId,
     },
     {
       id: "online",
       label: "分身在线",
       value: `${online}/${TEAM_MEMBERS.length}`,
-      color: "text-success",
+      tone: "success" as const,
       tab: "members" as TabId,
     },
     {
       id: "cards",
       label: "今日卡片",
       value: `${IM_CARDS.length}`,
-      color: "text-clone",
+      tone: "accent" as const,
       tab: "cards" as TabId,
     },
     {
       id: "alignments",
       label: "待对齐",
-      value: `${
-        IM_CARDS.filter((c) => c.type === "alignment_request" && !c.read).length
-      }`,
-      color: "text-warning",
+      value: `${IM_CARDS.filter((c) => c.type === "alignment_request" && !c.read).length}`,
+      tone: "warning" as const,
       tab: "alignments" as TabId,
     },
     {
       id: "tasks",
       label: "活跃任务",
-      value: `${TASK_BOARD.filter(t => t.status === 'in_progress' || t.status === 'todo').length}`,
-      color: "text-clone",
+      value: `${TASK_BOARD.filter((t) => t.status === "in_progress" || t.status === "todo").length}`,
+      tone: "accent" as const,
       tab: "tasks" as TabId,
     },
     {
       id: "sprint",
       label: "Sprint",
       value: "58%",
-      color: "text-info",
+      tone: "info" as const,
       tab: "sprint" as TabId,
     },
   ];
@@ -874,19 +780,25 @@ function StatsBar({
       {stats.map((s, i) => (
         <button
           key={s.id}
+          type="button"
           onClick={() => {
             onSelectStat(s.id);
             onSwitchTab(s.tab);
           }}
-          className={`flex items-center gap-1.5 transition-colors rounded-md px-1.5 py-0.5 -mx-1.5 ${
+          className={`transition-colors rounded-md ${
             selectedStat === s.id ? "bg-accent/5" : "hover:bg-surface-2"
           }`}
         >
-          {i > 0 && <div className="mr-2 w-px h-3 bg-border" />}
-          <span className={`text-[13px] font-bold tabular-nums ${s.color}`}>
-            {s.value}
-          </span>
-          <span className="text-[10px] text-text-muted">{s.label}</span>
+          <div className="flex items-center gap-2">
+            {i > 0 && <div className="w-px h-8 bg-border" />}
+            <StatCard
+              label={s.label}
+              value={s.value}
+              tone={s.tone}
+              padding="none"
+              className="border-0 bg-transparent shadow-none p-1.5 min-w-[86px]"
+            />
+          </div>
         </button>
       ))}
     </div>
@@ -908,9 +820,7 @@ function DetailPanelRouter({
     case "member":
       return <MemberDetailPanel member={selected.data} onClose={onClose} />;
     case "alignment":
-      return (
-        <AlignmentDetailPanel alignment={selected.data} onClose={onClose} />
-      );
+      return <AlignmentDetailPanel alignment={selected.data} onClose={onClose} />;
     case "task":
       return <TaskDetailPanel task={selected.data} onClose={onClose} />;
     case "taskItem":
@@ -936,58 +846,50 @@ export default function TeamPage() {
 
   const handleSelectCard = (card: IMCard) => {
     setSelected((prev) =>
-      prev?.type === "card" && prev.data.id === card.id
-        ? null
-        : { type: "card", data: card }
+      prev?.type === "card" && prev.data.id === card.id ? null : { type: "card", data: card },
     );
   };
   const handleSelectMember = (member: TeamMember) => {
     setSelected((prev) =>
       prev?.type === "member" && prev.data.name === member.name
         ? null
-        : { type: "member", data: member }
+        : { type: "member", data: member },
     );
   };
   const handleSelectAlignment = (a: (typeof ALIGNMENT_HISTORY)[number]) => {
     setSelected((prev) =>
-      prev?.type === "alignment" && prev.data.id === a.id
-        ? null
-        : { type: "alignment", data: a }
+      prev?.type === "alignment" && prev.data.id === a.id ? null : { type: "alignment", data: a },
     );
   };
   const handleSelectTask = (task: SprintTask) => {
     setSelected((prev) =>
-      prev?.type === "task" && prev.data.id === task.id
-        ? null
-        : { type: "task", data: task }
+      prev?.type === "task" && prev.data.id === task.id ? null : { type: "task", data: task },
     );
   };
   const handleSelectTaskItem = (task: TaskItem) => {
     setSelected((prev) =>
       prev?.type === "taskItem" && prev.data.id === task.id
         ? null
-        : { type: "taskItem", data: task }
+        : { type: "taskItem", data: task },
     );
   };
   const handleSelectStat = (statId: string) => {
     setSelected((prev) =>
-      prev?.type === "stat" && prev.data === statId
-        ? null
-        : { type: "stat", data: statId }
+      prev?.type === "stat" && prev.data === statId ? null : { type: "stat", data: statId },
     );
   };
   const handleSelectObjective = (o: Objective) => {
     setSelected((prev) =>
       prev?.type === "okr" && prev.data.objectiveId === o.id && !prev.data.krId
         ? null
-        : { type: "okr", data: { objectiveId: o.id } }
+        : { type: "okr", data: { objectiveId: o.id } },
     );
   };
   const handleSelectKR = (kr: KeyResult) => {
     setSelected((prev) =>
       prev?.type === "okr" && prev.data.krId === kr.id
         ? null
-        : { type: "okr", data: { krId: kr.id } }
+        : { type: "okr", data: { krId: kr.id } },
     );
   };
 
@@ -1001,7 +903,7 @@ export default function TeamPage() {
   const handleClose = () => setSelected(null);
 
   const atRiskOKR = OBJECTIVES.filter(
-    (o) => o.status === "at_risk" || o.status === "behind"
+    (o) => o.status === "at_risk" || o.status === "behind",
   ).length;
 
   return (
@@ -1019,6 +921,7 @@ export default function TeamPage() {
           return (
             <button
               key={tab.id}
+              type="button"
               onClick={() => handleTabSwitch(tab.id)}
               className={`flex items-center gap-1.5 px-3 py-2.5 text-[12px] font-medium border-b-2 transition-colors ${
                 active
@@ -1030,7 +933,7 @@ export default function TeamPage() {
               {tab.label}
               {tab.id === "tasks" && (
                 <span className="text-[9px] px-1 py-0.5 bg-clone/10 text-clone rounded-full ml-0.5">
-                  {TASK_BOARD.filter(t => t.status === 'in_progress').length}
+                  {TASK_BOARD.filter((t) => t.status === "in_progress").length}
                 </span>
               )}
               {tab.id === "alignments" && (
@@ -1070,51 +973,39 @@ export default function TeamPage() {
               )}
               {activeTab === "cards" && (
                 <CardsTab
-                  selectedCard={
-                    selected?.type === "card" ? selected.data : null
-                  }
+                  selectedCard={selected?.type === "card" ? selected.data : null}
                   onSelectCard={handleSelectCard}
                 />
               )}
               {activeTab === "members" && (
                 <MembersTab
-                  selectedMember={
-                    selected?.type === "member" ? selected.data : null
-                  }
+                  selectedMember={selected?.type === "member" ? selected.data : null}
                   onSelectMember={handleSelectMember}
                 />
               )}
               {activeTab === "alignments" && (
                 <AlignmentsTab
-                  selectedAlignment={
-                    selected?.type === "alignment" ? selected.data : null
-                  }
+                  selectedAlignment={selected?.type === "alignment" ? selected.data : null}
                   onSelectCard={handleSelectCard}
                   onSelectAlignment={handleSelectAlignment}
                 />
               )}
               {activeTab === "tasks" && (
                 <TeamTasks
-                  selectedTask={
-                    selected?.type === "taskItem" ? selected.data : null
-                  }
+                  selectedTask={selected?.type === "taskItem" ? selected.data : null}
                   onSelectTask={handleSelectTaskItem}
                 />
               )}
               {activeTab === "sprint" && (
                 <SprintTabEnhanced
-                  selectedTask={
-                    selected?.type === "task" ? selected.data : null
-                  }
+                  selectedTask={selected?.type === "task" ? selected.data : null}
                   onSelectTask={handleSelectTask}
                 />
               )}
             </div>
           </div>
 
-          {selected && (
-            <DetailPanelRouter selected={selected} onClose={handleClose} />
-          )}
+          {selected && <DetailPanelRouter selected={selected} onClose={handleClose} />}
         </div>
 
         {/* Persistent Insights Chat */}

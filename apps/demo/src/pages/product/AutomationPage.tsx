@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertTitle, Button } from "@nexu/ui-web";
+import { Alert, AlertDescription, AlertTitle, Button, StatCard } from "@nexu/ui-web";
 import {
   AlertCircle,
   BarChart3,
@@ -891,16 +891,28 @@ export default function AutomationPage() {
         {/* Stats */}
         <div className="grid grid-cols-4 gap-3 mb-6">
           {[
-            { label: "活跃任务", value: "8", icon: Clock, color: "text-info" },
-            { label: "主动规则", value: "7", icon: Brain, color: "text-clone" },
-            { label: "今日触发", value: "14", icon: Zap, color: "text-success" },
-            { label: "成功率", value: "96%", icon: CheckCircle, color: "text-success" },
+            { label: "活跃任务", value: "8", icon: Clock, tone: "info" as const },
+            { label: "主动规则", value: "7", icon: Brain, tone: "accent" as const },
+            { label: "今日触发", value: "14", icon: Zap, tone: "success" as const },
+            {
+              label: "成功率",
+              value: "96%",
+              icon: CheckCircle,
+              tone: "success" as const,
+              progress: 96,
+              progressVariant: "success" as const,
+            },
           ].map((s) => (
-            <div key={s.label} className="bg-surface-2 border border-border rounded-xl p-4">
-              <s.icon size={16} className={`${s.color} mb-2`} />
-              <div className="text-lg font-bold text-text-primary">{s.value}</div>
-              <div className="text-[11px] text-text-muted">{s.label}</div>
-            </div>
+            <StatCard
+              key={s.label}
+              label={s.label}
+              value={s.value}
+              icon={s.icon}
+              tone={s.tone}
+              progress={s.progress}
+              progressVariant={s.progressVariant}
+              className="p-4"
+            />
           ))}
         </div>
 
