@@ -1,20 +1,35 @@
-import { useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { usePageTitle } from '../../hooks/usePageTitle';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  Badge,
+  Button,
+  Separator,
+  Switch,
+} from "@nexu/ui-web";
 import {
   ArrowLeft,
   ArrowRight,
   Check,
-  ExternalLink,
-  Copy,
-  Sparkles,
   ChevronDown,
-  Shield,
-  RefreshCw,
+  Copy,
+  ExternalLink,
   Lock,
-} from 'lucide-react';
-import { SKILL_CATEGORIES, findSkillById, DEFAULT_AUTHORIZED_TOOLS, type OAuthTool, type SkillDef } from './skillData';
-import { Badge, Button, Separator, Switch } from '@nexu/ui-web';
+  RefreshCw,
+  Shield,
+  Sparkles,
+} from "lucide-react";
+import { useId, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { usePageTitle } from "../../hooks/usePageTitle";
+import {
+  DEFAULT_AUTHORIZED_TOOLS,
+  type OAuthTool,
+  SKILL_CATEGORIES,
+  type SkillDef,
+  findSkillById,
+} from "./skillData";
 
 /* ------------------------------------------------------------------ */
 /*  Platform icons                                                      */
@@ -23,10 +38,22 @@ import { Badge, Button, Separator, Switch } from '@nexu/ui-web';
 function SlackIcon({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zm1.271 0a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313z" fill="#E01E5A" />
-      <path d="M8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zm0 1.271a2.527 2.527 0 0 1 2.521 2.521 2.527 2.527 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312z" fill="#36C5F0" />
-      <path d="M18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zm-1.27 0a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.163 0a2.528 2.528 0 0 1 2.523 2.522v6.312z" fill="#2EB67D" />
-      <path d="M15.163 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.163 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zm0-1.27a2.527 2.527 0 0 1-2.52-2.523 2.527 2.527 0 0 1 2.52-2.52h6.315A2.528 2.528 0 0 1 24 15.163a2.528 2.528 0 0 1-2.522 2.523h-6.315z" fill="#ECB22E" />
+      <path
+        d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zm1.271 0a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313z"
+        fill="#E01E5A"
+      />
+      <path
+        d="M8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zm0 1.271a2.527 2.527 0 0 1 2.521 2.521 2.527 2.527 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312z"
+        fill="#36C5F0"
+      />
+      <path
+        d="M18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zm-1.27 0a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.163 0a2.528 2.528 0 0 1 2.523 2.522v6.312z"
+        fill="#2EB67D"
+      />
+      <path
+        d="M15.163 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.163 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zm0-1.27a2.527 2.527 0 0 1-2.52-2.523 2.527 2.527 0 0 1 2.52-2.52h6.315A2.528 2.528 0 0 1 24 15.163a2.528 2.528 0 0 1-2.522 2.523h-6.315z"
+        fill="#ECB22E"
+      />
     </svg>
   );
 }
@@ -52,38 +79,47 @@ function TelegramIcon({ size = 16 }: { size?: number }) {
 /* ------------------------------------------------------------------ */
 
 function FAQItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
+  const value = useId();
+
   return (
-    <div style={{ borderBottom: '1px solid var(--color-border)' }}>
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full py-4 text-left cursor-pointer"
-      >
-        <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--color-text-primary)', fontFamily: 'Manrope, PingFang SC, sans-serif' }} className="pr-4">
-          {q}
-        </span>
-        <ChevronDown
-          size={16}
-          style={{
-            color: 'var(--color-text-tertiary)',
-            transition: 'transform 0.25s ease-out',
-            transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-          }}
-          className="shrink-0"
-        />
-      </button>
-      <div
-        style={{
-          maxHeight: open ? 200 : 0,
-          overflow: 'hidden',
-          transition: 'max-height 0.25s ease-out',
-        }}
-      >
-        <div style={{ paddingBottom: 16, fontSize: 14, color: 'var(--color-text-secondary)', lineHeight: 1.6, fontFamily: 'Manrope, PingFang SC, sans-serif' }}>
-          {a}
-        </div>
-      </div>
-    </div>
+    <Accordion type="single" collapsible defaultValue={value}>
+      <AccordionItem value={value} style={{ borderBottom: "1px solid var(--color-border)" }}>
+        <AccordionTrigger
+          className="py-4"
+          icon={
+            <ChevronDown
+              size={16}
+              className="shrink-0 text-[var(--color-text-tertiary)] transition-transform data-[state=open]:rotate-180"
+            />
+          }
+        >
+          <span
+            style={{
+              fontSize: 14,
+              fontWeight: 500,
+              color: "var(--color-text-primary)",
+              fontFamily: "Manrope, PingFang SC, sans-serif",
+            }}
+            className="pr-4"
+          >
+            {q}
+          </span>
+        </AccordionTrigger>
+        <AccordionContent>
+          <div
+            style={{
+              paddingBottom: 16,
+              fontSize: 14,
+              color: "var(--color-text-secondary)",
+              lineHeight: 1.6,
+              fontFamily: "Manrope, PingFang SC, sans-serif",
+            }}
+          >
+            {a}
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }
 
@@ -100,50 +136,71 @@ function RelatedSkillCard({ skill }: { skill: SkillDef }) {
       style={{
         padding: 16,
         borderRadius: 8,
-        border: '1px solid var(--color-border)',
-        backgroundColor: 'var(--color-surface-1)',
-        transition: 'box-shadow 0.15s ease, border-color 0.15s ease',
+        border: "1px solid var(--color-border)",
+        backgroundColor: "var(--color-surface-1)",
+        transition: "box-shadow 0.15s ease, border-color 0.15s ease",
       }}
-      onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = 'var(--shadow-card)';
-        e.currentTarget.style.borderColor = 'rgba(61,185,206,0.3)';
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow = "var(--shadow-card)";
+        e.currentTarget.style.borderColor = "rgba(61,185,206,0.3)";
       }}
-      onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = 'none';
-        e.currentTarget.style.borderColor = 'var(--color-border)';
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = "none";
+        e.currentTarget.style.borderColor = "var(--color-border)";
       }}
     >
       <div className="flex items-center gap-2.5 mb-2">
-        <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 overflow-hidden border border-border bg-white"
-        >
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 overflow-hidden border border-border bg-white">
           {skill.logo ? (
             <img
               src={skill.logo}
               alt=""
               className="w-5 h-5 object-contain"
               onError={(e) => {
-                e.currentTarget.style.display = 'none';
+                e.currentTarget.style.display = "none";
                 const fb = e.currentTarget.nextElementSibling as HTMLElement;
-                if (fb) fb.style.display = 'flex';
+                if (fb) fb.style.display = "flex";
               }}
             />
           ) : null}
-          <div className={skill.logo ? 'hidden' : 'flex'} style={{ alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-            <Icon size={16} style={{ color: 'var(--color-text-secondary)' }} />
+          <div
+            className={skill.logo ? "hidden" : "flex"}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <Icon size={16} style={{ color: "var(--color-text-secondary)" }} />
           </div>
         </div>
-        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text-primary)', fontFamily: 'Manrope, PingFang SC, sans-serif' }}>
+        <span
+          style={{
+            fontSize: 13,
+            fontWeight: 600,
+            color: "var(--color-text-primary)",
+            fontFamily: "Manrope, PingFang SC, sans-serif",
+          }}
+        >
           {skill.name}
         </span>
       </div>
-      <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', lineHeight: 1.5, fontFamily: 'Manrope, PingFang SC, sans-serif' }} className="line-clamp-2">
+      <p
+        style={{
+          fontSize: 12,
+          color: "var(--color-text-tertiary)",
+          lineHeight: 1.5,
+          fontFamily: "Manrope, PingFang SC, sans-serif",
+        }}
+        className="line-clamp-2"
+      >
         {skill.desc}
       </p>
       {skill.tools && skill.tools.length > 0 && (
         <div className="flex gap-1.5 mt-3">
-          {skill.tools.map(t => (
-            <span key={t.id} className="tag" style={{ fontSize: 10, padding: '2px 6px' }}>
+          {skill.tools.map((t) => (
+            <span key={t.id} className="tag" style={{ fontSize: 10, padding: "2px 6px" }}>
               {t.provider}
             </span>
           ))}
@@ -160,10 +217,12 @@ function RelatedSkillCard({ skill }: { skill: SkillDef }) {
 export default function SkillDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const result = findSkillById(id ?? '');
-  usePageTitle(result ? result.skill.name : 'Skill');
+  const result = findSkillById(id ?? "");
+  usePageTitle(result ? result.skill.name : "Skill");
 
-  const [authorizedTools, setAuthorizedTools] = useState<Set<string>>(new Set(DEFAULT_AUTHORIZED_TOOLS));
+  const [authorizedTools, setAuthorizedTools] = useState<Set<string>>(
+    new Set(DEFAULT_AUTHORIZED_TOOLS),
+  );
   const [authorizingToolId, setAuthorizingToolId] = useState<string | null>(null);
   const [copiedPrompt, setCopiedPrompt] = useState<number | null>(null);
   const [skillEnabled, setSkillEnabled] = useState(true);
@@ -172,19 +231,26 @@ export default function SkillDetailPage() {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: 'var(--color-surface-0)', fontFamily: 'Manrope, PingFang SC, sans-serif' }}
+        style={{
+          backgroundColor: "var(--color-surface-0)",
+          fontFamily: "Manrope, PingFang SC, sans-serif",
+        }}
       >
         <div
           className="text-center"
-          style={{ animation: 'nexuPageEnter 0.3s cubic-bezier(0.16,1,0.3,1) both' }}
+          style={{ animation: "nexuPageEnter 0.3s cubic-bezier(0.16,1,0.3,1) both" }}
         >
           <div className="text-6xl mb-4">🔍</div>
-          <h1 style={{ fontSize: 20, fontWeight: 600, color: 'var(--color-text-primary)' }} className="mb-2">Skill not found</h1>
-          <p style={{ fontSize: 14, color: 'var(--color-text-tertiary)' }} className="mb-6">This skill does not exist or has been removed.</p>
-          <Button
-            onClick={() => navigate('/openclaw')}
-            className="rounded-full"
+          <h1
+            style={{ fontSize: 20, fontWeight: 600, color: "var(--color-text-primary)" }}
+            className="mb-2"
           >
+            Skill not found
+          </h1>
+          <p style={{ fontSize: 14, color: "var(--color-text-tertiary)" }} className="mb-6">
+            This skill does not exist or has been removed.
+          </p>
+          <Button onClick={() => navigate("/openclaw")} className="rounded-full">
             <ArrowLeft size={14} />
             Back to Skills
           </Button>
@@ -200,7 +266,7 @@ export default function SkillDetailPage() {
   const handleAuthTool = (tool: OAuthTool) => {
     setAuthorizingToolId(tool.id);
     setTimeout(() => {
-      setAuthorizedTools(prev => new Set([...prev, tool.id]));
+      setAuthorizedTools((prev) => new Set([...prev, tool.id]));
       setAuthorizingToolId(null);
     }, 2000);
   };
@@ -211,27 +277,26 @@ export default function SkillDetailPage() {
     setTimeout(() => setCopiedPrompt(null), 3000);
   };
 
-  const relatedSkills = SKILL_CATEGORIES
-    .find(c => c.id === category.id)
-    ?.skills.filter(s => s.id !== skill.id)
-    .slice(0, 3) ?? [];
+  const relatedSkills =
+    SKILL_CATEGORIES.find((c) => c.id === category.id)
+      ?.skills.filter((s) => s.id !== skill.id)
+      .slice(0, 3) ?? [];
 
-  const otherCategorySkills = SKILL_CATEGORIES
-    .filter(c => c.id !== category.id)
-    .flatMap(c => c.skills)
+  const otherCategorySkills = SKILL_CATEGORIES.filter((c) => c.id !== category.id)
+    .flatMap((c) => c.skills)
     .slice(0, 3);
 
   const allRelated = [...relatedSkills, ...otherCategorySkills].slice(0, 6);
 
-  const goToAuth = () => navigate('/openclaw/auth');
+  const goToAuth = () => navigate("/openclaw/auth");
 
   return (
     <div
       className="min-h-screen"
       style={{
-        backgroundColor: 'var(--color-surface-0)',
-        fontFamily: 'Manrope, PingFang SC, sans-serif',
-        animation: 'nexuPageEnter 0.3s cubic-bezier(0.16,1,0.3,1) both',
+        backgroundColor: "var(--color-surface-0)",
+        fontFamily: "Manrope, PingFang SC, sans-serif",
+        animation: "nexuPageEnter 0.3s cubic-bezier(0.16,1,0.3,1) both",
       }}
     >
       <style>{`
@@ -246,32 +311,33 @@ export default function SkillDetailPage() {
         className="sticky top-0 z-50 flex items-center"
         style={{
           height: 56,
-          borderBottom: '1px solid var(--color-border)',
-          backgroundColor: 'var(--color-surface-0)',
-          padding: '0 24px',
+          borderBottom: "1px solid var(--color-border)",
+          backgroundColor: "var(--color-surface-0)",
+          padding: "0 24px",
         }}
       >
         <div className="flex items-center gap-3 max-w-[800px] w-full mx-auto">
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate('/openclaw/skills')}
+            onClick={() => navigate("/openclaw/skills")}
             className="shrink-0 size-8"
           >
             <ArrowLeft size={18} />
           </Button>
-          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)' }}>{skill.name}</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: "var(--color-text-primary)" }}>
+            {skill.name}
+          </span>
         </div>
       </header>
 
       {/* ── Content ─────────────────────────────────────────── */}
-      <div style={{ maxWidth: 800, margin: '0 auto', padding: 24 }}>
-
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: 24 }}>
         {/* ── Skill Info Card ─────────────────────────────────── */}
         <div
           style={{
-            backgroundColor: 'var(--color-surface-1)',
-            border: '1px solid var(--color-border)',
+            backgroundColor: "var(--color-surface-1)",
+            border: "1px solid var(--color-border)",
             borderRadius: 8,
             padding: 24,
             marginBottom: 32,
@@ -293,21 +359,44 @@ export default function SkillDetailPage() {
                     alt=""
                     className="w-10 h-10 object-contain"
                     onError={(e) => {
-                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.style.display = "none";
                       const fb = e.currentTarget.nextElementSibling as HTMLElement;
-                      if (fb) fb.style.display = 'flex';
+                      if (fb) fb.style.display = "flex";
                     }}
                   />
                 ) : null}
-                <div className={skill.logo ? 'hidden' : 'flex'} style={{ alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-                  <Icon size={28} style={{ color: 'var(--color-text-secondary)' }} />
+                <div
+                  className={skill.logo ? "hidden" : "flex"}
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  <Icon size={28} style={{ color: "var(--color-text-secondary)" }} />
                 </div>
               </div>
               <div>
-                <h1 style={{ fontSize: 20, fontWeight: 600, color: 'var(--color-text-primary)', margin: 0 }}>
+                <h1
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 600,
+                    color: "var(--color-text-primary)",
+                    margin: 0,
+                  }}
+                >
                   {skill.name}
                 </h1>
-                <p style={{ fontSize: 14, fontWeight: 400, color: 'var(--color-text-secondary)', margin: '4px 0 0 0', lineHeight: 1.5 }}>
+                <p
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 400,
+                    color: "var(--color-text-secondary)",
+                    margin: "4px 0 0 0",
+                    lineHeight: 1.5,
+                  }}
+                >
                   {skill.longDesc || skill.desc}
                 </p>
               </div>
@@ -321,37 +410,39 @@ export default function SkillDetailPage() {
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mt-4">
-            <span className="tag" style={{ padding: '4px 12px' }}>
+            <span className="tag" style={{ padding: "4px 12px" }}>
               {category.label}
             </span>
             {hasTools && (
-              <span className="tag" style={{ padding: '4px 12px' }}>
+              <span className="tag" style={{ padding: "4px 12px" }}>
                 OAuth
               </span>
             )}
-            {hasTools && skill.tools!.map(t => (
-              <span key={t.id} className="tag" style={{ padding: '4px 12px' }}>
-                {t.provider}
-              </span>
-            ))}
+            {hasTools &&
+              skill.tools!.map((t) => (
+                <span key={t.id} className="tag" style={{ padding: "4px 12px" }}>
+                  {t.provider}
+                </span>
+              ))}
           </div>
 
           {/* Quick info row */}
           <div
             className="flex items-center gap-4 mt-4 pt-4"
-            style={{ borderTop: '1px solid var(--color-border-subtle)' }}
+            style={{ borderTop: "1px solid var(--color-border-subtle)" }}
           >
             <div className="flex items-center gap-2">
-              <span style={{ fontSize: 12, color: 'var(--color-text-tertiary)' }}>Works in</span>
+              <span style={{ fontSize: 12, color: "var(--color-text-tertiary)" }}>Works in</span>
               <div className="flex items-center gap-1.5">
                 <SlackIcon size={14} />
                 <DiscordIcon size={14} />
                 <TelegramIcon size={14} />
               </div>
             </div>
-            <span style={{ fontSize: 12, color: 'var(--color-text-tertiary)' }}>·</span>
-            <span style={{ fontSize: 12, color: 'var(--color-text-tertiary)' }}>
-              Managed by <span style={{ color: 'var(--color-brand-primary)', fontWeight: 500 }}>nexu</span>
+            <span style={{ fontSize: 12, color: "var(--color-text-tertiary)" }}>·</span>
+            <span style={{ fontSize: 12, color: "var(--color-text-tertiary)" }}>
+              Managed by{" "}
+              <span style={{ color: "var(--color-brand-primary)", fontWeight: 500 }}>nexu</span>
             </span>
           </div>
         </div>
@@ -359,14 +450,28 @@ export default function SkillDetailPage() {
         {/* ── OAuth Tools Section ───────────────────────────── */}
         {hasTools && (
           <div style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 12 }}>
+            <h2
+              style={{
+                fontSize: 14,
+                fontWeight: 600,
+                color: "var(--color-text-primary)",
+                marginBottom: 12,
+              }}
+            >
               Connected Tools
             </h2>
-            <p style={{ fontSize: 14, color: 'var(--color-text-secondary)', marginBottom: 16, lineHeight: 1.5 }}>
+            <p
+              style={{
+                fontSize: 14,
+                color: "var(--color-text-secondary)",
+                marginBottom: 16,
+                lineHeight: 1.5,
+              }}
+            >
               We manage OAuth, token refresh, and scopes — you just chat.
             </p>
             <div className="space-y-3">
-              {skill.tools!.map(tool => {
+              {skill.tools!.map((tool) => {
                 const isAuthed = authorizedTools.has(tool.id);
                 const isAuthing = authorizingToolId === tool.id;
                 return (
@@ -376,12 +481,16 @@ export default function SkillDetailPage() {
                     style={{
                       padding: 16,
                       borderRadius: 8,
-                      border: '1px solid var(--color-border)',
-                      backgroundColor: 'var(--color-surface-1)',
-                      transition: 'border-color 0.15s ease',
+                      border: "1px solid var(--color-border)",
+                      backgroundColor: "var(--color-surface-1)",
+                      transition: "border-color 0.15s ease",
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(61,185,206,0.3)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = "rgba(61,185,206,0.3)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = "var(--color-border)";
+                    }}
                   >
                     <div className="flex items-center gap-3">
                       <div
@@ -390,14 +499,32 @@ export default function SkillDetailPage() {
                           width: 40,
                           height: 40,
                           borderRadius: 12,
-                          backgroundColor: 'var(--color-surface-2)',
+                          backgroundColor: "var(--color-surface-2)",
                         }}
                       >
-                        <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-text-tertiary)' }}>{tool.name[0]}</span>
+                        <span
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 700,
+                            color: "var(--color-text-tertiary)",
+                          }}
+                        >
+                          {tool.name[0]}
+                        </span>
                       </div>
                       <div>
-                        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)' }}>{tool.name}</div>
-                        <div style={{ fontSize: 12, color: 'var(--color-text-tertiary)' }}>{tool.provider} · OAuth 2.0</div>
+                        <div
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 600,
+                            color: "var(--color-text-primary)",
+                          }}
+                        >
+                          {tool.name}
+                        </div>
+                        <div style={{ fontSize: 12, color: "var(--color-text-tertiary)" }}>
+                          {tool.provider} · OAuth 2.0
+                        </div>
                       </div>
                     </div>
                     {isAuthed ? (
@@ -417,9 +544,9 @@ export default function SkillDetailPage() {
                               style={{
                                 width: 12,
                                 height: 12,
-                                border: '1.5px solid rgba(255,255,255,0.3)',
-                                borderTopColor: 'var(--color-accent-fg)',
-                                borderRadius: '50%',
+                                border: "1.5px solid rgba(255,255,255,0.3)",
+                                borderTopColor: "var(--color-accent-fg)",
+                                borderRadius: "50%",
                               }}
                             />
                             Connecting...
@@ -442,10 +569,24 @@ export default function SkillDetailPage() {
         {/* ── Example Prompts ─────────────────────────────────── */}
         {skill.examples && skill.examples.length > 0 && (
           <div style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 12 }}>
+            <h2
+              style={{
+                fontSize: 14,
+                fontWeight: 600,
+                color: "var(--color-text-primary)",
+                marginBottom: 12,
+              }}
+            >
               Try saying
             </h2>
-            <p style={{ fontSize: 14, color: 'var(--color-text-secondary)', marginBottom: 16, lineHeight: 1.5 }}>
+            <p
+              style={{
+                fontSize: 14,
+                color: "var(--color-text-secondary)",
+                marginBottom: 16,
+                lineHeight: 1.5,
+              }}
+            >
               Copy the prompts below and send to nexu to try this skill.
             </p>
             <div className="space-y-2">
@@ -457,18 +598,18 @@ export default function SkillDetailPage() {
                   style={{
                     padding: 14,
                     borderRadius: 8,
-                    border: '1px solid var(--color-border)',
-                    backgroundColor: 'var(--color-surface-1)',
-                    transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
-                    fontFamily: 'Manrope, PingFang SC, sans-serif',
+                    border: "1px solid var(--color-border)",
+                    backgroundColor: "var(--color-surface-1)",
+                    transition: "border-color 0.15s ease, box-shadow 0.15s ease",
+                    fontFamily: "Manrope, PingFang SC, sans-serif",
                   }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.borderColor = 'rgba(61,185,206,0.3)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-rest)';
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(61,185,206,0.3)";
+                    e.currentTarget.style.boxShadow = "var(--shadow-rest)";
                   }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.borderColor = 'var(--color-border)';
-                    e.currentTarget.style.boxShadow = 'none';
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "var(--color-border)";
+                    e.currentTarget.style.boxShadow = "none";
                   }}
                 >
                   <div
@@ -477,19 +618,41 @@ export default function SkillDetailPage() {
                       width: 28,
                       height: 28,
                       borderRadius: 8,
-                      backgroundColor: 'var(--color-brand-subtle)',
+                      backgroundColor: "var(--color-brand-subtle)",
                     }}
                   >
-                    <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-brand-primary)' }}>{i + 1}</span>
+                    <span
+                      style={{ fontSize: 12, fontWeight: 700, color: "var(--color-brand-primary)" }}
+                    >
+                      {i + 1}
+                    </span>
                   </div>
-                  <span className="flex-1" style={{ fontSize: 14, color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{ex}</span>
-                  <div className="shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100" style={{ transition: 'opacity 0.15s ease' }}>
+                  <span
+                    className="flex-1"
+                    style={{ fontSize: 14, color: "var(--color-text-secondary)", lineHeight: 1.5 }}
+                  >
+                    {ex}
+                  </span>
+                  <div
+                    className="shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100"
+                    style={{ transition: "opacity 0.15s ease" }}
+                  >
                     {copiedPrompt === i + 100 ? (
-                      <span style={{ fontSize: 11, fontWeight: 500, color: 'var(--color-success)' }} className="flex items-center gap-1">
+                      <span
+                        style={{ fontSize: 11, fontWeight: 500, color: "var(--color-success)" }}
+                        className="flex items-center gap-1"
+                      >
                         <Check size={12} /> Copied
                       </span>
                     ) : (
-                      <span style={{ fontSize: 11, fontWeight: 500, color: 'var(--color-text-tertiary)' }} className="flex items-center gap-1">
+                      <span
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 500,
+                          color: "var(--color-text-tertiary)",
+                        }}
+                        className="flex items-center gap-1"
+                      >
                         <Copy size={12} /> Copy
                       </span>
                     )}
@@ -503,7 +666,14 @@ export default function SkillDetailPage() {
         {/* ── Capabilities Grid ───────────────────────────────── */}
         {skill.examples && skill.examples.length > 0 && (
           <div style={{ marginBottom: 32 }}>
-            <h2 style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 16 }}>
+            <h2
+              style={{
+                fontSize: 14,
+                fontWeight: 600,
+                color: "var(--color-text-primary)",
+                marginBottom: 16,
+              }}
+            >
               What you can do with {skill.name}
             </h2>
             <div className="grid sm:grid-cols-2 gap-3">
@@ -515,18 +685,18 @@ export default function SkillDetailPage() {
                   style={{
                     padding: 16,
                     borderRadius: 8,
-                    border: '1px solid var(--color-border)',
-                    backgroundColor: 'var(--color-surface-1)',
-                    transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
-                    fontFamily: 'Manrope, PingFang SC, sans-serif',
+                    border: "1px solid var(--color-border)",
+                    backgroundColor: "var(--color-surface-1)",
+                    transition: "border-color 0.15s ease, box-shadow 0.15s ease",
+                    fontFamily: "Manrope, PingFang SC, sans-serif",
                   }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.borderColor = 'rgba(61,185,206,0.3)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-card)';
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(61,185,206,0.3)";
+                    e.currentTarget.style.boxShadow = "var(--shadow-card)";
                   }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.borderColor = 'var(--color-border)';
-                    e.currentTarget.style.boxShadow = 'none';
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "var(--color-border)";
+                    e.currentTarget.style.boxShadow = "none";
                   }}
                 >
                   <div className="flex items-start gap-3">
@@ -536,20 +706,45 @@ export default function SkillDetailPage() {
                         width: 28,
                         height: 28,
                         borderRadius: 8,
-                        backgroundColor: 'var(--color-brand-subtle)',
+                        backgroundColor: "var(--color-brand-subtle)",
                       }}
                     >
-                      <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-brand-primary)' }}>{i + 1}</span>
+                      <span
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 700,
+                          color: "var(--color-brand-primary)",
+                        }}
+                      >
+                        {i + 1}
+                      </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p style={{ fontSize: 14, color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>{example}</p>
-                      <div className="flex items-center gap-1 mt-2 opacity-0 group-hover:opacity-100" style={{ transition: 'opacity 0.15s ease' }}>
+                      <p
+                        style={{
+                          fontSize: 14,
+                          color: "var(--color-text-secondary)",
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {example}
+                      </p>
+                      <div
+                        className="flex items-center gap-1 mt-2 opacity-0 group-hover:opacity-100"
+                        style={{ transition: "opacity 0.15s ease" }}
+                      >
                         {copiedPrompt === i ? (
-                          <span style={{ fontSize: 11, color: 'var(--color-success)', fontWeight: 500 }} className="flex items-center gap-1">
+                          <span
+                            style={{ fontSize: 11, color: "var(--color-success)", fontWeight: 500 }}
+                            className="flex items-center gap-1"
+                          >
                             <Check size={10} /> Copied
                           </span>
                         ) : (
-                          <span style={{ fontSize: 11, color: 'var(--color-text-tertiary)' }} className="flex items-center gap-1">
+                          <span
+                            style={{ fontSize: 11, color: "var(--color-text-tertiary)" }}
+                            className="flex items-center gap-1"
+                          >
                             <Copy size={10} /> Click to copy
                           </span>
                         )}
@@ -566,35 +761,74 @@ export default function SkillDetailPage() {
 
         {/* ── IM Integrations ──────────────────────────────────── */}
         <div style={{ marginBottom: 32 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 4 }}>
+          <h2
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: "var(--color-text-primary)",
+              marginBottom: 4,
+            }}
+          >
             Use {skill.name} in any team chat
           </h2>
-          <p style={{ fontSize: 14, color: 'var(--color-text-secondary)', marginBottom: 16, lineHeight: 1.5 }}>
+          <p
+            style={{
+              fontSize: 14,
+              color: "var(--color-text-secondary)",
+              marginBottom: 16,
+              lineHeight: 1.5,
+            }}
+          >
             nexu lives where your team already works. No new app to install.
           </p>
           <div className="grid sm:grid-cols-3 gap-3">
             {[
-              { name: 'Slack', icon: SlackIcon, desc: 'Add nexu to your Slack workspace', bg: 'rgba(74,21,75,0.04)' },
-              { name: 'Discord', icon: DiscordIcon, desc: 'Invite nexu to your Discord server', bg: 'rgba(88,101,242,0.04)' },
-              { name: 'Telegram', icon: TelegramIcon, desc: 'Add nexu bot to your Telegram group', bg: 'rgba(38,165,228,0.04)' },
-            ].map(platform => (
+              {
+                name: "Slack",
+                icon: SlackIcon,
+                desc: "Add nexu to your Slack workspace",
+                bg: "rgba(74,21,75,0.04)",
+              },
+              {
+                name: "Discord",
+                icon: DiscordIcon,
+                desc: "Invite nexu to your Discord server",
+                bg: "rgba(88,101,242,0.04)",
+              },
+              {
+                name: "Telegram",
+                icon: TelegramIcon,
+                desc: "Add nexu bot to your Telegram group",
+                bg: "rgba(38,165,228,0.04)",
+              },
+            ].map((platform) => (
               <div
                 key={platform.name}
                 style={{
                   padding: 16,
                   borderRadius: 8,
-                  border: '1px solid var(--color-border)',
+                  border: "1px solid var(--color-border)",
                   backgroundColor: platform.bg,
-                  transition: 'border-color 0.15s ease',
+                  transition: "border-color 0.15s ease",
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-border-hover)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "var(--color-border-hover)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "var(--color-border)";
+                }}
               >
                 <div className="flex items-center gap-3 mb-2">
                   <platform.icon size={20} />
-                  <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)' }}>{platform.name}</span>
+                  <span
+                    style={{ fontSize: 14, fontWeight: 600, color: "var(--color-text-primary)" }}
+                  >
+                    {platform.name}
+                  </span>
                 </div>
-                <p style={{ fontSize: 12, color: 'var(--color-text-tertiary)', lineHeight: 1.5 }}>{platform.desc}</p>
+                <p style={{ fontSize: 12, color: "var(--color-text-tertiary)", lineHeight: 1.5 }}>
+                  {platform.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -604,32 +838,39 @@ export default function SkillDetailPage() {
 
         {/* ── Why nexu ────────────────────────────────────────── */}
         <div style={{ marginBottom: 32 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 16 }}>
+          <h2
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: "var(--color-text-primary)",
+              marginBottom: 16,
+            }}
+          >
             Why use {skill.name} with nexu?
           </h2>
           <div className="grid sm:grid-cols-2 gap-4">
             {[
               {
                 icon: Sparkles,
-                title: 'AI-Native Integration',
+                title: "AI-Native Integration",
                 desc: `${skill.name} is deeply integrated with nexu's AI engine — structured schemas, smart error handling, and LLM-optimized responses.`,
               },
               {
                 icon: Lock,
-                title: 'Managed Auth',
-                desc: 'Built-in OAuth handling with automatic token refresh and rotation. Per-user credentials, never hard-coded keys.',
+                title: "Managed Auth",
+                desc: "Built-in OAuth handling with automatic token refresh and rotation. Per-user credentials, never hard-coded keys.",
               },
               {
                 icon: RefreshCw,
-                title: 'Agent-Optimized',
-                desc: 'Tools are tuned using real error and success rates to improve reliability over time. Comprehensive execution logs.',
+                title: "Agent-Optimized",
+                desc: "Tools are tuned using real error and success rates to improve reliability over time. Comprehensive execution logs.",
               },
               {
                 icon: Shield,
-                title: 'Enterprise-Grade Security',
-                desc: 'Fine-grained RBAC, scoped least-privilege access, full audit trail. SOC 2 compliance for enterprise plans.',
+                title: "Enterprise-Grade Security",
+                desc: "Fine-grained RBAC, scoped least-privilege access, full audit trail. SOC 2 compliance for enterprise plans.",
               },
-            ].map(item => (
+            ].map((item) => (
               <div key={item.title} className="flex gap-3">
                 <div
                   className="flex items-center justify-center shrink-0"
@@ -637,14 +878,32 @@ export default function SkillDetailPage() {
                     width: 40,
                     height: 40,
                     borderRadius: 12,
-                    backgroundColor: 'var(--color-brand-subtle)',
+                    backgroundColor: "var(--color-brand-subtle)",
                   }}
                 >
-                  <item.icon size={18} style={{ color: 'var(--color-brand-primary)' }} />
+                  <item.icon size={18} style={{ color: "var(--color-brand-primary)" }} />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 4 }}>{item.title}</h3>
-                  <p style={{ fontSize: 14, color: 'var(--color-text-secondary)', lineHeight: 1.5, margin: 0 }}>{item.desc}</p>
+                  <h3
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: "var(--color-text-primary)",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: 14,
+                      color: "var(--color-text-secondary)",
+                      lineHeight: 1.5,
+                      margin: 0,
+                    }}
+                  >
+                    {item.desc}
+                  </p>
                 </div>
               </div>
             ))}
@@ -656,18 +915,22 @@ export default function SkillDetailPage() {
         {/* ── Related Skills ───────────────────────────────────── */}
         <div style={{ marginBottom: 32 }}>
           <div className="flex items-center justify-between mb-4">
-            <h2 style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)', margin: 0 }}>
+            <h2
+              style={{
+                fontSize: 14,
+                fontWeight: 600,
+                color: "var(--color-text-primary)",
+                margin: 0,
+              }}
+            >
               Explore other skills
             </h2>
-            <Link
-              to="/openclaw/skills"
-              className="text-link"
-            >
+            <Link to="/openclaw/skills" className="text-link">
               View all <ArrowRight size={14} />
             </Link>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {allRelated.map(s => (
+            {allRelated.map((s) => (
               <RelatedSkillCard key={s.id} skill={s} />
             ))}
           </div>
@@ -677,7 +940,14 @@ export default function SkillDetailPage() {
 
         {/* ── FAQ ──────────────────────────────────────────────── */}
         <div style={{ marginBottom: 32 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 16 }}>
+          <h2
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: "var(--color-text-primary)",
+              marginBottom: 16,
+            }}
+          >
             Frequently Asked Questions
           </h2>
           <div>
@@ -716,62 +986,123 @@ export default function SkillDetailPage() {
         <Separator className="my-8" />
 
         {/* ── CTA ─────────────────────────────────────────────── */}
-        <div className="text-center" style={{ padding: '16px 0 40px 0' }}>
-          <h2 style={{ fontSize: 20, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 8 }}>
+        <div className="text-center" style={{ padding: "16px 0 40px 0" }}>
+          <h2
+            style={{
+              fontSize: 20,
+              fontWeight: 600,
+              color: "var(--color-text-primary)",
+              marginBottom: 8,
+            }}
+          >
             Start using {skill.name} in your team chat
           </h2>
-          <p style={{ fontSize: 14, color: 'var(--color-text-tertiary)', marginBottom: 20, maxWidth: 480, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.5 }}>
-            Deploy in 3 sentences — no code, no setup. Your AI coworker with memory, a cloud computer & 1000+ tools, 24/7 next to your team.
-          </p>
-          <Button
-            onClick={goToAuth}
-            size="lg"
-            className="rounded-full px-7"
+          <p
+            style={{
+              fontSize: 14,
+              color: "var(--color-text-tertiary)",
+              marginBottom: 20,
+              maxWidth: 480,
+              marginLeft: "auto",
+              marginRight: "auto",
+              lineHeight: 1.5,
+            }}
           >
+            Deploy in 3 sentences — no code, no setup. Your AI coworker with memory, a cloud
+            computer & 1000+ tools, 24/7 next to your team.
+          </p>
+          <Button onClick={goToAuth} size="lg" className="rounded-full px-7">
             Get started free <ArrowRight size={14} />
           </Button>
         </div>
       </div>
 
       {/* ── Footer ─────────────────────────────────────────── */}
-      <footer style={{ borderTop: '1px solid var(--color-border)' }}>
+      <footer style={{ borderTop: "1px solid var(--color-border)" }}>
         <div
           className="flex justify-between items-center"
-          style={{ maxWidth: 800, margin: '0 auto', padding: '20px 24px' }}
+          style={{ maxWidth: 800, margin: "0 auto", padding: "20px 24px" }}
         >
           <div className="flex items-center gap-2">
             <div
               className="flex items-center justify-center"
-              style={{ width: 20, height: 20, borderRadius: 4, backgroundColor: 'var(--color-brand-primary)' }}
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 4,
+                backgroundColor: "var(--color-brand-primary)",
+              }}
             >
-              <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--color-accent-fg)' }}>N</span>
+              <span style={{ fontSize: 9, fontWeight: 700, color: "var(--color-accent-fg)" }}>
+                N
+              </span>
             </div>
-            <span style={{ fontSize: 12, color: 'var(--color-text-tertiary)' }}>
+            <span style={{ fontSize: 12, color: "var(--color-text-tertiary)" }}>
               © 2026 Powerformer, Inc.
             </span>
           </div>
-          <div className="flex gap-5" style={{ fontSize: 12, color: 'var(--color-text-tertiary)' }}>
-            <a href="#" style={{ color: 'var(--color-text-tertiary)', textDecoration: 'none', transition: 'color 0.15s ease' }}
-              onMouseEnter={e => { e.currentTarget.style.color = 'var(--color-text-secondary)'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'var(--color-text-tertiary)'; }}
+          <div className="flex gap-5" style={{ fontSize: 12, color: "var(--color-text-tertiary)" }}>
+            <a
+              href="#"
+              style={{
+                color: "var(--color-text-tertiary)",
+                textDecoration: "none",
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "var(--color-text-secondary)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "var(--color-text-tertiary)";
+              }}
             >
               X / Twitter
             </a>
-            <a href="#" style={{ color: 'var(--color-text-tertiary)', textDecoration: 'none', transition: 'color 0.15s ease' }}
-              onMouseEnter={e => { e.currentTarget.style.color = 'var(--color-text-secondary)'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'var(--color-text-tertiary)'; }}
+            <a
+              href="#"
+              style={{
+                color: "var(--color-text-tertiary)",
+                textDecoration: "none",
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "var(--color-text-secondary)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "var(--color-text-tertiary)";
+              }}
             >
               Docs
             </a>
-            <Link to="/openclaw/privacy" style={{ color: 'var(--color-text-tertiary)', textDecoration: 'none', transition: 'color 0.15s ease' }}
-              onMouseEnter={e => { e.currentTarget.style.color = 'var(--color-text-secondary)'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'var(--color-text-tertiary)'; }}
+            <Link
+              to="/openclaw/privacy"
+              style={{
+                color: "var(--color-text-tertiary)",
+                textDecoration: "none",
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "var(--color-text-secondary)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "var(--color-text-tertiary)";
+              }}
             >
               Privacy Policy
             </Link>
-            <Link to="/openclaw/terms" style={{ color: 'var(--color-text-tertiary)', textDecoration: 'none', transition: 'color 0.15s ease' }}
-              onMouseEnter={e => { e.currentTarget.style.color = 'var(--color-text-secondary)'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'var(--color-text-tertiary)'; }}
+            <Link
+              to="/openclaw/terms"
+              style={{
+                color: "var(--color-text-tertiary)",
+                textDecoration: "none",
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "var(--color-text-secondary)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "var(--color-text-tertiary)";
+              }}
             >
               Terms of Service
             </Link>

@@ -1,6 +1,10 @@
 import {
   Badge,
   Button,
+  DataTableHeader as ComposedDataTableHeader,
+  DataTable,
+  DataTableDescription,
+  DataTableTitle,
   Table,
   TableBody,
   TableCell,
@@ -70,7 +74,15 @@ export default function NexuTaskPage() {
 
           <section className="card p-5">
             <h3 className="text-xs font-medium uppercase tracking-wider text-text-muted">指派给</h3>
-            <div className="mt-3 overflow-hidden rounded-xl border border-border bg-surface-0">
+            <DataTable className="mt-3 bg-surface-0">
+              <ComposedDataTableHeader>
+                <div>
+                  <DataTableTitle>分身候选</DataTableTitle>
+                  <DataTableDescription>
+                    选择最适合执行当前任务的分身，或交给系统自动分配。
+                  </DataTableDescription>
+                </div>
+              </ComposedDataTableHeader>
               <Table density="compact">
                 <TableHeader>
                   <TableRow>
@@ -122,7 +134,7 @@ export default function NexuTaskPage() {
                   })}
                 </TableBody>
               </Table>
-            </div>
+            </DataTable>
           </section>
 
           <div className="flex flex-wrap items-center gap-3">

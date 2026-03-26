@@ -1,6 +1,11 @@
 import {
   Badge,
   Button,
+  DataTable,
+  DataTableDescription,
+  DataTableFooter,
+  DataTableHeader,
+  DataTableTitle,
   Progress,
   Table,
   TableBody,
@@ -441,14 +446,14 @@ function CompactTaskTable({
   onToggleExpand: (id: string) => void;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-surface-1">
-      <div className="flex items-center justify-between border-b border-border px-4 py-3">
+    <DataTable>
+      <DataTableHeader>
         <div>
-          <div className="text-[12px] font-semibold text-text-primary">紧凑列表视图</div>
-          <div className="text-[11px] text-text-muted">用于快速扫描负责人、优先级与进度</div>
+          <DataTableTitle>紧凑列表视图</DataTableTitle>
+          <DataTableDescription>用于快速扫描负责人、优先级与进度</DataTableDescription>
         </div>
         <div className="text-[11px] text-text-muted">{tasks.length} 条任务</div>
-      </div>
+      </DataTableHeader>
       <Table density="compact">
         <TableHeader>
           <TableRow>
@@ -552,7 +557,11 @@ function CompactTaskTable({
           })}
         </TableBody>
       </Table>
-    </div>
+      <DataTableFooter>
+        <span>点击行查看详情，左侧按钮展开更多上下文。</span>
+        <span>{expandedIds.size} 条已展开</span>
+      </DataTableFooter>
+    </DataTable>
   );
 }
 

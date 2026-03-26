@@ -1,38 +1,38 @@
-import { useState } from "react";
+import { Button, PanelFooter, PanelFooterActions } from "@nexu/ui-web";
 import {
-  X,
-  Send,
-  ExternalLink,
+  Activity,
+  AlertTriangle,
+  ArrowRight,
+  BarChart3,
   CheckCircle,
   Clock,
-  AlertTriangle,
+  ExternalLink,
   FileText,
   GitPullRequest,
-  Users,
-  BarChart3,
-  Activity,
   MessageSquare,
-  ArrowRight,
+  Send,
+  Users,
+  X,
 } from "lucide-react";
+import { useState } from "react";
 import {
-  type IMCard,
-  type TeamMember,
-  type SprintTask,
-  type TaskItem,
+  type ALIGNMENT_HISTORY,
+  type ActivityItem,
+  type BIPStep,
   CARD_BIP_FLOWS,
   CARD_FILE_OPS,
-  MEMBER_ACTIVITIES,
-  TASK_CHANGE_LOGS,
-  ALIGNMENT_HISTORY,
-  SPRINT_TASKS,
-  TASK_BOARD,
-  TEAM_MEMBERS,
-  OBJECTIVES,
-  type BIPStep,
   type FileOp,
-  type ActivityItem,
+  type IMCard,
+  MEMBER_ACTIVITIES,
+  OBJECTIVES,
+  SPRINT_TASKS,
+  type SprintTask,
+  TASK_BOARD,
+  TASK_CHANGE_LOGS,
+  TEAM_MEMBERS,
+  type TaskItem,
+  type TeamMember,
 } from "./teamData";
-import { Button } from '@nexu/ui-web'
 
 // ─── Shared Components ─────────────────────────────────────
 
@@ -69,9 +69,7 @@ function PanelShell({
               {badge}
             </span>
           )}
-          <h3 className="text-[13px] font-semibold text-text-primary truncate">
-            {title}
-          </h3>
+          <h3 className="text-[13px] font-semibold text-text-primary truncate">{title}</h3>
         </div>
         <button
           onClick={onClose}
@@ -81,9 +79,7 @@ function PanelShell({
         </button>
       </div>
       <div className="overflow-y-auto flex-1 min-h-0">{children}</div>
-      {footer && (
-        <div className="p-3 border-t border-border shrink-0">{footer}</div>
-      )}
+      {footer && <PanelFooter className="shrink-0 px-3 py-3">{footer}</PanelFooter>}
     </div>
   );
 }
@@ -103,15 +99,11 @@ function BIPFlowSection({ steps }: { steps: BIPStep[] }) {
                   step.status === "done"
                     ? "bg-success text-white"
                     : step.status === "active"
-                    ? "bg-warning text-white animate-pulse"
-                    : "bg-surface-3 text-text-muted"
+                      ? "bg-warning text-white animate-pulse"
+                      : "bg-surface-3 text-text-muted"
                 }`}
               >
-                {step.status === "done"
-                  ? "✓"
-                  : step.status === "active"
-                  ? "⏳"
-                  : i + 1}
+                {step.status === "done" ? "✓" : step.status === "active" ? "⏳" : i + 1}
               </div>
               {i < steps.length - 1 && (
                 <div
@@ -122,13 +114,9 @@ function BIPFlowSection({ steps }: { steps: BIPStep[] }) {
               )}
             </div>
             <div className="flex-1 pb-3 min-w-0">
-              <div className="text-[11px] text-text-primary font-medium">
-                {step.label}
-              </div>
+              <div className="text-[11px] text-text-primary font-medium">{step.label}</div>
               {step.detail && (
-                <div className="text-[10px] text-text-muted mt-0.5 font-mono">
-                  {step.detail}
-                </div>
+                <div className="text-[10px] text-text-muted mt-0.5 font-mono">{step.detail}</div>
               )}
             </div>
           </div>
@@ -160,15 +148,11 @@ function FileOpsSection({ ops }: { ops: FileOp[] }) {
               key={i}
               className="flex items-center gap-1.5 p-2 bg-surface-1 border border-border rounded-lg text-[11px]"
             >
-              <span
-                className={`px-1 py-0.5 rounded text-[8px] font-bold ${s.color}`}
-              >
+              <span className={`px-1 py-0.5 rounded text-[8px] font-bold ${s.color}`}>
                 {s.label}
               </span>
               <FileText size={10} className="text-text-muted shrink-0" />
-              <span className="font-medium truncate text-text-primary">
-                {file}
-              </span>
+              <span className="font-medium truncate text-text-primary">{file}</span>
               <span className="text-text-muted truncate ml-auto text-[9px] font-mono">
                 {parts.join("/")}/
               </span>
@@ -187,13 +171,12 @@ function ActivitySection({
   items: ActivityItem[];
   title?: string;
 }) {
-  const TYPE_ICONS: Record<string, { icon: React.ElementType; color: string }> =
-    {
-      card: { icon: MessageSquare, color: "text-clone" },
-      task: { icon: Activity, color: "text-info" },
-      alignment: { icon: GitPullRequest, color: "text-warning" },
-      session: { icon: MessageSquare, color: "text-success" },
-    };
+  const TYPE_ICONS: Record<string, { icon: React.ElementType; color: string }> = {
+    card: { icon: MessageSquare, color: "text-clone" },
+    task: { icon: Activity, color: "text-info" },
+    alignment: { icon: GitPullRequest, color: "text-warning" },
+    session: { icon: MessageSquare, color: "text-success" },
+  };
 
   return (
     <div className="px-4 py-3">
@@ -210,12 +193,8 @@ function ActivitySection({
             >
               <t.icon size={12} className={`${t.color} shrink-0 mt-0.5`} />
               <div className="flex-1 min-w-0">
-                <div className="text-[11px] text-text-primary">
-                  {item.content}
-                </div>
-                <div className="text-[9px] text-text-muted mt-0.5">
-                  {item.time}
-                </div>
+                <div className="text-[11px] text-text-primary">{item.content}</div>
+                <div className="text-[9px] text-text-muted mt-0.5">{item.time}</div>
               </div>
             </div>
           );
@@ -298,12 +277,12 @@ export function CardDetailPanel({
         card.type === "summary_report"
           ? "站会汇总详情"
           : card.type === "status_query"
-          ? `${(card as any).target} 任务进度`
-          : card.type === "alignment_request"
-          ? (card as any).topic
-          : card.type === "event_notification"
-          ? (card as any).event
-          : (card as any).taskTitle
+            ? `${(card as any).target} 任务进度`
+            : card.type === "alignment_request"
+              ? (card as any).topic
+              : card.type === "event_notification"
+                ? (card as any).event
+                : (card as any).taskTitle
       }
       badge={typeInfo.label}
       badgeColor={typeInfo.color}
@@ -312,14 +291,22 @@ export function CardDetailPanel({
       footer={
         <div className="space-y-2">
           <FollowUpInput placeholder="追问详情、调整排期..." />
-          <div className="flex gap-2 items-center">
-            <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors">
+          <PanelFooterActions>
+            <Button
+              type="button"
+              size="inline"
+              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors"
+            >
               <ExternalLink size={10} /> 在 Session 中展开
             </Button>
-            <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent/10 border border-accent/20 rounded-lg text-[11px] text-accent hover:bg-accent/15 transition-colors">
+            <Button
+              type="button"
+              size="inline"
+              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent/10 border border-accent/20 rounded-lg text-[11px] text-accent hover:bg-accent/15 transition-colors"
+            >
               <ArrowRight size={10} /> 查看相关任务
             </Button>
-          </div>
+          </PanelFooterActions>
         </div>
       }
     >
@@ -328,21 +315,15 @@ export function CardDetailPanel({
         <div className="grid grid-cols-3 gap-3">
           <div className="text-center">
             <div className="text-[11px] text-text-muted">来源</div>
-            <div className="text-[12px] font-medium text-text-primary mt-0.5">
-              {card.from}
-            </div>
+            <div className="text-[12px] font-medium text-text-primary mt-0.5">{card.from}</div>
           </div>
           <div className="text-center">
             <div className="text-[11px] text-text-muted">渠道</div>
-            <div className="text-[12px] font-medium text-text-primary mt-0.5">
-              {card.channel}
-            </div>
+            <div className="text-[12px] font-medium text-text-primary mt-0.5">{card.channel}</div>
           </div>
           <div className="text-center">
             <div className="text-[11px] text-text-muted">时间</div>
-            <div className="text-[12px] font-medium text-text-primary mt-0.5">
-              {card.time}
-            </div>
+            <div className="text-[12px] font-medium text-text-primary mt-0.5">{card.time}</div>
           </div>
         </div>
       </div>
@@ -366,27 +347,17 @@ export function CardDetailPanel({
             </div>
             <div className="space-y-1">
               {card.members.map((m) => (
-                <div
-                  key={m.name}
-                  className="flex items-center gap-2 text-[11px]"
-                >
+                <div key={m.name} className="flex items-center gap-2 text-[11px]">
                   <span>{m.avatar}</span>
-                  <span className="font-medium text-text-primary">
-                    {m.name}
-                  </span>
-                  <span className="flex-1 truncate text-text-muted">
-                    — {m.summary}
-                  </span>
+                  <span className="font-medium text-text-primary">{m.name}</span>
+                  <span className="flex-1 truncate text-text-muted">— {m.summary}</span>
                 </div>
               ))}
             </div>
             {card.risks.length > 0 && (
               <div className="p-2 rounded-lg bg-warning-subtle/50">
                 {card.risks.map((r, i) => (
-                  <div
-                    key={i}
-                    className="text-[10px] text-warning flex items-start gap-1"
-                  >
+                  <div key={i} className="text-[10px] text-warning flex items-start gap-1">
                     <AlertTriangle size={10} className="shrink-0 mt-0.5" /> {r}
                   </div>
                 ))}
@@ -397,17 +368,10 @@ export function CardDetailPanel({
         {card.type === "status_query" && (
           <div className="space-y-2">
             {card.tasks.map((t) => (
-              <div
-                key={t.name}
-                className="flex items-center justify-between text-[11px]"
-              >
+              <div key={t.name} className="flex items-center justify-between text-[11px]">
                 <span className="text-text-primary">{t.name}</span>
                 <span
-                  className={
-                    t.progress >= 100
-                      ? "text-success font-medium"
-                      : "text-text-muted"
-                  }
+                  className={t.progress >= 100 ? "text-success font-medium" : "text-text-muted"}
                 >
                   {t.progress}%
                 </span>
@@ -422,9 +386,7 @@ export function CardDetailPanel({
         )}
         {card.type === "alignment_request" && (
           <div className="space-y-2">
-            <div className="text-[12px] text-text-primary font-medium">
-              {card.topic}
-            </div>
+            <div className="text-[12px] text-text-primary font-medium">{card.topic}</div>
             <div className="text-[11px] text-text-secondary">{card.reason}</div>
             <div className="text-[11px] text-clone">🎯 {card.suggestion}</div>
           </div>
@@ -433,10 +395,7 @@ export function CardDetailPanel({
           <div className="space-y-2">
             <div className="text-[12px] text-text-primary">{card.impact}</div>
             {card.updates.map((u, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-1.5 text-[11px] text-text-secondary"
-              >
+              <div key={i} className="flex items-center gap-1.5 text-[11px] text-text-secondary">
                 <div className="w-1 h-1 rounded-full bg-success" /> {u}
               </div>
             ))}
@@ -446,9 +405,7 @@ export function CardDetailPanel({
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-2">
               <div className="p-2 text-center rounded-lg bg-success-subtle/50">
-                <div className="text-[16px] font-bold text-success">
-                  {card.timeSaved}
-                </div>
+                <div className="text-[16px] font-bold text-success">{card.timeSaved}</div>
                 <div className="text-[9px] text-text-muted">实际耗时</div>
               </div>
               <div className="p-2 text-center rounded-lg bg-surface-2">
@@ -459,8 +416,7 @@ export function CardDetailPanel({
               </div>
             </div>
             <div className="text-[11px] text-text-secondary">
-              💡 本周: {card.weeklyStats.tasks} 任务 · 节省{" "}
-              {card.weeklyStats.hours}h
+              💡 本周: {card.weeklyStats.tasks} 任务 · 节省 {card.weeklyStats.hours}h
             </div>
           </div>
         )}
@@ -494,10 +450,7 @@ export function MemberDetailPanel({
     offline: { label: "离线", color: "text-text-muted" },
   };
 
-  const TASK_STYLES: Record<
-    string,
-    { bg: string; text: string; label: string }
-  > = {
+  const TASK_STYLES: Record<string, { bg: string; text: string; label: string }> = {
     done: { bg: "bg-success-subtle", text: "text-success", label: "完成" },
     in_progress: { bg: "bg-clone/10", text: "text-clone", label: "进行中" },
     blocked: { bg: "bg-danger-subtle", text: "text-danger", label: "阻塞" },
@@ -513,14 +466,22 @@ export function MemberDetailPanel({
       icon={Users}
       onClose={onClose}
       footer={
-        <div className="flex gap-2 items-center">
-          <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors">
+        <PanelFooterActions>
+          <Button
+            type="button"
+            size="inline"
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors"
+          >
             <MessageSquare size={11} /> 查询进度
           </Button>
-          <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors">
+          <Button
+            type="button"
+            size="inline"
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors"
+          >
             <GitPullRequest size={11} /> 发起对齐
           </Button>
-        </div>
+        </PanelFooterActions>
       }
     >
       {/* Profile header */}
@@ -535,22 +496,18 @@ export function MemberDetailPanel({
                 member.status === "online"
                   ? "bg-success"
                   : member.status === "busy"
-                  ? "bg-warning"
-                  : "bg-text-muted"
+                    ? "bg-warning"
+                    : "bg-text-muted"
               }`}
             />
           </div>
           <div>
             <div className="flex gap-2 items-center">
-              <span className="text-[15px] font-bold text-text-primary">
-                {member.name}
-              </span>
+              <span className="text-[15px] font-bold text-text-primary">{member.name}</span>
               <span className="text-[10px] px-1.5 py-0.5 bg-clone/10 text-clone rounded font-medium">
                 Lv.{member.level}
               </span>
-              <span className={`text-[10px] ${statusInfo.color}`}>
-                {statusInfo.label}
-              </span>
+              <span className={`text-[10px] ${statusInfo.color}`}>{statusInfo.label}</span>
             </div>
             <div className="text-[12px] text-text-secondary mt-0.5">
               {member.role} · {member.channel}
@@ -581,15 +538,8 @@ export function MemberDetailPanel({
               small: true,
             },
           ].map((s) => (
-            <div
-              key={s.label}
-              className="p-2 text-center rounded-lg bg-surface-1"
-            >
-              <div
-                className={`text-[${
-                  (s as any).small ? "10" : "14"
-                }px] font-bold ${s.color}`}
-              >
+            <div key={s.label} className="p-2 text-center rounded-lg bg-surface-1">
+              <div className={`text-[${(s as any).small ? "10" : "14"}px] font-bold ${s.color}`}>
                 {s.value}
               </div>
               <div className="text-[8px] text-text-muted mt-0.5">{s.label}</div>
@@ -611,14 +561,10 @@ export function MemberDetailPanel({
                 key={task.id}
                 className="flex gap-2 items-center p-2 rounded-lg border bg-surface-1 border-border"
               >
-                <span
-                  className={`text-[8px] px-1 py-0.5 rounded font-bold ${st.bg} ${st.text}`}
-                >
+                <span className={`text-[8px] px-1 py-0.5 rounded font-bold ${st.bg} ${st.text}`}>
                   {st.label}
                 </span>
-                <span className="text-[11px] text-text-primary flex-1 truncate">
-                  {task.title}
-                </span>
+                <span className="text-[11px] text-text-primary flex-1 truncate">{task.title}</span>
                 <div className="overflow-hidden w-12 h-1 rounded-full bg-surface-3">
                   <div
                     className={`h-full rounded-full ${
@@ -627,16 +573,12 @@ export function MemberDetailPanel({
                     style={{ width: `${task.progress}%` }}
                   />
                 </div>
-                <span className="text-[9px] text-text-muted tabular-nums">
-                  {task.progress}%
-                </span>
+                <span className="text-[9px] text-text-muted tabular-nums">{task.progress}%</span>
               </div>
             );
           })}
           {tasks.length === 0 && (
-            <div className="text-[11px] text-text-muted py-2 text-center">
-              暂无任务
-            </div>
+            <div className="text-[11px] text-text-muted py-2 text-center">暂无任务</div>
           )}
         </div>
       </div>
@@ -668,14 +610,22 @@ export function AlignmentDetailPanel({
       icon={GitPullRequest}
       onClose={onClose}
       footer={
-        <div className="flex gap-2 items-center">
-          <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors">
+        <PanelFooterActions>
+          <Button
+            type="button"
+            size="inline"
+            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors"
+          >
             <ExternalLink size={10} /> 查看相关对话
           </Button>
-          <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent/10 border border-accent/20 rounded-lg text-[11px] text-accent hover:bg-accent/15 transition-colors">
+          <Button
+            type="button"
+            size="inline"
+            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent/10 border border-accent/20 rounded-lg text-[11px] text-accent hover:bg-accent/15 transition-colors"
+          >
             <GitPullRequest size={10} /> 重新发起
           </Button>
-        </div>
+        </PanelFooterActions>
       }
     >
       {/* Alignment summary */}
@@ -694,15 +644,11 @@ export function AlignmentDetailPanel({
         <div className="space-y-2">
           <div>
             <div className="text-[10px] text-text-muted mb-0.5">话题</div>
-            <div className="text-[13px] text-text-primary font-medium">
-              {alignment.topic}
-            </div>
+            <div className="text-[13px] text-text-primary font-medium">{alignment.topic}</div>
           </div>
           <div className="p-2.5 bg-surface-1 border border-border rounded-lg">
             <div className="text-[10px] text-text-muted mb-0.5">📎 原因</div>
-            <div className="text-[11px] text-text-secondary">
-              {alignment.reason}
-            </div>
+            <div className="text-[11px] text-text-secondary">{alignment.reason}</div>
           </div>
         </div>
       </div>
@@ -714,9 +660,7 @@ export function AlignmentDetailPanel({
         </div>
         <div
           className={`p-3 rounded-lg flex items-start gap-2.5 ${
-            alignment.status === "accepted"
-              ? "bg-success-subtle/50"
-              : "bg-danger-subtle/50"
+            alignment.status === "accepted" ? "bg-success-subtle/50" : "bg-danger-subtle/50"
           }`}
         >
           {alignment.status === "accepted" ? (
@@ -732,9 +676,7 @@ export function AlignmentDetailPanel({
             >
               {alignment.status === "accepted" ? "已同意" : "已拒绝"}
             </div>
-            <div className="text-[11px] text-text-secondary mt-0.5">
-              {alignment.response}
-            </div>
+            <div className="text-[11px] text-text-secondary mt-0.5">{alignment.response}</div>
           </div>
         </div>
       </div>
@@ -747,8 +689,7 @@ export function AlignmentDetailPanel({
           { label: "推送 IM 卡片到群", status: "done" },
           { label: "等待你的响应", status: "done", detail: alignment.time },
           {
-            label:
-              alignment.status === "accepted" ? "你同意了调整" : "你拒绝了调整",
+            label: alignment.status === "accepted" ? "你同意了调整" : "你拒绝了调整",
             status: "done",
             detail: alignment.response,
           },
@@ -765,9 +706,7 @@ export function AlignmentDetailPanel({
           <div className="flex items-center gap-2 p-2 bg-surface-1 border border-border rounded-lg text-[11px]">
             <Users size={11} className="text-text-muted" />
             <span className="text-text-secondary">涉及成员</span>
-            <span className="ml-auto font-medium text-text-primary">
-              {alignment.from}、你
-            </span>
+            <span className="ml-auto font-medium text-text-primary">{alignment.from}、你</span>
           </div>
           <div className="flex items-center gap-2 p-2 bg-surface-1 border border-border rounded-lg text-[11px]">
             <FileText size={11} className="text-text-muted" />
@@ -794,14 +733,9 @@ export function TaskDetailPanel({
   const member = TEAM_MEMBERS.find((m) => m.name === task.assignee);
   const changeLogs = TASK_CHANGE_LOGS[task.id] || [];
   const downstream = SPRINT_TASKS.filter((t) => t.dependency === task.id);
-  const upstream = task.dependency
-    ? SPRINT_TASKS.find((t) => t.id === task.dependency)
-    : null;
+  const upstream = task.dependency ? SPRINT_TASKS.find((t) => t.id === task.dependency) : null;
 
-  const TASK_STYLES: Record<
-    string,
-    { bg: string; text: string; label: string }
-  > = {
+  const TASK_STYLES: Record<string, { bg: string; text: string; label: string }> = {
     done: { bg: "bg-success-subtle", text: "text-success", label: "已完成" },
     in_progress: { bg: "bg-clone/10", text: "text-clone", label: "进行中" },
     blocked: { bg: "bg-danger-subtle", text: "text-danger", label: "阻塞中" },
@@ -820,11 +754,15 @@ export function TaskDetailPanel({
       footer={
         <div className="space-y-2">
           <FollowUpInput placeholder="调整排期、追问进度、分配子任务..." />
-          <div className="flex gap-2 items-center">
-            <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors">
+          <PanelFooterActions>
+            <Button
+              type="button"
+              size="inline"
+              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors"
+            >
               <MessageSquare size={10} /> 查询详细进度
             </Button>
-          </div>
+          </PanelFooterActions>
         </div>
       }
     >
@@ -864,16 +802,12 @@ export function TaskDetailPanel({
               {member.avatar}
             </div>
             <div className="flex-1">
-              <div className="text-[12px] font-medium text-text-primary">
-                {member.name}
-              </div>
+              <div className="text-[12px] font-medium text-text-primary">{member.name}</div>
               <div className="text-[10px] text-text-muted">
                 {member.role} · {member.channel}
               </div>
             </div>
-            <span className="text-[10px] text-clone font-medium">
-              Lv.{member.level}
-            </span>
+            <span className="text-[10px] text-clone font-medium">Lv.{member.level}</span>
           </div>
         )}
       </div>
@@ -891,9 +825,7 @@ export function TaskDetailPanel({
                   上游
                 </span>
                 <span className="font-mono text-text-muted">{upstream.id}</span>
-                <span className="flex-1 text-text-primary">
-                  {upstream.title}
-                </span>
+                <span className="flex-1 text-text-primary">{upstream.title}</span>
                 <span className="text-text-muted">{upstream.assignee}</span>
               </div>
             )}
@@ -929,10 +861,7 @@ export function TaskDetailPanel({
                 <Clock size={10} className="text-text-muted shrink-0" />
                 <span className="text-text-muted">{log.time}</span>
                 <span className="flex-1 text-text-secondary">
-                  {log.from} →{" "}
-                  <span className="font-medium text-text-primary">
-                    {log.to}
-                  </span>
+                  {log.from} → <span className="font-medium text-text-primary">{log.to}</span>
                 </span>
               </div>
             ))}
@@ -949,19 +878,13 @@ export function TaskDetailPanel({
           <div className="flex items-center gap-1.5 p-2 bg-surface-1 border border-border rounded-lg text-[11px]">
             <FileText size={10} className="text-text-muted" />
             <span className="font-medium text-text-primary">sprint.md</span>
-            <span className="text-text-muted ml-auto font-mono text-[9px]">
-              team/
-            </span>
+            <span className="text-text-muted ml-auto font-mono text-[9px]">team/</span>
           </div>
           {task.status === "blocked" && upstream && (
             <div className="flex items-center gap-1.5 p-2 bg-surface-1 border border-border rounded-lg text-[11px]">
               <FileText size={10} className="text-warning" />
-              <span className="font-medium text-text-primary">
-                gateway-priority.md
-              </span>
-              <span className="text-text-muted ml-auto font-mono text-[9px]">
-                team/decisions/
-              </span>
+              <span className="font-medium text-text-primary">gateway-priority.md</span>
+              <span className="text-text-muted ml-auto font-mono text-[9px]">team/decisions/</span>
             </div>
           )}
         </div>
@@ -973,12 +896,12 @@ export function TaskDetailPanel({
 // ─── Stats Detail Panel ────────────────────────────────────
 
 const STAT_PANEL_CONFIG: Record<string, { title: string; icon: typeof BarChart3 }> = {
-  okr: { title: 'OKR 概览', icon: Activity },
-  online: { title: '分身在线状态', icon: Users },
-  cards: { title: '今日任务流', icon: MessageSquare },
-  alignments: { title: '待对齐请求', icon: GitPullRequest },
-  tasks: { title: '活跃任务', icon: CheckCircle },
-  sprint: { title: 'Sprint 进度', icon: BarChart3 },
+  okr: { title: "OKR 概览", icon: Activity },
+  online: { title: "分身在线状态", icon: Users },
+  cards: { title: "今日任务流", icon: MessageSquare },
+  alignments: { title: "待对齐请求", icon: GitPullRequest },
+  tasks: { title: "活跃任务", icon: CheckCircle },
+  sprint: { title: "Sprint 进度", icon: BarChart3 },
 };
 
 export function StatsDetailPanel({
@@ -990,11 +913,7 @@ export function StatsDetailPanel({
 }) {
   const cfg = STAT_PANEL_CONFIG[statId] || STAT_PANEL_CONFIG.sprint;
   return (
-    <PanelShell
-      title={cfg.title}
-      icon={cfg.icon}
-      onClose={onClose}
-    >
+    <PanelShell title={cfg.title} icon={cfg.icon} onClose={onClose}>
       {statId === "online" && (
         <div className="px-4 py-3">
           <div className="text-[10px] text-text-muted font-medium uppercase tracking-wider mb-2">
@@ -1015,15 +934,13 @@ export function StatsDetailPanel({
                       m.status === "online"
                         ? "bg-success"
                         : m.status === "busy"
-                        ? "bg-warning"
-                        : "bg-text-muted"
+                          ? "bg-warning"
+                          : "bg-text-muted"
                     }`}
                   />
                 </div>
                 <div className="flex-1">
-                  <div className="text-[12px] font-medium text-text-primary">
-                    {m.name}
-                  </div>
+                  <div className="text-[12px] font-medium text-text-primary">{m.name}</div>
                   <div className="text-[10px] text-text-muted">{m.role}</div>
                 </div>
                 <span
@@ -1031,19 +948,13 @@ export function StatsDetailPanel({
                     m.status === "online"
                       ? "text-success"
                       : m.status === "busy"
-                      ? "text-warning"
-                      : "text-text-muted"
+                        ? "text-warning"
+                        : "text-text-muted"
                   }`}
                 >
-                  {m.status === "online"
-                    ? "在线"
-                    : m.status === "busy"
-                    ? "忙碌"
-                    : "离开"}
+                  {m.status === "online" ? "在线" : m.status === "busy" ? "忙碌" : "离开"}
                 </span>
-                <span className="text-[9px] text-text-muted">
-                  {m.lastActive}
-                </span>
+                <span className="text-[9px] text-text-muted">{m.lastActive}</span>
               </div>
             ))}
           </div>
@@ -1064,9 +975,7 @@ export function StatsDetailPanel({
             ].map((c) => (
               <div key={c.type} className="flex gap-2 items-center">
                 <div className={`w-2 h-2 rounded-full ${c.color}`} />
-                <span className="text-[11px] text-text-primary flex-1">
-                  {c.type}
-                </span>
+                <span className="text-[11px] text-text-primary flex-1">{c.type}</span>
                 <span className="text-[12px] font-bold text-text-primary tabular-nums">
                   {c.count}
                 </span>
@@ -1091,17 +1000,23 @@ export function StatsDetailPanel({
             待处理
           </div>
           <div className="p-3 rounded-lg border bg-warning-subtle/30 border-warning/20">
-            <div className="text-[12px] font-medium text-text-primary">
-              Gateway 重构排期提前
-            </div>
+            <div className="text-[12px] font-medium text-text-primary">Gateway 重构排期提前</div>
             <div className="text-[10px] text-text-secondary mt-1">
               来自张三的分身 · 紧急程度：高
             </div>
             <div className="flex gap-2 items-center mt-2">
-              <Button type="button" size="inline" className="px-2.5 py-1 bg-success-subtle text-success rounded-lg text-[10px] font-medium">
+              <Button
+                type="button"
+                size="inline"
+                className="px-2.5 py-1 bg-success-subtle text-success rounded-lg text-[10px] font-medium"
+              >
                 ✅ 同意
               </Button>
-              <Button type="button" size="inline" className="px-2.5 py-1 bg-danger-subtle text-danger rounded-lg text-[10px]">
+              <Button
+                type="button"
+                size="inline"
+                className="px-2.5 py-1 bg-danger-subtle text-danger rounded-lg text-[10px]"
+              >
                 ❌ 拒绝
               </Button>
             </div>
@@ -1136,10 +1051,7 @@ export function StatsDetailPanel({
               <span className="font-bold text-clone">58%</span>
             </div>
             <div className="overflow-hidden h-2 rounded-full bg-surface-3">
-              <div
-                className="h-full rounded-full bg-clone"
-                style={{ width: "58%" }}
-              />
+              <div className="h-full rounded-full bg-clone" style={{ width: "58%" }} />
             </div>
             <div className="flex items-center justify-between text-[10px] text-text-muted mt-1">
               <span>02-17 → 03-02</span>
@@ -1155,14 +1067,12 @@ export function StatsDetailPanel({
               },
               {
                 label: "进行中",
-                value: SPRINT_TASKS.filter((t) => t.status === "in_progress")
-                  .length,
+                value: SPRINT_TASKS.filter((t) => t.status === "in_progress").length,
                 color: "text-clone",
               },
               {
                 label: "阻塞",
-                value: SPRINT_TASKS.filter((t) => t.status === "blocked")
-                  .length,
+                value: SPRINT_TASKS.filter((t) => t.status === "blocked").length,
                 color: "text-danger",
               },
               {
@@ -1171,126 +1081,166 @@ export function StatsDetailPanel({
                 color: "text-text-muted",
               },
             ].map((s) => (
-              <div
-                key={s.label}
-                className="text-center p-2.5 bg-surface-1 rounded-lg"
-              >
-                <div className={`text-[16px] font-bold ${s.color}`}>
-                  {s.value}
-                </div>
+              <div key={s.label} className="text-center p-2.5 bg-surface-1 rounded-lg">
+                <div className={`text-[16px] font-bold ${s.color}`}>{s.value}</div>
                 <div className="text-[9px] text-text-muted">{s.label}</div>
               </div>
             ))}
           </div>
         </div>
       )}
-      {statId === "okr" && (() => {
-        const okrProgress = Math.round(OBJECTIVES.reduce((s, o) => s + o.progress, 0) / OBJECTIVES.length);
-        const atRisk = OBJECTIVES.filter(o => o.status === 'at_risk' || o.status === 'behind');
-        const onTrack = OBJECTIVES.filter(o => o.status === 'on_track');
-        const achieved = OBJECTIVES.filter(o => o.status === 'achieved');
-        return (
-          <div className="px-4 py-3">
-            <div className="mb-3">
-              <div className="flex items-center justify-between text-[12px] mb-1">
-                <span className="text-text-secondary">整体 OKR 完成度</span>
-                <span className="font-bold text-accent">{okrProgress}%</span>
+      {statId === "okr" &&
+        (() => {
+          const okrProgress = Math.round(
+            OBJECTIVES.reduce((s, o) => s + o.progress, 0) / OBJECTIVES.length,
+          );
+          const atRisk = OBJECTIVES.filter((o) => o.status === "at_risk" || o.status === "behind");
+          const onTrack = OBJECTIVES.filter((o) => o.status === "on_track");
+          const achieved = OBJECTIVES.filter((o) => o.status === "achieved");
+          return (
+            <div className="px-4 py-3">
+              <div className="mb-3">
+                <div className="flex items-center justify-between text-[12px] mb-1">
+                  <span className="text-text-secondary">整体 OKR 完成度</span>
+                  <span className="font-bold text-accent">{okrProgress}%</span>
+                </div>
+                <div className="overflow-hidden h-2 rounded-full bg-surface-3">
+                  <div
+                    className="h-full rounded-full bg-accent"
+                    style={{ width: `${okrProgress}%` }}
+                  />
+                </div>
               </div>
-              <div className="overflow-hidden h-2 rounded-full bg-surface-3">
-                <div className="h-full rounded-full bg-accent" style={{ width: `${okrProgress}%` }} />
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-2 mb-3">
-              <div className="text-center p-2.5 bg-surface-1 rounded-lg">
-                <div className="text-[16px] font-bold text-success">{achieved.length + onTrack.length}</div>
-                <div className="text-[9px] text-text-muted">正常</div>
-              </div>
-              <div className="text-center p-2.5 bg-surface-1 rounded-lg">
-                <div className="text-[16px] font-bold text-warning">{atRisk.filter(o => o.status === 'at_risk').length}</div>
-                <div className="text-[9px] text-text-muted">有风险</div>
-              </div>
-              <div className="text-center p-2.5 bg-surface-1 rounded-lg">
-                <div className="text-[16px] font-bold text-danger">{atRisk.filter(o => o.status === 'behind').length}</div>
-                <div className="text-[9px] text-text-muted">落后</div>
-              </div>
-            </div>
-            <div className="text-[10px] text-text-muted font-medium uppercase tracking-wider mb-2">各目标进度</div>
-            <div className="space-y-2">
-              {OBJECTIVES.map(o => {
-                const st = o.status === 'on_track' ? 'text-success' : o.status === 'at_risk' ? 'text-warning' : o.status === 'behind' ? 'text-danger' : 'text-success';
-                return (
-                  <div key={o.id} className="p-2.5 bg-surface-1 border border-border rounded-lg">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[11px] font-medium text-text-primary truncate flex-1">{o.title}</span>
-                      <span className={`text-[10px] font-bold ml-2 ${st}`}>{o.progress}%</span>
-                    </div>
-                    <div className="overflow-hidden h-1 rounded-full bg-surface-3">
-                      <div className={`h-full rounded-full ${o.status === 'on_track' ? 'bg-success' : o.status === 'at_risk' ? 'bg-warning' : o.status === 'behind' ? 'bg-danger' : 'bg-success'}`} style={{ width: `${o.progress}%` }} />
-                    </div>
-                    <div className="flex items-center justify-between mt-1">
-                      <span className="text-[9px] text-text-muted">{o.owner}</span>
-                      <span className="text-[9px] text-text-muted">{o.keyResults.length} KRs</span>
-                    </div>
+              <div className="grid grid-cols-3 gap-2 mb-3">
+                <div className="text-center p-2.5 bg-surface-1 rounded-lg">
+                  <div className="text-[16px] font-bold text-success">
+                    {achieved.length + onTrack.length}
                   </div>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })()}
-      {statId === "tasks" && (() => {
-        const inProgress = TASK_BOARD.filter(t => t.status === 'in_progress');
-        const todo = TASK_BOARD.filter(t => t.status === 'todo');
-        const done = TASK_BOARD.filter(t => t.status === 'done');
-        const agentTasks = TASK_BOARD.filter(t => t.executor === 'agent');
-        const activeTasks = [...inProgress, ...todo];
-        return (
-          <div className="px-4 py-3">
-            <div className="grid grid-cols-2 gap-2 mb-3">
-              <div className="text-center p-2.5 bg-surface-1 rounded-lg">
-                <div className="text-[16px] font-bold text-clone">{inProgress.length}</div>
-                <div className="text-[9px] text-text-muted">进行中</div>
+                  <div className="text-[9px] text-text-muted">正常</div>
+                </div>
+                <div className="text-center p-2.5 bg-surface-1 rounded-lg">
+                  <div className="text-[16px] font-bold text-warning">
+                    {atRisk.filter((o) => o.status === "at_risk").length}
+                  </div>
+                  <div className="text-[9px] text-text-muted">有风险</div>
+                </div>
+                <div className="text-center p-2.5 bg-surface-1 rounded-lg">
+                  <div className="text-[16px] font-bold text-danger">
+                    {atRisk.filter((o) => o.status === "behind").length}
+                  </div>
+                  <div className="text-[9px] text-text-muted">落后</div>
+                </div>
               </div>
-              <div className="text-center p-2.5 bg-surface-1 rounded-lg">
-                <div className="text-[16px] font-bold text-warning">{todo.length}</div>
-                <div className="text-[9px] text-text-muted">待开始</div>
+              <div className="text-[10px] text-text-muted font-medium uppercase tracking-wider mb-2">
+                各目标进度
               </div>
-              <div className="text-center p-2.5 bg-surface-1 rounded-lg">
-                <div className="text-[16px] font-bold text-success">{done.length}</div>
-                <div className="text-[9px] text-text-muted">已完成</div>
-              </div>
-              <div className="text-center p-2.5 bg-surface-1 rounded-lg">
-                <div className="text-[16px] font-bold text-accent">{agentTasks.length}</div>
-                <div className="text-[9px] text-text-muted">Agent 执行</div>
-              </div>
-            </div>
-            <div className="text-[10px] text-text-muted font-medium uppercase tracking-wider mb-2">活跃任务</div>
-            <div className="space-y-1.5">
-              {activeTasks.slice(0, 6).map(t => {
-                const prioColor = t.priority === 'urgent' ? 'text-danger' : t.priority === 'high' ? 'text-warning' : 'text-text-muted';
-                const statusDot = t.status === 'in_progress' ? 'bg-clone animate-pulse' : 'bg-surface-4';
-                const execIcon = t.executor === 'agent' ? '🤖' : t.executor === 'hybrid' ? '🤝' : '👤';
-                return (
-                  <div key={t.id} className="flex items-center gap-2 p-2 bg-surface-1 border border-border rounded-lg">
-                    <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusDot}`} />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[11px] font-medium text-text-primary truncate">{t.title}</div>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className={`text-[9px] ${prioColor}`}>{t.priority}</span>
-                        <span className="text-[9px] text-text-muted">{t.assignee}</span>
+              <div className="space-y-2">
+                {OBJECTIVES.map((o) => {
+                  const st =
+                    o.status === "on_track"
+                      ? "text-success"
+                      : o.status === "at_risk"
+                        ? "text-warning"
+                        : o.status === "behind"
+                          ? "text-danger"
+                          : "text-success";
+                  return (
+                    <div key={o.id} className="p-2.5 bg-surface-1 border border-border rounded-lg">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[11px] font-medium text-text-primary truncate flex-1">
+                          {o.title}
+                        </span>
+                        <span className={`text-[10px] font-bold ml-2 ${st}`}>{o.progress}%</span>
+                      </div>
+                      <div className="overflow-hidden h-1 rounded-full bg-surface-3">
+                        <div
+                          className={`h-full rounded-full ${o.status === "on_track" ? "bg-success" : o.status === "at_risk" ? "bg-warning" : o.status === "behind" ? "bg-danger" : "bg-success"}`}
+                          style={{ width: `${o.progress}%` }}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between mt-1">
+                        <span className="text-[9px] text-text-muted">{o.owner}</span>
+                        <span className="text-[9px] text-text-muted">
+                          {o.keyResults.length} KRs
+                        </span>
                       </div>
                     </div>
-                    <span className="text-[10px] shrink-0">{execIcon}</span>
-                    {t.progress > 0 && (
-                      <span className="text-[9px] text-text-muted tabular-nums shrink-0">{t.progress}%</span>
-                    )}
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        );
-      })()}
+          );
+        })()}
+      {statId === "tasks" &&
+        (() => {
+          const inProgress = TASK_BOARD.filter((t) => t.status === "in_progress");
+          const todo = TASK_BOARD.filter((t) => t.status === "todo");
+          const done = TASK_BOARD.filter((t) => t.status === "done");
+          const agentTasks = TASK_BOARD.filter((t) => t.executor === "agent");
+          const activeTasks = [...inProgress, ...todo];
+          return (
+            <div className="px-4 py-3">
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                <div className="text-center p-2.5 bg-surface-1 rounded-lg">
+                  <div className="text-[16px] font-bold text-clone">{inProgress.length}</div>
+                  <div className="text-[9px] text-text-muted">进行中</div>
+                </div>
+                <div className="text-center p-2.5 bg-surface-1 rounded-lg">
+                  <div className="text-[16px] font-bold text-warning">{todo.length}</div>
+                  <div className="text-[9px] text-text-muted">待开始</div>
+                </div>
+                <div className="text-center p-2.5 bg-surface-1 rounded-lg">
+                  <div className="text-[16px] font-bold text-success">{done.length}</div>
+                  <div className="text-[9px] text-text-muted">已完成</div>
+                </div>
+                <div className="text-center p-2.5 bg-surface-1 rounded-lg">
+                  <div className="text-[16px] font-bold text-accent">{agentTasks.length}</div>
+                  <div className="text-[9px] text-text-muted">Agent 执行</div>
+                </div>
+              </div>
+              <div className="text-[10px] text-text-muted font-medium uppercase tracking-wider mb-2">
+                活跃任务
+              </div>
+              <div className="space-y-1.5">
+                {activeTasks.slice(0, 6).map((t) => {
+                  const prioColor =
+                    t.priority === "urgent"
+                      ? "text-danger"
+                      : t.priority === "high"
+                        ? "text-warning"
+                        : "text-text-muted";
+                  const statusDot =
+                    t.status === "in_progress" ? "bg-clone animate-pulse" : "bg-surface-4";
+                  const execIcon =
+                    t.executor === "agent" ? "🤖" : t.executor === "hybrid" ? "🤝" : "👤";
+                  return (
+                    <div
+                      key={t.id}
+                      className="flex items-center gap-2 p-2 bg-surface-1 border border-border rounded-lg"
+                    >
+                      <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusDot}`} />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[11px] font-medium text-text-primary truncate">
+                          {t.title}
+                        </div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className={`text-[9px] ${prioColor}`}>{t.priority}</span>
+                          <span className="text-[9px] text-text-muted">{t.assignee}</span>
+                        </div>
+                      </div>
+                      <span className="text-[10px] shrink-0">{execIcon}</span>
+                      {t.progress > 0 && (
+                        <span className="text-[9px] text-text-muted tabular-nums shrink-0">
+                          {t.progress}%
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
     </PanelShell>
   );
 }
@@ -1314,7 +1264,7 @@ export function OKRDetailPanel({
   onClose: () => void;
 }) {
   const objective = OBJECTIVES.find(
-    (o) => o.id === objectiveId || o.keyResults.some((kr) => kr.id === krId)
+    (o) => o.id === objectiveId || o.keyResults.some((kr) => kr.id === krId),
   );
   const keyResult = objective?.keyResults.find((kr) => kr.id === krId);
 
@@ -1335,18 +1285,26 @@ export function OKRDetailPanel({
           ? keyResult.progress >= 80
             ? "bg-success-subtle text-success"
             : keyResult.progress >= 50
-            ? "bg-clone/10 text-clone"
-            : "bg-warning-subtle text-warning"
+              ? "bg-clone/10 text-clone"
+              : "bg-warning-subtle text-warning"
           : statusInfo.color
       }
       icon={Activity}
       onClose={onClose}
       footer={
         <div className="flex gap-2 items-center">
-          <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors">
+          <Button
+            type="button"
+            size="inline"
+            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-accent text-accent-fg rounded-lg text-[11px] font-medium hover:bg-accent-hover transition-colors"
+          >
             <MessageSquare size={10} /> 讨论 OKR
           </Button>
-          <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors">
+          <Button
+            type="button"
+            size="inline"
+            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors"
+          >
             <ExternalLink size={10} /> 编辑目标
           </Button>
         </div>
@@ -1355,31 +1313,21 @@ export function OKRDetailPanel({
       {/* Objective overview */}
       <div className="px-4 py-3 border-b border-border">
         <div className="flex gap-2 items-center mb-2">
-          <span className="text-[10px] font-mono text-text-muted">
-            {objective.id}
-          </span>
-          <span
-            className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full ${statusInfo.color}`}
-          >
+          <span className="text-[10px] font-mono text-text-muted">{objective.id}</span>
+          <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full ${statusInfo.color}`}>
             {statusInfo.label}
           </span>
-          <span className="text-[10px] text-text-muted">
-            {objective.quarter}
-          </span>
+          <span className="text-[10px] text-text-muted">{objective.quarter}</span>
         </div>
         <div className="text-[12px] text-text-primary font-medium leading-snug">
           {objective.title}
         </div>
-        <div className="text-[11px] text-text-muted mt-1">
-          {objective.description}
-        </div>
+        <div className="text-[11px] text-text-muted mt-1">{objective.description}</div>
 
         <div className="mt-3">
           <div className="flex items-center justify-between text-[10px] mb-1">
             <span className="text-text-muted">整体进度</span>
-            <span className="font-bold text-text-primary">
-              {objective.progress}%
-            </span>
+            <span className="font-bold text-text-primary">{objective.progress}%</span>
           </div>
           <div className="overflow-hidden h-2 rounded-full bg-surface-3">
             <div
@@ -1387,8 +1335,8 @@ export function OKRDetailPanel({
                 objective.progress >= 80
                   ? "bg-success"
                   : objective.progress >= 50
-                  ? "bg-clone"
-                  : "bg-warning"
+                    ? "bg-clone"
+                    : "bg-warning"
               }`}
               style={{ width: `${objective.progress}%` }}
             />
@@ -1408,22 +1356,18 @@ export function OKRDetailPanel({
               <div
                 key={kr.id}
                 className={`p-2.5 rounded-lg border transition-colors ${
-                  isHighlighted
-                    ? "border-accent/40 bg-accent/5"
-                    : "border-border bg-surface-1"
+                  isHighlighted ? "border-accent/40 bg-accent/5" : "border-border bg-surface-1"
                 }`}
               >
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-[11px] text-text-primary font-medium">
-                    {kr.title}
-                  </span>
+                  <span className="text-[11px] text-text-primary font-medium">{kr.title}</span>
                   <span
                     className={`text-[10px] font-bold ${
                       kr.progress >= 100
                         ? "text-success"
                         : kr.progress >= 50
-                        ? "text-clone"
-                        : "text-warning"
+                          ? "text-clone"
+                          : "text-warning"
                     }`}
                   >
                     {kr.progress}%
@@ -1435,8 +1379,8 @@ export function OKRDetailPanel({
                       kr.progress >= 100
                         ? "bg-success"
                         : kr.progress >= 50
-                        ? "bg-clone"
-                        : "bg-warning"
+                          ? "bg-clone"
+                          : "bg-warning"
                     }`}
                     style={{ width: `${kr.progress}%` }}
                   />
@@ -1492,10 +1436,7 @@ export function OKRDetailPanel({
         </div>
         <div className="flex gap-1 mt-2">
           {objective.tags.map((t) => (
-            <span
-              key={t}
-              className="text-[9px] px-1.5 py-0.5 bg-surface-2 text-text-muted rounded"
-            >
+            <span key={t} className="text-[9px] px-1.5 py-0.5 bg-surface-2 text-text-muted rounded">
               {t}
             </span>
           ))}
@@ -1507,10 +1448,7 @@ export function OKRDetailPanel({
 
 // ─── Task Item Detail Panel ─────────────────────────────────
 
-const TASK_STATUS_MAP: Record<
-  string,
-  { bg: string; text: string; label: string }
-> = {
+const TASK_STATUS_MAP: Record<string, { bg: string; text: string; label: string }> = {
   backlog: { bg: "bg-surface-3", text: "text-text-muted", label: "待规划" },
   todo: { bg: "bg-info-subtle", text: "text-info", label: "待开始" },
   in_progress: { bg: "bg-clone/10", text: "text-clone", label: "进行中" },
@@ -1542,9 +1480,7 @@ export function TaskItemDetailPanel({
   const pr = PRIORITY_MAP[task.priority];
   const ex = EXECUTOR_MAP[task.executor];
   const member = TEAM_MEMBERS.find((m) => m.name === task.assignee);
-  const deps = task.dependencies
-    ? TASK_BOARD.filter((t) => task.dependencies?.includes(t.id))
-    : [];
+  const deps = task.dependencies ? TASK_BOARD.filter((t) => task.dependencies?.includes(t.id)) : [];
   const dependents = TASK_BOARD.filter((t) => t.dependencies?.includes(task.id));
   const subtasksDone = task.subtasks?.filter((s) => s.done).length ?? 0;
   const subtasksTotal = task.subtasks?.length ?? 0;
@@ -1561,12 +1497,20 @@ export function TaskItemDetailPanel({
           <FollowUpInput placeholder="追问进度、委托 Agent、调整排期..." />
           <div className="flex gap-2 items-center">
             {task.status === "in_progress" && (
-              <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-success text-white rounded-lg text-[11px] font-medium hover:bg-success/90 transition-colors">
+              <Button
+                type="button"
+                size="inline"
+                className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-success text-white rounded-lg text-[11px] font-medium hover:bg-success/90 transition-colors"
+              >
                 <CheckCircle size={10} /> 标记完成
               </Button>
             )}
             {task.executor !== "agent" && (
-              <Button type="button" size="inline" className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-clone/10 text-clone rounded-lg text-[11px] font-medium hover:bg-clone/20 transition-colors">
+              <Button
+                type="button"
+                size="inline"
+                className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-clone/10 text-clone rounded-lg text-[11px] font-medium hover:bg-clone/20 transition-colors"
+              >
                 🤖 委托给 Agent
               </Button>
             )}
@@ -1587,9 +1531,7 @@ export function TaskItemDetailPanel({
           </div>
           <div className="p-2 bg-surface-1 rounded-lg text-center">
             <div className="text-[9px] text-text-muted">优先级</div>
-            <span className={`text-[11px] font-medium mt-0.5 ${pr.text}`}>
-              {pr.label}
-            </span>
+            <span className={`text-[11px] font-medium mt-0.5 ${pr.text}`}>{pr.label}</span>
           </div>
           <div className="p-2 bg-surface-1 rounded-lg text-center">
             <div className="text-[9px] text-text-muted">执行方式</div>
@@ -1603,8 +1545,7 @@ export function TaskItemDetailPanel({
         <div className="p-2.5 bg-surface-1 rounded-lg mb-3">
           <div className="flex justify-between items-center mb-1">
             <span className="text-[10px] text-text-muted">
-              进度{" "}
-              {subtasksTotal > 0 && `(${subtasksDone}/${subtasksTotal} 子任务)`}
+              进度 {subtasksTotal > 0 && `(${subtasksDone}/${subtasksTotal} 子任务)`}
             </span>
             <span className="text-[12px] font-bold text-text-primary tabular-nums">
               {task.progress}%
@@ -1612,9 +1553,7 @@ export function TaskItemDetailPanel({
           </div>
           <div className="h-1.5 bg-surface-3 rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full ${
-                task.progress >= 100 ? "bg-success" : "bg-clone"
-              }`}
+              className={`h-full rounded-full ${task.progress >= 100 ? "bg-success" : "bg-clone"}`}
               style={{ width: `${task.progress}%` }}
             />
           </div>
@@ -1627,9 +1566,7 @@ export function TaskItemDetailPanel({
               {member.avatar}
             </div>
             <div className="flex-1">
-              <div className="text-[12px] font-medium text-text-primary">
-                {member.name}
-              </div>
+              <div className="text-[12px] font-medium text-text-primary">{member.name}</div>
               <div className="text-[10px] text-text-muted">
                 {member.role} · Lv.{member.level}
               </div>
@@ -1645,9 +1582,7 @@ export function TaskItemDetailPanel({
           <div className="text-[10px] text-text-muted font-medium uppercase tracking-wider mb-1.5">
             描述
           </div>
-          <div className="text-[12px] text-text-secondary leading-relaxed">
-            {task.description}
-          </div>
+          <div className="text-[12px] text-text-secondary leading-relaxed">{task.description}</div>
         </div>
       )}
 
@@ -1665,13 +1600,7 @@ export function TaskItemDetailPanel({
                 ) : (
                   <div className="w-3.5 h-3.5 rounded-full border-2 border-border shrink-0" />
                 )}
-                <span
-                  className={
-                    sub.done
-                      ? "text-text-muted line-through"
-                      : "text-text-primary"
-                  }
-                >
+                <span className={sub.done ? "text-text-muted line-through" : "text-text-primary"}>
                   {sub.title}
                 </span>
               </div>
@@ -1689,9 +1618,7 @@ export function TaskItemDetailPanel({
           {task.sprintId && (
             <div className="flex justify-between">
               <span className="text-text-muted">Sprint</span>
-              <span className="text-text-primary font-medium">
-                {task.sprintId}
-              </span>
+              <span className="text-text-primary font-medium">{task.sprintId}</span>
             </div>
           )}
           {task.okrTitle && (
@@ -1718,9 +1645,7 @@ export function TaskItemDetailPanel({
           )}
           <div className="flex justify-between">
             <span className="text-text-muted">来源</span>
-            <span className="text-text-primary">
-              {task.sourceRef ?? task.source}
-            </span>
+            <span className="text-text-primary">{task.sourceRef ?? task.source}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-text-muted">创建时间</span>
@@ -1741,9 +1666,7 @@ export function TaskItemDetailPanel({
           </div>
           {deps.length > 0 && (
             <div className="mb-2">
-              <div className="text-[10px] text-text-muted mb-1">
-                依赖（上游）
-              </div>
+              <div className="text-[10px] text-text-muted mb-1">依赖（上游）</div>
               {deps.map((d) => (
                 <div
                   key={d.id}
@@ -1759,9 +1682,7 @@ export function TaskItemDetailPanel({
           )}
           {dependents.length > 0 && (
             <div>
-              <div className="text-[10px] text-text-muted mb-1">
-                被依赖（下游）
-              </div>
+              <div className="text-[10px] text-text-muted mb-1">被依赖（下游）</div>
               {dependents.map((d) => (
                 <div
                   key={d.id}
@@ -1790,10 +1711,7 @@ export function TaskItemDetailPanel({
                 className="flex items-center gap-1.5 text-[11px] text-info hover:underline cursor-pointer p-1.5 rounded hover:bg-surface-1"
               >
                 <FileText size={11} /> {f}
-                <ExternalLink
-                  size={9}
-                  className="ml-auto text-text-muted shrink-0"
-                />
+                <ExternalLink size={9} className="ml-auto text-text-muted shrink-0" />
               </div>
             ))}
           </div>

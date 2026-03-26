@@ -1,5 +1,13 @@
 import {
   Button,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+  DataTable,
+  InteractiveRow,
+  InteractiveRowContent,
+  InteractiveRowTrailing,
+  ScrollArea,
   Table,
   TableBody,
   TableCell,
@@ -526,80 +534,84 @@ function SessionFileOpsTable({
   if (ops.length === 0) return null;
 
   return (
-    <div>
-      <div className="flex items-center gap-1.5 px-2 py-1">
+    <Collapsible defaultOpen>
+      <CollapsibleTrigger className="flex w-full items-center gap-1.5 px-2 py-1 text-left">
         <span className="text-[9px] font-bold uppercase tracking-wider text-text-muted">
           {title}
         </span>
         <span className="text-[9px] text-text-muted">{ops.length}</span>
         <div className="h-px flex-1 bg-border" />
-      </div>
-      <div className="overflow-hidden rounded-lg border border-border/80 bg-surface-1">
-        <Table density="compact">
-          <TableHeader>
-            <TableRow>
-              <TableHead>Op</TableHead>
-              <TableHead>File</TableHead>
-              <TableHead>Diff / Size</TableHead>
-              <TableHead className="text-right">Time</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {ops.map((op) => {
-              const idx = fileOps.indexOf(op);
-              const style = FILE_OP_STYLES[op.action];
-              const fileName = op.path.split("/").pop() || op.path;
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <DataTable className="rounded-lg border-border/80">
+          <Table density="compact">
+            <TableHeader>
+              <TableRow>
+                <TableHead>Op</TableHead>
+                <TableHead>File</TableHead>
+                <TableHead>Diff / Size</TableHead>
+                <TableHead className="text-right">Time</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {ops.map((op) => {
+                const idx = fileOps.indexOf(op);
+                const style = FILE_OP_STYLES[op.action];
+                const fileName = op.path.split("/").pop() || op.path;
 
-              return (
-                <TableRow
-                  key={`${op.action}-${op.path}-${op.time}`}
-                  selected={safeIdx === idx}
-                  className="cursor-pointer"
-                  onClick={() => onSelect(idx)}
-                >
-                  <TableCell>
-                    <span
-                      className={`inline-flex rounded px-1 py-0.5 text-[8px] font-bold ${style.color}`}
-                    >
-                      {style.label}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex min-w-0 items-center gap-2">
-                      <FileTypeIcon fileType={op.fileType} />
-                      <div className="min-w-0">
-                        <div className="truncate text-[11px] font-medium text-text-primary">
-                          {fileName}
-                        </div>
-                        <div className="truncate font-mono text-[9px] text-text-muted">
-                          {op.path}
+                return (
+                  <TableRow
+                    key={`${op.action}-${op.path}-${op.time}`}
+                    selected={safeIdx === idx}
+                    className="cursor-pointer"
+                    onClick={() => onSelect(idx)}
+                  >
+                    <TableCell>
+                      <span
+                        className={`inline-flex rounded px-1 py-0.5 text-[8px] font-bold ${style.color}`}
+                      >
+                        {style.label}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex min-w-0 items-center gap-2">
+                        <FileTypeIcon fileType={op.fileType} />
+                        <div className="min-w-0">
+                          <div className="truncate text-[11px] font-medium text-text-primary">
+                            {fileName}
+                          </div>
+                          <div className="truncate font-mono text-[9px] text-text-muted">
+                            {op.path}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2 text-[9px]">
-                      {op.diff ? (
-                        <>
-                          {op.diff.added > 0 ? (
-                            <span className="font-mono text-success">+{op.diff.added}</span>
-                          ) : null}
-                          {op.diff.removed > 0 ? (
-                            <span className="font-mono text-danger">-{op.diff.removed}</span>
-                          ) : null}
-                        </>
-                      ) : null}
-                      {op.size ? <span className="text-text-muted">{op.size}</span> : null}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right text-[9px] text-text-muted">{op.time}</TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2 text-[9px]">
+                        {op.diff ? (
+                          <>
+                            {op.diff.added > 0 ? (
+                              <span className="font-mono text-success">+{op.diff.added}</span>
+                            ) : null}
+                            {op.diff.removed > 0 ? (
+                              <span className="font-mono text-danger">-{op.diff.removed}</span>
+                            ) : null}
+                          </>
+                        ) : null}
+                        {op.size ? <span className="text-text-muted">{op.size}</span> : null}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right text-[9px] text-text-muted">
+                      {op.time}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </DataTable>
+      </CollapsibleContent>
+    </Collapsible>
   );
 }
 
@@ -701,60 +713,62 @@ function ActiveChatView({
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {messages.map((msg, i) => (
-            <div
-              key={`${msg.from}-${msg.content || msg.tool?.name || i}`}
-              className={`flex ${msg.from === "user" ? "justify-end" : "gap-2"}`}
-            >
-              {msg.from === "clone" && (
-                <div className="w-6 h-6 rounded-full bg-clone/15 flex items-center justify-center text-[11px] shrink-0 mt-0.5">
-                  😊
+        <ScrollArea className="flex-1">
+          <div className="p-4 space-y-3">
+            {messages.map((msg, i) => (
+              <div
+                key={`${msg.from}-${msg.content || msg.tool?.name || i}`}
+                className={`flex ${msg.from === "user" ? "justify-end" : "gap-2"}`}
+              >
+                {msg.from === "clone" && (
+                  <div className="w-6 h-6 rounded-full bg-clone/15 flex items-center justify-center text-[11px] shrink-0 mt-0.5">
+                    😊
+                  </div>
+                )}
+                <div className="max-w-[80%] space-y-1.5">
+                  {msg.attachments && msg.attachments.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 justify-end">
+                      {msg.attachments.map((att) => (
+                        <AttachmentChip
+                          key={att.name}
+                          attachment={att}
+                          variant={msg.from === "user" ? "dark" : "light"}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  {msg.cards && msg.cards.length > 0 ? (
+                    <ChatCardGroup cards={msg.cards} onCardAction={handleCardAction} interactive />
+                  ) : msg.fileOps ? (
+                    <div className="space-y-1">
+                      {msg.fileOps.map((op) => (
+                        <FileOpBadge key={`${op.action}-${op.path}`} op={op} />
+                      ))}
+                    </div>
+                  ) : null}
+                  {msg.tool && !msg.cards && (
+                    <div className="flex items-center gap-2 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[12px]">
+                      <msg.tool.icon size={13} className="text-clone shrink-0" />
+                      <span className="text-text-secondary">{msg.tool.name}</span>
+                      <span className="text-[10px] text-success ml-auto">✓</span>
+                    </div>
+                  )}
+                  {msg.content && (
+                    <div
+                      className={`rounded-xl px-3 py-2.5 text-[12px] leading-relaxed whitespace-pre-line ${
+                        msg.from === "user"
+                          ? "bg-accent text-accent-fg rounded-br-sm"
+                          : "bg-surface-2 border border-border text-text-primary rounded-bl-sm"
+                      }`}
+                    >
+                      {msg.content}
+                    </div>
+                  )}
                 </div>
-              )}
-              <div className="max-w-[80%] space-y-1.5">
-                {msg.attachments && msg.attachments.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 justify-end">
-                    {msg.attachments.map((att) => (
-                      <AttachmentChip
-                        key={att.name}
-                        attachment={att}
-                        variant={msg.from === "user" ? "dark" : "light"}
-                      />
-                    ))}
-                  </div>
-                )}
-                {msg.cards && msg.cards.length > 0 ? (
-                  <ChatCardGroup cards={msg.cards} onCardAction={handleCardAction} interactive />
-                ) : msg.fileOps ? (
-                  <div className="space-y-1">
-                    {msg.fileOps.map((op) => (
-                      <FileOpBadge key={`${op.action}-${op.path}`} op={op} />
-                    ))}
-                  </div>
-                ) : null}
-                {msg.tool && !msg.cards && (
-                  <div className="flex items-center gap-2 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[12px]">
-                    <msg.tool.icon size={13} className="text-clone shrink-0" />
-                    <span className="text-text-secondary">{msg.tool.name}</span>
-                    <span className="text-[10px] text-success ml-auto">✓</span>
-                  </div>
-                )}
-                {msg.content && (
-                  <div
-                    className={`rounded-xl px-3 py-2.5 text-[12px] leading-relaxed whitespace-pre-line ${
-                      msg.from === "user"
-                        ? "bg-accent text-accent-fg rounded-br-sm"
-                        : "bg-surface-2 border border-border text-text-primary rounded-bl-sm"
-                    }`}
-                  >
-                    {msg.content}
-                  </div>
-                )}
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </ScrollArea>
 
         {/* Input */}
         <div className="border-t border-border p-2.5">
@@ -921,29 +935,31 @@ function ActiveChatView({
                 </span>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto px-2 pb-2 space-y-0.5">
-              <SessionFileOpsTable
-                title="Writes"
-                ops={writeOps}
-                safeIdx={safeIdx}
-                fileOps={fileOps}
-                onSelect={setSelectedFileOp}
-              />
-              <SessionFileOpsTable
-                title="Reads"
-                ops={readOps}
-                safeIdx={safeIdx}
-                fileOps={fileOps}
-                onSelect={setSelectedFileOp}
-              />
-              <SessionFileOpsTable
-                title="Skills"
-                ops={execOps}
-                safeIdx={safeIdx}
-                fileOps={fileOps}
-                onSelect={setSelectedFileOp}
-              />
-            </div>
+            <ScrollArea className="flex-1 px-2 pb-2">
+              <div className="space-y-0.5">
+                <SessionFileOpsTable
+                  title="Writes"
+                  ops={writeOps}
+                  safeIdx={safeIdx}
+                  fileOps={fileOps}
+                  onSelect={setSelectedFileOp}
+                />
+                <SessionFileOpsTable
+                  title="Reads"
+                  ops={readOps}
+                  safeIdx={safeIdx}
+                  fileOps={fileOps}
+                  onSelect={setSelectedFileOp}
+                />
+                <SessionFileOpsTable
+                  title="Skills"
+                  ops={execOps}
+                  safeIdx={safeIdx}
+                  fileOps={fileOps}
+                  onSelect={setSelectedFileOp}
+                />
+              </div>
+            </ScrollArea>
           </div>
         </div>
       )}
@@ -987,85 +1003,89 @@ export default function SessionsPage() {
             </button>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-1 space-y-0.5">
-          {SESSIONS.map((s) => {
-            const ch = CHANNEL_ICONS[s.channel];
-            const isActive = activeSession === s.id;
-            return (
-              <button
-                type="button"
-                key={s.id}
-                onClick={() => setActiveSession(s.id)}
-                className={`w-full text-left px-2.5 py-2 rounded-lg transition-colors ${
-                  isActive ? "bg-accent text-accent-fg" : "hover:bg-surface-3"
-                }`}
-              >
-                <div className="flex items-start gap-2">
-                  <span className="text-xs mt-0.5">{s.emoji}</span>
-                  <div className="flex-1 min-w-0">
-                    <div
-                      className={`text-[12px] font-medium truncate ${
-                        isActive ? "" : "text-text-primary"
-                      }`}
-                    >
-                      {s.title}
-                    </div>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <span
-                        className={`text-[10px] ${
-                          isActive ? "text-accent-fg/70" : "text-text-muted"
+        <ScrollArea className="flex-1">
+          <div className="p-1 space-y-0.5">
+            {SESSIONS.map((s) => {
+              const ch = CHANNEL_ICONS[s.channel];
+              const isActive = activeSession === s.id;
+              return (
+                <InteractiveRow
+                  type="button"
+                  key={s.id}
+                  onClick={() => setActiveSession(s.id)}
+                  className={`px-2.5 py-2 rounded-lg ${
+                    isActive ? "bg-accent text-accent-fg" : "hover:bg-surface-3"
+                  }`}
+                >
+                  <div className="flex items-start gap-2 w-full">
+                    <span className="text-xs mt-0.5">{s.emoji}</span>
+                    <InteractiveRowContent>
+                      <div
+                        className={`text-[12px] font-medium truncate ${
+                          isActive ? "" : "text-text-primary"
                         }`}
                       >
-                        {s.time}
-                      </span>
-                      <span
-                        className={`text-[10px] ${
-                          isActive ? "text-accent-fg/50" : "text-text-muted"
-                        }`}
-                      >
-                        ·
-                      </span>
-                      <span className="text-[10px]" title={s.channel}>
-                        {ch.icon}
-                      </span>
-                      {s.fileOps > 0 && (
-                        <>
-                          <span
-                            className={`text-[10px] ${
-                              isActive ? "text-accent-fg/50" : "text-text-muted"
-                            }`}
-                          >
-                            ·
-                          </span>
-                          <span
-                            className={`text-[9px] font-mono ${
-                              isActive ? "text-accent-fg/70" : "text-text-muted"
-                            }`}
-                          >
-                            {s.fileOps} ops
-                          </span>
-                        </>
+                        {s.title}
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span
+                          className={`text-[10px] ${
+                            isActive ? "text-accent-fg/70" : "text-text-muted"
+                          }`}
+                        >
+                          {s.time}
+                        </span>
+                        <span
+                          className={`text-[10px] ${
+                            isActive ? "text-accent-fg/50" : "text-text-muted"
+                          }`}
+                        >
+                          ·
+                        </span>
+                        <span className="text-[10px]" title={s.channel}>
+                          {ch.icon}
+                        </span>
+                        {s.fileOps > 0 && (
+                          <>
+                            <span
+                              className={`text-[10px] ${
+                                isActive ? "text-accent-fg/50" : "text-text-muted"
+                              }`}
+                            >
+                              ·
+                            </span>
+                            <span
+                              className={`text-[9px] font-mono ${
+                                isActive ? "text-accent-fg/70" : "text-text-muted"
+                              }`}
+                            >
+                              {s.fileOps} ops
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </InteractiveRowContent>
+                    <InteractiveRowTrailing>
+                      {s.isProxy && !isActive && (
+                        <span className="text-[8px] px-1 py-0.5 bg-info-subtle text-info rounded shrink-0 mt-1">
+                          代问
+                        </span>
                       )}
-                    </div>
+                      {s.isProactive && !isActive && !s.isProxy && (
+                        <span className="text-[8px] px-1 py-0.5 bg-clone/10 text-clone rounded shrink-0 mt-1">
+                          主动
+                        </span>
+                      )}
+                      {s.unread && !isActive && !s.isProactive && !s.isProxy && (
+                        <div className="w-1.5 h-1.5 rounded-full bg-clone shrink-0 mt-1.5" />
+                      )}
+                    </InteractiveRowTrailing>
                   </div>
-                  {s.isProxy && !isActive && (
-                    <span className="text-[8px] px-1 py-0.5 bg-info-subtle text-info rounded shrink-0 mt-1">
-                      代问
-                    </span>
-                  )}
-                  {s.isProactive && !isActive && !s.isProxy && (
-                    <span className="text-[8px] px-1 py-0.5 bg-clone/10 text-clone rounded shrink-0 mt-1">
-                      主动
-                    </span>
-                  )}
-                  {s.unread && !isActive && !s.isProactive && !s.isProxy && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-clone shrink-0 mt-1.5" />
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
+                </InteractiveRow>
+              );
+            })}
+          </div>
+        </ScrollArea>
       </div>
 
       {/* Main content: new session vs active chat */}

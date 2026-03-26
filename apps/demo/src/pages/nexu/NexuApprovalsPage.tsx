@@ -1,5 +1,10 @@
 import {
   Button,
+  DataTable,
+  DataTableDescription,
+  DataTableFooter,
+  DataTableHeader,
+  DataTableTitle,
   Input,
   Table,
   TableBody,
@@ -53,7 +58,13 @@ export default function NexuApprovalsPage() {
             <ClipboardCheck size={18} className="text-accent" />
             <h2 className="text-sm font-semibold text-text-primary">待处理</h2>
           </div>
-          <div className="overflow-hidden rounded-xl border border-border bg-surface-1">
+          <DataTable>
+            <DataTableHeader>
+              <div>
+                <DataTableTitle>审批请求队列</DataTableTitle>
+                <DataTableDescription>在关键动作执行前提供反馈并决定去留。</DataTableDescription>
+              </div>
+            </DataTableHeader>
             <Table density="compact">
               <TableHeader>
                 <TableRow>
@@ -118,7 +129,11 @@ export default function NexuApprovalsPage() {
                 ))}
               </TableBody>
             </Table>
-          </div>
+            <DataTableFooter>
+              <span>共 {MOCK_ITEMS.length} 条待处理请求</span>
+              <span>可选反馈会用于纠偏学习</span>
+            </DataTableFooter>
+          </DataTable>
         </section>
       </div>
     </div>
