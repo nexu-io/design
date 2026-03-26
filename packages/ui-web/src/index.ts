@@ -21,6 +21,7 @@ export * from "./primitives/sonner";
 export * from "./primitives/spinner";
 export * from "./primitives/stat-card";
 export * from "./primitives/switch";
+export * from "./primitives/table";
 export * from "./primitives/tabs";
 export * from "./primitives/textarea";
 export * from "./primitives/tooltip";

@@ -1,50 +1,58 @@
-import { useState } from "react";
 import {
-  Search,
-  Plus,
-  Send,
-  Paperclip,
-  Mic,
-  FileText,
-  Code,
-  Terminal,
-  MoreHorizontal,
-  Eye,
-  FolderOpen,
-  ChevronRight,
-  X,
-  Sparkles,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@nexu/ui-web";
+import {
   BarChart3,
-  Clock,
-  Wrench,
   Bookmark,
-  Settings,
-  UserPlus,
-  Users,
+  ChevronRight,
+  Clock,
+  Code,
+  Eye,
+  File,
+  FileSpreadsheet,
+  FileText,
+  Film,
+  FolderOpen,
   Hash,
   Image,
-  Film,
+  Mic,
+  MoreHorizontal,
   Music,
-  FileSpreadsheet,
-  File,
+  Paperclip,
+  Plus,
   Presentation,
+  Search,
+  Send,
+  Settings,
+  Sparkles,
+  Terminal,
+  UserPlus,
+  Users,
+  Wrench,
+  X,
 } from "lucide-react";
-import {
-  SESSIONS,
-  SESSION_DATA,
-  type FileOp,
-  type FileOpAction,
-  type SessionFileOp,
-  type Attachment,
-  type AttachmentType,
-} from "./sessionsData";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FileEditor from "./FileEditor";
 import ChatCardGroup from "./ChatCards";
 import type { CardAction } from "./ChatCards";
+import FileEditor from "./FileEditor";
 import PricingModal from "./PricingModal";
 import { useProductLayout } from "./ProductLayoutContext";
-import { Button } from '@nexu/ui-web'
+import {
+  type Attachment,
+  type AttachmentType,
+  type FileOp,
+  type FileOpAction,
+  SESSIONS,
+  SESSION_DATA,
+  type SessionFileOp,
+} from "./sessionsData";
 
 const QUICK_ACTIONS = [
   { label: "帮我写一份 PRD", icon: FileText, color: "text-emerald-400" },
@@ -112,9 +120,7 @@ function FileOpBadge({ op }: { op: FileOp }) {
   const style = FILE_OP_STYLES[op.action];
   return (
     <div className="flex items-center gap-1.5 px-2 py-1 bg-surface-3 rounded text-[11px] font-mono">
-      <span
-        className={`px-1 py-0.5 rounded text-[9px] font-bold ${style.color}`}
-      >
+      <span className={`px-1 py-0.5 rounded text-[9px] font-bold ${style.color}`}>
         {style.label}
       </span>
       <span className="text-text-secondary truncate">{op.path}</span>
@@ -169,9 +175,7 @@ function AttachmentChip({
           <Image size={20} className="text-white/40" />
         </div>
         <div className="px-2 py-1.5">
-          <div className="text-[10px] text-white/80 truncate">
-            {attachment.name}
-          </div>
+          <div className="text-[10px] text-white/80 truncate">{attachment.name}</div>
           <div className="text-[9px] text-white/40">{attachment.size}</div>
         </div>
       </div>
@@ -185,39 +189,44 @@ function AttachmentChip({
           <Image size={20} className="text-text-placeholder" />
         </div>
         <div className="px-2 py-1.5">
-          <div className="text-[10px] text-text-secondary truncate">
-            {attachment.name}
-          </div>
+          <div className="text-[10px] text-text-secondary truncate">{attachment.name}</div>
           <div className="text-[9px] text-text-muted">{attachment.size}</div>
         </div>
       </div>
     );
   }
 
-  const bgClass =
-    variant === "dark"
-      ? "bg-white/10 border-white/10"
-      : `${style.bg} border-border`;
+  const bgClass = variant === "dark" ? "bg-white/10 border-white/10" : `${style.bg} border-border`;
   const nameClass = variant === "dark" ? "text-white/90" : "text-text-primary";
   const sizeClass = variant === "dark" ? "text-white/40" : "text-text-muted";
   const iconClass = variant === "dark" ? "text-white/60" : style.color;
 
   return (
-    <div
-      className={`flex items-center gap-2 px-2.5 py-2 rounded-lg border ${bgClass}`}
-    >
+    <div className={`flex items-center gap-2 px-2.5 py-2 rounded-lg border ${bgClass}`}>
       <div className="shrink-0">
         {isAudio ? (
           <div className="flex items-center gap-0.5">
             <Icon size={14} className={iconClass} />
             <div className="flex items-end gap-px h-3.5">
-              {[3, 5, 8, 6, 10, 7, 4, 9, 5, 7, 3].map((h, i) => (
+              {[
+                { id: "b1", height: 3 },
+                { id: "b2", height: 5 },
+                { id: "b3", height: 8 },
+                { id: "b4", height: 6 },
+                { id: "b5", height: 10 },
+                { id: "b6", height: 7 },
+                { id: "b7", height: 4 },
+                { id: "b8", height: 9 },
+                { id: "b9", height: 5 },
+                { id: "b10", height: 7 },
+                { id: "b11", height: 3 },
+              ].map((bar) => (
                 <div
-                  key={i}
+                  key={bar.id}
                   className={`w-[2px] rounded-full ${
                     variant === "dark" ? "bg-white/30" : "bg-role-ops/30"
                   }`}
-                  style={{ height: h }}
+                  style={{ height: bar.height }}
                 />
               ))}
             </div>
@@ -231,9 +240,7 @@ function AttachmentChip({
         )}
       </div>
       <div className="min-w-0">
-        <div className={`text-[11px] font-medium truncate ${nameClass}`}>
-          {attachment.name}
-        </div>
+        <div className={`text-[11px] font-medium truncate ${nameClass}`}>{attachment.name}</div>
         <div className={`text-[9px] ${sizeClass}`}>{attachment.size}</div>
       </div>
     </div>
@@ -259,15 +266,13 @@ function NewSessionView({
         <div className="w-16 h-16 rounded-full bg-surface-3 animate-clone-breath-subtle flex items-center justify-center text-3xl mb-5">
           😊
         </div>
-        <h2 className="text-xl font-semibold text-text-primary mb-1">
-          Good evening, Tom
-        </h2>
+        <h2 className="text-xl font-semibold text-text-primary mb-1">Good evening, Tom</h2>
         <p className="text-sm text-text-secondary mb-1">
           你的主线入口 — <span className="text-accent font-medium">对话即操控一切</span>
         </p>
         <p className="text-[11px] text-text-muted mb-6 text-center max-w-sm">
-          写文件、记笔记、问同事、设自动化、装技能、查 OKR — 这一个对话窗就是你的 agent computer。所有操作都沉淀在{" "}
-          <span className="text-text-secondary">分身的大脑</span>里
+          写文件、记笔记、问同事、设自动化、装技能、查 OKR — 这一个对话窗就是你的 agent
+          computer。所有操作都沉淀在 <span className="text-text-secondary">分身的大脑</span>里
         </p>
 
         {/* Input */}
@@ -287,13 +292,22 @@ function NewSessionView({
           />
           <div className="flex items-center justify-between px-3 pb-3">
             <div className="flex items-center gap-1">
-              <button className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted transition-colors" title="上传文件">
+              <button
+                type="button"
+                className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted transition-colors"
+                title="上传文件"
+              >
                 <Paperclip size={15} />
               </button>
-              <button className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted transition-colors" title="拍照/录屏">
+              <button
+                type="button"
+                className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted transition-colors"
+                title="拍照/录屏"
+              >
                 <Image size={15} />
               </button>
               <button
+                type="button"
                 onClick={() => setShowSkills(!showSkills)}
                 className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[12px] transition-colors ${
                   showSkills ? "bg-clone/10 text-clone" : "hover:bg-surface-3 text-text-muted"
@@ -305,10 +319,18 @@ function NewSessionView({
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-[11px] text-text-muted">Claude 4.5</span>
-              <button className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted transition-colors" title="语音输入">
+              <button
+                type="button"
+                className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted transition-colors"
+                title="语音输入"
+              >
                 <Mic size={15} />
               </button>
-              <button onClick={handleSubmit} className="p-1.5 bg-accent text-accent-fg rounded-lg hover:bg-accent-hover transition-colors">
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className="p-1.5 bg-accent text-accent-fg rounded-lg hover:bg-accent-hover transition-colors"
+              >
                 <Send size={14} />
               </button>
             </div>
@@ -316,7 +338,9 @@ function NewSessionView({
           <div className="flex items-center gap-2 px-3 pb-2 text-[10px] text-text-muted">
             <span>支持上传：</span>
             {["图片", "PDF", "文档", "表格", "代码", "音视频"].map((t) => (
-              <span key={t} className="px-1.5 py-0.5 bg-surface-3 rounded">{t}</span>
+              <span key={t} className="px-1.5 py-0.5 bg-surface-3 rounded">
+                {t}
+              </span>
             ))}
           </div>
         </div>
@@ -328,12 +352,19 @@ function NewSessionView({
               已激活的 Skills
             </div>
             {ACTIVE_SKILLS.map((s) => (
-              <button key={s} className="w-full text-left px-3 py-2 rounded-lg text-[13px] text-text-primary hover:bg-surface-3 transition-colors">
+              <button
+                type="button"
+                key={s}
+                className="w-full text-left px-3 py-2 rounded-lg text-[13px] text-text-primary hover:bg-surface-3 transition-colors"
+              >
                 {s}
               </button>
             ))}
             <div className="border-t border-border mt-1 pt-1">
-              <Button size="inline" className="w-full text-left px-3 py-2 rounded-lg text-[12px] text-text-secondary hover:bg-surface-3 transition-colors flex items-center justify-start gap-1.5">
+              <Button
+                size="inline"
+                className="w-full text-left px-3 py-2 rounded-lg text-[12px] text-text-secondary hover:bg-surface-3 transition-colors flex items-center justify-start gap-1.5"
+              >
                 <Plus size={12} />
                 浏览 Skills Store...
               </Button>
@@ -345,6 +376,7 @@ function NewSessionView({
         <div className="flex flex-wrap gap-2 justify-center mb-6">
           {QUICK_ACTIONS.map((t) => (
             <button
+              type="button"
               key={t.label}
               onClick={() => onStartChat(t.label)}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-surface-2 border border-border rounded-full text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors"
@@ -366,13 +398,12 @@ function NewSessionView({
           <div className="grid grid-cols-3 gap-2">
             {CAPABILITY_DOMAINS.map((d) => (
               <button
+                type="button"
                 key={d.domain}
                 onClick={() => onStartChat(d.items[0])}
                 className={`p-3 bg-surface-2 border border-border ${d.accent} border-l-2 rounded-lg hover:border-border-hover transition-colors text-left group`}
               >
-                <div className="text-[12px] font-medium text-text-primary mb-1.5">
-                  {d.domain}
-                </div>
+                <div className="text-[12px] font-medium text-text-primary mb-1.5">{d.domain}</div>
                 <div className="space-y-0.5">
                   {d.items.map((item) => (
                     <div key={item} className="text-[10px] text-text-muted leading-relaxed">
@@ -394,15 +425,31 @@ function NewSessionView({
             <div className="flex-1 h-px bg-border" />
           </div>
           <p className="text-[10px] text-text-muted mb-2">
-            在其他页面你会看到 scoped sessions — 它们和这里一样是 Chat，但限定了特定的 Skills 和上下文：
+            在其他页面你会看到 scoped sessions — 它们和这里一样是 Chat，但限定了特定的 Skills
+            和上下文：
           </p>
           <div className="flex flex-wrap gap-1.5">
             {[
-              { label: "Team Insights", desc: "团队数据分析", color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20" },
-              { label: "Sprint 分析", desc: "冲刺进度跟踪", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
-              { label: "OKR 对齐", desc: "目标跟踪分析", color: "bg-violet-500/10 text-violet-400 border-violet-500/20" },
+              {
+                label: "Team Insights",
+                desc: "团队数据分析",
+                color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+              },
+              {
+                label: "Sprint 分析",
+                desc: "冲刺进度跟踪",
+                color: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+              },
+              {
+                label: "OKR 对齐",
+                desc: "目标跟踪分析",
+                color: "bg-violet-500/10 text-violet-400 border-violet-500/20",
+              },
             ].map((s) => (
-              <span key={s.label} className={`inline-flex items-center gap-1 px-2 py-1 rounded-md border text-[10px] ${s.color}`}>
+              <span
+                key={s.label}
+                className={`inline-flex items-center gap-1 px-2 py-1 rounded-md border text-[10px] ${s.color}`}
+              >
                 {s.label}
                 <span className="text-text-muted">· {s.desc}</span>
               </span>
@@ -463,77 +510,96 @@ function FileTypeIcon({ fileType }: { fileType: SessionFileOp["fileType"] }) {
   }
 }
 
-function SessionFileOpRow({
-  op,
-  selected,
+function SessionFileOpsTable({
+  title,
+  ops,
+  safeIdx,
+  fileOps,
   onSelect,
 }: {
-  op: SessionFileOp;
-  selected: boolean;
-  onSelect: () => void;
+  title: string;
+  ops: SessionFileOp[];
+  safeIdx: number;
+  fileOps: SessionFileOp[];
+  onSelect: (idx: number) => void;
 }) {
-  const style = FILE_OP_STYLES[op.action];
-  const fileName = op.path.split("/").pop() || op.path;
+  if (ops.length === 0) return null;
 
   return (
-    <button
-      onClick={onSelect}
-      className={`w-full text-left p-2 rounded-lg transition-all group ${
-        selected
-          ? "bg-accent/8 border border-accent/20"
-          : "hover:bg-surface-3 border border-transparent"
-      }`}
-    >
-      <div className="flex items-center gap-2">
-        <span
-          className={`px-1 py-0.5 rounded text-[8px] font-bold shrink-0 ${style.color}`}
-        >
-          {style.label}
+    <div>
+      <div className="flex items-center gap-1.5 px-2 py-1">
+        <span className="text-[9px] font-bold uppercase tracking-wider text-text-muted">
+          {title}
         </span>
-        <FileTypeIcon fileType={op.fileType} />
-        <span
-          className={`text-[11px] font-medium truncate ${
-            selected
-              ? "text-text-primary"
-              : "text-text-secondary group-hover:text-text-primary"
-          }`}
-        >
-          {fileName}
-        </span>
+        <span className="text-[9px] text-text-muted">{ops.length}</span>
+        <div className="h-px flex-1 bg-border" />
       </div>
-      <div className="flex items-center gap-2 mt-1 pl-[38px]">
-        <span className="text-[9px] text-text-muted font-mono truncate">
-          {op.path}
-        </span>
-        <span className="text-[9px] text-text-muted ml-auto shrink-0">
-          {op.time}
-        </span>
+      <div className="overflow-hidden rounded-lg border border-border/80 bg-surface-1">
+        <Table density="compact">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Op</TableHead>
+              <TableHead>File</TableHead>
+              <TableHead>Diff / Size</TableHead>
+              <TableHead className="text-right">Time</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {ops.map((op) => {
+              const idx = fileOps.indexOf(op);
+              const style = FILE_OP_STYLES[op.action];
+              const fileName = op.path.split("/").pop() || op.path;
+
+              return (
+                <TableRow
+                  key={`${op.action}-${op.path}-${op.time}`}
+                  selected={safeIdx === idx}
+                  className="cursor-pointer"
+                  onClick={() => onSelect(idx)}
+                >
+                  <TableCell>
+                    <span
+                      className={`inline-flex rounded px-1 py-0.5 text-[8px] font-bold ${style.color}`}
+                    >
+                      {style.label}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex min-w-0 items-center gap-2">
+                      <FileTypeIcon fileType={op.fileType} />
+                      <div className="min-w-0">
+                        <div className="truncate text-[11px] font-medium text-text-primary">
+                          {fileName}
+                        </div>
+                        <div className="truncate font-mono text-[9px] text-text-muted">
+                          {op.path}
+                        </div>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2 text-[9px]">
+                      {op.diff ? (
+                        <>
+                          {op.diff.added > 0 ? (
+                            <span className="font-mono text-success">+{op.diff.added}</span>
+                          ) : null}
+                          {op.diff.removed > 0 ? (
+                            <span className="font-mono text-danger">-{op.diff.removed}</span>
+                          ) : null}
+                        </>
+                      ) : null}
+                      {op.size ? <span className="text-text-muted">{op.size}</span> : null}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right text-[9px] text-text-muted">{op.time}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       </div>
-      {op.diff && (
-        <div className="flex items-center gap-2 mt-1 pl-[38px]">
-          {op.diff.added > 0 && (
-            <span className="text-[9px] text-success font-mono">
-              +{op.diff.added}
-            </span>
-          )}
-          {op.diff.removed > 0 && (
-            <span className="text-[9px] text-danger font-mono">
-              -{op.diff.removed}
-            </span>
-          )}
-          {op.size && (
-            <span className="text-[9px] text-text-muted ml-auto">
-              {op.size}
-            </span>
-          )}
-        </div>
-      )}
-      {!op.diff && op.size && (
-        <div className="flex items-center gap-2 mt-1 pl-[38px]">
-          <span className="text-[9px] text-text-muted">{op.size}</span>
-        </div>
-      )}
-    </button>
+    </div>
   );
 }
 
@@ -562,19 +628,20 @@ function ActiveChatView({
 
   const handleCardAction = (action: CardAction) => {
     switch (action.type) {
-      case 'openFile':
+      case "openFile":
         openFile(action.payload);
         break;
-      case 'navigate':
+      case "navigate":
         navigate(action.payload);
         break;
-      case 'showPricing':
+      case "showPricing":
         setPricingOpen(true);
         break;
     }
   };
 
-  const session = SESSIONS.find((s) => s.id === sessionId)!;
+  const session = SESSIONS.find((s) => s.id === sessionId);
+  if (!session) return null;
   const data = SESSION_DATA[sessionId];
   const messages = data?.messages || [];
   const fileOps = data?.fileOps || [];
@@ -582,17 +649,19 @@ function ActiveChatView({
 
   const safeIdx = selectedFileOp < fileOps.length ? selectedFileOp : 0;
   const currentOp = fileOps[safeIdx];
-  const pathParts = currentOp ? currentOp.path.split("/") : [];
-  const fileName = currentOp ? pathParts.pop() || "" : "";
+  const rawPathParts = currentOp ? currentOp.path.split("/") : [];
+  const fileName = currentOp ? rawPathParts[rawPathParts.length - 1] || "" : "";
+  const pathParts = fileName ? rawPathParts.slice(0, -1) : rawPathParts;
+  const breadcrumbs = pathParts.map((part, idx, parts) => ({
+    label: part,
+    key: parts.slice(0, idx + 1).join("/"),
+  }));
 
   const writeOps = fileOps.filter(
-    (op) =>
-      op.action === "create" || op.action === "write" || op.action === "delete"
+    (op) => op.action === "create" || op.action === "write" || op.action === "delete",
   );
   const readOps = fileOps.filter((op) => op.action === "read");
-  const execOps = fileOps.filter(
-    (op) => op.action === "execute" || op.action === "install"
-  );
+  const execOps = fileOps.filter((op) => op.action === "execute" || op.action === "install");
 
   return (
     <>
@@ -601,9 +670,7 @@ function ActiveChatView({
         <div className="h-11 border-b border-border flex items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <span className="text-sm">{session.emoji}</span>
-            <span className="text-[13px] font-medium text-text-primary">
-              {session.title}
-            </span>
+            <span className="text-[13px] font-medium text-text-primary">{session.title}</span>
             <span className="text-[10px] bg-surface-3 px-1.5 py-0.5 rounded flex items-center gap-1">
               <span>{ch?.icon}</span>
               <span className="text-text-muted">{session.channel}</span>
@@ -614,6 +681,7 @@ function ActiveChatView({
           </div>
           <div className="flex items-center gap-1">
             <button
+              type="button"
               onClick={() => setPreviewOpen(!previewOpen)}
               className={`p-1 rounded transition-colors ${
                 previewOpen
@@ -624,7 +692,10 @@ function ActiveChatView({
             >
               <Eye size={14} />
             </button>
-            <button className="p-1 rounded hover:bg-surface-3 text-text-muted transition-colors">
+            <button
+              type="button"
+              className="p-1 rounded hover:bg-surface-3 text-text-muted transition-colors"
+            >
               <MoreHorizontal size={14} />
             </button>
           </div>
@@ -633,10 +704,8 @@ function ActiveChatView({
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {messages.map((msg, i) => (
             <div
-              key={i}
-              className={`flex ${
-                msg.from === "user" ? "justify-end" : "gap-2"
-              }`}
+              key={`${msg.from}-${msg.content || msg.tool?.name || i}`}
+              className={`flex ${msg.from === "user" ? "justify-end" : "gap-2"}`}
             >
               {msg.from === "clone" && (
                 <div className="w-6 h-6 rounded-full bg-clone/15 flex items-center justify-center text-[11px] shrink-0 mt-0.5">
@@ -646,9 +715,9 @@ function ActiveChatView({
               <div className="max-w-[80%] space-y-1.5">
                 {msg.attachments && msg.attachments.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 justify-end">
-                    {msg.attachments.map((att, j) => (
+                    {msg.attachments.map((att) => (
                       <AttachmentChip
-                        key={j}
+                        key={att.name}
                         attachment={att}
                         variant={msg.from === "user" ? "dark" : "light"}
                       />
@@ -659,8 +728,8 @@ function ActiveChatView({
                   <ChatCardGroup cards={msg.cards} onCardAction={handleCardAction} interactive />
                 ) : msg.fileOps ? (
                   <div className="space-y-1">
-                    {msg.fileOps.map((op, j) => (
-                      <FileOpBadge key={j} op={op} />
+                    {msg.fileOps.map((op) => (
+                      <FileOpBadge key={`${op.action}-${op.path}`} op={op} />
                     ))}
                   </div>
                 ) : null}
@@ -694,18 +763,19 @@ function ActiveChatView({
             <div className="flex items-center gap-1 px-2 py-1 bg-surface-3 rounded-md text-[10px] text-text-secondary">
               <Image size={11} className="text-role-designer" />
               <span className="truncate max-w-[80px]">screenshot.png</span>
-              <button className="ml-0.5 text-text-muted hover:text-text-primary">
+              <button type="button" className="ml-0.5 text-text-muted hover:text-text-primary">
                 <X size={10} />
               </button>
             </div>
             <div className="flex items-center gap-1 px-2 py-1 bg-surface-3 rounded-md text-[10px] text-text-secondary">
               <File size={11} className="text-danger" />
               <span className="truncate max-w-[80px]">report.pdf</span>
-              <button className="ml-0.5 text-text-muted hover:text-text-primary">
+              <button type="button" className="ml-0.5 text-text-muted hover:text-text-primary">
                 <X size={10} />
               </button>
             </div>
             <button
+              type="button"
               className="p-1 rounded-md hover:bg-surface-3 text-text-muted transition-colors"
               title="添加更多"
             >
@@ -714,12 +784,16 @@ function ActiveChatView({
           </div>
           <div className="flex items-end gap-2 bg-surface-2 border border-border rounded-xl px-3 py-2">
             <button
+              type="button"
               className="p-1 text-text-muted hover:text-text-secondary transition-colors shrink-0"
               title="上传文件 (图片/PDF/文档/表格/代码/音视频...)"
             >
               <Paperclip size={14} />
             </button>
-            <button className="p-1 text-text-muted hover:text-text-secondary transition-colors shrink-0">
+            <button
+              type="button"
+              className="p-1 text-text-muted hover:text-text-secondary transition-colors shrink-0"
+            >
               <Sparkles size={14} />
             </button>
             <textarea
@@ -730,18 +804,23 @@ function ActiveChatView({
               className="flex-1 bg-transparent text-[13px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed"
             />
             <button
+              type="button"
               className="p-1 text-text-muted hover:text-text-secondary transition-colors shrink-0"
               title="语音输入"
             >
               <Mic size={14} />
             </button>
             <button
+              type="button"
               className="p-1 text-text-muted hover:text-text-secondary transition-colors shrink-0"
               title="拍照/录屏"
             >
               <Film size={14} />
             </button>
-            <button className="p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors">
+            <button
+              type="button"
+              className="p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors"
+            >
               <Send size={13} />
             </button>
           </div>
@@ -755,11 +834,8 @@ function ActiveChatView({
           <div className="h-11 border-b border-border flex items-center justify-between px-3">
             <div className="flex items-center gap-2 min-w-0">
               <FileTypeIcon fileType={currentOp.fileType} />
-              <span className="text-[12px] font-medium text-text-primary truncate">
-                {fileName}
-              </span>
-              {(currentOp.action === "create" ||
-                currentOp.action === "write") && (
+              <span className="text-[12px] font-medium text-text-primary truncate">{fileName}</span>
+              {(currentOp.action === "create" || currentOp.action === "write") && (
                 <span
                   className={`text-[9px] px-1 py-0.5 rounded shrink-0 ${
                     FILE_OP_STYLES[currentOp.action].color
@@ -780,6 +856,7 @@ function ActiveChatView({
               )}
             </div>
             <button
+              type="button"
               onClick={() => setPreviewOpen(false)}
               className="p-1 rounded hover:bg-surface-3 text-text-muted transition-colors"
             >
@@ -791,10 +868,10 @@ function ActiveChatView({
           <div className="px-3 py-1.5 border-b border-border flex items-center gap-1 text-[10px] text-text-muted">
             <FolderOpen size={10} />
             <span>~/clone</span>
-            {pathParts.map((part, i) => (
-              <span key={i} className="flex items-center gap-1">
+            {breadcrumbs.map((part) => (
+              <span key={part.key} className="flex items-center gap-1">
                 <ChevronRight size={8} />
-                <span>{part}</span>
+                <span>{part.label}</span>
               </span>
             ))}
             <ChevronRight size={8} />
@@ -820,18 +897,12 @@ function ActiveChatView({
             )}
             {currentOp.diff && (
               <div className="px-3 py-2 border-t border-border flex items-center gap-3 text-[10px] shrink-0">
-                <span className="text-success font-mono">
-                  +{currentOp.diff.added} lines
-                </span>
+                <span className="text-success font-mono">+{currentOp.diff.added} lines</span>
                 {currentOp.diff.removed > 0 && (
-                  <span className="text-danger font-mono">
-                    -{currentOp.diff.removed} lines
-                  </span>
+                  <span className="text-danger font-mono">-{currentOp.diff.removed} lines</span>
                 )}
                 {currentOp.size && (
-                  <span className="text-text-muted ml-auto">
-                    {currentOp.size}
-                  </span>
+                  <span className="text-text-muted ml-auto">{currentOp.size}</span>
                 )}
               </div>
             )}
@@ -851,81 +922,27 @@ function ActiveChatView({
               </div>
             </div>
             <div className="flex-1 overflow-y-auto px-2 pb-2 space-y-0.5">
-              {/* Write ops */}
-              {writeOps.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-1.5 px-2 py-1">
-                    <span className="text-[9px] font-bold text-text-muted uppercase tracking-wider">
-                      Writes
-                    </span>
-                    <span className="text-[9px] text-text-muted">
-                      {writeOps.length}
-                    </span>
-                    <div className="flex-1 h-px bg-border" />
-                  </div>
-                  {writeOps.map((op) => {
-                    const idx = fileOps.indexOf(op);
-                    return (
-                      <SessionFileOpRow
-                        key={idx}
-                        op={op}
-                        selected={safeIdx === idx}
-                        onSelect={() => setSelectedFileOp(idx)}
-                      />
-                    );
-                  })}
-                </div>
-              )}
-              {/* Read ops */}
-              {readOps.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-1.5 px-2 py-1">
-                    <span className="text-[9px] font-bold text-text-muted uppercase tracking-wider">
-                      Reads
-                    </span>
-                    <span className="text-[9px] text-text-muted">
-                      {readOps.length}
-                    </span>
-                    <div className="flex-1 h-px bg-border" />
-                  </div>
-                  {readOps.map((op) => {
-                    const idx = fileOps.indexOf(op);
-                    return (
-                      <SessionFileOpRow
-                        key={idx}
-                        op={op}
-                        selected={safeIdx === idx}
-                        onSelect={() => setSelectedFileOp(idx)}
-                      />
-                    );
-                  })}
-                </div>
-              )}
-              {/* Exec / Install ops */}
-              {execOps.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-1.5 px-2 py-1">
-                    <span className="text-[9px] font-bold text-text-muted uppercase tracking-wider">
-                      Skills
-                    </span>
-                    <span className="text-[9px] text-text-muted">
-                      {execOps.length}
-                    </span>
-                    <div className="flex-1 h-px bg-border" />
-                  </div>
-                  {execOps.map((op) => {
-                    const idx = fileOps.indexOf(op);
-                    return (
-                      <SessionFileOpRow
-                        key={idx}
-                        op={op}
-                        selected={safeIdx === idx}
-                        onSelect={() => setSelectedFileOp(idx)}
-                      />
-                    );
-                  })}
-                </div>
-              )}
+              <SessionFileOpsTable
+                title="Writes"
+                ops={writeOps}
+                safeIdx={safeIdx}
+                fileOps={fileOps}
+                onSelect={setSelectedFileOp}
+              />
+              <SessionFileOpsTable
+                title="Reads"
+                ops={readOps}
+                safeIdx={safeIdx}
+                fileOps={fileOps}
+                onSelect={setSelectedFileOp}
+              />
+              <SessionFileOpsTable
+                title="Skills"
+                ops={execOps}
+                safeIdx={safeIdx}
+                fileOps={fileOps}
+                onSelect={setSelectedFileOp}
+              />
             </div>
           </div>
         </div>
@@ -961,6 +978,7 @@ export default function SessionsPage() {
               />
             </div>
             <button
+              type="button"
               onClick={() => setActiveSession(null)}
               className="p-1 rounded-md hover:bg-surface-3 text-text-secondary transition-colors"
               title="新建对话"
@@ -975,6 +993,7 @@ export default function SessionsPage() {
             const isActive = activeSession === s.id;
             return (
               <button
+                type="button"
                 key={s.id}
                 onClick={() => setActiveSession(s.id)}
                 className={`w-full text-left px-2.5 py-2 rounded-lg transition-colors ${
@@ -1029,24 +1048,19 @@ export default function SessionsPage() {
                       )}
                     </div>
                   </div>
-                  {(s as any).isProxy && !isActive && (
+                  {s.isProxy && !isActive && (
                     <span className="text-[8px] px-1 py-0.5 bg-info-subtle text-info rounded shrink-0 mt-1">
                       代问
                     </span>
                   )}
-                  {(s as any).isProactive &&
-                    !isActive &&
-                    !(s as any).isProxy && (
-                      <span className="text-[8px] px-1 py-0.5 bg-clone/10 text-clone rounded shrink-0 mt-1">
-                        主动
-                      </span>
-                    )}
-                  {s.unread &&
-                    !isActive &&
-                    !(s as any).isProactive &&
-                    !(s as any).isProxy && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-clone shrink-0 mt-1.5" />
-                    )}
+                  {s.isProactive && !isActive && !s.isProxy && (
+                    <span className="text-[8px] px-1 py-0.5 bg-clone/10 text-clone rounded shrink-0 mt-1">
+                      主动
+                    </span>
+                  )}
+                  {s.unread && !isActive && !s.isProactive && !s.isProxy && (
+                    <div className="w-1.5 h-1.5 rounded-full bg-clone shrink-0 mt-1.5" />
+                  )}
                 </div>
               </button>
             );

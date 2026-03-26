@@ -1,4 +1,17 @@
-import { Alert, AlertDescription, AlertTitle, Button, Input, Label } from "@nexu/ui-web";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Button,
+  Input,
+  Label,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@nexu/ui-web";
 import {
   AlertCircle,
   ArrowLeft,
@@ -248,7 +261,8 @@ function SlackOAuthView() {
         <div className="grid grid-cols-4 gap-2 mb-6">
           {manualSteps.map((s, i) => (
             <button
-              key={i}
+              key={s.title}
+              type="button"
               onClick={() => setManualStep(i)}
               className="text-left cursor-pointer"
               style={{ background: "none", border: "none", padding: 0 }}
@@ -341,7 +355,7 @@ function SlackOAuthView() {
                   "Enter App name (e.g. your brand)",
                   "Select Workspace to install",
                 ].map((item, i) => (
-                  <div key={i} className="flex gap-2.5 items-start">
+                  <div key={item} className="flex gap-2.5 items-start">
                     <div
                       className="flex justify-center items-center w-5 h-5 rounded-full shrink-0 mt-0.5"
                       style={{
@@ -512,7 +526,7 @@ function SlackOAuthView() {
                   "Paste the URL above into Request URL",
                   "Add message.im and app_mention to Subscribe to bot events",
                 ].map((item, i) => (
-                  <div key={i} className="flex gap-2.5 items-start">
+                  <div key={item} className="flex gap-2.5 items-start">
                     <div
                       className="flex justify-center items-center w-5 h-5 rounded-full shrink-0 mt-0.5"
                       style={{
@@ -582,55 +596,53 @@ function SlackOAuthView() {
               </div>
             </div>
             <div className="ml-11 space-y-4">
-              <div
-                className="rounded-lg overflow-hidden"
-                style={{ border: "1px solid rgba(0,0,0,0.10)" }}
-              >
-                <div className="px-3.5 py-2.5 bg-surface-2 border-b border-border">
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 600,
-                      color: "var(--color-text-secondary)",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                      fontFamily: FONT,
-                    }}
-                  >
-                    Required Scopes
-                  </span>
-                </div>
-                {REQUIRED_SLACK_SCOPES.map((s, i) => (
-                  <div
-                    key={s.scope}
-                    className="flex items-center gap-3 px-3.5 py-2.5"
-                    style={{
-                      borderBottom:
-                        i < REQUIRED_SLACK_SCOPES.length - 1
-                          ? "1px solid rgba(0,0,0,0.10)"
-                          : "none",
-                    }}
-                  >
-                    <CheckCircle2 size={12} className="text-success shrink-0" />
-                    <code
-                      className="px-1.5 py-0.5 rounded"
-                      style={{
-                        fontSize: 11,
-                        fontFamily: MONO,
-                        color: "#611f69",
-                        background: "rgba(97,31,105,0.08)",
-                        fontWeight: 500,
-                      }}
-                    >
-                      {s.scope}
-                    </code>
-                    <span
-                      style={{ fontSize: 11, color: "var(--color-text-muted)", fontFamily: FONT }}
-                    >
-                      {s.desc}
-                    </span>
-                  </div>
-                ))}
+              <div className="overflow-hidden rounded-lg border border-border bg-surface-0">
+                <Table density="compact">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead style={{ fontFamily: FONT }}>Scope</TableHead>
+                      <TableHead style={{ fontFamily: FONT }}>Description</TableHead>
+                      <TableHead className="w-[88px] text-right" style={{ fontFamily: FONT }}>
+                        State
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {REQUIRED_SLACK_SCOPES.map((s) => (
+                      <TableRow key={s.scope}>
+                        <TableCell>
+                          <code
+                            className="inline-flex rounded px-1.5 py-0.5"
+                            style={{
+                              fontSize: 11,
+                              fontFamily: MONO,
+                              color: "#611f69",
+                              background: "rgba(97,31,105,0.08)",
+                              fontWeight: 500,
+                            }}
+                          >
+                            {s.scope}
+                          </code>
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            fontSize: 11,
+                            color: "var(--color-text-muted)",
+                            fontFamily: FONT,
+                          }}
+                        >
+                          {s.desc}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="inline-flex items-center gap-1 text-[11px] text-success">
+                            <CheckCircle2 size={12} className="shrink-0" />
+                            Required
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
               <Button
                 className="flex gap-1.5 items-center"
