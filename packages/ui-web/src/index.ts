@@ -2,6 +2,7 @@ export * from "./lib/cn";
 export * from "./primitives/badge";
 export * from "./primitives/button";
 export * from "./primitives/avatar";
+export * from "./primitives/alert";
 export * from "./primitives/card";
 export * from "./primitives/checkbox";
 export * from "./primitives/dialog";
