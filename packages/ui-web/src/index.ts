@@ -11,6 +11,7 @@ export * from "./primitives/input";
 export * from "./primitives/label";
 export * from "./primitives/popover";
 export * from "./primitives/progress";
+export * from "./primitives/pricing-card";
 export * from "./primitives/radio-group";
 export * from "./primitives/select";
 export * from "./primitives/separator";

@@ -1,14 +1,14 @@
-import { Badge, Button, StatCard, Tabs, TabsContent, TabsList, TabsTrigger } from "@nexu/ui-web";
 import {
-  ArrowRight,
-  Check,
-  ChevronRight,
-  Code2,
-  Crown,
-  Globe,
-  Sparkles,
-  TrendingUp,
-} from "lucide-react";
+  Badge,
+  Button,
+  PricingCard,
+  StatCard,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@nexu/ui-web";
+import { ArrowRight, ChevronRight, Code2, Crown, Globe, Sparkles, TrendingUp } from "lucide-react";
 import { usePageTitle } from "../../hooks/usePageTitle";
 
 const PLANS = [
@@ -16,7 +16,9 @@ const PLANS = [
     id: "free",
     name: "Free",
     price: "$0",
+    description: "For getting started with AI workflows",
     credits: 5000,
+    icon: Sparkles,
     current: true,
     features: [
       "5,000 credits / month",
@@ -29,7 +31,9 @@ const PLANS = [
     id: "pro",
     name: "Pro",
     price: "$29",
+    description: "For independent builders shipping faster",
     credits: 50000,
+    icon: Crown,
     recommended: true,
     features: [
       "50,000 credits / month",
@@ -43,7 +47,9 @@ const PLANS = [
     id: "team",
     name: "Team",
     price: "$99",
+    description: "For teams coordinating delivery together",
     credits: 200000,
+    icon: Globe,
     features: [
       "200,000 credits / month",
       "Dedicated compute",
@@ -237,48 +243,34 @@ export default function BillingPage() {
         <TabsContent value="plans">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {PLANS.map((plan) => (
-              <div
+              <PricingCard
                 key={plan.id}
-                className={`p-6 rounded-[12px] border border-border-subtle transition-colors ${
-                  "recommended" in plan && plan.recommended
-                    ? "border-accent/40 bg-accent/5 ring-1 ring-accent/20"
-                    : "border-border-subtle bg-surface-1"
-                }`}
-              >
-                {"recommended" in plan && plan.recommended && (
-                  <Badge variant="brand" className="mb-3">
-                    Recommended
-                  </Badge>
-                )}
-                <h3 className="text-lg font-bold text-text-primary">{plan.name}</h3>
-                <div className="flex items-baseline gap-1 mt-2 mb-4">
-                  <span className="text-3xl font-bold text-text-primary">{plan.price}</span>
-                  <span className="text-[12px] text-text-muted">/ month</span>
-                </div>
-                <div className="space-y-2.5 mb-6">
-                  {plan.features.map((f) => (
-                    <div
-                      key={f}
-                      className="flex gap-2 items-center text-[13px] text-text-secondary"
+                name={plan.name}
+                description={plan.description}
+                price={plan.price}
+                period="/ month"
+                icon={plan.icon}
+                iconClassName={
+                  "recommended" in plan && plan.recommended ? "text-accent" : undefined
+                }
+                badge={"recommended" in plan && plan.recommended ? "Recommended" : undefined}
+                featured={Boolean("recommended" in plan && plan.recommended)}
+                features={plan.features}
+                footer={
+                  "current" in plan && plan.current ? (
+                    <Button variant="outline" className="w-full cursor-default" disabled>
+                      Current plan
+                    </Button>
+                  ) : (
+                    <Button
+                      variant={"recommended" in plan && plan.recommended ? "default" : "outline"}
+                      className="w-full"
                     >
-                      <Check size={14} className="text-[var(--color-success)] shrink-0" />
-                      {f}
-                    </div>
-                  ))}
-                </div>
-                {"current" in plan && plan.current ? (
-                  <Button variant="outline" className="w-full cursor-default" disabled>
-                    Current plan
-                  </Button>
-                ) : (
-                  <Button
-                    variant={"recommended" in plan && plan.recommended ? "default" : "outline"}
-                    className="w-full"
-                  >
-                    Upgrade <ChevronRight size={14} />
-                  </Button>
-                )}
-              </div>
+                      Upgrade <ChevronRight size={14} />
+                    </Button>
+                  )
+                }
+              />
             ))}
           </div>
         </TabsContent>
