@@ -21,7 +21,9 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@nexu-design/ui-web": ["../../packages/ui-web/src/index.ts"],
+      "@nexu-design/tokens": ["../../packages/tokens/src/index.ts"]
     }
   },
   "include": ["src"]
