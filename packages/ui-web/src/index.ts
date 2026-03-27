@@ -34,6 +34,7 @@ export * from "./primitives/stepper";
 export * from "./primitives/table";
 export * from "./primitives/tabs";
 export * from "./primitives/textarea";
+export * from "./primitives/toggle";
 export * from "./primitives/tooltip";
 export * from "./patterns/form-field";
 export * from "./patterns/empty-state";

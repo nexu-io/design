@@ -12,6 +12,8 @@ import {
   TableHeader,
   TableRow,
   Textarea,
+  ToggleGroup,
+  ToggleGroupItem,
 } from "@nexu/ui-web";
 import { Clock, Sparkles, Users, Zap } from "lucide-react";
 import { type FormEvent, useEffect, useState } from "react";
@@ -74,6 +76,27 @@ export default function NexuTaskPage() {
 
           <section className="card p-5">
             <h3 className="text-xs font-medium uppercase tracking-wider text-text-muted">指派给</h3>
+            <ToggleGroup
+              type="single"
+              value={selectedAvatar}
+              onValueChange={(value: string) => {
+                if (value) setSelectedAvatar(value);
+              }}
+              variant="outline"
+              aria-label="Quick avatar selection"
+              className="mt-3"
+            >
+              {AVATAR_OPTIONS.map((avatar) => (
+                <ToggleGroupItem
+                  key={avatar.id}
+                  value={avatar.id}
+                  variant="outline"
+                  className="min-w-fit"
+                >
+                  {avatar.name}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
             <DataTable className="mt-3 bg-surface-0">
               <ComposedDataTableHeader>
                 <div>

@@ -56,6 +56,8 @@ The target state is:
 - `Table`
 - `Tabs`
 - `Textarea`
+- `Toggle`
+- `ToggleGroup`
 - `Tooltip`
 
 #### Patterns
@@ -92,7 +94,6 @@ It is now primarily about:
 The largest remaining unimplemented shared pieces are:
 - `ResizablePanel` / `SplitView`
 - `Sidebar` / `NavigationMenu`
-- `Toggle` / `ToggleGroup`
 - `Combobox`
 - `Breadcrumb`
 - `ActivityBar`
@@ -786,7 +787,7 @@ The original Wave 1-3 ordering is still useful as historical context, but the fi
 - [x] `PanelFooter`
 - [x] `InteractiveRow`
 - [x] `DataTable`
-- [ ] `Toggle` / `ToggleGroup`
+- [x] `Toggle` / `ToggleGroup`
 
 ### Wave 3
 - [x] `ConversationMessage`
@@ -875,7 +876,6 @@ If continuing implementation immediately, do this next:
 1. implement the missing desktop shell primitives:
    - `ResizablePanel` / `SplitView`
    - `Sidebar` / `NavigationMenu`
-   - `Toggle` / `ToggleGroup`
 2. apply those shell primitives to the highest-leverage layouts:
    - `product/ProductLayout.tsx`
    - `nexu/NexuProductLayout.tsx`

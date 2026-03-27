@@ -1,4 +1,12 @@
-import { Alert, AlertDescription, AlertTitle, Button, StatCard } from "@nexu/ui-web";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Button,
+  StatCard,
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@nexu/ui-web";
 import {
   AlertCircle,
   BarChart3,
@@ -917,16 +925,22 @@ export default function AutomationPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center gap-1 mb-6 border-b border-border">
+        <ToggleGroup
+          type="single"
+          value={activeTab}
+          onValueChange={(value: string) => {
+            if (value) setActiveTab(value as TabId);
+          }}
+          variant="underline"
+          aria-label="Automation views"
+          className="mb-6"
+        >
           {TABS_CONFIG.map((t) => (
-            <button
+            <ToggleGroupItem
               key={t.id}
-              onClick={() => setActiveTab(t.id)}
-              className={`flex items-center gap-1.5 px-3 py-2.5 text-[13px] border-b-2 transition-colors -mb-px ${
-                activeTab === t.id
-                  ? "border-accent text-text-primary font-medium"
-                  : "border-transparent text-text-secondary hover:text-text-primary"
-              }`}
+              value={t.id}
+              variant="underline"
+              className="gap-1.5 text-[13px]"
             >
               <t.icon size={14} />
               {t.label}
@@ -935,9 +949,9 @@ export default function AutomationPage() {
                   {t.count}
                 </span>
               )}
-            </button>
+            </ToggleGroupItem>
           ))}
-        </div>
+        </ToggleGroup>
 
         {activeTab === "schedules" && <SchedulesTab onSelectItem={setSelectedItem} />}
         {activeTab === "proactive" && <ProactiveTab onSelectItem={setSelectedItem} />}

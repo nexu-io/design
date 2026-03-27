@@ -1,4 +1,4 @@
-import { Button, StatsBar } from "@nexu/ui-web";
+import { Button, StatsBar, ToggleGroup, ToggleGroupItem } from "@nexu/ui-web";
 import {
   AlertTriangle,
   BarChart3,
@@ -918,41 +918,38 @@ export default function TeamPage() {
       />
 
       {/* Tab bar */}
-      <div className="flex items-center gap-0.5 px-5 border-b border-border bg-surface-0">
-        {TABS.map((tab) => {
-          const active = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => handleTabSwitch(tab.id)}
-              className={`flex items-center gap-1.5 px-3 py-2.5 text-[12px] font-medium border-b-2 transition-colors ${
-                active
-                  ? "border-accent text-text-primary"
-                  : "border-transparent text-text-muted hover:text-text-secondary"
-              }`}
-            >
-              <tab.icon size={14} />
-              {tab.label}
-              {tab.id === "tasks" && (
-                <span className="text-[9px] px-1 py-0.5 bg-clone/10 text-clone rounded-full ml-0.5">
-                  {TASK_BOARD.filter((t) => t.status === "in_progress").length}
-                </span>
-              )}
-              {tab.id === "alignments" && (
-                <span className="text-[9px] px-1 py-0.5 bg-warning-subtle text-warning rounded-full ml-0.5">
-                  1
-                </span>
-              )}
-              {tab.id === "okr" && atRiskOKR > 0 && (
-                <span className="text-[9px] px-1 py-0.5 bg-danger-subtle text-danger rounded-full ml-0.5">
-                  {atRiskOKR}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+      <ToggleGroup
+        type="single"
+        value={activeTab}
+        onValueChange={(value: string) => {
+          if (value) handleTabSwitch(value as TabId);
+        }}
+        variant="underline"
+        aria-label="Team views"
+        className="px-5 bg-surface-0"
+      >
+        {TABS.map((tab) => (
+          <ToggleGroupItem key={tab.id} value={tab.id} variant="underline" className="gap-1.5">
+            <tab.icon size={14} />
+            {tab.label}
+            {tab.id === "tasks" && (
+              <span className="text-[9px] px-1 py-0.5 bg-clone/10 text-clone rounded-full ml-0.5">
+                {TASK_BOARD.filter((t) => t.status === "in_progress").length}
+              </span>
+            )}
+            {tab.id === "alignments" && (
+              <span className="text-[9px] px-1 py-0.5 bg-warning-subtle text-warning rounded-full ml-0.5">
+                1
+              </span>
+            )}
+            {tab.id === "okr" && atRiskOKR > 0 && (
+              <span className="text-[9px] px-1 py-0.5 bg-danger-subtle text-danger rounded-full ml-0.5">
+                {atRiskOKR}
+              </span>
+            )}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
 
       {/* Content + Detail Panel + Insights Chat */}
       <div className="flex overflow-hidden flex-col flex-1 min-h-0">

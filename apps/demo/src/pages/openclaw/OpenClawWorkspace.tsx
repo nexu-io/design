@@ -11,6 +11,8 @@ import {
   PanelFooterActions,
   ScrollArea,
   Switch,
+  ToggleGroup,
+  ToggleGroupItem,
 } from "@nexu/ui-web";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import {
@@ -358,108 +360,99 @@ function SkillsPanel() {
         </div>
 
         {/* Top-level tabs: Explore / Yours — segment control */}
-        <div className="inline-flex items-center gap-1 p-1 rounded-full bg-surface-2 mb-4">
+        <ToggleGroup
+          type="single"
+          value={topTab}
+          onValueChange={(value: string) => {
+            if (!value) return;
+            setTopTab(value as typeof topTab);
+            setFilter("all");
+            setYoursSubTab("all");
+          }}
+          variant="pill"
+          aria-label="Skills source"
+          className="mb-4"
+        >
           {[
             { id: "yours" as const, label: t("ws.skills.yours"), icon: Settings2 },
             { id: "explore" as const, label: t("ws.skills.explore"), icon: Compass },
           ].map((tab) => {
-            const active = topTab === tab.id;
             const TabIcon = tab.icon;
             return (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  setTopTab(tab.id);
-                  setFilter("all");
-                  setYoursSubTab("all");
-                }}
-                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[13px] font-medium transition-all ${
-                  active
-                    ? "bg-white text-text-primary shadow-[var(--shadow-rest)]"
-                    : "text-text-secondary hover:text-text-primary"
-                }`}
-              >
+              <ToggleGroupItem key={tab.id} value={tab.id} variant="pill" className="gap-1.5">
                 <TabIcon size={14} />
                 {tab.label}
                 {tab.id === "yours" && installedSkills.length > 0 && (
-                  <span
-                    className={`tabular-nums text-[12px] ${active ? "text-text-secondary" : "text-text-tertiary"}`}
-                  >
-                    {installedSkills.length}
-                  </span>
+                  <span className="tabular-nums text-[12px]">{installedSkills.length}</span>
                 )}
-              </button>
+              </ToggleGroupItem>
             );
           })}
-        </div>
+        </ToggleGroup>
 
         {/* Yours sub-tabs: All / Personal / Installed */}
         {topTab === "yours" && (
-          <div className="flex items-center gap-2 mb-3">
+          <ToggleGroup
+            type="single"
+            value={yoursSubTab}
+            onValueChange={(value: string) => {
+              if (!value) return;
+              setYoursSubTab(value as typeof yoursSubTab);
+              setFilter("all");
+            }}
+            variant="outline"
+            size="sm"
+            aria-label="Installed skill groups"
+            className="mb-3"
+          >
             {[
               { id: "all" as const, label: t("ws.common.all"), count: installedSkills.length },
               { id: "personal" as const, label: t("ws.skills.personal"), count: personalCount },
               { id: "installed" as const, label: t("ws.skills.installed"), count: installedCount },
-            ].map((tab) => {
-              const active = yoursSubTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    setYoursSubTab(tab.id);
-                    setFilter("all");
-                  }}
-                  className={`shrink-0 inline-flex items-center justify-center rounded-full h-7 px-3 text-[11px] leading-none font-medium transition-all ${
-                    active
-                      ? "bg-[var(--color-accent)] text-white"
-                      : "border border-border bg-surface-1 text-text-secondary hover:text-text-primary hover:border-border-hover"
-                  }`}
-                >
-                  {tab.label}
-                  <span className={`ml-1 tabular-nums ${active ? "opacity-80" : "opacity-50"}`}>
-                    {tab.count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+            ].map((tab) => (
+              <ToggleGroupItem key={tab.id} value={tab.id} variant="outline" className="shrink-0">
+                {tab.label}
+                <span className="ml-1 tabular-nums opacity-70">{tab.count}</span>
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
         )}
 
         {/* Category pill filters (Explore only) */}
         {topTab === "explore" && (
           <div className="relative mb-5">
-            <div
+            <ToggleGroup
               ref={pillScrollRef}
+              type="single"
+              value={filter}
+              onValueChange={(value: string) => {
+                if (value) setFilter(value as SkillFilter);
+              }}
+              variant="outline"
+              size="sm"
+              aria-label="Skill categories"
               onScroll={checkPillOverflow}
-              className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5"
+              className="overflow-x-auto no-scrollbar pb-0.5 min-w-max"
             >
-              {categoryTabs.map((tab) => {
-                const active = filter === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setFilter(tab.id)}
-                    ref={
-                      tab.id === categoryTabs[categoryTabs.length - 1].id
-                        ? () => {
-                            setTimeout(checkPillOverflow, 0);
-                          }
-                        : undefined
-                    }
-                    className={`shrink-0 inline-flex items-center justify-center rounded-full h-7 px-3 text-[11px] leading-none font-medium transition-all ${
-                      active
-                        ? "bg-[var(--color-accent)] text-white"
-                        : "border border-border bg-surface-1 text-text-secondary hover:text-text-primary hover:border-border-hover"
-                    }`}
-                  >
-                    {tab.label}
-                    <span className={`ml-1 tabular-nums ${active ? "opacity-80" : "opacity-50"}`}>
-                      {tab.count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+              {categoryTabs.map((tab) => (
+                <ToggleGroupItem
+                  key={tab.id}
+                  value={tab.id}
+                  variant="outline"
+                  className="shrink-0"
+                  ref={
+                    tab.id === categoryTabs[categoryTabs.length - 1].id
+                      ? () => {
+                          setTimeout(checkPillOverflow, 0);
+                        }
+                      : undefined
+                  }
+                >
+                  {tab.label}
+                  <span className="ml-1 tabular-nums opacity-70">{tab.count}</span>
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
             {showPillFadeLeft && (
               <div className="pointer-events-none absolute top-0 left-0 bottom-0 w-12 bg-gradient-to-r from-white to-transparent z-[1]" />
             )}

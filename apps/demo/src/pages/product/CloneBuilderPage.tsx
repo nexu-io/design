@@ -8,6 +8,8 @@ import {
   EntityCardMedia,
   EntityCardMeta,
   EntityCardTitle,
+  ToggleGroup,
+  ToggleGroupItem,
 } from "@nexu/ui-web";
 import {
   Activity,
@@ -1721,22 +1723,28 @@ export default function CloneBuilderPage() {
 
           {/* Right: Configuration tabs */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1 mb-6 border-b border-border">
+            <ToggleGroup
+              type="single"
+              value={activeTab}
+              onValueChange={(value: string) => {
+                if (value) setActiveTab(value as TabId);
+              }}
+              variant="underline"
+              aria-label="Clone builder sections"
+              className="mb-6"
+            >
               {TABS.map((t) => (
-                <button
+                <ToggleGroupItem
                   key={t.id}
-                  onClick={() => setActiveTab(t.id)}
-                  className={`flex items-center gap-1.5 px-3 py-2.5 text-[13px] border-b-2 transition-colors -mb-px ${
-                    activeTab === t.id
-                      ? "border-accent text-text-primary font-medium"
-                      : "border-transparent text-text-secondary hover:text-text-primary"
-                  }`}
+                  value={t.id}
+                  variant="underline"
+                  className="gap-1.5 text-[13px]"
                 >
                   <t.icon size={14} />
                   {t.label}
-                </button>
+                </ToggleGroupItem>
               ))}
-            </div>
+            </ToggleGroup>
             <TabContent />
           </div>
         </div>
