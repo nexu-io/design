@@ -1,7 +1,7 @@
-import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
 import { LoaderCircle } from "lucide-react";
+import * as React from "react";
 
 import { cn } from "../lib/cn";
 
@@ -16,7 +16,7 @@ const buttonVariants = cva(
         primary: "bg-primary text-primary-foreground hover:bg-primary/90",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         outline:
-          "border border-border bg-background text-foreground hover:border-accent hover:bg-accent/5 hover:text-accent",
+          "border border-border bg-background text-foreground shadow-xs hover:border-border-hover hover:bg-accent/5 hover:text-foreground hover:shadow-sm",
         ghost:
           "text-[var(--color-text-muted)] hover:bg-accent/5 hover:text-[var(--color-text-secondary)]",
         soft: "bg-accent/10 text-accent hover:bg-accent/20",
@@ -31,7 +31,7 @@ const buttonVariants = cva(
         lg: "h-12 rounded-xl px-6 text-[14px] font-semibold shadow-sm hover:shadow-lg hover:shadow-accent/20",
         inline: "h-auto px-0",
         icon: "size-10 p-0",
-        'icon-sm': "size-6 p-0",
+        "icon-sm": "size-6 p-0",
       },
     },
     defaultVariants: {

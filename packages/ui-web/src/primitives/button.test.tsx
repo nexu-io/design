@@ -34,4 +34,14 @@ describe("Button", () => {
 
     await expectNoA11yViolations(container);
   });
+
+  it("keeps outline buttons visible on hover", () => {
+    render(<Button variant="outline">Cancel</Button>);
+
+    const button = screen.getByRole("button", { name: "Cancel" });
+
+    expect(button).toHaveClass("border-border");
+    expect(button).toHaveClass("hover:border-border-hover");
+    expect(button).toHaveClass("hover:text-foreground");
+  });
 });

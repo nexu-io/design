@@ -65,6 +65,21 @@
 - Test file pattern: `packages/ui-web/src/**/*.test.ts` and `packages/ui-web/src/**/*.test.tsx`.
 - Tests are co-located with source files.
 
+## Storybook synchronization rules
+- Treat Storybook as part of the component-library contract, not as optional follow-up work.
+- When changing `packages/ui-web/src/primitives/*` or `packages/ui-web/src/patterns/*`, review whether the corresponding Storybook entry in `apps/storybook/src/stories/*` must be added or updated in the same change.
+- Each public primitive in `packages/ui-web/src/primitives/*.tsx` should have its own dedicated story file in `apps/storybook/src/stories/` named `<primitive>.stories.tsx`.
+- Dedicated primitive stories are the primary component docs; keep them focused on that single primitive.
+- Grouped or multi-component stories should live as scenario pages under `Scenarios/...`, not under `Primitives/...`.
+- When a primitive API, variants, slots, accessibility behavior, or visual states change, update both:
+  - the dedicated primitive story
+  - any scenario story that meaningfully demonstrates that primitive in context
+- When adding a new public primitive, also:
+  - export it from `packages/ui-web/src/index.ts`
+  - add a dedicated Storybook story
+  - add or update a scenario story if the component is mainly valuable in composition
+- If a component is internal-only or not exported publicly, do not create Storybook coverage unless there is a clear documentation need.
+
 ## Running a single test
 - Single file from repo root:
   - `pnpm --filter @nexu/ui-web exec vitest run src/primitives/button.test.tsx`
@@ -79,6 +94,8 @@
 - For code changes in `ui-web`: run
   - `pnpm --filter @nexu/ui-web typecheck`
   - `pnpm --filter @nexu/ui-web test`
+- For Storybook changes or any component-library changes that should sync to Storybook: run
+  - `pnpm --filter @nexu/storybook typecheck`
 - For formatting-sensitive changes: run
   - `pnpm format:check`
   - `pnpm biome:check`
@@ -168,6 +185,7 @@
 - Update `packages/ui-web/src/index.ts` for new public components/utilities.
 - Add tests for new behavior.
 - Add or update Storybook stories for discoverability.
+- Keep dedicated primitive stories and relevant scenario stories in sync with the implementation.
 - Ensure package builds still copy `styles.css` into `dist/`.
 
 ## Things not to assume
