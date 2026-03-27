@@ -1,0 +1,31 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@nexu/ui-web";
+
+const meta = {
+  title: "Primitives/Avatar",
+  component: Avatar,
+  tags: ["autodocs"],
+} satisfies Meta<typeof Avatar>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  render: () => (
+    <div className="flex items-center gap-4">
+      <Avatar>
+        <AvatarImage src="https://i.pravatar.cc/80?img=12" alt="Olivia Rhye" />
+        <AvatarFallback>OR</AvatarFallback>
+      </Avatar>
+
+      <Avatar className="size-12">
+        <AvatarFallback className="bg-accent/10 text-accent">NX</AvatarFallback>
+      </Avatar>
+
+      <Avatar className="size-14 rounded-xl">
+        <AvatarFallback className="rounded-xl bg-success/10 text-success">AI</AvatarFallback>
+      </Avatar>
+    </div>
+  ),
+};
