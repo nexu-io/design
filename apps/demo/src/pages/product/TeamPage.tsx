@@ -1,4 +1,4 @@
-import { Button, StatCard } from "@nexu/ui-web";
+import { Button, StatsBar } from "@nexu/ui-web";
 import {
   AlertTriangle,
   BarChart3,
@@ -717,7 +717,7 @@ function AlignmentsTab({
 
 // ─── Stats Bar ─────────────────────────────────────────────
 
-function StatsBar({
+function TeamStatsBar({
   onSelectStat,
   selectedStat,
   onSwitchTab,
@@ -737,6 +737,11 @@ function StatsBar({
       value: `${okrProgress}%`,
       tone: "accent" as const,
       tab: "okr" as TabId,
+      selected: selectedStat === "okr",
+      onSelect: () => {
+        onSelectStat("okr");
+        onSwitchTab("okr");
+      },
     },
     {
       id: "online",
@@ -744,6 +749,11 @@ function StatsBar({
       value: `${online}/${TEAM_MEMBERS.length}`,
       tone: "success" as const,
       tab: "members" as TabId,
+      selected: selectedStat === "online",
+      onSelect: () => {
+        onSelectStat("online");
+        onSwitchTab("members");
+      },
     },
     {
       id: "cards",
@@ -751,6 +761,11 @@ function StatsBar({
       value: `${IM_CARDS.length}`,
       tone: "accent" as const,
       tab: "cards" as TabId,
+      selected: selectedStat === "cards",
+      onSelect: () => {
+        onSelectStat("cards");
+        onSwitchTab("cards");
+      },
     },
     {
       id: "alignments",
@@ -758,6 +773,11 @@ function StatsBar({
       value: `${IM_CARDS.filter((c) => c.type === "alignment_request" && !c.read).length}`,
       tone: "warning" as const,
       tab: "alignments" as TabId,
+      selected: selectedStat === "alignments",
+      onSelect: () => {
+        onSelectStat("alignments");
+        onSwitchTab("alignments");
+      },
     },
     {
       id: "tasks",
@@ -765,6 +785,11 @@ function StatsBar({
       value: `${TASK_BOARD.filter((t) => t.status === "in_progress" || t.status === "todo").length}`,
       tone: "accent" as const,
       tab: "tasks" as TabId,
+      selected: selectedStat === "tasks",
+      onSelect: () => {
+        onSelectStat("tasks");
+        onSwitchTab("tasks");
+      },
     },
     {
       id: "sprint",
@@ -772,37 +797,15 @@ function StatsBar({
       value: "58%",
       tone: "info" as const,
       tab: "sprint" as TabId,
+      selected: selectedStat === "sprint",
+      onSelect: () => {
+        onSelectStat("sprint");
+        onSwitchTab("sprint");
+      },
     },
   ];
 
-  return (
-    <div className="flex items-center gap-4 px-5 py-2.5 bg-surface-1 border-b border-border">
-      {stats.map((s, i) => (
-        <button
-          key={s.id}
-          type="button"
-          onClick={() => {
-            onSelectStat(s.id);
-            onSwitchTab(s.tab);
-          }}
-          className={`transition-colors rounded-md ${
-            selectedStat === s.id ? "bg-accent/5" : "hover:bg-surface-2"
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            {i > 0 && <div className="w-px h-8 bg-border" />}
-            <StatCard
-              label={s.label}
-              value={s.value}
-              tone={s.tone}
-              padding="none"
-              className="border-0 bg-transparent shadow-none p-1.5 min-w-[86px]"
-            />
-          </div>
-        </button>
-      ))}
-    </div>
-  );
+  return <StatsBar items={stats} />;
 }
 
 // ─── Detail Panel Router ───────────────────────────────────
@@ -908,7 +911,7 @@ export default function TeamPage() {
 
   return (
     <div className="flex flex-col h-full bg-surface-0">
-      <StatsBar
+      <TeamStatsBar
         onSelectStat={handleSelectStat}
         selectedStat={selected?.type === "stat" ? selected.data : null}
         onSwitchTab={(tab) => handleTabSwitch(tab, true)}

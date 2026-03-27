@@ -17,27 +17,43 @@ The target state is:
 
 ## Current status
 
+> Status snapshot: updated for the current workspace on 2026-03-27.
+
 ### Already in `@nexu/ui-web`
 
 #### Primitives
+- `Alert`
+- `Accordion`
 - `Avatar`
 - `Badge`
 - `Button`
 - `Card`
 - `Checkbox`
+- `Collapsible`
+- `ConversationMessage`
+- `DataTable`
 - `Dialog`
 - `DropdownMenu`
+- `EntityCard`
 - `Input`
+- `InteractiveRow`
 - `Label`
+- `PanelFooter`
 - `Popover`
+- `Progress`
+- `PricingCard`
 - `RadioGroup`
+- `ScrollArea`
 - `Select`
 - `Separator`
 - `Sheet`
 - `Skeleton`
 - `Sonner`
 - `Spinner`
+- `StatCard`
 - `Switch`
+- `Stepper`
+- `Table`
 - `Tabs`
 - `Textarea`
 - `Tooltip`
@@ -53,20 +69,35 @@ The target state is:
 ### Already migrated substantially
 - Standard CTA / footer actions across desktop-critical `openclaw/*`, `nexu/*`, and `product/*`
 - A first round of shared visual alignment for `Button`, `Badge`, `Tabs`, `Input`, `Textarea`, `DialogTitle`
-- Initial pattern usage in some dashboard and header areas
+- Shared migration already landed across representative desktop pages, including:
+  - `openclaw/DashboardPage.tsx` → `StatCard`
+  - `openclaw/BillingPage.tsx` → `StatCard`, `PricingCard`
+  - `openclaw/PostAuthSetupPage.tsx` → `Progress`, `Stepper`
+  - `openclaw/ChannelsPage.tsx` → `Alert`, `Table`
+  - `openclaw/OpenClawWorkspace.tsx` → `ScrollArea`, `Collapsible`, `InteractiveRow`, `PanelFooter`
+  - `nexu/NexuApprovalsPage.tsx` / `NexuTaskPage.tsx` → `DataTable`, `Table`
+  - `nexu/NexuAvatarsPage.tsx` / `NexuSettingsPage.tsx` → `InteractiveRow`, `ScrollArea`
+  - `product/SessionsPage.tsx` → `DataTable`, `Table`, `ScrollArea`, `InteractiveRow`, `Collapsible`
+  - `product/SkillsPage.tsx` → `EntityCard`, `ScrollArea`, `PanelFooter`
+  - `product/ChatCards.tsx` → `ConversationMessage`
 
 ### Main remaining gap
-Most remaining inconsistency is no longer about raw buttons.
+Most remaining inconsistency is no longer about the first wave of shared UI.
 
-It is now about **missing shared primitives and patterns** for:
-- stats / KPI cards
-- pricing cards
-- data tables
-- alerts / callouts
-- progress / stepper flows
-- chat / message surfaces
-- shared list rows and panel footers
-- scrollable shells
+It is now primarily about:
+- finishing adoption on the remaining in-scope pages
+- filling in the still-missing desktop shell/workbench components
+- reducing page-local Tailwind clusters around navigation, split panes, and advanced filters
+
+The largest remaining unimplemented shared pieces are:
+- `ResizablePanel` / `SplitView`
+- `Sidebar` / `NavigationMenu`
+- `Toggle` / `ToggleGroup`
+- `Combobox`
+- `Breadcrumb`
+- `ActivityBar`
+- `DetailPanel`
+- `StatsBar`
 
 ---
 
@@ -583,117 +614,123 @@ Several workbench pages use compact horizontal metric strips above detailed cont
 
 ## Phase 1 — highest ROI, lowest risk
 
+**Status:** Mostly complete. Core components are implemented and adopted on several target pages. Remaining work is mostly follow-through and consistency cleanup.
+
 ### Add to `ui-web`
-- `Table`
-- `Alert`
-- `Progress`
-- `StatCard`
-- `PricingCard`
+- [x] `Table`
+- [x] `Alert`
+- [x] `Progress`
+- [x] `StatCard`
+- [x] `PricingCard`
 
 ### Refactor demo pages
 
 #### `openclaw/*`
-- `DashboardPage.tsx`
+- [x] `DashboardPage.tsx`
   - replace local KPI boxes with `StatCard`
-- `BillingPage.tsx`
+- [x] `BillingPage.tsx`
   - replace usage summary cards with `StatCard`
   - replace pricing section with `PricingCard`
-- `PostAuthSetupPage.tsx`
+- [x] `PostAuthSetupPage.tsx`
   - replace progress bars with `Progress`
-- `ChannelsPage.tsx`
+- [x] `ChannelsPage.tsx`
   - replace warning/info boxes with `Alert`
 
 #### `nexu/*`
-- `NexuProgressPage.tsx`
+- [~] `NexuProgressPage.tsx`
   - replace KPI blocks and progress bars with `StatCard` + `Progress`
-- `NexuApprovalsPage.tsx`
+- [x] `NexuApprovalsPage.tsx`
   - prepare for `Table` / `DataTable`
-- `NexuTaskPage.tsx`
+- [x] `NexuTaskPage.tsx`
   - prepare for `Table` / `DataTable`
 
 #### `product/*`
-- `PricingModal.tsx`
+- [x] `PricingModal.tsx`
   - replace local plan cards with `PricingCard`
-- `TeamPage.tsx`
+- [x] `TeamPage.tsx`
   - replace dashboard metric cards with `StatCard`
-- `AutomationPage.tsx`
+- [x] `AutomationPage.tsx`
   - replace status/info boxes with `Alert`
 
 ---
 
 ## Phase 2 — desktop structural consistency
 
+**Status:** Substantially complete. Shared building blocks exist and are already used in core desktop shells. Remaining work is selective page coverage.
+
 ### Add to `ui-web`
-- `ScrollArea`
-- `Accordion`
-- `Collapsible`
-- `PanelFooter`
-- `InteractiveRow`
-- `DataTable`
+- [x] `ScrollArea`
+- [x] `Accordion`
+- [x] `Collapsible`
+- [x] `PanelFooter`
+- [x] `InteractiveRow`
+- [x] `DataTable`
 
 ### Refactor demo pages
 
 #### `openclaw/*`
-- `OpenClawWorkspace.tsx`
+- [x] `OpenClawWorkspace.tsx`
   - replace local scroll containers with `ScrollArea`
   - replace repeated footer action groups with `PanelFooter`
   - replace repeated clickable rows with `InteractiveRow`
-- `SkillDetailPage.tsx`
+- [x] `SkillDetailPage.tsx`
   - replace local expand/collapse sections with `Accordion`
 
 #### `nexu/*`
-- `NexuAvatarsPage.tsx`
+- [x] `NexuAvatarsPage.tsx`
   - replace list/grid row shells with `InteractiveRow` or `EntityCard`
-- `NexuSettingsPage.tsx`
+- [x] `NexuSettingsPage.tsx`
   - use `ScrollArea` for long settings regions
-- `NexuApprovalsPage.tsx`
+- [x] `NexuApprovalsPage.tsx`
   - migrate to `DataTable`
-- `NexuTaskPage.tsx`
+- [x] `NexuTaskPage.tsx`
   - migrate list/table sections to `DataTable`
 
 #### `product/*`
-- `SessionsPage.tsx`
+- [x] `SessionsPage.tsx`
   - use `ScrollArea` in side/detail panes
   - use `InteractiveRow` for session rows
-- `TeamTasks.tsx`
+- [x] `TeamTasks.tsx`
   - migrate to `DataTable`
-- `TeamDetailPanels.tsx`
+- [x] `TeamDetailPanels.tsx`
   - use `PanelFooter`
-- `SkillsPage.tsx`
+- [x] `SkillsPage.tsx`
   - use `ScrollArea` and `PanelFooter`
 
 ---
 
 ## Phase 3 — product-specific patterns
 
+**Status:** In progress but already well underway. Core primitives/patterns are implemented; adoption is partial and uneven across the remaining pages.
+
 ### Add to `ui-web`
-- `ConversationMessage`
-- `Stepper`
-- `EntityCard`
-- possibly `TagGroup`
+- [x] `ConversationMessage`
+- [x] `Stepper`
+- [x] `EntityCard`
+- [ ] possibly `TagGroup`
 
 ### Refactor demo pages
 
 #### `openclaw/*`
-- `ClientWelcomePage.tsx`
+- [x] `ClientWelcomePage.tsx`
   - entry cards → reusable `EntityCard` or `EntryCard` pattern
-- `OnboardingPage.tsx`
+- [~] `OnboardingPage.tsx`
   - chat-like areas → `ConversationMessage`
-- `PostAuthSetupPage.tsx`
+- [x] `PostAuthSetupPage.tsx`
   - onboarding flow → `Stepper`
 
 #### `nexu/*`
-- `NexuSkillsKnowledgePage.tsx`
+- [x] `NexuSkillsKnowledgePage.tsx`
   - grouped skill tiles → `EntityCard` / `TagGroup`
-- `NexuAvatarDetailPage.tsx`
+- [x] `NexuAvatarDetailPage.tsx`
   - capability / profile grouped cards → `EntityCard`
 
 #### `product/*`
-- `ChatCards.tsx`
+- [x] `ChatCards.tsx`
   - convert to `ConversationMessage` + shared card shell
-- `CloneBuilderPage.tsx`
+- [x] `CloneBuilderPage.tsx`
   - channel / memory / entity cards → `EntityCard`
-- `SkillsPage.tsx`
+- [x] `SkillsPage.tsx`
   - skill marketplace cards → `EntityCard`
 
 ---
@@ -729,34 +766,36 @@ Several workbench pages use compact horizontal metric strips above detailed cont
 
 ## Suggested implementation order
 
+The original Wave 1-3 ordering is still useful as historical context, but the first three waves are no longer greenfield work. The next implementation order should prioritize the remaining gaps.
+
 ### Wave 1
-- `Table`
-- `Alert`
-- `Progress`
-- `StatCard`
-- `PricingCard`
+- [x] `Table`
+- [x] `Alert`
+- [x] `Progress`
+- [x] `StatCard`
+- [x] `PricingCard`
 
 ### Wave 2
-- `ResizablePanel` / `SplitView`
-- `Sidebar` / `NavigationMenu`
-- `ActivityBar`
-- `DetailPanel`
-- `ScrollArea`
-- `Accordion`
-- `Collapsible`
-- `PanelFooter`
-- `InteractiveRow`
-- `DataTable`
-- `Toggle` / `ToggleGroup`
+- [ ] `ResizablePanel` / `SplitView`
+- [ ] `Sidebar` / `NavigationMenu`
+- [ ] `ActivityBar`
+- [ ] `DetailPanel`
+- [x] `ScrollArea`
+- [x] `Accordion`
+- [x] `Collapsible`
+- [x] `PanelFooter`
+- [x] `InteractiveRow`
+- [x] `DataTable`
+- [ ] `Toggle` / `ToggleGroup`
 
 ### Wave 3
-- `ConversationMessage`
-- `Stepper`
-- `EntityCard`
-- `Combobox`
-- `Breadcrumb`
-- `StatsBar`
-- optional `TagGroup`
+- [x] `ConversationMessage`
+- [x] `Stepper`
+- [x] `EntityCard`
+- [ ] `Combobox`
+- [ ] `Breadcrumb`
+- [x] `StatsBar`
+- [ ] optional `TagGroup`
 
 ---
 
@@ -833,17 +872,24 @@ Desktop demo migration is complete when:
 
 If continuing implementation immediately, do this next:
 
-1. add `Alert`
-2. add `Progress`
-3. add `StatCard`
-4. refactor:
-   - `openclaw/DashboardPage.tsx`
-   - `openclaw/BillingPage.tsx`
-   - `openclaw/PostAuthSetupPage.tsx`
-   - `nexu/NexuProgressPage.tsx`
-   - `product/PricingModal.tsx`
+1. finish partial migrations:
+   - `nexu/NexuProgressPage.tsx` → complete `Progress` adoption
+   - `openclaw/OnboardingPage.tsx` → evaluate whether chat-like sections should move to `ConversationMessage`
+2. implement the missing desktop shell primitives:
+   - `ResizablePanel` / `SplitView`
+   - `Sidebar` / `NavigationMenu`
+   - `Toggle` / `ToggleGroup`
+3. apply those shell primitives to the highest-leverage layouts:
+   - `product/ProductLayout.tsx`
+   - `nexu/NexuProductLayout.tsx`
+   - `openclaw/OpenClawWorkspace.tsx`
+4. then tackle filter/navigation polish:
+   - `Combobox`
+   - `Breadcrumb`
+   - `ActivityBar`
+   - `DetailPanel`
 
 That batch has the best balance of:
 - high reuse
-- low behavior risk
-- visible desktop consistency gain
+- desktop-shell consistency gain
+- progress toward the remaining true gaps in the migration

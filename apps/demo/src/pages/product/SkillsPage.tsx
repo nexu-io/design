@@ -1,4 +1,15 @@
-import { Button, PanelFooter, PanelFooterActions, ScrollArea } from "@nexu/ui-web";
+import {
+  Button,
+  EntityCard,
+  EntityCardContent,
+  EntityCardDescription,
+  EntityCardHeader,
+  EntityCardMeta,
+  EntityCardTitle,
+  PanelFooter,
+  PanelFooterActions,
+  ScrollArea,
+} from "@nexu/ui-web";
 import {
   BarChart3,
   Building,
@@ -897,18 +908,24 @@ function FeaturedTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) {
       {/* Featured cards */}
       <div className="grid grid-cols-3 gap-3 mb-8">
         {FEATURED_SKILLS.map((f) => (
-          <div
+          <EntityCard
             key={f.title}
-            className={`${f.color} rounded-xl p-5 cursor-pointer hover:opacity-90 transition-opacity`}
+            interactive
+            className={`${f.color} rounded-xl hover:opacity-90 transition-opacity`}
           >
-            <div className="text-[10px] font-medium text-text-muted uppercase tracking-wider mb-2">
-              {f.badge}
-            </div>
-            <div className="text-[14px] font-semibold text-text-primary leading-snug mb-1">
-              {f.title}
-            </div>
-            <div className="text-[11px] text-text-secondary">{f.desc}</div>
-          </div>
+            <EntityCardHeader className="p-5 pb-0">
+              <div>
+                <div className="mb-2 text-[10px] font-medium uppercase tracking-wider text-text-muted">
+                  {f.badge}
+                </div>
+                <EntityCardTitle className="leading-snug">{f.title}</EntityCardTitle>
+              </div>
+            </EntityCardHeader>
+            <EntityCardContent className="p-5 pt-2">
+              <EntityCardDescription className="text-[11px]">{f.desc}</EntityCardDescription>
+              <EntityCardMeta className="mt-4">精选推荐</EntityCardMeta>
+            </EntityCardContent>
+          </EntityCard>
         ))}
       </div>
 

@@ -2,174 +2,37 @@
   "iterations": [
     {
       "iteration": 1,
-      "startedAt": "2026-03-26T20:41:04.195Z",
-      "endedAt": "2026-03-26T20:45:45.699Z",
-      "durationMs": 278995,
-      "agent": "opencode",
-      "model": "",
-      "toolsUsed": {},
-      "filesModified": [
-        "apps/demo/src/pages/openclaw/ChannelsPage.tsx",
-        "apps/demo/src/pages/product/AutomationPage.tsx",
-        "packages/ui-web/src/index.ts",
-        ".ralph/",
-        "packages/ui-web/src/primitives/alert.test.tsx",
-        "packages/ui-web/src/primitives/alert.tsx"
-      ],
-      "exitCode": 0,
-      "completionDetected": false,
-      "errors": []
-    },
-    {
-      "iteration": 2,
-      "startedAt": "2026-03-26T20:45:49.219Z",
-      "endedAt": "2026-03-26T20:51:02.120Z",
-      "durationMs": 310369,
+      "startedAt": "2026-03-27T03:22:51.908Z",
+      "endedAt": "2026-03-27T03:30:46.654Z",
+      "durationMs": 470565,
       "agent": "opencode",
       "model": "",
       "toolsUsed": {},
       "filesModified": [
         ".ralph/ralph-tasks.md",
-        "apps/demo/src/pages/nexu/NexuProgressPage.tsx",
-        "apps/demo/src/pages/openclaw/PostAuthSetupPage.tsx",
-        "packages/ui-web/src/index.ts",
-        "apps/storybook/src/stories/progress.stories.tsx",
-        "packages/ui-web/src/primitives/progress.test.tsx",
-        "packages/ui-web/src/primitives/progress.tsx"
-      ],
-      "exitCode": 0,
-      "completionDetected": false,
-      "errors": [
-        "\u001b[91m\u001b[1mError: \u001b[0mapply_patch verification failed: Error: Failed to find expected lines in /Users/mrc/Projects/nexu-io/ui/apps/demo/src/pages/nexu/NexuProgressPage.tsx:"
-      ]
-    },
-    {
-      "iteration": 3,
-      "startedAt": "2026-03-26T20:51:05.573Z",
-      "endedAt": "2026-03-26T21:01:23.530Z",
-      "durationMs": 615484,
-      "agent": "opencode",
-      "model": "",
-      "toolsUsed": {},
-      "filesModified": [
-        ".ralph/ralph-tasks.md",
-        "apps/demo/src/pages/nexu/NexuProgressPage.tsx",
-        "apps/demo/src/pages/openclaw/BillingPage.tsx",
-        "apps/demo/src/pages/openclaw/DashboardPage.tsx",
-        "apps/demo/src/pages/product/AutomationPage.tsx",
+        "apps/demo/src/pages/journey/StepTeam.tsx",
         "apps/demo/src/pages/product/TeamPage.tsx",
+        "docs/desktop-demo-migration-plan.md",
         "packages/ui-web/src/index.ts",
-        "apps/storybook/src/stories/stat-card.stories.tsx",
-        "packages/ui-web/src/primitives/stat-card.test.tsx",
-        "packages/ui-web/src/primitives/stat-card.tsx"
-      ],
-      "exitCode": 0,
-      "completionDetected": false,
-      "errors": []
-    },
-    {
-      "iteration": 4,
-      "startedAt": "2026-03-26T21:01:26.947Z",
-      "endedAt": "2026-03-26T21:08:15.164Z",
-      "durationMs": 405737,
-      "agent": "opencode",
-      "model": "",
-      "toolsUsed": {},
-      "filesModified": [
-        ".ralph/ralph-tasks.md",
-        "apps/demo/src/pages/openclaw/BillingPage.tsx",
-        "apps/demo/src/pages/product/PricingModal.tsx",
-        "packages/ui-web/src/index.ts",
-        "packages/ui-web/src/primitives/pricing-card.test.tsx",
-        "packages/ui-web/src/primitives/pricing-card.tsx"
+        "packages/ui-web/src/primitives/stats-bar.test.tsx",
+        "packages/ui-web/src/primitives/stats-bar.tsx"
       ],
       "exitCode": 0,
       "completionDetected": false,
       "errors": [
-        "\u001b[91m\u001b[1mError: \u001b[0mapply_patch verification failed: Error: Failed to find expected lines in /Users/mrc/Projects/nexu-io/ui/packages/ui-web/src/primitives/pricing-card.tsx:",
-        "\u001b[91m\u001b[1mError: \u001b[0mapply_patch verification failed: Error: Failed to find expected lines in /Users/mrc/Projects/nexu-io/ui/apps/demo/src/pages/product/PricingModal.tsx:"
-      ]
-    },
-    {
-      "iteration": 5,
-      "startedAt": "2026-03-26T21:08:18.589Z",
-      "endedAt": "2026-03-26T21:19:04.474Z",
-      "durationMs": 643358,
-      "agent": "opencode",
-      "model": "",
-      "toolsUsed": {},
-      "filesModified": [
-        ".ralph/ralph-tasks.md",
-        "apps/demo/src/pages/nexu/NexuApprovalsPage.tsx",
-        "apps/demo/src/pages/nexu/NexuTaskPage.tsx",
-        "apps/demo/src/pages/openclaw/ChannelsPage.tsx",
-        "apps/demo/src/pages/product/SessionsPage.tsx",
-        "apps/demo/src/pages/product/TeamTasks.tsx",
-        "packages/ui-web/src/index.ts",
-        "apps/storybook/src/stories/table.stories.tsx",
-        "packages/ui-web/src/primitives/table.test.tsx",
-        "packages/ui-web/src/primitives/table.tsx"
-      ],
-      "exitCode": 0,
-      "completionDetected": false,
-      "errors": []
-    },
-    {
-      "iteration": 6,
-      "startedAt": "2026-03-26T21:19:07.902Z",
-      "endedAt": "2026-03-26T21:37:00.747Z",
-      "durationMs": 1070373,
-      "agent": "opencode",
-      "model": "",
-      "toolsUsed": {},
-      "filesModified": [
-        ".ralph/ralph-tasks.md",
-        "apps/demo/src/pages/nexu/NexuApprovalsPage.tsx",
-        "apps/demo/src/pages/nexu/NexuAvatarsPage.tsx",
-        "apps/demo/src/pages/nexu/NexuSettingsPage.tsx",
-        "apps/demo/src/pages/nexu/NexuTaskPage.tsx",
-        "apps/demo/src/pages/openclaw/OpenClawWorkspace.tsx",
-        "apps/demo/src/pages/openclaw/SkillDetailPage.tsx",
-        "apps/demo/src/pages/product/SessionsPage.tsx",
-        "apps/demo/src/pages/product/SkillsPage.tsx",
-        "apps/demo/src/pages/product/TeamDetailPanels.tsx",
-        "apps/demo/src/pages/product/TeamTasks.tsx",
-        "packages/ui-web/src/index.ts",
-        "packages/ui-web/src/primitives/accordion.test.tsx",
-        "packages/ui-web/src/primitives/accordion.tsx",
-        "packages/ui-web/src/primitives/collapsible.tsx",
-        "packages/ui-web/src/primitives/data-table.test.tsx",
-        "packages/ui-web/src/primitives/data-table.tsx",
-        "packages/ui-web/src/primitives/interactive-row.test.tsx",
-        "packages/ui-web/src/primitives/interactive-row.tsx",
-        "packages/ui-web/src/primitives/panel-footer.tsx",
-        "packages/ui-web/src/primitives/scroll-area.tsx"
-      ],
-      "exitCode": 0,
-      "completionDetected": false,
-      "errors": [
-        "\u001b[91m\u001b[1mError: \u001b[0mapply_patch verification failed: Error: Failed to find expected lines in /Users/mrc/Projects/nexu-io/ui/packages/ui-web/src/primitives/data-table.tsx:",
-        "\u001b[91m\u001b[1mError: \u001b[0mapply_patch verification failed: Error: Failed to find expected lines in /Users/mrc/Projects/nexu-io/ui/packages/ui-web/src/primitives/data-table.test.tsx:",
-        "\u001b[91m\u001b[1mError: \u001b[0mapply_patch verification failed: Error: Failed to find expected lines in /Users/mrc/Projects/nexu-io/ui/apps/demo/src/pages/nexu/NexuTaskPage.tsx:",
-        "\u001b[91m\u001b[1mError: \u001b[0mapply_patch verification failed: Error: Failed to find expected lines in /Users/mrc/Projects/nexu-io/ui/apps/demo/src/pages/openclaw/OpenClawWorkspace.tsx:",
-        "\u001b[91m\u001b[1mError: \u001b[0mapply_patch verification failed: Error: Failed to find expected lines in /Users/mrc/Projects/nexu-io/ui/packages/ui-web/src/primitives/accordion.tsx:",
-        "❯ src/primitives/accordion.test.tsx (1 test | 1 failed) 72ms",
-        "⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯",
-        "FAIL  src/primitives/accordion.test.tsx > Accordion > toggles content visibility",
-        "Error: \u001b[2mexpect(\u001b[22m\u001b[31melement\u001b[39m\u001b[2m).not.toBeInTheDocument()\u001b[22m",
-        "Test Files  1 failed | 27 passed (28)"
+        "\u001b[91m\u001b[1mError: \u001b[0mFile not found: /Users/mrc/Projects/nexu-io/ui/apps/storybook/src/nexu/NexuProgressPage.tsx",
+        "\u001b[91m\u001b[1mError: \u001b[0mFile not found: /Users/mrc/Projects/nexu-io/ui/apps/storybook/src/openclaw/OnboardingPage.tsx",
+        "\u001b[91m\u001b[1mError: \u001b[0mapply_patch verification failed: Error: Failed to find expected lines in /Users/mrc/Projects/nexu-io/ui/apps/demo/src/pages/product/TeamPage.tsx:",
+        "\u001b[91m\u001b[1mError: \u001b[0mapply_patch verification failed: Error: Failed to find expected lines in /Users/mrc/Projects/nexu-io/ui/packages/ui-web/src/primitives/stats-bar.test.tsx:"
       ]
     }
   ],
-  "totalDurationMs": 3324316,
+  "totalDurationMs": 470565,
   "struggleIndicators": {
     "repeatedErrors": {
-      "\u001b[91m\u001b[1mError: \u001b[0mapply_patch verification failed: Error: Failed to find expected lines in /Users/": 5,
-      "❯ src/primitives/accordion.test.tsx (1 test | 1 failed) 72ms": 1,
-      "⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯": 1,
-      "FAIL  src/primitives/accordion.test.tsx > Accordion > toggles content visibility": 1,
-      "Error: \u001b[2mexpect(\u001b[22m\u001b[31melement\u001b[39m\u001b[2m).not.toBeInTheDocument()\u001b[22m": 1,
-      "Test Files  1 failed | 27 passed (28)": 1
+      "\u001b[91m\u001b[1mError: \u001b[0mFile not found: /Users/mrc/Projects/nexu-io/ui/apps/storybook/src/nexu/NexuProgr": 1,
+      "\u001b[91m\u001b[1mError: \u001b[0mFile not found: /Users/mrc/Projects/nexu-io/ui/apps/storybook/src/openclaw/Onboa": 1,
+      "\u001b[91m\u001b[1mError: \u001b[0mapply_patch verification failed: Error: Failed to find expected lines in /Users/": 2
     },
     "noProgressIterations": 0,
     "shortIterations": 0

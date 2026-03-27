@@ -1,13 +1,13 @@
 {
   "active": true,
-  "iteration": 6,
+  "iteration": 1,
   "minIterations": 1,
   "maxIterations": 0,
   "completionPromise": "COMPLETE",
   "tasksMode": true,
   "taskPromise": "READY_FOR_NEXT_TASK",
-  "prompt": "Finish all the components and migrations defined in desktop-demo-migration-plan.md.",
-  "startedAt": "2026-03-26T20:41:01.358Z",
+  "prompt": "Find remaining todos in desktop-demo-migration-plan.md, and finish all of them.",
+  "startedAt": "2026-03-27T03:22:49.071Z",
   "model": "",
   "agent": "opencode"
 }

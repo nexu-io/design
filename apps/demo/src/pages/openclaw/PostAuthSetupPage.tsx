@@ -1,6 +1,6 @@
-import { Badge, Button, Progress } from "@nexu/ui-web";
+import { Badge, Button, Progress, Stepper, StepperItem, StepperSeparator } from "@nexu/ui-web";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Brain, Check, Loader2, Settings, Sparkles } from "lucide-react";
+import { ArrowRight, Brain, Loader2, Settings, Sparkles } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
@@ -285,62 +285,55 @@ export default function PostAuthSetupPage() {
             </div>
 
             {/* Steps with icons */}
-            <div className="space-y-2 max-w-[420px] mx-auto mb-10">
-              <AnimatePresence>
+            <Stepper orientation="vertical" className="max-w-[420px] mx-auto mb-10">
+              <AnimatePresence initial={false}>
                 {SETUP_STEPS.map((step, idx) => {
                   const status = stepStatuses[step.id];
                   const Icon = step.icon;
+                  const stepStatus =
+                    status === "done" ? "completed" : status === "running" ? "current" : "pending";
+
                   return (
                     <motion.div
                       key={step.id}
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.05 }}
-                      className={`flex items-center gap-4 px-4 py-3.5 rounded-lg transition-all text-left ${
-                        status === "running"
-                          ? "bg-accent/8 border border-accent/12 shadow-sm shadow-accent/5"
-                          : status === "done"
-                            ? "bg-[var(--color-success-subtle)] border border-[rgba(52,110,88,0.15)]"
-                            : "border border-border/50 bg-surface-1/50 opacity-60"
-                      }`}
                     >
-                      <div className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 bg-white border border-border">
-                        {status === "done" ? (
-                          <div className="w-6 h-6 rounded-full bg-[rgba(52,110,88,0.20)] flex items-center justify-center">
-                            <Check size={14} className="text-[var(--color-success)]" />
-                          </div>
-                        ) : status === "running" ? (
-                          <Loader2 size={18} className="text-accent animate-spin" />
-                        ) : (
-                          <span className="text-text-muted">
-                            <Icon size={18} />
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div
-                          className={`text-[14px] font-semibold ${
-                            status === "done"
-                              ? "text-[var(--color-success)]"
-                              : status === "running"
-                                ? "text-text-primary"
-                                : "text-text-muted"
-                          }`}
-                        >
-                          {step.label}
-                        </div>
-                        <div className="text-[12px] text-text-muted mt-0.5">{step.detail}</div>
-                      </div>
-                      {status === "done" && (
-                        <Badge variant="success" className="shrink-0">
-                          Done
-                        </Badge>
-                      )}
+                      <StepperItem
+                        status={stepStatus}
+                        icon={
+                          status === "running" ? (
+                            <Loader2 size={16} className="animate-spin" />
+                          ) : status === "done" ? undefined : (
+                            <Icon size={16} />
+                          )
+                        }
+                        label={step.label}
+                        description={step.detail}
+                        trailing={
+                          status === "done" ? (
+                            <Badge variant="success" className="shrink-0">
+                              Done
+                            </Badge>
+                          ) : null
+                        }
+                        className={`rounded-lg border px-4 py-3.5 text-left transition-all ${
+                          status === "running"
+                            ? "border-accent/12 bg-accent/8 shadow-sm shadow-accent/5"
+                            : status === "done"
+                              ? "border-[rgba(52,110,88,0.15)] bg-[var(--color-success-subtle)]"
+                              : "border-border/50 bg-surface-1/50 opacity-60"
+                        }`}
+                      />
+                      {idx < SETUP_STEPS.length - 1 ? (
+                        <StepperSeparator active={status !== "pending"} />
+                      ) : null}
                     </motion.div>
                   );
                 })}
               </AnimatePresence>
-            </div>
+            </Stepper>
           </div>
         )}
       </div>
