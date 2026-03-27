@@ -1,16 +1,16 @@
+import { Button } from "@nexu-design/ui-web";
 import {
   Check,
-  Plus,
-  Settings,
-  MessageSquare,
-  Link2,
   CheckCircle,
-  RefreshCw,
   Globe,
+  Link2,
+  MessageSquare,
   Phone,
+  Plus,
+  RefreshCw,
+  Settings,
   Sparkles,
 } from "lucide-react";
-import { Button } from "@nexu-design/ui-web";
 import ChatCardGroup from "../product/ChatCards";
 import type { ChatCard } from "../product/sessionsData";
 
@@ -52,8 +52,7 @@ const NATIVE_CHANNELS: Channel[] = [
       },
       { type: "memory", label: "从邮件中提取了合作意向备忘", time: "3 小时前" },
     ],
-    highlight:
-      "发邮件给分身 = 启动一个 Session。附件自动存入 artifacts，关键信息记入 memory。",
+    highlight: "发邮件给分身 = 启动一个 Session。附件自动存入 artifacts，关键信息记入 memory。",
   },
   {
     name: "SMS / iMessage",
@@ -71,8 +70,7 @@ const NATIVE_CHANNELS: Channel[] = [
       },
       { type: "file", label: "分身回复了日程摘要", time: "30 分钟前" },
     ],
-    highlight:
-      "给分身发短信，随时随地发指令。无需打开任何 App，最原生的交互方式。",
+    highlight: "给分身发短信，随时随地发指令。无需打开任何 App，最原生的交互方式。",
   },
   {
     name: "WhatsApp",
@@ -83,8 +81,7 @@ const NATIVE_CHANNELS: Channel[] = [
     category: "native",
     stats: null,
     recent: [],
-    highlight:
-      "全球 20 亿用户的即时通讯。给分身的 WhatsApp 号发消息就能开始工作。",
+    highlight: "全球 20 亿用户的即时通讯。给分身的 WhatsApp 号发消息就能开始工作。",
   },
 ];
 
@@ -101,12 +98,7 @@ const IM_CHANNELS: Channel[] = [
       { type: "memory", label: "记录了 OAuth 选型决策", time: "20 分钟前" },
       { type: "file", label: "生成了注册流程 PRD", time: "2 小时前" },
     ],
-    steps: [
-      "创建飞书机器人",
-      "填写 App ID + Secret",
-      "选择权限范围",
-      "部署完成",
-    ],
+    steps: ["创建飞书机器人", "填写 App ID + Secret", "选择权限范围", "部署完成"],
     stepsDone: 4,
   },
   {
@@ -184,9 +176,7 @@ function StatBadge({
   return (
     <div className="flex items-center gap-1 text-[10px] text-text-secondary">
       <span className="text-[9px]">{icon}</span>
-      <span className="tabular-nums font-medium text-text-primary">
-        {value.toLocaleString()}
-      </span>
+      <span className="tabular-nums font-medium text-text-primary">{value.toLocaleString()}</span>
       <span className="text-text-muted">{label}</span>
     </div>
   );
@@ -201,26 +191,22 @@ function ChannelCard({ ch }: { ch: Channel }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-[13px] font-medium text-text-primary">
-              {ch.name}
-            </span>
+            <span className="text-[13px] font-medium text-text-primary">{ch.name}</span>
             {ch.badge && (
               <span
                 className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium ${
                   ch.badge === "主渠道"
                     ? "bg-clone/10 text-clone"
                     : ch.badge === "零安装"
-                    ? "bg-success-subtle text-success"
-                    : "bg-surface-3 text-text-muted"
+                      ? "bg-success-subtle text-success"
+                      : "bg-surface-3 text-text-muted"
                 }`}
               >
                 {ch.badge}
               </span>
             )}
           </div>
-          <div className="text-[11px] text-text-secondary mt-0.5">
-            {ch.desc}
-          </div>
+          <div className="text-[11px] text-text-secondary mt-0.5">{ch.desc}</div>
         </div>
         <div className="flex items-center gap-2">
           {ch.status === "connected" && (
@@ -229,13 +215,15 @@ function ChannelCard({ ch }: { ch: Channel }) {
             </span>
           )}
           {ch.status === "pending" && (
-            <Button variant="ghost" size="xs" className="h-auto gap-1 bg-accent-subtle px-2.5 py-1 text-[11px] font-medium text-accent hover:bg-accent-glow">
+            <Button
+              variant="ghost"
+              size="xs"
+              className="h-auto gap-1 bg-accent-subtle px-2.5 py-1 text-[11px] font-medium text-accent hover:bg-accent-glow"
+            >
               <Settings size={11} /> 配置
             </Button>
           )}
-          {ch.status === "coming" && (
-            <span className="text-[11px] text-text-muted">即将支持</span>
-          )}
+          {ch.status === "coming" && <span className="text-[11px] text-text-muted">即将支持</span>}
         </div>
       </div>
 
@@ -259,18 +247,14 @@ function ChannelCard({ ch }: { ch: Channel }) {
           </div>
           {ch.recent && ch.recent.length > 0 && (
             <div className="pt-2 border-t border-border-subtle space-y-1">
-              {ch.recent.map((r, i) => (
+              {ch.recent.map((r) => (
                 <div
-                  key={i}
+                  key={`${r.type}-${r.label}`}
                   className="flex items-center gap-2 text-[10px] text-text-secondary"
                 >
-                  <span className="text-[9px]">
-                    {r.type === "memory" ? "🧠" : "📄"}
-                  </span>
+                  <span className="text-[9px]">{r.type === "memory" ? "🧠" : "📄"}</span>
                   <span className="truncate">{r.label}</span>
-                  <span className="text-text-muted ml-auto shrink-0">
-                    {r.time}
-                  </span>
+                  <span className="text-text-muted ml-auto shrink-0">{r.time}</span>
                 </div>
               ))}
             </div>
@@ -292,9 +276,7 @@ function ChannelCard({ ch }: { ch: Channel }) {
                   )}
                   <span
                     className={
-                      i < (ch.stepsDone ?? 0)
-                        ? "text-text-muted line-through"
-                        : "text-text-primary"
+                      i < (ch.stepsDone ?? 0) ? "text-text-muted line-through" : "text-text-primary"
                     }
                   >
                     {step}
@@ -328,37 +310,27 @@ export default function StepIM() {
           接入流程（以飞书为例）
         </div>
         <div className="flex items-center gap-2">
-          {["创建机器人", "配置权限", "填写凭证", "测试连接", "上线运行"].map(
-            (step, i) => (
-              <div key={step} className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5">
-                  <div
-                    className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold ${
-                      i < 4
-                        ? "bg-success text-white"
-                        : "bg-clone text-white animate-pulse"
-                    }`}
-                  >
-                    {i < 4 ? <Check size={10} /> : i + 1}
-                  </div>
-                  <span
-                    className={`text-[10px] ${
-                      i <= 4
-                        ? "text-text-primary font-medium"
-                        : "text-text-muted"
-                    }`}
-                  >
-                    {step}
-                  </span>
+          {["创建机器人", "配置权限", "填写凭证", "测试连接", "上线运行"].map((step, i) => (
+            <div key={step} className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold ${
+                    i < 4 ? "bg-success text-white" : "bg-clone text-white animate-pulse"
+                  }`}
+                >
+                  {i < 4 ? <Check size={10} /> : i + 1}
                 </div>
-                {i < 4 && (
-                  <div
-                    className={`w-8 h-px ${i < 4 ? "bg-success" : "bg-border"}`}
-                  />
-                )}
+                <span
+                  className={`text-[10px] ${
+                    i <= 4 ? "text-text-primary font-medium" : "text-text-muted"
+                  }`}
+                >
+                  {step}
+                </span>
               </div>
-            )
-          )}
+              {i < 4 && <div className={`w-8 h-px ${i < 4 ? "bg-success" : "bg-border"}`} />}
+            </div>
+          ))}
         </div>
         <div className="mt-3 flex items-center gap-2 text-[10px]">
           <CheckCircle size={12} className="text-success" />
@@ -375,16 +347,13 @@ export default function StepIM() {
           <div className="w-5 h-5 rounded bg-success-subtle flex items-center justify-center">
             <Phone size={11} className="text-success" />
           </div>
-          <span className="text-[13px] font-semibold text-text-primary">
-            原生渠道
-          </span>
+          <span className="text-[13px] font-semibold text-text-primary">原生渠道</span>
           <span className="text-[10px] text-success bg-success-subtle px-1.5 py-0.5 rounded-full font-medium">
             零安装
           </span>
         </div>
         <div className="text-[12px] text-text-secondary mb-3 pl-7">
-          无需下载任何 App —
-          每个手机都有短信和邮件。发一条消息就能启动分身工作。
+          无需下载任何 App — 每个手机都有短信和邮件。发一条消息就能启动分身工作。
         </div>
         <div className="space-y-3">
           {NATIVE_CHANNELS.map((ch) => (
@@ -399,12 +368,8 @@ export default function StepIM() {
           <div className="w-5 h-5 rounded bg-clone/10 flex items-center justify-center">
             <MessageSquare size={11} className="text-clone" />
           </div>
-          <span className="text-[13px] font-semibold text-text-primary">
-            IM 平台
-          </span>
-          <span className="text-[10px] text-text-muted">
-            团队协作 · 群聊 · 卡片交互
-          </span>
+          <span className="text-[13px] font-semibold text-text-primary">IM 平台</span>
+          <span className="text-[10px] text-text-muted">团队协作 · 群聊 · 卡片交互</span>
         </div>
         <div className="space-y-3">
           {IM_CHANNELS.map((ch) => (
@@ -415,15 +380,16 @@ export default function StepIM() {
 
       {/* Card preview: session from email/SMS */}
       <div className="mb-6">
-        <div className="text-[11px] font-medium text-text-secondary mb-2">
-          邮件/短信 会话示例
-        </div>
+        <div className="text-[11px] font-medium text-text-secondary mb-2">邮件/短信 会话示例</div>
         <div className="max-w-72">
           <ChatCardGroup cards={EMAIL_SESSION_CARDS} interactive={false} />
         </div>
       </div>
 
-      <Button variant="outline" className="mb-6 h-auto w-full gap-2 border-dashed p-3 text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover">
+      <Button
+        variant="outline"
+        className="mb-6 h-auto w-full gap-2 border-dashed p-3 text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover"
+      >
         <Plus size={14} />
         添加渠道
       </Button>
@@ -449,9 +415,7 @@ export default function StepIM() {
             className="bg-surface-1 border border-border rounded-lg p-3 text-center"
           >
             <f.icon size={16} className="text-clone mx-auto mb-1.5" />
-            <div className="text-[11px] font-medium text-text-primary">
-              {f.label}
-            </div>
+            <div className="text-[11px] font-medium text-text-primary">{f.label}</div>
             <div className="text-[10px] text-text-muted mt-0.5">{f.desc}</div>
           </div>
         ))}

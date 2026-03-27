@@ -113,7 +113,7 @@ function Breadcrumbs({ currentPath }: { currentPath: string }) {
         {crumbs.map((crumb, i) => {
           const isLast = i === crumbs.length - 1;
           return (
-            <BreadcrumbItem key={crumb.path + i}>
+            <BreadcrumbItem key={crumb.path}>
               {i > 0 && <BreadcrumbSeparator className="text-text-placeholder" />}
               {isLast ? (
                 <BreadcrumbPage className="text-text-secondary">{crumb.label}</BreadcrumbPage>
@@ -180,9 +180,11 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    setMobileOpen(false);
-    setFeedback("none");
-    setFeedbackText("");
+    if (currentPath.length >= 0) {
+      setMobileOpen(false);
+      setFeedback("none");
+      setFeedbackText("");
+    }
   }, [currentPath]);
 
   return (
@@ -222,9 +224,11 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
       {/* Mobile sidebar overlay */}
       {mobileOpen && (
         <>
-          <div
+          <button
+            type="button"
             className="fixed inset-0 z-40 bg-black/30 lg:hidden"
             onClick={() => setMobileOpen(false)}
+            aria-label="Close navigation drawer"
           />
           <aside className="fixed inset-y-0 left-0 z-50 w-72 bg-[#f5f5f7] border-r border-[#e5e5e8] flex flex-col lg:hidden overflow-y-auto">
             <div className="flex items-center justify-between px-5 pt-4 pb-2">

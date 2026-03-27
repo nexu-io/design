@@ -1,17 +1,25 @@
-import { useState, useRef, useCallback } from 'react';
-import { CheckCircle2, AlertCircle } from 'lucide-react';
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
   DialogBody,
-} from '@nexu-design/ui-web';
-import { Tabs, TabsList, TabsTrigger, TabsContent, Button, Input, Label } from '@nexu-design/ui-web';
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@nexu-design/ui-web";
+import {
+  Button,
+  Input,
+  Label,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@nexu-design/ui-web";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
 
-type ImportTab = 'folder' | 'github';
+type ImportTab = "folder" | "github";
 
 interface ImportSkillModalProps {
   open: boolean;
@@ -19,8 +27,8 @@ interface ImportSkillModalProps {
 }
 
 export default function ImportSkillModal({ open, onClose }: ImportSkillModalProps) {
-  const [tab, setTab] = useState<ImportTab>('folder');
-  const [githubUrl, setGithubUrl] = useState('');
+  const [tab, setTab] = useState<ImportTab>("folder");
+  const [githubUrl, setGithubUrl] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [importing, setImporting] = useState(false);
@@ -28,8 +36,8 @@ export default function ImportSkillModal({ open, onClose }: ImportSkillModalProp
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const reset = useCallback(() => {
-    setTab('folder');
-    setGithubUrl('');
+    setTab("folder");
+    setGithubUrl("");
     setDragOver(false);
     setSelectedFolder(null);
     setImporting(false);
@@ -48,8 +56,9 @@ export default function ImportSkillModal({ open, onClose }: ImportSkillModalProp
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      const path = (files[0] as any).webkitRelativePath || files[0].name;
-      const folder = path.split('/')[0] || files[0].name;
+      const file = files[0] as File & { webkitRelativePath?: string };
+      const path = file.webkitRelativePath || file.name;
+      const folder = path.split("/")[0] || files[0].name;
       setSelectedFolder(folder);
     }
   };
@@ -69,8 +78,7 @@ export default function ImportSkillModal({ open, onClose }: ImportSkillModalProp
   };
 
   const canImport =
-    (tab === 'folder' && selectedFolder) ||
-    (tab === 'github' && githubUrl.trim().length > 0);
+    (tab === "folder" && selectedFolder) || (tab === "github" && githubUrl.trim().length > 0);
 
   const handleImport = () => {
     if (!canImport) return;
@@ -83,25 +91,33 @@ export default function ImportSkillModal({ open, onClose }: ImportSkillModalProp
   };
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) handleClose(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) handleClose();
+      }}
+    >
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Import Skill</DialogTitle>
-          <DialogDescription>Add a custom skill from a folder or GitHub repository</DialogDescription>
+          <DialogDescription>
+            Add a custom skill from a folder or GitHub repository
+          </DialogDescription>
         </DialogHeader>
 
-          <Tabs value={tab} onValueChange={(v) => { setTab(v as ImportTab); setDone(false); }} className="px-6">
+        <Tabs
+          value={tab}
+          onValueChange={(v) => {
+            setTab(v as ImportTab);
+            setDone(false);
+          }}
+          className="px-6"
+        >
           <TabsList variant="underline">
-            <TabsTrigger
-              value="folder"
-              variant="underline"
-            >
+            <TabsTrigger value="folder" variant="underline">
               Upload Folder
             </TabsTrigger>
-            <TabsTrigger
-              value="github"
-              variant="underline"
-            >
+            <TabsTrigger value="github" variant="underline">
               GitHub Link
             </TabsTrigger>
           </TabsList>
@@ -111,26 +127,40 @@ export default function ImportSkillModal({ open, onClose }: ImportSkillModalProp
               {done ? (
                 <div className="flex flex-col items-center justify-center py-8 gap-2">
                   <CheckCircle2 size={32} className="text-[var(--color-success)]" />
-                  <p className="text-[14px] font-medium text-text-primary">Skill imported successfully</p>
+                  <p className="text-[14px] font-medium text-text-primary">
+                    Skill imported successfully
+                  </p>
                 </div>
               ) : (
                 <div>
-                  <div
-                    onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                  <button
+                    type="button"
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      setDragOver(true);
+                    }}
                     onDragLeave={() => setDragOver(false)}
                     onDrop={handleDrop}
                     onClick={handleFolderSelect}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleFolderSelect();
+                      }
+                    }}
                     className={`flex flex-col items-center justify-center gap-1.5 py-10 rounded-[12px] border border-dashed cursor-pointer transition-colors ${
                       dragOver
-                        ? 'border-[var(--color-brand-primary)] bg-[var(--color-brand-subtle)]'
+                        ? "border-[var(--color-brand-primary)] bg-[var(--color-brand-subtle)]"
                         : selectedFolder
-                          ? 'border-[var(--color-success)] bg-[var(--color-success)]/5'
-                          : 'border-border-card hover:border-text-muted hover:bg-surface-1'
+                          ? "border-[var(--color-success)] bg-[var(--color-success)]/5"
+                          : "border-border-card hover:border-text-muted hover:bg-surface-1"
                     }`}
                   >
                     {selectedFolder ? (
                       <>
-                        <p className="text-[13px] font-medium text-text-primary">{selectedFolder}</p>
+                        <p className="text-[13px] font-medium text-text-primary">
+                          {selectedFolder}
+                        </p>
                         <p className="text-[11px] text-text-muted">Click to change folder</p>
                       </>
                     ) : (
@@ -138,12 +168,10 @@ export default function ImportSkillModal({ open, onClose }: ImportSkillModalProp
                         <p className="text-[13px] font-medium text-text-primary">
                           Drag & drop a skill folder here
                         </p>
-                        <p className="text-[11px] text-text-muted">
-                          or click to browse
-                        </p>
+                        <p className="text-[11px] text-text-muted">or click to browse</p>
                       </>
                     )}
-                  </div>
+                  </button>
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -157,7 +185,11 @@ export default function ImportSkillModal({ open, onClose }: ImportSkillModalProp
                   <div className="flex items-start gap-1.5 mt-3">
                     <AlertCircle size={12} className="text-text-muted shrink-0 mt-0.5" />
                     <p className="text-[11px] text-text-muted leading-relaxed">
-                      The folder should contain a <code className="px-1 py-0.5 rounded bg-surface-2 text-[10px] font-mono">skill.json</code> manifest and any related prompt or config files.
+                      The folder should contain a{" "}
+                      <code className="px-1 py-0.5 rounded bg-surface-2 text-[10px] font-mono">
+                        skill.json
+                      </code>{" "}
+                      manifest and any related prompt or config files.
                     </p>
                   </div>
                 </div>
@@ -170,7 +202,9 @@ export default function ImportSkillModal({ open, onClose }: ImportSkillModalProp
               {done ? (
                 <div className="flex flex-col items-center justify-center py-8 gap-2">
                   <CheckCircle2 size={32} className="text-[var(--color-success)]" />
-                  <p className="text-[14px] font-medium text-text-primary">Skill imported successfully</p>
+                  <p className="text-[14px] font-medium text-text-primary">
+                    Skill imported successfully
+                  </p>
                 </div>
               ) : (
                 <div>
@@ -183,7 +217,8 @@ export default function ImportSkillModal({ open, onClose }: ImportSkillModalProp
                     placeholder="https://github.com/user/repo or https://github.com/user/repo/tree/main/skills/my-skill"
                   />
                   <p className="text-[11px] text-text-muted mt-2 leading-relaxed">
-                    Paste a link to the full repository or a specific skill folder within the repo. nexu will clone and import automatically.
+                    Paste a link to the full repository or a specific skill folder within the repo.
+                    nexu will clone and import automatically.
                   </p>
                   <div className="mt-4 flex items-start gap-1.5">
                     <AlertCircle size={12} className="text-text-muted shrink-0 mt-0.5" />
@@ -202,11 +237,8 @@ export default function ImportSkillModal({ open, onClose }: ImportSkillModalProp
             <Button variant="ghost" onClick={handleClose}>
               Cancel
             </Button>
-            <Button
-              onClick={handleImport}
-              disabled={!canImport || importing}
-            >
-              {importing ? 'Importing...' : 'Import'}
+            <Button onClick={handleImport} disabled={!canImport || importing}>
+              {importing ? "Importing..." : "Import"}
             </Button>
           </DialogFooter>
         )}

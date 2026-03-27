@@ -1,24 +1,24 @@
-import { useState, useCallback, useEffect, useRef } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import {
+  Bot,
+  Check,
+  ChevronRight,
   Eye,
+  File,
+  type FileText,
+  Film,
+  FolderOpen,
+  Image,
+  Music,
   Pencil,
   Save,
-  X,
-  Check,
-  Bot,
   User,
-  FileText,
-  Image,
-  Film,
-  Music,
-  File,
-  FolderOpen,
-  ChevronRight,
+  X,
 } from "lucide-react";
-import type { FileType } from "./sessionsData";
+import { useCallback, useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { getFile, saveFile } from "./fileStore";
+import type { FileType } from "./sessionsData";
 
 const EDITABLE_TYPES = new Set<FileType>([
   "markdown",
@@ -32,9 +32,7 @@ const EDITABLE_TYPES = new Set<FileType>([
   "sql",
 ]);
 
-const BINARY_PLACEHOLDERS: Partial<
-  Record<FileType, { icon: typeof FileText; label: string }>
-> = {
+const BINARY_PLACEHOLDERS: Partial<Record<FileType, { icon: typeof FileText; label: string }>> = {
   image: { icon: Image, label: "图片文件 — 不支持在线编辑" },
   video: { icon: Film, label: "视频文件 — 不支持在线编辑" },
   audio: { icon: Music, label: "音频文件 — 不支持在线编辑" },
@@ -81,15 +79,14 @@ export default function FileEditor({
   const [saved, setSaved] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isEditable = EDITABLE_TYPES.has(fileType) && !readOnly;
-  const isMarkdown =
-    fileType === "markdown" || fileType === "contact" || fileType === "skill";
+  const isMarkdown = fileType === "markdown" || fileType === "contact" || fileType === "skill";
   const binary = BINARY_PLACEHOLDERS[fileType];
 
   useEffect(() => {
     setDraft(content);
     setMode("preview");
     setSaved(false);
-  }, [content, filePath]);
+  }, [content]);
 
   useEffect(() => {
     if (mode === "edit" && textareaRef.current) {
@@ -141,24 +138,20 @@ export default function FileEditor({
         <div className="flex gap-2 items-center min-w-0">
           <FolderOpen size={12} className="text-text-muted shrink-0" />
           {pathParts.map((part, i) => (
-            <span
-              key={i}
-              className="flex items-center gap-1 text-[10px] text-text-muted"
-            >
+            <span key={part} className="flex items-center gap-1 text-[10px] text-text-muted">
               {i > 0 && <ChevronRight size={8} />}
               <span>{part}</span>
             </span>
           ))}
           <ChevronRight size={8} className="text-text-muted" />
-          <span className="text-[12px] font-medium text-text-primary truncate">
-            {fileName}
-          </span>
+          <span className="text-[12px] font-medium text-text-primary truncate">{fileName}</span>
         </div>
         <div className="flex gap-1 items-center shrink-0">
           {isEditable && (
             <div className="flex items-center bg-surface-3 rounded-md p-0.5">
               <button
                 onClick={() => setMode("preview")}
+                type="button"
                 className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] transition-colors ${
                   mode === "preview"
                     ? "bg-surface-0 text-text-primary shadow-sm"
@@ -170,6 +163,7 @@ export default function FileEditor({
               </button>
               <button
                 onClick={() => setMode("edit")}
+                type="button"
                 className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] transition-colors ${
                   mode === "edit"
                     ? "bg-surface-0 text-text-primary shadow-sm"
@@ -184,6 +178,7 @@ export default function FileEditor({
           {onClose && (
             <button
               onClick={onClose}
+              type="button"
               className="p-1 ml-1 rounded transition-colors hover:bg-surface-3 text-text-muted"
             >
               <X size={13} />
@@ -220,8 +215,7 @@ export default function FileEditor({
         <div className="flex items-center gap-1.5 text-[10px] text-text-muted">
           {editedBy === "agent" ? <Bot size={10} /> : <User size={10} />}
           <span>
-            {editedBy === "agent" ? "Agent" : "You"} edited{" "}
-            {editedAt && `at ${editedAt}`}
+            {editedBy === "agent" ? "Agent" : "You"} edited {editedAt && `at ${editedAt}`}
           </span>
           {saved && (
             <span className="flex items-center gap-0.5 text-success ml-1">
@@ -234,12 +228,14 @@ export default function FileEditor({
           <div className="flex items-center gap-1.5">
             <button
               onClick={handleCancel}
+              type="button"
               className="px-2 py-1 text-[10px] text-text-muted hover:text-text-secondary rounded transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
+              type="button"
               className="flex items-center gap-1 px-2.5 py-1 text-[10px] bg-accent text-accent-fg rounded-md hover:bg-accent-hover transition-colors"
             >
               <Save size={10} />
@@ -302,6 +298,7 @@ function CompactEditor({
           {isEditable && mode === "preview" && (
             <button
               onClick={() => setMode("edit")}
+              type="button"
               className="flex items-center gap-1 px-1.5 py-0.5 text-[9px] text-text-muted hover:text-text-primary bg-surface-3 rounded transition-colors"
             >
               <Pencil size={9} />
@@ -312,12 +309,14 @@ function CompactEditor({
             <>
               <button
                 onClick={onCancel}
+                type="button"
                 className="px-1.5 py-0.5 text-[9px] text-text-muted hover:text-text-secondary rounded transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={onSave}
+                type="button"
                 className="flex items-center gap-0.5 px-1.5 py-0.5 text-[9px] bg-accent text-accent-fg rounded hover:bg-accent-hover transition-colors"
               >
                 <Save size={9} />

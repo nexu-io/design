@@ -1,66 +1,165 @@
+import { Button } from "@nexu-design/ui-web";
 import {
   ArrowRight,
-  Star,
-  Check,
-  X,
-  Users,
-  Sparkles,
+  BarChart3,
   Brain,
+  Check,
+  Crown,
+  GitPullRequest,
   MessageSquare,
   Rss,
-  UserPlus,
   Send,
   Shield,
-  GitPullRequest,
+  Sparkles,
+  Star,
   Target,
-  BarChart3,
+  UserPlus,
+  Users,
+  X,
   Zap,
-  Crown,
 } from "lucide-react";
 import {
+  ChatDivider,
   ChatMsg,
   ChatWindow,
-  ChatDivider,
+  FAQItem,
   ScenarioSection,
   SectionHeading,
-  FAQItem,
 } from "./LandingParts";
 import ChatCardGroup from "./product/ChatCards";
 import type { ChatCard } from "./product/sessionsData";
-import { Button } from '@nexu-design/ui-web'
 
 const LANDING_CARDS: Record<string, ChatCard[]> = {
   scenario1a: [
-    { type: 'skill', title: '深度调研', status: 'success', body: '✓ 检索 23 篇文章 + 5 个竞品官网\n✓ 生成竞品分析报告', path: 'skills/web-research/SKILL.md', meta: '耗时 15s · 自动调用' },
+    {
+      type: "skill",
+      title: "深度调研",
+      status: "success",
+      body: "✓ 检索 23 篇文章 + 5 个竞品官网\n✓ 生成竞品分析报告",
+      path: "skills/web-research/SKILL.md",
+      meta: "耗时 15s · 自动调用",
+    },
   ],
   scenario1b: [
-    { type: 'file', title: '竞品分析报告', status: 'success', body: '8,200 字 · 3 个关键发现\n记忆壁垒 · IM 入口 · 团队协作', path: 'artifacts/research/竞品分析.md', diff: { added: 128, removed: 0 }, actions: [{ label: '打开编辑', primary: true }] },
-    { type: 'memory', title: '记住了 3 个关键结论', status: 'success', body: '记忆壁垒是核心 · IM 优于独立 App · 团队协作驱动付费', meta: '记忆 +3 · 自动归档' },
+    {
+      type: "file",
+      title: "竞品分析报告",
+      status: "success",
+      body: "8,200 字 · 3 个关键发现\n记忆壁垒 · IM 入口 · 团队协作",
+      path: "artifacts/research/竞品分析.md",
+      diff: { added: 128, removed: 0 },
+      actions: [{ label: "打开编辑", primary: true }],
+    },
+    {
+      type: "memory",
+      title: "记住了 3 个关键结论",
+      status: "success",
+      body: "记忆壁垒是核心 · IM 优于独立 App · 团队协作驱动付费",
+      meta: "记忆 +3 · 自动归档",
+    },
   ],
   scenario1c: [
-    { type: 'file', title: '产品方案 v1', status: 'success', body: '基于竞品分析 + 你的 12 条历史偏好\n自动引用了之前的决策记录', path: 'artifacts/prds/产品方案.md', diff: { added: 86, removed: 0 }, actions: [{ label: '打开编辑', primary: true }, { label: '分享' }] },
+    {
+      type: "file",
+      title: "产品方案 v1",
+      status: "success",
+      body: "基于竞品分析 + 你的 12 条历史偏好\n自动引用了之前的决策记录",
+      path: "artifacts/prds/产品方案.md",
+      diff: { added: 86, removed: 0 },
+      actions: [{ label: "打开编辑", primary: true }, { label: "分享" }],
+    },
   ],
   scenario2a: [
-    { type: 'skill', title: '竞品监控', status: 'success', body: '✓ 能力已激活\n✓ 监控 Linear / Notion / Cursor', path: 'skills/competitor-watch/SKILL.md', actions: [{ label: '查看配置' }] },
-    { type: 'automation', title: '每日竞品扫描', status: 'success', body: '⏰ cron: 每天 09:00\n有更新推送飞书 + 保存分析报告', path: 'automation/competitor-scan.yaml', meta: '下次触发：明天 09:00', actions: [{ label: '测试执行' }] },
+    {
+      type: "skill",
+      title: "竞品监控",
+      status: "success",
+      body: "✓ 能力已激活\n✓ 监控 Linear / Notion / Cursor",
+      path: "skills/competitor-watch/SKILL.md",
+      actions: [{ label: "查看配置" }],
+    },
+    {
+      type: "automation",
+      title: "每日竞品扫描",
+      status: "success",
+      body: "⏰ cron: 每天 09:00\n有更新推送飞书 + 保存分析报告",
+      path: "automation/competitor-scan.yaml",
+      meta: "下次触发：明天 09:00",
+      actions: [{ label: "测试执行" }],
+    },
   ],
   scenario2b: [
-    { type: 'automation', title: '每周 Sprint 回顾', status: 'success', body: '⏰ cron: 每周五 18:00\n自动汇总本周产出 + 推送到群', path: 'automation/weekly-review.yaml', meta: '2 个自动任务已上线', actions: [{ label: '查看全部', primary: true }] },
+    {
+      type: "automation",
+      title: "每周 Sprint 回顾",
+      status: "success",
+      body: "⏰ cron: 每周五 18:00\n自动汇总本周产出 + 推送到群",
+      path: "automation/weekly-review.yaml",
+      meta: "2 个自动任务已上线",
+      actions: [{ label: "查看全部", primary: true }],
+    },
   ],
   scenario3a: [
-    { type: 'automation', title: '📊 今日战况复盘', status: 'success', body: '✅ 完成 12 个任务，写了 3 份文档\n🧠 新记住 5 件事，默契度 → 78%', meta: '自动推送 · 每天 21:00' },
-    { type: 'skill', title: '⚡ 竞品监控发现', status: 'warning', body: 'Notion 发布了 AI 新功能\n分析报告已准备好', actions: [{ label: '查看分析', primary: true }] },
-    { type: 'memory', title: '🔔 记忆冲突提醒', status: 'warning', body: '发现 3 条记忆有矛盾，需要你来定夺', actions: [{ label: '处理', primary: true }] },
+    {
+      type: "automation",
+      title: "📊 今日战况复盘",
+      status: "success",
+      body: "✅ 完成 12 个任务，写了 3 份文档\n🧠 新记住 5 件事，默契度 → 78%",
+      meta: "自动推送 · 每天 21:00",
+    },
+    {
+      type: "skill",
+      title: "⚡ 竞品监控发现",
+      status: "warning",
+      body: "Notion 发布了 AI 新功能\n分析报告已准备好",
+      actions: [{ label: "查看分析", primary: true }],
+    },
+    {
+      type: "memory",
+      title: "🔔 记忆冲突提醒",
+      status: "warning",
+      body: "发现 3 条记忆有矛盾，需要你来定夺",
+      actions: [{ label: "处理", primary: true }],
+    },
   ],
   scenario3b: [
-    { type: 'file', title: 'Notion AI 新功能分析', status: 'success', body: 'Notion 采用嵌入式 AI 方案\n对我们的启示：记忆 + 能力组合是差异化优势', path: 'artifacts/research/notion-ai-update.md', diff: { added: 42, removed: 0 }, actions: [{ label: '打开', primary: true }] },
+    {
+      type: "file",
+      title: "Notion AI 新功能分析",
+      status: "success",
+      body: "Notion 采用嵌入式 AI 方案\n对我们的启示：记忆 + 能力组合是差异化优势",
+      path: "artifacts/research/notion-ai-update.md",
+      diff: { added: 42, removed: 0 },
+      actions: [{ label: "打开", primary: true }],
+    },
   ],
   scenario4a: [
-    { type: 'memory', title: '已记住', status: 'success', body: '"搜索结果页加相关推荐"\n归入产品想法 · 标签：搜索优化', path: 'memory/ideas/search-recommendations.md', meta: '记忆 +1 · 默契度 +0.5%' },
+    {
+      type: "memory",
+      title: "已记住",
+      status: "success",
+      body: '"搜索结果页加相关推荐"\n归入产品想法 · 标签：搜索优化',
+      path: "memory/ideas/search-recommendations.md",
+      meta: "记忆 +1 · 默契度 +0.5%",
+    },
   ],
   scenario4b: [
-    { type: 'file', title: '搜索优化方案', status: 'success', body: '混合搜索 + 相关推荐\n参考了你过去 17 条相关记忆', path: 'artifacts/prds/search-optimization.md', diff: { added: 64, removed: 0 }, actions: [{ label: '打开编辑', primary: true }] },
-    { type: 'memory', title: '默契度提升', status: 'success', body: '记忆关联命中 · 默契度 +1% → 79%', meta: '跨越 2 个月的记忆关联' },
+    {
+      type: "file",
+      title: "搜索优化方案",
+      status: "success",
+      body: "混合搜索 + 相关推荐\n参考了你过去 17 条相关记忆",
+      path: "artifacts/prds/search-optimization.md",
+      diff: { added: 64, removed: 0 },
+      actions: [{ label: "打开编辑", primary: true }],
+    },
+    {
+      type: "memory",
+      title: "默契度提升",
+      status: "success",
+      body: "记忆关联命中 · 默契度 +1% → 79%",
+      meta: "跨越 2 个月的记忆关联",
+    },
   ],
 };
 
@@ -74,21 +173,19 @@ export default function LandingPreview() {
             <div className="flex justify-center items-center w-7 h-7 rounded-lg bg-accent">
               <span className="text-xs font-bold text-accent-fg">N</span>
             </div>
-            <span className="text-sm font-semibold tracking-tight text-text-primary">
-              nexu
-            </span>
+            <span className="text-sm font-semibold tracking-tight text-text-primary">nexu</span>
           </div>
           <div className="flex items-center gap-6 text-[13px] text-text-tertiary">
-            <a href="#" className="transition-colors hover:text-text-primary">
+            <button type="button" className="transition-colors hover:text-text-primary">
               产品
-            </a>
-            <a href="#" className="transition-colors hover:text-text-primary">
+            </button>
+            <button type="button" className="transition-colors hover:text-text-primary">
               定价
-            </a>
-            <a href="#" className="transition-colors hover:text-text-primary">
+            </button>
+            <button type="button" className="transition-colors hover:text-text-primary">
               文档
-            </a>
-            <Button size='sm'>
+            </button>
+            <Button size="sm">
               免费开始 <ArrowRight size={14} />
             </Button>
           </div>
@@ -120,7 +217,9 @@ export default function LandingPreview() {
           <h1 className="text-[52px] font-bold text-text-primary mb-5 leading-[1.1] tracking-tight">
             People quit. Clones don&apos;t.
             <br />
-            <span className="text-text-secondary">为你的龙虾打造一间赛博办公室 — 世界首个人与分身共存的办公协作网络</span>
+            <span className="text-text-secondary">
+              为你的龙虾打造一间赛博办公室 — 世界首个人与分身共存的办公协作网络
+            </span>
           </h1>
           <p className="mx-auto mb-10 max-w-xl text-lg leading-relaxed text-text-tertiary">
             每个人有一个分身 — 记住你说过的每句话，帮你做事，和团队协作。
@@ -128,10 +227,10 @@ export default function LandingPreview() {
             人走了，分身留下，知识永不流失。
           </p>
           <div className="flex gap-3 justify-center mb-6">
-            <Button size='lg'>
+            <Button size="lg">
               免费开始 <ArrowRight size={14} />
             </Button>
-            <Button variant='outline' size='lg'>
+            <Button variant="outline" size="lg">
               <UserPlus size={14} /> 邀请同事一起用
             </Button>
           </div>
@@ -150,21 +249,13 @@ export default function LandingPreview() {
             已有数万知识工作者在使用
           </div>
           <div className="flex gap-12 justify-center items-center text-text-muted">
-            {[
-              "ByteBuilder",
-              "NextStudio",
-              "锐思科技",
-              "CloudStack",
-              "DataPulse",
-              "创见设计",
-            ].map((name) => (
-              <span
-                key={name}
-                className="text-[13px] font-semibold opacity-30 select-none"
-              >
-                {name}
-              </span>
-            ))}
+            {["ByteBuilder", "NextStudio", "锐思科技", "CloudStack", "DataPulse", "创见设计"].map(
+              (name) => (
+                <span key={name} className="text-[13px] font-semibold opacity-30 select-none">
+                  {name}
+                </span>
+              ),
+            )}
           </div>
         </div>
       </section>
@@ -202,17 +293,15 @@ export default function LandingPreview() {
               before: "对话结束后什么也没留下",
               after: "每次对话都帮你沉淀文档、记忆和知识",
             },
-          ].map((p, i) => (
-            <div key={i} className="flex gap-4 items-start">
+          ].map((p) => (
+            <div key={p.before} className="flex gap-4 items-start">
               <div className="mt-1 shrink-0">
                 <div className="flex justify-center items-center w-5 h-5 rounded-full bg-danger-subtle">
                   <X size={10} className="text-danger" />
                 </div>
               </div>
               <div>
-                <div className="text-sm line-through text-text-tertiary">
-                  {p.before}
-                </div>
+                <div className="text-sm line-through text-text-tertiary">{p.before}</div>
                 <div className="text-sm text-text-primary font-medium mt-1.5 flex items-start gap-2">
                   <div className="w-5 h-5 rounded-full bg-success-subtle flex items-center justify-center shrink-0 mt-0.5">
                     <Check size={10} className="text-success" />
@@ -238,9 +327,7 @@ export default function LandingPreview() {
         />
         <div className="p-8 rounded-xl border bg-surface-1 border-border">
           <div className="text-[13px] leading-[2] text-text-secondary">
-            <div className="mb-1 font-semibold text-text-primary">
-              你的分身空间
-            </div>
+            <div className="mb-1 font-semibold text-text-primary">你的分身空间</div>
             {[
               {
                 icon: "🧬",
@@ -285,12 +372,8 @@ export default function LandingPreview() {
             ].map((item) => (
               <div key={item.name} className="flex gap-3 items-center pl-5">
                 <span>{item.icon}</span>
-                <span className="font-medium text-text-primary">
-                  {item.name}
-                </span>
-                <span className="text-text-muted text-[11px]">
-                  — {item.desc}
-                </span>
+                <span className="font-medium text-text-primary">{item.name}</span>
+                <span className="text-text-muted text-[11px]">— {item.desc}</span>
               </div>
             ))}
           </div>
@@ -300,9 +383,7 @@ export default function LandingPreview() {
                 <div className="w-2 h-2 rounded-full bg-success" />
                 <span>218 份资料 · 今天新增 6 份</span>
               </div>
-              <span>
-                支持任意内容：文档 · 表格 · 设计稿 · 图片 · 音视频 · PDF
-              </span>
+              <span>支持任意内容：文档 · 表格 · 设计稿 · 图片 · 音视频 · PDF</span>
             </div>
           </div>
         </div>
@@ -326,15 +407,11 @@ export default function LandingPreview() {
         chatContent={
           <ChatWindow title="nexu · 我的分身">
             <ChatMsg from="user">帮我做一份 AI 赛道的竞品分析</ChatMsg>
-            <ChatMsg from="clone">
-              收到，让我帮你搞定 📂
-            </ChatMsg>
+            <ChatMsg from="clone">收到，让我帮你搞定 📂</ChatMsg>
             <div className="ml-8 mb-2.5">
               <ChatCardGroup cards={LANDING_CARDS.scenario1a} />
             </div>
-            <ChatMsg from="clone">
-              报告完成 ✅ 8,200 字，3 个关键发现
-            </ChatMsg>
+            <ChatMsg from="clone">报告完成 ✅ 8,200 字，3 个关键发现</ChatMsg>
             <div className="ml-8 mb-2.5">
               <ChatCardGroup cards={LANDING_CARDS.scenario1b} />
             </div>
@@ -365,9 +442,7 @@ export default function LandingPreview() {
         chatContent={
           <ChatWindow title="nexu · 我的分身">
             <ChatMsg from="user">帮我设一个竞品监控，每天自动跑</ChatMsg>
-            <ChatMsg from="clone">
-              好的，帮你设置 ⚡
-            </ChatMsg>
+            <ChatMsg from="clone">好的，帮你设置 ⚡</ChatMsg>
             <div className="ml-8 mb-2.5">
               <ChatCardGroup cards={LANDING_CARDS.scenario2a} />
             </div>
@@ -469,8 +544,7 @@ export default function LandingPreview() {
               </span>
               <br />
               <br />
-              李四反馈：Gateway 重构完成 65%，卡在第三方 SDK 适配，预计延迟 2
-              天。
+              李四反馈：Gateway 重构完成 65%，卡在第三方 SDK 适配，预计延迟 2 天。
               <br />
               <br />
               已自动更新 Sprint 状态 ✅
@@ -483,9 +557,7 @@ export default function LandingPreview() {
               <br />
               王五，点击下方链接 3 分钟激活你的专属分身 👇
               <br />
-              <span className="text-info underline text-[12px]">
-                refly.ai/invite/team-abc123
-              </span>
+              <span className="text-info underline text-[12px]">refly.ai/invite/team-abc123</span>
             </ChatMsg>
           </ChatWindow>
         }
@@ -545,12 +617,8 @@ export default function LandingPreview() {
                 >
                   <s.icon size={18} />
                 </div>
-                <div className="text-[13px] font-semibold text-text-primary mb-1">
-                  {s.title}
-                </div>
-                <div className="text-[11px] text-text-muted leading-relaxed">
-                  {s.desc}
-                </div>
+                <div className="text-[13px] font-semibold text-text-primary mb-1">{s.title}</div>
+                <div className="text-[11px] text-text-muted leading-relaxed">{s.desc}</div>
               </div>
             ))}
           </div>
@@ -608,12 +676,8 @@ export default function LandingPreview() {
                   {item.badge}
                 </span>
               </div>
-              <div className="text-[13px] font-semibold text-text-primary mb-1.5">
-                {item.title}
-              </div>
-              <div className="text-[12px] text-text-muted leading-relaxed">
-                {item.desc}
-              </div>
+              <div className="text-[13px] font-semibold text-text-primary mb-1.5">{item.title}</div>
+              <div className="text-[12px] text-text-muted leading-relaxed">{item.desc}</div>
             </div>
           ))}
         </div>
@@ -628,7 +692,7 @@ export default function LandingPreview() {
               邀请 3 位同事加入，每人免费获得 Pro 版 30 天体验
             </div>
           </div>
-          <Button className='shrink-0'>
+          <Button className="shrink-0">
             <UserPlus size={14} /> 邀请同事
           </Button>
         </div>
@@ -667,15 +731,9 @@ export default function LandingPreview() {
               {i < 2 && (
                 <div className="absolute top-5 -right-6 w-12 border-t border-dashed border-border" />
               )}
-              <div className="mb-4 font-mono text-2xl font-bold text-clone">
-                {s.step}
-              </div>
-              <h3 className="text-[15px] font-semibold text-text-primary mb-2">
-                {s.title}
-              </h3>
-              <p className="text-sm leading-relaxed text-text-tertiary">
-                {s.desc}
-              </p>
+              <div className="mb-4 font-mono text-2xl font-bold text-clone">{s.step}</div>
+              <h3 className="text-[15px] font-semibold text-text-primary mb-2">{s.title}</h3>
+              <p className="text-sm leading-relaxed text-text-tertiary">{s.desc}</p>
             </div>
           ))}
         </div>
@@ -702,9 +760,7 @@ export default function LandingPreview() {
               <div className="font-mono text-3xl font-bold tracking-tight text-text-primary">
                 {n.num}
               </div>
-              <div className="mt-1 text-sm font-medium text-text-primary">
-                {n.label}
-              </div>
+              <div className="mt-1 text-sm font-medium text-text-primary">{n.label}</div>
               <div className="text-[11px] text-text-muted mt-0.5">{n.sub}</div>
             </div>
           ))}
@@ -726,15 +782,9 @@ export default function LandingPreview() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-surface-2/50">
-                <th className="text-left p-4 text-text-secondary font-medium w-[28%]">
-                  能力
-                </th>
-                <th className="text-center p-4 font-semibold text-text-primary w-[18%]">
-                  nexu
-                </th>
-                <th className="text-center p-4 text-text-secondary font-medium w-[18%]">
-                  ChatGPT
-                </th>
+                <th className="text-left p-4 text-text-secondary font-medium w-[28%]">能力</th>
+                <th className="text-center p-4 font-semibold text-text-primary w-[18%]">nexu</th>
+                <th className="text-center p-4 text-text-secondary font-medium w-[18%]">ChatGPT</th>
                 <th className="text-center p-4 text-text-secondary font-medium w-[18%]">
                   Notion AI
                 </th>
@@ -760,18 +810,18 @@ export default function LandingPreview() {
                   boolean | string,
                   boolean | string,
                   boolean | string,
-                  boolean | string
+                  boolean | string,
                 ][]
               ).map(([feature, refly, chatgpt, notion, coze]) => (
-                <tr
-                  key={feature as string}
-                  className="border-b border-border last:border-0"
-                >
-                  <td className="p-4 text-text-primary text-[13px]">
-                    {feature as string}
-                  </td>
-                  {[refly, chatgpt, notion, coze].map((val, ci) => (
-                    <td key={ci} className="p-4 text-center">
+                <tr key={feature as string} className="border-b border-border last:border-0">
+                  <td className="p-4 text-text-primary text-[13px]">{feature as string}</td>
+                  {[
+                    ["Refly", refly],
+                    ["ChatGPT", chatgpt],
+                    ["Notion", notion],
+                    ["Coze", coze],
+                  ].map(([name, val]) => (
+                    <td key={`${feature as string}-${name}`} className="p-4 text-center">
                       {val === true ? (
                         <Check size={16} className="mx-auto text-success" />
                       ) : val === false ? (
@@ -800,11 +850,7 @@ export default function LandingPreview() {
 
       {/* ───── Social Proof ───── */}
       <section className="px-6 py-24 mx-auto max-w-4xl">
-        <SectionHeading
-          tag="用户声音"
-          title="他们的分身已经上岗了"
-          desc="来自真实用户的反馈"
-        />
+        <SectionHeading tag="用户声音" title="他们的分身已经上岗了" desc="来自真实用户的反馈" />
         <div className="grid grid-cols-3 gap-6">
           {[
             {
@@ -822,8 +868,7 @@ export default function LandingPreview() {
               days: 62,
             },
             {
-              quote:
-                "让分身帮我写产品方案，它先做了竞品调研再写。比实习生靠谱。",
+              quote: "让分身帮我写产品方案，它先做了竞品调研再写。比实习生靠谱。",
               who: "创业公司 CEO",
               title: "CEO & Founder",
               days: 45,
@@ -836,40 +881,31 @@ export default function LandingPreview() {
               days: 93,
             },
             {
-              quote:
-                "做了一个客户跟进的自动任务，现在每周自动提醒我跟进，一个客户都不漏。",
+              quote: "做了一个客户跟进的自动任务，现在每周自动提醒我跟进，一个客户都不漏。",
               who: "销售负责人",
               title: "Sales",
               days: 38,
             },
             {
-              quote:
-                "分身里已经有 500 多条记忆了。默契度 82%，它比我自己还了解我的偏好。",
+              quote: "分身里已经有 500 多条记忆了。默契度 82%，它比我自己还了解我的偏好。",
               who: "自由设计师",
               title: "Freelancer",
               days: 186,
             },
           ].map((t) => (
-            <div
-              key={t.who}
-              className="p-5 rounded-xl border bg-surface-1 border-border"
-            >
+            <div key={t.who} className="p-5 rounded-xl border bg-surface-1 border-border">
               <div className="flex gap-0.5 mb-3">
                 {[1, 2, 3, 4, 5].map((s) => (
                   <Star key={s} size={13} className="text-clone fill-clone" />
                 ))}
               </div>
-              <p className="text-[13px] text-text-secondary leading-relaxed mb-5">
-                "{t.quote}"
-              </p>
+              <p className="text-[13px] text-text-secondary leading-relaxed mb-5">"{t.quote}"</p>
               <div className="flex items-center gap-2.5">
                 <div className="flex justify-center items-center w-8 h-8 text-xs font-medium rounded-full bg-surface-3 text-text-secondary">
                   {t.who[0]}
                 </div>
                 <div>
-                  <div className="text-xs font-medium text-text-primary">
-                    {t.who}
-                  </div>
+                  <div className="text-xs font-medium text-text-primary">{t.who}</div>
                   <div className="text-[11px] text-text-muted">
                     {t.title} · 使用 {t.days} 天
                   </div>
@@ -940,13 +976,7 @@ export default function LandingPreview() {
               name: "基础版",
               price: "免费",
               sub: "",
-              items: [
-                "分身上岗",
-                "500 能量/月",
-                "3 种能力",
-                "基础记忆",
-                "每日动态",
-              ],
+              items: ["分身上岗", "500 能量/月", "3 种能力", "基础记忆", "每日动态"],
               cta: "免费开始",
               hl: false,
             },
@@ -971,13 +1001,7 @@ export default function LandingPreview() {
               name: "团队版",
               price: "¥19",
               sub: "/人/月",
-              items: [
-                "专业版全部",
-                "团队共享知识库",
-                "分身间协作",
-                "团队管理后台",
-                "群聊协作",
-              ],
+              items: ["专业版全部", "团队共享知识库", "分身间协作", "团队管理后台", "群聊协作"],
               cta: "团队一起用",
               hl: false,
             },
@@ -985,22 +1009,16 @@ export default function LandingPreview() {
             <div
               key={p.name}
               className={`rounded-xl p-6 relative ${
-                p.hl
-                  ? "bg-surface-1 border-2 border-clone/30"
-                  : "bg-surface-1 border border-border"
+                p.hl ? "bg-surface-1 border-2 border-clone/30" : "bg-surface-1 border border-border"
               }`}
-              style={
-                p.hl ? { boxShadow: "0 0 40px rgba(192,138,37,0.08)" } : {}
-              }
+              style={p.hl ? { boxShadow: "0 0 40px rgba(192,138,37,0.08)" } : {}}
             >
               {p.hl && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-clone text-white text-[11px] font-semibold px-3 py-0.5 rounded-full">
                   推荐
                 </div>
               )}
-              <div className="text-sm font-medium text-text-secondary">
-                {p.name}
-              </div>
+              <div className="text-sm font-medium text-text-secondary">{p.name}</div>
               <div className="mt-2 mb-6">
                 <span className="text-3xl font-bold tracking-tight text-text-primary">
                   {p.price}
@@ -1017,10 +1035,7 @@ export default function LandingPreview() {
                   </div>
                 ))}
               </div>
-              <Button
-                variant={p.hl ? 'default' : 'outline'}
-                className='w-full'
-              >
+              <Button variant={p.hl ? "default" : "outline"} className="w-full">
                 {p.cta}
               </Button>
             </div>
@@ -1042,26 +1057,24 @@ export default function LandingPreview() {
             免费开始，3 分钟上手。员工会辞职，分身不会。
           </p>
           <div className="flex gap-3 justify-center">
-            <Button size='lg'>
+            <Button size="lg">
               免费开始 <ArrowRight size={14} />
             </Button>
-            <Button variant='outline' size='lg'>
+            <Button variant="outline" size="lg">
               <UserPlus size={14} /> 邀请同事
             </Button>
           </div>
           <div className="flex gap-0 justify-center mt-10">
-            {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+            {["😊", "🤝", "😄", "💻", "🎨", "🚀", "✨"].map((emoji) => (
               <div
-                key={i}
+                key={emoji}
                 className="flex justify-center items-center -ml-2 w-9 h-9 text-sm rounded-full border-2 bg-surface-3 border-surface-0 first:ml-0"
               >
-                {["😊", "🤝", "😄", "💻", "🎨", "🚀", "✨"][i]}
+                {emoji}
               </div>
             ))}
           </div>
-          <div className="text-[13px] text-text-muted mt-3">
-            12,000+ 团队 · 89,536 人已加入
-          </div>
+          <div className="text-[13px] text-text-muted mt-3">12,000+ 团队 · 89,536 人已加入</div>
         </div>
       </section>
 
@@ -1072,20 +1085,18 @@ export default function LandingPreview() {
             <div className="flex justify-center items-center w-5 h-5 rounded bg-accent">
               <span className="text-accent-fg text-[9px] font-bold">N</span>
             </div>
-            <span className="text-xs text-text-muted">
-              nexu — People quit. Clones don&apos;t.
-            </span>
+            <span className="text-xs text-text-muted">nexu — People quit. Clones don&apos;t.</span>
           </div>
           <div className="flex gap-6 text-xs text-text-muted">
-            <a href="#" className="transition-colors hover:text-text-secondary">
+            <button type="button" className="transition-colors hover:text-text-secondary">
               GitHub
-            </a>
-            <a href="#" className="transition-colors hover:text-text-secondary">
+            </button>
+            <button type="button" className="transition-colors hover:text-text-secondary">
               X / Twitter
-            </a>
-            <a href="#" className="transition-colors hover:text-text-secondary">
+            </button>
+            <button type="button" className="transition-colors hover:text-text-secondary">
               即刻
-            </a>
+            </button>
           </div>
         </div>
       </footer>

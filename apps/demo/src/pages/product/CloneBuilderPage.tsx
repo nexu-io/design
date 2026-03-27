@@ -786,6 +786,7 @@ function FeedDetailPanel({ item, onClose }: { item: FeedItem; onClose: () => voi
           <h3 className="text-[13px] font-semibold text-text-primary truncate">{item.title}</h3>
         </div>
         <button
+          type="button"
           onClick={onClose}
           className="p-1 rounded-md hover:bg-surface-3 text-text-muted transition-colors shrink-0"
         >
@@ -795,8 +796,8 @@ function FeedDetailPanel({ item, onClose }: { item: FeedItem; onClose: () => voi
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-3 space-y-2.5 min-h-0">
-        {detail.messages.map((msg, i) => (
-          <div key={i}>
+        {detail.messages.map((msg) => (
+          <div key={`${msg.from}-${msg.content}`}>
             {msg.from === "system" ? (
               <div className="flex items-center gap-2 py-1.5">
                 <div className="h-px flex-1 bg-border" />
@@ -822,13 +823,13 @@ function FeedDetailPanel({ item, onClose }: { item: FeedItem; onClose: () => voi
             <div className="text-[10px] text-text-muted font-medium uppercase tracking-wider px-1">
               文件操作
             </div>
-            {detail.fileOps.map((op, i) => {
+            {detail.fileOps.map((op) => {
               const opStyle = FILE_OP_ACTION_STYLES[op.action];
               const parts = op.path.split("/");
               const fileName = parts.pop() || "";
               return (
                 <div
-                  key={i}
+                  key={`${op.action}-${op.path}`}
                   className="flex items-center gap-1.5 px-2 py-1.5 bg-surface-1 border border-border rounded-lg text-[11px]"
                 >
                   <span className={`px-1 py-0.5 rounded text-[9px] font-bold ${opStyle.color}`}>
@@ -941,6 +942,7 @@ function FeedsTab() {
             {["帮我写 PRD", "跑一下竞品监控", "今天做了什么"].map((q) => (
               <button
                 key={q}
+                type="button"
                 onClick={() => {
                   setChatInput(q);
                   navigate("/app/sessions");
@@ -982,14 +984,10 @@ function FeedsTab() {
             const style = FEED_TYPE_STYLES[item.type];
             const isSelected = selectedFeed?.id === item.id;
             return (
-              <div
+              <button
+                type="button"
                 key={item.id}
-                role="button"
-                tabIndex={0}
                 onClick={() => setSelectedFeed(isSelected ? null : item)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") setSelectedFeed(isSelected ? null : item);
-                }}
                 className={`group bg-surface-1 border rounded-xl p-4 transition-colors cursor-pointer ${
                   isSelected
                     ? "border-accent bg-accent/[0.03]"
@@ -1047,7 +1045,7 @@ function FeedsTab() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
@@ -1145,8 +1143,11 @@ function ChannelCard({ ch }: { ch: Channel }) {
 
           {ch.recent.length > 0 && (
             <div className="pt-2 border-t border-border-subtle space-y-1">
-              {ch.recent.map((r, i) => (
-                <div key={i} className="flex items-center gap-2 text-[11px] group cursor-pointer">
+              {ch.recent.map((r) => (
+                <div
+                  key={`${r.type}-${r.time}-${r.label}`}
+                  className="flex items-center gap-2 text-[11px] group cursor-pointer"
+                >
                   <span className="text-[10px]">{r.type === "memory" ? "🧠" : "📄"}</span>
                   <span className="text-text-secondary group-hover:text-text-primary transition-colors">
                     {r.label}
@@ -1341,6 +1342,7 @@ function MemoryTab() {
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
         {MEMORY_CATEGORIES.map((cat) => (
           <button
+            type="button"
             key={cat.id}
             onClick={() => setActiveCat(cat.id)}
             className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[12px] whitespace-nowrap transition-colors border ${
@@ -1362,6 +1364,7 @@ function MemoryTab() {
 
       {/* Update history link */}
       <button
+        type="button"
         onClick={() => setShowChangelog(!showChangelog)}
         className="w-full flex items-center justify-between px-4 py-2.5 bg-surface-2 border border-border rounded-xl hover:border-border-hover transition-colors"
       >
@@ -1376,9 +1379,9 @@ function MemoryTab() {
       {showChangelog && (
         <div className="bg-surface-2 border border-border rounded-xl p-4 space-y-2">
           <div className="text-[13px] font-medium text-text-primary mb-3">记忆记录</div>
-          {MEMORY_CHANGELOG.map((log, i) => (
+          {MEMORY_CHANGELOG.map((log) => (
             <div
-              key={i}
+              key={`${log.action}-${log.time}-${log.desc}`}
               className="flex items-start gap-3 py-2 border-b border-border-subtle last:border-0"
             >
               <div className="w-5 h-5 rounded-full bg-surface-3 flex items-center justify-center shrink-0 mt-0.5">
@@ -1437,7 +1440,10 @@ function MemoryTab() {
                     私密记忆
                   </span>
                 )}
-                <button className="ml-auto p-1 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity hover:text-text-secondary">
+                <button
+                  type="button"
+                  className="ml-auto p-1 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity hover:text-text-secondary"
+                >
                   <Pencil size={11} />
                 </button>
               </div>
@@ -1583,9 +1589,9 @@ function PersonaPanel({ onOpenOnboarding }: { onOpenOnboarding: () => void }) {
           </span>
         </div>
         <div className="space-y-1.5">
-          {SOUL_FILES.map((f, i) => (
+          {SOUL_FILES.map((f) => (
             <div
-              key={i}
+              key={`${f.path}-${f.label}`}
               className="flex items-start gap-2 p-2 bg-surface-2 border border-border rounded-lg group hover:border-border-hover transition-colors"
             >
               <div className="text-[10px] text-text-muted w-14 shrink-0 pt-0.5 uppercase tracking-wider">
@@ -1593,7 +1599,10 @@ function PersonaPanel({ onOpenOnboarding }: { onOpenOnboarding: () => void }) {
               </div>
               <div className="flex-1 text-[12px] text-text-primary leading-relaxed">{f.value}</div>
               {f.editable && (
-                <button className="p-0.5 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity hover:text-text-secondary shrink-0">
+                <button
+                  type="button"
+                  className="p-0.5 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity hover:text-text-secondary shrink-0"
+                >
                   <Pencil size={10} />
                 </button>
               )}
@@ -1650,7 +1659,10 @@ function WorldviewTab() {
             <span className="text-[10px] text-text-muted font-mono ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
               {w.path}
             </span>
-            <button className="p-1 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity hover:text-text-secondary">
+            <button
+              type="button"
+              className="p-1 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity hover:text-text-secondary"
+            >
               <Pencil size={12} />
             </button>
           </div>

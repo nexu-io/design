@@ -90,19 +90,19 @@ function ProviderLogo({ provider, size = 16 }: { provider: string; size?: number
       return <img src="/logo.svg" alt="nexu" style={s} className="object-contain" />;
     case "anthropic":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="currentColor">
+        <svg style={s} aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor">
           <path d="M13.827 3.52h3.603L24 20.48h-3.603l-6.57-16.96zm-7.258 0h3.767L16.906 20.48h-3.674l-1.476-3.914H5.036l-1.466 3.914H0L6.569 3.52zm.658 10.418h4.543L9.548 7.04l-2.32 6.898z" />
         </svg>
       );
     case "openai":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="currentColor">
+        <svg style={s} aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor">
           <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.998 5.998 0 0 0-3.998 2.9 6.042 6.042 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z" />
         </svg>
       );
     case "google":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="none">
+        <svg style={s} aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none">
           <path
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
             fill="#4285F4"
@@ -123,38 +123,66 @@ function ProviderLogo({ provider, size = 16 }: { provider: string; size?: number
       );
     case "xai":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="currentColor">
+        <svg style={s} aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor">
           <path d="M3 2l8.6 12.24L3 22h1.95l7.56-6.8L18.06 22H21L12.12 9.36 19.8 2h-1.95l-6.66 6.42L5.94 2H3zm2.76 1.4h2.46l9.96 15.2h-2.46L5.76 3.4z" />
         </svg>
       );
     case "kimi":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="currentColor">
+        <svg style={s} aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor">
           <path d="M21.846 0a1.923 1.923 0 110 3.846H20.15a.226.226 0 01-.227-.226V1.923C19.923.861 20.784 0 21.846 0z" />
           <path d="M11.065 11.199l7.257-7.2c.137-.136.06-.41-.116-.41H14.3a.164.164 0 00-.117.051l-7.82 7.756c-.122.12-.302.013-.302-.179V3.82c0-.127-.083-.23-.185-.23H3.186c-.103 0-.186.103-.186.23V19.77c0 .128.083.23.186.23h2.69c.103 0 .186-.102.186-.23v-3.25c0-.069.025-.135.069-.178l2.424-2.406a.158.158 0 01.205-.023l6.484 4.772a7.677 7.677 0 003.453 1.283c.108.012.2-.095.2-.23v-3.06c0-.117-.07-.212-.164-.227a5.028 5.028 0 01-2.027-.807l-5.613-4.064c-.117-.078-.132-.279-.028-.381z" />
         </svg>
       );
     case "glm":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="currentColor" fillRule="evenodd">
+        <svg
+          style={s}
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          fillRule="evenodd"
+        >
           <path d="M11.991 23.503a.24.24 0 00-.244.248.24.24 0 00.244.249.24.24 0 00.245-.249.24.24 0 00-.22-.247l-.025-.001zM9.671 5.365a1.697 1.697 0 011.099 2.132l-.071.172-.016.04-.018.054c-.07.16-.104.32-.104.498-.035.71.47 1.279 1.186 1.314h.366c1.309.053 2.338 1.173 2.286 2.523-.052 1.332-1.152 2.38-2.478 2.327h-.174c-.715.018-1.274.64-1.239 1.368 0 .124.018.23.053.337.209.373.54.658.96.8.75.23 1.517-.125 1.9-.782l.018-.035c.402-.64 1.17-.96 1.92-.711.854.284 1.378 1.226 1.099 2.167a1.661 1.661 0 01-2.077 1.102 1.711 1.711 0 01-.907-.711l-.017-.035c-.2-.323-.463-.58-.851-.711l-.056-.018a1.646 1.646 0 00-1.954.746 1.66 1.66 0 01-1.065.764 1.677 1.677 0 01-1.989-1.279c-.209-.906.332-1.83 1.257-2.043a1.51 1.51 0 01.296-.035h.018c.68-.071 1.151-.622 1.116-1.333a1.307 1.307 0 00-.227-.693 2.515 2.515 0 01-.366-1.403 2.39 2.39 0 01.366-1.208c.14-.195.21-.444.227-.693.018-.71-.506-1.261-1.186-1.332l-.07-.018a1.43 1.43 0 01-.299-.07l-.05-.019a1.7 1.7 0 01-1.047-2.114 1.68 1.68 0 012.094-1.101zm-5.575 10.11c.26-.264.639-.367.994-.27.355.096.633.379.728.74.095.362-.007.748-.267 1.013-.402.41-1.053.41-1.455 0a1.062 1.062 0 010-1.482zm14.845-.294c.359-.09.738.024.992.297.254.274.344.665.237 1.025-.107.36-.396.634-.756.718-.551.128-1.1-.22-1.23-.781a1.05 1.05 0 01.757-1.26zm-.064-4.39c.314.32.49.753.49 1.206 0 .452-.176.886-.49 1.206-.315.32-.74.5-1.185.5-.444 0-.87-.18-1.184-.5a1.727 1.727 0 010-2.412 1.654 1.654 0 012.369 0zm-11.243.163c.364.484.447 1.128.218 1.691a1.665 1.665 0 01-2.188.923c-.855-.36-1.26-1.358-.907-2.228a1.68 1.68 0 011.33-1.038c.593-.08 1.183.169 1.547.652zm11.545-4.221c.368 0 .708.2.892.524.184.324.184.724 0 1.048a1.026 1.026 0 01-.892.524c-.568 0-1.03-.47-1.03-1.048 0-.579.462-1.048 1.03-1.048zm-14.358 0c.368 0 .707.2.891.524.184.324.184.724 0 1.048a1.026 1.026 0 01-.891.524c-.569 0-1.03-.47-1.03-1.048 0-.579.461-1.048 1.03-1.048zm10.031-1.475c.925 0 1.675.764 1.675 1.706s-.75 1.705-1.675 1.705-1.674-.763-1.674-1.705c0-.942.75-1.706 1.674-1.706zM12.226 4.574c.362-.082.653-.356.761-.718a1.062 1.062 0 00-.238-1.028 1.017 1.017 0 00-.996-.294c-.547.14-.881.7-.752 1.257.13.558.675.907 1.225.783zm0 16.876c.359-.087.644-.36.75-.72a1.062 1.062 0 00-.237-1.019 1.018 1.018 0 00-.985-.301 1.037 1.037 0 00-.762.717c-.108.361-.017.754.239 1.028.245.263.606.377.953.305l.043-.01zM17.19 3.5a.631.631 0 00.628-.64c0-.355-.279-.64-.628-.64a.631.631 0 00-.628.64c0 .355.28.64.628.64zm-10.38 0a.631.631 0 00.628-.64c0-.355-.28-.64-.628-.64a.631.631 0 00-.628.64c0 .355.279.64.628.64zm-5.182 7.852a.631.631 0 00-.628.64c0 .354.28.639.628.639a.63.63 0 00.627-.606l.001-.034a.62.62 0 00-.628-.64zm5.182 9.13a.631.631 0 00-.628.64c0 .355.279.64.628.64a.631.631 0 00.628-.64c0-.355-.28-.64-.628-.64zm10.38.018a.631.631 0 00-.628.64c0 .355.28.64.628.64a.631.631 0 00.628-.64c0-.355-.279-.64-.628-.64zm5.182-9.148a.631.631 0 00-.628.64c0 .354.279.639.628.639a.631.631 0 00.628-.64c0-.355-.28-.64-.628-.64zm-.384-4.992a.24.24 0 00.244-.249.24.24 0 00-.244-.249.24.24 0 00-.244.249c0 .142.122.249.244.249zM11.991.497a.24.24 0 00.245-.248A.24.24 0 0011.99 0a.24.24 0 00-.244.249c0 .133.108.236.223.247l.021.001zM2.011 6.36a.24.24 0 00.245-.249.24.24 0 00-.244-.249.24.24 0 00-.244.249.24.24 0 00.244.249zm0 11.263a.24.24 0 00-.243.248.24.24 0 00.244.249.24.24 0 00.244-.249.252.252 0 00-.244-.248zm19.995-.018a.24.24 0 00-.245.248.24.24 0 00.245.25.24.24 0 00.244-.25.252.252 0 00-.244-.248z" />
         </svg>
       );
     case "minimax":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="currentColor" fillRule="evenodd">
+        <svg
+          style={s}
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          fillRule="evenodd"
+        >
           <path d="M16.278 2c1.156 0 2.093.927 2.093 2.07v12.501a.74.74 0 00.744.709.74.74 0 00.743-.709V9.099a2.06 2.06 0 012.071-2.049A2.06 2.06 0 0124 9.1v6.561a.649.649 0 01-.652.645.649.649 0 01-.653-.645V9.1a.762.762 0 00-.766-.758.762.762 0 00-.766.758v7.472a2.037 2.037 0 01-2.048 2.026 2.037 2.037 0 01-2.048-2.026v-12.5a.785.785 0 00-.788-.753.785.785 0 00-.789.752l-.001 15.904A2.037 2.037 0 0113.441 22a2.037 2.037 0 01-2.048-2.026V18.04c0-.356.292-.645.652-.645.36 0 .652.289.652.645v1.934c0 .263.142.506.372.638.23.131.514.131.744 0a.734.734 0 00.372-.638V4.07c0-1.143.937-2.07 2.093-2.07zm-5.674 0c1.156 0 2.093.927 2.093 2.07v11.523a.648.648 0 01-.652.645.648.648 0 01-.652-.645V4.07a.785.785 0 00-.789-.78.785.785 0 00-.789.78v14.013a2.06 2.06 0 01-2.07 2.048 2.06 2.06 0 01-2.071-2.048V9.1a.762.762 0 00-.766-.758.762.762 0 00-.766.758v3.8a2.06 2.06 0 01-2.071 2.049A2.06 2.06 0 010 12.9v-1.378c0-.357.292-.646.652-.646.36 0 .653.29.653.646V12.9c0 .418.343.757.766.757s.766-.339.766-.757V9.099a2.06 2.06 0 012.07-2.048 2.06 2.06 0 012.071 2.048v8.984c0 .419.343.758.767.758.423 0 .766-.339.766-.758V4.07c0-1.143.937-2.07 2.093-2.07z" />
         </svg>
       );
     case "openrouter":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="currentColor" fillRule="evenodd">
+        <svg
+          style={s}
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          fillRule="evenodd"
+        >
           <path d="M16.804 1.957l7.22 4.105v.087L16.73 10.21l.017-2.117-.821-.03c-1.059-.028-1.611.002-2.268.11-1.064.175-2.038.577-3.147 1.352L8.345 11.03c-.284.195-.495.336-.68.455l-.515.322-.397.234.385.23.53.338c.476.314 1.17.796 2.701 1.866 1.11.775 2.083 1.177 3.147 1.352l.3.045c.694.091 1.375.094 2.825.033l.022-2.159 7.22 4.105v.087L16.589 22l.014-1.862-.635.022c-1.386.042-2.137.002-3.138-.162-1.694-.28-3.26-.926-4.881-2.059l-2.158-1.5a21.997 21.997 0 00-.755-.498l-.467-.28a55.927 55.927 0 00-.76-.43C2.908 14.73.563 14.116 0 14.116V9.888l.14.004c.564-.007 2.91-.622 3.809-1.124l1.016-.58.438-.274c.428-.28 1.072-.726 2.686-1.853 1.621-1.133 3.186-1.78 4.881-2.059 1.152-.19 1.974-.213 3.814-.138l.02-1.907z" />
         </svg>
       );
     case "siliconflow":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="currentColor" fillRule="evenodd">
+        <svg
+          style={s}
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          fillRule="evenodd"
+        >
           <path
             clipRule="evenodd"
             d="M22.956 6.521H12.522c-.577 0-1.044.468-1.044 1.044v3.13c0 .577-.466 1.044-1.043 1.044H1.044c-.577 0-1.044.467-1.044 1.044v4.174C0 17.533.467 18 1.044 18h10.434c.577 0 1.044-.467 1.044-1.043v-3.13c0-.578.466-1.044 1.043-1.044h9.391c.577 0 1.044-.467 1.044-1.044V7.565c0-.576-.467-1.044-1.044-1.044z"
@@ -163,7 +191,14 @@ function ProviderLogo({ provider, size = 16 }: { provider: string; size?: number
       );
     case "ppio":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="currentColor" fillRule="evenodd">
+        <svg
+          style={s}
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          fillRule="evenodd"
+        >
           <path
             clipRule="evenodd"
             d="M12.002 0C5.377 0 0 5.37 0 11.994c0 3.266 1.309 6.232 3.43 8.395v-8.383c0-2.288.893-4.447 2.51-6.063a8.513 8.513 0 016.066-2.509h.07l-.074.008c4.735 0 8.575 3.84 8.575 8.571 0 .413-.03.818-.087 1.219l-4.844-4.86A5.12 5.12 0 0012.01 6.87a5.126 5.126 0 00-3.637 1.503 5.107 5.107 0 00-1.507 3.641c0 1.376.536 2.666 1.507 3.64a5.12 5.12 0 003.637 1.504 5.126 5.126 0 003.637-1.503 5.114 5.114 0 001.496-3.348l2.842 2.853c-1.256 3.18-4.353 5.433-7.978 5.433-1.879 0-3.671-.6-5.145-1.714v3.967c1.56.742 3.3 1.155 5.137 1.155C18.623 24 24 18.63 24 12.006 24.008 5.373 18.635.004 12.006.004L12.002 0z"
@@ -172,7 +207,7 @@ function ProviderLogo({ provider, size = 16 }: { provider: string; size?: number
       );
     case "xiaoxiang":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="currentColor">
+        <svg style={s} aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor">
           <rect width="24" height="24" rx="4" fill="#10B981" />
           <text
             x="12"
@@ -243,7 +278,7 @@ function SkillsPanel() {
     checkPillOverflow();
     window.addEventListener("resize", checkPillOverflow);
     return () => window.removeEventListener("resize", checkPillOverflow);
-  }, [checkPillOverflow, topTab]);
+  }, [checkPillOverflow]);
 
   const isEnabled = (skill: SkillDef) => !disabledSkills.has(skill.id);
 
@@ -585,7 +620,14 @@ function FeishuIconSetup({ size = 20, light }: { size?: number; light?: boolean 
 }
 function SlackIconSetup({ size = 20 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      focusable="false"
+    >
       <path
         d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zm1.271 0a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313z"
         fill="#E01E5A"
@@ -607,7 +649,14 @@ function SlackIconSetup({ size = 20 }: { size?: number }) {
 }
 function DiscordIconSetup({ size = 20 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="#5865F2">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="#5865F2"
+      aria-hidden="true"
+      focusable="false"
+    >
       <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
     </svg>
   );
@@ -784,7 +833,7 @@ function HomeDashboard({
     };
     v.addEventListener("ended", onEnded);
     return () => v.removeEventListener("ended", onEnded);
-  }, [hasChannel]);
+  }, []);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -805,10 +854,12 @@ function HomeDashboard({
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
           {/* ═══ TOP: Hero — Bot idle, waiting to be activated ═══ */}
           <div className="flex flex-col items-center text-center">
-            <div
+            <button
+              type="button"
               className="relative w-32 h-32 mb-1 cursor-default"
               onMouseEnter={() => setVideoHover(true)}
               onMouseLeave={() => setVideoHover(false)}
+              aria-label="Preview nexu animation"
             >
               <video
                 ref={videoRef}
@@ -820,7 +871,7 @@ function HomeDashboard({
                 playsInline
                 className="w-full h-full object-contain"
               />
-            </div>
+            </button>
             <h2
               className="text-[32px] font-normal tracking-tight text-text-primary mb-1.5"
               style={{ fontFamily: "var(--font-script)" }}
@@ -857,6 +908,7 @@ function HomeDashboard({
                   const Icon = ch.icon;
                   return (
                     <button
+                      type="button"
                       key={ch.id}
                       onClick={() => handleOpenConfig(ch.id)}
                       className={`group relative rounded-xl border px-3 py-3 text-left transition-all cursor-pointer active:scale-[0.98] border-border bg-surface-0 hover:border-border-hover hover:bg-surface-1 ${
@@ -889,7 +941,8 @@ function HomeDashboard({
         {/* Channel config modal */}
         {configChannel &&
           (() => {
-            const ch = ONBOARDING_CHANNELS.find((c) => c.id === configChannel)!;
+            const ch = ONBOARDING_CHANNELS.find((c) => c.id === configChannel);
+            if (!ch) return null;
             const fields = CHANNEL_CONFIG_FIELDS[configChannel] || [];
             const Icon = ch.icon;
             const allFilled = fields.every((f) => (configValues[f.id] || "").trim().length > 0);
@@ -898,6 +951,11 @@ function HomeDashboard({
                 <div
                   className="absolute inset-0 bg-black/40 backdrop-blur-sm"
                   onClick={handleCloseConfig}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") handleCloseConfig();
+                  }}
                 />
                 <div className="relative w-full max-w-md mx-4 rounded-2xl border border-border bg-white shadow-2xl">
                   {/* Header */}
@@ -916,6 +974,7 @@ function HomeDashboard({
                       </div>
                     </div>
                     <button
+                      type="button"
                       onClick={handleCloseConfig}
                       className="p-1.5 rounded-lg hover:bg-surface-2 text-text-muted hover:text-text-secondary transition-colors"
                     >
@@ -926,7 +985,10 @@ function HomeDashboard({
                   <div className="px-6 py-5 space-y-4">
                     {fields.map((field) => (
                       <div key={field.id}>
-                        <label className="block text-[12px] font-medium text-text-primary mb-1.5">
+                        <label
+                          htmlFor={field.id}
+                          className="block text-[12px] font-medium text-text-primary mb-1.5"
+                        >
                           {field.label}
                         </label>
                         <div className="relative">
@@ -997,10 +1059,12 @@ function HomeDashboard({
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         {/* ═══ TOP: Compact Hero — Bot + CTA ═══ */}
         <div className="flex items-center gap-4">
-          <div
+          <button
+            type="button"
             className="relative w-28 h-28 shrink-0 cursor-default"
             onMouseEnter={() => setVideoHover(true)}
             onMouseLeave={() => setVideoHover(false)}
+            aria-label="Preview nexu animation"
           >
             <video
               ref={videoRef}
@@ -1012,7 +1076,7 @@ function HomeDashboard({
               playsInline
               className="w-full h-full object-contain"
             />
-          </div>
+          </button>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2.5 w-full">
               <h2
@@ -1180,6 +1244,7 @@ function HomeDashboard({
                       const Icon = ch.icon;
                       return (
                         <button
+                          type="button"
                           key={ch.id}
                           onClick={() => handleOpenConfig(ch.id)}
                           className="group flex items-center gap-2.5 rounded-lg border border-dashed border-border bg-surface-0 px-3 py-2 text-left hover:border-solid hover:border-border-hover hover:bg-surface-1 transition-all"
@@ -1232,7 +1297,14 @@ function HomeDashboard({
                 </div>
               )}
               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(251,191,36,0.12)] border border-amber-200/60 text-[12px] font-medium text-[#b45309] group-hover:bg-[rgba(251,191,36,0.2)] group-hover:border-amber-300/60 transition-colors">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  focusable="false"
+                >
                   <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
                 </svg>
                 <span>{t("ws.home.github")}</span>
@@ -1246,7 +1318,8 @@ function HomeDashboard({
       {/* Channel config modal — shared across scenes */}
       {configChannel &&
         (() => {
-          const ch = ONBOARDING_CHANNELS.find((c) => c.id === configChannel)!;
+          const ch = ONBOARDING_CHANNELS.find((c) => c.id === configChannel);
+          if (!ch) return null;
           const fields = CHANNEL_CONFIG_FIELDS[configChannel] || [];
           const Icon = ch.icon;
           const allFilled = fields.every((f) => (configValues[f.id] || "").trim().length > 0);
@@ -1255,6 +1328,11 @@ function HomeDashboard({
               <div
                 className="absolute inset-0 bg-black/40 backdrop-blur-sm"
                 onClick={handleCloseConfig}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") handleCloseConfig();
+                }}
               />
               <div className="relative w-full max-w-md mx-4 rounded-2xl border border-border bg-white shadow-2xl">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-border">
@@ -1272,6 +1350,7 @@ function HomeDashboard({
                     </div>
                   </div>
                   <button
+                    type="button"
                     onClick={handleCloseConfig}
                     className="p-1.5 rounded-lg hover:bg-surface-2 text-text-muted hover:text-text-secondary transition-colors"
                   >
@@ -1281,7 +1360,10 @@ function HomeDashboard({
                 <div className="px-6 py-5 space-y-4">
                   {fields.map((field) => (
                     <div key={field.id}>
-                      <label className="block text-[12px] font-medium text-text-primary mb-1.5">
+                      <label
+                        htmlFor={field.id}
+                        className="block text-[12px] font-medium text-text-primary mb-1.5"
+                      >
                         {field.label}
                       </label>
                       <div className="relative">
@@ -1405,7 +1487,7 @@ function DeploymentsView() {
           </div>
           {deployments.map((d) => {
             const channelName = d.channelId ? channelMap[d.channelId] : null;
-            const sl = statusLabel[d.status] ?? statusLabel.live!;
+            const sl = statusLabel[d.status] ?? statusLabel.live;
             return (
               <div key={d.id} className="data-table-row" style={colStyle}>
                 <span
@@ -1644,6 +1726,7 @@ function SettingsView({
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => setShowModelDropdown((v) => !v)}
                 className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-0 hover:bg-surface-2 hover:border-border-hover transition-all text-[12px] font-medium text-text-primary"
               >
@@ -1675,6 +1758,7 @@ function SettingsView({
                       const isSelected = m.id === selectedModelId;
                       return (
                         <button
+                          type="button"
                           key={m.id}
                           onClick={() => {
                             setSelectedModelId(m.id);
@@ -1715,6 +1799,7 @@ function SettingsView({
                   const active = p.id === activeProviderId;
                   return (
                     <button
+                      type="button"
                       key={p.id}
                       onClick={() => setActiveProviderId(p.id)}
                       className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${
@@ -1794,10 +1879,14 @@ function SettingsView({
                     {t("ws.settings.apiKeySteps")}
                   </div>
                   <div>
-                    <label className="block text-[13px] font-semibold text-text-primary mb-3">
+                    <label
+                      htmlFor={`${activeProvider.id}-api-key`}
+                      className="block text-[13px] font-semibold text-text-primary mb-3"
+                    >
                       {t("ws.settings.apiKey")}
                     </label>
                     <input
+                      id={`${activeProvider.id}-api-key`}
                       type="password"
                       placeholder={activeProvider.apiKeyPlaceholder}
                       value={getFormValues(activeProvider.id).apiKey}
@@ -1806,10 +1895,14 @@ function SettingsView({
                     />
                   </div>
                   <div>
-                    <label className="block text-[13px] font-semibold text-text-primary mb-3">
+                    <label
+                      htmlFor={`${activeProvider.id}-proxy-url`}
+                      className="block text-[13px] font-semibold text-text-primary mb-3"
+                    >
                       {t("ws.settings.apiProxyUrl")}
                     </label>
                     <input
+                      id={`${activeProvider.id}-proxy-url`}
                       type="text"
                       value={getFormValues(activeProvider.id).proxyUrl}
                       onChange={(e) => setFormField(activeProvider.id, "proxyUrl", e.target.value)}
@@ -1877,6 +1970,7 @@ function SettingsView({
                     const isActive = model.id === selectedModelId;
                     return (
                       <button
+                        type="button"
                         key={model.id}
                         onClick={() => setSelectedModelId(model.id)}
                         className={`w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left transition-all border-none ${
@@ -2076,6 +2170,7 @@ export default function OpenClawWorkspace() {
     <SplitView className="relative h-full">
       {/* Sidebar toggle — fixed position, same spot for expand/collapse */}
       <button
+        type="button"
         onClick={() => {
           const next = !collapsed;
           setCollapsed(next);
@@ -2114,6 +2209,7 @@ export default function OpenClawWorkspace() {
             <img src="/brand/logo-black-1.svg" alt="nexu" className="h-6 object-contain" />
             {hasUpdate && updateDismissed && (
               <button
+                type="button"
                 onClick={() => setUpdateDismissed(false)}
                 className="rounded-full px-2 py-1 text-[10px] leading-none font-semibold bg-[var(--color-brand-primary)] text-white hover:opacity-85 transition-opacity"
               >
@@ -2132,6 +2228,7 @@ export default function OpenClawWorkspace() {
                 const active = view.type === item.id;
                 return (
                   <button
+                    type="button"
                     key={item.id}
                     onClick={() => setView({ type: item.id } as View)}
                     className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-2 ${
@@ -2168,6 +2265,7 @@ export default function OpenClawWorkspace() {
                     )[ch.platform] || SlackIconSetup;
                   return (
                     <button
+                      type="button"
                       key={ch.id}
                       onClick={() => setView({ type: "conversations", channelId: ch.id })}
                       className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-1.5 ${
@@ -2216,6 +2314,7 @@ export default function OpenClawWorkspace() {
                   </div>
                   {!updating && (
                     <button
+                      type="button"
                       onClick={() => setUpdateDismissed(true)}
                       className="text-text-muted hover:text-text-primary transition-colors -mr-1"
                     >
@@ -2365,6 +2464,7 @@ export default function OpenClawWorkspace() {
                     </div>
                     <div className="border-t border-border p-1.5">
                       <button
+                        type="button"
                         onClick={() => {
                           setShowHelpMenu(false);
                           setCheckingUpdate(true);
@@ -2396,6 +2496,7 @@ export default function OpenClawWorkspace() {
                 </div>
               )}
               <button
+                type="button"
                 onClick={() => setShowHelpMenu(!showHelpMenu)}
                 className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors cursor-pointer ${showHelpMenu ? "text-text-primary bg-black/5" : "text-text-secondary hover:text-text-primary hover:bg-black/5"}`}
                 title={t("ws.help.title")}
@@ -2409,8 +2510,17 @@ export default function OpenClawWorkspace() {
               rel="noopener noreferrer"
               className="w-7 h-7 flex items-center justify-center rounded-md text-text-secondary hover:text-text-primary hover:bg-black/5 transition-colors"
               title={t("ws.help.github")}
+              aria-label={t("ws.help.github")}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <span className="sr-only">{t("ws.help.github")}</span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+                focusable="false"
+              >
                 <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
               </svg>
             </a>
@@ -2429,6 +2539,7 @@ export default function OpenClawWorkspace() {
                     ].map((opt) => (
                       <button
                         key={opt.value}
+                        type="button"
                         onClick={() => {
                           setLocale(opt.value);
                           setShowLangMenu(false);
@@ -2447,6 +2558,7 @@ export default function OpenClawWorkspace() {
                 </div>
               )}
               <button
+                type="button"
                 onClick={() => setShowLangMenu(!showLangMenu)}
                 className={`h-7 flex items-center gap-1.5 px-1.5 rounded-md transition-colors cursor-pointer ${showLangMenu ? "text-text-primary bg-black/5" : "text-text-secondary hover:text-text-primary hover:bg-black/5"}`}
                 title={t("ws.help.language")}
@@ -2464,6 +2576,7 @@ export default function OpenClawWorkspace() {
       {/* Mobile header — hidden in desktop client */}
       <div className="hidden">
         <button
+          type="button"
           onClick={() => navigate("/openclaw")}
           className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary"
         >
@@ -2477,6 +2590,7 @@ export default function OpenClawWorkspace() {
         </div>
         <LanguageSwitcher variant="muted" />
         <button
+          type="button"
           onClick={() => setView({ type: "settings" })}
           className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary"
         >
@@ -2519,19 +2633,25 @@ export default function OpenClawWorkspace() {
           className="fixed inset-0 z-[9999] flex items-center justify-center"
           style={{
             background: "transparent",
-            pointerEvents: "none",
             animation: "fadeIn 150ms ease-out",
           }}
-          onClick={showUpToDate ? () => setShowUpToDate(false) : undefined}
         >
-          <div
+          {showUpToDate && (
+            <button
+              type="button"
+              className="absolute inset-0"
+              onClick={() => setShowUpToDate(false)}
+              aria-label="Dismiss update dialog"
+            />
+          )}
+          <dialog
             className="flex flex-col items-center w-[260px] px-6 py-6 rounded-[14px] bg-white text-center"
             style={{
-              pointerEvents: "auto",
               boxShadow: "0 24px 48px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06)",
               animation: "scaleIn 200ms cubic-bezier(0.16,1,0.3,1)",
             }}
-            onClick={(e) => e.stopPropagation()}
+            aria-modal="true"
+            open
           >
             <div className="flex items-center justify-center w-11 h-11 mb-3.5 rounded-[10px] bg-[#f5f5f5]">
               <img
@@ -2575,7 +2695,7 @@ export default function OpenClawWorkspace() {
                 OK
               </Button>
             )}
-          </div>
+          </dialog>
         </div>
       )}
     </SplitView>

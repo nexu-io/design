@@ -1,6 +1,6 @@
 import { Badge, Button, Input, ToggleGroup, ToggleGroupItem } from "@nexu-design/ui-web";
 import { ArrowLeft, ArrowRight, Compass, Search, Settings2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import { SKILL_CATEGORIES, TOOL_TAG_LABELS, type ToolTag } from "./skillData";
@@ -224,7 +224,7 @@ export default function OpenClawSkillsPage() {
             };
 
             const content = (
-              <>
+              <React.Fragment key={skill.id}>
                 <div className="flex items-center gap-3 mb-2.5">
                   <div
                     className="flex items-center justify-center shrink-0 relative border border-border bg-white"
@@ -288,7 +288,7 @@ export default function OpenClawSkillsPage() {
                     </span>
                   )}
                 </div>
-              </>
+              </React.Fragment>
             );
 
             return isCustom ? (

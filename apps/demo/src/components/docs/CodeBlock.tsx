@@ -1,7 +1,11 @@
-import { useState } from 'react';
-import { Copy, Check } from 'lucide-react';
+import { Check, Copy } from "lucide-react";
+import { useState } from "react";
 
-export default function CodeBlock({ code, lang: _lang = 'bash', filename }: { code: string; lang?: string; filename?: string }) {
+export default function CodeBlock({
+  code,
+  lang: _lang = "bash",
+  filename,
+}: { code: string; lang?: string; filename?: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -21,7 +25,7 @@ export default function CodeBlock({ code, lang: _lang = 'bash', filename }: { co
             className="flex items-center gap-1 text-[11px] text-white/40 hover:text-white/70 transition-colors"
           >
             {copied ? <Check size={12} /> : <Copy size={12} />}
-            {copied ? 'Copied' : 'Copy'}
+            {copied ? "Copied" : "Copy"}
           </button>
         </div>
       )}

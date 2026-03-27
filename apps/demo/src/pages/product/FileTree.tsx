@@ -1,25 +1,25 @@
-import { useState, type ReactNode } from "react";
 import {
-  ChevronRight,
+  Brain,
   ChevronDown,
+  ChevronRight,
+  Clock,
+  Database,
+  File,
+  FileCode,
+  FileSpreadsheet,
   FileText,
+  Film,
   FolderClosed,
   FolderOpen,
-  Database,
-  Brain,
+  Image,
+  Music,
+  Presentation,
   Sparkles,
   Terminal as TermIcon,
-  Clock,
-  Wrench,
   Users,
-  Image,
-  Film,
-  Music,
-  FileSpreadsheet,
-  FileCode,
-  File,
-  Presentation,
+  Wrench,
 } from "lucide-react";
+import { type ReactNode, useState } from "react";
 
 export interface FileNode {
   name: string;
@@ -343,9 +343,7 @@ export const CLONE_FILE_TREE: FileNode[] = [
       {
         name: "decisions",
         type: "folder",
-        children: [
-          { name: "2026-02-23-gateway-priority.md", type: "file", isNew: true },
-        ],
+        children: [{ name: "2026-02-23-gateway-priority.md", type: "file", isNew: true }],
       },
       { name: "topology.md", type: "file" },
     ],
@@ -435,14 +433,12 @@ const DEFAULT_OPEN = new Set([
 function FileIcon({ node }: { node: FileNode }) {
   const ext = node.name.split(".").pop()?.toLowerCase();
   if (ext === "md") return <FileText size={14} className="text-text-muted" />;
-  if (ext === "yaml" || ext === "yml")
-    return <FileText size={14} className="text-warning" />;
+  if (ext === "yaml" || ext === "yml") return <FileText size={14} className="text-warning" />;
   if (ext === "sql") return <FileCode size={14} className="text-info" />;
   if (ext === "jsonl" || ext === "json")
     return <FileCode size={14} className="text-role-programmer" />;
   if (ext === "pdf") return <File size={14} className="text-danger" />;
-  if (ext === "docx" || ext === "doc")
-    return <FileText size={14} className="text-info" />;
+  if (ext === "docx" || ext === "doc") return <FileText size={14} className="text-info" />;
   if (ext === "xlsx" || ext === "xls" || ext === "csv")
     return <FileSpreadsheet size={14} className="text-success" />;
   if (ext === "pptx" || ext === "ppt")
@@ -469,8 +465,7 @@ function FileIcon({ node }: { node: FileNode }) {
     return <Film size={14} className="text-role-designer" />;
   if (ext === "mp3" || ext === "wav" || ext === "ogg" || ext === "m4a")
     return <Music size={14} className="text-role-ops" />;
-  if (ext === "figma")
-    return <Presentation size={14} className="text-role-designer" />;
+  if (ext === "figma") return <Presentation size={14} className="text-role-designer" />;
   return <File size={14} className="text-text-muted" />;
 }
 
@@ -520,12 +515,11 @@ function TreeNode({
   return (
     <>
       <button
+        type="button"
         onClick={handleClick}
         className={`w-full flex items-center gap-1 py-[3px] pr-2 text-[12px] hover:bg-surface-3 transition-colors rounded-sm group ${
           isSelected ? "bg-accent/8 text-text-primary" : ""
-        } ${
-          node.active ? "text-text-primary font-medium" : "text-text-secondary"
-        }`}
+        } ${node.active ? "text-text-primary font-medium" : "text-text-secondary"}`}
         style={{ paddingLeft: `${depth * 12 + 8}px` }}
       >
         {isFolder ? (
@@ -549,20 +543,16 @@ function TreeNode({
           </>
         )}
         <span className="ml-1 truncate">{node.name}</span>
-        {node.modified && (
-          <span className="w-1.5 h-1.5 rounded-full bg-clone ml-auto shrink-0" />
-        )}
+        {node.modified && <span className="w-1.5 h-1.5 rounded-full bg-clone ml-auto shrink-0" />}
         {node.isNew && (
-          <span className="text-[9px] text-success ml-auto shrink-0 font-medium">
-            N
-          </span>
+          <span className="text-[9px] text-success ml-auto shrink-0 font-medium">N</span>
         )}
       </button>
       {isFolder &&
         isOpen &&
-        node.children?.map((child, i) => (
+        node.children?.map((child) => (
           <TreeNode
-            key={`${child.name}-${i}`}
+            key={child.name}
             node={child}
             depth={depth + 1}
             path={path ? `${path}/${child.name}` : child.name}
@@ -587,12 +577,8 @@ export default function FileTree({
   onNavigate?: (route: string) => void;
   onOpenFile?: (fullPath: string) => void;
 }) {
-  const [openFolders, setOpenFolders] = useState<Set<string>>(
-    new Set(DEFAULT_OPEN)
-  );
-  const [selectedFile, setSelectedFile] = useState<string | null>(
-    "universal-agent-v3.md"
-  );
+  const [openFolders, setOpenFolders] = useState<Set<string>>(new Set(DEFAULT_OPEN));
+  const [selectedFile, setSelectedFile] = useState<string | null>("universal-agent-v3.md");
 
   const toggleFolder = (name: string) => {
     setOpenFolders((prev) => {
@@ -615,9 +601,9 @@ export default function FileTree({
 
       {/* Tree */}
       <div className="overflow-y-auto flex-1 py-1">
-        {CLONE_FILE_TREE.map((node, i) => (
+        {CLONE_FILE_TREE.map((node) => (
           <TreeNode
-            key={`${node.name}-${i}`}
+            key={node.name}
             node={node}
             depth={0}
             path={node.name}

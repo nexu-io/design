@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 
-const REPO = 'refly-ai/nexu';
-const CACHE_KEY = 'nexu_github_stars';
+const REPO = "refly-ai/nexu";
+const CACHE_KEY = "nexu_github_stars";
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 interface CacheEntry {
@@ -17,7 +17,9 @@ export function useGitHubStars() {
         const entry: CacheEntry = JSON.parse(cached);
         if (Date.now() - entry.ts < CACHE_TTL) return entry.stars;
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     return null;
   });
 
@@ -32,23 +34,31 @@ export function useGitHubStars() {
           return;
         }
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
 
     let cancelled = false;
     fetch(`https://api.github.com/repos/${REPO}`)
-      .then(res => res.json())
-      .then(data => {
-        if (!cancelled && typeof data.stargazers_count === 'number') {
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled && typeof data.stargazers_count === "number") {
           const count = data.stargazers_count;
           setStars(count);
           try {
             localStorage.setItem(CACHE_KEY, JSON.stringify({ stars: count, ts: Date.now() }));
-          } catch { /* ignore */ }
+          } catch {
+            /* ignore */
+          }
         }
       })
-      .catch(() => { /* silently fail, show fallback */ });
+      .catch(() => {
+        /* silently fail, show fallback */
+      });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return { stars, repo: REPO };

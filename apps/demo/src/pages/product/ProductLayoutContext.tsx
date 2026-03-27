@@ -1,15 +1,15 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext } from "react";
 
 export interface ProductLayoutContextValue {
-  expandFileTree: () => void
-  openFile: (path: string) => void
+  expandFileTree: () => void;
+  openFile: (path: string) => void;
 }
 
 export const ProductLayoutContext = createContext<ProductLayoutContextValue>({
   expandFileTree: () => {},
   openFile: () => {},
-})
+});
 
 export function useProductLayout() {
-  return useContext(ProductLayoutContext)
+  return useContext(ProductLayoutContext);
 }

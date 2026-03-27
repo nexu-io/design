@@ -1,33 +1,33 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { usePageTitle } from '../../hooks/usePageTitle';
-import { AlertCircle, Check } from 'lucide-react';
-import { Button, Label } from '@nexu-design/ui-web';
+import { Button, Label } from "@nexu-design/ui-web";
+import { AlertCircle, Check } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
-const VALID_CODES = ['NEXU2026', 'OPENCLAW', 'LOBSTER', 'EARLY-ACCESS'];
+const VALID_CODES = ["NEXU2026", "OPENCLAW", "LOBSTER", "EARLY-ACCESS"];
 
 const TOKENS = {
-  brand700: '#3db9ce',
-  brand800: '#00a2c7',
-  surface0: '#fafdfe',
-  surface1: '#ffffff',
-  textPrimary: '#1c1f23',
-  textSecondary: '#545659',
-  textPlaceholder: '#8f959e',
-  borderInput: '#dee0e3',
-  error: '#F8672F',
-  success: '#346E58',
-  darkBg: '#042028',
-  font: 'var(--font-sans)',
-  fontMono: 'var(--font-mono)',
-  easeOut: 'cubic-bezier(0.16, 1, 0.3, 1)',
+  brand700: "#3db9ce",
+  brand800: "#00a2c7",
+  surface0: "#fafdfe",
+  surface1: "#ffffff",
+  textPrimary: "#1c1f23",
+  textSecondary: "#545659",
+  textPlaceholder: "#8f959e",
+  borderInput: "#dee0e3",
+  error: "#F8672F",
+  success: "#346E58",
+  darkBg: "#042028",
+  font: "var(--font-sans)",
+  fontMono: "var(--font-mono)",
+  easeOut: "cubic-bezier(0.16, 1, 0.3, 1)",
 };
 
 export default function InvitePage() {
-  usePageTitle('Invite Code');
+  usePageTitle("Invite Code");
   const navigate = useNavigate();
-  const [fullCode, setFullCode] = useState('');
-  const [error, setError] = useState('');
+  const [fullCode, setFullCode] = useState("");
+  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -39,83 +39,67 @@ export default function InvitePage() {
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
     const pasted = e.clipboardData
-      .getData('text')
+      .getData("text")
       .trim()
       .toUpperCase()
-      .replace(/[^A-Z0-9-]/g, '');
+      .replace(/[^A-Z0-9-]/g, "");
     setFullCode(pasted);
-    setError('');
+    setError("");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const codeValue = fullCode.trim().toUpperCase();
     if (!codeValue) {
-      setError('Please enter an invite code');
+      setError("Please enter an invite code");
       return;
     }
 
     setLoading(true);
-    setError('');
+    setError("");
 
     setTimeout(() => {
       if (VALID_CODES.includes(codeValue)) {
         setSuccess(true);
-        setTimeout(() => navigate('/openclaw/onboarding'), 1200);
+        setTimeout(() => navigate("/openclaw/onboarding"), 1200);
       } else {
-        setError('Invalid invite code. Please try again.');
+        setError("Invalid invite code. Please try again.");
         setLoading(false);
       }
     }, 600);
   };
 
   return (
-    <div
-      className="flex min-h-screen"
-      style={{ fontFamily: TOKENS.font }}
-    >
+    <div className="flex min-h-screen" style={{ fontFamily: TOKENS.font }}>
       {/* Left panel — brand dark */}
       <div
         className="hidden lg:flex w-[420px] shrink-0 flex-col justify-between p-10 relative overflow-hidden"
         style={{ background: TOKENS.darkBg }}
       >
-        <img
-          src="/brand/nexu logo-white1.svg"
-          alt="nexu"
-          className="h-7 w-auto object-contain"
-        />
+        <img src="/brand/nexu logo-white1.svg" alt="nexu" className="h-7 w-auto object-contain" />
 
         <div className="flex-1 flex flex-col justify-center">
-          <h2
-            className="text-[28px] font-semibold leading-[1.2] mb-4"
-            style={{ color: '#ffffff' }}
-          >
+          <h2 className="text-[28px] font-semibold leading-[1.2] mb-4" style={{ color: "#ffffff" }}>
             Your mind,
             <br />
             extended.
           </h2>
           <p
             className="text-[14px] leading-relaxed max-w-[280px]"
-            style={{ color: 'rgba(255,255,255,0.45)' }}
+            style={{ color: "rgba(255,255,255,0.45)" }}
           >
-            AI coworkers that live in your IM — with memory, tools, and
-            real understanding of your team.
+            AI coworkers that live in your IM — with memory, tools, and real understanding of your
+            team.
           </p>
         </div>
 
-        <div
-          className="text-[11px]"
-          style={{ color: 'rgba(255,255,255,0.2)' }}
-        >
+        <div className="text-[11px]" style={{ color: "rgba(255,255,255,0.2)" }}>
           © 2026 nexu by Refly
         </div>
       </div>
 
       {/* Right panel — form */}
-      <div
-        className="flex-1 flex flex-col"
-        style={{ background: TOKENS.surface0 }}
-      >
+      <div className="flex-1 flex flex-col" style={{ background: TOKENS.surface0 }}>
         {/* Mobile-only nav */}
         <nav
           className="lg:hidden flex items-center px-6 h-14"
@@ -125,7 +109,7 @@ export default function InvitePage() {
             type="button"
             variant="ghost"
             size="inline"
-            onClick={() => navigate('/openclaw')}
+            onClick={() => navigate("/openclaw")}
             className="h-auto p-0 hover:bg-transparent"
           >
             <img
@@ -141,7 +125,7 @@ export default function InvitePage() {
             className="w-full max-w-[380px]"
             style={{
               opacity: mounted ? 1 : 0,
-              transform: mounted ? 'translateY(0)' : 'translateY(12px)',
+              transform: mounted ? "translateY(0)" : "translateY(12px)",
               transition: `all 0.3s ${TOKENS.easeOut}`,
             }}
           >
@@ -178,16 +162,12 @@ function SuccessState() {
         className="flex items-center justify-center mx-auto mb-6 w-16 h-16 rounded-lg"
         style={{
           background: `${TOKENS.success}14`,
-          transform: show ? 'scale(1)' : 'scale(0.5)',
+          transform: show ? "scale(1)" : "scale(0.5)",
           opacity: show ? 1 : 0,
           transition: `all 0.4s ${TOKENS.easeOut}`,
         }}
       >
-        <Check
-          size={32}
-          strokeWidth={2.5}
-          style={{ color: TOKENS.success }}
-        />
+        <Check size={32} strokeWidth={2.5} style={{ color: TOKENS.success }} />
       </div>
       <h1
         className="text-[24px] font-semibold mb-2"
@@ -195,7 +175,7 @@ function SuccessState() {
           color: TOKENS.textPrimary,
           fontFamily: TOKENS.font,
           opacity: show ? 1 : 0,
-          transform: show ? 'translateY(0)' : 'translateY(8px)',
+          transform: show ? "translateY(0)" : "translateY(8px)",
           transition: `all 0.3s ${TOKENS.easeOut} 0.1s`,
         }}
       >
@@ -207,7 +187,7 @@ function SuccessState() {
           color: TOKENS.textSecondary,
           fontFamily: TOKENS.font,
           opacity: show ? 1 : 0,
-          transition: `opacity 0.3s ease 0.2s`,
+          transition: "opacity 0.3s ease 0.2s",
         }}
       >
         Invite code verified. Setting things up...
@@ -242,17 +222,13 @@ function FormState({
 }) {
   const [focused, setFocused] = useState(false);
 
-  const borderColor = error
-    ? TOKENS.error
-    : focused
-      ? TOKENS.brand700
-      : TOKENS.borderInput;
+  const borderColor = error ? TOKENS.error : focused ? TOKENS.brand700 : TOKENS.borderInput;
 
   const shadowStyle = error
     ? `0 0 0 2px ${TOKENS.error}25`
     : focused
-      ? 'var(--shadow-focus)'
-      : 'none';
+      ? "var(--shadow-focus)"
+      : "none";
 
   return (
     <>
@@ -293,7 +269,7 @@ function FormState({
             value={fullCode}
             onChange={(e) => {
               setFullCode(e.target.value.toUpperCase());
-              setError('');
+              setError("");
             }}
             onPaste={onPaste}
             onFocus={() => setFocused(true)}
@@ -301,22 +277,22 @@ function FormState({
             placeholder="e.g. NEXU2026"
             className="w-full text-center font-mono tracking-[0.15em] text-[18px] outline-none"
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: "var(--font-mono)",
               background: TOKENS.surface1,
               color: TOKENS.textPrimary,
               border: `0.5px solid ${borderColor}`,
-              borderRadius: '16px',
-              padding: '14px 16px',
+              borderRadius: "16px",
+              padding: "14px 16px",
               boxShadow: shadowStyle,
-              transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
+              transition: "border-color 0.15s ease, box-shadow 0.15s ease",
             }}
           />
           <div
             style={{
-              height: '24px',
-              display: 'flex',
-              alignItems: 'center',
-              marginTop: '8px',
+              height: "24px",
+              display: "flex",
+              alignItems: "center",
+              marginTop: "8px",
             }}
           >
             {error && (
@@ -336,8 +312,8 @@ function FormState({
           disabled={loading}
           className="w-full rounded-full h-9 text-[14px] font-semibold"
           style={{
-            background: '#1c1f23',
-            color: '#ffffff',
+            background: "#1c1f23",
+            color: "#ffffff",
             fontFamily: TOKENS.font,
           }}
         >
@@ -345,12 +321,12 @@ function FormState({
             <div
               className="w-4 h-4 rounded-full border-2 animate-spin"
               style={{
-                borderColor: 'rgba(255,255,255,0.3)',
-                borderTopColor: '#ffffff',
+                borderColor: "rgba(255,255,255,0.3)",
+                borderTopColor: "#ffffff",
               }}
             />
           ) : (
-            'Continue'
+            "Continue"
           )}
         </Button>
       </form>
@@ -360,9 +336,9 @@ function FormState({
           className="text-[13px]"
           style={{ color: TOKENS.textPlaceholder, fontFamily: TOKENS.font }}
         >
-          Don't have a code?{' '}
+          Don't have a code?{" "}
           <a
-            href="#"
+            href="/openclaw/workspace"
             className="font-semibold hover:underline underline-offset-2"
             style={{ color: TOKENS.brand700 }}
           >

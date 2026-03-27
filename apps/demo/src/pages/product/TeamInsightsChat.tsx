@@ -1,28 +1,21 @@
-import { useState, useRef, useEffect } from "react";
 import {
+  BarChart3,
+  ChevronDown,
+  ChevronUp,
+  Lightbulb,
+  Link2,
+  Maximize2,
   MessageSquare,
+  Minimize2,
   Send,
   Sparkles,
-  ChevronUp,
-  ChevronDown,
-  BarChart3,
   Target,
   Users,
-  Link2,
-  Lightbulb,
-  Maximize2,
-  Minimize2,
 } from "lucide-react";
-import {
-  INSIGHT_SUGGESTIONS,
-  INSIGHT_CONVERSATIONS,
-  type InsightMessage,
-} from "./teamData";
+import { useEffect, useRef, useState } from "react";
+import { INSIGHT_CONVERSATIONS, INSIGHT_SUGGESTIONS, type InsightMessage } from "./teamData";
 
-const REF_TYPE_STYLES: Record<
-  string,
-  { icon: React.ElementType; color: string }
-> = {
+const REF_TYPE_STYLES: Record<string, { icon: React.ElementType; color: string }> = {
   task: { icon: BarChart3, color: "text-clone bg-clone/10" },
   member: { icon: Users, color: "text-info bg-info-subtle" },
   okr: { icon: Target, color: "text-accent bg-accent/10" },
@@ -38,15 +31,11 @@ function InlineChart({
     const max = Math.max(...chart.data.map((d) => d.value));
     return (
       <div className="my-2 p-3 bg-surface-1 border border-border rounded-lg">
-        <div className="text-[9px] text-text-muted uppercase tracking-wider mb-2">
-          成员进度对比
-        </div>
+        <div className="text-[9px] text-text-muted uppercase tracking-wider mb-2">成员进度对比</div>
         <div className="space-y-1.5">
           {chart.data.map((d) => (
             <div key={d.label} className="flex items-center gap-2">
-              <span className="text-[10px] text-text-primary w-8 shrink-0">
-                {d.label}
-              </span>
+              <span className="text-[10px] text-text-primary w-8 shrink-0">{d.label}</span>
               <div className="flex-1 h-[14px] bg-surface-3 rounded overflow-hidden">
                 <div
                   className={`h-full rounded ${
@@ -55,16 +44,12 @@ function InlineChart({
                   style={{ width: `${(d.value / max) * 100}%` }}
                 >
                   {d.value > 15 && (
-                    <span className="text-[8px] font-bold text-white/90">
-                      {d.value}%
-                    </span>
+                    <span className="text-[8px] font-bold text-white/90">{d.value}%</span>
                   )}
                 </div>
               </div>
               {d.value <= 15 && (
-                <span className="text-[9px] text-text-muted tabular-nums">
-                  {d.value}%
-                </span>
+                <span className="text-[9px] text-text-muted tabular-nums">{d.value}%</span>
               )}
             </div>
           ))}
@@ -81,7 +66,13 @@ function InlineChart({
           className="p-2.5 bg-surface-1 border border-border rounded-lg text-center"
         >
           <div className="relative h-[36px] w-[36px] mx-auto mb-1">
-            <svg width={36} height={36} className="transform -rotate-90">
+            <svg
+              width={36}
+              height={36}
+              className="transform -rotate-90"
+              role="img"
+              aria-label="圆环进度图"
+            >
               <circle
                 cx={18}
                 cy={18}
@@ -106,9 +97,7 @@ function InlineChart({
               {d.value}%
             </span>
           </div>
-          <div className="text-[9px] text-text-muted leading-tight">
-            {d.label}
-          </div>
+          <div className="text-[9px] text-text-muted leading-tight">{d.label}</div>
         </div>
       ))}
     </div>
@@ -134,15 +123,15 @@ function ChatMessage({ msg }: { msg: InsightMessage }) {
           }`}
         >
           <div className="whitespace-pre-line">
-            {msg.content.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
+            {msg.content.split(/(\*\*[^*]+\*\*)/g).map((part) => {
               if (part.startsWith("**") && part.endsWith("**")) {
                 return (
-                  <strong key={i} className="font-semibold">
+                  <strong key={part} className="font-semibold">
                     {part.slice(2, -2)}
                   </strong>
                 );
               }
-              return <span key={i}>{part}</span>;
+              return <span key={part}>{part}</span>;
             })}
           </div>
           {msg.chart && <InlineChart chart={msg.chart} />}
@@ -151,11 +140,12 @@ function ChatMessage({ msg }: { msg: InsightMessage }) {
         {/* References */}
         {msg.references && msg.references.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-1.5">
-            {msg.references.map((ref, i) => {
+            {msg.references.map((ref) => {
               const st = REF_TYPE_STYLES[ref.type];
               return (
                 <button
-                  key={i}
+                  key={ref.id}
+                  type="button"
                   className={`inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full font-medium ${st.color} hover:opacity-80 transition-opacity`}
                 >
                   <st.icon size={8} />
@@ -166,11 +156,7 @@ function ChatMessage({ msg }: { msg: InsightMessage }) {
             })}
           </div>
         )}
-        <div
-          className={`text-[9px] text-text-muted mt-0.5 ${
-            isAgent ? "" : "text-right"
-          }`}
-        >
+        <div className={`text-[9px] text-text-muted mt-0.5 ${isAgent ? "" : "text-right"}`}>
           {msg.time}
         </div>
       </div>
@@ -189,9 +175,7 @@ const MODE_HEIGHT: Record<ChatMode, string> = {
 export default function TeamInsightsChat() {
   const [mode, setMode] = useState<ChatMode>("collapsed");
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<InsightMessage[]>(
-    INSIGHT_CONVERSATIONS
-  );
+  const [messages, setMessages] = useState<InsightMessage[]>(INSIGHT_CONVERSATIONS);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const isOpen = mode !== "collapsed";
@@ -200,7 +184,7 @@ export default function TeamInsightsChat() {
     if (isOpen && scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [isOpen, messages.length]);
+  }, [isOpen]);
 
   const toggleCollapse = () => {
     setMode((prev) => (prev === "collapsed" ? "default" : "collapsed"));
@@ -250,37 +234,27 @@ export default function TeamInsightsChat() {
     >
       {/* Header bar — always visible */}
       <button
+        type="button"
         onClick={toggleCollapse}
         className="w-full px-4 h-[44px] flex items-center gap-2 bg-surface-1 hover:bg-surface-1/80 transition-colors"
       >
         <Sparkles size={14} className="text-accent" />
-        <span className="text-[12px] font-medium text-text-primary">
-          Team Insights
-        </span>
+        <span className="text-[12px] font-medium text-text-primary">Team Insights</span>
         <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-medium">
           Scoped Session
         </span>
-        <span className="text-[10px] text-text-muted">
-          — 限定团队分析 Skills
-        </span>
+        <span className="text-[10px] text-text-muted">— 限定团队分析 Skills</span>
         <div className="ml-auto flex items-center gap-2">
-          {!isOpen && (
-            <span className="text-[10px] text-text-muted">点击展开对话...</span>
-          )}
+          {!isOpen && <span className="text-[10px] text-text-muted">点击展开对话...</span>}
           {isOpen && (
-            <span
-              role="button"
-              tabIndex={0}
+            <button
+              type="button"
               onClick={toggleFullscreen}
               className="p-1 rounded hover:bg-surface-3 text-text-muted hover:text-text-secondary transition-colors"
               title={mode === "fullscreen" ? "缩小" : "展开到近全屏"}
             >
-              {mode === "fullscreen" ? (
-                <Minimize2 size={12} />
-              ) : (
-                <Maximize2 size={12} />
-              )}
-            </span>
+              {mode === "fullscreen" ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
+            </button>
           )}
           {isOpen ? (
             <ChevronDown size={14} className="text-text-muted" />
@@ -294,17 +268,11 @@ export default function TeamInsightsChat() {
       {isOpen && (
         <div className="flex flex-col h-[calc(100%-44px)]">
           {/* Messages */}
-          <div
-            ref={scrollRef}
-            className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0"
-          >
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
             {/* Welcome message if empty */}
             {messages.length === 0 && (
               <div className="text-center py-6">
-                <Lightbulb
-                  size={24}
-                  className="text-accent mx-auto mb-2 opacity-60"
-                />
+                <Lightbulb size={24} className="text-accent mx-auto mb-2 opacity-60" />
                 <div className="text-[13px] text-text-secondary font-medium">
                   问我任何关于团队的问题
                 </div>
@@ -312,7 +280,9 @@ export default function TeamInsightsChat() {
                   我可以分析 Sprint 进度、OKR 健康度、成员负载、依赖风险等
                 </div>
                 <div className="text-[10px] text-text-muted mt-3 px-6">
-                  这是一个 <span className="text-cyan-400 font-medium">Scoped Session</span> — 和主 Session 一样是 Chat，但限定了团队分析相关的 Skills 和上下文。更通用的操作可以回到主线会话
+                  这是一个 <span className="text-cyan-400 font-medium">Scoped Session</span> — 和主
+                  Session 一样是 Chat，但限定了团队分析相关的 Skills
+                  和上下文。更通用的操作可以回到主线会话
                 </div>
               </div>
             )}
@@ -326,6 +296,7 @@ export default function TeamInsightsChat() {
             <span className="text-[9px] text-text-muted shrink-0">快捷：</span>
             {INSIGHT_SUGGESTIONS.slice(0, 4).map((s) => (
               <button
+                type="button"
                 key={s}
                 onClick={() => {
                   setInput(s);
@@ -354,6 +325,7 @@ export default function TeamInsightsChat() {
                 className="flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed"
               />
               <button
+                type="button"
                 onClick={handleSend}
                 className="p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors"
               >

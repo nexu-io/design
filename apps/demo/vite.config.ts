@@ -1,30 +1,30 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import { resolve } from 'path'
-import { copyFileSync, mkdirSync, existsSync } from 'fs'
+import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import { resolve } from "node:path";
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 function copyChangelog() {
-  const src = resolve(__dirname, '../clone/artifacts/changelog/changelog.json')
-  const destDir = resolve(__dirname, 'public')
-  const dest = resolve(destDir, 'changelog.json')
+  const src = resolve(__dirname, "../clone/artifacts/changelog/changelog.json");
+  const destDir = resolve(__dirname, "public");
+  const dest = resolve(destDir, "changelog.json");
   return {
-    name: 'copy-changelog',
+    name: "copy-changelog",
     buildStart() {
       if (existsSync(src)) {
-        mkdirSync(destDir, { recursive: true })
-        copyFileSync(src, dest)
+        mkdirSync(destDir, { recursive: true });
+        copyFileSync(src, dest);
       }
     },
-  }
+  };
 }
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), copyChangelog()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
+      "@": resolve(__dirname, "./src"),
     },
   },
   server: { port: 5175 },
-})
+});

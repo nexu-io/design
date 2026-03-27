@@ -1,24 +1,24 @@
-import { Link } from "react-router-dom";
-import { PageShell, PageHeader, Section } from "../components/Section";
 import {
-  Brain,
-  Users,
-  Layers,
-  Globe,
-  Zap,
-  Shield,
   ArrowRight,
-  MessageSquare,
-  Sparkles,
   Bot,
-  Target,
+  Brain,
   Database,
-  Network,
+  Globe,
+  Layers,
   Lock,
+  MessageSquare,
+  Network,
   Play,
   Presentation,
   Route as RouteIcon,
+  Shield,
+  Sparkles,
+  Target,
+  Users,
+  Zap,
 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { PageHeader, PageShell, Section } from "../components/Section";
 
 function EraCard({
   era,
@@ -57,16 +57,12 @@ function InsightBlock({
   return (
     <div className="bg-surface-2 border border-border rounded-xl p-5">
       <div className="flex items-center gap-3 mb-3">
-        <div
-          className={`w-9 h-9 rounded-lg ${accent} flex items-center justify-center shrink-0`}
-        >
+        <div className={`w-9 h-9 rounded-lg ${accent} flex items-center justify-center shrink-0`}>
           <Icon size={18} className="text-text-primary" />
         </div>
         <div className="text-sm font-bold text-text-primary">{title}</div>
       </div>
-      <div className="text-xs text-text-secondary leading-relaxed space-y-2">
-        {children}
-      </div>
+      <div className="text-xs text-text-secondary leading-relaxed space-y-2">{children}</div>
     </div>
   );
 }
@@ -90,9 +86,14 @@ export default function WhyWeBuiltPage() {
           </div>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-bold text-text-primary mb-0.5">BP PPT — 投资人 Deck</div>
-            <div className="text-[11px] text-text-secondary">10 页全屏演示，键盘翻页，一眼 get 整体逻辑</div>
+            <div className="text-[11px] text-text-secondary">
+              10 页全屏演示，键盘翻页，一眼 get 整体逻辑
+            </div>
           </div>
-          <ArrowRight size={16} className="text-accent shrink-0 group-hover:translate-x-0.5 transition-transform" />
+          <ArrowRight
+            size={16}
+            className="text-accent shrink-0 group-hover:translate-x-0.5 transition-transform"
+          />
         </Link>
         <Link
           to="/journey"
@@ -102,10 +103,17 @@ export default function WhyWeBuiltPage() {
             <RouteIcon size={22} className="text-clone" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-bold text-text-primary mb-0.5">User Journey — 交互体验</div>
-            <div className="text-[11px] text-text-secondary">从 Landing 到团队协作，完整产品旅程</div>
+            <div className="text-sm font-bold text-text-primary mb-0.5">
+              User Journey — 交互体验
+            </div>
+            <div className="text-[11px] text-text-secondary">
+              从 Landing 到团队协作，完整产品旅程
+            </div>
           </div>
-          <ArrowRight size={16} className="text-clone shrink-0 group-hover:translate-x-0.5 transition-transform" />
+          <ArrowRight
+            size={16}
+            className="text-clone shrink-0 group-hover:translate-x-0.5 transition-transform"
+          />
         </Link>
         <Link
           to="/demo"
@@ -115,10 +123,17 @@ export default function WhyWeBuiltPage() {
             <Play size={22} className="text-emerald-400" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-bold text-text-primary mb-0.5">Product Demo — 沉浸体验</div>
-            <div className="text-[11px] text-text-secondary">全屏产品界面，直接感受分身的赛博办公室</div>
+            <div className="text-sm font-bold text-text-primary mb-0.5">
+              Product Demo — 沉浸体验
+            </div>
+            <div className="text-[11px] text-text-secondary">
+              全屏产品界面，直接感受分身的赛博办公室
+            </div>
           </div>
-          <ArrowRight size={16} className="text-emerald-400 shrink-0 group-hover:translate-x-0.5 transition-transform" />
+          <ArrowRight
+            size={16}
+            className="text-emerald-400 shrink-0 group-hover:translate-x-0.5 transition-transform"
+          />
         </Link>
       </div>
 
@@ -130,17 +145,17 @@ export default function WhyWeBuiltPage() {
           </div>
           <p className="text-sm text-text-secondary leading-relaxed mb-4">
             2003 年 LinkedIn 告诉世界：职场关系可以在线化。2013 年 Slack
-            告诉世界：团队协作可以在对话里完成。2026 年 OpenClaw
-            告诉世界：Agent 比你想象的能干 — 但 Agent 住在哪？OpenClaw
-            给了它电脑，EvoMap 给了它共享大脑。但没人给它
-            <strong className="text-text-primary">一间办公室</strong>
-            — 有任务、有记忆、有同事，和人坐在一起。
+            告诉世界：团队协作可以在对话里完成。2026 年 OpenClaw 告诉世界：Agent 比你想象的能干 — 但
+            Agent 住在哪？OpenClaw 给了它电脑，EvoMap 给了它共享大脑。但没人给它
+            <strong className="text-text-primary">一间办公室</strong>—
+            有任务、有记忆、有同事，和人坐在一起。
           </p>
           <div className="p-4 bg-surface-3 rounded-lg border border-border text-[13px] text-text-primary font-medium">
-            <span className="text-accent">Core thesis:</span> 不是又一个 Agent
-            工具。是{" "}
-            <span className="text-accent">为你的龙虾打造一间赛博办公室 — 世界首个人与分身共存的办公协作网络</span>。
-            人做决策，分身做执行；人会离职，分身不会。
+            <span className="text-accent">Core thesis:</span> 不是又一个 Agent 工具。是{" "}
+            <span className="text-accent">
+              为你的龙虾打造一间赛博办公室 — 世界首个人与分身共存的办公协作网络
+            </span>
+            。 人做决策，分身做执行；人会离职，分身不会。
           </div>
         </div>
 
@@ -169,18 +184,10 @@ export default function WhyWeBuiltPage() {
       {/* ===== SECTION 2: WHAT WE SEE ===== */}
       <Section title="2. 我们看到了什么 — What We See">
         <div className="grid grid-cols-2 gap-4">
-          <InsightBlock
-            icon={Shield}
-            title="大企业的壁垒正在瓦解"
-            accent="bg-danger-subtle"
-          >
+          <InsightBlock icon={Shield} title="大企业的壁垒正在瓦解" accent="bg-danger-subtle">
+            <p>SaaS 时代，大企业的壁垒是 UI 复杂度、行业 best practices、客户关系和资源垄断。</p>
             <p>
-              SaaS 时代，大企业的壁垒是 UI 复杂度、行业 best
-              practices、客户关系和资源垄断。
-            </p>
-            <p>
-              Agent 时代，这些壁垒{" "}
-              <strong className="text-danger">全部失效</strong>：
+              Agent 时代，这些壁垒 <strong className="text-danger">全部失效</strong>：
             </p>
             <ul className="list-disc ml-4 space-y-1">
               <li>精美的 UI → Agent 不看 UI，直接调 API</li>
@@ -190,11 +197,7 @@ export default function WhyWeBuiltPage() {
             </ul>
           </InsightBlock>
 
-          <InsightBlock
-            icon={Lock}
-            title="新的壁垒正在形成"
-            accent="bg-emerald-500/10"
-          >
+          <InsightBlock icon={Lock} title="新的壁垒正在形成" accent="bg-emerald-500/10">
             <p>Agent 时代的新壁垒不再是"功能多"，而是：</p>
             <ul className="list-disc ml-4 space-y-1">
               <li>
@@ -202,20 +205,16 @@ export default function WhyWeBuiltPage() {
                 分身越用越懂你，记忆不可迁移，不可复制
               </li>
               <li>
-                <strong className="text-emerald-400">
-                  Relationship Lock-in
-                </strong>{" "}
-                — 不只是个人，是整个团队的协作关系网
+                <strong className="text-emerald-400">Relationship Lock-in</strong> —
+                不只是个人，是整个团队的协作关系网
               </li>
               <li>
-                <strong className="text-emerald-400">
-                  Agent-Parseable Architecture
-                </strong>{" "}
-                — SKILL.md 被 Agent 自然选择消费
+                <strong className="text-emerald-400">Agent-Parseable Architecture</strong> —
+                SKILL.md 被 Agent 自然选择消费
               </li>
               <li>
-                <strong className="text-emerald-400">Data Flywheel</strong> —
-                任务定义 + 任务交付的数据，是 AGI 缺失的最后一环
+                <strong className="text-emerald-400">Data Flywheel</strong> — 任务定义 +
+                任务交付的数据，是 AGI 缺失的最后一环
               </li>
             </ul>
           </InsightBlock>
@@ -235,11 +234,7 @@ export default function WhyWeBuiltPage() {
         </div>
 
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <InsightBlock
-            icon={Bot}
-            title="为 Agentic 打造办公套件"
-            accent="bg-blue-500/10"
-          >
+          <InsightBlock icon={Bot} title="为 Agentic 打造办公套件" accent="bg-blue-500/10">
             <ul className="list-disc ml-4 space-y-1">
               <li>Task — Agent 可读写的任务系统</li>
               <li>Calendar — Agent 可调度的日程</li>
@@ -250,11 +245,7 @@ export default function WhyWeBuiltPage() {
             </ul>
           </InsightBlock>
 
-          <InsightBlock
-            icon={Brain}
-            title="为员工打造数字分身"
-            accent="bg-violet-500/10"
-          >
+          <InsightBlock icon={Brain} title="为员工打造数字分身" accent="bg-violet-500/10">
             <ul className="list-disc ml-4 space-y-1">
               <li>Persona — 人设、风格、偏好</li>
               <li>Memory — 决策、想法、经验</li>
@@ -265,11 +256,7 @@ export default function WhyWeBuiltPage() {
             </ul>
           </InsightBlock>
 
-          <InsightBlock
-            icon={Network}
-            title="分身协作网络"
-            accent="bg-cyan-500/10"
-          >
+          <InsightBlock icon={Network} title="分身协作网络" accent="bg-cyan-500/10">
             <ul className="list-disc ml-4 space-y-1">
               <li>Agent 完成任务，人负责协调</li>
               <li>人提供 Context + Review</li>
@@ -288,9 +275,7 @@ export default function WhyWeBuiltPage() {
           </div>
           <div className="space-y-3">
             <div className="flex items-center gap-4">
-              <div className="w-32 text-right text-[11px] text-text-muted shrink-0">
-                用户入口
-              </div>
+              <div className="w-32 text-right text-[11px] text-text-muted shrink-0">用户入口</div>
               <ArrowRight size={12} className="text-text-muted shrink-0" />
               <div className="flex-1 p-3 rounded-lg bg-accent/10 border border-accent/20">
                 <div className="flex items-center gap-2 text-[12px] font-medium text-accent">
@@ -298,8 +283,7 @@ export default function WhyWeBuiltPage() {
                   IM 入口 — 对话即操控一切
                 </div>
                 <div className="text-[10px] text-text-muted mt-1">
-                  飞书 · Slack · WhatsApp · Email · SMS · Telegram —
-                  7×24，任何终端
+                  飞书 · Slack · WhatsApp · Email · SMS · Telegram — 7×24，任何终端
                 </div>
               </div>
             </div>
@@ -329,8 +313,7 @@ export default function WhyWeBuiltPage() {
                   Memory OS + Skill OS + Session Fabric
                 </div>
                 <div className="text-[10px] text-text-muted mt-1">
-                  分身大脑 · 可学习的技能系统 ·
-                  跨终端无中断会话
+                  分身大脑 · 可学习的技能系统 · 跨终端无中断会话
                 </div>
               </div>
             </div>
@@ -342,9 +325,7 @@ export default function WhyWeBuiltPage() {
       <Section title="4. 为什么是我们 — Why Us">
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-surface-2 border border-border rounded-xl p-5">
-            <div className="text-sm font-bold text-text-primary mb-3">
-              三层竞争优势
-            </div>
+            <div className="text-sm font-bold text-text-primary mb-3">三层竞争优势</div>
             <div className="space-y-3">
               {[
                 {
@@ -366,30 +347,21 @@ export default function WhyWeBuiltPage() {
                   color: "border-l-accent",
                 },
               ].map((l) => (
-                <div
-                  key={l.layer}
-                  className={`p-3 bg-surface-3 rounded-lg border-l-2 ${l.color}`}
-                >
+                <div key={l.layer} className={`p-3 bg-surface-3 rounded-lg border-l-2 ${l.color}`}>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[10px] px-1.5 py-0.5 rounded bg-surface-4 text-text-muted font-mono">
                       {l.layer}
                     </span>
-                    <span className="text-[12px] font-medium text-text-primary">
-                      {l.title}
-                    </span>
+                    <span className="text-[12px] font-medium text-text-primary">{l.title}</span>
                   </div>
-                  <div className="text-[11px] text-text-secondary leading-relaxed">
-                    {l.desc}
-                  </div>
+                  <div className="text-[11px] text-text-secondary leading-relaxed">{l.desc}</div>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="bg-surface-2 border border-border rounded-xl p-5">
-            <div className="text-sm font-bold text-text-primary mb-3">
-              vs 竞品
-            </div>
+            <div className="text-sm font-bold text-text-primary mb-3">vs 竞品</div>
             <div className="space-y-2">
               {[
                 {
@@ -419,12 +391,8 @@ export default function WhyWeBuiltPage() {
                 },
               ].map((c) => (
                 <div key={c.name} className="p-2.5 bg-surface-3 rounded-lg">
-                  <div className="text-[11px] font-medium text-text-primary mb-0.5">
-                    {c.name}
-                  </div>
-                  <div className="text-[10px] text-text-muted line-through mb-0.5">
-                    {c.gap}
-                  </div>
+                  <div className="text-[11px] font-medium text-text-primary mb-0.5">{c.name}</div>
+                  <div className="text-[10px] text-text-muted line-through mb-0.5">{c.gap}</div>
                   <div className="text-[10px] text-success">✓ {c.us}</div>
                 </div>
               ))}
@@ -461,28 +429,19 @@ export default function WhyWeBuiltPage() {
                 sub: "Memory Lock",
                 color: "bg-emerald-500/10 text-emerald-400",
               },
-            ].map((step, i) =>
+            ].map((step) =>
               step.sub === "" ? (
-                <div key={i} className={step.color}>
+                <div key={step.label} className={step.color}>
                   {step.label}
                 </div>
               ) : (
-                <div
-                  key={i}
-                  className={`p-3 rounded-xl ${step.color.split(" ")[0]}`}
-                >
-                  <div
-                    className={`text-[12px] font-bold ${
-                      step.color.split(" ")[1]
-                    }`}
-                  >
+                <div key={step.label} className={`p-3 rounded-xl ${step.color.split(" ")[0]}`}>
+                  <div className={`text-[12px] font-bold ${step.color.split(" ")[1]}`}>
                     {step.label}
                   </div>
-                  <div className="text-[10px] text-text-muted mt-0.5">
-                    {step.sub}
-                  </div>
+                  <div className="text-[10px] text-text-muted mt-0.5">{step.sub}</div>
                 </div>
-              )
+              ),
             )}
           </div>
           <div className="grid grid-cols-7 gap-2 items-center text-center">
@@ -510,28 +469,19 @@ export default function WhyWeBuiltPage() {
                 sub: "网络效应",
                 color: "bg-green-500/10 text-green-400",
               },
-            ].map((step, i) =>
+            ].map((step) =>
               step.sub === "" ? (
-                <div key={i} className={step.color}>
+                <div key={step.label} className={step.color}>
                   {step.label}
                 </div>
               ) : (
-                <div
-                  key={i}
-                  className={`p-3 rounded-xl ${step.color.split(" ")[0]}`}
-                >
-                  <div
-                    className={`text-[12px] font-bold ${
-                      step.color.split(" ")[1]
-                    }`}
-                  >
+                <div key={step.label} className={`p-3 rounded-xl ${step.color.split(" ")[0]}`}>
+                  <div className={`text-[12px] font-bold ${step.color.split(" ")[1]}`}>
                     {step.label}
                   </div>
-                  <div className="text-[10px] text-text-muted mt-0.5">
-                    {step.sub}
-                  </div>
+                  <div className="text-[10px] text-text-muted mt-0.5">{step.sub}</div>
                 </div>
-              )
+              ),
             )}
           </div>
 
@@ -553,8 +503,8 @@ export default function WhyWeBuiltPage() {
               </span>
             </div>
             <div className="text-[10px] text-text-muted mt-2">
-              不是 top-down 大客户销售。而是 ProC 自费使用 → 团队看到价值 →
-              公司采购。像 Slack、Figma、Notion 的增长路径。
+              不是 top-down 大客户销售。而是 ProC 自费使用 → 团队看到价值 → 公司采购。像
+              Slack、Figma、Notion 的增长路径。
             </div>
           </div>
         </div>
@@ -586,29 +536,29 @@ export default function WhyWeBuiltPage() {
                 <div className="flex items-start gap-2">
                   <Target size={12} className="text-accent mt-0.5 shrink-0" />
                   <span>
-                    <strong className="text-text-primary">Task 定义数据</strong>{" "}
-                    — 人类如何定义和分解任务
+                    <strong className="text-text-primary">Task 定义数据</strong> —
+                    人类如何定义和分解任务
                   </span>
                 </div>
                 <div className="flex items-start gap-2">
                   <Zap size={12} className="text-accent mt-0.5 shrink-0" />
                   <span>
-                    <strong className="text-text-primary">Task 完成数据</strong>{" "}
-                    — Agent 如何执行任务并交付价值
+                    <strong className="text-text-primary">Task 完成数据</strong> — Agent
+                    如何执行任务并交付价值
                   </span>
                 </div>
                 <div className="flex items-start gap-2">
                   <Users size={12} className="text-accent mt-0.5 shrink-0" />
                   <span>
-                    <strong className="text-text-primary">社会协作数据</strong>{" "}
-                    — 人与人、人与 Agent、Agent 与 Agent 的协作模式
+                    <strong className="text-text-primary">社会协作数据</strong> — 人与人、人与
+                    Agent、Agent 与 Agent 的协作模式
                   </span>
                 </div>
                 <div className="flex items-start gap-2">
                   <Database size={12} className="text-accent mt-0.5 shrink-0" />
                   <span>
-                    <strong className="text-text-primary">价值交付数据</strong>{" "}
-                    — 什么样的执行路径产生了真实商业价值
+                    <strong className="text-text-primary">价值交付数据</strong> —
+                    什么样的执行路径产生了真实商业价值
                   </span>
                 </div>
               </div>
@@ -620,11 +570,9 @@ export default function WhyWeBuiltPage() {
               </div>
               <div className="space-y-2 text-[11px] text-text-secondary">
                 <p>
-                  基础模型公司拿到的是{" "}
-                  <strong className="text-text-primary">对话数据</strong>
-                  （人问、AI 答），不是{" "}
-                  <strong className="text-accent">工作数据</strong>（人定义任务
-                  → Agent 执行 → 交付价值 → 人 Review → 改进）。
+                  基础模型公司拿到的是 <strong className="text-text-primary">对话数据</strong>
+                  （人问、AI 答），不是 <strong className="text-accent">工作数据</strong>
+                  （人定义任务 → Agent 执行 → 交付价值 → 人 Review → 改进）。
                 </p>
                 <p>让 Agent 走向真正 AGI 需要的不是更多对话，而是：</p>
                 <ul className="list-disc ml-4 space-y-0.5">
@@ -641,16 +589,15 @@ export default function WhyWeBuiltPage() {
           </div>
 
           <div className="p-4 bg-accent/5 border border-accent/10 rounded-xl">
-            <div className="text-sm font-bold text-accent mb-2">
-              nexu 的终局定位
-            </div>
+            <div className="text-sm font-bold text-accent mb-2">nexu 的终局定位</div>
             <div className="text-[13px] text-text-primary leading-relaxed">
               不是 AI 工具公司，不是 SaaS 公司。
               <br />是{" "}
               <strong className="text-accent">
                 为你的龙虾打造一间赛博办公室 — 世界首个人与分身共存的办公协作网络
               </strong>{" "}
-              — 让每个人都有数字分身，分身组成协作网络。人做决策，分身做执行。人会离职，分身不会。知识永不流失，能力持续传承。
+              —
+              让每个人都有数字分身，分身组成协作网络。人做决策，分身做执行。人会离职，分身不会。知识永不流失，能力持续传承。
               <br />
               <br />
               <span className="text-text-secondary">
@@ -689,8 +636,7 @@ export default function WhyWeBuiltPage() {
               title: "OPC Programmer",
               desc: "聚焦程序员垂直场景。TAM 只有 ~30M 程序员，且 Cursor/Claude Code 已占先机。",
               color: "bg-cyan-500",
-              decision:
-                "单角色垂直太窄。需要 universal entry + role-based depth。",
+              decision: "单角色垂直太窄。需要 universal entry + role-based depth。",
             },
             {
               version: "v3",
@@ -707,17 +653,15 @@ export default function WhyWeBuiltPage() {
               title: "Agent-Native 办公基础设施",
               desc: '从"做一个 Agent 产品"升维到"做 Agent 时代的办公基础设施"。Memory OS + Skill OS + Session Fabric + 分身网络。终局是拿到 task completion 数据。',
               color: "bg-accent",
-              decision:
-                "不选行业，选层 — 所有行业的 Agent 都需要记忆、技能和会话基础设施。",
+              decision: "不选行业，选层 — 所有行业的 Agent 都需要记忆、技能和会话基础设施。",
             },
             {
               version: "v4",
               date: "2026-02",
               title: "龙虾的赛博办公室",
-              desc: '从「基础设施」升维到「赛博办公室」。不是做工具，是为 OpenClaw 龙虾打造一间真正的办公室 — 世界首个人与分身共存的办公协作网络。People quit. Clones don\'t.',
+              desc: "从「基础设施」升维到「赛博办公室」。不是做工具，是为 OpenClaw 龙虾打造一间真正的办公室 — 世界首个人与分身共存的办公协作网络。People quit. Clones don't.",
               color: "bg-pink-500",
-              decision:
-                "从卖功能到定义品类 — 网络效应 + 记忆锁定 + 经验传承 = 不可替代。",
+              decision: "从卖功能到定义品类 — 网络效应 + 记忆锁定 + 经验传承 = 不可替代。",
             },
           ].map((v) => (
             <div key={v.version} className="flex gap-4">
@@ -727,17 +671,11 @@ export default function WhyWeBuiltPage() {
                 >
                   {v.version}
                 </div>
-                <div className="text-[10px] text-text-muted mt-0.5">
-                  {v.date}
-                </div>
+                <div className="text-[10px] text-text-muted mt-0.5">{v.date}</div>
               </div>
               <div className="flex-1 bg-surface-2 border border-border rounded-lg p-4">
-                <div className="text-[13px] font-bold text-text-primary mb-1">
-                  {v.title}
-                </div>
-                <div className="text-[11px] text-text-secondary leading-relaxed mb-2">
-                  {v.desc}
-                </div>
+                <div className="text-[13px] font-bold text-text-primary mb-1">{v.title}</div>
+                <div className="text-[11px] text-text-secondary leading-relaxed mb-2">{v.desc}</div>
                 <div className="text-[11px] text-accent flex items-start gap-1.5">
                   <Layers size={12} className="mt-0.5 shrink-0" />
                   <span>{v.decision}</span>
@@ -791,12 +729,8 @@ export default function WhyWeBuiltPage() {
                 <Icon size={18} className="text-text-primary" />
               </div>
               <div>
-                <div className="text-sm font-bold text-text-primary mb-1">
-                  {title}
-                </div>
-                <div className="text-xs text-text-secondary leading-relaxed">
-                  {desc}
-                </div>
+                <div className="text-sm font-bold text-text-primary mb-1">{title}</div>
+                <div className="text-xs text-text-secondary leading-relaxed">{desc}</div>
               </div>
             </div>
           ))}
@@ -809,11 +743,10 @@ export default function WhyWeBuiltPage() {
           <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-5 animate-clone-breath">
             <Play size={28} className="text-accent ml-1" />
           </div>
-          <h3 className="text-xl font-bold text-text-primary mb-2">
-            给你的龙虾一间赛博办公室
-          </h3>
+          <h3 className="text-xl font-bold text-text-primary mb-2">给你的龙虾一间赛博办公室</h3>
           <p className="text-sm text-text-secondary mb-6 max-w-md mx-auto">
-            从 Landing Page 开始，走一遍完整的用户旅程。世界首个人与分身共存的办公协作网络。人做决策，分身做执行。
+            从 Landing Page
+            开始，走一遍完整的用户旅程。世界首个人与分身共存的办公协作网络。人做决策，分身做执行。
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
             <Link

@@ -1,5 +1,5 @@
-import LandingPreview from '../LandingPreview'
+import LandingPreview from "../LandingPreview";
 
 export default function StepLanding() {
-  return <LandingPreview />
+  return <LandingPreview />;
 }

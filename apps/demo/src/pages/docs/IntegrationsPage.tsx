@@ -1,35 +1,35 @@
-import { MessageSquare } from 'lucide-react';
-import { usePageTitle } from '../../hooks/usePageTitle';
+import { MessageSquare } from "lucide-react";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 const PLATFORMS = [
   {
-    name: 'Slack',
-    status: 'Available',
-    statusClass: 'text-success',
-    desc: 'Full integration with channels, threads, and DMs.',
+    name: "Slack",
+    status: "Available",
+    statusClass: "text-success",
+    desc: "Full integration with channels, threads, and DMs.",
   },
   {
-    name: 'Feishu / Lark',
-    status: 'Available',
-    statusClass: 'text-success',
-    desc: 'Native bot with group chat and document access.',
+    name: "Feishu / Lark",
+    status: "Available",
+    statusClass: "text-success",
+    desc: "Native bot with group chat and document access.",
   },
   {
-    name: 'Discord',
-    status: 'Coming soon',
-    statusClass: 'text-amber-500',
-    desc: 'Community and team server support.',
+    name: "Discord",
+    status: "Coming soon",
+    statusClass: "text-amber-500",
+    desc: "Community and team server support.",
   },
   {
-    name: 'Microsoft Teams',
-    status: 'Planned',
-    statusClass: 'text-text-muted',
-    desc: 'Enterprise workplace integration.',
+    name: "Microsoft Teams",
+    status: "Planned",
+    statusClass: "text-text-muted",
+    desc: "Enterprise workplace integration.",
   },
 ];
 
 export default function IntegrationsPage() {
-  usePageTitle('Channels');
+  usePageTitle("Channels");
 
   return (
     <div className="space-y-8">
@@ -39,7 +39,8 @@ export default function IntegrationsPage() {
           Channels
         </h1>
         <p className="mt-3 text-[14px] text-text-secondary leading-relaxed max-w-2xl">
-          nexu connects to the platforms your team already uses. Configure channels to determine where nexu listens and responds.
+          nexu connects to the platforms your team already uses. Configure channels to determine
+          where nexu listens and responds.
         </p>
       </div>
 

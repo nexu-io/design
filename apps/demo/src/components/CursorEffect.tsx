@@ -1,14 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
-export type CursorMode = 'trail' | 'follow' | 'cursor' | 'swarm' | 'off';
+export type CursorMode = "trail" | "follow" | "cursor" | "swarm" | "off";
 
 interface CursorEffectProps {
   mode: CursorMode;
 }
 
-const LOBSTER = '🦞';
-const PREY = ['🐟', '🦐', '🦀', '🐚', '🪸'];
-const EXPLODE_PARTICLES = ['✨', '💥', '🔥', '⭐', '💫'];
+const LOBSTER = "🦞";
+const PREY = ["🐟", "🦐", "🦀", "🐚", "🪸"];
+const EXPLODE_PARTICLES = ["✨", "💥", "🔥", "⭐", "💫"];
 
 /* ------------------------------------------------------------------ */
 /*  Mode 1: Lobster Hunting                                            */
@@ -39,13 +39,31 @@ function isOverText(x: number, y: number): boolean {
   for (const el of els) {
     if ((el as HTMLElement).dataset?.cursorLayer) continue;
     const tag = el.tagName;
-    if (tag === 'A' || tag === 'BUTTON' || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return true;
+    if (
+      tag === "A" ||
+      tag === "BUTTON" ||
+      tag === "INPUT" ||
+      tag === "TEXTAREA" ||
+      tag === "SELECT"
+    )
+      return true;
     const display = getComputedStyle(el).display;
-    if (display === 'inline' || display === 'inline-block') {
+    if (display === "inline" || display === "inline-block") {
       const text = el.textContent?.trim();
       if (text && text.length > 0 && el.children.length === 0) return true;
     }
-    if (tag === 'H1' || tag === 'H2' || tag === 'H3' || tag === 'H4' || tag === 'P' || tag === 'SPAN' || tag === 'LI' || tag === 'LABEL' || tag === 'TH' || tag === 'TD') {
+    if (
+      tag === "H1" ||
+      tag === "H2" ||
+      tag === "H3" ||
+      tag === "H4" ||
+      tag === "P" ||
+      tag === "SPAN" ||
+      tag === "LI" ||
+      tag === "LABEL" ||
+      tag === "TH" ||
+      tag === "TD"
+    ) {
       const rect = el.getBoundingClientRect();
       if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) return true;
     }
@@ -58,7 +76,7 @@ function useTrailEffect(active: boolean) {
 
   useEffect(() => {
     if (!active) return;
-    const container = containerRef.current!;
+    const container = containerRef.current;
     if (!container) return;
 
     const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
@@ -68,9 +86,9 @@ function useTrailEffect(active: boolean) {
     let spawnThrottle = 0;
     let lobsterSize = MIN_LOBSTER_SIZE;
 
-    const lobsterEl = document.createElement('div');
+    const lobsterEl = document.createElement("div");
     lobsterEl.textContent = LOBSTER;
-    lobsterEl.dataset.cursorLayer = '1';
+    lobsterEl.dataset.cursorLayer = "1";
     lobsterEl.style.cssText = `
       position: fixed; font-size: ${lobsterSize}px; pointer-events: none; z-index: 10000;
       transition: none; will-change: transform, left, top;
@@ -81,9 +99,10 @@ function useTrailEffect(active: boolean) {
       const cx = lobsterPos.x;
       const cy = lobsterPos.y;
       for (let i = 0; i < 8; i++) {
-        const particle = document.createElement('span');
-        particle.textContent = EXPLODE_PARTICLES[Math.floor(Math.random() * EXPLODE_PARTICLES.length)];
-        particle.dataset.cursorLayer = '1';
+        const particle = document.createElement("span");
+        particle.textContent =
+          EXPLODE_PARTICLES[Math.floor(Math.random() * EXPLODE_PARTICLES.length)];
+        particle.dataset.cursorLayer = "1";
         const a = (Math.PI * 2 * i) / 8;
         particle.style.cssText = `
           position: fixed; left: ${cx}px; top: ${cy}px;
@@ -92,10 +111,10 @@ function useTrailEffect(active: boolean) {
           transform: translate(-50%, -50%) scale(1); opacity: 1;
           transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         `;
-        container.appendChild(particle);
+        container?.appendChild(particle);
         const dist = 50 + Math.random() * 40;
         requestAnimationFrame(() => {
-          particle.style.opacity = '0';
+          particle.style.opacity = "0";
           particle.style.transform = `translate(${Math.cos(a) * dist - 8}px, ${Math.sin(a) * dist - 8}px) scale(0.3) rotate(${Math.random() * 360}deg)`;
         });
         setTimeout(() => particle.remove(), 520);
@@ -103,8 +122,10 @@ function useTrailEffect(active: boolean) {
 
       lobsterSize = MIN_LOBSTER_SIZE;
       lobsterEl.style.fontSize = `${lobsterSize}px`;
-      lobsterEl.style.opacity = '0';
-      setTimeout(() => { lobsterEl.style.opacity = '1'; }, 300);
+      lobsterEl.style.opacity = "0";
+      setTimeout(() => {
+        lobsterEl.style.opacity = "1";
+      }, 300);
     }
 
     function spawnPrey(x: number, y: number) {
@@ -120,9 +141,9 @@ function useTrailEffect(active: boolean) {
 
       if (isOverText(px, py)) return;
 
-      const el = document.createElement('span');
+      const el = document.createElement("span");
       el.textContent = PREY[Math.floor(Math.random() * PREY.length)];
-      el.dataset.cursorLayer = '1';
+      el.dataset.cursorLayer = "1";
       el.style.cssText = `
         position: fixed; left: ${px}px; top: ${py}px;
         font-size: ${14 + Math.random() * 6}px;
@@ -131,12 +152,15 @@ function useTrailEffect(active: boolean) {
         transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s;
         opacity: 1; will-change: transform, left, top;
       `;
-      container.appendChild(el);
+      container?.appendChild(el);
       requestAnimationFrame(() => {
-        el.style.transform = 'translate(-50%, -50%) scale(1)';
+        el.style.transform = "translate(-50%, -50%) scale(1)";
       });
       preyList.push({
-        el, x: px, y: py, alive: true,
+        el,
+        x: px,
+        y: py,
+        alive: true,
         wobbleOffset: Math.random() * Math.PI * 2,
         wobbleSpeed: 1.5 + Math.random() * 1.5,
         baseY: py,
@@ -146,15 +170,15 @@ function useTrailEffect(active: boolean) {
 
     function fadePrey(prey: Prey) {
       prey.alive = false;
-      prey.el.style.transform = 'translate(-50%, -50%) scale(0.3)';
-      prey.el.style.opacity = '0';
+      prey.el.style.transform = "translate(-50%, -50%) scale(0.3)";
+      prey.el.style.opacity = "0";
       setTimeout(() => prey.el.remove(), 620);
     }
 
     function eatPrey(prey: Prey) {
       prey.alive = false;
-      prey.el.style.transform = 'translate(-50%, -50%) scale(0)';
-      prey.el.style.opacity = '0';
+      prey.el.style.transform = "translate(-50%, -50%) scale(0)";
+      prey.el.style.opacity = "0";
       setTimeout(() => prey.el.remove(), 320);
 
       lobsterSize = Math.min(lobsterSize + SIZE_PER_EAT, MAX_LOBSTER_SIZE + SIZE_PER_EAT);
@@ -174,7 +198,7 @@ function useTrailEffect(active: boolean) {
         spawnPrey(e.clientX, e.clientY);
       }
     }
-    window.addEventListener('mousemove', onMove);
+    window.addEventListener("mousemove", onMove);
 
     let raf: number;
     let t = 0;
@@ -236,9 +260,9 @@ function useTrailEffect(active: boolean) {
     raf = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(raf);
-      if (container) container.innerHTML = '';
+      if (container) container.innerHTML = "";
     };
   }, [active]);
 
@@ -263,7 +287,7 @@ function useFollowEffect(active: boolean) {
     function onMove(e: MouseEvent) {
       mouseRef.current = { x: e.clientX, y: e.clientY };
     }
-    window.addEventListener('mousemove', onMove);
+    window.addEventListener("mousemove", onMove);
 
     let raf: number;
     function animate() {
@@ -301,7 +325,7 @@ function useFollowEffect(active: boolean) {
     raf = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(raf);
     };
   }, [active]);
@@ -330,25 +354,25 @@ function useCursorEffect(active: boolean) {
 
     function onDown() {
       scaleRef.current = 0.8;
-      if (el) el.style.transform = 'translate(-50%, -50%) scale(0.8)';
+      if (el) el.style.transform = "translate(-50%, -50%) scale(0.8)";
     }
 
     function onUp() {
       scaleRef.current = 1;
-      if (el) el.style.transform = 'translate(-50%, -50%) scale(1.15)';
+      if (el) el.style.transform = "translate(-50%, -50%) scale(1.15)";
       setTimeout(() => {
-        if (el) el.style.transform = 'translate(-50%, -50%) scale(1)';
+        if (el) el.style.transform = "translate(-50%, -50%) scale(1)";
       }, 120);
     }
 
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mousedown', onDown);
-    window.addEventListener('mouseup', onUp);
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mousedown", onDown);
+    window.addEventListener("mouseup", onUp);
 
     return () => {
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mousedown', onDown);
-      window.removeEventListener('mouseup', onUp);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mousedown", onDown);
+      window.removeEventListener("mouseup", onUp);
     };
   }, [active]);
 
@@ -373,7 +397,7 @@ function useSwarmEffect(active: boolean) {
 
     const particles: HTMLSpanElement[] = [];
     for (let i = 0; i < SWARM_COUNT; i++) {
-      const el = document.createElement('span');
+      const el = document.createElement("span");
       el.textContent = LOBSTER;
       el.style.cssText = `
         position: fixed;
@@ -389,7 +413,7 @@ function useSwarmEffect(active: boolean) {
     function onMove(e: MouseEvent) {
       mouseRef.current = { x: e.clientX, y: e.clientY };
     }
-    window.addEventListener('mousemove', onMove);
+    window.addEventListener("mousemove", onMove);
 
     let raf: number;
     let t = 0;
@@ -418,9 +442,9 @@ function useSwarmEffect(active: boolean) {
     raf = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(raf);
-      particles.forEach((p) => p.remove());
+      for (const p of particles) p.remove();
     };
   }, [active]);
 
@@ -432,53 +456,58 @@ function useSwarmEffect(active: boolean) {
 /* ------------------------------------------------------------------ */
 
 export default function CursorEffect({ mode }: CursorEffectProps) {
-  const trailRef = useTrailEffect(mode === 'trail');
-  const followRef = useFollowEffect(mode === 'follow');
-  const cursorRef = useCursorEffect(mode === 'cursor');
-  const swarmRef = useSwarmEffect(mode === 'swarm');
+  const trailRef = useTrailEffect(mode === "trail");
+  const followRef = useFollowEffect(mode === "follow");
+  const cursorRef = useCursorEffect(mode === "cursor");
+  const swarmRef = useSwarmEffect(mode === "swarm");
 
-  const hideCursor = mode === 'cursor';
+  const hideCursor = mode === "cursor";
 
   useEffect(() => {
     if (hideCursor) {
-      document.body.style.cursor = 'none';
-      return () => { document.body.style.cursor = ''; };
+      document.body.style.cursor = "none";
+      return () => {
+        document.body.style.cursor = "";
+      };
     }
   }, [hideCursor]);
 
-  if (mode === 'off') return null;
+  if (mode === "off") return null;
 
   return (
     <>
       {/* Trail container */}
-      {mode === 'trail' && (
+      {mode === "trail" && (
         <div ref={trailRef} className="fixed inset-0 pointer-events-none z-[9999]" />
       )}
 
       {/* Follow pet */}
-      {mode === 'follow' && (
+      {mode === "follow" && (
         <div
           ref={followRef}
           className="fixed pointer-events-none z-[9999] text-[32px]"
-          style={{ transition: 'transform 0.1s ease-out' }}
+          style={{ transition: "transform 0.1s ease-out" }}
         >
           {LOBSTER}
         </div>
       )}
 
       {/* Custom cursor */}
-      {mode === 'cursor' && (
+      {mode === "cursor" && (
         <div
           ref={cursorRef}
           className="fixed pointer-events-none z-[9999] text-[28px]"
-          style={{ transition: 'transform 0.1s ease-out', transform: 'translate(-50%, -50%) scale(1)' }}
+          style={{
+            transition: "transform 0.1s ease-out",
+            transform: "translate(-50%, -50%) scale(1)",
+          }}
         >
           {LOBSTER}
         </div>
       )}
 
       {/* Swarm container */}
-      {mode === 'swarm' && (
+      {mode === "swarm" && (
         <div ref={swarmRef} className="fixed inset-0 pointer-events-none z-[9999]" />
       )}
     </>

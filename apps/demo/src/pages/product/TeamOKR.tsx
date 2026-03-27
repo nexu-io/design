@@ -1,21 +1,16 @@
-import { useState } from "react";
 import {
-  Target,
-  ChevronRight,
-  ChevronDown,
-  CheckCircle,
-  AlertTriangle,
   AlertCircle,
-  Link2,
-  Users,
+  AlertTriangle,
   BarChart3,
+  CheckCircle,
+  ChevronDown,
+  ChevronRight,
+  Link2,
+  Target,
+  Users,
 } from "lucide-react";
-import {
-  OBJECTIVES,
-  SPRINT_TASKS,
-  type Objective,
-  type KeyResult,
-} from "./teamData";
+import { useState } from "react";
+import { type KeyResult, OBJECTIVES, type Objective, SPRINT_TASKS } from "./teamData";
 
 const OKR_STATUS_STYLES: Record<
   Objective["status"],
@@ -65,13 +60,14 @@ function ProgressRing({
     value >= 80
       ? "stroke-success"
       : value >= 50
-      ? "stroke-clone"
-      : value >= 30
-      ? "stroke-warning"
-      : "stroke-danger";
+        ? "stroke-clone"
+        : value >= 30
+          ? "stroke-warning"
+          : "stroke-danger";
 
   return (
-    <svg width={size} height={size} className={className}>
+    <svg width={size} height={size} className={className} aria-hidden="true" focusable="false">
+      <title>Progress ring</title>
       <circle
         cx={size / 2}
         cy={size / 2}
@@ -119,13 +115,9 @@ function KRRow({
   const linkedTasks = SPRINT_TASKS.filter((t) => kr.linkedTasks.includes(t.id));
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
+    <button
+      type="button"
       onClick={onSelect}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") onSelect();
-      }}
       className={`p-3 border rounded-lg transition-colors cursor-pointer ${
         isSelected
           ? "ring-2 ring-accent/30 border-accent/40 bg-accent/5"
@@ -135,9 +127,7 @@ function KRRow({
       <div className="flex items-center gap-3">
         <ProgressRing value={kr.progress} size={32} stroke={2.5} />
         <div className="flex-1 min-w-0">
-          <div className="text-[12px] font-medium text-text-primary">
-            {kr.title}
-          </div>
+          <div className="text-[12px] font-medium text-text-primary">{kr.title}</div>
           <div className="flex items-center gap-3 mt-0.5">
             <span className="text-[10px] text-text-muted">
               {kr.current} / {kr.target}
@@ -161,8 +151,8 @@ function KRRow({
               t.status === "done"
                 ? "bg-success/10 text-success"
                 : t.status === "blocked"
-                ? "bg-danger/10 text-danger"
-                : "bg-clone/10 text-clone";
+                  ? "bg-danger/10 text-danger"
+                  : "bg-clone/10 text-clone";
             return (
               <span
                 key={t.id}
@@ -174,7 +164,7 @@ function KRRow({
           })}
         </div>
       )}
-    </div>
+    </button>
   );
 }
 
@@ -194,9 +184,7 @@ function ObjectiveCard({
   const [expanded, setExpanded] = useState(true);
   const statusStyle = OKR_STATUS_STYLES[objective.status];
   const StatusIcon = statusStyle.icon;
-  const achieved = objective.keyResults.filter(
-    (kr) => kr.progress >= 100
-  ).length;
+  const achieved = objective.keyResults.filter((kr) => kr.progress >= 100).length;
 
   return (
     <div
@@ -205,13 +193,9 @@ function ObjectiveCard({
       }`}
     >
       {/* Objective header */}
-      <div
-        role="button"
-        tabIndex={0}
+      <button
+        type="button"
         onClick={() => onSelectObjective(objective)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") onSelectObjective(objective);
-        }}
         className="px-4 py-3 bg-surface-1 cursor-pointer hover:bg-surface-1/80 transition-colors"
       >
         <div className="flex items-start gap-3">
@@ -223,17 +207,13 @@ function ObjectiveCard({
           />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
-              <span className="text-[10px] font-mono text-text-muted">
-                {objective.id}
-              </span>
+              <span className="text-[10px] font-mono text-text-muted">{objective.id}</span>
               <span
                 className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full inline-flex items-center gap-0.5 ${statusStyle.bg} ${statusStyle.text}`}
               >
                 <StatusIcon size={9} /> {statusStyle.label}
               </span>
-              <span className="text-[10px] text-text-muted">
-                {objective.quarter}
-              </span>
+              <span className="text-[10px] text-text-muted">{objective.quarter}</span>
             </div>
             <div className="text-[13px] font-semibold text-text-primary leading-snug">
               {objective.title}
@@ -243,6 +223,7 @@ function ObjectiveCard({
             </div>
           </div>
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               setExpanded(!expanded);
@@ -257,8 +238,7 @@ function ObjectiveCard({
             <Users size={10} /> {objective.ownerAvatar} {objective.owner}
           </div>
           <div className="flex items-center gap-1 text-[10px] text-text-muted">
-            <BarChart3 size={10} /> {achieved}/{objective.keyResults.length} KR
-            达标
+            <BarChart3 size={10} /> {achieved}/{objective.keyResults.length} KR 达标
           </div>
           <div className="flex gap-1 ml-auto">
             {objective.tags.map((t) => (
@@ -271,7 +251,7 @@ function ObjectiveCard({
             ))}
           </div>
         </div>
-      </div>
+      </button>
 
       {/* Key Results */}
       {expanded && (
@@ -303,23 +283,17 @@ export default function OKRTab({
   onSelectKR: (kr: KeyResult) => void;
 }) {
   const totalProgress = Math.round(
-    OBJECTIVES.reduce((s, o) => s + o.progress, 0) / OBJECTIVES.length
+    OBJECTIVES.reduce((s, o) => s + o.progress, 0) / OBJECTIVES.length,
   );
-  const atRisk = OBJECTIVES.filter(
-    (o) => o.status === "at_risk" || o.status === "behind"
-  ).length;
+  const atRisk = OBJECTIVES.filter((o) => o.status === "at_risk" || o.status === "behind").length;
 
   return (
     <div className="h-full overflow-y-auto">
       <div className="px-5 py-3 border-b border-border bg-surface-1/50 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Target size={14} className="text-accent" />
-          <span className="text-[13px] font-medium text-text-primary">
-            OKR · 2026-Q1
-          </span>
-          <span className="text-[11px] text-text-muted">
-            3 Objectives · 11 Key Results
-          </span>
+          <span className="text-[13px] font-medium text-text-primary">OKR · 2026-Q1</span>
+          <span className="text-[11px] text-text-muted">3 Objectives · 11 Key Results</span>
         </div>
         <div className="flex items-center gap-3">
           {atRisk > 0 && (
@@ -327,9 +301,7 @@ export default function OKRTab({
               {atRisk} 需关注
             </span>
           )}
-          <span className="text-[12px] font-bold text-clone tabular-nums">
-            {totalProgress}%
-          </span>
+          <span className="text-[12px] font-bold text-clone tabular-nums">{totalProgress}%</span>
         </div>
       </div>
 
@@ -338,22 +310,15 @@ export default function OKRTab({
         {OBJECTIVES.map((o) => {
           const st = OKR_STATUS_STYLES[o.status];
           return (
-            <div
-              key={o.id}
-              className="flex items-center gap-2 flex-1 p-2 bg-surface-1 rounded-lg"
-            >
+            <div key={o.id} className="flex items-center gap-2 flex-1 p-2 bg-surface-1 rounded-lg">
               <ProgressRing value={o.progress} size={28} stroke={2} />
               <div className="flex-1 min-w-0">
-                <div className="text-[10px] font-mono text-text-muted">
-                  {o.id}
-                </div>
+                <div className="text-[10px] font-mono text-text-muted">{o.id}</div>
                 <div className="text-[11px] text-text-primary font-medium truncate">
                   {o.title.slice(0, 20)}...
                 </div>
               </div>
-              <span
-                className={`text-[8px] px-1 py-0.5 rounded ${st.bg} ${st.text}`}
-              >
+              <span className={`text-[8px] px-1 py-0.5 rounded ${st.bg} ${st.text}`}>
                 {st.label}
               </span>
             </div>

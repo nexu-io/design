@@ -1,4 +1,11 @@
-import { Badge, Button, Progress, Stepper, StepperItem, StepperSeparator } from "@nexu-design/ui-web";
+import {
+  Badge,
+  Button,
+  Progress,
+  Stepper,
+  StepperItem,
+  StepperSeparator,
+} from "@nexu-design/ui-web";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Brain, Loader2, Settings, Sparkles } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";

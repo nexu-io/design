@@ -1,21 +1,21 @@
-import { useState } from "react";
-import {
-  Shield,
-  Globe,
-  Pencil,
-  Wrench,
-  Rss,
-  Activity,
-  FileText,
-  Brain,
-  Plus,
-  Send,
-  ChevronRight,
-  MessageSquare,
-  Phone,
-  Database,
-} from "lucide-react";
 import { Button } from "@nexu-design/ui-web";
+import {
+  Activity,
+  Brain,
+  ChevronRight,
+  Database,
+  FileText,
+  Globe,
+  MessageSquare,
+  Pencil,
+  Phone,
+  Plus,
+  Rss,
+  Send,
+  Shield,
+  Wrench,
+} from "lucide-react";
+import { useState } from "react";
 import ChatCardGroup from "../product/ChatCards";
 import type { ChatCard } from "../product/sessionsData";
 
@@ -32,13 +32,7 @@ const WORLDVIEW = [
   { icon: "🧭", label: "决策原则", value: '"这让分身更懂用户了吗？"' },
 ];
 
-type FeedItemType =
-  | "automation"
-  | "session"
-  | "skill"
-  | "memory"
-  | "proactive"
-  | "team";
+type FeedItemType = "automation" | "session" | "skill" | "memory" | "proactive" | "team";
 
 const FEED_ITEMS: {
   type: FeedItemType;
@@ -229,18 +223,18 @@ export default function StepClone() {
                 Lv.3
               </div>
             </div>
-            <div className="mt-3 text-base font-semibold text-text-primary">
-              我的分身
-            </div>
+            <div className="mt-3 text-base font-semibold text-text-primary">我的分身</div>
             <div className="text-[12px] text-text-secondary">全栈工程师</div>
             <div className="flex items-center justify-center gap-1 mt-1">
               <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-              <span className="text-[10px] text-success">
-                在线 · 已陪伴 49 天
-              </span>
+              <span className="text-[10px] text-success">在线 · 已陪伴 49 天</span>
             </div>
 
-            <Button variant="outline" size="sm" className="mt-2.5 w-full gap-1 border-clone/20 bg-clone/10 px-3 text-[11px] text-clone hover:bg-clone/15">
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-2.5 w-full gap-1 border-clone/20 bg-clone/10 px-3 text-[11px] text-clone hover:bg-clone/15"
+            >
               <Wrench size={11} />
               初始化 / 编辑分身
             </Button>
@@ -251,10 +245,7 @@ export default function StepClone() {
                 <span className="text-clone font-medium tabular-nums">78%</span>
               </div>
               <div className="h-1.5 bg-surface-3 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-clone rounded-full"
-                  style={{ width: "78%" }}
-                />
+                <div className="h-full bg-clone rounded-full" style={{ width: "78%" }} />
               </div>
             </div>
           </div>
@@ -270,9 +261,7 @@ export default function StepClone() {
                 key={s.l}
                 className="bg-surface-2 border border-border rounded-md p-2 text-center"
               >
-                <div className="text-sm font-bold text-text-primary tabular-nums">
-                  {s.v}
-                </div>
+                <div className="text-sm font-bold text-text-primary tabular-nums">{s.v}</div>
                 <div className="text-[9px] text-text-muted">{s.l}</div>
               </div>
             ))}
@@ -321,12 +310,8 @@ export default function StepClone() {
                 >
                   <span className="text-xs shrink-0">{w.icon}</span>
                   <div>
-                    <div className="text-[10px] font-medium text-text-primary">
-                      {w.label}
-                    </div>
-                    <div className="text-[9px] text-text-secondary">
-                      {w.value}
-                    </div>
+                    <div className="text-[10px] font-medium text-text-primary">{w.label}</div>
+                    <div className="text-[9px] text-text-secondary">{w.value}</div>
                   </div>
                 </div>
               ))}
@@ -339,6 +324,7 @@ export default function StepClone() {
           <div className="flex items-center gap-1 mb-4 border-b border-border">
             {TABS.map((t) => (
               <button
+                type="button"
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
                 className={`flex items-center gap-1 px-3 py-2 text-[12px] border-b-2 -mb-px transition-colors ${
@@ -360,7 +346,10 @@ export default function StepClone() {
                     placeholder="有什么想法？随时开始对话..."
                     className="flex-1 bg-surface-0 border border-border rounded-lg px-3 py-2 text-[12px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[var(--color-brand-primary)]/30 focus:ring-1 focus:ring-[var(--color-brand-primary)]/20 transition-colors"
                   />
-                  <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-accent text-white hover:bg-accent/90 transition-colors">
+                  <button
+                    type="button"
+                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-accent text-white hover:bg-accent/90 transition-colors"
+                  >
                     <Send size={14} />
                   </button>
                 </div>
@@ -401,16 +390,10 @@ export default function StepClone() {
                           >
                             {item.type}
                           </span>
-                          <span className="text-[10px] text-text-muted ml-auto">
-                            {item.time}
-                          </span>
+                          <span className="text-[10px] text-text-muted ml-auto">{item.time}</span>
                         </div>
-                        <h4 className="text-[12px] font-medium text-text-primary">
-                          {item.title}
-                        </h4>
-                        <p className="text-[11px] text-text-secondary mt-0.5">
-                          {item.desc}
-                        </p>
+                        <h4 className="text-[12px] font-medium text-text-primary">{item.title}</h4>
+                        <p className="text-[11px] text-text-secondary mt-0.5">{item.desc}</p>
                         <div className="flex items-center gap-2 mt-1.5">
                           {item.files != null && (
                             <span className="text-[10px] text-text-muted flex items-center gap-0.5">
@@ -440,7 +423,11 @@ export default function StepClone() {
               </div>
 
               <div className="text-center py-3">
-                <Button variant="ghost" size="sm" className="mx-auto gap-1 text-[11px] text-text-muted hover:text-text-secondary">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mx-auto gap-1 text-[11px] text-text-muted hover:text-text-secondary"
+                >
                   <Plus size={11} /> 加载更多
                 </Button>
               </div>
@@ -454,9 +441,7 @@ export default function StepClone() {
                   <div className="w-5 h-5 rounded bg-success-subtle flex items-center justify-center">
                     <Phone size={11} className="text-success" />
                   </div>
-                  <span className="text-[13px] font-semibold text-text-primary">
-                    原生渠道
-                  </span>
+                  <span className="text-[13px] font-semibold text-text-primary">原生渠道</span>
                   <span className="text-[10px] text-success bg-success-subtle px-1.5 py-0.5 rounded-full font-medium">
                     零安装
                   </span>
@@ -482,9 +467,7 @@ export default function StepClone() {
                             </span>
                           )}
                         </div>
-                        <div className="text-[11px] text-text-secondary">
-                          {ch.desc}
-                        </div>
+                        <div className="text-[11px] text-text-secondary">{ch.desc}</div>
                       </div>
                       {ch.status === "connected" && (
                         <span className="text-[10px] text-success bg-success-subtle px-2 py-0.5 rounded">
@@ -506,9 +489,7 @@ export default function StepClone() {
                   <div className="w-5 h-5 rounded bg-clone/10 flex items-center justify-center">
                     <MessageSquare size={11} className="text-clone" />
                   </div>
-                  <span className="text-[13px] font-semibold text-text-primary">
-                    IM 平台
-                  </span>
+                  <span className="text-[13px] font-semibold text-text-primary">IM 平台</span>
                 </div>
                 <div className="space-y-2">
                   {CHANNELS_IM.map((ch) => (
@@ -518,12 +499,8 @@ export default function StepClone() {
                     >
                       <span className="text-xl">{ch.icon}</span>
                       <div className="flex-1 min-w-0">
-                        <span className="text-[13px] font-medium text-text-primary">
-                          {ch.name}
-                        </span>
-                        <span className="text-[11px] text-text-secondary ml-2">
-                          {ch.desc}
-                        </span>
+                        <span className="text-[13px] font-medium text-text-primary">{ch.name}</span>
+                        <span className="text-[11px] text-text-secondary ml-2">{ch.desc}</span>
                       </div>
                       {ch.status === "connected" && (
                         <span className="text-[10px] text-success bg-success-subtle px-2 py-0.5 rounded">
@@ -536,16 +513,17 @@ export default function StepClone() {
                         </span>
                       )}
                       {ch.status === "off" && (
-                        <span className="text-[10px] text-text-muted">
-                          即将支持
-                        </span>
+                        <span className="text-[10px] text-text-muted">即将支持</span>
                       )}
                     </div>
                   ))}
                 </div>
               </div>
 
-              <Button variant="outline" className="h-auto w-full gap-2 border-dashed p-3 text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover">
+              <Button
+                variant="outline"
+                className="h-auto w-full gap-2 border-dashed p-3 text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover"
+              >
                 <Plus size={14} /> 添加渠道
               </Button>
             </div>
@@ -556,31 +534,27 @@ export default function StepClone() {
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
                 {MEMORY_CATEGORIES.map((cat) => (
                   <button
+                    type="button"
                     key={cat.id}
                     className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[12px] whitespace-nowrap bg-surface-2 text-text-secondary border border-border hover:border-border-hover transition-colors"
                   >
                     <span className="text-[11px]">{cat.icon}</span>
                     {cat.label}
-                    <span className="text-[10px] text-text-muted tabular-nums">
-                      {cat.count}
-                    </span>
+                    <span className="text-[10px] text-text-muted tabular-nums">{cat.count}</span>
                   </button>
                 ))}
               </div>
 
               <div className="space-y-2">
-                {MEMORY_SAMPLE.map((m, i) => (
+                {MEMORY_SAMPLE.map((m) => (
                   <div
-                    key={i}
+                    key={`${m.category}-${m.content.slice(0, 20)}`}
                     className="p-3 bg-surface-2 border border-border rounded-xl hover:border-border-hover transition-colors"
                   >
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-sm">{m.icon}</span>
                       <span className="text-[12px] font-medium text-clone">
-                        {
-                          MEMORY_CATEGORIES.find((c) => c.id === m.category)
-                            ?.label
-                        }
+                        {MEMORY_CATEGORIES.find((c) => c.id === m.category)?.label}
                       </span>
                     </div>
                     <div className="text-[12px] text-text-primary leading-relaxed pl-5">
@@ -590,7 +564,10 @@ export default function StepClone() {
                 ))}
               </div>
 
-              <Button variant="outline" className="h-auto w-full gap-2 border-dashed p-3 text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover">
+              <Button
+                variant="outline"
+                className="h-auto w-full gap-2 border-dashed p-3 text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover"
+              >
                 <Plus size={14} /> 查看全部记忆
               </Button>
             </div>
