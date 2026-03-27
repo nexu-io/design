@@ -10,7 +10,7 @@ const tabsListVariants = cva("inline-flex items-center", {
   variants: {
     variant: {
       default: "gap-1 rounded-lg border border-border bg-surface-2/50 p-1 text-muted-foreground",
-      pill: "gap-2 bg-transparent p-0 text-muted-foreground",
+      pill: "gap-1 rounded-full bg-surface-2 p-1 text-muted-foreground",
       underline:
         "w-full gap-0 rounded-none border-b border-[var(--color-border)] bg-transparent p-0 text-muted-foreground",
     },
@@ -28,7 +28,7 @@ const tabsTriggerVariants = cva(
         default:
           "rounded-md px-3 py-1.5 data-[state=active]:bg-surface-0 data-[state=active]:text-foreground data-[state=active]:shadow-sm",
         pill:
-          "rounded-full px-4 py-1.5 text-[13px] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-2)] data-[state=active]:bg-[var(--color-brand-primary)] data-[state=active]:text-white data-[state=active]:shadow-sm",
+          "rounded-full px-4 py-1.5 text-[13px] text-text-secondary hover:bg-transparent hover:text-text-primary data-[state=active]:bg-white data-[state=active]:text-text-primary data-[state=active]:shadow-[var(--shadow-rest)]",
         underline:
           "rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:shadow-none",
       },

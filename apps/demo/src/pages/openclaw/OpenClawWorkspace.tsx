@@ -20,6 +20,10 @@ import {
   SidebarHeader,
   SplitView,
   Switch,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
   ToggleGroup,
   ToggleGroupItem,
 } from "@nexu/ui-web";
@@ -65,7 +69,7 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import ChannelDetailPage from "./ChannelDetailPage";
 import ImportSkillModal from "./ImportSkillModal";
 import { MOCK_CHANNELS, MOCK_DEPLOYMENTS, type ModelProvider, getProviderDetails } from "./data";
-import { SKILL_CATEGORIES, type SkillDef } from "./skillData";
+import { SKILL_CATEGORIES, type SkillDef, type ToolTag } from "./skillData";
 
 const openExternal = async (url: string) => {
   try {
@@ -77,7 +81,7 @@ const openExternal = async (url: string) => {
 
 const GITHUB_URL = "https://github.com/refly-ai/nexu";
 
-type SkillFilter = "all" | string;
+type SkillFilter = "all" | ToolTag;
 
 function ProviderLogo({ provider, size = 16 }: { provider: string; size?: number }) {
   const s = { width: size, height: size };
@@ -243,11 +247,14 @@ function SkillsPanel() {
 
   const isEnabled = (skill: SkillDef) => !disabledSkills.has(skill.id);
 
-  const handleToggleSkill = (skill: SkillDef) => {
+  const handleToggleSkill = (skill: SkillDef, nextChecked?: boolean) => {
     setDisabledSkills((prev) => {
       const next = new Set(prev);
-      if (next.has(skill.id)) next.delete(skill.id);
+      const shouldEnable = nextChecked ?? prev.has(skill.id);
+
+      if (shouldEnable) next.delete(skill.id);
       else next.add(skill.id);
+
       return next;
     });
   };
@@ -267,19 +274,8 @@ function SkillsPanel() {
   const installedSkills = allSkills.filter((s) => s.source === "custom");
   const exploreSkills = allSkills.filter((s) => s.source === "official");
 
-  const [yoursSubTab, setYoursSubTab] = useState<"all" | "personal" | "installed">("all");
-
   const baseSkills = (() => {
     if (topTab === "explore") return exploreSkills;
-    if (yoursSubTab === "personal")
-      return installedSkills.filter((s) =>
-        ["custom-skill-builder", "claude-code", "coding-agent", "github-issues"].includes(s.id),
-      );
-    if (yoursSubTab === "installed")
-      return installedSkills.filter(
-        (s) =>
-          !["custom-skill-builder", "claude-code", "coding-agent", "github-issues"].includes(s.id),
-      );
     return installedSkills;
   })();
 
@@ -298,17 +294,12 @@ function SkillsPanel() {
     return list;
   })();
 
-  const personalCount = installedSkills.filter((s) =>
-    ["custom-skill-builder", "claude-code", "coding-agent", "github-issues"].includes(s.id),
-  ).length;
-  const installedCount = installedSkills.length - personalCount;
-
   const categoryTabs: { id: SkillFilter; label: string; count: number }[] =
     topTab === "explore"
       ? [
           { id: "all" as SkillFilter, label: t("ws.common.all"), count: exploreSkills.length },
           ...SKILL_CATEGORIES.map((c) => ({
-            id: c.id,
+            id: c.id as ToolTag,
             label: c.label,
             count: exploreSkills.filter((s) => c.skills.some((cs) => cs.id === s.id)).length,
           })).filter((c) => c.count > 0),
@@ -316,11 +307,152 @@ function SkillsPanel() {
       : [
           { id: "all" as SkillFilter, label: t("ws.common.all"), count: baseSkills.length },
           ...SKILL_CATEGORIES.map((c) => ({
-            id: c.id,
+            id: c.id as ToolTag,
             label: c.label,
             count: baseSkills.filter((s) => c.skills.some((cs) => cs.id === s.id)).length,
           })).filter((c) => c.count > 0),
         ];
+
+  const renderCategoryPills = () => (
+    <div className="relative mb-5">
+      <ToggleGroup
+        ref={pillScrollRef}
+        type="single"
+        value={filter}
+        onValueChange={(value: string) => {
+          if (value) setFilter(value as SkillFilter);
+        }}
+        variant="outline"
+        size="sm"
+        aria-label="Skill categories"
+        onScroll={checkPillOverflow}
+        className="overflow-x-auto no-scrollbar pb-0.5 min-w-max"
+      >
+        {categoryTabs.map((tab) => (
+          <ToggleGroupItem
+            key={tab.id}
+            value={tab.id}
+            variant="outline"
+            className="shrink-0"
+            ref={
+              tab.id === categoryTabs[categoryTabs.length - 1].id
+                ? () => {
+                    setTimeout(checkPillOverflow, 0);
+                  }
+                : undefined
+            }
+          >
+            {tab.label}
+            <span className="ml-1 tabular-nums opacity-70">{tab.count}</span>
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+      {showPillFadeLeft && (
+        <div className="pointer-events-none absolute top-0 left-0 bottom-0 w-12 bg-gradient-to-r from-white to-transparent z-[1]" />
+      )}
+      {showPillFade && (
+        <div className="pointer-events-none absolute top-0 right-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent z-[1]" />
+      )}
+    </div>
+  );
+
+  const renderSkillsGrid = () => (
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {filteredSkills.map((skill) => {
+          const enabled = isEnabled(skill);
+          const catInfo = SKILL_CATEGORIES.find((c) => c.skills.some((s) => s.id === skill.id));
+
+          return (
+            <div
+              key={skill.id}
+              className={`card flex flex-col p-4 ${skill.source === "custom" && !enabled ? "opacity-55" : ""}`}
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 rounded-[10px] bg-white border border-border flex items-center justify-center shrink-0">
+                  {skill.logo ? (
+                    <img src={skill.logo} alt="" className="w-[18px] h-[18px] object-contain" />
+                  ) : (
+                    <skill.icon size={18} className="text-text-primary" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[13px] font-semibold text-text-heading truncate">
+                    {skill.name}
+                  </div>
+                  {catInfo && <span className="text-[11px] text-text-muted">{catInfo.label}</span>}
+                </div>
+              </div>
+
+              <p className="text-[12px] text-text-tertiary leading-[1.5] line-clamp-2 mb-3">
+                {skill.desc}
+              </p>
+
+              <div className="mt-auto flex items-center justify-between">
+                {skill.source === "custom" ? (
+                  <>
+                    <Switch
+                      id={`skill-toggle-${skill.id}`}
+                      size="sm"
+                      checked={enabled}
+                      aria-label={`${enabled ? "Disable" : "Enable"} ${skill.name}`}
+                      onClick={(e) => e.stopPropagation()}
+                      onCheckedChange={(checked) => handleToggleSkill(skill, checked)}
+                    />
+                    <Button
+                      type="button"
+                      size="inline"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      className="text-[12px] font-medium text-text-muted hover:text-[var(--color-danger)] transition-colors"
+                    >
+                      {t("ws.skills.uninstall")}
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <span />
+                    {installingSkills.has(skill.id) ? (
+                      <span className="inline-flex items-center gap-1.5 rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium border border-border text-text-muted cursor-default">
+                        <Loader2 size={12} className="animate-spin" />
+                        {t("ws.skills.installing")}
+                      </span>
+                    ) : (
+                      <Button
+                        type="button"
+                        size="inline"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleInstallSkill(skill);
+                        }}
+                        className="rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium border border-border text-text-primary hover:bg-surface-2 hover:border-border-hover transition-colors"
+                      >
+                        {t("ws.skills.install")}
+                      </Button>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {filteredSkills.length === 0 && (
+        <div className="text-center py-12">
+          <Search size={24} className="mx-auto text-text-muted mb-3" />
+          <div className="text-[13px] text-text-muted">
+            {topTab === "yours" && !searchQuery.trim()
+              ? t("ws.skills.emptyYours")
+              : t("ws.skills.emptySearch")}
+          </div>
+        </div>
+      )}
+    </>
+  );
 
   return (
     <ScrollArea className="h-full">
@@ -368,204 +500,54 @@ function SkillsPanel() {
           </div>
         </div>
 
-        {/* Top-level tabs: Explore / Yours — segment control */}
-        <ToggleGroup
-          type="single"
+        {/* Top-level tabs: Explore / Yours */}
+        <Tabs
           value={topTab}
-          onValueChange={(value: string) => {
+          onValueChange={(value) => {
             if (!value) return;
             setTopTab(value as typeof topTab);
             setFilter("all");
-            setYoursSubTab("all");
           }}
-          variant="pill"
-          aria-label="Skills source"
-          className="mb-4"
         >
-          {[
-            { id: "yours" as const, label: t("ws.skills.yours"), icon: Settings2 },
-            { id: "explore" as const, label: t("ws.skills.explore"), icon: Compass },
-          ].map((tab) => {
-            const TabIcon = tab.icon;
-            return (
-              <ToggleGroupItem key={tab.id} value={tab.id} variant="pill" className="gap-1.5">
-                <TabIcon size={14} />
-                {tab.label}
-                {tab.id === "yours" && installedSkills.length > 0 && (
-                  <span className="tabular-nums text-[12px]">{installedSkills.length}</span>
-                )}
-              </ToggleGroupItem>
-            );
-          })}
-        </ToggleGroup>
-
-        {/* Yours sub-tabs: All / Personal / Installed */}
-        {topTab === "yours" && (
-          <ToggleGroup
-            type="single"
-            value={yoursSubTab}
-            onValueChange={(value: string) => {
-              if (!value) return;
-              setYoursSubTab(value as typeof yoursSubTab);
-              setFilter("all");
-            }}
-            variant="outline"
-            size="sm"
-            aria-label="Installed skill groups"
-            className="mb-3"
-          >
-            {[
-              { id: "all" as const, label: t("ws.common.all"), count: installedSkills.length },
-              { id: "personal" as const, label: t("ws.skills.personal"), count: personalCount },
-              { id: "installed" as const, label: t("ws.skills.installed"), count: installedCount },
-            ].map((tab) => (
-              <ToggleGroupItem key={tab.id} value={tab.id} variant="outline" className="shrink-0">
-                {tab.label}
-                <span className="ml-1 tabular-nums opacity-70">{tab.count}</span>
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-        )}
-
-        {/* Category pill filters (Explore only) */}
-        {topTab === "explore" && (
-          <div className="relative mb-5">
-            <ToggleGroup
-              ref={pillScrollRef}
-              type="single"
-              value={filter}
-              onValueChange={(value: string) => {
-                if (value) setFilter(value as SkillFilter);
-              }}
-              variant="outline"
-              size="sm"
-              aria-label="Skill categories"
-              onScroll={checkPillOverflow}
-              className="overflow-x-auto no-scrollbar pb-0.5 min-w-max"
-            >
-              {categoryTabs.map((tab) => (
-                <ToggleGroupItem
-                  key={tab.id}
-                  value={tab.id}
-                  variant="outline"
-                  className="shrink-0"
-                  ref={
-                    tab.id === categoryTabs[categoryTabs.length - 1].id
-                      ? () => {
-                          setTimeout(checkPillOverflow, 0);
-                        }
-                      : undefined
-                  }
-                >
-                  {tab.label}
-                  <span className="ml-1 tabular-nums opacity-70">{tab.count}</span>
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
-            {showPillFadeLeft && (
-              <div className="pointer-events-none absolute top-0 left-0 bottom-0 w-12 bg-gradient-to-r from-white to-transparent z-[1]" />
-            )}
-            {showPillFade && (
-              <div className="pointer-events-none absolute top-0 right-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent z-[1]" />
-            )}
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {filteredSkills.map((skill) => {
-            const enabled = isEnabled(skill);
-            const catInfo = SKILL_CATEGORIES.find((c) => c.skills.some((s) => s.id === skill.id));
-
-            return (
-              <div
-                key={skill.id}
-                className={`card flex flex-col p-4 ${skill.source === "custom" && !enabled ? "opacity-55" : ""}`}
-              >
-                {/* Header: Icon + Name + Tag */}
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-9 h-9 rounded-[10px] bg-white border border-border flex items-center justify-center shrink-0">
-                    {skill.logo ? (
-                      <img src={skill.logo} alt="" className="w-[18px] h-[18px] object-contain" />
-                    ) : (
-                      <skill.icon size={18} className="text-text-primary" />
+          <div className="mb-4">
+            <TabsList aria-label="Skills source" className="w-fit rounded-full">
+              {[
+                { id: "yours" as const, label: t("ws.skills.yours"), icon: Settings2 },
+                { id: "explore" as const, label: t("ws.skills.explore"), icon: Compass },
+              ].map((tab) => {
+                const TabIcon = tab.icon;
+                return (
+                  <TabsTrigger
+                    key={tab.id}
+                    value={tab.id}
+                    className="gap-1.5 rounded-full data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                    onClick={() => {
+                      setTopTab(tab.id);
+                      setFilter("all");
+                    }}
+                  >
+                    <TabIcon size={14} />
+                    {tab.label}
+                    {tab.id === "yours" && installedSkills.length > 0 && (
+                      <span className="tabular-nums text-[12px] text-text-tertiary data-[state=active]:text-text-secondary">
+                        {installedSkills.length}
+                      </span>
                     )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[13px] font-semibold text-text-heading truncate">
-                      {skill.name}
-                    </div>
-                    {catInfo && (
-                      <span className="text-[11px] text-text-muted">{catInfo.label}</span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Description */}
-                <p className="text-[12px] text-text-tertiary leading-[1.5] line-clamp-2 mb-3">
-                  {skill.desc}
-                </p>
-
-                {/* Footer */}
-                <div className="mt-auto flex items-center justify-between">
-                  {skill.source === "custom" ? (
-                    <>
-                      <Switch
-                        size="xs"
-                        checked={enabled}
-                        onCheckedChange={() => handleToggleSkill(skill)}
-                      />
-                      <Button
-                        type="button"
-                        size="inline"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        className="text-[12px] font-medium text-text-muted hover:text-[var(--color-danger)] transition-colors"
-                      >
-                        {t("ws.skills.uninstall")}
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <span />
-                      {installingSkills.has(skill.id) ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium border border-border text-text-muted cursor-default">
-                          <Loader2 size={12} className="animate-spin" />
-                          {t("ws.skills.installing")}
-                        </span>
-                      ) : (
-                        <Button
-                          type="button"
-                          size="inline"
-                          variant="ghost"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleInstallSkill(skill);
-                          }}
-                          className="rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium border border-border text-text-primary hover:bg-surface-2 hover:border-border-hover transition-colors"
-                        >
-                          {t("ws.skills.install")}
-                        </Button>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {filteredSkills.length === 0 && (
-          <div className="text-center py-12">
-            <Search size={24} className="mx-auto text-text-muted mb-3" />
-            <div className="text-[13px] text-text-muted">
-              {topTab === "yours" && !searchQuery.trim()
-                ? t("ws.skills.emptyYours")
-                : t("ws.skills.emptySearch")}
-            </div>
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
           </div>
-        )}
+          <TabsContent value="yours" className="mt-0 outline-none">
+            {renderCategoryPills()}
+            {renderSkillsGrid()}
+          </TabsContent>
+
+          <TabsContent value="explore" className="mt-0 outline-none">
+            {renderCategoryPills()}
+            {renderSkillsGrid()}
+          </TabsContent>
+        </Tabs>
       </div>
 
       <ImportSkillModal open={importModalOpen} onClose={() => setImportModalOpen(false)} />
