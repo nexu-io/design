@@ -637,7 +637,7 @@ Several workbench pages use compact horizontal metric strips above detailed cont
   - replace warning/info boxes with `Alert`
 
 #### `nexu/*`
-- [~] `NexuProgressPage.tsx`
+- [x] `NexuProgressPage.tsx`
   - replace KPI blocks and progress bars with `StatCard` + `Progress`
 - [x] `NexuApprovalsPage.tsx`
   - prepare for `Table` / `DataTable`
@@ -714,7 +714,7 @@ Several workbench pages use compact horizontal metric strips above detailed cont
 #### `openclaw/*`
 - [x] `ClientWelcomePage.tsx`
   - entry cards → reusable `EntityCard` or `EntryCard` pattern
-- [~] `OnboardingPage.tsx`
+- [x] `OnboardingPage.tsx`
   - chat-like areas → `ConversationMessage`
 - [x] `PostAuthSetupPage.tsx`
   - onboarding flow → `Stepper`
@@ -872,14 +872,11 @@ Desktop demo migration is complete when:
 
 If continuing implementation immediately, do this next:
 
-1. finish partial migrations:
-   - `nexu/NexuProgressPage.tsx` → complete `Progress` adoption
-   - `openclaw/OnboardingPage.tsx` → evaluate whether chat-like sections should move to `ConversationMessage`
-2. implement the missing desktop shell primitives:
+1. implement the missing desktop shell primitives:
    - `ResizablePanel` / `SplitView`
    - `Sidebar` / `NavigationMenu`
    - `Toggle` / `ToggleGroup`
-3. apply those shell primitives to the highest-leverage layouts:
+2. apply those shell primitives to the highest-leverage layouts:
    - `product/ProductLayout.tsx`
    - `nexu/NexuProductLayout.tsx`
    - `openclaw/OpenClawWorkspace.tsx`

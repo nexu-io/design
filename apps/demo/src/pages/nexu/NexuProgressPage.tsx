@@ -1,4 +1,4 @@
-import { Badge, StatCard } from "@nexu/ui-web";
+import { Badge, Progress, StatCard } from "@nexu/ui-web";
 import { BarChart3, Clock, DollarSign, TrendingUp, Users } from "lucide-react";
 
 const STATS = [
@@ -37,10 +37,34 @@ const STATS = [
 ];
 
 const RECENT_RUNS = [
-  { avatar: "研发助手", task: "汇总 Linear issue 并生成待办", status: "success", at: "10:35" },
-  { avatar: "运营助手", task: "生成昨日渠道转化摘要", status: "success", at: "10:20" },
-  { avatar: "内容助手", task: "起草 Twitter 推文", status: "success", at: "09:55" },
-  { avatar: "创始人分身", task: "投资人周报初稿", status: "waiting", at: "09:30" },
+  {
+    avatar: "研发助手",
+    task: "汇总 Linear issue 并生成待办",
+    status: "success",
+    at: "10:35",
+    progress: 100,
+  },
+  {
+    avatar: "运营助手",
+    task: "生成昨日渠道转化摘要",
+    status: "success",
+    at: "10:20",
+    progress: 100,
+  },
+  {
+    avatar: "内容助手",
+    task: "起草 Twitter 推文",
+    status: "success",
+    at: "09:55",
+    progress: 100,
+  },
+  {
+    avatar: "创始人分身",
+    task: "投资人周报初稿",
+    status: "waiting",
+    at: "09:30",
+    progress: 62,
+  },
 ];
 
 export default function NexuProgressPage() {
@@ -89,6 +113,15 @@ export default function NexuProgressPage() {
                 <div className="min-w-0 flex-1">
                   <div className="text-[13px] font-medium text-text-primary">{run.avatar}</div>
                   <div className="truncate text-[12px] text-text-secondary">{run.task}</div>
+                  <div className="mt-2 flex items-center gap-3">
+                    <Progress
+                      value={run.progress}
+                      size="sm"
+                      variant={run.status === "success" ? "success" : "accent"}
+                      className="max-w-36"
+                    />
+                    <span className="text-[10px] text-text-muted">{run.progress}%</span>
+                  </div>
                 </div>
                 <Badge
                   variant={run.status === "success" ? "success" : "brand"}
