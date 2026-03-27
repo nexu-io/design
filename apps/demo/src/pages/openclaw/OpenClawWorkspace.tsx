@@ -1,8 +1,10 @@
 import {
   Button,
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
+  Combobox,
+  ComboboxContent,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxTrigger,
   InteractiveRow,
   InteractiveRowContent,
   InteractiveRowLeading,
@@ -740,10 +742,6 @@ function HomeDashboard({
   const [configValues, setConfigValues] = useState<Record<string, string>>({});
   const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
   const [selectedModelId, setSelectedModelId] = useState("nexu-claude-opus-4-6");
-  const [showModelDropdown, setShowModelDropdown] = useState(false);
-  const [modelSearch, setModelSearch] = useState("");
-  const [expandedProviders, setExpandedProviders] = useState<Set<string>>(new Set());
-  const modelDropdownRef = useRef<HTMLDivElement>(null);
   const hasChannel = connectedIds.size > 0;
   const connectedChannels = ONBOARDING_CHANNELS.filter((c) => connectedIds.has(c.id));
   const providerDetails = getProviderDetails();
@@ -755,35 +753,6 @@ function HomeDashboard({
   );
   const selectedModel =
     allEnabledModels.find((m) => m.id === selectedModelId) ?? allEnabledModels[0];
-
-  useEffect(() => {
-    if (!showModelDropdown) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modelDropdownRef.current && !modelDropdownRef.current.contains(e.target as Node)) {
-        setShowModelDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showModelDropdown]);
-
-  useEffect(() => {
-    if (showModelDropdown) {
-      setModelSearch("");
-      const selectedProvider = enabledProviders.find((p) =>
-        p.models.some((m) => m.id === selectedModelId),
-      );
-      setExpandedProviders(
-        new Set(
-          selectedProvider
-            ? [selectedProvider.id]
-            : enabledProviders.length > 0
-              ? [enabledProviders[0].id]
-              : [],
-        ),
-      );
-    }
-  }, [showModelDropdown]);
 
   const persistChannels = (ids: Set<string>, active: string) => {
     localStorage.setItem(CHANNELS_CONNECTED_KEY, JSON.stringify([...ids]));
@@ -1094,159 +1063,76 @@ function HomeDashboard({
               </a>
             </div>
             <div className="flex items-center gap-2 mt-1.5">
-              <div className="relative" ref={modelDropdownRef}>
-                <button
-                  onClick={() => setShowModelDropdown(!showModelDropdown)}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-surface-0 hover:border-border-hover hover:bg-surface-1 transition-all text-[12px] text-text-primary"
-                >
-                  {selectedModel ? (
-                    <span className="w-4 h-4 shrink-0 flex items-center justify-center">
-                      <ProviderLogo
-                        provider={
-                          getModelIconProvider(selectedModel.name) || selectedModel.providerId
-                        }
-                        size={14}
-                      />
+              <Combobox value={selectedModelId} onValueChange={setSelectedModelId}>
+                <ComboboxTrigger className="w-[280px] bg-surface-0 text-[12px]">
+                  <span className="flex items-center gap-1.5 text-left">
+                    {selectedModel ? (
+                      <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+                        <ProviderLogo
+                          provider={
+                            getModelIconProvider(selectedModel.name) || selectedModel.providerId
+                          }
+                          size={14}
+                        />
+                      </span>
+                    ) : (
+                      <Cpu size={13} className="text-text-muted" />
+                    )}
+                    <span className="truncate font-medium">
+                      {selectedModel?.name ?? t("ws.home.notSelected")}
                     </span>
-                  ) : (
-                    <Cpu size={13} className="text-text-muted" />
-                  )}
-                  <span className="font-medium">
-                    {selectedModel?.name ?? t("ws.home.notSelected")}
                   </span>
-                  <ChevronDown
-                    size={10}
-                    className={`text-text-muted transition-transform ${showModelDropdown ? "rotate-180" : ""}`}
+                </ComboboxTrigger>
+                <ComboboxContent className="w-[320px]">
+                  <ComboboxInput
+                    placeholder={t("ws.home.searchModels")}
+                    leadingIcon={<Search size={12} />}
                   />
-                </button>
-
-                {showModelDropdown &&
-                  (() => {
-                    const query = modelSearch.toLowerCase().trim();
-                    const filteredProviders = enabledProviders
-                      .map((p) => ({
-                        ...p,
-                        models: p.models.filter(
-                          (m) =>
-                            m.enabled &&
-                            (!query ||
-                              m.name.toLowerCase().includes(query) ||
-                              p.name.toLowerCase().includes(query)),
-                        ),
-                      }))
-                      .filter((p) => p.models.length > 0);
-
-                    return (
-                      <div className="absolute z-50 mt-2 left-0 w-[280px] rounded-xl border border-border bg-surface-1 shadow-xl">
-                        <div className="px-3 pt-3 pb-2">
-                          <div className="flex items-center gap-2.5 rounded-lg bg-surface-0 border border-border px-3 py-1.5">
-                            <Search size={12} className="text-text-muted shrink-0" />
-                            <input
-                              type="text"
-                              value={modelSearch}
-                              onChange={(e) => {
-                                setModelSearch(e.target.value);
-                                if (e.target.value.trim()) {
-                                  setExpandedProviders(new Set(enabledProviders.map((p) => p.id)));
-                                }
-                              }}
-                              placeholder={t("ws.home.searchModels")}
-                              className="flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted/50 outline-none"
-                              autoFocus
-                            />
-                          </div>
-                        </div>
-                        <div className="relative">
-                          <ScrollArea
-                            className="max-h-[280px] py-1"
-                            style={{ overscrollBehavior: "contain" }}
-                          >
-                            {filteredProviders.length === 0 ? (
-                              <div className="px-4 py-6 text-center text-[12px] text-text-muted">
-                                {t("ws.home.noMatchingModels")}
-                              </div>
-                            ) : (
-                              filteredProviders.map((provider) => {
-                                const isExpanded = expandedProviders.has(provider.id) || !!query;
-                                return (
-                                  <Collapsible
-                                    key={provider.id}
-                                    open={isExpanded}
-                                    onOpenChange={(nextOpen: boolean) => {
-                                      if (query) return;
-                                      setExpandedProviders((prev) => {
-                                        const next = new Set(prev);
-                                        if (nextOpen) next.add(provider.id);
-                                        else next.delete(provider.id);
-                                        return next;
-                                      });
-                                    }}
-                                  >
-                                    <CollapsibleTrigger className="w-full px-3 py-1.5 flex items-center gap-2 hover:bg-surface-2/50 transition-colors">
-                                      <ChevronDown
-                                        size={10}
-                                        className={`text-text-muted/50 transition-transform ${isExpanded ? "" : "-rotate-90"}`}
-                                      />
-                                      <span className="w-4 h-4 shrink-0 flex items-center justify-center">
-                                        <ProviderLogo provider={provider.id} size={13} />
-                                      </span>
-                                      <span className="text-[11px] font-medium text-text-secondary">
-                                        {provider.name}
-                                      </span>
-                                      <span className="text-[10px] text-text-muted/40 ml-auto tabular-nums">
-                                        {provider.models.length}
-                                      </span>
-                                    </CollapsibleTrigger>
-                                    <CollapsibleContent forceMount={query.length > 0}>
-                                      {isExpanded &&
-                                        provider.models.map((model) => (
-                                          <button
-                                            key={model.id}
-                                            onClick={() => {
-                                              setSelectedModelId(model.id);
-                                              setShowModelDropdown(false);
-                                            }}
-                                            className={`w-full flex items-center gap-2 pl-8 pr-3 py-1.5 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/5" : ""}`}
-                                          >
-                                            {model.id === selectedModelId ? (
-                                              <Check size={11} className="text-accent shrink-0" />
-                                            ) : (
-                                              <span className="w-[11px] shrink-0" />
-                                            )}
-                                            <span className="text-[12px] font-medium text-text-primary truncate flex-1">
-                                              {model.name}
-                                            </span>
-                                            <span className="text-[10px] text-text-muted/50 tabular-nums shrink-0">
-                                              {model.contextWindow}
-                                            </span>
-                                          </button>
-                                        ))}
-                                    </CollapsibleContent>
-                                  </Collapsible>
-                                );
-                              })
-                            )}
-                          </ScrollArea>
-                        </div>
-                        <div className="border-t border-border px-2 py-1.5">
-                          <button
-                            onClick={() => {
-                              setShowModelDropdown(false);
-                              onNavigate({ type: "settings" });
-                            }}
-                            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors hover:bg-surface-2"
-                          >
-                            <Settings size={11} className="text-text-primary" />
-                            <span className="text-[11px] font-medium text-text-primary">
-                              {t("ws.home.configureProviders")}
+                  <ScrollArea
+                    className="max-h-[280px] p-1"
+                    style={{ overscrollBehavior: "contain" }}
+                  >
+                    <div className="space-y-1">
+                      {allEnabledModels.map((model) => (
+                        <ComboboxItem
+                          key={model.id}
+                          value={model.id}
+                          textValue={`${model.name} ${model.providerName} ${model.contextWindow}`}
+                        >
+                          <div className="flex min-w-0 flex-1 items-center gap-2">
+                            <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+                              <ProviderLogo
+                                provider={getModelIconProvider(model.name) || model.providerId}
+                                size={13}
+                              />
                             </span>
-                            <ArrowRight size={10} className="text-text-secondary ml-auto" />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })()}
-              </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="truncate text-[12px] font-medium text-text-primary">
+                                {model.name}
+                              </div>
+                              <div className="truncate text-[10px] text-text-muted/70">
+                                {model.providerName} · {model.contextWindow}
+                              </div>
+                            </div>
+                          </div>
+                        </ComboboxItem>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                  <div className="border-t border-border px-2 py-1.5">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start px-2.5 text-[11px] text-text-primary"
+                      onClick={() => onNavigate({ type: "settings" })}
+                    >
+                      <Settings size={11} className="text-text-primary" />
+                      {t("ws.home.configureProviders")}
+                    </Button>
+                  </div>
+                </ComboboxContent>
+              </Combobox>
               <div className="flex items-center gap-2 text-[11px] text-text-muted ml-3">
                 <span>{t("ws.home.messagesToday")}</span>
                 <span className="text-border">·</span>

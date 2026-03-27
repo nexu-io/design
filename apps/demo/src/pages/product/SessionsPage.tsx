@@ -1,8 +1,18 @@
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
   Button,
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
+  Combobox,
+  ComboboxContent,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxTrigger,
   DataTable,
   InteractiveRow,
   InteractiveRowContent,
@@ -18,7 +28,6 @@ import {
 import {
   BarChart3,
   Bookmark,
-  ChevronRight,
   Clock,
   Code,
   Eye,
@@ -879,18 +888,26 @@ function ActiveChatView({
           </div>
 
           {/* Breadcrumb path */}
-          <div className="px-3 py-1.5 border-b border-border flex items-center gap-1 text-[10px] text-text-muted">
-            <FolderOpen size={10} />
-            <span>~/clone</span>
-            {breadcrumbs.map((part) => (
-              <span key={part.key} className="flex items-center gap-1">
-                <ChevronRight size={8} />
-                <span>{part.label}</span>
-              </span>
-            ))}
-            <ChevronRight size={8} />
-            <span className="text-text-secondary">{fileName}</span>
-          </div>
+          <Breadcrumb className="border-b border-border px-3 py-1.5">
+            <BreadcrumbList className="flex-nowrap gap-1 text-[10px] text-text-muted">
+              <BreadcrumbItem className="shrink-0 gap-1">
+                <FolderOpen size={10} />
+                <span>~/clone</span>
+              </BreadcrumbItem>
+              {breadcrumbs.map((part) => (
+                <BreadcrumbItem key={part.key} className="min-w-0">
+                  <BreadcrumbSeparator className="shrink-0" />
+                  <span className="truncate">{part.label}</span>
+                </BreadcrumbItem>
+              ))}
+              <BreadcrumbItem className="min-w-0">
+                <BreadcrumbSeparator className="shrink-0" />
+                <BreadcrumbPage className="truncate text-[10px] text-text-secondary">
+                  {fileName}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
 
           {/* Editable file content */}
           <div className="flex-1 min-h-0 flex flex-col">
@@ -971,6 +988,7 @@ function ActiveChatView({
 export default function SessionsPage() {
   const [activeSession, setActiveSession] = useState<number | null>(null);
   const [previewOpen, setPreviewOpen] = useState(true);
+  const activeSessionOption = SESSIONS.find((session) => session.id === activeSession) ?? null;
 
   const handleStartChat = (_msg: string) => {
     setActiveSession(1);
@@ -982,17 +1000,41 @@ export default function SessionsPage() {
       <div className="w-56 shrink-0 border-r border-border flex flex-col bg-surface-0">
         <div className="p-2 border-b border-border">
           <div className="flex items-center gap-1.5">
-            <div className="flex-1 relative">
-              <Search
-                size={13}
-                className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted"
-              />
-              <input
-                type="text"
-                placeholder="搜索对话..."
-                className="w-full pl-7 pr-2 py-1.5 bg-surface-2 border border-border-subtle rounded-md text-[11px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[var(--color-brand-primary)]/30 focus:ring-1 focus:ring-[var(--color-brand-primary)]/20 transition-colors"
-              />
-            </div>
+            <Combobox
+              value={activeSessionOption ? String(activeSessionOption.id) : undefined}
+              onValueChange={(value: string) => setActiveSession(Number(value))}
+            >
+              <ComboboxTrigger className="h-8 flex-1 border-border-subtle bg-surface-2 px-2.5 text-[11px]">
+                <span className="flex items-center gap-2 text-left">
+                  <Search size={13} className="shrink-0 text-text-muted" />
+                  <span className="truncate text-text-primary">
+                    {activeSessionOption ? activeSessionOption.title : "搜索对话..."}
+                  </span>
+                </span>
+              </ComboboxTrigger>
+              <ComboboxContent className="w-[280px]">
+                <ComboboxInput placeholder="搜索对话..." leadingIcon={<Search size={12} />} />
+                <div className="max-h-72 overflow-y-auto p-1">
+                  {SESSIONS.map((session) => (
+                    <ComboboxItem
+                      key={session.id}
+                      value={String(session.id)}
+                      textValue={`${session.title} ${session.channel} ${session.time} ${session.fileOps}`}
+                      className="items-start"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-[12px] font-medium text-text-primary">
+                          {session.title}
+                        </div>
+                        <div className="truncate text-[10px] text-text-muted">
+                          {session.channel} · {session.time}
+                        </div>
+                      </div>
+                    </ComboboxItem>
+                  ))}
+                </div>
+              </ComboboxContent>
+            </Combobox>
             <button
               type="button"
               onClick={() => setActiveSession(null)}

@@ -1,5 +1,10 @@
 import {
   Button,
+  Combobox,
+  ComboboxContent,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxTrigger,
   DetailPanel,
   DetailPanelCloseButton,
   DetailPanelContent,
@@ -998,6 +1003,10 @@ export default function SkillsPage() {
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const { expandFileTree } = useProductLayout();
   const navigate = useNavigate();
+  const quickFindSkills = [...INSTALLED_SKILLS, ...RECOMMENDED_SKILLS].filter(
+    (skill, index, skills) =>
+      skills.findIndex((candidate) => candidate.name === skill.name) === index,
+  );
 
   return (
     <div className="h-full overflow-y-auto">
@@ -1057,17 +1066,45 @@ export default function SkillsPage() {
             >
               <RefreshCw size={13} />
             </button>
-            <div className="relative">
-              <Search
-                size={12}
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted"
-              />
-              <input
-                type="text"
-                placeholder="Search skills"
-                className="pl-7 pr-3 py-1 w-36 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[var(--color-brand-primary)]/30 focus:ring-1 focus:ring-[var(--color-brand-primary)]/20 focus:w-48 transition-all"
-              />
-            </div>
+            <Combobox
+              value={selectedSkill?.name}
+              onValueChange={(value: string) => {
+                const nextSkill = quickFindSkills.find((skill) => skill.name === value);
+                if (!nextSkill) return;
+                setSelectedSkill(nextSkill);
+                setActiveTab(nextSkill.installed ? "installed" : "explore");
+              }}
+            >
+              <ComboboxTrigger className="h-8 w-48 bg-surface-2 text-[11px]">
+                <span className="flex items-center gap-2 text-left">
+                  <Search size={12} className="shrink-0 text-text-muted" />
+                  <span className="truncate text-text-primary">
+                    {selectedSkill ? selectedSkill.name : "Search skills"}
+                  </span>
+                </span>
+              </ComboboxTrigger>
+              <ComboboxContent>
+                <ComboboxInput placeholder="Search skills" leadingIcon={<Search size={12} />} />
+                <div className="max-h-80 overflow-y-auto p-1">
+                  {quickFindSkills.map((skill) => (
+                    <ComboboxItem
+                      key={skill.name}
+                      value={skill.name}
+                      textValue={`${skill.name} ${skill.desc} ${skill.category} ${skill.author}`}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-[12px] font-medium text-text-primary">
+                          {skill.name}
+                        </div>
+                        <div className="truncate text-[10px] text-text-muted">
+                          {skill.category} · {skill.author}
+                        </div>
+                      </div>
+                    </ComboboxItem>
+                  ))}
+                </div>
+              </ComboboxContent>
+            </Combobox>
           </div>
         </div>
 

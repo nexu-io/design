@@ -7,6 +7,8 @@ import {
   DetailPanelTitle,
   PanelFooter,
   PanelFooterActions,
+  TagGroup,
+  TagGroupItem,
 } from "@nexu/ui-web";
 import {
   Activity,
@@ -1442,13 +1444,13 @@ export function OKRDetailPanel({
             </span>
           </div>
         </div>
-        <div className="flex gap-1 mt-2">
+        <TagGroup className="mt-2 gap-1">
           {objective.tags.map((t) => (
-            <span key={t} className="text-[9px] px-1.5 py-0.5 bg-surface-2 text-text-muted rounded">
+            <TagGroupItem key={t} size="xs" radius="md" className="bg-surface-2 text-text-muted">
               {t}
-            </span>
+            </TagGroupItem>
           ))}
-        </div>
+        </TagGroup>
       </div>
     </PanelShell>
   );
@@ -1731,16 +1733,13 @@ export function TaskItemDetailPanel({
         <div className="text-[10px] text-text-muted font-medium uppercase tracking-wider mb-2">
           标签
         </div>
-        <div className="flex flex-wrap gap-1.5">
+        <TagGroup>
           {task.tags.map((tag) => (
-            <span
-              key={tag}
-              className="text-[10px] px-2 py-0.5 bg-surface-3 text-text-muted rounded-full"
-            >
+            <TagGroupItem key={tag} className="bg-surface-3 text-text-muted">
               {tag}
-            </span>
+            </TagGroupItem>
           ))}
-        </div>
+        </TagGroup>
       </div>
     </PanelShell>
   );

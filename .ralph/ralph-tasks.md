@@ -13,4 +13,4 @@ Add your tasks below using: `ralph --add-task "description"`
 - [x] Audit and resolve the remaining partial migration notes for `NexuProgressPage.tsx` and `OnboardingPage.tsx`
 - [x] Add `Toggle` / `ToggleGroup` to `@nexu/ui-web` and migrate the remaining toggle-style surfaces
 - [x] Add `ResizablePanel` / `SplitView`, `Sidebar` / `NavigationMenu`, `ActivityBar`, and `DetailPanel` to `@nexu/ui-web` and migrate the desktop shell surfaces
-- [ ] Add `Combobox`, `Breadcrumb`, and optional `TagGroup` to `@nexu/ui-web` and migrate the remaining target surfaces
+- [x] Add `Combobox`, `Breadcrumb`, and optional `TagGroup` to `@nexu/ui-web` and migrate the remaining target surfaces

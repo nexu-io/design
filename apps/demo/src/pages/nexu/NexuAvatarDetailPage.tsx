@@ -8,6 +8,8 @@ import {
   EntityCardHeader,
   EntityCardMeta,
   EntityCardTitle,
+  TagGroup,
+  TagGroupItem,
 } from "@nexu/ui-web";
 import { BookOpen, ChevronLeft, GitBranch, Send, Shield, Users, Wrench } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -123,13 +125,13 @@ export default function NexuAvatarDetailPage() {
               </div>
             </EntityCardHeader>
             <EntityCardContent>
-              <div className="flex flex-wrap gap-1.5">
+              <TagGroup>
                 {avatar.skills.map((skill) => (
-                  <Badge key={skill} variant="brand" radius="md">
+                  <TagGroupItem key={skill} variant="brand" radius="md">
                     {skill}
-                  </Badge>
+                  </TagGroupItem>
                 ))}
-              </div>
+              </TagGroup>
             </EntityCardContent>
             <EntityCardFooter>
               <Button
@@ -178,13 +180,13 @@ export default function NexuAvatarDetailPage() {
               </div>
             </EntityCardHeader>
             <EntityCardContent>
-              <div className="flex flex-wrap gap-1.5">
+              <TagGroup>
                 {avatar.permissions.map((p) => (
-                  <Badge key={p} variant="default" radius="md">
+                  <TagGroupItem key={p} variant="default" radius="md">
                     {p}
-                  </Badge>
+                  </TagGroupItem>
                 ))}
-              </div>
+              </TagGroup>
             </EntityCardContent>
             <EntityCardFooter>
               <Button
