@@ -40,8 +40,8 @@ describe("Button", () => {
 
     const button = screen.getByRole("button", { name: "Cancel" });
 
-    expect(button).toHaveClass("border-border");
-    expect(button).toHaveClass("hover:border-border-hover");
+    expect(button).toHaveClass("border-input");
+    expect(button).toHaveClass("hover:border-foreground/15");
     expect(button).toHaveClass("hover:text-foreground");
   });
 });
