@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Mail, Check } from 'lucide-react';
-import { Button } from '@nexu/ui-web';
+import { Button } from '@nexu-design/ui-web';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { useLocale } from '../../hooks/useLocale';
 import { GitHubIcon } from '../../components/openclaw/OpenClawBrandRail';

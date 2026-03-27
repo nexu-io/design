@@ -10,7 +10,7 @@ import {
   EntityCardTitle,
   TagGroup,
   TagGroupItem,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import { BookOpen, ChevronLeft, GitBranch, Send, Shield, Users, Wrench } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 

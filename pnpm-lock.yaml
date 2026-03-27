@@ -14,10 +14,10 @@ importers:
 
   apps/demo:
     dependencies:
-      '@nexu/tokens':
+      '@nexu-design/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
-      '@nexu/ui-web':
+      '@nexu-design/ui-web':
         specifier: workspace:*
         version: link:../../packages/ui-web
       '@radix-ui/react-avatar':
@@ -165,10 +165,10 @@ importers:
 
   apps/storybook:
     dependencies:
-      '@nexu/tokens':
+      '@nexu-design/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
-      '@nexu/ui-web':
+      '@nexu-design/ui-web':
         specifier: workspace:*
         version: link:../../packages/ui-web
       lucide-react:
@@ -220,7 +220,7 @@ importers:
 
   packages/ui-web:
     dependencies:
-      '@nexu/tokens':
+      '@nexu-design/tokens':
         specifier: workspace:^0.1.0
         version: link:../tokens
       '@radix-ui/react-avatar':

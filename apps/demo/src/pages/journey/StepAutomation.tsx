@@ -6,7 +6,7 @@ import {
   Plus, Star, Download, Code, Wrench,
   ToggleRight, MessageSquare,
 } from 'lucide-react'
-import { Button } from '@nexu/ui-web'
+import { Button } from '@nexu-design/ui-web'
 import ChatCardGroup from '../product/ChatCards'
 import type { ChatCard } from '../product/sessionsData'
 

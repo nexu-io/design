@@ -1,4 +1,4 @@
-import { Badge, Button, Input, ToggleGroup, ToggleGroupItem } from "@nexu/ui-web";
+import { Badge, Button, Input, ToggleGroup, ToggleGroupItem } from "@nexu-design/ui-web";
 import { ArrowLeft, ArrowRight, Compass, Search, Settings2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";

@@ -9,7 +9,7 @@ import {
   MessageSquare,
   BarChart3,
 } from 'lucide-react'
-import { Badge, Button, SectionHeader } from '@nexu/ui-web'
+import { Badge, Button, SectionHeader } from '@nexu-design/ui-web'
 
 const PRESET_AVATARS = [
   { id: 'ops', name: '运营助手', desc: '日报、周报、指标跟进', status: 'idle', roleColor: 'role-ops' },

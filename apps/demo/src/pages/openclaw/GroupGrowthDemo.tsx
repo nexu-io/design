@@ -35,7 +35,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Badge, Button, Input, Label } from '@nexu/ui-web';
+import { Badge, Button, Input, Label } from '@nexu-design/ui-web';
 
 /* ------------------------------------------------------------------ */
 /*  Types & Data                                                       */

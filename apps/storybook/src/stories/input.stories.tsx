@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Input } from "@nexu/ui-web";
+import { Input } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Input",

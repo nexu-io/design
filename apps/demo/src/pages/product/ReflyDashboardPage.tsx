@@ -6,7 +6,7 @@ import {
   MoreVertical,
   Eye,
 } from 'lucide-react'
-import { Button, Tabs, TabsList, TabsTrigger } from '@nexu/ui-web'
+import { Button, Tabs, TabsList, TabsTrigger } from '@nexu-design/ui-web'
 
 const MY_WORKFLOWS = [
   {

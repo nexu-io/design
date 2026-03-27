@@ -1,4 +1,4 @@
-import { Badge, Button, ScrollArea } from "@nexu/ui-web";
+import { Badge, Button, ScrollArea } from "@nexu-design/ui-web";
 import { Calendar, Link2, Mail, MessageSquare, Shield } from "lucide-react";
 
 const INTEGRATIONS = [

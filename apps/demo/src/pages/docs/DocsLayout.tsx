@@ -6,7 +6,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
   Button,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import { ArrowLeft, ChevronLeft, ChevronRight, Menu, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";

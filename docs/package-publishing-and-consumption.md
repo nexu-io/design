@@ -2,8 +2,8 @@
 
 This workspace is prepared for **future publish** of:
 
-- `@nexu/tokens`
-- `@nexu/ui-web`
+- `@nexu-design/tokens`
+- `@nexu-design/ui-web`
 
 No publishing is performed by default.
 
@@ -23,15 +23,15 @@ This keeps the setup minimal while making outputs consumable by non-workspace ap
 
 In consumers inside a pnpm workspace:
 
-- `"@nexu/tokens": "workspace:^0.1.0"`
-- `"@nexu/ui-web": "workspace:^0.1.0"`
+- `"@nexu-design/tokens": "workspace:^0.1.0"`
+- `"@nexu-design/ui-web": "workspace:^0.1.0"`
 
 ### 2) `file:` dependency (outside workspace, local machine)
 
 Point directly to this repo paths, e.g.:
 
-- `"@nexu/tokens": "file:../ui/packages/tokens"`
-- `"@nexu/ui-web": "file:../ui/packages/ui-web"`
+- `"@nexu-design/tokens": "file:../ui/packages/tokens"`
+- `"@nexu-design/ui-web": "file:../ui/packages/ui-web"`
 
 Run package builds before consuming:
 
@@ -51,9 +51,9 @@ pnpm release:check
 ## Versioning + release notes expectations
 
 - Use semver per package (`major.minor.patch`)
-- Bump `@nexu/tokens` when tokens/CSS contract changes
-- Bump `@nexu/ui-web` for component API or behavior changes
-- If `@nexu/ui-web` needs newer tokens, bump both and keep dependency aligned
+- Bump `@nexu-design/tokens` when tokens/CSS contract changes
+- Bump `@nexu-design/ui-web` for component API or behavior changes
+- If `@nexu-design/ui-web` needs newer tokens, bump both and keep dependency aligned
 - Add concise release notes per version with:
   - **What changed** (consumer-visible)
   - **Migration impact** (if any)

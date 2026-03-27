@@ -11,7 +11,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Sidebar",

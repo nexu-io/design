@@ -18,7 +18,7 @@ import {
   Hash,
   Globe,
 } from 'lucide-react'
-import { Button } from '@nexu/ui-web'
+import { Button } from '@nexu-design/ui-web'
 
 const SEGMENTS = [
   {

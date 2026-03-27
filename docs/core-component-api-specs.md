@@ -2,7 +2,7 @@
 
 ## 1. 文档目标
 
-本文档定义 `nexu-io/ui` 首批核心组件的 API 草案，作为：
+本文档定义 `nexu-io/design` 首批核心组件的 API 草案，作为：
 
 - `packages/ui-web` 实现输入
 - Storybook stories 设计依据

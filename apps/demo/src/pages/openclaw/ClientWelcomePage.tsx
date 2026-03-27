@@ -23,7 +23,7 @@ import {
   EntityCardMeta,
   EntityCardTitle,
   Input,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 
 function FadeIn({
   children,

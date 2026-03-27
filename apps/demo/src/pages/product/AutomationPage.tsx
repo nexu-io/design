@@ -11,7 +11,7 @@ import {
   StatCard,
   ToggleGroup,
   ToggleGroupItem,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import {
   AlertCircle,
   BarChart3,

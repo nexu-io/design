@@ -27,7 +27,7 @@ import {
 } from "./LandingParts";
 import ChatCardGroup from "./product/ChatCards";
 import type { ChatCard } from "./product/sessionsData";
-import { Button } from '@nexu/ui-web'
+import { Button } from '@nexu-design/ui-web'
 
 const LANDING_CARDS: Record<string, ChatCard[]> = {
   scenario1a: [

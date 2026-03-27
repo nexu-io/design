@@ -1,5 +1,5 @@
 {
-  "name": "@nexu/storybook",
+  "name": "@nexu-design/storybook",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,8 +10,8 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@nexu/tokens": "workspace:*",
-    "@nexu/ui-web": "workspace:*",
+    "@nexu-design/tokens": "workspace:*",
+    "@nexu-design/ui-web": "workspace:*",
     "lucide-react": "^0.542.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@nexu/ui-web";
+import { Avatar, AvatarFallback, AvatarImage } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Avatar",

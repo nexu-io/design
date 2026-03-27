@@ -5,7 +5,7 @@ import {
   Globe, MessageSquare, User, Monitor, Users,
   Zap, Link2, Eye, Crown,
 } from 'lucide-react'
-import { Button } from '@nexu/ui-web'
+import { Button } from '@nexu-design/ui-web'
 import StepLanding from './StepLanding'
 import StepOnboarding from './StepOnboarding'
 import StepClone from './StepClone'

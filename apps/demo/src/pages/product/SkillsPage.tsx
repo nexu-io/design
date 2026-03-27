@@ -19,7 +19,7 @@ import {
   PanelFooter,
   PanelFooterActions,
   ScrollArea,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import {
   BarChart3,
   Building,

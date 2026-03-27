@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Button } from "@nexu/ui-web";
+import { Button } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Button",

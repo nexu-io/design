@@ -9,7 +9,7 @@ import {
   PanelFooterActions,
   TagGroup,
   TagGroupItem,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import {
   Activity,
   AlertTriangle,

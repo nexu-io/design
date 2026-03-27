@@ -1,4 +1,4 @@
-import { Button, StatsBar, ToggleGroup, ToggleGroupItem } from "@nexu/ui-web";
+import { Button, StatsBar, ToggleGroup, ToggleGroupItem } from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   BarChart3,

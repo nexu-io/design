@@ -14,7 +14,7 @@ import {
   Zap,
   LayoutDashboard,
 } from 'lucide-react'
-import { Badge, Button, Input } from '@nexu/ui-web'
+import { Badge, Button, Input } from '@nexu-design/ui-web'
 
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false)

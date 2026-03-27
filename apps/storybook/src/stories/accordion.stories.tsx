@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@nexu/ui-web";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Accordion",

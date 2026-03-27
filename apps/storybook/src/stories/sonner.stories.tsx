@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { toast } from "sonner";
 
-import { Button, Toaster } from "@nexu/ui-web";
+import { Button, Toaster } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Sonner",

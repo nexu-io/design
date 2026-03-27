@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { Button } from '@nexu/ui-web';
+import { Button } from '@nexu-design/ui-web';
 import { usePageTitle } from '../../hooks/usePageTitle';
 
 const CAPABILITY_PILLS = [

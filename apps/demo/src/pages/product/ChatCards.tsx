@@ -1,4 +1,4 @@
-import { Badge, Button, ConversationMessage, ConversationMessageStatusIcon } from "@nexu/ui-web";
+import { Badge, Button, ConversationMessage, ConversationMessageStatusIcon } from "@nexu-design/ui-web";
 import {
   Brain,
   ChevronRight,

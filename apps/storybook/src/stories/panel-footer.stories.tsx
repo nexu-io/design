@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Button, PanelFooter, PanelFooterActions, PanelFooterMeta } from "@nexu/ui-web";
+import { Button, PanelFooter, PanelFooterActions, PanelFooterMeta } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/PanelFooter",

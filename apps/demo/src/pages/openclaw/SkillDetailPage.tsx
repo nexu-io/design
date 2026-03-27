@@ -7,7 +7,7 @@ import {
   Button,
   Separator,
   Switch,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import {
   ArrowLeft,
   ArrowRight,

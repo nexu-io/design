@@ -1,4 +1,4 @@
-import { Button } from '@nexu/ui-web'
+import { Button } from '@nexu-design/ui-web'
 
 import { PageShell, PageHeader, Section } from '../components/Section'
 import { Zap, Brain, Sparkles, ArrowRight, Lightbulb, CheckCircle2, AlertTriangle, XCircle, FileText, Users, Bot, Layers, MessageSquare } from 'lucide-react'

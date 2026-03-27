@@ -1,4 +1,4 @@
-import { Button, StatsBar } from "@nexu/ui-web";
+import { Button, StatsBar } from "@nexu-design/ui-web";
 import {
   ArrowUp,
   BarChart3,

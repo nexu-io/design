@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Button, FormField, Input, SettingsSection } from "@nexu/ui-web";
+import { Button, FormField, Input, SettingsSection } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Patterns/SettingsSection",

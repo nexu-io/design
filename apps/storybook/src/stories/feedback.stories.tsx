@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Separator, Skeleton, Spinner } from "@nexu/ui-web";
+import { Separator, Skeleton, Spinner } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Feedback",

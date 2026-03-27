@@ -1,4 +1,4 @@
-import { Badge, Button, SectionHeader, StatCard } from "@nexu/ui-web";
+import { Badge, Button, SectionHeader, StatCard } from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   ArrowUpRight,

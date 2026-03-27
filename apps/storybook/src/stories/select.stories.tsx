@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@nexu/ui-web";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Select",

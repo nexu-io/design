@@ -3,7 +3,7 @@ import { Activity, AlertTriangle, ArrowRight, CalendarDays, Check, ChevronRight,
 import { useNavigate } from 'react-router-dom';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import SlackDemo from '../../components/SlackDemo';
-import { Button } from '@nexu/ui-web';
+import { Button } from '@nexu-design/ui-web';
 
 const TRUSTED_LOGOS = [
   'Raycast',

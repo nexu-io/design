@@ -8,7 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Card",

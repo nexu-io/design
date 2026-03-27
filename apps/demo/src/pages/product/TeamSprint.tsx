@@ -1,4 +1,4 @@
-import { ToggleGroup, ToggleGroupItem } from "@nexu/ui-web";
+import { ToggleGroup, ToggleGroupItem } from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   ArrowRight,

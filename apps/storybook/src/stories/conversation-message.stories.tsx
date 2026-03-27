@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Bot, User } from "lucide-react";
 
-import { Button, ConversationMessage, ConversationMessageStatusIcon } from "@nexu/ui-web";
+import { Button, ConversationMessage, ConversationMessageStatusIcon } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/ConversationMessage",

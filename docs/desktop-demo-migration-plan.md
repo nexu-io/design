@@ -1,14 +1,14 @@
-# Desktop Demo → `@nexu/ui-web` Migration Plan
+# Desktop Demo → `@nexu-design/ui-web` Migration Plan
 
 ## Goal
 
-Move the Tauri desktop demo away from page-local ad hoc UI and toward shared `@nexu/ui-web` primitives and patterns.
+Move the Tauri desktop demo away from page-local ad hoc UI and toward shared `@nexu-design/ui-web` primitives and patterns.
 
 This is **not** a Button-only migration.
 
 The target state is:
 
-1. Desktop-critical demo pages (`openclaw/*`, `nexu/*`, `product/*`) consume shared UI from `@nexu/ui-web`
+1. Desktop-critical demo pages (`openclaw/*`, `nexu/*`, `product/*`) consume shared UI from `@nexu-design/ui-web`
 2. Repeated desktop layouts are extracted into reusable `ui-web` patterns
 3. Demo pages keep only page-specific composition and business logic
 4. Visual and interaction consistency is owned by `ui-web`, not by page-local Tailwind clusters
@@ -19,7 +19,7 @@ The target state is:
 
 > Status snapshot: updated for the current workspace on 2026-03-27.
 
-### Already in `@nexu/ui-web`
+### Already in `@nexu-design/ui-web`
 
 #### Primitives
 - `Alert`
@@ -152,7 +152,7 @@ Desktop-critical routes loaded by the Tauri app:
 ## Migration principles
 
 1. **Shared before local**
-   - If 2+ desktop pages share a visual structure, move it into `@nexu/ui-web`
+    - If 2+ desktop pages share a visual structure, move it into `@nexu-design/ui-web`
 
 2. **Primitive first, pattern second**
    - Add a primitive when the gap is low-level and reusable broadly
@@ -171,7 +171,7 @@ Desktop-critical routes loaded by the Tauri app:
 
 ---
 
-## Missing primitives to add to `@nexu/ui-web`
+## Missing primitives to add to `@nexu-design/ui-web`
 
 ### 1. `Table`
 
@@ -398,7 +398,7 @@ The desktop app now has multiple custom left-nav shells that should converge on 
 
 ---
 
-## Missing patterns to add to `@nexu/ui-web`
+## Missing patterns to add to `@nexu-design/ui-web`
 
 ### 1. `StatCard`
 
@@ -851,10 +851,10 @@ For every new primitive or pattern:
 4. refactor one representative demo page first
 5. then refactor the rest of the target pages
 6. run:
-   - `pnpm --filter @nexu/ui-web test`
-   - `pnpm --filter @nexu/ui-web build`
-   - `pnpm --filter @nexu/demo typecheck`
-   - `pnpm --filter @nexu/demo build`
+    - `pnpm --filter @nexu-design/ui-web test`
+    - `pnpm --filter @nexu-design/ui-web build`
+    - `pnpm --filter @nexu-design/demo typecheck`
+    - `pnpm --filter @nexu-design/demo build`
 
 ---
 
@@ -863,7 +863,7 @@ For every new primitive or pattern:
 Desktop demo migration is complete when:
 
 1. desktop-critical pages no longer hand-roll repeated stat, pricing, table, alert, progress, and panel-footer structures
-2. `openclaw/*`, `nexu/*`, and `product/*` primarily compose from `@nexu/ui-web`
+2. `openclaw/*`, `nexu/*`, and `product/*` primarily compose from `@nexu-design/ui-web`
 3. repeated visual behavior is owned by `ui-web`, not page-local Tailwind clusters
 4. remaining local markup is only business-unique layout or intentionally native high-interaction controls
 

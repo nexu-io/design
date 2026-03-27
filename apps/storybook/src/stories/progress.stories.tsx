@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Progress } from "@nexu/ui-web";
+import { Progress } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Progress",

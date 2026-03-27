@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Stepper, StepperItem, StepperSeparator } from "@nexu/ui-web";
+import { Stepper, StepperItem, StepperSeparator } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Stepper",

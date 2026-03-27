@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 import SlackDemo, { DEMO_SCENARIOS } from '../../components/SlackDemo';
 import { TOOL_TAG_LABELS } from './skillData';
-import { Badge, Button } from '@nexu/ui-web';
+import { Badge, Button } from '@nexu-design/ui-web';
 
 /* ------------------------------------------------------------------ */
 /*  IM platform icons                                                  */

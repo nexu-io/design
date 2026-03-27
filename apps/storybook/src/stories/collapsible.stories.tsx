@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@nexu/ui-web";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Collapsible",

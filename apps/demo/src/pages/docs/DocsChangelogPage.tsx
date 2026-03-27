@@ -9,7 +9,7 @@ import {
   Palette,
   Server,
 } from 'lucide-react';
-import { Button } from '@nexu/ui-web';
+import { Button } from '@nexu-design/ui-web';
 import { usePageTitle } from '../../hooks/usePageTitle';
 
 interface ChangelogEntry {

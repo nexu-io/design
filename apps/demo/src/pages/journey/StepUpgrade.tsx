@@ -3,7 +3,7 @@ import {
   Zap, Brain, Shield, BarChart3, UserPlus,
   Rocket, Gift,
 } from 'lucide-react'
-import { Button } from '@nexu/ui-web'
+import { Button } from '@nexu-design/ui-web'
 
 const VALUE_ITEMS = [
   { icon: Brain, label: '无限记忆', free: '50 条', pro: '无限制', team: '无限制 + 共享' },

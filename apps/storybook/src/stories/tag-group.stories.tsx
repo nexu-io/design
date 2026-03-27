@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { TagGroup, TagGroupItem } from "@nexu/ui-web";
+import { TagGroup, TagGroupItem } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/TagGroup",

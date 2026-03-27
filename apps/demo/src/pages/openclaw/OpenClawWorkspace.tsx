@@ -26,7 +26,7 @@ import {
   TabsTrigger,
   ToggleGroup,
   ToggleGroupItem,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import {
   AlertCircle,

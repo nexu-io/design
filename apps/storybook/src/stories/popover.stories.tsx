@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Button, Popover, PopoverContent, PopoverTrigger } from "@nexu/ui-web";
+import { Button, Popover, PopoverContent, PopoverTrigger } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Popover",

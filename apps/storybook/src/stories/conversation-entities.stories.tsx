@@ -17,7 +17,7 @@ import {
   Stepper,
   StepperItem,
   StepperSeparator,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 
 const meta = {
   title: "Scenarios/Conversation Entities",

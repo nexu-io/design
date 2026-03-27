@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Button, PricingCard } from "@nexu/ui-web";
+import { Button, PricingCard } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/PricingCard",

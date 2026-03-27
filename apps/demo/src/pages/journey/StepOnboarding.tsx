@@ -5,7 +5,7 @@ import {
   CheckCircle, RefreshCw, Upload, Users, UserPlus,
   MessageSquare, Wrench, ArrowRight,
 } from 'lucide-react'
-import { Button } from '@nexu/ui-web'
+import { Button } from '@nexu-design/ui-web'
 import ChatCardGroup from '../product/ChatCards'
 import type { ChatCard } from '../product/sessionsData'
 

@@ -10,7 +10,7 @@ import {
   EntityCardTitle,
   ToggleGroup,
   ToggleGroupItem,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import {
   Activity,
   ArrowUpRight,

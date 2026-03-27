@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Bold, Italic, Pin, Underline } from "lucide-react";
 
-import { Toggle, ToggleGroup, ToggleGroupItem } from "@nexu/ui-web";
+import { Toggle, ToggleGroup, ToggleGroupItem } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Toggle",

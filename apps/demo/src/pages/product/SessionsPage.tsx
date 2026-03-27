@@ -24,7 +24,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import {
   BarChart3,
   Bookmark,

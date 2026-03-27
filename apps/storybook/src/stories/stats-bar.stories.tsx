@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { StatsBar } from "@nexu/ui-web";
+import { StatsBar } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/StatsBar",

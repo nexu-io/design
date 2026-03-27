@@ -8,8 +8,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogBody,
-} from '@nexu/ui-web';
-import { Tabs, TabsList, TabsTrigger, TabsContent, Button, Input, Label } from '@nexu/ui-web';
+} from '@nexu-design/ui-web';
+import { Tabs, TabsList, TabsTrigger, TabsContent, Button, Input, Label } from '@nexu-design/ui-web';
 
 type ImportTab = 'folder' | 'github';
 

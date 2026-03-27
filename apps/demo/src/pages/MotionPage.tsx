@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button } from '@nexu/ui-web'
+import { Button } from '@nexu-design/ui-web'
 import { PageShell, PageHeader, Section } from '../components/Section'
 import NexuLoader, { NexuLoadingScreen } from '../components/NexuLoader'
 
