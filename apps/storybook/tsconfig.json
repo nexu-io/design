@@ -1,7 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["react", "react-dom", "vite/client"]
+    "types": ["react", "react-dom", "vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@nexu-design/ui-web": ["../../packages/ui-web/src/index.ts"],
+      "@nexu-design/tokens": ["../../packages/tokens/src/index.ts"]
+    }
   },
   "include": [".storybook", "src"]
 }
