@@ -20,15 +20,14 @@ import {
 } from "@nexu/ui-web";
 
 const meta = {
-  title: "Primitives/ConversationEntities",
-  component: ConversationMessage,
+  title: "Scenarios/Conversation Entities",
   tags: ["autodocs"],
-} satisfies Meta<typeof ConversationMessage>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ConversationMessageExample: Story = {
+export const TeamStatusThread: Story = {
   render: () => (
     <div className="grid w-[720px] gap-4">
       <ConversationMessage
@@ -50,7 +49,7 @@ export const ConversationMessageExample: Story = {
   ),
 };
 
-export const StepperExample: Story = {
+export const LaunchStepperFlow: Story = {
   render: () => (
     <div className="grid w-[720px] gap-8">
       <Stepper>
@@ -84,7 +83,7 @@ export const StepperExample: Story = {
   ),
 };
 
-export const EntityCardExample: Story = {
+export const WorkspaceEntityCards: Story = {
   render: () => (
     <div className="grid w-[760px] grid-cols-2 gap-4">
       <EntityCard interactive>
@@ -130,7 +129,7 @@ export const EntityCardExample: Story = {
   ),
 };
 
-export const StatsBarExample: Story = {
+export const OperationalStatsBar: Story = {
   render: () => (
     <div className="w-[760px]">
       <StatsBar

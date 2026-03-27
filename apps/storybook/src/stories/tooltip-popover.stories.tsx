@@ -12,14 +12,14 @@ import {
 } from "@nexu/ui-web";
 
 const meta = {
-  title: "Primitives/Tooltip & Popover",
+  title: "Scenarios/Tooltip & Popover",
   tags: ["autodocs"],
 } satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const InlineHelpAndActions: Story = {
   render: () => (
     <TooltipProvider>
       <div className="flex items-center gap-4">

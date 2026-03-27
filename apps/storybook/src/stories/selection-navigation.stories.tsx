@@ -17,18 +17,14 @@ import {
 } from "@nexu/ui-web";
 
 const meta = {
-  title: "Primitives/SelectionNavigation",
-  component: Combobox,
+  title: "Scenarios/Selection Navigation",
   tags: ["autodocs"],
-} satisfies Meta<typeof Combobox>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ComboboxExample: Story = {
-  args: {
-    children: null,
-  },
+export const SkillPicker: Story = {
   render: () => (
     <div className="h-[320px] w-[360px]">
       <Combobox defaultOpen defaultValue="gamma">
@@ -52,10 +48,7 @@ export const ComboboxExample: Story = {
   ),
 };
 
-export const BreadcrumbExample: Story = {
-  args: {
-    children: null,
-  },
+export const WorkspaceBreadcrumbs: Story = {
   render: () => (
     <Breadcrumb>
       <BreadcrumbList>
@@ -75,10 +68,7 @@ export const BreadcrumbExample: Story = {
   ),
 };
 
-export const TagGroupExample: Story = {
-  args: {
-    children: null,
-  },
+export const RoutingTags: Story = {
   render: () => (
     <TagGroup>
       <TagGroupItem variant="brand">AI</TagGroupItem>

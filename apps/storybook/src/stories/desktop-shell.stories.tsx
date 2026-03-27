@@ -31,15 +31,14 @@ import {
 } from "@nexu/ui-web";
 
 const meta = {
-  title: "Primitives/DesktopShell",
-  component: SplitView,
+  title: "Scenarios/Desktop Shell",
   tags: ["autodocs"],
-} satisfies Meta<typeof SplitView>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const SplitViewExample: Story = {
+export const WorkspaceSplitView: Story = {
   render: () => (
     <div className="h-[360px] w-[960px] overflow-hidden rounded-xl border border-border">
       <SplitView className="h-full bg-surface-2">
@@ -61,7 +60,7 @@ export const SplitViewExample: Story = {
   ),
 };
 
-export const SidebarNavigationExample: Story = {
+export const WorkspaceSidebar: Story = {
   render: () => (
     <div className="h-[420px] w-[280px] overflow-hidden rounded-xl border border-border">
       <Sidebar className="h-full">
@@ -117,7 +116,7 @@ export const SidebarNavigationExample: Story = {
   ),
 };
 
-export const ActivityBarExample: Story = {
+export const CompactActivityBar: Story = {
   render: () => (
     <div className="h-[360px] overflow-hidden rounded-xl border border-border">
       <ActivityBar className="h-full">
@@ -148,7 +147,7 @@ export const ActivityBarExample: Story = {
   ),
 };
 
-export const DetailPanelExample: Story = {
+export const ApprovalDetailPanel: Story = {
   render: () => (
     <div className="h-[360px] overflow-hidden rounded-xl border border-border bg-surface-2">
       <DetailPanel className="h-full" width={360}>

@@ -34,15 +34,14 @@ import {
 } from "@nexu/ui-web";
 
 const meta = {
-  title: "Primitives/LayoutSurfaces",
-  component: ScrollArea,
+  title: "Scenarios/Layout Surfaces",
   tags: ["autodocs"],
-} satisfies Meta<typeof ScrollArea>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ScrollAreaExample: Story = {
+export const AuditLogSurface: Story = {
   render: () => (
     <div className="w-[420px] rounded-xl border border-border bg-surface-1">
       <ScrollArea className="h-56">
@@ -66,7 +65,7 @@ export const ScrollAreaExample: Story = {
   ),
 };
 
-export const AccordionExample: Story = {
+export const WorkspaceAccordion: Story = {
   render: () => (
     <div className="w-[560px] rounded-xl border border-border bg-surface-1 p-2">
       <Accordion type="single" collapsible defaultValue="sources">
@@ -87,7 +86,7 @@ export const AccordionExample: Story = {
   ),
 };
 
-export const CollapsibleExample: Story = {
+export const EscalationPolicyDetails: Story = {
   render: () => (
     <div className="w-[560px] rounded-xl border border-border bg-surface-1 p-4">
       <Collapsible defaultOpen>
@@ -111,7 +110,7 @@ export const CollapsibleExample: Story = {
   ),
 };
 
-export const PanelFooterExample: Story = {
+export const PublishPanelFooter: Story = {
   render: () => (
     <div className="w-[560px] overflow-hidden rounded-xl border border-border bg-surface-1">
       <div className="px-4 py-6 text-sm text-text-secondary">
@@ -128,7 +127,7 @@ export const PanelFooterExample: Story = {
   ),
 };
 
-export const InteractiveRowExample: Story = {
+export const WorkflowQueueRows: Story = {
   render: () => (
     <div className="grid w-[640px] gap-3">
       <InteractiveRow className="p-4">
@@ -165,7 +164,7 @@ export const InteractiveRowExample: Story = {
   ),
 };
 
-export const DataTableExample: Story = {
+export const ApprovalQueueTable: Story = {
   render: () => (
     <DataTable className="w-[760px]">
       <DataTableHeader>
