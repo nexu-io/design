@@ -14,3 +14,4 @@ Add your tasks below using: `ralph --add-task "description"`
 - [x] Add `Toggle` / `ToggleGroup` to `@nexu/ui-web` and migrate the remaining toggle-style surfaces
 - [x] Add `ResizablePanel` / `SplitView`, `Sidebar` / `NavigationMenu`, `ActivityBar`, and `DetailPanel` to `@nexu/ui-web` and migrate the desktop shell surfaces
 - [x] Add `Combobox`, `Breadcrumb`, and optional `TagGroup` to `@nexu/ui-web` and migrate the remaining target surfaces
+- [x] Add Storybook coverage for the new `@nexu/ui-web` components
