@@ -777,10 +777,10 @@ The original Wave 1-3 ordering is still useful as historical context, but the fi
 - [x] `PricingCard`
 
 ### Wave 2
-- [ ] `ResizablePanel` / `SplitView`
-- [ ] `Sidebar` / `NavigationMenu`
-- [ ] `ActivityBar`
-- [ ] `DetailPanel`
+- [x] `ResizablePanel` / `SplitView`
+- [x] `Sidebar` / `NavigationMenu`
+- [x] `ActivityBar`
+- [x] `DetailPanel`
 - [x] `ScrollArea`
 - [x] `Accordion`
 - [x] `Collapsible`
@@ -873,20 +873,12 @@ Desktop demo migration is complete when:
 
 If continuing implementation immediately, do this next:
 
-1. implement the missing desktop shell primitives:
-   - `ResizablePanel` / `SplitView`
-   - `Sidebar` / `NavigationMenu`
-2. apply those shell primitives to the highest-leverage layouts:
-   - `product/ProductLayout.tsx`
-   - `nexu/NexuProductLayout.tsx`
-   - `openclaw/OpenClawWorkspace.tsx`
-4. then tackle filter/navigation polish:
+1. implement the remaining form/navigation primitives:
    - `Combobox`
    - `Breadcrumb`
-   - `ActivityBar`
-   - `DetailPanel`
+2. decide whether `TagGroup` should ship as a shared primitive or stay page-local
+3. apply those primitives to the remaining filter-heavy pages and navigation trails
 
 That batch has the best balance of:
 - high reuse
-- desktop-shell consistency gain
 - progress toward the remaining true gaps in the migration

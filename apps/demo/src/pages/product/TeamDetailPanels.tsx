@@ -1,4 +1,13 @@
-import { Button, PanelFooter, PanelFooterActions } from "@nexu/ui-web";
+import {
+  Button,
+  DetailPanel,
+  DetailPanelCloseButton,
+  DetailPanelContent,
+  DetailPanelHeader,
+  DetailPanelTitle,
+  PanelFooter,
+  PanelFooterActions,
+} from "@nexu/ui-web";
 import {
   Activity,
   AlertTriangle,
@@ -54,8 +63,8 @@ function PanelShell({
   footer?: React.ReactNode;
 }) {
   return (
-    <div className="w-[400px] shrink-0 border-l border-border flex flex-col bg-surface-0 h-full animate-slide-in-right">
-      <div className="flex gap-3 items-center px-4 py-3 border-b border-border shrink-0">
+    <DetailPanel width={400} className="bg-surface-0 animate-slide-in-right">
+      <DetailPanelHeader className="items-center shrink-0">
         <div className="flex justify-center items-center w-8 h-8 rounded-lg bg-clone/10">
           <Icon size={14} className="text-clone" />
         </div>
@@ -69,18 +78,17 @@ function PanelShell({
               {badge}
             </span>
           )}
-          <h3 className="text-[13px] font-semibold text-text-primary truncate">{title}</h3>
+          <DetailPanelTitle className="truncate">{title}</DetailPanelTitle>
         </div>
-        <button
+        <DetailPanelCloseButton
           onClick={onClose}
-          className="p-1 rounded-md transition-colors hover:bg-surface-3 text-text-muted shrink-0"
-        >
-          <X size={14} />
-        </button>
-      </div>
-      <div className="overflow-y-auto flex-1 min-h-0">{children}</div>
+          srLabel="关闭详情"
+          className="hover:bg-surface-3 text-text-muted"
+        />
+      </DetailPanelHeader>
+      <DetailPanelContent className="overflow-y-auto">{children}</DetailPanelContent>
       {footer && <PanelFooter className="shrink-0 px-3 py-3">{footer}</PanelFooter>}
-    </div>
+    </DetailPanel>
   );
 }
 

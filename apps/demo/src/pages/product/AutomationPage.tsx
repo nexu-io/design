@@ -3,6 +3,11 @@ import {
   AlertDescription,
   AlertTitle,
   Button,
+  DetailPanel,
+  DetailPanelCloseButton,
+  DetailPanelContent,
+  DetailPanelHeader,
+  DetailPanelTitle,
   StatCard,
   ToggleGroup,
   ToggleGroupItem,
@@ -34,7 +39,6 @@ import {
   ToggleRight,
   TrendingUp,
   Users,
-  X,
   Zap,
 } from "lucide-react";
 import { useState } from "react";
@@ -462,9 +466,9 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       <div className="absolute inset-0 bg-black/15 backdrop-blur-[2px]" onClick={onClose} />
-      <div className="relative w-[400px] h-full bg-surface-1 border-l border-border shadow-2xl flex flex-col overflow-hidden animate-slide-in-right">
+      <DetailPanel width={400} className="relative shadow-2xl animate-slide-in-right">
         {/* Header */}
-        <div className="px-4 py-3 border-b border-border flex items-center gap-3 shrink-0">
+        <DetailPanelHeader className="items-center shrink-0">
           <div className="w-9 h-9 rounded-lg bg-clone/10 flex items-center justify-center">
             <item.icon size={16} className="text-clone" />
           </div>
@@ -485,15 +489,14 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
                 {item.enabled ? "运行中" : "已暂停"}
               </span>
             </div>
-            <h3 className="text-[13px] font-semibold text-text-primary truncate">{item.name}</h3>
+            <DetailPanelTitle className="truncate">{item.name}</DetailPanelTitle>
           </div>
-          <button
+          <DetailPanelCloseButton
             onClick={onClose}
-            className="p-1 rounded-md hover:bg-surface-3 text-text-muted transition-colors shrink-0"
-          >
-            <X size={14} />
-          </button>
-        </div>
+            srLabel="关闭自动化详情"
+            className="hover:bg-surface-3 text-text-muted"
+          />
+        </DetailPanelHeader>
 
         {/* Config info */}
         <div className="px-4 py-3 border-b border-border shrink-0">
@@ -530,7 +533,7 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
         </div>
 
         {/* Run history */}
-        <div className="flex-1 overflow-y-auto min-h-0">
+        <DetailPanelContent className="overflow-y-auto">
           <div className="px-4 pt-3 pb-1">
             <div className="text-[10px] text-text-muted font-medium uppercase tracking-wider">
               运行记录
@@ -562,7 +565,7 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
           ) : (
             <div className="px-4 py-8 text-center text-[12px] text-text-muted">暂无运行记录</div>
           )}
-        </div>
+        </DetailPanelContent>
 
         {/* Actions */}
         <div className="border-t border-border p-3 space-y-2 shrink-0">
@@ -608,7 +611,7 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
             </Button>
           </div>
         </div>
-      </div>
+      </DetailPanel>
     </div>
   );
 }

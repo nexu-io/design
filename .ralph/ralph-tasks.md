@@ -12,5 +12,5 @@ Add your tasks below using: `ralph --add-task "description"`
 - [x] Add `StatsBar` to `@nexu/ui-web` and migrate `TeamPage.tsx` and `StepTeam.tsx`
 - [x] Audit and resolve the remaining partial migration notes for `NexuProgressPage.tsx` and `OnboardingPage.tsx`
 - [x] Add `Toggle` / `ToggleGroup` to `@nexu/ui-web` and migrate the remaining toggle-style surfaces
-- [ ] Add `ResizablePanel` / `SplitView`, `Sidebar` / `NavigationMenu`, `ActivityBar`, and `DetailPanel` to `@nexu/ui-web` and migrate the desktop shell surfaces
+- [x] Add `ResizablePanel` / `SplitView`, `Sidebar` / `NavigationMenu`, `ActivityBar`, and `DetailPanel` to `@nexu/ui-web` and migrate the desktop shell surfaces
 - [ ] Add `Combobox`, `Breadcrumb`, and optional `TagGroup` to `@nexu/ui-web` and migrate the remaining target surfaces

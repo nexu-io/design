@@ -1,5 +1,10 @@
 import {
   Button,
+  DetailPanel,
+  DetailPanelCloseButton,
+  DetailPanelContent,
+  DetailPanelHeader,
+  DetailPanelTitle,
   EntityCard,
   EntityCardContent,
   EntityCardDescription,
@@ -372,14 +377,14 @@ function SkillDetailPanel({ skill, onClose }: { skill: Skill; onClose: () => voi
     <div className="fixed inset-0 z-50 flex justify-end">
       <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]" onClick={onClose} />
 
-      <div className="relative w-[420px] h-full bg-surface-1 border-l border-border shadow-2xl flex flex-col overflow-hidden animate-slide-in-right">
-        <div className="flex items-start gap-4 p-6 border-b border-border">
+      <DetailPanel width={420} className="relative shadow-2xl animate-slide-in-right">
+        <DetailPanelHeader className="items-start gap-4 p-6">
           <div className="w-12 h-12 rounded-xl bg-surface-3 flex items-center justify-center shrink-0">
             <skill.icon size={22} className="text-text-secondary" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-semibold text-text-primary">{skill.name}</h2>
+              <DetailPanelTitle className="text-base">{skill.name}</DetailPanelTitle>
               {skill.certified && <Shield size={14} className="text-success" />}
             </div>
             <div className="text-xs text-text-secondary mt-0.5">{skill.author}</div>
@@ -396,118 +401,119 @@ function SkillDetailPanel({ skill, onClose }: { skill: Skill; onClose: () => voi
               )}
             </div>
           </div>
-          <button
+          <DetailPanelCloseButton
             onClick={onClose}
-            className="p-1 rounded-md hover:bg-surface-3 text-text-muted transition-colors shrink-0"
-          >
-            <X size={16} />
-          </button>
-        </div>
+            srLabel="关闭技能详情"
+            className="mt-1 hover:bg-surface-3 text-text-muted"
+          />
+        </DetailPanelHeader>
 
-        <ScrollArea className="flex-1">
-          <div className="px-6 py-4 border-b border-border flex items-center gap-2">
-            {skill.installed ? (
-              <>
-                <span className="flex items-center gap-1.5 px-4 py-2 bg-success-subtle text-success rounded-lg text-[13px] font-medium">
-                  <Check size={14} /> 已安装
-                </span>
-                <Button variant="ghost" className="px-4 py-2 text-[13px]">
-                  卸载
-                </Button>
-              </>
-            ) : (
-              <Button className="px-5 py-2 text-[13px]">
-                <Download size={14} /> 安装此 Skill
-              </Button>
-            )}
-            <Button
-              type="button"
-              size="inline"
-              onClick={expandFileTree}
-              className="ml-auto p-2 rounded-lg hover:bg-surface-3 text-text-muted hover:text-accent transition-colors"
-              title="在文件树中查看"
-            >
-              <FolderOpen size={14} />
-            </Button>
-          </div>
-
-          <div className="px-6 py-4 border-b border-border">
-            <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider mb-2">
-              描述
-            </h3>
-            <p className="text-[13px] text-text-primary leading-relaxed">
-              {detail?.longDesc || skill.desc}
-            </p>
-          </div>
-
-          {detail && (
-            <div className="px-6 py-4 border-b border-border">
-              <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider mb-2">
-                触发条件
-              </h3>
-              <div className="space-y-1.5">
-                {detail.triggers.map((t, i) => (
-                  <div key={i} className="flex items-center gap-2 text-[12px]">
-                    <Zap size={11} className="text-clone shrink-0" />
-                    <span className="text-text-primary">{t}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {detail && (
-            <div className="px-6 py-4 border-b border-border">
-              <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider mb-2">
-                使用工具
-              </h3>
-              <div className="flex flex-wrap gap-1.5">
-                {detail.tools.map((t) => (
-                  <span
-                    key={t}
-                    className="px-2 py-1 bg-surface-3 rounded text-[11px] font-mono text-text-secondary"
-                  >
-                    {t}
+        <DetailPanelContent>
+          <ScrollArea className="h-full flex-1">
+            <div className="px-6 py-4 border-b border-border flex items-center gap-2">
+              {skill.installed ? (
+                <>
+                  <span className="flex items-center gap-1.5 px-4 py-2 bg-success-subtle text-success rounded-lg text-[13px] font-medium">
+                    <Check size={14} /> 已安装
                   </span>
-                ))}
-              </div>
+                  <Button variant="ghost" className="px-4 py-2 text-[13px]">
+                    卸载
+                  </Button>
+                </>
+              ) : (
+                <Button className="px-5 py-2 text-[13px]">
+                  <Download size={14} /> 安装此 Skill
+                </Button>
+              )}
+              <Button
+                type="button"
+                size="inline"
+                onClick={expandFileTree}
+                className="ml-auto p-2 rounded-lg hover:bg-surface-3 text-text-muted hover:text-accent transition-colors"
+                title="在文件树中查看"
+              >
+                <FolderOpen size={14} />
+              </Button>
             </div>
-          )}
 
-          {detail && detail.auth.length > 0 && (
             <div className="px-6 py-4 border-b border-border">
               <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider mb-2">
-                需要授权
+                描述
               </h3>
-              <div className="space-y-1.5">
-                {detail.auth.map((a, i) => (
-                  <div key={i} className="flex items-center gap-2 text-[12px]">
-                    <Lock size={11} className="text-success" />
-                    <span className="text-text-primary">{a}</span>
-                    <span className="text-[10px] text-success ml-auto">已授权</span>
-                  </div>
-                ))}
-              </div>
+              <p className="text-[13px] text-text-primary leading-relaxed">
+                {detail?.longDesc || skill.desc}
+              </p>
             </div>
-          )}
 
-          {detail && (
-            <div className="px-6 py-4">
-              <div className="flex items-center gap-2 mb-2">
-                <FileText size={12} className="text-text-muted" />
-                <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider">
-                  SKILL.md
+            {detail && (
+              <div className="px-6 py-4 border-b border-border">
+                <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider mb-2">
+                  触发条件
                 </h3>
-                <span className="text-[10px] text-text-muted font-mono ml-auto">
-                  ~/clone/skills/{skill.name.toLowerCase().replace(/\s+/g, "-")}/
-                </span>
+                <div className="space-y-1.5">
+                  {detail.triggers.map((t, i) => (
+                    <div key={i} className="flex items-center gap-2 text-[12px]">
+                      <Zap size={11} className="text-clone shrink-0" />
+                      <span className="text-text-primary">{t}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <pre className="p-3 bg-surface-3/60 border border-border rounded-lg text-[11px] font-mono text-text-secondary leading-relaxed whitespace-pre-wrap overflow-x-auto">
-                {detail.skillMd}
-              </pre>
-            </div>
-          )}
-        </ScrollArea>
+            )}
+
+            {detail && (
+              <div className="px-6 py-4 border-b border-border">
+                <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider mb-2">
+                  使用工具
+                </h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {detail.tools.map((t) => (
+                    <span
+                      key={t}
+                      className="px-2 py-1 bg-surface-3 rounded text-[11px] font-mono text-text-secondary"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {detail && detail.auth.length > 0 && (
+              <div className="px-6 py-4 border-b border-border">
+                <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider mb-2">
+                  需要授权
+                </h3>
+                <div className="space-y-1.5">
+                  {detail.auth.map((a, i) => (
+                    <div key={i} className="flex items-center gap-2 text-[12px]">
+                      <Lock size={11} className="text-success" />
+                      <span className="text-text-primary">{a}</span>
+                      <span className="text-[10px] text-success ml-auto">已授权</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {detail && (
+              <div className="px-6 py-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText size={12} className="text-text-muted" />
+                  <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider">
+                    SKILL.md
+                  </h3>
+                  <span className="text-[10px] text-text-muted font-mono ml-auto">
+                    ~/clone/skills/{skill.name.toLowerCase().replace(/\s+/g, "-")}/
+                  </span>
+                </div>
+                <pre className="p-3 bg-surface-3/60 border border-border rounded-lg text-[11px] font-mono text-text-secondary leading-relaxed whitespace-pre-wrap overflow-x-auto">
+                  {detail.skillMd}
+                </pre>
+              </div>
+            )}
+          </ScrollArea>
+        </DetailPanelContent>
         <PanelFooter className="border-t border-border">
           <span className="text-[11px] text-text-muted">
             Skill metadata, auth, and source are managed here.
@@ -519,7 +525,7 @@ function SkillDetailPanel({ skill, onClose }: { skill: Skill; onClose: () => voi
             <Button size="xs">打开 Session</Button>
           </PanelFooterActions>
         </PanelFooter>
-      </div>
+      </DetailPanel>
     </div>
   );
 }

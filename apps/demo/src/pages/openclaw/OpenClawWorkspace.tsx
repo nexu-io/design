@@ -9,7 +9,14 @@ import {
   InteractiveRowTrailing,
   PanelFooter,
   PanelFooterActions,
+  ResizableHandle,
+  ResizablePanel,
   ScrollArea,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SplitView,
   Switch,
   ToggleGroup,
   ToggleGroupItem,
@@ -2198,7 +2205,7 @@ export default function OpenClawWorkspace() {
   const allSkillsCount = SKILL_CATEGORIES.flatMap((c) => c.skills).length;
 
   return (
-    <div className="relative flex flex-row h-full">
+    <SplitView className="relative h-full">
       {/* Sidebar toggle — fixed position, same spot for expand/collapse */}
       <button
         onClick={() => {
@@ -2214,371 +2221,377 @@ export default function OpenClawWorkspace() {
       </button>
 
       {/* Sidebar — frosted glass + fully hidden when collapsed */}
-      <div
-        className={`flex flex-col shrink-0 overflow-hidden ${collapsed ? "w-0" : ""}`}
-        style={
-          {
-            ...(!collapsed ? { width: sidebarWidth } : {}),
-            transition: isResizing.current ? "none" : "width 200ms",
-            WebkitAppRegion: "drag",
-            background: "transparent",
-          } as React.CSSProperties
-        }
+      <ResizablePanel
+        size={collapsed ? 0 : sidebarWidth}
+        collapsed={collapsed}
+        className="overflow-hidden"
       >
-        {/* Traffic light clearance */}
-        <div className="h-14 shrink-0" />
-
-        {/* Brand */}
-        <div
-          className="px-3 pb-2 flex items-center justify-between"
-          style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
+        <Sidebar
+          className="h-full border-r-0 bg-transparent"
+          style={
+            {
+              transition: isResizing.current ? "none" : "width 200ms",
+              WebkitAppRegion: "drag",
+            } as React.CSSProperties
+          }
         >
-          <img src="/brand/logo-black-1.svg" alt="nexu" className="h-6 object-contain" />
-          {hasUpdate && updateDismissed && (
-            <button
-              onClick={() => setUpdateDismissed(false)}
-              className="rounded-full px-2 py-1 text-[10px] leading-none font-semibold bg-[var(--color-brand-primary)] text-white hover:opacity-85 transition-opacity"
-            >
-              {t("ws.sidebar.update")}
-            </button>
-          )}
-        </div>
+          {/* Traffic light clearance */}
+          <SidebarHeader className="h-14 shrink-0" />
 
-        {/* Nav items */}
-        <div
-          className="flex-1 overflow-y-auto"
-          style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
-        >
-          <div className="px-2 pt-3 space-y-0.5">
-            {NAV_ITEMS.map((item) => {
-              const active = view.type === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setView({ type: item.id } as View)}
-                  className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-2 ${
-                    active ? "nav-item-active" : "nav-item"
-                  }`}
-                >
-                  <item.icon size={16} />
-                  {t(item.labelKey)}
-                  {item.id === "skills" && (
-                    <span className="ml-auto text-[10px] text-text-tertiary font-normal">
-                      {allSkillsCount}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+          {/* Brand */}
+          <SidebarHeader
+            className="px-3 pb-2 flex items-center justify-between"
+            style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
+          >
+            <img src="/brand/logo-black-1.svg" alt="nexu" className="h-6 object-contain" />
+            {hasUpdate && updateDismissed && (
+              <button
+                onClick={() => setUpdateDismissed(false)}
+                className="rounded-full px-2 py-1 text-[10px] leading-none font-semibold bg-[var(--color-brand-primary)] text-white hover:opacity-85 transition-opacity"
+              >
+                {t("ws.sidebar.update")}
+              </button>
+            )}
+          </SidebarHeader>
 
-          {/* Conversations section */}
-          <div className="px-2 pt-6">
-            <div className="sidebar-section-label">{t("ws.nav.conversations")}</div>
-            <div className="space-y-0.5">
-              {MOCK_CHANNELS.map((ch) => {
-                const active =
-                  view.type === "conversations" &&
-                  (view as { type: "conversations"; channelId?: string }).channelId === ch.id;
-                const ChannelIcon =
-                  (
-                    {
-                      slack: SlackIconSetup,
-                      feishu: FeishuIconSetup,
-                      discord: DiscordIconSetup,
-                    } as Record<string, typeof SlackIconSetup>
-                  )[ch.platform] || SlackIconSetup;
+          {/* Nav items */}
+          <SidebarContent
+            className="flex-1 overflow-y-auto"
+            style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
+          >
+            <div className="px-2 pt-3 space-y-0.5">
+              {NAV_ITEMS.map((item) => {
+                const active = view.type === item.id;
                 return (
                   <button
-                    key={ch.id}
-                    onClick={() => setView({ type: "conversations", channelId: ch.id })}
-                    className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-1.5 ${
+                    key={item.id}
+                    onClick={() => setView({ type: item.id } as View)}
+                    className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-2 ${
                       active ? "nav-item-active" : "nav-item"
                     }`}
                   >
-                    <span className="shrink-0 w-4 h-4 flex items-center justify-center">
-                      <ChannelIcon size={14} />
-                    </span>
-                    <span className={`truncate text-[12px] ${active ? "" : "text-text-primary"}`}>
-                      {ch.name}
-                    </span>
+                    <item.icon size={16} />
+                    {t(item.labelKey)}
+                    {item.id === "skills" && (
+                      <span className="ml-auto text-[10px] text-text-tertiary font-normal">
+                        {allSkillsCount}
+                      </span>
+                    )}
                   </button>
                 );
               })}
             </div>
-          </div>
-        </div>
 
-        {/* Update banner — available / downloading / ready / error */}
-        {hasUpdate && !updateDismissed && (
-          <div
-            className="mx-3 mb-2 px-3 py-2.5 rounded-[10px] border border-border bg-surface-0/80 backdrop-blur-sm animate-float shrink-0"
-            style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2 shrink-0">
-                  <span
-                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${updateError ? "bg-red-500" : "bg-[var(--color-success)]"}`}
-                  />
-                  <span
-                    className={`relative inline-flex rounded-full h-2 w-2 ${updateError ? "bg-red-500" : "bg-[var(--color-success)]"}`}
-                  />
-                </span>
-                <span className="text-[12px] font-medium text-text-primary whitespace-nowrap">
-                  {updating && t("ws.update.downloading")}
-                  {updateReady && t("ws.update.ready").replace("{{version}}", MOCK_VERSION)}
-                  {updateError && t("ws.update.failed")}
-                  {!updating &&
-                    !updateReady &&
-                    !updateError &&
-                    t("ws.update.available").replace("{{version}}", MOCK_VERSION)}
-                </span>
-              </div>
-              {!updating && (
-                <button
-                  onClick={() => setUpdateDismissed(true)}
-                  className="text-text-muted hover:text-text-primary transition-colors -mr-1"
-                >
-                  <X size={12} />
-                </button>
-              )}
-            </div>
-
-            {/* Downloading — progress bar + percent right-aligned below */}
-            {updating && (
-              <div className="pl-4 pr-1">
-                <div className="h-[6px] w-full rounded-full bg-border overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-300 ease-out"
-                    style={{ width: `${downloadProgress}%`, background: "#1c1f23" }}
-                  />
-                </div>
-                <div className="flex justify-end mt-1.5">
-                  <span className="text-[10px] tabular-nums text-text-muted">
-                    {downloadProgress}%
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Available — Download + Changelog */}
-            {!updating && !updateReady && !updateError && (
-              <div className="flex items-center gap-2 pl-4">
-                <Button
-                  type="button"
-                  size="inline"
-                  onClick={() => {
-                    setUpdating(true);
-                    setDownloadProgress(0);
-                    let progress = 0;
-                    downloadTimer.current = setInterval(() => {
-                      const remaining = 100 - progress;
-                      const step = Math.max(1, Math.floor(Math.random() * remaining * 0.15));
-                      progress = Math.min(100, progress + step);
-                      setDownloadProgress(progress);
-                      if (progress >= 100) {
-                        if (downloadTimer.current) clearInterval(downloadTimer.current);
-                        setTimeout(() => {
-                          setUpdating(false);
-                          setUpdateReady(true);
-                        }, 600);
-                      }
-                    }, 200);
-                  }}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[11px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
-                >
-                  {t("ws.update.download")}
-                </Button>
-                <Button
-                  type="button"
-                  size="inline"
-                  variant="ghost"
-                  onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[11px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
-                >
-                  {t("ws.update.changelog")}
-                </Button>
-              </div>
-            )}
-
-            {/* Ready — Restart + Changelog */}
-            {updateReady && (
-              <div className="flex items-center gap-2 pl-4">
-                <Button
-                  type="button"
-                  size="inline"
-                  onClick={() => {
-                    setUpdateReady(false);
-                    setHasUpdate(false);
-                  }}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[11px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
-                >
-                  {t("ws.update.restart")}
-                </Button>
-                <Button
-                  type="button"
-                  size="inline"
-                  variant="ghost"
-                  onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[11px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
-                >
-                  {t("ws.update.changelog")}
-                </Button>
-              </div>
-            )}
-
-            {/* Error — Retry + Changelog */}
-            {updateError && (
-              <div className="flex items-center gap-2 pl-4">
-                <Button
-                  type="button"
-                  size="inline"
-                  onClick={() => {
-                    setUpdateError(false);
-                    setHasUpdate(true);
-                  }}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[11px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
-                >
-                  {t("ws.update.retry")}
-                </Button>
-                <Button
-                  type="button"
-                  size="inline"
-                  variant="ghost"
-                  onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[11px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
-                >
-                  {t("ws.update.changelog")}
-                </Button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Icon row — above account bar */}
-        <div
-          className="px-3 pb-1.5 flex items-center gap-1"
-          style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
-        >
-          <div className="relative" ref={helpRef}>
-            {showHelpMenu && (
-              <div className="absolute z-20 bottom-full left-0 mb-2 w-44">
-                <div className="rounded-xl border bg-surface-1 border-border shadow-xl shadow-black/10 overflow-hidden">
-                  <div className="p-1.5">
-                    <a
-                      href="https://docs.nexu.ai"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
-                    >
-                      <BookOpen size={14} />
-                      {t("ws.help.documentation")}
-                    </a>
-                    <a
-                      href="mailto:hi@nexu.ai"
-                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
-                    >
-                      <Mail size={14} />
-                      {t("ws.help.contactUs")}
-                    </a>
-                  </div>
-                  <div className="border-t border-border p-1.5">
+            {/* Conversations section */}
+            <div className="px-2 pt-6">
+              <div className="sidebar-section-label">{t("ws.nav.conversations")}</div>
+              <div className="space-y-0.5">
+                {MOCK_CHANNELS.map((ch) => {
+                  const active =
+                    view.type === "conversations" &&
+                    (view as { type: "conversations"; channelId?: string }).channelId === ch.id;
+                  const ChannelIcon =
+                    (
+                      {
+                        slack: SlackIconSetup,
+                        feishu: FeishuIconSetup,
+                        discord: DiscordIconSetup,
+                      } as Record<string, typeof SlackIconSetup>
+                    )[ch.platform] || SlackIconSetup;
+                  return (
                     <button
-                      onClick={() => {
-                        setShowHelpMenu(false);
-                        setCheckingUpdate(true);
-                        setTimeout(() => {
-                          setCheckingUpdate(false);
-                          if (hasUpdate && !updateDismissed) {
-                            /* new version → sidebar card already visible */
-                          } else {
-                            setShowUpToDate(true);
-                          }
-                        }, 1500);
-                      }}
-                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
-                    >
-                      <Loader2 size={14} />
-                      Check for Updates…
-                    </button>
-                    <a
-                      href="https://nexu.ai/changelog"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
-                    >
-                      <ScrollText size={14} />
-                      {t("ws.help.changelog")}
-                    </a>
-                  </div>
-                </div>
-              </div>
-            )}
-            <button
-              onClick={() => setShowHelpMenu(!showHelpMenu)}
-              className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors cursor-pointer ${showHelpMenu ? "text-text-primary bg-black/5" : "text-text-secondary hover:text-text-primary hover:bg-black/5"}`}
-              title={t("ws.help.title")}
-            >
-              <CircleHelp size={16} />
-            </button>
-          </div>
-          <a
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-7 h-7 flex items-center justify-center rounded-md text-text-secondary hover:text-text-primary hover:bg-black/5 transition-colors"
-            title={t("ws.help.github")}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-            </svg>
-          </a>
-          {stars && stars > 0 && (
-            <span className="text-[10px] tabular-nums text-text-tertiary ml-0.5">
-              {stars.toLocaleString()}
-            </span>
-          )}
-          <div className="relative ml-auto" ref={langRef}>
-            {showLangMenu && (
-              <div className="absolute z-20 bottom-full right-0 mb-2 w-36">
-                <div className="rounded-xl border bg-surface-1 border-border shadow-xl shadow-black/10 overflow-hidden p-1.5">
-                  {[
-                    { value: "en" as const, label: "English" },
-                    { value: "zh" as const, label: "简体中文" },
-                  ].map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => {
-                        setLocale(opt.value);
-                        setShowLangMenu(false);
-                      }}
-                      className={`flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium transition-all ${
-                        locale === opt.value
-                          ? "text-text-primary bg-black/5"
-                          : "text-text-secondary hover:text-text-primary hover:bg-black/5"
+                      key={ch.id}
+                      onClick={() => setView({ type: "conversations", channelId: ch.id })}
+                      className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-1.5 ${
+                        active ? "nav-item-active" : "nav-item"
                       }`}
                     >
-                      {opt.label}
-                      {locale === opt.value && <Check size={12} className="ml-auto" />}
+                      <span className="shrink-0 w-4 h-4 flex items-center justify-center">
+                        <ChannelIcon size={14} />
+                      </span>
+                      <span className={`truncate text-[12px] ${active ? "" : "text-text-primary"}`}>
+                        {ch.name}
+                      </span>
                     </button>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
-            )}
-            <button
-              onClick={() => setShowLangMenu(!showLangMenu)}
-              className={`h-7 flex items-center gap-1.5 px-1.5 rounded-md transition-colors cursor-pointer ${showLangMenu ? "text-text-primary bg-black/5" : "text-text-secondary hover:text-text-primary hover:bg-black/5"}`}
-              title={t("ws.help.language")}
+            </div>
+          </SidebarContent>
+
+          {/* Update banner — available / downloading / ready / error */}
+          {hasUpdate && !updateDismissed && (
+            <SidebarFooter>
+              <div
+                className="mx-3 mb-2 px-3 py-2.5 rounded-[10px] border border-border bg-surface-0/80 backdrop-blur-sm animate-float shrink-0"
+                style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-2 w-2 shrink-0">
+                      <span
+                        className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${updateError ? "bg-red-500" : "bg-[var(--color-success)]"}`}
+                      />
+                      <span
+                        className={`relative inline-flex rounded-full h-2 w-2 ${updateError ? "bg-red-500" : "bg-[var(--color-success)]"}`}
+                      />
+                    </span>
+                    <span className="text-[12px] font-medium text-text-primary whitespace-nowrap">
+                      {updating && t("ws.update.downloading")}
+                      {updateReady && t("ws.update.ready").replace("{{version}}", MOCK_VERSION)}
+                      {updateError && t("ws.update.failed")}
+                      {!updating &&
+                        !updateReady &&
+                        !updateError &&
+                        t("ws.update.available").replace("{{version}}", MOCK_VERSION)}
+                    </span>
+                  </div>
+                  {!updating && (
+                    <button
+                      onClick={() => setUpdateDismissed(true)}
+                      className="text-text-muted hover:text-text-primary transition-colors -mr-1"
+                    >
+                      <X size={12} />
+                    </button>
+                  )}
+                </div>
+
+                {/* Downloading — progress bar + percent right-aligned below */}
+                {updating && (
+                  <div className="pl-4 pr-1">
+                    <div className="h-[6px] w-full rounded-full bg-border overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-300 ease-out"
+                        style={{ width: `${downloadProgress}%`, background: "#1c1f23" }}
+                      />
+                    </div>
+                    <div className="flex justify-end mt-1.5">
+                      <span className="text-[10px] tabular-nums text-text-muted">
+                        {downloadProgress}%
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Available — Download + Changelog */}
+                {!updating && !updateReady && !updateError && (
+                  <div className="flex items-center gap-2 pl-4">
+                    <Button
+                      type="button"
+                      size="inline"
+                      onClick={() => {
+                        setUpdating(true);
+                        setDownloadProgress(0);
+                        let progress = 0;
+                        downloadTimer.current = setInterval(() => {
+                          const remaining = 100 - progress;
+                          const step = Math.max(1, Math.floor(Math.random() * remaining * 0.15));
+                          progress = Math.min(100, progress + step);
+                          setDownloadProgress(progress);
+                          if (progress >= 100) {
+                            if (downloadTimer.current) clearInterval(downloadTimer.current);
+                            setTimeout(() => {
+                              setUpdating(false);
+                              setUpdateReady(true);
+                            }, 600);
+                          }
+                        }, 200);
+                      }}
+                      className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[11px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
+                    >
+                      {t("ws.update.download")}
+                    </Button>
+                    <Button
+                      type="button"
+                      size="inline"
+                      variant="ghost"
+                      onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
+                      className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[11px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
+                    >
+                      {t("ws.update.changelog")}
+                    </Button>
+                  </div>
+                )}
+
+                {/* Ready — Restart + Changelog */}
+                {updateReady && (
+                  <div className="flex items-center gap-2 pl-4">
+                    <Button
+                      type="button"
+                      size="inline"
+                      onClick={() => {
+                        setUpdateReady(false);
+                        setHasUpdate(false);
+                      }}
+                      className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[11px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
+                    >
+                      {t("ws.update.restart")}
+                    </Button>
+                    <Button
+                      type="button"
+                      size="inline"
+                      variant="ghost"
+                      onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
+                      className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[11px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
+                    >
+                      {t("ws.update.changelog")}
+                    </Button>
+                  </div>
+                )}
+
+                {/* Error — Retry + Changelog */}
+                {updateError && (
+                  <div className="flex items-center gap-2 pl-4">
+                    <Button
+                      type="button"
+                      size="inline"
+                      onClick={() => {
+                        setUpdateError(false);
+                        setHasUpdate(true);
+                      }}
+                      className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[11px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
+                    >
+                      {t("ws.update.retry")}
+                    </Button>
+                    <Button
+                      type="button"
+                      size="inline"
+                      variant="ghost"
+                      onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
+                      className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[11px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
+                    >
+                      {t("ws.update.changelog")}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </SidebarFooter>
+          )}
+
+          {/* Icon row — above account bar */}
+          <SidebarFooter
+            className="px-3 pb-1.5 flex items-center gap-1"
+            style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
+          >
+            <div className="relative" ref={helpRef}>
+              {showHelpMenu && (
+                <div className="absolute z-20 bottom-full left-0 mb-2 w-44">
+                  <div className="rounded-xl border bg-surface-1 border-border shadow-xl shadow-black/10 overflow-hidden">
+                    <div className="p-1.5">
+                      <a
+                        href="https://docs.nexu.ai"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
+                      >
+                        <BookOpen size={14} />
+                        {t("ws.help.documentation")}
+                      </a>
+                      <a
+                        href="mailto:hi@nexu.ai"
+                        className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
+                      >
+                        <Mail size={14} />
+                        {t("ws.help.contactUs")}
+                      </a>
+                    </div>
+                    <div className="border-t border-border p-1.5">
+                      <button
+                        onClick={() => {
+                          setShowHelpMenu(false);
+                          setCheckingUpdate(true);
+                          setTimeout(() => {
+                            setCheckingUpdate(false);
+                            if (hasUpdate && !updateDismissed) {
+                              /* new version → sidebar card already visible */
+                            } else {
+                              setShowUpToDate(true);
+                            }
+                          }, 1500);
+                        }}
+                        className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
+                      >
+                        <Loader2 size={14} />
+                        Check for Updates…
+                      </button>
+                      <a
+                        href="https://nexu.ai/changelog"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
+                      >
+                        <ScrollText size={14} />
+                        {t("ws.help.changelog")}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <button
+                onClick={() => setShowHelpMenu(!showHelpMenu)}
+                className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors cursor-pointer ${showHelpMenu ? "text-text-primary bg-black/5" : "text-text-secondary hover:text-text-primary hover:bg-black/5"}`}
+                title={t("ws.help.title")}
+              >
+                <CircleHelp size={16} />
+              </button>
+            </div>
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-7 h-7 flex items-center justify-center rounded-md text-text-secondary hover:text-text-primary hover:bg-black/5 transition-colors"
+              title={t("ws.help.github")}
             >
-              <Globe size={14} />
-              <span className="text-[11px] font-medium leading-none">
-                {locale === "en" ? "EN" : "中文"}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+              </svg>
+            </a>
+            {stars && stars > 0 && (
+              <span className="text-[10px] tabular-nums text-text-tertiary ml-0.5">
+                {stars.toLocaleString()}
               </span>
-            </button>
-          </div>
-        </div>
-      </div>
+            )}
+            <div className="relative ml-auto" ref={langRef}>
+              {showLangMenu && (
+                <div className="absolute z-20 bottom-full right-0 mb-2 w-36">
+                  <div className="rounded-xl border bg-surface-1 border-border shadow-xl shadow-black/10 overflow-hidden p-1.5">
+                    {[
+                      { value: "en" as const, label: "English" },
+                      { value: "zh" as const, label: "简体中文" },
+                    ].map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => {
+                          setLocale(opt.value);
+                          setShowLangMenu(false);
+                        }}
+                        className={`flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium transition-all ${
+                          locale === opt.value
+                            ? "text-text-primary bg-black/5"
+                            : "text-text-secondary hover:text-text-primary hover:bg-black/5"
+                        }`}
+                      >
+                        {opt.label}
+                        {locale === opt.value && <Check size={12} className="ml-auto" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <button
+                onClick={() => setShowLangMenu(!showLangMenu)}
+                className={`h-7 flex items-center gap-1.5 px-1.5 rounded-md transition-colors cursor-pointer ${showLangMenu ? "text-text-primary bg-black/5" : "text-text-secondary hover:text-text-primary hover:bg-black/5"}`}
+                title={t("ws.help.language")}
+              >
+                <Globe size={14} />
+                <span className="text-[11px] font-medium leading-none">
+                  {locale === "en" ? "EN" : "中文"}
+                </span>
+              </button>
+            </div>
+          </SidebarFooter>
+        </Sidebar>
+      </ResizablePanel>
 
       {/* Mobile header — hidden in desktop client */}
       <div className="hidden">
@@ -2605,13 +2618,13 @@ export default function OpenClawWorkspace() {
 
       {/* Resize handle */}
       {!collapsed && (
-        <div
+        <ResizableHandle
           onMouseDown={handleResizeStart}
-          className="w-[3px] shrink-0 cursor-col-resize group relative z-10"
+          className="group relative z-10 w-[3px]"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
           <div className="absolute inset-y-0 -left-[2px] -right-[2px]" />
-        </div>
+        </ResizableHandle>
       )}
 
       {/* Main content */}
@@ -2697,6 +2710,6 @@ export default function OpenClawWorkspace() {
           </div>
         </div>
       )}
-    </div>
+    </SplitView>
   );
 }
