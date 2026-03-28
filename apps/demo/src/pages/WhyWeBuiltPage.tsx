@@ -18,7 +18,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { PageHeader, PageShell, Section } from "../components/Section";
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 
 function EraCard({
   era,
@@ -138,7 +138,11 @@ export default function WhyWeBuiltPage() {
       </div>
 
       {/* ===== SECTION 1: THE TIPPING POINT ===== */}
-      <Section title="1. 时代拐点 — 每一代「网络」定义一个时代">
+      <section className="mb-12">
+        <SectionHeader
+          title="1. 时代拐点 — 每一代「网络」定义一个时代"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="bg-surface-1 border border-border rounded-xl p-6 mb-6">
           <div className="text-xl font-bold text-text-primary mb-2">
             OpenClaw 给了龙虾一台电脑。nexu 给了龙虾一间办公室。
@@ -179,10 +183,14 @@ export default function WhyWeBuiltPage() {
             color="bg-accent"
           />
         </div>
-      </Section>
+      </section>
 
       {/* ===== SECTION 2: WHAT WE SEE ===== */}
-      <Section title="2. 我们看到了什么 — What We See">
+      <section className="mb-12">
+        <SectionHeader
+          title="2. 我们看到了什么 — What We See"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-2 gap-4">
           <InsightBlock icon={Shield} title="大企业的壁垒正在瓦解" accent="bg-danger-subtle">
             <p>SaaS 时代，大企业的壁垒是 UI 复杂度、行业 best practices、客户关系和资源垄断。</p>
@@ -219,10 +227,14 @@ export default function WhyWeBuiltPage() {
             </ul>
           </InsightBlock>
         </div>
-      </Section>
+      </section>
 
       {/* ===== SECTION 3: WHAT WE BUILD ===== */}
-      <Section title="3. 我们在建什么 — 龙虾的赛博办公室">
+      <section className="mb-12">
+        <SectionHeader
+          title="3. 我们在建什么 — 龙虾的赛博办公室"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="bg-surface-1 border border-border rounded-xl p-6 mb-6">
           <div className="text-lg font-bold text-text-primary mb-3">
             为你的龙虾打造一间赛博办公室 — 世界首个人与分身共存的办公协作网络
@@ -319,10 +331,14 @@ export default function WhyWeBuiltPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
       {/* ===== SECTION 4: WHY US ===== */}
-      <Section title="4. 为什么是我们 — Why Us">
+      <section className="mb-12">
+        <SectionHeader
+          title="4. 为什么是我们 — Why Us"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-surface-2 border border-border rounded-xl p-5">
             <div className="text-sm font-bold text-text-primary mb-3">三层竞争优势</div>
@@ -399,10 +415,14 @@ export default function WhyWeBuiltPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
       {/* ===== SECTION 5: THE FLYWHEEL ===== */}
-      <Section title="5. 增长飞轮 — The Flywheel">
+      <section className="mb-12">
+        <SectionHeader
+          title="5. 增长飞轮 — The Flywheel"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="bg-surface-2 border border-border rounded-xl p-6">
           <div className="grid grid-cols-7 gap-2 items-center text-center mb-6">
             {[
@@ -508,10 +528,14 @@ export default function WhyWeBuiltPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
       {/* ===== SECTION 6: THE ENDGAME ===== */}
-      <Section title="6. 终局愿景 — The Endgame">
+      <section className="mb-12">
+        <SectionHeader
+          title="6. 终局愿景 — The Endgame"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="bg-surface-1 border border-accent/20 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
@@ -608,10 +632,14 @@ export default function WhyWeBuiltPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
       {/* ===== SECTION 7: EVOLUTION ===== */}
-      <Section title="7. 思想演化 — How We Got Here">
+      <section className="mb-12">
+        <SectionHeader
+          title="7. 思想演化 — How We Got Here"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="space-y-3">
           {[
             {
@@ -684,10 +712,14 @@ export default function WhyWeBuiltPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
       {/* ===== SECTION 8: CORE AXIOMS ===== */}
-      <Section title="8. 核心公理 — Core Axioms">
+      <section className="mb-12">
+        <SectionHeader
+          title="8. 核心公理 — Core Axioms"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-2 gap-4">
           {[
             {
@@ -735,7 +767,7 @@ export default function WhyWeBuiltPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
       {/* ===== CTA: Experience It ===== */}
       <div className="mt-12 mb-4">

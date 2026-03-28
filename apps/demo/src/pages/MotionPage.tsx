@@ -1,7 +1,7 @@
 import { Button } from "@nexu-design/ui-web";
 import { useEffect, useState } from "react";
 import NexuLoader, { NexuLoadingScreen } from "../components/NexuLoader";
-import { PageHeader, PageShell, Section } from "../components/Section";
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 
 export default function MotionPage() {
   const [showFullscreen, setShowFullscreen] = useState(false);
@@ -22,7 +22,11 @@ export default function MotionPage() {
         description="会呼吸的 UI。分身有状态——在线、思考中、工作中、休息中。界面跟随分身状态微妙变化。"
       />
 
-      <Section title="nexu Loader — 品牌加载动效">
+      <section className="mb-12">
+        <SectionHeader
+          title="nexu Loader — 品牌加载动效"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="flex items-end gap-12">
           <div className="text-center">
             <NexuLoader size={96} />
@@ -40,9 +44,13 @@ export default function MotionPage() {
         <Button onClick={() => setShowFullscreen(true)} className="mt-6 rounded-lg text-sm">
           预览全屏加载效果（4s 后自动关闭）
         </Button>
-      </Section>
+      </section>
 
-      <Section title="Clone Breath — 分身呼吸">
+      <section className="mb-12">
+        <SectionHeader
+          title="Clone Breath — 分身呼吸"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="flex items-center gap-8">
           <div className="text-center">
             <div className="w-20 h-20 rounded-full bg-surface-3 animate-clone-breath mx-auto flex items-center justify-center">
@@ -98,9 +106,13 @@ export default function MotionPage() {
             <div className="text-[11px] text-text-muted">金色闪烁（短暂）</div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Thinking Dots — 分身思考">
+      <section className="mb-12">
+        <SectionHeader
+          title="Thinking Dots — 分身思考"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="bg-surface-2 border border-border rounded-lg px-5 py-4 inline-flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-surface-3 animate-clone-breath flex items-center justify-center text-sm">
             🤔
@@ -112,9 +124,13 @@ export default function MotionPage() {
           </div>
           <span className="text-[13px] text-text-secondary">分身在想……</span>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Message Enter — 消息入场">
+      <section className="mb-12">
+        <SectionHeader
+          title="Message Enter — 消息入场"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="space-y-3 max-w-md">
           <div
             className="animate-fade-in-up bg-surface-2 border border-border rounded-lg px-4 py-3"
@@ -142,9 +158,13 @@ export default function MotionPage() {
         <div className="text-[11px] text-text-muted mt-3">
           8px slideUp + fadeIn, 350ms ease-out, staggered
         </div>
-      </Section>
+      </section>
 
-      <Section title="Energy Drain — 能量消耗">
+      <section className="mb-12">
+        <SectionHeader
+          title="Energy Drain — 能量消耗"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="max-w-md space-y-4">
           <div>
             <div className="text-xs text-text-secondary mb-1.5">Smooth color transition</div>
@@ -170,9 +190,13 @@ export default function MotionPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Float — 落地页元素">
+      <section className="mb-12">
+        <SectionHeader
+          title="Float — 落地页元素"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="flex gap-8 items-center">
           <div className="animate-float">
             <div className="w-16 h-16 rounded-2xl bg-accent-subtle border border-accent flex items-center justify-center text-2xl">
@@ -191,9 +215,13 @@ export default function MotionPage() {
           </div>
           <div className="text-xs text-text-muted">3s float cycle, staggered delays</div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Timing Functions">
+      <section className="mb-12">
+        <SectionHeader
+          title="Timing Functions"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="space-y-3 max-w-lg">
           {[
             { name: "ease-default", fn: "cubic-bezier(0.4, 0, 0.2, 1)", use: "通用" },
@@ -210,9 +238,10 @@ export default function MotionPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Duration Scale">
+      <section className="mb-12">
+        <SectionHeader title="Duration Scale" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="flex gap-3">
           {[
             { name: "fast", ms: 100 },
@@ -231,7 +260,7 @@ export default function MotionPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
     </PageShell>
   );
 }

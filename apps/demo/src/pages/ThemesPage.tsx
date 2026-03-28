@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { PageHeader, PageShell, Section } from "../components/Section";
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 
 const THEMES = [
   {
@@ -30,7 +30,8 @@ export default function ThemesPage() {
         description="设计系统支持多套主题。在侧栏底部切换「默认」/「线上」可实时预览；Colors、Components 等页会随当前主题变化。"
       />
 
-      <Section title="主题列表">
+      <section className="mb-12">
+        <SectionHeader title="主题列表" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {THEMES.map((t) => (
             <div
@@ -62,9 +63,10 @@ export default function ThemesPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="如何切换主题">
+      <section className="mb-12">
+        <SectionHeader title="如何切换主题" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="bg-surface-2 rounded-lg border border-border p-6">
           <p className="text-sm text-text-secondary mb-4">
             在左侧边栏<strong className="text-text-primary">底部</strong>
@@ -86,9 +88,10 @@ export default function ThemesPage() {
             等 CSS 变量。所有使用 token 的组件会自动跟随当前主题。
           </p>
         </div>
-      </Section>
+      </section>
 
-      <Section title="文档">
+      <section className="mb-12">
+        <SectionHeader title="文档" className="mb-4 border-b border-border-subtle pb-2" />
         <ul className="space-y-2 text-sm text-text-secondary">
           <li>
             <Link to="/colors" className="text-accent hover:underline">
@@ -107,7 +110,7 @@ export default function ThemesPage() {
             线上版本完整规范（色彩、圆角、组件约定）
           </li>
         </ul>
-      </Section>
+      </section>
     </PageShell>
   );
 }

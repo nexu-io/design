@@ -47,5 +47,6 @@ export * from "./patterns/form-field";
 export * from "./patterns/empty-state";
 export * from "./patterns/section-header";
 export * from "./patterns/page-header";
+export * from "./patterns/page-shell";
 export * from "./patterns/settings-section";
 export * from "./patterns/confirm-dialog";

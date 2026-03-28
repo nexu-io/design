@@ -1,6 +1,6 @@
 import { Button } from "@nexu-design/ui-web";
 
-import { PageHeader, PageShell, Section } from "../components/Section";
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 
 function ChatBubble({
   from,
@@ -37,7 +37,11 @@ export default function CopyPage() {
         description="nexu（奈苏）AARRR 全链路文案。产品里每一个字都在讲同一个故事 — 为你的龙虾打造一间赛博办公室 — 世界首个人与分身共存的办公协作网络。People quit. Clones don't."
       />
 
-      <Section title="Acquisition — 获客（落地页 Hero）">
+      <section className="mb-12">
+        <SectionHeader
+          title="Acquisition — 获客（落地页 Hero）"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="overflow-hidden relative p-8 text-center rounded-xl border bg-surface-1 border-border">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(192,138,37,0.04)_0%,transparent_60%)]" />
           <div className="flex relative justify-center items-center mx-auto mb-6 w-20 h-20 text-3xl rounded-2xl border bg-surface-2 border-border animate-clone-breath">
@@ -59,9 +63,13 @@ export default function CopyPage() {
           </div>
           <div className="mt-6 text-xs text-text-muted">已有 89,536 人与分身共存中</div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Acquisition — 团队获客">
+      <section className="mb-12">
+        <SectionHeader
+          title="Acquisition — 团队获客"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="overflow-hidden relative p-8 text-center rounded-xl border bg-surface-1 border-border">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,200,200,0.04)_0%,transparent_60%)]" />
           <div className="flex relative gap-3 justify-center mb-6">
@@ -90,9 +98,13 @@ export default function CopyPage() {
             <Button variant="outline">看看团队分身怎么工作</Button>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Acquisition — 主线入口文案">
+      <section className="mb-12">
+        <SectionHeader
+          title="Acquisition — 主线入口文案"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-2 gap-4">
           <div className="p-5 rounded-lg border bg-surface-2 border-border">
             <div className="mb-3 text-xs font-medium text-accent">
@@ -143,9 +155,13 @@ export default function CopyPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Activation — 激活（Onboarding 对话）">
+      <section className="mb-12">
+        <SectionHeader
+          title="Activation — 激活（Onboarding 对话）"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="p-5 mx-auto max-w-md rounded-xl border bg-surface-1 border-border">
           <ChatBubble from="clone">
             你好！我是你的数字分身 ✨<br />
@@ -176,9 +192,13 @@ export default function CopyPage() {
             有什么事直接说，我一直在 🫡
           </ChatBubble>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Activation — 原生渠道激活">
+      <section className="mb-12">
+        <SectionHeader
+          title="Activation — 原生渠道激活"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-2 gap-4">
           <div className="p-5 rounded-lg border bg-surface-2 border-border">
             <div className="mb-3 text-xs font-medium text-success">📧 Email 激活</div>
@@ -209,9 +229,13 @@ export default function CopyPage() {
             </ChatBubble>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Retention — 留存（每日推送）">
+      <section className="mb-12">
+        <SectionHeader
+          title="Retention — 留存（每日推送）"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-2 gap-4">
           <div className="p-5 rounded-lg border bg-surface-2 border-border">
             <div className="mb-3 text-xs font-medium text-accent">☀️ 早间推送</div>
@@ -251,9 +275,13 @@ export default function CopyPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Retention — 里程碑">
+      <section className="mb-12">
+        <SectionHeader
+          title="Retention — 里程碑"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-3 gap-3">
           {[
             {
@@ -293,9 +321,13 @@ export default function CopyPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Retention — 沉默用户召回">
+      <section className="mb-12">
+        <SectionHeader
+          title="Retention — 沉默用户召回"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="space-y-3 max-w-md">
           {[
             {
@@ -321,9 +353,13 @@ export default function CopyPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Revenue — 积分耗尽（核心转化）">
+      <section className="mb-12">
+        <SectionHeader
+          title="Revenue — 积分耗尽（核心转化）"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="p-6 mx-auto max-w-sm text-center rounded-xl border-2 bg-surface-2 border-danger">
           <div
             className="flex justify-center items-center mx-auto mb-4 w-16 h-16 text-3xl rounded-full opacity-70 bg-surface-3"
@@ -354,9 +390,13 @@ export default function CopyPage() {
             你的所有记忆都会保留，充能后立刻恢复工作
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Revenue — 定价页">
+      <section className="mb-12">
+        <SectionHeader
+          title="Revenue — 定价页"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-3 gap-4 mx-auto max-w-3xl">
           {[
             {
@@ -429,9 +469,13 @@ export default function CopyPage() {
         <div className="mt-4 text-xs text-center text-text-muted">
           还可以单独购买能量包：¥10 = 1000 能量
         </div>
-      </Section>
+      </section>
 
-      <Section title="Referral — 邀请">
+      <section className="mb-12">
+        <SectionHeader
+          title="Referral — 邀请"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-2 gap-4">
           <div className="overflow-hidden mx-auto max-w-sm rounded-xl border bg-surface-2 border-border">
             <div className="h-1 bg-accent" />
@@ -484,9 +528,13 @@ export default function CopyPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Referral — 团队裂变">
+      <section className="mb-12">
+        <SectionHeader
+          title="Referral — 团队裂变"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-2 gap-4">
           <div className="overflow-hidden max-w-sm rounded-xl border bg-surface-2 border-border">
             <div className="h-1 bg-cyan-500" />
@@ -524,7 +572,7 @@ export default function CopyPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
     </PageShell>
   );
 }

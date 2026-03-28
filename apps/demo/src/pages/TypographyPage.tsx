@@ -1,4 +1,4 @@
-import { PageHeader, PageShell, Section } from "../components/Section";
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 
 export default function TypographyPage() {
   return (
@@ -8,7 +8,8 @@ export default function TypographyPage() {
         description="Inter + Noto Sans SC, 基于 4px 模块化缩放的字号阶梯。IM 消息 13px，落地页正文 14px。"
       />
 
-      <Section title="Font Family">
+      <section className="mb-12">
+        <SectionHeader title="Font Family" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-surface-2 border border-border rounded-lg p-5">
             <div className="text-xl font-semibold text-text-primary mb-2 font-sans">
@@ -27,9 +28,10 @@ export default function TypographyPage() {
             <div className="text-[11px] text-text-muted mt-3 font-mono">--font-mono</div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Type Scale">
+      <section className="mb-12">
+        <SectionHeader title="Type Scale" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="space-y-0">
           {[
             { name: "Hero", size: "48px", lh: "56px", weight: "700", sample: "你的 AI 分身" },
@@ -93,9 +95,10 @@ export default function TypographyPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Font Weight">
+      <section className="mb-12">
+        <SectionHeader title="Font Weight" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="grid grid-cols-4 gap-4">
           {[
             { weight: 400, name: "Regular", use: "正文、描述" },
@@ -114,9 +117,13 @@ export default function TypographyPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Spacing Scale (4px base)">
+      <section className="mb-12">
+        <SectionHeader
+          title="Spacing Scale (4px base)"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="space-y-2">
           {[
             { name: "space-1", px: 4 },
@@ -137,9 +144,10 @@ export default function TypographyPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Border Radius">
+      <section className="mb-12">
+        <SectionHeader title="Border Radius" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="flex gap-4">
           {[
             { name: "xs", px: 4 },
@@ -161,7 +169,7 @@ export default function TypographyPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
     </PageShell>
   );
 }
