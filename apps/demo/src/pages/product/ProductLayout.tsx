@@ -6,15 +6,15 @@ import {
   ActivityBarIndicator,
   ActivityBarItem,
   DetailPanel,
+  FileEditor,
+  FileTree,
   NavigationMenu,
   NavigationMenuButton,
   NavigationMenuItem,
-  ResizableHandle,
-  ResizablePanel,
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  SplitView,
+  WorkspaceShell,
 } from "@nexu-design/ui-web";
 import {
   Clock,
@@ -28,12 +28,12 @@ import {
   Wrench,
   Zap,
 } from "lucide-react";
-import { type ReactNode, useCallback, useState } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import FileEditor from "./FileEditor";
-import FileTree from "./FileTree";
+
+import { CLONE_FILE_TREE, FOLDER_ICONS, FOLDER_ROUTES, type FileNode } from "./FileTree";
 import { ProductLayoutContext } from "./ProductLayoutContext";
-import { getFile } from "./fileStore";
+import { getFile, saveFile } from "./fileStore";
 
 const ACTIVITY_NAV = [
   { to: "/app/sessions", id: "sessions", icon: MessageSquare, label: "Sessions" },
@@ -42,6 +42,21 @@ const ACTIVITY_NAV = [
   { to: "/app/clone", id: "clone", icon: Wrench, label: "分身搭建" },
   { to: "/app/automation", id: "automation", icon: Clock, label: "Automation" },
   { to: "/app/skills", id: "skills", icon: Sparkles, label: "Skills" },
+];
+
+const TREE_MIN = 180;
+const TREE_MAX = 480;
+const TREE_DEFAULT = 224;
+const DEFAULT_EXPANDED_PATHS = [
+  ".soul",
+  "contacts",
+  "memory",
+  "memory/decisions",
+  "knowledge",
+  "artifacts",
+  "artifacts/prds",
+  "sessions",
+  "sessions/2026-02-22-clone文件系统验证",
 ];
 
 function inferFileType(path: string) {
@@ -59,29 +74,26 @@ function inferFileType(path: string) {
   return "markdown" as const;
 }
 
-const TREE_MIN = 180;
-const TREE_MAX = 480;
-const TREE_DEFAULT = 224;
+function decorateTree(nodes: FileNode[]): FileNode[] {
+  return nodes.map((node) => ({
+    ...node,
+    icon: node.type === "folder" ? FOLDER_ICONS[node.name] : node.icon,
+    children: node.children ? decorateTree(node.children) : undefined,
+  }));
+}
 
 export default function ProductLayout({ children }: { children: ReactNode }) {
   const [treeCollapsed, setTreeCollapsed] = useState(false);
   const [treeWidth, setTreeWidth] = useState(TREE_DEFAULT);
   const [openFilePath, setOpenFilePath] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const tree = useMemo(() => decorateTree(CLONE_FILE_TREE), []);
 
   const isActive = (to: string | null) => {
     if (!to) return !treeCollapsed;
     return location.pathname.startsWith(to);
   };
-
-  const handleTreeNavigate = useCallback(
-    (route: string) => {
-      navigate(route);
-    },
-    [navigate],
-  );
 
   const expandFileTree = useCallback(() => {
     setTreeCollapsed(false);
@@ -95,118 +107,133 @@ export default function ProductLayout({ children }: { children: ReactNode }) {
     setOpenFilePath(null);
   }, []);
 
-  const handleResize = useCallback(
-    (offset: number) => {
-      const next = Math.max(TREE_MIN, Math.min(TREE_MAX, treeWidth + offset));
-      setTreeWidth(next);
+  const handleTreeSelect = useCallback(
+    ({ node, path }: { node: FileNode; path: string }) => {
+      if (node.type === "folder") {
+        const route = FOLDER_ROUTES[node.name];
+        if (route) {
+          navigate(route);
+        }
+        return;
+      }
+
+      setOpenFilePath(path);
+      const parentFolder = path.split("/")[0];
+      const route = FOLDER_ROUTES[parentFolder];
+      if (route) {
+        navigate(route);
+      }
     },
-    [treeWidth],
+    [navigate],
   );
 
   return (
     <ProductLayoutContext.Provider value={{ expandFileTree, openFile: handleOpenFile }}>
-      <SplitView className={`h-full bg-surface-0 ${isDragging ? "select-none" : ""}`}>
-        <ActivityBar>
-          <ActivityBarHeader>
-            <div className="relative">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-3 text-sm animate-clone-breath-subtle">
-                😊
+      <WorkspaceShell
+        sidebarCollapsed={treeCollapsed}
+        onSidebarCollapsedChange={setTreeCollapsed}
+        sidebarWidth={treeWidth}
+        onSidebarWidthChange={setTreeWidth}
+        sidebarDefaultWidth={TREE_DEFAULT}
+        sidebarMinWidth={TREE_MIN}
+        sidebarMaxWidth={TREE_MAX}
+        contentClassName={`transition-all duration-200 ${openFilePath ? "min-w-0 flex-1" : "w-full"}`}
+        activityBar={
+          <ActivityBar>
+            <ActivityBarHeader>
+              <div className="relative">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-3 text-sm animate-clone-breath-subtle">
+                  😊
+                </div>
+                <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-surface-1 bg-success" />
               </div>
-              <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-surface-1 bg-success" />
-            </div>
-          </ActivityBarHeader>
+            </ActivityBarHeader>
 
-          <ActivityBarContent>
-            {ACTIVITY_NAV.map(({ to, id, icon: Icon, label }) => {
-              const active = isActive(to);
+            <ActivityBarContent>
+              {ACTIVITY_NAV.map(({ to, id, icon: Icon, label }) => {
+                const active = isActive(to);
 
-              if (to) {
+                if (to) {
+                  return (
+                    <ActivityBarItem key={id} asChild active={active} title={label}>
+                      <NavLink to={to}>
+                        {active ? <ActivityBarIndicator /> : null}
+                        <Icon size={18} />
+                      </NavLink>
+                    </ActivityBarItem>
+                  );
+                }
+
                 return (
-                  <ActivityBarItem key={id} asChild active={active} title={label}>
-                    <NavLink to={to}>
-                      {active && <ActivityBarIndicator />}
-                      <Icon size={18} />
-                    </NavLink>
+                  <ActivityBarItem
+                    key={id}
+                    active={!treeCollapsed}
+                    title={label}
+                    onClick={() => setTreeCollapsed((collapsed) => !collapsed)}
+                  >
+                    {!treeCollapsed ? <ActivityBarIndicator /> : null}
+                    <Icon size={18} />
                   </ActivityBarItem>
                 );
-              }
+              })}
+            </ActivityBarContent>
 
-              return (
-                <ActivityBarItem
-                  key={id}
-                  active={!treeCollapsed}
-                  title={label}
-                  onClick={() => setTreeCollapsed((c) => !c)}
-                >
-                  {!treeCollapsed && <ActivityBarIndicator />}
-                  <Icon size={18} />
+            <ActivityBarFooter>
+              {treeCollapsed ? (
+                <ActivityBarItem title="展开文件树" onClick={() => setTreeCollapsed(false)}>
+                  <PanelLeft size={16} />
                 </ActivityBarItem>
-              );
-            })}
-          </ActivityBarContent>
-
-          <ActivityBarFooter>
-            {treeCollapsed && (
-              <ActivityBarItem title="展开文件树" onClick={() => setTreeCollapsed(false)}>
-                <PanelLeft size={16} />
+              ) : null}
+              <div
+                className="flex h-8 w-8 items-center justify-center"
+                title="3,200 / 5,000 credits"
+              >
+                <Zap size={16} className="text-clone" />
+              </div>
+              <ActivityBarItem title="设置">
+                <Settings size={16} />
               </ActivityBarItem>
-            )}
-            <div className="flex h-8 w-8 items-center justify-center" title="3,200 / 5,000 credits">
-              <Zap size={16} className="text-clone" />
-            </div>
-            <ActivityBarItem title="设置">
-              <Settings size={16} />
-            </ActivityBarItem>
-          </ActivityBarFooter>
-        </ActivityBar>
-
-        {!treeCollapsed && (
-          <>
-            <ResizablePanel size={treeWidth} minSize={TREE_MIN} maxSize={TREE_MAX}>
-              <Sidebar className="h-full">
-                <SidebarHeader className="flex items-center justify-between border-b border-border px-3 py-1.5">
-                  <span className="text-[11px] font-medium uppercase tracking-wider text-text-secondary">
-                    Explorer
-                  </span>
-                  <NavigationMenu>
-                    <NavigationMenuItem>
-                      <NavigationMenuButton
-                        type="button"
-                        title="收起文件树"
-                        className="h-7 w-7 justify-center px-0 py-0"
-                        onClick={() => setTreeCollapsed(true)}
-                      >
-                        <PanelLeftClose size={14} />
-                      </NavigationMenuButton>
-                    </NavigationMenuItem>
-                  </NavigationMenu>
-                </SidebarHeader>
-                <SidebarContent className="overflow-hidden">
-                  <FileTree onNavigate={handleTreeNavigate} onOpenFile={handleOpenFile} />
-                </SidebarContent>
-              </Sidebar>
-            </ResizablePanel>
-
-            <ResizableHandle
-              className="w-1 hover:bg-accent/30 data-[dragging=true]:bg-accent/50"
-              onResizeStart={() => setIsDragging(true)}
-              onResize={handleResize}
-              onResizeEnd={() => setIsDragging(false)}
-            />
-          </>
-        )}
-
-        <SplitView className="relative flex-1 overflow-hidden">
-          <main className="min-w-0 flex-1 overflow-hidden">
-            <div
-              key={location.pathname}
-              className={`h-full overflow-hidden transition-all duration-200 animate-page-enter ${openFilePath ? "min-w-0 flex-1" : "w-full"}`}
-            >
-              {children}
-            </div>
-          </main>
-
-          {openFilePath && (
+            </ActivityBarFooter>
+          </ActivityBar>
+        }
+        sidebar={
+          <Sidebar className="h-full">
+            <SidebarHeader className="flex items-center justify-between border-b border-border px-3 py-1.5">
+              <span className="text-[11px] font-medium uppercase tracking-wider text-text-secondary">
+                Explorer
+              </span>
+              <NavigationMenu>
+                <NavigationMenuItem>
+                  <NavigationMenuButton
+                    type="button"
+                    title="收起文件树"
+                    className="h-7 w-7 justify-center px-0 py-0"
+                    onClick={() => setTreeCollapsed(true)}
+                  >
+                    <PanelLeftClose size={14} />
+                  </NavigationMenuButton>
+                </NavigationMenuItem>
+              </NavigationMenu>
+            </SidebarHeader>
+            <SidebarContent className="overflow-hidden">
+              <FileTree
+                tree={tree}
+                rootLabel="~/clone"
+                defaultExpandedPaths={DEFAULT_EXPANDED_PATHS}
+                defaultSelectedPath="artifacts/prds/universal-agent-v3.md"
+                footer={
+                  <div className="flex items-center justify-between text-[10px] text-text-muted">
+                    <span>137 files</span>
+                    <span>1 modified · 4 new</span>
+                  </div>
+                }
+                onItemSelect={handleTreeSelect}
+              />
+            </SidebarContent>
+          </Sidebar>
+        }
+        detailPanel={
+          openFilePath ? (
             <DetailPanel width={420} className="animate-slide-in-right bg-surface-0">
               <FileEditor
                 filePath={openFilePath}
@@ -218,11 +245,16 @@ export default function ProductLayout({ children }: { children: ReactNode }) {
                 lastEditedBy={getFile(openFilePath)?.lastEditedBy}
                 lastEditedAt={getFile(openFilePath)?.lastEditedAt}
                 onClose={handleCloseFile}
+                onSave={(content) => saveFile(openFilePath, content, "human")}
               />
             </DetailPanel>
-          )}
-        </SplitView>
-      </SplitView>
+          ) : null
+        }
+      >
+        <div key={location.pathname} className="h-full overflow-hidden animate-page-enter">
+          {children}
+        </div>
+      </WorkspaceShell>
     </ProductLayoutContext.Provider>
   );
 }

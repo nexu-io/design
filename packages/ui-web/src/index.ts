@@ -52,3 +52,6 @@ export * from "./patterns/settings-section";
 export * from "./patterns/confirm-dialog";
 export * from "./patterns/inspector-panel";
 export * from "./patterns/follow-up-input";
+export * from "./patterns/file-tree";
+export * from "./patterns/file-editor";
+export * from "./patterns/workspace-shell";

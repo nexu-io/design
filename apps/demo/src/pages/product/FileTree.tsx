@@ -43,7 +43,7 @@ export const FOLDER_ROUTES: Record<string, string> = {
   skills: "/app/skills",
 };
 
-const FOLDER_ICONS: Record<string, ReactNode> = {
+export const FOLDER_ICONS: Record<string, ReactNode> = {
   ".soul": <Brain size={14} className="text-clone" />,
   contacts: <Users size={14} className="text-role-ops" />,
   memory: <Database size={14} className="text-info" />,
