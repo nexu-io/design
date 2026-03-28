@@ -1,3 +1,4 @@
+import { BrandRail } from "@nexu-design/ui-web";
 import { ArrowRight, Infinity as InfinityIcon, Shield, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 import { useGitHubStars } from "../../hooks/useGitHubStars";
@@ -111,52 +112,37 @@ export default function OpenClawBrandRail({
   ];
 
   return (
-    <div className="flex w-[46%] min-w-[320px] min-h-screen relative overflow-hidden shrink-0">
-      <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_18%_18%,rgba(255,255,255,0.08),transparent_36%),radial-gradient(80%_80%_at_82%_22%,rgba(180,150,255,0.14),transparent_36%),linear-gradient(180deg,var(--color-dark-bg)_0%,#0a0a0d_100%)]" />
-      <div className="absolute -right-20 bottom-0 opacity-[0.05]">
-        <NexuIcon className="h-[360px] w-[360px] text-white" />
-      </div>
-
-      <div className="relative z-10 flex w-full flex-col justify-between px-10 pb-12 pt-8 xl:px-12 xl:py-12">
-        <FadeIn delay={80} className="flex items-center justify-between">
-          <button type="button" onClick={onLogoClick} className="flex items-center cursor-pointer">
-            <NexuLogoWhite className="h-8 w-auto text-white xl:h-9" />
-          </button>
-          {topRight ?? <div />}
-        </FadeIn>
-
-        <div>
-          <FadeIn delay={220}>
-            <h1
-              className="max-w-[560px] text-[40px] leading-[0.96] tracking-tight text-white sm:text-[52px] lg:text-[64px]"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              {t("brand.title.line1")}
-              <br />
-              {t("brand.title.line2")}
-            </h1>
-          </FadeIn>
-
-          <FadeIn delay={300}>
-            <p className="mt-6 max-w-[460px] text-[14px] leading-[1.8] text-white/58">
-              {t("brand.body")}
-            </p>
-          </FadeIn>
-
-          <div className="mt-8 space-y-3">
-            {bullets.map((item, index) => (
-              <FadeIn key={item.text} delay={380 + index * 80}>
-                <div className="grid min-h-[72px] grid-cols-[40px_1fr] items-center gap-4 rounded-[var(--radius-16)] border border-dark-border bg-white/[0.025] px-5 py-4">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-12)] bg-white/[0.06]">
-                    <item.icon size={15} className="text-white/66" />
-                  </div>
-                  <p className="text-[13px] leading-[1.6] text-white/58">{item.text}</p>
-                </div>
-              </FadeIn>
-            ))}
+    <BrandRail
+      logo={<NexuLogoWhite className="h-8 w-auto text-white xl:h-9" />}
+      logoLabel="OpenClaw home"
+      onLogoClick={onLogoClick}
+      topRight={<FadeIn delay={80}>{topRight ?? <div />}</FadeIn>}
+      background={
+        <>
+          <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_18%_18%,rgba(255,255,255,0.08),transparent_36%),radial-gradient(80%_80%_at_82%_22%,rgba(180,150,255,0.14),transparent_36%),linear-gradient(180deg,var(--color-dark-bg)_0%,#0a0a0d_100%)]" />
+          <div className="absolute -right-20 bottom-0 opacity-[0.05]">
+            <NexuIcon className="h-[360px] w-[360px] text-white" />
           </div>
-        </div>
-
+        </>
+      }
+      title={
+        <FadeIn delay={220}>
+          <h1
+            className="max-w-[560px] text-[40px] leading-[0.96] tracking-tight text-white sm:text-[52px] lg:text-[64px]"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            {t("brand.title.line1")}
+            <br />
+            {t("brand.title.line2")}
+          </h1>
+        </FadeIn>
+      }
+      description={
+        <FadeIn delay={300}>
+          <span>{t("brand.body")}</span>
+        </FadeIn>
+      }
+      footer={
         <FadeIn delay={520}>
           <a
             href={GITHUB_URL}
@@ -190,7 +176,20 @@ export default function OpenClawBrandRail({
             />
           </a>
         </FadeIn>
+      }
+    >
+      <div className="space-y-3">
+        {bullets.map((item, index) => (
+          <FadeIn key={item.text} delay={380 + index * 80}>
+            <div className="grid min-h-[72px] grid-cols-[40px_1fr] items-center gap-4 rounded-[var(--radius-16)] border border-dark-border bg-white/[0.025] px-5 py-4">
+              <div className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-12)] bg-white/[0.06]">
+                <item.icon size={15} className="text-white/66" />
+              </div>
+              <p className="text-[13px] leading-[1.6] text-white/58">{item.text}</p>
+            </div>
+          </FadeIn>
+        ))}
       </div>
-    </div>
+    </BrandRail>
   );
 }

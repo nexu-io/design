@@ -55,3 +55,5 @@ export * from "./patterns/follow-up-input";
 export * from "./patterns/file-tree";
 export * from "./patterns/file-editor";
 export * from "./patterns/workspace-shell";
+export * from "./patterns/auth-shell";
+export * from "./patterns/brand-rail";

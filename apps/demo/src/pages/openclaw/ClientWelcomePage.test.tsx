@@ -1,13 +1,13 @@
 // @vitest-environment jsdom
 
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { LocaleProvider } from "../../hooks/useLocale";
+import AuthShell from "./AuthShell";
 import ClientWelcomePage from "./ClientWelcomePage";
 
 const navigateMock = vi.fn();
-const openMock = vi.fn();
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual<typeof import("react-router-dom")>("react-router-dom");
@@ -22,9 +22,22 @@ vi.mock("../../hooks/useGitHubStars", () => ({
 }));
 
 describe("ClientWelcomePage", () => {
+  function renderWelcomePage() {
+    render(
+      <LocaleProvider>
+        <MemoryRouter initialEntries={["/openclaw/welcome"]}>
+          <Routes>
+            <Route element={<AuthShell />}>
+              <Route path="/openclaw/welcome" element={<ClientWelcomePage />} />
+            </Route>
+          </Routes>
+        </MemoryRouter>
+      </LocaleProvider>,
+    );
+  }
+
   beforeEach(() => {
-    openMock.mockReset();
-    vi.stubGlobal("open", openMock);
+    navigateMock.mockReset();
     window.localStorage.clear();
     window.localStorage.setItem("nexu_locale", "zh");
   });
@@ -34,13 +47,7 @@ describe("ClientWelcomePage", () => {
   });
 
   it("separates product positioning on the left from entry methods on the right", () => {
-    render(
-      <LocaleProvider>
-        <MemoryRouter>
-          <ClientWelcomePage />
-        </MemoryRouter>
-      </LocaleProvider>,
-    );
+    renderWelcomePage();
 
     expect(screen.getByRole("heading", { name: /OpenClaw，开箱即用/i })).toBeTruthy();
     expect(screen.queryByText("你的工作 AI 客户端")).toBeNull();
@@ -51,7 +58,11 @@ describe("ClientWelcomePage", () => {
     ).toBeTruthy();
     expect(screen.getByText("安装即用，无需额外配置 OpenClaw")).toBeTruthy();
     expect(screen.getByText("飞书文档、日历、审批等工具能力开箱可用")).toBeTruthy();
-    expect(screen.getByText("接入 Claude、GPT 等顶级模型")).toBeTruthy();
+    expect(
+      screen.getByText(
+        "连接了 Claude Opus 4.6、GPT-5.4、MiniMax 2.5、GLM 5.0、Kimi K2.5 等顶级模型",
+      ),
+    ).toBeTruthy();
     expect(screen.getByRole("link", { name: /在 GitHub 上 Star nexu/i })).toBeTruthy();
     expect(screen.getByText("选择你的开始方式")).toBeTruthy();
     expect(screen.queryByText("开始使用")).toBeNull();
@@ -65,13 +76,7 @@ describe("ClientWelcomePage", () => {
   });
 
   it("uses a larger logo in the brand rail", () => {
-    render(
-      <LocaleProvider>
-        <MemoryRouter>
-          <ClientWelcomePage />
-        </MemoryRouter>
-      </LocaleProvider>,
-    );
+    renderWelcomePage();
 
     const logoButton = screen.getAllByRole("button")[0];
     const logo = logoButton.querySelector("svg");
@@ -82,40 +87,22 @@ describe("ClientWelcomePage", () => {
   it("renders the brand rail in English when locale is set to english", () => {
     window.localStorage.setItem("nexu_locale", "en");
 
-    render(
-      <LocaleProvider>
-        <MemoryRouter>
-          <ClientWelcomePage />
-        </MemoryRouter>
-      </LocaleProvider>,
-    );
+    renderWelcomePage();
 
     expect(screen.getByRole("heading", { name: /OpenClaw,\s*ready to use\./i })).toBeTruthy();
     expect(screen.getByRole("link", { name: /Star us on GitHub/i })).toBeTruthy();
   });
 
-  it("opens the web auth page in a new browser tab from the primary entry", () => {
-    render(
-      <LocaleProvider>
-        <MemoryRouter>
-          <ClientWelcomePage />
-        </MemoryRouter>
-      </LocaleProvider>,
-    );
+  it("navigates to the auth flow from the primary entry", () => {
+    renderWelcomePage();
 
     fireEvent.click(screen.getAllByRole("button", { name: /使用 nexu 账号/i })[0]);
 
-    expect(openMock).toHaveBeenCalledWith("/openclaw/auth", "_blank", "noopener,noreferrer");
+    expect(navigateMock).toHaveBeenCalledWith("/openclaw/auth");
   });
 
   it("opens workspace settings with anthropic selected from the secondary entry", () => {
-    render(
-      <LocaleProvider>
-        <MemoryRouter>
-          <ClientWelcomePage />
-        </MemoryRouter>
-      </LocaleProvider>,
-    );
+    renderWelcomePage();
 
     fireEvent.click(screen.getAllByRole("button", { name: /使用你自己的模型/i })[0]);
 
@@ -125,25 +112,13 @@ describe("ClientWelcomePage", () => {
   });
 
   it("shows a language switcher on the welcome page", () => {
-    render(
-      <LocaleProvider>
-        <MemoryRouter>
-          <ClientWelcomePage />
-        </MemoryRouter>
-      </LocaleProvider>,
-    );
+    renderWelcomePage();
 
     expect(screen.getAllByRole("button", { name: /简体中文/i }).length).toBeGreaterThan(0);
   });
 
   it("renders each entry icon on the same row as its title", () => {
-    render(
-      <LocaleProvider>
-        <MemoryRouter>
-          <ClientWelcomePage />
-        </MemoryRouter>
-      </LocaleProvider>,
-    );
+    renderWelcomePage();
 
     const loginCard = screen.getAllByRole("button", { name: /使用 nexu 账号/i })[0];
     const byokCard = screen.getAllByRole("button", { name: /使用你自己的模型/i })[0];
@@ -156,13 +131,7 @@ describe("ClientWelcomePage", () => {
   });
 
   it("does not leave an empty spacer above the entry titles", () => {
-    render(
-      <LocaleProvider>
-        <MemoryRouter>
-          <ClientWelcomePage />
-        </MemoryRouter>
-      </LocaleProvider>,
-    );
+    renderWelcomePage();
 
     const loginCard = screen.getAllByRole("button", { name: /使用 nexu 账号/i })[0];
     const byokCard = screen.getAllByRole("button", { name: /使用你自己的模型/i })[0];
