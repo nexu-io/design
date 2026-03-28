@@ -1,81 +1,75 @@
-import { useState } from "react";
 import {
-  Routes,
-  Route,
-  NavLink,
-  Navigate,
-  useLocation,
-} from "react-router-dom";
-import { CommentSystem } from "./components/CommentSystem";
-import {
-  Palette,
-  Type,
-  Component,
-  Users,
-  MessageSquare,
-  Layout,
-  Zap,
   Brain,
-  Wrench,
   Clock,
-  Sparkles,
-  Monitor,
-  PanelLeftClose,
-  PanelLeft,
-  Route as RouteIcon,
-  Lightbulb,
-  Presentation,
-  Play,
-  Rocket,
+  Component,
   Globe,
+  Layout,
+  Lightbulb,
+  MessageSquare,
+  Monitor,
+  Palette,
+  PanelLeft,
+  PanelLeftClose,
+  Play,
+  Presentation,
+  Rocket,
+  Route as RouteIcon,
+  Sparkles,
+  Type,
+  Users,
+  Wrench,
+  Zap,
 } from "lucide-react";
-import ColorsPage from "./pages/ColorsPage";
-import TypographyPage from "./pages/TypographyPage";
-import ComponentsPage from "./pages/ComponentsPage";
+import { useState } from "react";
+import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { CommentSystem } from "./components/CommentSystem";
 import AvatarPage from "./pages/AvatarPage";
+import BPPage from "./pages/BPPage";
+import ColorsPage from "./pages/ColorsPage";
+import ComponentsPage from "./pages/ComponentsPage";
 import CopyPage from "./pages/CopyPage";
+import GrowthLanding from "./pages/GrowthLanding";
 import LandingPreview from "./pages/LandingPreview";
 import MotionPage from "./pages/MotionPage";
 import OverviewPage from "./pages/OverviewPage";
-import ProductLayout from "./pages/product/ProductLayout";
-import SessionsPage from "./pages/product/SessionsPage";
-import CloneBuilderPage from "./pages/product/CloneBuilderPage";
-import AutomationPage from "./pages/product/AutomationPage";
-import SkillsPage from "./pages/product/SkillsPage";
-import TeamPage from "./pages/product/TeamPage";
-import JourneyPage from "./pages/journey/JourneyPage";
+import TypographyPage from "./pages/TypographyPage";
 import WhyWeBuiltPage from "./pages/WhyWeBuiltPage";
-import BPPage from "./pages/BPPage";
-import ProductDemoPage from "./pages/product/ProductDemoPage";
-import OpenClawLanding from "./pages/openclaw/OpenClawLanding";
-import OpenClawWorkspace from "./pages/openclaw/OpenClawWorkspace";
-import AuthPage from "./pages/openclaw/AuthPage";
-import ClientWelcomePage from "./pages/openclaw/ClientWelcomePage";
-import AuthShell from "./pages/openclaw/AuthShell";
-import InvitePage from "./pages/openclaw/InvitePage";
-import OnboardingPage from "./pages/openclaw/OnboardingPage";
-import WhatsAppQRPage from "./pages/openclaw/WhatsAppQRPage";
-import PrivacyPolicyPage from "./pages/openclaw/PrivacyPolicyPage";
-import TermsOfServicePage from "./pages/openclaw/TermsOfServicePage";
-import GrowthLanding from "./pages/GrowthLanding";
-import GroupGrowthDemo from "./pages/openclaw/GroupGrowthDemo";
-import ChannelsPage from "./pages/openclaw/ChannelsPage";
-import OpenClawSkillsPage from "./pages/openclaw/OpenClawSkillsPage";
-import SkillDetailPage from "./pages/openclaw/SkillDetailPage";
-import DocsLayout from "./pages/docs/DocsLayout";
-import WhatIsNexuPage from "./pages/docs/WhatIsNexuPage";
-import SetupGuidePage from "./pages/docs/SetupGuidePage";
-import QuickStartPage from "./pages/docs/QuickStartPage";
-import DocsSkillsPage from "./pages/docs/SkillsPage";
-import ChannelsDocPage from "./pages/docs/IntegrationsPage";
-import LLMProvidersPage from "./pages/docs/LLMProvidersPage";
-import YourClonePage from "./pages/docs/YourClonePage";
-import PreRequisitesPage from "./pages/docs/PreRequisitesPage";
-import KeyWorkflowsPage from "./pages/docs/KeyWorkflowsPage";
-import FaqPage from "./pages/docs/FaqPage";
 import CommunityPage from "./pages/docs/CommunityPage";
 import DocsChangelogPage from "./pages/docs/DocsChangelogPage";
+import DocsLayout from "./pages/docs/DocsLayout";
+import FaqPage from "./pages/docs/FaqPage";
+import ChannelsDocPage from "./pages/docs/IntegrationsPage";
+import KeyWorkflowsPage from "./pages/docs/KeyWorkflowsPage";
+import LLMProvidersPage from "./pages/docs/LLMProvidersPage";
+import PreRequisitesPage from "./pages/docs/PreRequisitesPage";
+import QuickStartPage from "./pages/docs/QuickStartPage";
+import SetupGuidePage from "./pages/docs/SetupGuidePage";
+import DocsSkillsPage from "./pages/docs/SkillsPage";
 import StarOnGitHubPage from "./pages/docs/StarOnGitHubPage";
+import WhatIsNexuPage from "./pages/docs/WhatIsNexuPage";
+import YourClonePage from "./pages/docs/YourClonePage";
+import JourneyPage from "./pages/journey/JourneyPage";
+import AuthPage from "./pages/openclaw/AuthPage";
+import AuthShell from "./pages/openclaw/AuthShell";
+import ChannelsPage from "./pages/openclaw/ChannelsPage";
+import ClientWelcomePage from "./pages/openclaw/ClientWelcomePage";
+import GroupGrowthDemo from "./pages/openclaw/GroupGrowthDemo";
+import InvitePage from "./pages/openclaw/InvitePage";
+import OnboardingPage from "./pages/openclaw/OnboardingPage";
+import OpenClawLanding from "./pages/openclaw/OpenClawLanding";
+import OpenClawSkillsPage from "./pages/openclaw/OpenClawSkillsPage";
+import OpenClawWorkspace from "./pages/openclaw/OpenClawWorkspace";
+import PrivacyPolicyPage from "./pages/openclaw/PrivacyPolicyPage";
+import SkillDetailPage from "./pages/openclaw/SkillDetailPage";
+import TermsOfServicePage from "./pages/openclaw/TermsOfServicePage";
+import WhatsAppQRPage from "./pages/openclaw/WhatsAppQRPage";
+import AutomationPage from "./pages/product/AutomationPage";
+import CloneBuilderPage from "./pages/product/CloneBuilderPage";
+import ProductDemoPage from "./pages/product/ProductDemoPage";
+import ProductLayout from "./pages/product/ProductLayout";
+import SessionsPage from "./pages/product/SessionsPage";
+import SkillsPage from "./pages/product/SkillsPage";
+import TeamPage from "./pages/product/TeamPage";
 
 const DESIGN_NAV = [
   { to: "/why", label: "Why We Build nexu", icon: Lightbulb },
@@ -166,15 +160,12 @@ function DesignSystemShell() {
                 <span className="text-xs font-bold text-accent-fg">N</span>
               </div>
               <div>
-                <div className="text-sm font-semibold text-text-primary">
-                  nexu
-                </div>
-                <div className="text-[11px] text-text-tertiary">
-                  Design System
-                </div>
+                <div className="text-sm font-semibold text-text-primary">nexu</div>
+                <div className="text-[11px] text-text-tertiary">Design System</div>
               </div>
             </div>
             <button
+              type="button"
               onClick={() => setCollapsed(true)}
               className="p-1 rounded transition-colors text-text-muted hover:text-text-secondary"
               title="收起侧边栏"
@@ -185,32 +176,17 @@ function DesignSystemShell() {
         )}
 
         {/* Nav */}
-        <div
-          className={`flex-1 ${
-            collapsed ? "p-1.5" : "p-3"
-          } space-y-4 overflow-y-auto`}
-        >
-          <NavSection
-            title="Design System"
-            items={DESIGN_NAV}
-            collapsed={collapsed}
-          />
-          <NavSection
-            title="Product Pages"
-            items={PRODUCT_NAV}
-            collapsed={collapsed}
-          />
-          <NavSection
-            title="nexu MVP"
-            items={GROWTH_NAV}
-            collapsed={collapsed}
-          />
+        <div className={`flex-1 ${collapsed ? "p-1.5" : "p-3"} space-y-4 overflow-y-auto`}>
+          <NavSection title="Design System" items={DESIGN_NAV} collapsed={collapsed} />
+          <NavSection title="Product Pages" items={PRODUCT_NAV} collapsed={collapsed} />
+          <NavSection title="nexu MVP" items={GROWTH_NAV} collapsed={collapsed} />
         </div>
 
         {/* Footer */}
         <div className="p-4 border-t border-border">
           {collapsed ? (
             <button
+              type="button"
               onClick={() => setCollapsed(false)}
               className="flex justify-center items-center mx-auto w-7 h-7 rounded-lg transition-colors bg-accent hover:bg-accent-hover"
               title="展开侧边栏"
@@ -218,9 +194,7 @@ function DesignSystemShell() {
               <PanelLeft size={14} className="text-accent-fg" />
             </button>
           ) : (
-            <div className="text-[11px] text-text-muted">
-              v1.0 — nexu Design System
-            </div>
+            <div className="text-[11px] text-text-muted">v1.0 — nexu Design System</div>
           )}
         </div>
       </nav>
@@ -293,20 +267,20 @@ function DesignSystemShell() {
 export default function App() {
   const location = useLocation();
   const isFullScreen =
-    location.pathname === '/openclaw/workspace' ||
-    location.pathname === '/openclaw/welcome' ||
-    location.pathname.startsWith('/openclaw/auth') ||
-    location.pathname.startsWith('/openclaw/invite') ||
-    location.pathname.startsWith('/openclaw/onboarding') ||
-    location.pathname.startsWith('/openclaw/whatsapp-qr') ||
-    location.pathname === '/openclaw/privacy' ||
-    location.pathname === '/openclaw/terms' ||
-    location.pathname === '/openclaw/channels' ||
-    location.pathname === '/openclaw/skills' ||
-    location.pathname.startsWith('/openclaw/skill/') ||
-    location.pathname.startsWith('/openclaw/growth-demo') ||
-    location.pathname === '/openclaw/changelog' ||
-    location.pathname.startsWith('/docs/');
+    location.pathname === "/openclaw/workspace" ||
+    location.pathname === "/openclaw/welcome" ||
+    location.pathname.startsWith("/openclaw/auth") ||
+    location.pathname.startsWith("/openclaw/invite") ||
+    location.pathname.startsWith("/openclaw/onboarding") ||
+    location.pathname.startsWith("/openclaw/whatsapp-qr") ||
+    location.pathname === "/openclaw/privacy" ||
+    location.pathname === "/openclaw/terms" ||
+    location.pathname === "/openclaw/channels" ||
+    location.pathname === "/openclaw/skills" ||
+    location.pathname.startsWith("/openclaw/skill/") ||
+    location.pathname.startsWith("/openclaw/growth-demo") ||
+    location.pathname === "/openclaw/changelog" ||
+    location.pathname.startsWith("/docs/");
 
   if (isFullScreen) {
     return (
@@ -328,22 +302,119 @@ export default function App() {
           <Route path="/openclaw/growth-demo" element={<GroupGrowthDemo />} />
           <Route path="/openclaw/growth-demo/new" element={<GroupGrowthDemo />} />
           <Route path="/openclaw/growth-demo/existing" element={<GroupGrowthDemo />} />
-          <Route path="/docs/get-started" element={<DocsLayout><WhatIsNexuPage /></DocsLayout>} />
-          <Route path="/docs/get-started/setup-guide" element={<DocsLayout><SetupGuidePage /></DocsLayout>} />
-          <Route path="/docs/get-started/quick-start" element={<DocsLayout><QuickStartPage /></DocsLayout>} />
-          <Route path="/docs/get-started/skills" element={<DocsLayout><DocsSkillsPage /></DocsLayout>} />
-          <Route path="/docs/get-started/channels" element={<DocsLayout><ChannelsDocPage /></DocsLayout>} />
-          <Route path="/docs/get-started/llm-providers" element={<DocsLayout><LLMProvidersPage /></DocsLayout>} />
-          <Route path="/docs/get-started/your-clone" element={<DocsLayout><YourClonePage /></DocsLayout>} />
-          <Route path="/docs/get-started/pre-requisites" element={<DocsLayout><PreRequisitesPage /></DocsLayout>} />
-          <Route path="/docs/get-started/key-workflows" element={<DocsLayout><KeyWorkflowsPage /></DocsLayout>} />
-          <Route path="/docs/get-started/faq" element={<DocsLayout><FaqPage /></DocsLayout>} />
-          <Route path="/docs/get-started/community" element={<DocsLayout><CommunityPage /></DocsLayout>} />
-          <Route path="/docs/get-started/changelog" element={<DocsLayout><DocsChangelogPage /></DocsLayout>} />
-          <Route path="/docs/get-started/star" element={<DocsLayout><StarOnGitHubPage /></DocsLayout>} />
-          <Route path="/docs/get-started/integrations" element={<Navigate to="/docs/get-started/channels" replace />} />
+          <Route
+            path="/docs/get-started"
+            element={
+              <DocsLayout>
+                <WhatIsNexuPage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/setup-guide"
+            element={
+              <DocsLayout>
+                <SetupGuidePage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/quick-start"
+            element={
+              <DocsLayout>
+                <QuickStartPage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/skills"
+            element={
+              <DocsLayout>
+                <DocsSkillsPage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/channels"
+            element={
+              <DocsLayout>
+                <ChannelsDocPage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/llm-providers"
+            element={
+              <DocsLayout>
+                <LLMProvidersPage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/your-clone"
+            element={
+              <DocsLayout>
+                <YourClonePage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/pre-requisites"
+            element={
+              <DocsLayout>
+                <PreRequisitesPage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/key-workflows"
+            element={
+              <DocsLayout>
+                <KeyWorkflowsPage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/faq"
+            element={
+              <DocsLayout>
+                <FaqPage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/community"
+            element={
+              <DocsLayout>
+                <CommunityPage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/changelog"
+            element={
+              <DocsLayout>
+                <DocsChangelogPage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/star"
+            element={
+              <DocsLayout>
+                <StarOnGitHubPage />
+              </DocsLayout>
+            }
+          />
+          <Route
+            path="/docs/get-started/integrations"
+            element={<Navigate to="/docs/get-started/channels" replace />}
+          />
           <Route path="/openclaw/changelog" element={<Navigate to="/docs/get-started" replace />} />
-          <Route path="/openclaw/changelog/*" element={<Navigate to="/docs/get-started" replace />} />
+          <Route
+            path="/openclaw/changelog/*"
+            element={<Navigate to="/docs/get-started" replace />}
+          />
         </Routes>
         <CommentSystem />
       </>

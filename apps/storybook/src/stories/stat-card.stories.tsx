@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BarChart3, Sparkles, TrendingUp, Zap } from "lucide-react";
 
-import { StatCard } from "@nexu/ui-web";
+import { StatCard } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/StatCard",

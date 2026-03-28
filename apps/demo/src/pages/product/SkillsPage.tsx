@@ -19,7 +19,7 @@ import {
   PanelFooter,
   PanelFooterActions,
   ScrollArea,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import {
   BarChart3,
   Building,
@@ -380,7 +380,12 @@ function SkillDetailPanel({ skill, onClose }: { skill: Skill; onClose: () => voi
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]" onClick={onClose} />
+      <button
+        type="button"
+        aria-label="关闭详情面板"
+        className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"
+        onClick={onClose}
+      />
 
       <DetailPanel width={420} className="relative shadow-2xl animate-slide-in-right">
         <DetailPanelHeader className="items-start gap-4 p-6">
@@ -456,8 +461,8 @@ function SkillDetailPanel({ skill, onClose }: { skill: Skill; onClose: () => voi
                   触发条件
                 </h3>
                 <div className="space-y-1.5">
-                  {detail.triggers.map((t, i) => (
-                    <div key={i} className="flex items-center gap-2 text-[12px]">
+                  {detail.triggers.map((t) => (
+                    <div key={t} className="flex items-center gap-2 text-[12px]">
                       <Zap size={11} className="text-clone shrink-0" />
                       <span className="text-text-primary">{t}</span>
                     </div>
@@ -490,8 +495,8 @@ function SkillDetailPanel({ skill, onClose }: { skill: Skill; onClose: () => voi
                   需要授权
                 </h3>
                 <div className="space-y-1.5">
-                  {detail.auth.map((a, i) => (
-                    <div key={i} className="flex items-center gap-2 text-[12px]">
+                  {detail.auth.map((a) => (
+                    <div key={a} className="flex items-center gap-2 text-[12px]">
                       <Lock size={11} className="text-success" />
                       <span className="text-text-primary">{a}</span>
                       <span className="text-[10px] text-success ml-auto">已授权</span>
@@ -549,7 +554,12 @@ function ChatCreatorModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
+      <button
+        type="button"
+        aria-label="关闭对话式创建"
+        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+        onClick={onClose}
+      />
       <div className="relative w-[480px] max-h-[600px] bg-surface-1/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         <div className="flex items-center justify-between px-5 py-3 border-b border-border/50">
           <div className="flex items-center gap-2">
@@ -559,6 +569,7 @@ function ChatCreatorModal({ onClose }: { onClose: () => void }) {
             <span className="text-[13px] font-medium text-text-primary">对话式创建 Skill</span>
           </div>
           <button
+            type="button"
             onClick={onClose}
             className="p-1 rounded-md hover:bg-surface-3 text-text-muted transition-colors"
           >
@@ -566,8 +577,11 @@ function ChatCreatorModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {chatMessages.map((msg, i) => (
-            <div key={i} className={`flex ${msg.from === "user" ? "justify-end" : "gap-2"}`}>
+          {chatMessages.map((msg) => (
+            <div
+              key={`${msg.from}-${msg.content}`}
+              className={`flex ${msg.from === "user" ? "justify-end" : "gap-2"}`}
+            >
               {msg.from === "system" && (
                 <div className="w-5 h-5 rounded-full bg-clone/15 flex items-center justify-center text-[10px] shrink-0 mt-0.5">
                   🛠
@@ -681,7 +695,12 @@ function WorkflowEditorModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <button
+        type="button"
+        aria-label="关闭工作流编辑器"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
       <div className="relative w-[720px] h-[520px] bg-surface-1/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         <div className="flex items-center justify-between px-5 py-3 border-b border-border/50">
           <div className="flex items-center gap-3">
@@ -701,6 +720,7 @@ function WorkflowEditorModal({ onClose }: { onClose: () => void }) {
             </Button>
             <Button size="xs">保存</Button>
             <button
+              type="button"
               onClick={onClose}
               className="p-1 rounded-md hover:bg-surface-3 text-text-muted transition-colors"
             >
@@ -718,7 +738,11 @@ function WorkflowEditorModal({ onClose }: { onClose: () => void }) {
                 backgroundSize: "24px 24px",
               }}
             />
-            <svg className="absolute inset-0 w-full h-full pointer-events-none">
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              aria-hidden="true"
+              focusable="false"
+            >
               <line
                 x1="140"
                 y1="66"
@@ -821,14 +845,10 @@ function WorkflowEditorModal({ onClose }: { onClose: () => void }) {
 
 function SkillRow({ skill, onSelect }: { skill: Skill; onSelect: (s: Skill) => void }) {
   return (
-    <div
-      role="button"
-      tabIndex={0}
+    <button
+      type="button"
       className="flex items-center gap-3 p-3 hover:bg-surface-3/50 rounded-lg transition-colors cursor-pointer group"
       onClick={() => onSelect(skill)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") onSelect(skill);
-      }}
     >
       <div className="w-9 h-9 rounded-xl bg-surface-3 flex items-center justify-center shrink-0">
         <skill.icon size={16} className="text-text-secondary" />
@@ -842,6 +862,7 @@ function SkillRow({ skill, onSelect }: { skill: Skill; onSelect: (s: Skill) => v
       </div>
       {skill.installed ? (
         <button
+          type="button"
           className="p-1 text-text-muted hover:text-text-secondary transition-colors"
           onClick={(e) => e.stopPropagation()}
         >
@@ -849,6 +870,7 @@ function SkillRow({ skill, onSelect }: { skill: Skill; onSelect: (s: Skill) => v
         </button>
       ) : (
         <button
+          type="button"
           className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted opacity-0 group-hover:opacity-100 transition-all"
           onClick={(e) => {
             e.stopPropagation();
@@ -858,7 +880,7 @@ function SkillRow({ skill, onSelect }: { skill: Skill; onSelect: (s: Skill) => v
           <Plus size={16} />
         </button>
       )}
-    </div>
+    </button>
   );
 }
 
@@ -967,6 +989,7 @@ function ExploreTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) {
       <div className="flex items-center gap-2 mb-5">
         {["All", "integration", "developer", "productivity", "design", "business"].map((cat) => (
           <button
+            type="button"
             key={cat}
             className={`px-3 py-1.5 rounded-lg text-[12px] transition-colors ${
               cat === "All"
@@ -1044,6 +1067,7 @@ export default function SkillsPage() {
           <div className="flex items-center gap-4">
             {TABS_CONFIG.map((t) => (
               <button
+                type="button"
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
                 className={`text-[13px] transition-colors pb-2 border-b-2 ${
@@ -1061,6 +1085,7 @@ export default function SkillsPage() {
           </div>
           <div className="flex items-center gap-2">
             <button
+              type="button"
               className="p-1.5 rounded-lg text-text-muted hover:text-text-secondary hover:bg-surface-3 transition-colors"
               title="Refresh"
             >

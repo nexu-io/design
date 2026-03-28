@@ -1,4 +1,4 @@
-import { Badge, Progress, StatCard } from "@nexu/ui-web";
+import { Badge, Progress, StatCard } from "@nexu-design/ui-web";
 import { BarChart3, Clock, DollarSign, TrendingUp, Users } from "lucide-react";
 
 const STATS = [

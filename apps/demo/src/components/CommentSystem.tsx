@@ -1,11 +1,5 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  type MouseEvent,
-} from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { type MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 interface Comment {
@@ -28,19 +22,11 @@ interface Reply {
 }
 
 const STORAGE_KEY = "nexu_demo_comments";
-const COLORS = [
-  "#F24E1E",
-  "#A259FF",
-  "#1ABCFE",
-  "#0ACF83",
-  "#FF7262",
-  "#FFBD12",
-];
+const COLORS = ["#F24E1E", "#A259FF", "#1ABCFE", "#0ACF83", "#FF7262", "#FFBD12"];
 
 function getAuthorColor(name: string) {
   let hash = 0;
-  for (let i = 0; i < name.length; i++)
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
   return COLORS[Math.abs(hash) % COLORS.length];
 }
 
@@ -83,10 +69,7 @@ function Avatar({ name, size = 28 }: { name: string; size?: number }) {
       className="rounded-full flex items-center justify-center shrink-0"
       style={{ width: size, height: size, backgroundColor: color }}
     >
-      <span
-        className="text-white font-medium"
-        style={{ fontSize: size * 0.38 }}
-      >
+      <span className="text-white font-medium" style={{ fontSize: size * 0.38 }}>
         {getInitials(name)}
       </span>
     </div>
@@ -120,9 +103,7 @@ function CommentPin({
       <div className="relative -translate-x-1/2 -translate-y-1/2">
         <div
           className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-[11px] font-bold shadow-lg transition-transform ${
-            isActive
-              ? "scale-125 ring-2 ring-white ring-offset-2"
-              : "hover:scale-110"
+            isActive ? "scale-125 ring-2 ring-white ring-offset-2" : "hover:scale-110"
           } ${comment.resolved ? "opacity-40" : ""}`}
           style={{ backgroundColor: color }}
         >
@@ -177,18 +158,15 @@ function CommentCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5">
-              <span className="text-[12px] font-semibold text-text-primary">
-                {comment.author}
-              </span>
-              <span className="text-[11px] text-text-muted">
-                {timeAgo(comment.timestamp)}
-              </span>
+              <span className="text-[12px] font-semibold text-text-primary">{comment.author}</span>
+              <span className="text-[11px] text-text-muted">{timeAgo(comment.timestamp)}</span>
             </div>
             <div className="flex items-center gap-1">
               <span className="text-[10px] font-medium text-text-muted bg-surface-2 px-1.5 py-0.5 rounded-full">
                 #{index + 1}
               </span>
               <button
+                type="button"
                 onClick={(e: MouseEvent<HTMLButtonElement>) => {
                   e.stopPropagation();
                   onResolve();
@@ -202,6 +180,8 @@ function CommentCard({
                     height="14"
                     viewBox="0 0 16 16"
                     fill="currentColor"
+                    aria-hidden="true"
+                    focusable="false"
                   >
                     <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm3.22 5.28-3.5 3.5a.75.75 0 0 1-1.06 0l-1.5-1.5a.75.75 0 1 1 1.06-1.06l.97.97 2.97-2.97a.75.75 0 0 1 1.06 1.06z" />
                   </svg>
@@ -213,6 +193,8 @@ function CommentCard({
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.5"
+                    aria-hidden="true"
+                    focusable="false"
                   >
                     <circle cx="8" cy="8" r="5.5" />
                     <path d="M6 8l1.5 1.5L10 7" />
@@ -220,6 +202,7 @@ function CommentCard({
                 )}
               </button>
               <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete();
@@ -234,6 +217,8 @@ function CommentCard({
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.5"
+                  aria-hidden="true"
+                  focusable="false"
                 >
                   <path d="M4 4l8 8M12 4l-8 8" />
                 </svg>
@@ -242,9 +227,7 @@ function CommentCard({
           </div>
           <p
             className={`text-[13px] mt-1 leading-relaxed ${
-              comment.resolved
-                ? "line-through text-text-tertiary"
-                : "text-text-primary"
+              comment.resolved ? "line-through text-text-tertiary" : "text-text-primary"
             }`}
           >
             {comment.text}
@@ -259,25 +242,18 @@ function CommentCard({
                     <span className="text-[11px] font-medium text-text-secondary">
                       {reply.author}
                     </span>
-                    <span className="text-[10px] text-text-muted">
-                      {timeAgo(reply.timestamp)}
-                    </span>
+                    <span className="text-[10px] text-text-muted">{timeAgo(reply.timestamp)}</span>
                   </div>
-                  <p className="text-[12px] text-text-secondary mt-0.5 ml-[26px]">
-                    {reply.text}
-                  </p>
+                  <p className="text-[12px] text-text-secondary mt-0.5 ml-[26px]">{reply.text}</p>
                 </div>
               ))}
             </div>
           )}
 
           {showReplyInput ? (
-            <div
-              className="mt-2 flex gap-1.5"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className="mt-2 flex gap-1.5">
               <input
-                autoFocus
+                onClick={(e) => e.stopPropagation()}
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
                 onKeyDown={(e) => {
@@ -292,6 +268,7 @@ function CommentCard({
                 className="flex-1 text-[12px] px-2.5 py-1.5 border border-border rounded-lg bg-surface-1 focus:outline-none focus:border-border-hover"
               />
               <button
+                type="button"
                 onClick={() => {
                   if (replyText.trim()) {
                     onReply(replyText.trim());
@@ -306,6 +283,7 @@ function CommentCard({
             </div>
           ) : (
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 setShowReplyInput(true);
@@ -334,7 +312,7 @@ export function CommentSystem() {
   } | null>(null);
   const [newCommentText, setNewCommentText] = useState("");
   const [authorName, setAuthorName] = useState(
-    () => localStorage.getItem("nexu_comment_author") || ""
+    () => localStorage.getItem("nexu_comment_author") || "",
   );
   const [showAuthorPrompt, setShowAuthorPrompt] = useState(false);
   const [filter, setFilter] = useState<"all" | "open" | "resolved">("all");
@@ -357,7 +335,7 @@ export function CommentSystem() {
     setActiveComment(null);
     setNewCommentPos(null);
     setIsPinMode(false);
-  }, [page]);
+  }, []);
 
   const handleOverlayClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -370,7 +348,7 @@ export function CommentSystem() {
       setNewCommentText("");
       setTimeout(() => inputRef.current?.focus(), 50);
     },
-    [isPinMode]
+    [isPinMode],
   );
 
   const submitComment = useCallback(() => {
@@ -394,9 +372,7 @@ export function CommentSystem() {
   }, [newCommentText, newCommentPos, authorName, page]);
 
   const handleResolve = useCallback((id: string) => {
-    setComments((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, resolved: !c.resolved } : c))
-    );
+    setComments((prev) => prev.map((c) => (c.id === id ? { ...c, resolved: !c.resolved } : c)));
   }, []);
 
   const handleDelete = useCallback(
@@ -404,7 +380,7 @@ export function CommentSystem() {
       setComments((prev) => prev.filter((c) => c.id !== id));
       if (activeComment === id) setActiveComment(null);
     },
-    [activeComment]
+    [activeComment],
   );
 
   const handleReply = useCallback(
@@ -416,12 +392,10 @@ export function CommentSystem() {
         timestamp: Date.now(),
       };
       setComments((prev) =>
-        prev.map((c) =>
-          c.id === commentId ? { ...c, replies: [...c.replies, reply] } : c
-        )
+        prev.map((c) => (c.id === commentId ? { ...c, replies: [...c.replies, reply] } : c)),
       );
     },
-    [authorName]
+    [authorName],
   );
 
   const startPinMode = useCallback(() => {
@@ -451,6 +425,7 @@ export function CommentSystem() {
               <div className="w-2 h-2 rounded-full bg-[#F24E1E] animate-pulse" />
               Click anywhere to leave a comment
               <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsPinMode(false);
@@ -465,6 +440,8 @@ export function CommentSystem() {
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
+                  aria-hidden="true"
+                  focusable="false"
                 >
                   <path d="M4 4l8 8M12 4l-8 8" />
                 </svg>
@@ -512,10 +489,9 @@ export function CommentSystem() {
                       />
                     </div>
                     <div className="flex items-center justify-between px-3 py-2 bg-surface-2 border-t border-border">
-                      <span className="text-[10px] text-text-muted">
-                        ⏎ to send · Esc to cancel
-                      </span>
+                      <span className="text-[10px] text-text-muted">⏎ to send · Esc to cancel</span>
                       <button
+                        type="button"
                         onClick={submitComment}
                         disabled={!newCommentText.trim()}
                         className="px-3 py-1 text-[11px] font-medium bg-accent text-accent-fg rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-30 cursor-pointer"
@@ -578,9 +554,7 @@ export function CommentSystem() {
               {/* Panel header */}
               <div className="px-4 py-3.5 border-b border-border flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-[13px] font-semibold text-text-primary">
-                    Comments
-                  </h3>
+                  <h3 className="text-[13px] font-semibold text-text-primary">Comments</h3>
                   {openCount > 0 && (
                     <span className="text-[10px] font-medium bg-[#F24E1E] text-white px-1.5 py-0.5 rounded-full">
                       {openCount}
@@ -589,6 +563,7 @@ export function CommentSystem() {
                 </div>
                 <div className="flex items-center gap-1">
                   <button
+                    type="button"
                     onClick={startPinMode}
                     className="p-1.5 rounded-lg hover:bg-surface-3 transition-colors text-text-secondary hover:text-text-primary cursor-pointer"
                     title="Add comment"
@@ -600,11 +575,14 @@ export function CommentSystem() {
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="1.5"
+                      aria-hidden="true"
+                      focusable="false"
                     >
                       <path d="M8 3v10M3 8h10" />
                     </svg>
                   </button>
                   <button
+                    type="button"
                     onClick={() => {
                       setIsOpen(false);
                       setActiveComment(null);
@@ -618,6 +596,8 @@ export function CommentSystem() {
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="1.5"
+                      aria-hidden="true"
+                      focusable="false"
                     >
                       <path d="M4 4l8 8M12 4l-8 8" />
                     </svg>
@@ -629,6 +609,7 @@ export function CommentSystem() {
               <div className="px-4 py-2 border-b border-border flex gap-1">
                 {(["all", "open", "resolved"] as const).map((f) => (
                   <button
+                    type="button"
                     key={f}
                     onClick={() => setFilter(f)}
                     className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors cursor-pointer ${
@@ -640,8 +621,8 @@ export function CommentSystem() {
                     {f === "all"
                       ? `All (${pageComments.length})`
                       : f === "open"
-                      ? `Open (${openCount})`
-                      : `Resolved (${pageComments.length - openCount})`}
+                        ? `Open (${openCount})`
+                        : `Resolved (${pageComments.length - openCount})`}
                   </button>
                 ))}
               </div>
@@ -664,13 +645,13 @@ export function CommentSystem() {
                           stroke="currentColor"
                           strokeWidth="1.2"
                           className="text-text-muted"
+                          aria-hidden="true"
+                          focusable="false"
                         >
                           <path d="M2 3h12v8H5l-3 3V3z" />
                         </svg>
                       </div>
-                      <p className="text-[13px] text-text-secondary font-medium">
-                        No comments yet
-                      </p>
+                      <p className="text-[13px] text-text-secondary font-medium">No comments yet</p>
                       <p className="text-[11px] text-text-muted mt-1">
                         Click the + button to add one
                       </p>
@@ -683,9 +664,7 @@ export function CommentSystem() {
                         index={pageComments.indexOf(comment)}
                         isActive={activeComment === comment.id}
                         onSelect={() =>
-                          setActiveComment(
-                            activeComment === comment.id ? null : comment.id
-                          )
+                          setActiveComment(activeComment === comment.id ? null : comment.id)
                         }
                         onResolve={() => handleResolve(comment.id)}
                         onDelete={() => handleDelete(comment.id)}
@@ -724,15 +703,11 @@ export function CommentSystem() {
                 This will be shown with your comments
               </p>
               <input
-                autoFocus
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && authorName.trim()) {
-                    localStorage.setItem(
-                      "nexu_comment_author",
-                      authorName.trim()
-                    );
+                    localStorage.setItem("nexu_comment_author", authorName.trim());
                     setShowAuthorPrompt(false);
                     setIsPinMode(true);
                     setIsOpen(false);
@@ -743,18 +718,17 @@ export function CommentSystem() {
               />
               <div className="flex gap-2 mt-3">
                 <button
+                  type="button"
                   onClick={() => setShowAuthorPrompt(false)}
                   className="flex-1 py-2 text-[12px] font-medium text-text-secondary border border-border rounded-lg hover:bg-surface-3 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     if (authorName.trim()) {
-                      localStorage.setItem(
-                        "nexu_comment_author",
-                        authorName.trim()
-                      );
+                      localStorage.setItem("nexu_comment_author", authorName.trim());
                       setShowAuthorPrompt(false);
                       setIsPinMode(true);
                       setIsOpen(false);
@@ -786,6 +760,7 @@ export function CommentSystem() {
         >
           {!isOpen && (
             <motion.button
+              type="button"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={startPinMode}
@@ -799,6 +774,8 @@ export function CommentSystem() {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.5"
+                aria-hidden="true"
+                focusable="false"
               >
                 <path d="M10 2L6 6l-3.5.5L6 10l-.5 3.5L10 10l4-4" />
                 <path d="M10 2l4 4" />
@@ -806,6 +783,7 @@ export function CommentSystem() {
             </motion.button>
           )}
           <motion.button
+            type="button"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsOpen(!isOpen)}
@@ -824,6 +802,8 @@ export function CommentSystem() {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.5"
+                aria-hidden="true"
+                focusable="false"
               >
                 <path d="M2 3h12v8H5l-3 3V3z" />
               </svg>

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Label, Switch } from "@nexu/ui-web";
+import { Label, Switch } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Switch",

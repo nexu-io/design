@@ -4,7 +4,7 @@ import {
   InteractiveRowContent,
   InteractiveRowLeading,
   InteractiveRowTrailing,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import { ChevronRight, Plus, Users, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 

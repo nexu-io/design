@@ -1,26 +1,26 @@
-import { LayoutGrid } from 'lucide-react';
-import { usePageTitle } from '../../hooks/usePageTitle';
+import { LayoutGrid } from "lucide-react";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 const WORKFLOWS = [
   {
     step: 1,
-    title: 'Drafting',
-    desc: 'Turn rough task inputs into polished first drafts. Paste your brief, attach examples, and let nexu produce a structured output you can iterate on.',
+    title: "Drafting",
+    desc: "Turn rough task inputs into polished first drafts. Paste your brief, attach examples, and let nexu produce a structured output you can iterate on.",
   },
   {
     step: 2,
-    title: 'Review loop',
-    desc: 'Improve drafts with structured feedback directly in chat. Point out what to change — nexu remembers your style and applies it consistently.',
+    title: "Review loop",
+    desc: "Improve drafts with structured feedback directly in chat. Point out what to change — nexu remembers your style and applies it consistently.",
   },
   {
     step: 3,
-    title: 'Shipping',
-    desc: 'Finalize deliverables with clear next steps. nexu generates summaries, action items, and follow-up threads automatically.',
+    title: "Shipping",
+    desc: "Finalize deliverables with clear next steps. nexu generates summaries, action items, and follow-up threads automatically.",
   },
 ];
 
 export default function KeyWorkflowsPage() {
-  usePageTitle('Key workflows');
+  usePageTitle("Key workflows");
 
   return (
     <>

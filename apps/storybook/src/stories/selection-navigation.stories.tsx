@@ -14,7 +14,7 @@ import {
   ComboboxTrigger,
   TagGroup,
   TagGroupItem,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 
 const meta = {
   title: "Scenarios/Selection Navigation",

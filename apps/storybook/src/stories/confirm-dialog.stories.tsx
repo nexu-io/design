@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Button, ConfirmDialog } from "@nexu/ui-web";
+import { Button, ConfirmDialog } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Patterns/ConfirmDialog",

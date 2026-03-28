@@ -110,9 +110,7 @@
     "filesCount": 2,
     "insertions": 56,
     "deletions": 22,
-    "categories": [
-      "operations"
-    ],
+    "categories": ["operations"],
     "summary": "文档更新: 部署配置"
   },
   {
@@ -148,11 +146,7 @@
     "filesCount": 3,
     "insertions": 52,
     "deletions": 0,
-    "categories": [
-      "decision",
-      "facts",
-      "identity"
-    ],
+    "categories": ["decision", "facts", "identity"],
     "summary": "产品策略更新：Dogfood 哲学 + 快速产品化优先于差异化"
   },
   {
@@ -164,15 +158,11 @@
     "email": "joey@joeydeMacBook-Air.local",
     "date": "2026-03-02T20:57:03+08:00",
     "dateShort": "2026-03-02",
-    "filesChanged": [
-      "design-system/src/pages/openclaw/OpenClawLanding.tsx"
-    ],
+    "filesChanged": ["design-system/src/pages/openclaw/OpenClawLanding.tsx"],
     "filesCount": 1,
     "insertions": 2,
     "deletions": 1,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "设计系统修复：补充 Cloud/Users 图标导入"
   },
   {
@@ -247,9 +237,7 @@
     "filesCount": 4,
     "insertions": 181,
     "deletions": 125,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "OpenClaw 落地页与 Nexu 关键词框架对齐"
   },
   {
@@ -293,15 +281,11 @@
     "email": "joey@joeydeMacBook-Air.local",
     "date": "2026-03-02T20:16:07+08:00",
     "dateShort": "2026-03-02",
-    "filesChanged": [
-      "growth space/keywords/nexu-keyword-framework.md"
-    ],
+    "filesChanged": ["growth space/keywords/nexu-keyword-framework.md"],
     "filesCount": 1,
     "insertions": 276,
     "deletions": 182,
-    "categories": [
-      "other"
-    ],
+    "categories": ["other"],
     "summary": "市场语言定义更新：核心定位、卖点、场景、VS OpenClaw"
   },
   {
@@ -329,15 +313,11 @@
     "email": "chizblank@gmail.com",
     "date": "2026-03-02T17:27:22+08:00",
     "dateShort": "2026-03-02",
-    "filesChanged": [
-      "clone/memory/context/2026-03-02-nexu-prod-deploy-lessons.md"
-    ],
+    "filesChanged": ["clone/memory/context/2026-03-02-nexu-prod-deploy-lessons.md"],
     "filesCount": 1,
     "insertions": 114,
     "deletions": 0,
-    "categories": [
-      "operations"
-    ],
+    "categories": ["operations"],
     "summary": "记录 2026-03-02 生产部署中发现的三个关键问题："
   },
   {
@@ -349,15 +329,11 @@
     "email": "chizblank@gmail.com",
     "date": "2026-03-02T16:32:40+08:00",
     "dateShort": "2026-03-02",
-    "filesChanged": [
-      "clone/memory/context/2026-03-02-sidecar-secrets-post-deploy-todos.md"
-    ],
+    "filesChanged": ["clone/memory/context/2026-03-02-sidecar-secrets-post-deploy-todos.md"],
     "filesCount": 1,
     "insertions": 7,
     "deletions": 3,
-    "categories": [
-      "operations"
-    ],
+    "categories": ["operations"],
     "summary": "修复: 部署配置"
   },
   {
@@ -377,9 +353,7 @@
     "filesCount": 3,
     "insertions": 0,
     "deletions": 29,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "修复: 移除未使用的代码"
   },
   {
@@ -409,14 +383,7 @@
     "filesCount": 13,
     "insertions": 437,
     "deletions": 442,
-    "categories": [
-      "artifact",
-      "design-system",
-      "knowledge",
-      "other",
-      "portal",
-      "rules"
-    ],
+    "categories": ["artifact", "design-system", "knowledge", "other", "portal", "rules"],
     "summary": "重构：clone/knowledge/growth 迁移到 growth space"
   },
   {
@@ -437,11 +404,7 @@
     "filesCount": 4,
     "insertions": 312,
     "deletions": 312,
-    "categories": [
-      "identity",
-      "knowledge",
-      "other"
-    ],
+    "categories": ["identity", "knowledge", "other"],
     "summary": "重构：海外 IM 增长计划迁移到 growth space"
   },
   {
@@ -453,15 +416,11 @@
     "email": "joey@joeydeMacBook-Air.local",
     "date": "2026-03-02T14:46:32+08:00",
     "dateShort": "2026-03-02",
-    "filesChanged": [
-      "growth space/joey-soul.md"
-    ],
+    "filesChanged": ["growth space/joey-soul.md"],
     "filesCount": 1,
     "insertions": 38,
     "deletions": 0,
-    "categories": [
-      "other"
-    ],
+    "categories": ["other"],
     "summary": "新增 Joey 个人偏好档案（增长负责人）"
   },
   {
@@ -473,15 +432,11 @@
     "email": "935902669@qq.com",
     "date": "2026-03-02T14:34:54+08:00",
     "dateShort": "2026-03-02",
-    "filesChanged": [
-      "clone/knowledge/references/evolver-architecture-internals.md"
-    ],
+    "filesChanged": ["clone/knowledge/references/evolver-architecture-internals.md"],
     "filesCount": 1,
     "insertions": 222,
     "deletions": 0,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "Evolver 架构内部细节文档完善"
   },
   {
@@ -493,15 +448,11 @@
     "email": "chizblank@gmail.com",
     "date": "2026-03-02T14:34:31+08:00",
     "dateShort": "2026-03-02",
-    "filesChanged": [
-      "clone/memory/context/2026-03-02-sidecar-secrets-post-deploy-todos.md"
-    ],
+    "filesChanged": ["clone/memory/context/2026-03-02-sidecar-secrets-post-deploy-todos.md"],
     "filesCount": 1,
     "insertions": 68,
     "deletions": 0,
-    "categories": [
-      "operations"
-    ],
+    "categories": ["operations"],
     "summary": "文档更新: 部署配置"
   },
   {
@@ -562,15 +513,11 @@
     "email": "935902669@qq.com",
     "date": "2026-03-02T14:24:34+08:00",
     "dateShort": "2026-03-02",
-    "filesChanged": [
-      "clone/knowledge/references/evolver-architecture-internals.md"
-    ],
+    "filesChanged": ["clone/knowledge/references/evolver-architecture-internals.md"],
     "filesCount": 1,
     "insertions": 820,
     "deletions": 0,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "Evolver 架构内部参考文档"
   },
   {
@@ -582,15 +529,11 @@
     "email": "chizblank@gmail.com",
     "date": "2026-03-02T14:19:14+08:00",
     "dateShort": "2026-03-02",
-    "filesChanged": [
-      "clone/memory/ideas/2026-03-02-nexu-skills-s3-storage.md"
-    ],
+    "filesChanged": ["clone/memory/ideas/2026-03-02-nexu-skills-s3-storage.md"],
     "filesCount": 1,
     "insertions": 44,
     "deletions": 0,
-    "categories": [
-      "insight"
-    ],
+    "categories": ["insight"],
     "summary": "新功能: add skills S3 storage optimization idea"
   },
   {
@@ -602,15 +545,11 @@
     "email": "joeylee12629@gmail.com",
     "date": "2026-03-02T14:12:50+08:00",
     "dateShort": "2026-03-02",
-    "filesChanged": [
-      "growth space"
-    ],
+    "filesChanged": ["growth space"],
     "filesCount": 1,
     "insertions": 1,
     "deletions": 0,
-    "categories": [
-      "other"
-    ],
+    "categories": ["other"],
     "summary": "创建 growth space 目录结构"
   },
   {
@@ -622,15 +561,11 @@
     "email": "joeylee12629@gmail.com",
     "date": "2026-03-02T14:10:24+08:00",
     "dateShort": "2026-03-02",
-    "filesChanged": [
-      "design-system/growth"
-    ],
+    "filesChanged": ["design-system/growth"],
     "filesCount": 1,
     "insertions": 1,
     "deletions": 0,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新增 设计系统 (1 个文件, +1/-0)"
   },
   {
@@ -670,12 +605,7 @@
     "filesCount": 7,
     "insertions": 233,
     "deletions": 1,
-    "categories": [
-      "facts",
-      "identity",
-      "insight",
-      "knowledge"
-    ],
+    "categories": ["facts", "identity", "insight", "knowledge"],
     "summary": "文档即增长引擎：文档优先于 UI 测试、驱动 AI 推荐与 SEO/GEO"
   },
   {
@@ -687,15 +617,11 @@
     "email": "joey@joeydeMacBook-Air.local",
     "date": "2026-03-02T12:22:27+08:00",
     "dateShort": "2026-03-02",
-    "filesChanged": [
-      "design-system/src/pages/openclaw/ChannelsPage.tsx"
-    ],
+    "filesChanged": ["design-system/src/pages/openclaw/ChannelsPage.tsx"],
     "filesCount": 1,
     "insertions": 0,
     "deletions": 168,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "清理 设计系统 (1 个文件, +0/-168)"
   },
   {
@@ -734,12 +660,7 @@
     "filesCount": 6,
     "insertions": 98,
     "deletions": 0,
-    "categories": [
-      "facts",
-      "identity",
-      "insight",
-      "other"
-    ],
+    "categories": ["facts", "identity", "insight", "other"],
     "summary": "Nexu 命名哲学与人性观文档 + 商标知识产权待办"
   },
   {
@@ -767,15 +688,11 @@
     "email": "mrc@powerformer.com",
     "date": "2026-02-28T22:27:01+08:00",
     "dateShort": "2026-02-28",
-    "filesChanged": [
-      "design-system/package-lock.json"
-    ],
+    "filesChanged": ["design-system/package-lock.json"],
     "filesCount": 1,
     "insertions": 13,
     "deletions": 0,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "工程维护：更新依赖锁文件"
   },
   {
@@ -796,9 +713,7 @@
     "filesCount": 4,
     "insertions": 2,
     "deletions": 31,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "修复：移除未使用的 OpenClaw 导入恢复构建"
   },
   {
@@ -810,15 +725,11 @@
     "email": "joey@joeydeMacBook-Air.local",
     "date": "2026-02-28T18:00:49+08:00",
     "dateShort": "2026-02-28",
-    "filesChanged": [
-      "clone/knowledge/operations/linear-integration.md"
-    ],
+    "filesChanged": ["clone/knowledge/operations/linear-integration.md"],
     "filesCount": 1,
     "insertions": 18,
     "deletions": 13,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "更新 知识库 (1 个文件, +18/-13)"
   },
   {
@@ -846,15 +757,11 @@
     "email": "joey@joeydeMacBook-Air.local",
     "date": "2026-02-28T17:50:46+08:00",
     "dateShort": "2026-02-28",
-    "filesChanged": [
-      "design-system/src/pages/openclaw/OpenClawLanding.tsx"
-    ],
+    "filesChanged": ["design-system/src/pages/openclaw/OpenClawLanding.tsx"],
     "filesCount": 1,
     "insertions": 61,
     "deletions": 60,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "更新 设计系统 (1 个文件, +61/-60)"
   },
   {
@@ -866,15 +773,11 @@
     "email": "joey@joeydeMacBook-Air.local",
     "date": "2026-02-28T17:32:10+08:00",
     "dateShort": "2026-02-28",
-    "filesChanged": [
-      "clone/artifacts/reports/nexu-keyword-framework.md"
-    ],
+    "filesChanged": ["clone/artifacts/reports/nexu-keyword-framework.md"],
     "filesCount": 1,
     "insertions": 1,
     "deletions": 1,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "文档更新: 更新产品标语"
   },
   {
@@ -886,15 +789,11 @@
     "email": "joey@joeydeMacBook-Air.local",
     "date": "2026-02-28T17:29:26+08:00",
     "dateShort": "2026-02-28",
-    "filesChanged": [
-      "clone/artifacts/reports/nexu-keyword-framework.md"
-    ],
+    "filesChanged": ["clone/artifacts/reports/nexu-keyword-framework.md"],
     "filesCount": 1,
     "insertions": 24,
     "deletions": 4,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "文档更新: restructure keyword framework features around 3 core pillars"
   },
   {
@@ -906,17 +805,11 @@
     "email": "joey@joeydeMacBook-Air.local",
     "date": "2026-02-28T17:23:04+08:00",
     "dateShort": "2026-02-28",
-    "filesChanged": [
-      "clone/.soul/joey.md",
-      "clone/artifacts/reports/nexu-keyword-framework.md"
-    ],
+    "filesChanged": ["clone/.soul/joey.md", "clone/artifacts/reports/nexu-keyword-framework.md"],
     "filesCount": 2,
     "insertions": 242,
     "deletions": 3,
-    "categories": [
-      "artifact",
-      "identity"
-    ],
+    "categories": ["artifact", "identity"],
     "summary": "文档更新: add Nexu keyword framework and update Joey preferences"
   },
   {
@@ -951,9 +844,7 @@
     "filesCount": 2,
     "insertions": 269,
     "deletions": 1,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "多租户隔离验证结果设计文档 + README 更新"
   },
   {
@@ -965,15 +856,11 @@
     "email": "joey@joeydeMacBook-Air.local",
     "date": "2026-02-28T16:18:16+08:00",
     "dateShort": "2026-02-28",
-    "filesChanged": [
-      "clone/.soul/joey.md"
-    ],
+    "filesChanged": ["clone/.soul/joey.md"],
     "filesCount": 1,
     "insertions": 92,
     "deletions": 0,
-    "categories": [
-      "identity"
-    ],
+    "categories": ["identity"],
     "summary": "新功能: 新增个人偏好档案"
   },
   {
@@ -993,10 +880,7 @@
     "filesCount": 3,
     "insertions": 1047,
     "deletions": 1,
-    "categories": [
-      "artifact",
-      "design-system"
-    ],
+    "categories": ["artifact", "design-system"],
     "summary": "新功能: 认证/登录"
   },
   {
@@ -1008,15 +892,11 @@
     "email": "935902669@qq.com",
     "date": "2026-02-28T15:11:26+08:00",
     "dateShort": "2026-02-28",
-    "filesChanged": [
-      "clone/artifacts/product-define/prds/bot-customization-playbook.md"
-    ],
+    "filesChanged": ["clone/artifacts/product-define/prds/bot-customization-playbook.md"],
     "filesCount": 1,
     "insertions": 1,
     "deletions": 1,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "文档更新: update bot customization playbook"
   },
   {
@@ -1028,15 +908,11 @@
     "email": "935902669@qq.com",
     "date": "2026-02-28T15:10:47+08:00",
     "dateShort": "2026-02-28",
-    "filesChanged": [
-      "clone/artifacts/product-define/prds/bot-customization-playbook.md"
-    ],
+    "filesChanged": ["clone/artifacts/product-define/prds/bot-customization-playbook.md"],
     "filesCount": 1,
     "insertions": 231,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "新功能: add bot customization playbook PRD"
   },
   {
@@ -1060,9 +936,7 @@
     "filesCount": 7,
     "insertions": 962,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "新功能: 多租户权限隔离"
   },
   {
@@ -1198,9 +1072,7 @@
     "filesCount": 7,
     "insertions": 5,
     "deletions": 201,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "暂存当前工作进度"
   },
   {
@@ -1212,15 +1084,11 @@
     "email": "935902669@qq.com",
     "date": "2026-02-27T21:38:38+08:00",
     "dateShort": "2026-02-27",
-    "filesChanged": [
-      "clone/knowledge/references/openclaw-config-reference.md"
-    ],
+    "filesChanged": ["clone/knowledge/references/openclaw-config-reference.md"],
     "filesCount": 1,
     "insertions": 1180,
     "deletions": 0,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "openclaw 配置项"
   },
   {
@@ -1257,9 +1125,7 @@
     "filesCount": 4,
     "insertions": 615,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "Gateway 工作区跨部署持久化设计文档"
   },
   {
@@ -1293,12 +1159,7 @@
     "filesCount": 17,
     "insertions": 2279,
     "deletions": 247,
-    "categories": [
-      "artifact",
-      "design-system",
-      "insight",
-      "portal"
-    ],
+    "categories": ["artifact", "design-system", "insight", "portal"],
     "summary": "新功能: 落地页"
   },
   {
@@ -1318,10 +1179,7 @@
     "filesCount": 3,
     "insertions": 45,
     "deletions": 0,
-    "categories": [
-      "identity",
-      "knowledge"
-    ],
+    "categories": ["identity", "knowledge"],
     "summary": "MaxClaw — 中国市场云端 OpenClaw + Expert 专家市场:"
   },
   {
@@ -1343,11 +1201,7 @@
     "filesCount": 5,
     "insertions": 650,
     "deletions": 3,
-    "categories": [
-      "portal",
-      "preference",
-      "rules"
-    ],
+    "categories": ["portal", "preference", "rules"],
     "summary": "新增 Portal 站点、偏好设定、AI 规则 (5 个文件, +650/-3)"
   },
   {
@@ -1369,11 +1223,7 @@
     "filesCount": 5,
     "insertions": 69,
     "deletions": 3,
-    "categories": [
-      "facts",
-      "identity",
-      "knowledge"
-    ],
+    "categories": ["facts", "identity", "knowledge"],
     "summary": "Slackbot 是 Nexu 在 Slack 入口上的最直接威胁:"
   },
   {
@@ -1397,9 +1247,7 @@
     "filesCount": 7,
     "insertions": 1055,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "新功能: 新增设计文档"
   },
   {
@@ -1497,9 +1345,7 @@
     "filesCount": 3,
     "insertions": 152,
     "deletions": 60,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "新增竞品参照物:"
   },
   {
@@ -1519,9 +1365,7 @@
     "filesCount": 3,
     "insertions": 175,
     "deletions": 81,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "关键词修正（核心变更）:"
   },
   {
@@ -1541,10 +1385,7 @@
     "filesCount": 3,
     "insertions": 353,
     "deletions": 16,
-    "categories": [
-      "insight",
-      "knowledge"
-    ],
+    "categories": ["insight", "knowledge"],
     "summary": "新增:"
   },
   {
@@ -1568,9 +1409,7 @@
     "filesCount": 7,
     "insertions": 718,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "新功能: 新增设计文档"
   },
   {
@@ -1598,11 +1437,7 @@
     "filesCount": 11,
     "insertions": 174,
     "deletions": 90,
-    "categories": [
-      "decision",
-      "insight",
-      "portal"
-    ],
+    "categories": ["decision", "insight", "portal"],
     "summary": "新增两篇文档，分别为「Clone 概念大白话化」和「Clone 概念清晰化」，旨在用更易懂的语言替代技术术语，提升团队成员对 clone/ 目录的理解。同..."
   },
   {
@@ -1621,10 +1456,7 @@
     "filesCount": 2,
     "insertions": 46,
     "deletions": 0,
-    "categories": [
-      "decision",
-      "insight"
-    ],
+    "categories": ["decision", "insight"],
     "summary": "docs: 记录 clone 概念大白话化的决策和洞察"
   },
   {
@@ -1650,9 +1482,7 @@
     "filesCount": 9,
     "insertions": 128,
     "deletions": 90,
-    "categories": [
-      "portal"
-    ],
+    "categories": ["portal"],
     "summary": "- KnowledgeMap: 新增「一句话理解」概念说明区，8个目录用问答形式解释"
   },
   {
@@ -1674,12 +1504,7 @@
     "filesCount": 5,
     "insertions": 196,
     "deletions": 91,
-    "categories": [
-      "facts",
-      "identity",
-      "insight",
-      "knowledge"
-    ],
+    "categories": ["facts", "identity", "insight", "knowledge"],
     "summary": "Manus 竞品分析"
   },
   {
@@ -1701,12 +1526,7 @@
     "filesCount": 5,
     "insertions": 217,
     "deletions": 14,
-    "categories": [
-      "facts",
-      "identity",
-      "insight",
-      "knowledge"
-    ],
+    "categories": ["facts", "identity", "insight", "knowledge"],
     "summary": "- LobsterAI（网易有道）: 桌面级全场景 Agent，IM 桥接钉钉/飞书，风险中"
   },
   {
@@ -1718,15 +1538,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-26T11:40:25+08:00",
     "dateShort": "2026-02-26",
-    "filesChanged": [
-      "clone/memory/ideas/2026-02-26-portal-public-deployment.md"
-    ],
+    "filesChanged": ["clone/memory/ideas/2026-02-26-portal-public-deployment.md"],
     "filesCount": 1,
     "insertions": 23,
     "deletions": 0,
-    "categories": [
-      "insight"
-    ],
+    "categories": ["insight"],
     "summary": "新增 Portal 公开部署文档，详细描述了将团队内部仪表盘部署到 Vercel 的背景、战略思考、建议和相关链接，旨在提升品牌展示和团队透明度。"
   },
   {
@@ -1745,10 +1561,7 @@
     "filesCount": 2,
     "insertions": 130,
     "deletions": 0,
-    "categories": [
-      "insight",
-      "knowledge"
-    ],
+    "categories": ["insight", "knowledge"],
     "summary": "- 文章来源：特工宇宙（微信公众号）"
   },
   {
@@ -1773,9 +1586,7 @@
     "filesCount": 8,
     "insertions": 1418,
     "deletions": 8,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "新功能: 新增设计文档"
   },
   {
@@ -1798,11 +1609,7 @@
     "filesCount": 6,
     "insertions": 713,
     "deletions": 27,
-    "categories": [
-      "infra",
-      "other",
-      "portal"
-    ],
+    "categories": ["infra", "other", "portal"],
     "summary": "更新团队 Portal 的在线预览链接为 nexu-team-portal.vercel.app，并在相关文档中反映此更改。同时，新增团队成员的管理层标识..."
   },
   {
@@ -1839,13 +1646,7 @@
     "filesCount": 44,
     "insertions": 10791,
     "deletions": 30,
-    "categories": [
-      "artifact",
-      "infra",
-      "insight",
-      "other",
-      "portal"
-    ],
+    "categories": ["artifact", "infra", "insight", "other", "portal"],
     "summary": "新增团队 Portal，作为内部信息中心，包含团队概览、招聘需求、Onboarding 指南和知识地图。更新文档以反映新结构，提供在线预览链接和部署指令。..."
   },
   {
@@ -1875,15 +1676,7 @@
     "filesCount": 13,
     "insertions": 1311,
     "deletions": 13,
-    "categories": [
-      "artifact",
-      "decision",
-      "facts",
-      "insight",
-      "knowledge",
-      "other",
-      "team"
-    ],
+    "categories": ["artifact", "decision", "facts", "insight", "knowledge", "other", "team"],
     "summary": "更新文档以反映产品定位和营销策略的调整，简化语言以提高用户理解。修改了在线预览链接，强调产品的快速、便捷、安全和成本优势。新增会议记录和市场洞察文档，聚焦..."
   },
   {
@@ -1895,15 +1688,11 @@
     "email": "2667192167@qq.com",
     "date": "2026-02-25T22:12:22+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/artifacts/research/openclaw-research.md"
-    ],
+    "filesChanged": ["clone/artifacts/research/openclaw-research.md"],
     "filesCount": 1,
     "insertions": 121,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "新功能: 新增调研报告"
   },
   {
@@ -1922,9 +1711,7 @@
     "filesCount": 2,
     "insertions": 49,
     "deletions": 0,
-    "categories": [
-      "insight"
-    ],
+    "categories": ["insight"],
     "summary": "新增两篇市场洞察文档：一篇关于海外市场定价策略的建议，强调应采取更激进的定价以适应高付费意愿；另一篇聚焦于无焦虑感的卡片设计，提出设计规范和用户体验优化建..."
   },
   {
@@ -1953,11 +1740,7 @@
     "filesCount": 12,
     "insertions": 170,
     "deletions": 401,
-    "categories": [
-      "facts",
-      "other",
-      "rules"
-    ],
+    "categories": ["facts", "other", "rules"],
     "summary": "清理 团队事实、AI 规则 (12 个文件, +170/-401)"
   },
   {
@@ -2056,10 +1839,7 @@
     "filesCount": 2,
     "insertions": 30,
     "deletions": 16,
-    "categories": [
-      "design-system",
-      "knowledge"
-    ],
+    "categories": ["design-system", "knowledge"],
     "summary": "文档:"
   },
   {
@@ -2071,16 +1851,11 @@
     "email": "cursoragent@cursor.com",
     "date": "2026-02-25T12:15:10Z",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "design-system/src/App.tsx",
-      "design-system/src/pages/GrowthLanding.tsx"
-    ],
+    "filesChanged": ["design-system/src/App.tsx", "design-system/src/pages/GrowthLanding.tsx"],
     "filesCount": 2,
     "insertions": 523,
     "deletions": 23,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "- 新增 GrowthLanding.tsx 页面，路由 /growth-landing"
   },
   {
@@ -2092,15 +1867,11 @@
     "email": "cursoragent@cursor.com",
     "date": "2026-02-25T12:08:17Z",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/knowledge/growth/overseas-im-growth-plan.md"
-    ],
+    "filesChanged": ["clone/knowledge/growth/overseas-im-growth-plan.md"],
     "filesCount": 1,
     "insertions": 62,
     "deletions": 0,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "update: 增加生态四层模型（模型→Agent/Skill→数字分身→IM平台）、竞品分析、三大引擎和长期壁垒"
   },
   {
@@ -2112,15 +1883,11 @@
     "email": "935902669@qq.com",
     "date": "2026-02-25T19:25:22+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/artifacts/designs/openclaw-multi-tenant/06-cost-roadmap.md"
-    ],
+    "filesChanged": ["clone/artifacts/designs/openclaw-multi-tenant/06-cost-roadmap.md"],
     "filesCount": 1,
     "insertions": 104,
     "deletions": 89,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "文档更新: Create WORKPLAN and update cost roadmap for multi-tenant design."
   },
   {
@@ -2132,15 +1899,11 @@
     "email": "cursoragent@cursor.com",
     "date": "2026-02-25T11:24:18Z",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/knowledge/growth/overseas-im-growth-plan.md"
-    ],
+    "filesChanged": ["clone/knowledge/growth/overseas-im-growth-plan.md"],
     "filesCount": 1,
     "insertions": 39,
     "deletions": 6,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "update: 裂变策略按三客群拆解，增加金句卡片/Wrapped/实时触发三大玩法"
   },
   {
@@ -2152,15 +1915,11 @@
     "email": "cursoragent@cursor.com",
     "date": "2026-02-25T11:11:04Z",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/knowledge/growth/overseas-im-growth-plan.md"
-    ],
+    "filesChanged": ["clone/knowledge/growth/overseas-im-growth-plan.md"],
     "filesCount": 1,
     "insertions": 23,
     "deletions": 15,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "update: IM平台改为Slack/Discord/飞书，增长渠道增加国内微信群冷启动"
   },
   {
@@ -2172,15 +1931,11 @@
     "email": "cursoragent@cursor.com",
     "date": "2026-02-25T11:08:03Z",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/knowledge/growth/overseas-im-growth-plan.md"
-    ],
+    "filesChanged": ["clone/knowledge/growth/overseas-im-growth-plan.md"],
     "filesCount": 1,
     "insertions": 58,
     "deletions": 43,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "update: 目标用户拆为电商/初创/ProC三客群，分身和场景按客群重构"
   },
   {
@@ -2205,10 +1960,7 @@
     "filesCount": 8,
     "insertions": 231,
     "deletions": 109,
-    "categories": [
-      "artifact",
-      "knowledge"
-    ],
+    "categories": ["artifact", "knowledge"],
     "summary": "重构: 认证/登录"
   },
   {
@@ -2220,15 +1972,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-25T18:11:07+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "design-system/src/pages/openclaw/ChannelDetailPage.tsx"
-    ],
+    "filesChanged": ["design-system/src/pages/openclaw/ChannelDetailPage.tsx"],
     "filesCount": 1,
     "insertions": 1,
     "deletions": 167,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "重构: simplify ChannelDetailPage by removing unused components and consolidating tabs"
   },
   {
@@ -2247,9 +1995,7 @@
     "filesCount": 2,
     "insertions": 59,
     "deletions": 18,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: enhance OpenClawLanding and OpenClawWorkspace for improved user interaction"
   },
   {
@@ -2269,11 +2015,7 @@
     "filesCount": 3,
     "insertions": 148,
     "deletions": 0,
-    "categories": [
-      "insight",
-      "knowledge",
-      "other"
-    ],
+    "categories": ["insight", "knowledge", "other"],
     "summary": "新功能: add Slack overseas user profile analysis for market positioning"
   },
   {
@@ -2285,15 +2027,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-25T17:50:22+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "design-system/src/pages/openclaw/OpenClawWorkspace.tsx"
-    ],
+    "filesChanged": ["design-system/src/pages/openclaw/OpenClawWorkspace.tsx"],
     "filesCount": 1,
     "insertions": 112,
     "deletions": 45,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: implement empty state UI in OpenClawWorkspace for improved user guidance"
   },
   {
@@ -2305,15 +2043,11 @@
     "email": "cursoragent@cursor.com",
     "date": "2026-02-25T09:48:18Z",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/knowledge/growth/overseas-im-growth-plan.md"
-    ],
+    "filesChanged": ["clone/knowledge/growth/overseas-im-growth-plan.md"],
     "filesCount": 1,
     "insertions": 25,
     "deletions": 6,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "update: MVP 定义按客群→分身→Skills 框架重构"
   },
   {
@@ -2325,15 +2059,11 @@
     "email": "935902669@qq.com",
     "date": "2026-02-25T17:44:59+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/knowledge/references/openclaw-architecture-internals.md"
-    ],
+    "filesChanged": ["clone/knowledge/references/openclaw-architecture-internals.md"],
     "filesCount": 1,
     "insertions": 780,
     "deletions": 0,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "新功能: add new knowledge reference for OpenClaw architecture internals"
   },
   {
@@ -2345,15 +2075,11 @@
     "email": "cursoragent@cursor.com",
     "date": "2026-02-25T09:36:46Z",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/knowledge/growth/overseas-im-growth-plan.md"
-    ],
+    "filesChanged": ["clone/knowledge/growth/overseas-im-growth-plan.md"],
     "filesCount": 1,
     "insertions": 30,
     "deletions": 27,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "update: 核心场景替换为群聊→社媒内容/群聊日报/金句卡片"
   },
   {
@@ -2365,15 +2091,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-25T17:31:48+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "design-system/src/pages/openclaw/OpenClawLanding.tsx"
-    ],
+    "filesChanged": ["design-system/src/pages/openclaw/OpenClawLanding.tsx"],
     "filesCount": 1,
     "insertions": 3,
     "deletions": 3,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: update OpenClawLanding messaging for improved clarity and user guidance"
   },
   {
@@ -2395,9 +2117,7 @@
     "filesCount": 5,
     "insertions": 447,
     "deletions": 248,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: enhance ChannelDetailPage and ChannelsPage with new UI components and platform configurations"
   },
   {
@@ -2409,15 +2129,11 @@
     "email": "cursoragent@cursor.com",
     "date": "2026-02-25T09:23:48Z",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/knowledge/growth/overseas-im-growth-plan.md"
-    ],
+    "filesChanged": ["clone/knowledge/growth/overseas-im-growth-plan.md"],
     "filesCount": 1,
     "insertions": 158,
     "deletions": 0,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "move: 海外增长规划移至 clone/knowledge/growth/"
   },
   {
@@ -2429,15 +2145,11 @@
     "email": "cursoragent@cursor.com",
     "date": "2026-02-25T09:15:53Z",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/artifacts/research/overseas-im-growth-plan-v2.md"
-    ],
+    "filesChanged": ["clone/artifacts/research/overseas-im-growth-plan-v2.md"],
     "filesCount": 1,
     "insertions": 158,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "refactor: 海外增长规划 v2 — 按六模块框架重构为一页纸"
   },
   {
@@ -2459,12 +2171,7 @@
     "filesCount": 5,
     "insertions": 735,
     "deletions": 0,
-    "categories": [
-      "artifact",
-      "insight",
-      "knowledge",
-      "other"
-    ],
+    "categories": ["artifact", "insight", "knowledge", "other"],
     "summary": "- 新增完整海外增长规划文档 (clone/artifacts/research/overseas-im-growth-plan.md)"
   },
   {
@@ -2476,15 +2183,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-25T16:44:55+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "design-system/src/pages/openclaw/OpenClawWorkspace.tsx"
-    ],
+    "filesChanged": ["design-system/src/pages/openclaw/OpenClawWorkspace.tsx"],
     "filesCount": 1,
     "insertions": 36,
     "deletions": 23,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: enhance sidebar functionality in OpenClawWorkspace"
   },
   {
@@ -2513,12 +2216,7 @@
     "filesCount": 12,
     "insertions": 488,
     "deletions": 683,
-    "categories": [
-      "design-system",
-      "insight",
-      "knowledge",
-      "other"
-    ],
+    "categories": ["design-system", "insight", "knowledge", "other"],
     "summary": "新功能: 增长策略"
   },
   {
@@ -2544,9 +2242,7 @@
     "filesCount": 9,
     "insertions": 554,
     "deletions": 505,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "文档更新: reorganize and update OpenClaw multi-tenant architecture docs"
   },
   {
@@ -2568,9 +2264,7 @@
     "filesCount": 5,
     "insertions": 207,
     "deletions": 161,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: extend platform support and enhance UI for Channel and Workspace pages"
   },
   {
@@ -2598,15 +2292,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-25T16:12:06+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "design-system/src/pages/openclaw/ChannelDetailPage.tsx"
-    ],
+    "filesChanged": ["design-system/src/pages/openclaw/ChannelDetailPage.tsx"],
     "filesCount": 1,
     "insertions": 29,
     "deletions": 216,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "重构: simplify ChannelDetailPage by removing unused components and activities"
   },
   {
@@ -2618,15 +2308,11 @@
     "email": "joeylee12629@gmail.com",
     "date": "2026-02-25T16:08:55+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/artifacts/reports/2026-02-25-nexu-growth-plan.pptx"
-    ],
+    "filesChanged": ["clone/artifacts/reports/2026-02-25-nexu-growth-plan.pptx"],
     "filesCount": 1,
     "insertions": 0,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "更新 产出物 (1 个文件, +0/-0)"
   },
   {
@@ -2638,15 +2324,11 @@
     "email": "joeylee12629@gmail.com",
     "date": "2026-02-25T16:08:36+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/artifacts/reports/2026-02-25-nexu-growth-plan-ppt.md"
-    ],
+    "filesChanged": ["clone/artifacts/reports/2026-02-25-nexu-growth-plan-ppt.md"],
     "filesCount": 1,
     "insertions": 0,
     "deletions": 201,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "清理 产出物 (1 个文件, +0/-201)"
   },
   {
@@ -2668,12 +2350,7 @@
     "filesCount": 5,
     "insertions": 434,
     "deletions": 0,
-    "categories": [
-      "artifact",
-      "infra",
-      "insight",
-      "other"
-    ],
+    "categories": ["artifact", "infra", "insight", "other"],
     "summary": "文档更新: generate growth plan PPT and slide source"
   },
   {
@@ -2716,11 +2393,7 @@
     "filesCount": 10,
     "insertions": 604,
     "deletions": 815,
-    "categories": [
-      "design-system",
-      "insight",
-      "other"
-    ],
+    "categories": ["design-system", "insight", "other"],
     "summary": "新功能: integrate content automation and rebrand OpenClaw to Nexu"
   },
   {
@@ -2748,15 +2421,11 @@
     "email": "cursoragent@cursor.com",
     "date": "2026-02-25T07:43:34Z",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/artifacts/reports/2026-02-25-nexu-growth-plan.md"
-    ],
+    "filesChanged": ["clone/artifacts/reports/2026-02-25-nexu-growth-plan.md"],
     "filesCount": 1,
     "insertions": 162,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "文档更新: add unified nexu growth plan markdown"
   },
   {
@@ -2777,11 +2446,7 @@
     "filesCount": 4,
     "insertions": 213,
     "deletions": 29,
-    "categories": [
-      "insight",
-      "knowledge",
-      "other"
-    ],
+    "categories": ["insight", "knowledge", "other"],
     "summary": "文档更新: add 8-week nexu growth plan and sync memory"
   },
   {
@@ -2793,15 +2458,11 @@
     "email": "joey@joeydeMacBook-Air.local",
     "date": "2026-02-25T15:20:30+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/knowledge/growth/growth-plan-2026-q1.md"
-    ],
+    "filesChanged": ["clone/knowledge/growth/growth-plan-2026-q1.md"],
     "filesCount": 1,
     "insertions": 369,
     "deletions": 0,
-    "categories": [
-      "knowledge"
-    ],
+    "categories": ["knowledge"],
     "summary": "增长规划覆盖 S0-S3 四阶段（8周），包含种子用户获取策略、"
   },
   {
@@ -2832,12 +2493,7 @@
     "filesCount": 14,
     "insertions": 1182,
     "deletions": 1683,
-    "categories": [
-      "decision",
-      "design-system",
-      "insight",
-      "other"
-    ],
+    "categories": ["decision", "design-system", "insight", "other"],
     "summary": "新功能: 认证/登录"
   },
   {
@@ -2849,15 +2505,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-25T14:56:41+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "design-system/src/pages/openclaw/ChannelsPage.tsx"
-    ],
+    "filesChanged": ["design-system/src/pages/openclaw/ChannelsPage.tsx"],
     "filesCount": 1,
     "insertions": 31,
     "deletions": 17,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: enhance ChannelsPage with new stats and icons"
   },
   {
@@ -2880,11 +2532,7 @@
     "filesCount": 6,
     "insertions": 177,
     "deletions": 41,
-    "categories": [
-      "design-system",
-      "insight",
-      "other"
-    ],
+    "categories": ["design-system", "insight", "other"],
     "summary": "新功能: establish brand hierarchy and update OpenClaw references"
   },
   {
@@ -2913,11 +2561,7 @@
     "filesCount": 12,
     "insertions": 1639,
     "deletions": 177,
-    "categories": [
-      "design-system",
-      "insight",
-      "other"
-    ],
+    "categories": ["design-system", "insight", "other"],
     "summary": "新功能: introduce billing and content automation features for OpenClaw"
   },
   {
@@ -2942,10 +2586,7 @@
     "filesCount": 8,
     "insertions": 1332,
     "deletions": 300,
-    "categories": [
-      "design-system",
-      "infra"
-    ],
+    "categories": ["design-system", "infra"],
     "summary": "新功能: 页面布局"
   },
   {
@@ -2965,9 +2606,7 @@
     "filesCount": 3,
     "insertions": 1436,
     "deletions": 0,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: 页面布局"
   },
   {
@@ -2979,15 +2618,11 @@
     "email": "935902669@qq.com",
     "date": "2026-02-25T00:22:51+08:00",
     "dateShort": "2026-02-25",
-    "filesChanged": [
-      "clone/artifacts/designs/openclaw-multi-tenant.md"
-    ],
+    "filesChanged": ["clone/artifacts/designs/openclaw-multi-tenant.md"],
     "filesCount": 1,
     "insertions": 505,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "文档更新: 新增设计文档"
   },
   {
@@ -3008,12 +2643,7 @@
     "filesCount": 4,
     "insertions": 176,
     "deletions": 13,
-    "categories": [
-      "artifact",
-      "facts",
-      "insight",
-      "operations"
-    ],
+    "categories": ["artifact", "facts", "insight", "operations"],
     "summary": "新功能: add all-hands email and update team structure documentation"
   },
   {
@@ -3033,11 +2663,7 @@
     "filesCount": 3,
     "insertions": 320,
     "deletions": 6,
-    "categories": [
-      "artifact",
-      "facts",
-      "insight"
-    ],
+    "categories": ["artifact", "facts", "insight"],
     "summary": "新功能: 招聘相关"
   },
   {
@@ -3056,9 +2682,7 @@
     "filesCount": 2,
     "insertions": 564,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "新功能: 招聘相关"
   },
   {
@@ -3077,9 +2701,7 @@
     "filesCount": 2,
     "insertions": 1428,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "新功能: add meeting summary and transcript for product planning session"
   },
   {
@@ -3099,10 +2721,7 @@
     "filesCount": 3,
     "insertions": 43,
     "deletions": 24,
-    "categories": [
-      "facts",
-      "knowledge"
-    ],
+    "categories": ["facts", "knowledge"],
     "summary": "- Revised product positioning to emphasize the concept of a collaborative workspace for humans and clones, introducing the slogan \"为你的龙虾打造一间赛博办公室\" and its English counterpart \"People quit. Clones don't.\""
   },
   {
@@ -3114,16 +2733,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-24T00:34:49+08:00",
     "dateShort": "2026-02-24",
-    "filesChanged": [
-      "CONTRIBUTING.md",
-      "README.md"
-    ],
+    "filesChanged": ["CONTRIBUTING.md", "README.md"],
     "filesCount": 2,
     "insertions": 15,
     "deletions": 12,
-    "categories": [
-      "other"
-    ],
+    "categories": ["other"],
     "summary": "重构: 更新 README"
   },
   {
@@ -3143,9 +2757,7 @@
     "filesCount": 3,
     "insertions": 278,
     "deletions": 1,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: 页面布局"
   },
   {
@@ -3169,13 +2781,7 @@
     "filesCount": 7,
     "insertions": 130,
     "deletions": 11,
-    "categories": [
-      "clone",
-      "design-system",
-      "identity",
-      "insight",
-      "knowledge"
-    ],
+    "categories": ["clone", "design-system", "identity", "insight", "knowledge"],
     "summary": "重构: 竞品分析"
   },
   {
@@ -3201,9 +2807,7 @@
     "filesCount": 9,
     "insertions": 18,
     "deletions": 20,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "- Revised various descriptions in BPPage, LandingPreview, OverviewPage, WhyWeBuiltPage, and journey-related pages to replace references to \"~/clone/\" with \"分身的大脑\" for improved clarity."
   },
   {
@@ -3222,9 +2826,7 @@
     "filesCount": 2,
     "insertions": 2,
     "deletions": 3,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "重构: 移除未使用的代码"
   },
   {
@@ -3251,13 +2853,7 @@
     "filesCount": 10,
     "insertions": 20,
     "deletions": 20,
-    "categories": [
-      "artifact",
-      "clone",
-      "design-system",
-      "facts",
-      "knowledge"
-    ],
+    "categories": ["artifact", "clone", "design-system", "facts", "knowledge"],
     "summary": "- Revised mentions of the skills catalog from \"24 skills\" to \"数千 skills\" in various markdown files, including sprint review, insights, and design system pages."
   },
   {
@@ -3280,9 +2876,7 @@
     "filesCount": 6,
     "insertions": 33,
     "deletions": 33,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "重构：全站定位与描述文案更新，强调 AI 办公场景"
   },
   {
@@ -3329,14 +2923,7 @@
     "filesCount": 14,
     "insertions": 1128,
     "deletions": 85,
-    "categories": [
-      "artifact",
-      "clone",
-      "decision",
-      "design-system",
-      "identity",
-      "insight"
-    ],
+    "categories": ["artifact", "clone", "decision", "design-system", "identity", "insight"],
     "summary": "新增 10 页全屏 BP 演示（键盘导航）"
   },
   {
@@ -3364,16 +2951,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-23T22:48:49+08:00",
     "dateShort": "2026-02-23",
-    "filesChanged": [
-      "design-system/src/pages/WhyWeBuiltPage.tsx",
-      "design-system/vercel.json"
-    ],
+    "filesChanged": ["design-system/src/pages/WhyWeBuiltPage.tsx", "design-system/vercel.json"],
     "filesCount": 2,
     "insertions": 47,
     "deletions": 1,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: 部署配置"
   },
   {
@@ -3413,14 +2995,7 @@
     "filesCount": 7,
     "insertions": 1021,
     "deletions": 90,
-    "categories": [
-      "clone",
-      "decision",
-      "design-system",
-      "identity",
-      "insight",
-      "other"
-    ],
+    "categories": ["clone", "decision", "design-system", "identity", "insight", "other"],
     "summary": "整合 v0→v3.1 历史思考 + OpenClaw 转折点分析"
   },
   {
@@ -3432,17 +3007,11 @@
     "email": "2694684348@qq.com",
     "date": "2026-02-23T20:23:45+08:00",
     "dateShort": "2026-02-23",
-    "filesChanged": [
-      ".gitignore",
-      "clone/artifacts/prds/prd-template.md"
-    ],
+    "filesChanged": [".gitignore", "clone/artifacts/prds/prd-template.md"],
     "filesCount": 2,
     "insertions": 66,
     "deletions": 0,
-    "categories": [
-      "artifact",
-      "other"
-    ],
+    "categories": ["artifact", "other"],
     "summary": "工程维护: add PRD template and ignore macOS metadata"
   },
   {
@@ -3464,11 +3033,7 @@
     "filesCount": 5,
     "insertions": 360,
     "deletions": 60,
-    "categories": [
-      "clone",
-      "design-system",
-      "insight"
-    ],
+    "categories": ["clone", "design-system", "insight"],
     "summary": "新功能: synchronize design system foundational pages with Nexu branding and enhance component descriptions"
   },
   {
@@ -3480,15 +3045,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-23T18:21:57+08:00",
     "dateShort": "2026-02-23",
-    "filesChanged": [
-      "clone/artifacts/reports/investor-bp/sharpest-entry-point-answer.md"
-    ],
+    "filesChanged": ["clone/artifacts/reports/investor-bp/sharpest-entry-point-answer.md"],
     "filesCount": 1,
     "insertions": 178,
     "deletions": 0,
-    "categories": [
-      "artifact"
-    ],
+    "categories": ["artifact"],
     "summary": "新功能: add investor Q&A document outlining sharpest entry point strategy"
   },
   {
@@ -3510,12 +3071,7 @@
     "filesCount": 5,
     "insertions": 303,
     "deletions": 3,
-    "categories": [
-      "clone",
-      "insight",
-      "knowledge",
-      "other"
-    ],
+    "categories": ["clone", "insight", "knowledge", "other"],
     "summary": "新功能: 文档体系增强"
   },
   {
@@ -3536,9 +3092,7 @@
     "filesCount": 4,
     "insertions": 1554,
     "deletions": 734,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "重构: improve code consistency and readability across AvatarPage, CopyPage, and journey steps"
   },
   {
@@ -3559,9 +3113,7 @@
     "filesCount": 4,
     "insertions": 601,
     "deletions": 66,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: 新人引导"
   },
   {
@@ -3598,11 +3150,7 @@
     "filesCount": 21,
     "insertions": 1655,
     "deletions": 757,
-    "categories": [
-      "clone",
-      "design-system",
-      "insight"
-    ],
+    "categories": ["clone", "design-system", "insight"],
     "summary": "新功能: 新人引导"
   },
   {
@@ -3627,11 +3175,7 @@
     "filesCount": 8,
     "insertions": 403,
     "deletions": 45,
-    "categories": [
-      "clone",
-      "design-system",
-      "insight"
-    ],
+    "categories": ["clone", "design-system", "insight"],
     "summary": "新功能: implement Main Thread strategy UI with standardized card components"
   },
   {
@@ -3655,11 +3199,7 @@
     "filesCount": 7,
     "insertions": 1131,
     "deletions": 58,
-    "categories": [
-      "clone",
-      "design-system",
-      "insight"
-    ],
+    "categories": ["clone", "design-system", "insight"],
     "summary": "新功能: introduce native channels and task board module for enhanced team collaboration"
   },
   {
@@ -3683,11 +3223,7 @@
     "filesCount": 7,
     "insertions": 616,
     "deletions": 108,
-    "categories": [
-      "clone",
-      "design-system",
-      "insight"
-    ],
+    "categories": ["clone", "design-system", "insight"],
     "summary": "Added two new insights documents detailing the onboarding upgrade step and landing page team virality strategy, emphasizing user engagement and conversion optimization. Updated the JourneyPage to include a new \"解锁超能力\" step, guiding users towards paid upgrades and team invitations. Introduced the StepUpgrade component to showcase upgrade benefits and pricing plans, enhancing the user journey experience. This update aims to align product features with strategic growth initiatives and improve user onboarding effectiveness."
   },
   {
@@ -3724,13 +3260,7 @@
     "filesCount": 20,
     "insertions": 7259,
     "deletions": 4626,
-    "categories": [
-      "artifact",
-      "clone",
-      "decision",
-      "design-system",
-      "insight"
-    ],
+    "categories": ["artifact", "clone", "decision", "design-system", "insight"],
     "summary": "新功能: define Nexu's product strategy with Clone Chat as the main thread"
   },
   {
@@ -3767,11 +3297,7 @@
     "filesCount": 20,
     "insertions": 3486,
     "deletions": 8,
-    "categories": [
-      "clone",
-      "design-system",
-      "insight"
-    ],
+    "categories": ["clone", "design-system", "insight"],
     "summary": "新功能: enhance TeamPage with OKR management, detailed collaboration panels, and insights chat functionality"
   },
   {
@@ -3799,11 +3325,7 @@
     "filesCount": 11,
     "insertions": 1610,
     "deletions": 1,
-    "categories": [
-      "clone",
-      "design-system",
-      "insight"
-    ],
+    "categories": ["clone", "design-system", "insight"],
     "summary": "新功能: 页面布局"
   },
   {
@@ -3834,12 +3356,7 @@
     "filesCount": 14,
     "insertions": 814,
     "deletions": 501,
-    "categories": [
-      "artifact",
-      "clone",
-      "design-system",
-      "insight"
-    ],
+    "categories": ["artifact", "clone", "design-system", "insight"],
     "summary": "重构: update investor presentation materials with revised metrics and team details"
   },
   {
@@ -3862,13 +3379,7 @@
     "filesCount": 6,
     "insertions": 226,
     "deletions": 14,
-    "categories": [
-      "clone",
-      "facts",
-      "identity",
-      "insight",
-      "knowledge"
-    ],
+    "categories": ["clone", "facts", "identity", "insight", "knowledge"],
     "summary": "新功能: update worldview and competitive matrix with insights from YC Lightcone podcast"
   },
   {
@@ -3896,15 +3407,7 @@
     "filesCount": 11,
     "insertions": 2204,
     "deletions": 311,
-    "categories": [
-      "artifact",
-      "clone",
-      "design-system",
-      "facts",
-      "insight",
-      "knowledge",
-      "rules"
-    ],
+    "categories": ["artifact", "clone", "design-system", "facts", "insight", "knowledge", "rules"],
     "summary": "新功能: introduce competitor analysis workflow and update market analysis skill"
   },
   {
@@ -3934,10 +3437,7 @@
     "filesCount": 13,
     "insertions": 105,
     "deletions": 5026,
-    "categories": [
-      "artifact",
-      "other"
-    ],
+    "categories": ["artifact", "other"],
     "summary": "重构: 更新 README"
   },
   {
@@ -4009,12 +3509,7 @@
     "filesCount": 8,
     "insertions": 323,
     "deletions": 79,
-    "categories": [
-      "decision",
-      "insight",
-      "other",
-      "rules"
-    ],
+    "categories": ["decision", "insight", "other", "rules"],
     "summary": "新功能: implement clone convergence as the primary knowledge accumulation target"
   },
   {
@@ -4103,10 +3598,7 @@
     "filesCount": 73,
     "insertions": 0,
     "deletions": 23196,
-    "categories": [
-      "backend",
-      "frontend"
-    ],
+    "categories": ["backend", "frontend"],
     "summary": "工程维护: remove deprecated backend files and configurations"
   },
   {
@@ -4127,10 +3619,7 @@
     "filesCount": 4,
     "insertions": 254,
     "deletions": 439,
-    "categories": [
-      "other",
-      "strategy"
-    ],
+    "categories": ["other", "strategy"],
     "summary": "新功能: revise roadmap to an 8-week delivery plan with bi-weekly outcomes"
   },
   {
@@ -4151,10 +3640,7 @@
     "filesCount": 4,
     "insertions": 527,
     "deletions": 0,
-    "categories": [
-      "other",
-      "strategy"
-    ],
+    "categories": ["other", "strategy"],
     "summary": "新功能: implement five-layer capability roadmap for productization"
   },
   {
@@ -4175,9 +3661,7 @@
     "filesCount": 4,
     "insertions": 37,
     "deletions": 2,
-    "categories": [
-      "other"
-    ],
+    "categories": ["other"],
     "summary": "新功能: upgrade product validation framework to a three-dimensional quality triangle"
   },
   {
@@ -4201,11 +3685,7 @@
     "filesCount": 7,
     "insertions": 531,
     "deletions": 38,
-    "categories": [
-      "design-system",
-      "other",
-      "strategy"
-    ],
+    "categories": ["design-system", "other", "strategy"],
     "summary": "Updated the AutomationPage to replace existing automation templates with new ones, including '安全自审' and '联系人健康扫描', while refining scheduled tasks and proactive rules for better tracking and management. Enhanced the SkillsPage by adding new recommended skills such as 'Contact Intelligence' and 'Meeting Action Tracker', along with detailed descriptions for improved user understanding. This update aims to enrich the automation capabilities and skill offerings, fostering better user engagement and productivity."
   },
   {
@@ -4236,12 +3716,7 @@
     "filesCount": 14,
     "insertions": 655,
     "deletions": 85,
-    "categories": [
-      "infra",
-      "other",
-      "rules",
-      "strategy"
-    ],
+    "categories": ["infra", "other", "rules", "strategy"],
     "summary": "新功能: 更新 README"
   },
   {
@@ -4278,12 +3753,7 @@
     "filesCount": 32,
     "insertions": 1172,
     "deletions": 41,
-    "categories": [
-      "infra",
-      "other",
-      "rules",
-      "strategy"
-    ],
+    "categories": ["infra", "other", "rules", "strategy"],
     "summary": "新功能: establish execution layer and contributing guidelines for team collaboration"
   },
   {
@@ -4295,15 +3765,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-22T21:05:04+08:00",
     "dateShort": "2026-02-22",
-    "filesChanged": [
-      "design-system/src/pages/product/OnboardingChat.tsx"
-    ],
+    "filesChanged": ["design-system/src/pages/product/OnboardingChat.tsx"],
     "filesCount": 1,
     "insertions": 1,
     "deletions": 1,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "重构: 移除未使用的代码"
   },
   {
@@ -4315,15 +3781,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-22T01:02:23+08:00",
     "dateShort": "2026-02-22",
-    "filesChanged": [
-      "soul/insights.md"
-    ],
+    "filesChanged": ["soul/insights.md"],
     "filesCount": 1,
     "insertions": 10,
     "deletions": 0,
-    "categories": [
-      "other"
-    ],
+    "categories": ["other"],
     "summary": "新功能: 新人引导"
   },
   {
@@ -4342,9 +3804,7 @@
     "filesCount": 2,
     "insertions": 441,
     "deletions": 3,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: 新人引导"
   },
   {
@@ -4368,11 +3828,7 @@
     "filesCount": 7,
     "insertions": 30,
     "deletions": 16,
-    "categories": [
-      "design-system",
-      "other",
-      "rules"
-    ],
+    "categories": ["design-system", "other", "rules"],
     "summary": "新功能: 部署配置"
   },
   {
@@ -4400,10 +3856,7 @@
     "filesCount": 11,
     "insertions": 1776,
     "deletions": 376,
-    "categories": [
-      "design-system",
-      "other"
-    ],
+    "categories": ["design-system", "other"],
     "summary": "新功能: 落地页"
   },
   {
@@ -4440,11 +3893,7 @@
     "filesCount": 27,
     "insertions": 1149,
     "deletions": 60,
-    "categories": [
-      "other",
-      "rules",
-      "strategy"
-    ],
+    "categories": ["other", "rules", "strategy"],
     "summary": "新功能: establish CEO Intelligence Operating System with comprehensive knowledge accumulation and strategic frameworks"
   },
   {
@@ -4470,10 +3919,7 @@
     "filesCount": 9,
     "insertions": 470,
     "deletions": 139,
-    "categories": [
-      "design-system",
-      "other"
-    ],
+    "categories": ["design-system", "other"],
     "summary": "新功能: implement file tree expansion functionality across product pages"
   },
   {
@@ -4494,10 +3940,7 @@
     "filesCount": 4,
     "insertions": 511,
     "deletions": 444,
-    "categories": [
-      "design-system",
-      "other"
-    ],
+    "categories": ["design-system", "other"],
     "summary": "新功能: redesign core product pages for enhanced user experience"
   },
   {
@@ -4522,10 +3965,7 @@
     "filesCount": 8,
     "insertions": 743,
     "deletions": 146,
-    "categories": [
-      "design-system",
-      "other"
-    ],
+    "categories": ["design-system", "other"],
     "summary": "新功能: enhance Skills module with slide-out detail panel and channel metadata"
   },
   {
@@ -4537,17 +3977,11 @@
     "email": "1043269994@qq.com",
     "date": "2026-02-21T17:04:51+08:00",
     "dateShort": "2026-02-21",
-    "filesChanged": [
-      "design-system/src/pages/product/ProductLayout.tsx",
-      "soul/insights.md"
-    ],
+    "filesChanged": ["design-system/src/pages/product/ProductLayout.tsx", "soul/insights.md"],
     "filesCount": 2,
     "insertions": 20,
     "deletions": 12,
-    "categories": [
-      "design-system",
-      "other"
-    ],
+    "categories": ["design-system", "other"],
     "summary": "重构: 页面布局"
   },
   {
@@ -4584,11 +4018,7 @@
     "filesCount": 20,
     "insertions": 2967,
     "deletions": 224,
-    "categories": [
-      "design-system",
-      "other",
-      "strategy"
-    ],
+    "categories": ["design-system", "other", "strategy"],
     "summary": "新功能: 页面布局"
   },
   {
@@ -4607,9 +4037,7 @@
     "filesCount": 2,
     "insertions": 202,
     "deletions": 0,
-    "categories": [
-      "other"
-    ],
+    "categories": ["other"],
     "summary": "新功能: add new article on OpenClaw ecosystem and competitive insights"
   },
   {
@@ -4635,9 +4063,7 @@
     "filesCount": 9,
     "insertions": 290,
     "deletions": 205,
-    "categories": [
-      "design-system"
-    ],
+    "categories": ["design-system"],
     "summary": "新功能: update design system colors and components for improved accessibility and aesthetics"
   },
   {
@@ -4657,10 +4083,7 @@
     "filesCount": 3,
     "insertions": 2617,
     "deletions": 0,
-    "categories": [
-      "design-system",
-      "other"
-    ],
+    "categories": ["design-system", "other"],
     "summary": "新功能: add pnpm lockfile and new article on pi-mono minimalism philosophy"
   },
   {
@@ -4697,11 +4120,7 @@
     "filesCount": 29,
     "insertions": 8321,
     "deletions": 69,
-    "categories": [
-      "design-system",
-      "other",
-      "strategy"
-    ],
+    "categories": ["design-system", "other", "strategy"],
     "summary": "新功能: 项目初始化"
   },
   {
@@ -4738,11 +4157,7 @@
     "filesCount": 28,
     "insertions": 2563,
     "deletions": 374,
-    "categories": [
-      "backend",
-      "frontend",
-      "other"
-    ],
+    "categories": ["backend", "frontend", "other"],
     "summary": "新功能: 新人引导"
   },
   {
@@ -4772,10 +4187,7 @@
     "filesCount": 13,
     "insertions": 4977,
     "deletions": 0,
-    "categories": [
-      "other",
-      "strategy"
-    ],
+    "categories": ["other", "strategy"],
     "summary": "新功能: 融资相关"
   },
   {
@@ -4797,10 +4209,7 @@
     "filesCount": 5,
     "insertions": 1128,
     "deletions": 33,
-    "categories": [
-      "other",
-      "strategy"
-    ],
+    "categories": ["other", "strategy"],
     "summary": "新功能: 新人引导"
   },
   {
@@ -4837,11 +4246,7 @@
     "filesCount": 27,
     "insertions": 1218,
     "deletions": 80,
-    "categories": [
-      "backend",
-      "frontend",
-      "other"
-    ],
+    "categories": ["backend", "frontend", "other"],
     "summary": "新功能: implement settings module for dynamic configuration of LLM and Feishu integration"
   },
   {
@@ -4869,9 +4274,7 @@
     "filesCount": 11,
     "insertions": 4954,
     "deletions": 0,
-    "categories": [
-      "strategy"
-    ],
+    "categories": ["strategy"],
     "summary": "新功能: 新增综合分析文档"
   },
   {
@@ -4894,10 +4297,7 @@
     "filesCount": 6,
     "insertions": 1070,
     "deletions": 6,
-    "categories": [
-      "other",
-      "strategy"
-    ],
+    "categories": ["other", "strategy"],
     "summary": "新功能: implement dual-layer architecture for Refly and Nexu with competitive positioning updates"
   },
   {
@@ -4917,10 +4317,7 @@
     "filesCount": 3,
     "insertions": 18,
     "deletions": 14,
-    "categories": [
-      "backend",
-      "other"
-    ],
+    "categories": ["backend", "other"],
     "summary": "修复: resolve timeout resource leak in execCommand and clean up merge conflicts"
   }
 ]

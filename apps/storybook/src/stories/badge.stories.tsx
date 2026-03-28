@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Badge } from "@nexu/ui-web";
+import { Badge } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Badge",

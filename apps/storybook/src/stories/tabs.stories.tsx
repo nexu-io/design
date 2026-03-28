@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Card, CardContent, Tabs, TabsContent, TabsList, TabsTrigger } from "@nexu/ui-web";
+import { Card, CardContent, Tabs, TabsContent, TabsList, TabsTrigger } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Tabs",

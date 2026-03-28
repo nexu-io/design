@@ -1,7 +1,7 @@
-import { expect } from 'vitest'
-import * as matchers from '@testing-library/jest-dom/matchers'
+import * as matchers from "@testing-library/jest-dom/matchers";
+import { expect } from "vitest";
 
-expect.extend(matchers)
+expect.extend(matchers);
 
 if (!Element.prototype.hasPointerCapture) {
   Element.prototype.hasPointerCapture = () => false;

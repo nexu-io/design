@@ -1,36 +1,39 @@
-import { Info, Lightbulb, AlertTriangle } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { AlertTriangle, Info, Lightbulb } from "lucide-react";
+import type { ReactNode } from "react";
 
 const VARIANTS = {
   tip: {
     icon: Lightbulb,
-    border: 'border-emerald-200',
-    bg: 'bg-emerald-50',
-    iconColor: 'text-emerald-600',
-    label: 'Tip',
-    labelColor: 'text-emerald-700',
+    border: "border-emerald-200",
+    bg: "bg-emerald-50",
+    iconColor: "text-emerald-600",
+    label: "Tip",
+    labelColor: "text-emerald-700",
   },
   info: {
     icon: Info,
-    border: 'border-blue-200',
-    bg: 'bg-blue-50',
-    iconColor: 'text-blue-600',
-    label: 'Note',
-    labelColor: 'text-blue-700',
+    border: "border-blue-200",
+    bg: "bg-blue-50",
+    iconColor: "text-blue-600",
+    label: "Note",
+    labelColor: "text-blue-700",
   },
   warning: {
     icon: AlertTriangle,
-    border: 'border-amber-200',
-    bg: 'bg-amber-50',
-    iconColor: 'text-amber-600',
-    label: 'Warning',
-    labelColor: 'text-amber-700',
+    border: "border-amber-200",
+    bg: "bg-amber-50",
+    iconColor: "text-amber-600",
+    label: "Warning",
+    labelColor: "text-amber-700",
   },
 } as const;
 
 type CalloutVariant = keyof typeof VARIANTS;
 
-export default function Callout({ variant = 'info', children }: { variant?: CalloutVariant; children: ReactNode }) {
+export default function Callout({
+  variant = "info",
+  children,
+}: { variant?: CalloutVariant; children: ReactNode }) {
   const v = VARIANTS[variant];
   const Icon = v.icon;
 

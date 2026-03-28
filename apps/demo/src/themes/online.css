@@ -4,7 +4,7 @@
  * 使用方式: 在 <html> 上设置 data-theme="online"
  */
 
-[data-theme='online'] {
+[data-theme="online"] {
   /* Surface — 白/浅灰，侧边栏与顶栏略深 */
   --color-surface-0: #ffffff;
   --color-surface-1: #ffffff;
@@ -43,7 +43,7 @@
   /* Clone / 高亮 — 沿用暖色但略偏绿以配合线上版 */
   --color-clone: #1eab60;
   --color-clone-light: #4ade80;
-  --color-clone-subtle: rgba(30, 171, 96, 0.10);
+  --color-clone-subtle: rgba(30, 171, 96, 0.1);
   --color-clone-glow: rgba(30, 171, 96, 0.18);
   --color-clone-pulse: rgba(30, 171, 96, 0.05);
 
@@ -72,7 +72,7 @@
 }
 
 /* 线上版本 — 工作流节点等专用色 (可用 class 或 data 使用) */
-[data-theme='online'] {
+[data-theme="online"] {
   /* User input 节点 — 浅黄 + 橙色描边 */
   --color-node-user-bg: #fffceb;
   --color-node-user-border: #ff8c00;

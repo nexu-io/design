@@ -1,10 +1,10 @@
-import { Wrench, MessageSquare } from 'lucide-react';
-import { usePageTitle } from '../../hooks/usePageTitle';
-import Callout from '../../components/docs/Callout';
-import CodeBlock from '../../components/docs/CodeBlock';
+import { MessageSquare, Wrench } from "lucide-react";
+import Callout from "../../components/docs/Callout";
+import CodeBlock from "../../components/docs/CodeBlock";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 export default function SetupGuidePage() {
-  usePageTitle('Setup Guide');
+  usePageTitle("Setup Guide");
 
   return (
     <div className="space-y-8">
@@ -14,12 +14,14 @@ export default function SetupGuidePage() {
           Setup Guide
         </h1>
         <p className="mt-3 text-[14px] text-text-secondary leading-relaxed max-w-2xl">
-          Add nexu to your team chat in under 5 minutes. Pick your platform below and follow the steps.
+          Add nexu to your team chat in under 5 minutes. Pick your platform below and follow the
+          steps.
         </p>
       </div>
 
       <Callout variant="info">
-        You need workspace admin permissions to install nexu. If you don't have admin access, ask your workspace owner to complete the setup.
+        You need workspace admin permissions to install nexu. If you don't have admin access, ask
+        your workspace owner to complete the setup.
       </Callout>
 
       {/* Slack */}
@@ -35,7 +37,8 @@ export default function SetupGuidePage() {
           <div className="space-y-2">
             <h3 className="text-[14px] font-medium text-text-primary">1. Install the nexu app</h3>
             <p className="text-[13px] text-text-tertiary leading-relaxed">
-              Go to your Slack workspace settings, navigate to <strong>Apps</strong>, and search for "nexu".
+              Go to your Slack workspace settings, navigate to <strong>Apps</strong>, and search for
+              "nexu".
             </p>
             <CodeBlock code="# Or install directly via the Slack App Directory URL:\nhttps://slack.com/apps/nexu-ai" />
           </div>
@@ -43,7 +46,8 @@ export default function SetupGuidePage() {
           <div className="space-y-2">
             <h3 className="text-[14px] font-medium text-text-primary">2. Authorize permissions</h3>
             <p className="text-[13px] text-text-tertiary leading-relaxed">
-              Grant nexu access to channels, threads, and DMs. nexu only reads messages where it's explicitly mentioned.
+              Grant nexu access to channels, threads, and DMs. nexu only reads messages where it's
+              explicitly mentioned.
             </p>
             <CodeBlock
               lang="json"
@@ -63,7 +67,11 @@ export default function SetupGuidePage() {
           <div className="space-y-2">
             <h3 className="text-[14px] font-medium text-text-primary">3. Invite to a channel</h3>
             <p className="text-[13px] text-text-tertiary leading-relaxed">
-              Invite <code className="px-1.5 py-0.5 rounded bg-surface-2 text-[12px] font-mono text-text-primary">@nexu</code> to any channel where your team works.
+              Invite{" "}
+              <code className="px-1.5 py-0.5 rounded bg-surface-2 text-[12px] font-mono text-text-primary">
+                @nexu
+              </code>{" "}
+              to any channel where your team works.
             </p>
             <CodeBlock code="/invite @nexu" />
           </div>
@@ -93,14 +101,19 @@ export default function SetupGuidePage() {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <h3 className="text-[14px] font-medium text-text-primary">1. Install from App Directory</h3>
+            <h3 className="text-[14px] font-medium text-text-primary">
+              1. Install from App Directory
+            </h3>
             <p className="text-[13px] text-text-tertiary leading-relaxed">
-              Open <strong>Feishu Admin → App Directory</strong>, search for "nexu" and click Install.
+              Open <strong>Feishu Admin → App Directory</strong>, search for "nexu" and click
+              Install.
             </p>
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-[14px] font-medium text-text-primary">2. Configure bot permissions</h3>
+            <h3 className="text-[14px] font-medium text-text-primary">
+              2. Configure bot permissions
+            </h3>
             <p className="text-[13px] text-text-tertiary leading-relaxed">
               Grant the bot access to target groups. Required permissions:
             </p>
@@ -120,14 +133,21 @@ export default function SetupGuidePage() {
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-[14px] font-medium text-text-primary">3. Activate in a group chat</h3>
+            <h3 className="text-[14px] font-medium text-text-primary">
+              3. Activate in a group chat
+            </h3>
             <p className="text-[13px] text-text-tertiary leading-relaxed">
-              Mention <code className="px-1.5 py-0.5 rounded bg-surface-2 text-[12px] font-mono text-text-primary">@nexu</code> in a group chat to activate.
+              Mention{" "}
+              <code className="px-1.5 py-0.5 rounded bg-surface-2 text-[12px] font-mono text-text-primary">
+                @nexu
+              </code>{" "}
+              in a group chat to activate.
             </p>
           </div>
 
           <Callout variant="warning">
-            Feishu requires your organization admin to approve third-party bot installations. Allow 1-2 business days for enterprise approval workflows.
+            Feishu requires your organization admin to approve third-party bot installations. Allow
+            1-2 business days for enterprise approval workflows.
           </Callout>
         </div>
       </section>

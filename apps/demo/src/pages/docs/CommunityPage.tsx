@@ -1,14 +1,14 @@
-import { Users, Github, MessageSquare, FileText, ExternalLink, ArrowRight } from 'lucide-react';
-import { usePageTitle } from '../../hooks/usePageTitle';
+import { ArrowRight, ExternalLink, FileText, Github, MessageSquare, Users } from "lucide-react";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 const RESOURCES = [
-  { icon: Github, label: 'GitHub', desc: 'Source code, issues, and contributions', href: '#' },
-  { icon: MessageSquare, label: 'Community', desc: 'Join the discussion on Discord', href: '#' },
-  { icon: FileText, label: 'API docs', desc: 'Reference for developers', href: '#' },
+  { icon: Github, label: "GitHub", desc: "Source code, issues, and contributions", href: "#" },
+  { icon: MessageSquare, label: "Community", desc: "Join the discussion on Discord", href: "#" },
+  { icon: FileText, label: "API docs", desc: "Reference for developers", href: "#" },
 ];
 
 export default function CommunityPage() {
-  usePageTitle('Community & resources');
+  usePageTitle("Community & resources");
 
   return (
     <>
@@ -33,7 +33,10 @@ export default function CommunityPage() {
                 <div className="w-9 h-9 rounded-lg bg-surface-2 flex items-center justify-center shrink-0">
                   <Icon size={16} className="text-text-secondary" />
                 </div>
-                <ExternalLink size={14} className="text-text-muted group-hover:text-accent transition-colors" />
+                <ExternalLink
+                  size={14}
+                  className="text-text-muted group-hover:text-accent transition-colors"
+                />
               </div>
               <div>
                 <div className="text-[13px] font-semibold text-text-primary">{r.label}</div>
@@ -50,7 +53,8 @@ export default function CommunityPage() {
           <div>
             <div className="text-[13px] font-semibold text-text-primary">Ready to go deeper?</div>
             <p className="mt-1 text-[12px] text-text-tertiary leading-relaxed">
-              Once your team has shipped the first outcome, explore more workflows, connect additional channels, and check the changelog for the latest capabilities.
+              Once your team has shipped the first outcome, explore more workflows, connect
+              additional channels, and check the changelog for the latest capabilities.
             </p>
           </div>
         </div>

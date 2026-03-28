@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Scope
-- Applies to the entire repository rooted at `/Users/mrc/Projects/nexu-io/ui`.
+- Applies to the entire repository rooted at `/Users/mrc/Projects/nexu-io/design`.
 - This is a pnpm workspace for a React/TypeScript UI library plus Storybook.
 - No existing `.cursor/rules/`, `.cursorrules`, or `.github/copilot-instructions.md` files were found.
 
@@ -17,9 +17,9 @@
 ## Package manager
 - Use `pnpm` only.
 - Workspace package names:
-  - `@nexu/ui-web`
-  - `@nexu/tokens`
-  - `@nexu/storybook`
+  - `@nexu-design/ui-web`
+  - `@nexu-design/tokens`
+  - `@nexu-design/storybook`
 
 ## Install
 - `pnpm install`
@@ -39,23 +39,23 @@
 ## Package-specific commands
 
 ### `packages/ui-web`
-- Build: `pnpm --filter @nexu/ui-web build`
-- Test all: `pnpm --filter @nexu/ui-web test`
-- Typecheck: `pnpm --filter @nexu/ui-web typecheck`
-- Lint: `pnpm --filter @nexu/ui-web lint`
-- Pack dry run: `pnpm --filter @nexu/ui-web pack:check`
+- Build: `pnpm --filter @nexu-design/ui-web build`
+- Test all: `pnpm --filter @nexu-design/ui-web test`
+- Typecheck: `pnpm --filter @nexu-design/ui-web typecheck`
+- Lint: `pnpm --filter @nexu-design/ui-web lint`
+- Pack dry run: `pnpm --filter @nexu-design/ui-web pack:check`
 
 ### `packages/tokens`
-- Build: `pnpm --filter @nexu/tokens build`
-- Typecheck: `pnpm --filter @nexu/tokens typecheck`
-- Lint: `pnpm --filter @nexu/tokens lint`
-- Pack dry run: `pnpm --filter @nexu/tokens pack:check`
+- Build: `pnpm --filter @nexu-design/tokens build`
+- Typecheck: `pnpm --filter @nexu-design/tokens typecheck`
+- Lint: `pnpm --filter @nexu-design/tokens lint`
+- Pack dry run: `pnpm --filter @nexu-design/tokens pack:check`
 
 ### `apps/storybook`
-- Start: `pnpm --filter @nexu/storybook storybook`
-- Build: `pnpm --filter @nexu/storybook build-storybook`
-- Typecheck: `pnpm --filter @nexu/storybook typecheck`
-- Lint: `pnpm --filter @nexu/storybook lint`
+- Start: `pnpm --filter @nexu-design/storybook storybook`
+- Build: `pnpm --filter @nexu-design/storybook build-storybook`
+- Typecheck: `pnpm --filter @nexu-design/storybook typecheck`
+- Lint: `pnpm --filter @nexu-design/storybook lint`
 
 ## Testing guidance
 - Test runner: Vitest.
@@ -82,20 +82,20 @@
 
 ## Running a single test
 - Single file from repo root:
-  - `pnpm --filter @nexu/ui-web exec vitest run src/primitives/button.test.tsx`
+  - `pnpm --filter @nexu-design/ui-web exec vitest run src/primitives/button.test.tsx`
 - Single file from inside `packages/ui-web`:
   - `pnpm exec vitest run src/primitives/button.test.tsx`
 - Single test by name from repo root:
-  - `pnpm --filter @nexu/ui-web exec vitest run src/primitives/button.test.tsx -t "renders children"`
+  - `pnpm --filter @nexu-design/ui-web exec vitest run src/primitives/button.test.tsx -t "renders children"`
 - Watch one file interactively:
-  - `pnpm --filter @nexu/ui-web exec vitest src/primitives/button.test.tsx`
+  - `pnpm --filter @nexu-design/ui-web exec vitest src/primitives/button.test.tsx`
 
 ## Recommended validation before finishing changes
 - For code changes in `ui-web`: run
-  - `pnpm --filter @nexu/ui-web typecheck`
-  - `pnpm --filter @nexu/ui-web test`
+  - `pnpm --filter @nexu-design/ui-web typecheck`
+  - `pnpm --filter @nexu-design/ui-web test`
 - For Storybook changes or any component-library changes that should sync to Storybook: run
-  - `pnpm --filter @nexu/storybook typecheck`
+  - `pnpm --filter @nexu-design/storybook typecheck`
 - For formatting-sensitive changes: run
   - `pnpm format:check`
   - `pnpm biome:check`
@@ -153,7 +153,7 @@
 
 ## Styling conventions
 - Styling is Tailwind-utility-driven, with a shared `cn()` helper built from `clsx` + `twMerge`.
-- Use tokens and CSS custom properties from `@nexu/tokens` and package `styles.css` files.
+- Use tokens and CSS custom properties from `@nexu-design/tokens` and package `styles.css` files.
 - Prefer variant classes via CVA over ad hoc conditional string concatenation.
 - Reuse existing spacing, radius, typography, and color tokens when possible.
 - Keep global styles in package-level `styles.css`; keep component styles inline via class names.

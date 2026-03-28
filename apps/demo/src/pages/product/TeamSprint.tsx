@@ -1,4 +1,4 @@
-import { ToggleGroup, ToggleGroupItem } from "@nexu/ui-web";
+import { ToggleGroup, ToggleGroupItem } from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   ArrowRight,
@@ -72,15 +72,15 @@ function ListView({
               const style = STATUS_STYLES[task.status];
               const isSelected = selectedTask?.id === task.id;
               return (
-                <div
+                <button
                   key={task.id}
-                  role="button"
+                  type="button"
                   tabIndex={0}
                   onClick={() => onSelectTask(task)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") onSelectTask(task);
                   }}
-                  className={`flex items-center gap-2 p-2.5 bg-surface-1 border rounded-lg cursor-pointer transition-colors ${
+                  className={`flex items-center gap-2 p-2.5 bg-surface-1 border rounded-lg cursor-pointer transition-colors text-left w-full ${
                     isSelected
                       ? "ring-2 ring-accent/30 border-accent/40"
                       : "border-border hover:border-border-hover"
@@ -104,7 +104,7 @@ function ListView({
                     {task.progress}%
                   </span>
                   <ChevronRight size={10} className="text-text-muted shrink-0" />
-                </div>
+                </button>
               );
             })}
           </div>
@@ -202,15 +202,15 @@ function GanttView({
               : null;
 
             return (
-              <div
+              <button
                 key={task.id}
-                role="button"
+                type="button"
                 tabIndex={0}
                 onClick={() => onSelectTask(task)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") onSelectTask(task);
                 }}
-                className={`flex items-center h-[32px] cursor-pointer rounded transition-colors ${
+                className={`flex items-center h-[32px] cursor-pointer rounded transition-colors w-full text-left ${
                   isSelected ? "bg-accent/5" : "hover:bg-surface-1"
                 }`}
               >
@@ -261,7 +261,7 @@ function GanttView({
                     )}
                   </div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>

@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import { Check, ClipboardCheck, Users, X } from "lucide-react";
 
 const MOCK_ITEMS = [

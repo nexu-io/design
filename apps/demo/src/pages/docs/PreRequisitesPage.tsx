@@ -1,20 +1,12 @@
-import { Shield } from 'lucide-react';
-import { usePageTitle } from '../../hooks/usePageTitle';
+import { Shield } from "lucide-react";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
-const WORKSPACE_ITEMS = [
-  'Admin access',
-  'Active channel',
-  'Slack/Feishu connected',
-];
+const WORKSPACE_ITEMS = ["Admin access", "Active channel", "Slack/Feishu connected"];
 
-const TEAM_ITEMS = [
-  'Concrete workflow',
-  'DRI for rollout',
-  '20 minutes for quick start',
-];
+const TEAM_ITEMS = ["Concrete workflow", "DRI for rollout", "20 minutes for quick start"];
 
 export default function PreRequisitesPage() {
-  usePageTitle('Pre-requisites');
+  usePageTitle("Pre-requisites");
 
   return (
     <>

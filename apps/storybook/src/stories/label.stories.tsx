@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Checkbox, Label } from "@nexu/ui-web";
+import { Checkbox, Label } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Label",

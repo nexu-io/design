@@ -6,7 +6,7 @@ import {
   ActivityBarIndicator,
   ActivityBarItem,
   SplitView,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import {
   ClipboardCheck,
   LayoutDashboard,

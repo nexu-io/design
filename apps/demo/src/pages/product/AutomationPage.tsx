@@ -11,7 +11,7 @@ import {
   StatCard,
   ToggleGroup,
   ToggleGroupItem,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import {
   AlertCircle,
   BarChart3,
@@ -465,7 +465,12 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      <div className="absolute inset-0 bg-black/15 backdrop-blur-[2px]" onClick={onClose} />
+      <button
+        type="button"
+        aria-label="关闭详情面板"
+        className="absolute inset-0 bg-black/15 backdrop-blur-[2px]"
+        onClick={onClose}
+      />
       <DetailPanel width={400} className="relative shadow-2xl animate-slide-in-right">
         {/* Header */}
         <DetailPanelHeader className="items-center shrink-0">
@@ -541,9 +546,9 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
           </div>
           {logs.length > 0 ? (
             <div className="px-4 pb-3 space-y-1.5">
-              {logs.map((log, i) => (
+              {logs.map((log) => (
                 <div
-                  key={i}
+                  key={`${log.time}-${log.summary}`}
                   className="flex items-start gap-2.5 p-2.5 bg-surface-2 border border-border rounded-lg"
                 >
                   <div className="mt-0.5 shrink-0">
@@ -628,6 +633,7 @@ function SchedulesTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
         <div className="grid grid-cols-3 gap-2">
           {AUTOMATION_TEMPLATES.map((t) => (
             <button
+              type="button"
               key={t.name}
               className="p-3 bg-surface-2 border border-border rounded-xl hover:border-border-hover transition-colors text-left group"
             >
@@ -654,10 +660,9 @@ function SchedulesTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
         </span>
       </div>
       {SCHEDULED_TASKS.map((task) => (
-        <div
+        <button
+          type="button"
           key={task.id}
-          role="button"
-          tabIndex={0}
           onClick={() =>
             onSelectItem({
               type: "schedule",
@@ -667,17 +672,7 @@ function SchedulesTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
               enabled: task.enabled,
             })
           }
-          onKeyDown={(e) => {
-            if (e.key === "Enter")
-              onSelectItem({
-                type: "schedule",
-                id: task.id,
-                name: task.name,
-                icon: task.icon,
-                enabled: task.enabled,
-              });
-          }}
-          className={`flex items-start gap-4 p-4 bg-surface-2 border border-border rounded-xl transition-colors cursor-pointer ${
+          className={`flex items-start gap-4 p-4 bg-surface-2 border border-border rounded-xl transition-colors cursor-pointer text-left w-full ${
             task.enabled ? "hover:border-border-hover" : "opacity-60"
           }`}
         >
@@ -700,36 +695,27 @@ function SchedulesTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
               <span>📍 {task.channel}</span>
               <span>· 上次运行：{task.lastRun}</span>
             </div>
-            {(task as any).stats && (
+            {task.stats && (
               <div className="mt-2 px-2.5 py-1.5 bg-surface-3 rounded-md text-[11px] text-text-secondary">
-                {(task as any).stats}
+                {task.stats}
               </div>
             )}
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {task.enabled ? (
-              <button
-                onClick={(e) => e.stopPropagation()}
-                className="p-1.5 rounded-md hover:bg-surface-3 text-success transition-colors"
-              >
+              <span className="p-1.5 rounded-md text-success transition-colors">
                 <Pause size={14} />
-              </button>
+              </span>
             ) : (
-              <button
-                onClick={(e) => e.stopPropagation()}
-                className="p-1.5 rounded-md hover:bg-surface-3 text-text-muted transition-colors"
-              >
+              <span className="p-1.5 rounded-md text-text-muted transition-colors">
                 <Play size={14} />
-              </button>
+              </span>
             )}
-            <button
-              onClick={(e) => e.stopPropagation()}
-              className="p-1.5 rounded-md hover:bg-surface-3 text-text-muted transition-colors"
-            >
+            <span className="p-1.5 rounded-md hover:bg-surface-3 text-text-muted transition-colors">
               <MoreHorizontal size={14} />
-            </button>
+            </span>
           </div>
-        </div>
+        </button>
       ))}
       <Button
         type="button"
@@ -755,10 +741,9 @@ function ProactiveTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
       </Alert>
 
       {PROACTIVE_RULES.map((rule) => (
-        <div
+        <button
+          type="button"
           key={rule.id}
-          role="button"
-          tabIndex={0}
           onClick={() =>
             onSelectItem({
               type: "proactive",
@@ -768,33 +753,20 @@ function ProactiveTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
               enabled: rule.enabled,
             })
           }
-          onKeyDown={(e) => {
-            if (e.key === "Enter")
-              onSelectItem({
-                type: "proactive",
-                id: rule.id,
-                name: rule.name,
-                icon: Zap,
-                enabled: rule.enabled,
-              });
-          }}
-          className="p-4 bg-surface-2 border border-border rounded-xl hover:border-border-hover transition-colors cursor-pointer"
+          className="p-4 bg-surface-2 border border-border rounded-xl hover:border-border-hover transition-colors cursor-pointer text-left w-full"
         >
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <Zap size={14} className={rule.enabled ? "text-clone" : "text-text-muted"} />
               <span className="text-[13px] font-medium text-text-primary">{rule.name}</span>
             </div>
-            <button
-              onClick={(e) => e.stopPropagation()}
-              className="text-text-muted hover:text-text-secondary transition-colors"
-            >
+            <span className="text-text-muted hover:text-text-secondary transition-colors">
               {rule.enabled ? (
                 <ToggleRight size={20} className="text-clone" />
               ) : (
                 <ToggleLeft size={20} />
               )}
-            </button>
+            </span>
           </div>
           <div className="text-xs text-text-secondary">
             <span className="text-text-muted">触发：</span>
@@ -807,7 +779,7 @@ function ProactiveTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
           <div className="mt-2 px-3 py-2 bg-surface-3 rounded-md text-[11px] text-text-tertiary italic">
             {rule.example}
           </div>
-        </div>
+        </button>
       ))}
     </div>
   );
@@ -823,9 +795,9 @@ function LogsTab() {
         <span className="w-20">状态</span>
         <span className="flex-1">详情</span>
       </div>
-      {ACTIVITY_LOGS.map((log, i) => (
+      {ACTIVITY_LOGS.map((log) => (
         <div
-          key={i}
+          key={`${log.time}-${log.name}`}
           className="flex items-center gap-3 px-3 py-2.5 bg-surface-2 border border-border rounded-lg text-[13px]"
         >
           <span className="w-12 text-text-muted font-mono text-xs">{log.time}</span>

@@ -1,6 +1,6 @@
-import * as React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, ChevronRight, Circle } from "lucide-react";
+import type * as React from "react";
 
 import { cn } from "../lib/cn";
 
@@ -145,7 +145,11 @@ function DropdownMenuLabel({
   return (
     <DropdownMenuPrimitive.Label
       data-slot="dropdown-menu-label"
-      className={cn("px-2 py-1.5 text-[12px] font-semibold text-muted-foreground", inset && "pl-8", className)}
+      className={cn(
+        "px-2 py-1.5 text-[12px] font-semibold text-muted-foreground",
+        inset && "pl-8",
+        className,
+      )}
       {...props}
     />
   );

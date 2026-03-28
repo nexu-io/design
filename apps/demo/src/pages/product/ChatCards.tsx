@@ -1,4 +1,9 @@
-import { Badge, Button, ConversationMessage, ConversationMessageStatusIcon } from "@nexu/ui-web";
+import {
+  Badge,
+  Button,
+  ConversationMessage,
+  ConversationMessageStatusIcon,
+} from "@nexu-design/ui-web";
 import {
   Brain,
   ChevronRight,
@@ -206,9 +211,9 @@ function CardItem({
 
         {card.actions && card.actions.length > 0 && (
           <div className="flex items-center gap-1.5 border-t border-border/30 pt-2">
-            {card.actions.map((btn, i) => (
+            {card.actions.map((btn) => (
               <Button
-                key={i}
+                key={btn.label}
                 type="button"
                 onClick={(e) => handleActionBtn(btn, e)}
                 size="xs"
@@ -245,8 +250,13 @@ export default function ChatCardGroup({
 }: ChatCardGroupProps) {
   return (
     <div className="space-y-1.5">
-      {cards.map((card, i) => (
-        <CardItem key={i} card={card} onCardAction={onCardAction} interactive={interactive} />
+      {cards.map((card, index) => (
+        <CardItem
+          key={`${card.type}:${card.title}:${index}`}
+          card={card}
+          onCardAction={onCardAction}
+          interactive={interactive}
+        />
       ))}
     </div>
   );

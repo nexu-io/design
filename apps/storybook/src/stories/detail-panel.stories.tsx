@@ -7,7 +7,7 @@ import {
   DetailPanelDescription,
   DetailPanelHeader,
   DetailPanelTitle,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/DetailPanel",

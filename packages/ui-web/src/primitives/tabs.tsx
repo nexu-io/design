@@ -1,6 +1,6 @@
-import * as React from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { cva, type VariantProps } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
+import * as React from "react";
 
 import { cn } from "../lib/cn";
 
@@ -18,7 +18,7 @@ const tabsListVariants = cva("inline-flex items-center", {
   defaultVariants: {
     variant: "default",
   },
-})
+});
 
 const tabsTriggerVariants = cva(
   "inline-flex items-center justify-center gap-1.5 whitespace-nowrap text-[12px] font-medium transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
@@ -27,8 +27,7 @@ const tabsTriggerVariants = cva(
       variant: {
         default:
           "rounded-md px-3 py-1.5 data-[state=active]:bg-surface-0 data-[state=active]:text-foreground data-[state=active]:shadow-sm",
-        pill:
-          "rounded-full px-4 py-1.5 text-[13px] text-text-secondary hover:bg-transparent hover:text-text-primary data-[state=active]:bg-white data-[state=active]:text-text-primary data-[state=active]:shadow-[var(--shadow-rest)]",
+        pill: "rounded-full px-4 py-1.5 text-[13px] text-text-secondary hover:bg-transparent hover:text-text-primary data-[state=active]:bg-white data-[state=active]:text-text-primary data-[state=active]:shadow-[var(--shadow-rest)]",
         underline:
           "rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:shadow-none",
       },
@@ -37,7 +36,7 @@ const tabsTriggerVariants = cva(
       variant: "default",
     },
   },
-)
+);
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
@@ -55,7 +54,8 @@ TabsList.displayName = TabsPrimitive.List.displayName;
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & VariantProps<typeof tabsTriggerVariants>
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> &
+    VariantProps<typeof tabsTriggerVariants>
 >(({ className, variant, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}

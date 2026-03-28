@@ -1,9 +1,9 @@
-import { PageShell, PageHeader, Section } from '../components/Section'
+import { PageHeader, PageShell, Section } from "../components/Section";
 
 const FIGMA_ICON_LIBRARY = {
-  name: '✕ Untitled UI Icons – 1-100 essential (Figma icons, Community)',
-  url: 'https://www.figma.com/design/nVKpObpC2UXEaXHCfdeKIk/%E2%9D%96-Untitled-UI-Icons-%E2%80%93-1-100--essential-Figma-icons--Community-?node-id=181-128951&t=6oiFqgbkpteDwoQZ-1',
-}
+  name: "✕ Untitled UI Icons – 1-100 essential (Figma icons, Community)",
+  url: "https://www.figma.com/design/nVKpObpC2UXEaXHCfdeKIk/%E2%9D%96-Untitled-UI-Icons-%E2%80%93-1-100--essential-Figma-icons--Community-?node-id=181-128951&t=6oiFqgbkpteDwoQZ-1",
+};
 
 export default function IconsPage() {
   return (
@@ -61,13 +61,18 @@ export default function IconsPage() {
 
       <Section title="设计 ↔ 开发">
         <p className="text-sm text-text-secondary mb-2">
-          Figma 使用本库；代码中可用 <strong className="text-text-primary">Lucide React</strong> 或{' '}
-          <strong className="text-text-primary">Heroicons</strong> 实现，以同语义、同尺寸、颜色用 design token 为准。
+          Figma 使用本库；代码中可用 <strong className="text-text-primary">Lucide React</strong> 或{" "}
+          <strong className="text-text-primary">Heroicons</strong> 实现，以同语义、同尺寸、颜色用
+          design token 为准。
         </p>
         <p className="text-[13px] text-text-tertiary">
-          完整说明见 <code className="px-1.5 py-0.5 rounded bg-surface-3 font-mono text-[12px]">design-system/docs/ICON-LIBRARY.md</code>。
+          完整说明见{" "}
+          <code className="px-1.5 py-0.5 rounded bg-surface-3 font-mono text-[12px]">
+            design-system/docs/ICON-LIBRARY.md
+          </code>
+          。
         </p>
       </Section>
     </PageShell>
-  )
+  );
 }

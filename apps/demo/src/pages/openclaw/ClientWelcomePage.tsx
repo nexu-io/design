@@ -15,15 +15,11 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 
 import {
   Button,
-  EntityCard,
-  EntityCardContent,
-  EntityCardDescription,
-  EntityCardHeader,
   EntityCardMedia,
   EntityCardMeta,
   EntityCardTitle,
   Input,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 
 function FadeIn({
   children,
@@ -52,19 +48,19 @@ function ProviderLogo({ provider, size = 16 }: { provider: string; size?: number
   switch (provider) {
     case "anthropic":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="currentColor">
+        <svg style={s} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
           <path d="M13.827 3.52h3.603L24 20.48h-3.603l-6.57-16.96zm-7.258 0h3.767L16.906 20.48h-3.674l-1.476-3.914H5.036l-1.466 3.914H0L6.569 3.52zm.658 10.418h4.543L9.548 7.04l-2.32 6.898z" />
         </svg>
       );
     case "openai":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="currentColor">
+        <svg style={s} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
           <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.998 5.998 0 0 0-3.998 2.9 6.042 6.042 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z" />
         </svg>
       );
     case "google":
       return (
-        <svg style={s} viewBox="0 0 24 24" fill="none">
+        <svg style={s} viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
           <path
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
             fill="#4285F4"
@@ -179,10 +175,8 @@ export default function ClientWelcomePage() {
             <div className="mt-3 space-y-2.5">
               {chooseOptions.map((option, index) => (
                 <FadeIn key={option.id} delay={180 + index * 90}>
-                  <EntityCard
-                    role="button"
-                    tabIndex={0}
-                    interactive
+                  <button
+                    type="button"
                     onClick={() => {
                       if (option.id === "login") {
                         handleAccountLogin();
@@ -190,23 +184,13 @@ export default function ClientWelcomePage() {
                       }
                       handleByokEntry();
                     }}
-                    onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        if (option.id === "login") {
-                          handleAccountLogin();
-                          return;
-                        }
-                        handleByokEntry();
-                      }
-                    }}
                     className={`group w-full rounded-[20px] text-left transition-all duration-300 ${
                       option.tone === "primary"
                         ? "border-border bg-[linear-gradient(135deg,var(--color-neutral-800)_0%,#232327_100%)] text-white hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(0,0,0,0.16)]"
                         : "border-border bg-surface-0 text-text-primary hover:-translate-y-0.5 hover:border-border-hover hover:shadow-refine"
                     }`}
                   >
-                    <EntityCardHeader className="items-center justify-between gap-4 p-5 pb-0">
+                    <div className="items-center justify-between gap-4 p-5 pb-0 flex">
                       <div className="flex items-center gap-3 min-w-0">
                         <EntityCardMedia
                           className={`h-11 w-11 rounded-2xl ${
@@ -235,18 +219,16 @@ export default function ClientWelcomePage() {
                       >
                         {option.badge}
                       </span>
-                    </EntityCardHeader>
+                    </div>
 
-                    <EntityCardContent className="p-5">
+                    <div className="p-5">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <EntityCardDescription
-                            className={`max-w-[430px] text-[13px] leading-[1.75] ${
-                              option.tone === "primary" ? "text-white/64" : "text-text-secondary"
-                            }`}
+                          <p
+                            className={`max-w-[430px] text-[13px] leading-[1.75] ${option.tone === "primary" ? "text-white/64" : "text-text-secondary"}`}
                           >
                             {option.description}
-                          </EntityCardDescription>
+                          </p>
                         </div>
                         <ArrowRight
                           size={16}
@@ -281,8 +263,8 @@ export default function ClientWelcomePage() {
                           <span key={item}>{item}</span>
                         ))}
                       </EntityCardMeta>
-                    </EntityCardContent>
-                  </EntityCard>
+                    </div>
+                  </button>
                 </FadeIn>
               ))}
             </div>
@@ -344,6 +326,7 @@ export default function ClientWelcomePage() {
             <div className="mt-6 grid grid-cols-2 gap-2">
               {PROVIDER_OPTIONS.map((p) => (
                 <button
+                  type="button"
                   key={p.id}
                   onClick={() => {
                     setSelectedProvider(p.id);

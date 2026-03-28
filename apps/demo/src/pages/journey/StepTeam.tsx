@@ -1,4 +1,4 @@
-import { Button, StatsBar } from "@nexu/ui-web";
+import { Button, StatsBar } from "@nexu-design/ui-web";
 import {
   ArrowUp,
   BarChart3,
@@ -218,6 +218,7 @@ export default function StepTeam() {
             const Icon = tab.icon;
             return (
               <button
+                type="button"
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-1.5 px-3 py-2.5 text-[12px] font-medium border-b-2 transition-colors ${
@@ -295,6 +296,7 @@ export default function StepTeam() {
                     { id: "align" as const, label: "⚠️ 对齐请求" },
                   ].map((t) => (
                     <button
+                      type="button"
                       key={t.id}
                       onClick={() => setCardTab(t.id)}
                       className={`px-2.5 py-1 rounded-md text-[10px] font-medium transition-colors ${

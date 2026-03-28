@@ -7,7 +7,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import { ArrowRight, ChevronRight, Code2, Crown, Globe, Sparkles, TrendingUp } from "lucide-react";
 import { usePageTitle } from "../../hooks/usePageTitle";
 

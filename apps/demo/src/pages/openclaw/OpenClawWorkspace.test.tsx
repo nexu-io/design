@@ -151,9 +151,9 @@ describe("OpenClawWorkspace bot manager panel", () => {
 
     fireEvent.click(exploreTab);
 
-    expect(
-      screen.getByRole("tab", { name: /ws\.skills\.yours/i }).getAttribute("data-state"),
-    ).toBe("inactive");
+    expect(screen.getByRole("tab", { name: /ws\.skills\.yours/i }).getAttribute("data-state")).toBe(
+      "inactive",
+    );
     expect(
       screen.getByRole("tab", { name: /ws\.skills\.explore/i }).getAttribute("data-state"),
     ).toBe("active");

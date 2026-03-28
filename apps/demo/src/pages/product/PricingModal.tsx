@@ -1,4 +1,4 @@
-import { Button, PricingCard } from "@nexu/ui-web";
+import { Button, PricingCard } from "@nexu-design/ui-web";
 import { Crown, Sparkles, Users, X } from "lucide-react";
 
 const PLANS = [

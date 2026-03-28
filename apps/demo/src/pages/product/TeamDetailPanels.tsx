@@ -9,7 +9,7 @@ import {
   PanelFooterActions,
   TagGroup,
   TagGroupItem,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import {
   Activity,
   AlertTriangle,
@@ -102,7 +102,7 @@ function BIPFlowSection({ steps }: { steps: BIPStep[] }) {
       </div>
       <div className="space-y-0">
         {steps.map((step, i) => (
-          <div key={i} className="flex gap-2.5">
+          <div key={step.label} className="flex gap-2.5">
             <div className="flex flex-col items-center">
               <div
                 className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 ${
@@ -149,13 +149,13 @@ function FileOpsSection({ ops }: { ops: FileOp[] }) {
         文件操作
       </div>
       <div className="space-y-1.5">
-        {ops.map((op, i) => {
+        {ops.map((op) => {
           const s = ACTION_STYLES[op.action];
           const parts = op.path.split("/");
-          const file = parts.pop()!;
+          const file = parts[parts.length - 1] ?? op.path;
           return (
             <div
-              key={i}
+              key={`${op.action}:${op.path}`}
               className="flex items-center gap-1.5 p-2 bg-surface-1 border border-border rounded-lg text-[11px]"
             >
               <span className={`px-1 py-0.5 rounded text-[8px] font-bold ${s.color}`}>
@@ -194,11 +194,11 @@ function ActivitySection({
         {title || "最近活动"}
       </div>
       <div className="space-y-1.5">
-        {items.map((item, i) => {
+        {items.map((item) => {
           const t = TYPE_ICONS[item.type];
           return (
             <div
-              key={i}
+              key={`${item.type}:${item.time}:${item.content}`}
               className="flex items-start gap-2.5 p-2 bg-surface-1 border border-border rounded-lg"
             >
               <t.icon size={12} className={`${t.color} shrink-0 mt-0.5`} />
@@ -212,6 +212,14 @@ function ActivitySection({
       </div>
     </div>
   );
+}
+
+function getCardPanelTitle(card: IMCard): string {
+  if (card.type === "summary_report") return "站会汇总详情";
+  if (card.type === "status_query") return `${card.target} 任务进度`;
+  if (card.type === "alignment_request") return card.topic;
+  if (card.type === "event_notification") return card.event;
+  return card.taskTitle;
 }
 
 function FollowUpInput({
@@ -283,17 +291,7 @@ export function CardDetailPanel({
 
   return (
     <PanelShell
-      title={
-        card.type === "summary_report"
-          ? "站会汇总详情"
-          : card.type === "status_query"
-            ? `${(card as any).target} 任务进度`
-            : card.type === "alignment_request"
-              ? (card as any).topic
-              : card.type === "event_notification"
-                ? (card as any).event
-                : (card as any).taskTitle
-      }
+      title={getCardPanelTitle(card)}
       badge={typeInfo.label}
       badgeColor={typeInfo.color}
       icon={MessageSquare}
@@ -366,8 +364,8 @@ export function CardDetailPanel({
             </div>
             {card.risks.length > 0 && (
               <div className="p-2 rounded-lg bg-warning-subtle/50">
-                {card.risks.map((r, i) => (
-                  <div key={i} className="text-[10px] text-warning flex items-start gap-1">
+                {card.risks.map((r) => (
+                  <div key={r} className="text-[10px] text-warning flex items-start gap-1">
                     <AlertTriangle size={10} className="shrink-0 mt-0.5" /> {r}
                   </div>
                 ))}
@@ -404,8 +402,8 @@ export function CardDetailPanel({
         {card.type === "event_notification" && (
           <div className="space-y-2">
             <div className="text-[12px] text-text-primary">{card.impact}</div>
-            {card.updates.map((u, i) => (
-              <div key={i} className="flex items-center gap-1.5 text-[11px] text-text-secondary">
+            {card.updates.map((u) => (
+              <div key={u} className="flex items-center gap-1.5 text-[11px] text-text-secondary">
                 <div className="w-1 h-1 rounded-full bg-success" /> {u}
               </div>
             ))}
@@ -547,9 +545,9 @@ export function MemberDetailPanel({
               color: "text-text-muted",
               small: true,
             },
-          ].map((s) => (
+          ].map((s: { label: string; value: string | number; color: string; small?: boolean }) => (
             <div key={s.label} className="p-2 text-center rounded-lg bg-surface-1">
-              <div className={`text-[${(s as any).small ? "10" : "14"}px] font-bold ${s.color}`}>
+              <div className={`text-[${s.small ? "10" : "14"}px] font-bold ${s.color}`}>
                 {s.value}
               </div>
               <div className="text-[8px] text-text-muted mt-0.5">{s.label}</div>
@@ -863,9 +861,9 @@ export function TaskDetailPanel({
             变更记录
           </div>
           <div className="space-y-1.5">
-            {changeLogs.map((log, i) => (
+            {changeLogs.map((log) => (
               <div
-                key={i}
+                key={`${log.time}:${log.from}:${log.to}`}
                 className="flex items-center gap-2 p-2 bg-surface-1 border border-border rounded-lg text-[10px]"
               >
                 <Clock size={10} className="text-text-muted shrink-0" />
@@ -1603,8 +1601,8 @@ export function TaskItemDetailPanel({
             子任务 ({subtasksDone}/{subtasksTotal})
           </div>
           <div className="space-y-1.5">
-            {task.subtasks.map((sub, i) => (
-              <div key={i} className="flex items-center gap-2 text-[12px]">
+            {task.subtasks.map((sub) => (
+              <div key={sub.title} className="flex items-center gap-2 text-[12px]">
                 {sub.done ? (
                   <CheckCircle size={14} className="text-success shrink-0" />
                 ) : (

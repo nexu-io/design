@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Spinner } from "@nexu/ui-web";
+import { Spinner } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Spinner",

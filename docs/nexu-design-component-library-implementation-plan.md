@@ -1,8 +1,8 @@
-# Nexu 组件库实现规划
+# Nexu Design 组件库实现规划
 
 ## 1. 背景
 
-目标是在 `~/Projects/nexu-io/ui` 建立一套可持续演进的组件库，用来逐步承接 `~/Projects/nexu-io/nexu` 里的 UI 重构工作，减少：
+目标是在 `~/Projects/nexu-io/design` 建立一套可持续演进的组件库，用来逐步承接 `~/Projects/nexu-io/nexu` 里的 UI 重构工作，减少：
 
 - 裸用 `shadcn/ui`
 - 页面内联 Tailwind 拼装
@@ -16,7 +16,7 @@
 - 通用视觉规则散落在 `apps/web/src/index.css`、页面样式和 feature 组件中
 - `apps/desktop` 还有一套独立 UI，不适合立刻强行合并
 
-因此，`ui` 仓库的职责不是“复制一份现有 UI”，而是提供一个新的、分层清晰的组件体系，作为后续迁移的目标平台。
+因此，`design` 仓库的职责不是“复制一份现有 UI”，而是提供一个新的、分层清晰的组件体系，作为后续迁移的目标平台。
 
 ---
 
@@ -120,12 +120,12 @@
 
 ## 4. 仓库结构建议
 
-建议 `ui` 仓库初始化为：
+建议 `design` 仓库初始化为：
 
 ```text
-ui/
+design/
   docs/
-    nexu-component-library-implementation-plan.md
+    nexu-design-component-library-implementation-plan.md
   packages/
     tokens/
       src/
@@ -790,7 +790,7 @@ Pattern 不应该因为“看起来差不多”就抽。
 
 ## 16. 结论
 
-`nexu-io/ui` 应该承载的是一套**渐进式可迁移的组件库平台**，而不是现有 `nexu` UI 的简单搬运。
+`nexu-io/design` 应该承载的是一套**渐进式可迁移的组件库平台**，而不是现有 `nexu` UI 的简单搬运。
 
 推荐路线是：
 

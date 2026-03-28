@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { ResizableHandle, ResizablePanel, SplitView } from "@nexu/ui-web";
+import { ResizableHandle, ResizablePanel, SplitView } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/SplitView",

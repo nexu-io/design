@@ -1,16 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  BookOpen,
-  ChevronDown,
-  FileText,
-  Sparkles,
-  Bug,
-  Palette,
-  Server,
-} from 'lucide-react';
-import { Button } from '@nexu/ui-web';
-import { usePageTitle } from '../../hooks/usePageTitle';
+import { Button } from "@nexu-design/ui-web";
+import { AnimatePresence, motion } from "framer-motion";
+import { BookOpen, Bug, ChevronDown, FileText, Palette, Server, Sparkles } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 interface ChangelogEntry {
   hash: string;
@@ -29,42 +21,49 @@ interface ChangelogEntry {
 }
 
 const HIDDEN_CATEGORIES = new Set([
-  'identity', 'decision', 'operations', 'preference',
-  'rules', 'infra', 'other', 'team', 'facts',
+  "identity",
+  "decision",
+  "operations",
+  "preference",
+  "rules",
+  "infra",
+  "other",
+  "team",
+  "facts",
 ]);
 
 const CATEGORY_LABELS: Record<string, string> = {
-  insight: 'Insight',
-  knowledge: 'Knowledge',
-  artifact: 'Product',
-  automation: 'Automation',
-  clone: 'Clone',
-  portal: 'Portal',
-  'design-system': 'Design',
-  backend: 'Backend',
-  frontend: 'Frontend',
-  strategy: 'Strategy',
+  insight: "Insight",
+  knowledge: "Knowledge",
+  artifact: "Product",
+  automation: "Automation",
+  clone: "Clone",
+  portal: "Portal",
+  "design-system": "Design",
+  backend: "Backend",
+  frontend: "Frontend",
+  strategy: "Strategy",
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  insight: 'bg-cyan-500/10 text-cyan-700 border-cyan-500/20',
-  knowledge: 'bg-blue-500/10 text-blue-700 border-blue-500/20',
-  artifact: 'bg-amber-500/10 text-amber-700 border-amber-500/20',
-  automation: 'bg-orange-500/10 text-orange-700 border-orange-500/20',
-  clone: 'bg-purple-500/10 text-purple-700 border-purple-500/20',
-  portal: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
-  'design-system': 'bg-pink-500/10 text-pink-700 border-pink-500/20',
-  backend: 'bg-indigo-500/10 text-indigo-700 border-indigo-500/20',
-  frontend: 'bg-teal-500/10 text-teal-700 border-teal-500/20',
-  strategy: 'bg-violet-500/10 text-violet-700 border-violet-500/20',
+  insight: "bg-cyan-500/10 text-cyan-700 border-cyan-500/20",
+  knowledge: "bg-blue-500/10 text-blue-700 border-blue-500/20",
+  artifact: "bg-amber-500/10 text-amber-700 border-amber-500/20",
+  automation: "bg-orange-500/10 text-orange-700 border-orange-500/20",
+  clone: "bg-purple-500/10 text-purple-700 border-purple-500/20",
+  portal: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20",
+  "design-system": "bg-pink-500/10 text-pink-700 border-pink-500/20",
+  backend: "bg-indigo-500/10 text-indigo-700 border-indigo-500/20",
+  frontend: "bg-teal-500/10 text-teal-700 border-teal-500/20",
+  strategy: "bg-violet-500/10 text-violet-700 border-violet-500/20",
 };
 
 const TYPE_CONFIG: Record<string, { icon: typeof Sparkles; label: string; color: string }> = {
-  feat: { icon: Sparkles, label: 'New', color: 'text-success' },
-  fix: { icon: Bug, label: 'Fix', color: 'text-danger' },
-  docs: { icon: FileText, label: 'Docs', color: 'text-info' },
-  refactor: { icon: Server, label: 'Improved', color: 'text-text-secondary' },
-  style: { icon: Palette, label: 'Style', color: 'text-text-tertiary' },
+  feat: { icon: Sparkles, label: "New", color: "text-success" },
+  fix: { icon: Bug, label: "Fix", color: "text-danger" },
+  docs: { icon: FileText, label: "Docs", color: "text-info" },
+  refactor: { icon: Server, label: "Improved", color: "text-text-secondary" },
+  style: { icon: Palette, label: "Style", color: "text-text-tertiary" },
 };
 
 function getCommitType(message: string) {
@@ -80,20 +79,20 @@ function getCommitType(message: string) {
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr);
-  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 }
 
 const ROWS_PER_PAGE = 30;
 
 export default function DocsChangelogPage() {
-  usePageTitle('Changelog');
+  usePageTitle("Changelog");
 
   const [entries, setEntries] = useState<ChangelogEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [visibleRows, setVisibleRows] = useState(ROWS_PER_PAGE);
 
   useEffect(() => {
-    fetch('/changelog.json')
+    fetch("/changelog.json")
       .then((r) => (r.ok ? r.json() : []))
       .then((data: ChangelogEntry[]) => {
         const filtered = data.filter(
@@ -102,7 +101,7 @@ export default function DocsChangelogPage() {
             !e.categories.every((c) => HIDDEN_CATEGORIES.has(c)) &&
             e.summary &&
             !/^merge:/i.test(e.message) &&
-            !/^Merge branch|^合并分支/.test(e.summary)
+            !/^Merge branch|^合并分支/.test(e.summary),
         );
         setEntries(filtered);
       })
@@ -110,10 +109,7 @@ export default function DocsChangelogPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const visibleEntries = useMemo(
-    () => entries.slice(0, visibleRows),
-    [entries, visibleRows]
-  );
+  const visibleEntries = useMemo(() => entries.slice(0, visibleRows), [entries, visibleRows]);
   const hasMore = visibleRows < entries.length;
 
   return (
@@ -123,7 +119,8 @@ export default function DocsChangelogPage() {
         Changelog
       </h1>
       <p className="mt-2 text-[14px] text-text-tertiary leading-relaxed max-w-2xl">
-        All shipped changes, sorted by date. We aim for safe, incremental updates; any breaking change is called out explicitly.
+        All shipped changes, sorted by date. We aim for safe, incremental updates; any breaking
+        change is called out explicitly.
       </p>
 
       {loading ? (
@@ -155,13 +152,13 @@ export default function DocsChangelogPage() {
                     {visibleEntries.map((entry, idx) => {
                       const typeInfo = getCommitType(entry.message);
                       const visibleCategories = entry.categories.filter(
-                        (c) => !HIDDEN_CATEGORIES.has(c)
+                        (c) => !HIDDEN_CATEGORIES.has(c),
                       );
-                      const primaryArea = visibleCategories[0] ?? 'other';
+                      const primaryArea = visibleCategories[0] ?? "other";
                       const areaLabel = CATEGORY_LABELS[primaryArea] ?? primaryArea;
                       const areaClass =
                         CATEGORY_COLORS[primaryArea] ??
-                        'bg-surface-2 text-text-muted border-border';
+                        "bg-surface-2 text-text-muted border-border";
                       const Icon = typeInfo?.icon ?? FileText;
                       return (
                         <motion.tr
@@ -178,10 +175,7 @@ export default function DocsChangelogPage() {
                           <td className="px-4 py-3 align-top">
                             <div className="flex items-start gap-3">
                               <div className="w-9 h-9 rounded-lg bg-surface-2 flex items-center justify-center shrink-0">
-                                <Icon
-                                  size={18}
-                                  className={typeInfo?.color ?? 'text-text-muted'}
-                                />
+                                <Icon size={18} className={typeInfo?.color ?? "text-text-muted"} />
                               </div>
                               <div className="min-w-0">
                                 <div className="flex items-center gap-2 flex-wrap">

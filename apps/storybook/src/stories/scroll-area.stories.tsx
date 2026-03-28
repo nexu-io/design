@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { ScrollArea, ScrollBar } from "@nexu/ui-web";
+import { ScrollArea, ScrollBar } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/ScrollArea",

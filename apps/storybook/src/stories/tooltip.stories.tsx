@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@nexu/ui-web";
+import {
+  Button,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Tooltip",

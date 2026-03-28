@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 
 function Toaster({ ...props }: ToasterProps) {
@@ -23,7 +23,8 @@ function Toaster({ ...props }: ToasterProps) {
           toast: "group toast rounded-xl border shadow-lg text-[13px]",
           title: "font-medium",
           description: "text-[12px] opacity-70",
-          actionButton: "bg-[var(--color-accent)] text-[var(--color-accent-fg)] text-[12px] font-medium rounded-lg",
+          actionButton:
+            "bg-[var(--color-accent)] text-[var(--color-accent-fg)] text-[12px] font-medium rounded-lg",
           cancelButton: "text-[var(--color-text-muted)] text-[12px] font-medium rounded-lg",
         },
       }}

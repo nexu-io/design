@@ -1,3 +1,3 @@
 @import "tailwindcss";
-@import "@nexu/tokens/styles.css";
+@import "@nexu-design/tokens/styles.css";
 @source "./**/*.{ts,tsx}";

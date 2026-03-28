@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CheckCircle2, CircleAlert, Info, TriangleAlert } from "lucide-react";
 
-import { Alert, AlertDescription, AlertTitle } from "@nexu/ui-web";
+import { Alert, AlertDescription, AlertTitle } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Alert",

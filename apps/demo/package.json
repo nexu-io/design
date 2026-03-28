@@ -1,5 +1,5 @@
 {
-  "name": "@nexu/demo",
+  "name": "@nexu-design/demo",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -17,8 +17,8 @@
     "tauri:build": "tauri build"
   },
   "dependencies": {
-    "@nexu/tokens": "workspace:*",
-    "@nexu/ui-web": "workspace:*",
+    "@nexu-design/tokens": "workspace:*",
+    "@nexu-design/ui-web": "workspace:*",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-dialog": "^1.1.15",

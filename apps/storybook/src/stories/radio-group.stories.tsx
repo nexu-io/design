@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Label, RadioGroup, RadioGroupItem } from "@nexu/ui-web";
+import { Label, RadioGroup, RadioGroupItem } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/RadioGroup",

@@ -1,6 +1,6 @@
+import { Button } from "@nexu-design/ui-web";
 import { useState } from "react";
-import { Button } from "@nexu/ui-web";
-import { PageShell, PageHeader, Section } from "../components/Section";
+import { PageHeader, PageShell, Section } from "../components/Section";
 
 const SKIN_TONES = [
   "#FDEBD0",
@@ -13,16 +13,7 @@ const SKIN_TONES = [
   "#5A3E36",
 ];
 const _FACES = ["圆形", "椭圆", "方形", "心形", "长形", "菱形"];
-const _EYES = [
-  "圆眼",
-  "杏眼",
-  "狭长眼",
-  "下垂眼",
-  "大眼",
-  "笑眼",
-  "单眼皮",
-  "戴眼镜",
-];
+const _EYES = ["圆眼", "杏眼", "狭长眼", "下垂眼", "大眼", "笑眼", "单眼皮", "戴眼镜"];
 void _FACES;
 void _EYES;
 const HAIRS = [
@@ -49,16 +40,7 @@ const HAIR_COLORS = [
   "#3b82f6",
   "#8b5cf6",
 ];
-const ACCESSORIES = [
-  "无",
-  "耳机",
-  "圆框眼镜",
-  "贝雷帽",
-  "领带",
-  "太阳镜",
-  "蝴蝶结",
-  "星星发卡",
-];
+const ACCESSORIES = ["无", "耳机", "圆框眼镜", "贝雷帽", "领带", "太阳镜", "蝴蝶结", "星星发卡"];
 const EXPRESSIONS = [
   "😊 专注",
   "🤔 思考",
@@ -155,6 +137,7 @@ export default function AvatarPage() {
         <div className="grid grid-cols-5 gap-4">
           {ROLE_PRESETS.map((p) => (
             <button
+              type="button"
               key={p.role}
               onClick={() => applyPreset(p)}
               className="p-5 text-center rounded-xl border transition-colors cursor-pointer bg-surface-2 border-border hover:border-border-hover group"
@@ -171,9 +154,7 @@ export default function AvatarPage() {
               <div className="text-sm font-medium text-text-primary">
                 {p.emoji} {p.role}
               </div>
-              <div className="text-[11px] text-text-tertiary mt-0.5">
-                {p.desc}
-              </div>
+              <div className="text-[11px] text-text-tertiary mt-0.5">{p.desc}</div>
               <div className="text-[11px] font-medium mt-2 text-accent opacity-0 group-hover:opacity-100 transition-opacity">
                 选择
               </div>
@@ -221,12 +202,11 @@ export default function AvatarPage() {
           {/* Controls */}
           <div className="flex-1 space-y-6">
             <div>
-              <div className="mb-2 text-xs font-medium text-text-secondary">
-                肤色
-              </div>
+              <div className="mb-2 text-xs font-medium text-text-secondary">肤色</div>
               <div className="flex gap-2">
                 {SKIN_TONES.map((c, i) => (
                   <button
+                    type="button"
                     key={c}
                     onClick={() => setSkin(i)}
                     className={`w-9 h-9 rounded-full border-2 transition-all ${
@@ -240,12 +220,11 @@ export default function AvatarPage() {
               </div>
             </div>
             <div>
-              <div className="mb-2 text-xs font-medium text-text-secondary">
-                发型
-              </div>
+              <div className="mb-2 text-xs font-medium text-text-secondary">发型</div>
               <div className="flex flex-wrap gap-2">
                 {HAIRS.map((h, i) => (
                   <button
+                    type="button"
                     key={h}
                     onClick={() => setHair(i)}
                     className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
@@ -260,12 +239,11 @@ export default function AvatarPage() {
               </div>
             </div>
             <div>
-              <div className="mb-2 text-xs font-medium text-text-secondary">
-                发色
-              </div>
+              <div className="mb-2 text-xs font-medium text-text-secondary">发色</div>
               <div className="flex gap-2">
                 {HAIR_COLORS.map((c, i) => (
                   <button
+                    type="button"
                     key={c}
                     onClick={() => setHairColor(i)}
                     className={`w-7 h-7 rounded-full border-2 transition-all ${
@@ -279,12 +257,11 @@ export default function AvatarPage() {
               </div>
             </div>
             <div>
-              <div className="mb-2 text-xs font-medium text-text-secondary">
-                配饰
-              </div>
+              <div className="mb-2 text-xs font-medium text-text-secondary">配饰</div>
               <div className="flex flex-wrap gap-2">
                 {ACCESSORIES.map((a, i) => (
                   <button
+                    type="button"
                     key={a}
                     onClick={() => setAccessory(i)}
                     className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
@@ -299,12 +276,11 @@ export default function AvatarPage() {
               </div>
             </div>
             <div>
-              <div className="mb-2 text-xs font-medium text-text-secondary">
-                默认表情
-              </div>
+              <div className="mb-2 text-xs font-medium text-text-secondary">默认表情</div>
               <div className="flex flex-wrap gap-2">
                 {EXPRESSIONS.map((e, i) => (
                   <button
+                    type="button"
                     key={e}
                     onClick={() => setExpression(i)}
                     className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
@@ -345,9 +321,7 @@ export default function AvatarPage() {
               >
                 {EXPR_EMOJI[expression]}
               </div>
-              <div className="text-[11px] text-text-secondary mt-2">
-                {s.size}px
-              </div>
+              <div className="text-[11px] text-text-secondary mt-2">{s.size}px</div>
               <div className="text-[11px] text-text-muted">{s.label}</div>
             </div>
           ))}
@@ -364,14 +338,10 @@ export default function AvatarPage() {
               {EXPR_EMOJI[expression]}
             </div>
             <div>
-              <div className="text-sm font-semibold text-text-primary">
-                我的分身
-              </div>
+              <div className="text-sm font-semibold text-text-primary">我的分身</div>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <div className="w-2 h-2 rounded-full bg-success" />
-                <span className="text-xs text-text-secondary">
-                  在线 · 陪你 47 天
-                </span>
+                <span className="text-xs text-text-secondary">在线 · 陪你 47 天</span>
               </div>
             </div>
           </div>
@@ -399,10 +369,7 @@ export default function AvatarPage() {
               <span className="text-xs font-medium text-accent">72%</span>
             </div>
             <div className="overflow-hidden w-full h-2 rounded-full bg-surface-4">
-              <div
-                className="h-full rounded-full bg-accent"
-                style={{ width: "72%" }}
-              />
+              <div className="h-full rounded-full bg-accent" style={{ width: "72%" }} />
             </div>
           </div>
         </div>
@@ -418,14 +385,10 @@ export default function AvatarPage() {
               {EXPR_EMOJI[expression]}
             </div>
             <div>
-              <div className="text-sm font-semibold text-text-primary">
-                我的分身
-              </div>
+              <div className="text-sm font-semibold text-text-primary">我的分身</div>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <div className="w-2 h-2 rounded-full bg-success" />
-                <span className="text-xs text-text-secondary">
-                  在线 · 陪你 49 天
-                </span>
+                <span className="text-xs text-text-secondary">在线 · 陪你 49 天</span>
               </div>
               <div className="flex gap-1 items-center mt-1">
                 <span className="text-[9px] px-1.5 py-0.5 bg-clone/10 text-clone rounded-full font-medium">
@@ -486,10 +449,7 @@ export default function AvatarPage() {
               <span className="text-xs font-medium text-clone">78%</span>
             </div>
             <div className="overflow-hidden w-full h-2 rounded-full bg-surface-4">
-              <div
-                className="h-full rounded-full bg-clone"
-                style={{ width: "78%" }}
-              />
+              <div className="h-full rounded-full bg-clone" style={{ width: "78%" }} />
             </div>
             <div className="text-[9px] text-text-muted mt-1">
               多聊天多"喂养"，对齐率越高分身越懂你
@@ -500,9 +460,7 @@ export default function AvatarPage() {
 
       <Section title="Team Avatar Network — 分身网络">
         <div className="p-5 max-w-md rounded-xl border bg-surface-2 border-border">
-          <div className="mb-4 text-sm font-medium text-text-primary">
-            🤖 分身网络
-          </div>
+          <div className="mb-4 text-sm font-medium text-text-primary">🤖 分身网络</div>
           <div className="flex gap-4 items-center mb-4">
             {/* Overlapping avatar stack */}
             <div className="flex -space-x-3">
@@ -512,23 +470,19 @@ export default function AvatarPage() {
                 { emoji: "👩‍🎨", bg: "#FDEBD0" },
                 { emoji: "🧑‍💻", bg: "#D4A574" },
                 { emoji: "👩‍💼", bg: "#C68E5E" },
-              ].map((m, i) => (
+              ].map((m) => (
                 <div
-                  key={i}
+                  key={m.emoji}
                   className="flex justify-center items-center w-10 h-10 text-lg rounded-full border-2 border-surface-2"
-                  style={{ backgroundColor: m.bg, zIndex: 5 - i }}
+                  style={{ backgroundColor: m.bg }}
                 >
                   {m.emoji}
                 </div>
               ))}
             </div>
             <div>
-              <div className="text-[12px] font-medium text-text-primary">
-                5 个分身在线
-              </div>
-              <div className="text-[10px] text-text-muted">
-                分身间可互查进度、代问代答
-              </div>
+              <div className="text-[12px] font-medium text-text-primary">5 个分身在线</div>
+              <div className="text-[10px] text-text-muted">分身间可互查进度、代问代答</div>
             </div>
           </div>
 
@@ -553,14 +507,12 @@ export default function AvatarPage() {
                 time: "09:05",
                 type: "站会",
               },
-            ].map((item, i) => (
+            ].map((item) => (
               <div
-                key={i}
+                key={`${item.from}-${item.time}`}
                 className="flex items-center gap-2.5 p-2 bg-surface-3 rounded-lg"
               >
-                <span className="text-sm shrink-0">
-                  {item.from.split(" ")[0]}
-                </span>
+                <span className="text-sm shrink-0">{item.from.split(" ")[0]}</span>
                 <div className="flex-1 min-w-0">
                   <div className="text-[11px] text-text-primary truncate">
                     {item.from.split(" ").slice(1).join(" ")} {item.action}

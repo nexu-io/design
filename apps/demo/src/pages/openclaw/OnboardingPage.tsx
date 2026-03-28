@@ -6,7 +6,7 @@ import {
   Stepper,
   StepperItem,
   StepperSeparator,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Textarea } from "@nexu/ui-web";
+import { Textarea } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Textarea",

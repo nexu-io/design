@@ -9,7 +9,7 @@ import {
   EntityCardMedia,
   EntityCardMeta,
   EntityCardTitle,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import { BookOpen, FileText, Plus, Sparkles, Wrench } from "lucide-react";
 
 const SKILLS_BY_AVATAR = [

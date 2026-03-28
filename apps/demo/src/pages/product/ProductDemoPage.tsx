@@ -15,7 +15,7 @@ import {
   SidebarContent,
   SidebarHeader,
   SplitView,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import {
   Clock,
   FolderTree,

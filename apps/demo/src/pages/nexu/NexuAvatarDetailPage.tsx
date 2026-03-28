@@ -10,7 +10,7 @@ import {
   EntityCardTitle,
   TagGroup,
   TagGroupItem,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import { BookOpen, ChevronLeft, GitBranch, Send, Shield, Users, Wrench } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -98,9 +98,9 @@ export default function NexuAvatarDetailPage() {
             查看分身调用的知识库与 Skill，必要时可中途介入引导。
           </p>
           <ul className="mt-3 space-y-2">
-            {THINKING_STEPS.map((s, i) => (
+            {THINKING_STEPS.map((s) => (
               <li
-                key={i}
+                key={s.step}
                 className="flex items-center gap-3 rounded-lg border border-border-subtle bg-surface-2/50 px-3 py-2 text-[12px]"
               >
                 <span className="text-text-muted">{s.time}</span>

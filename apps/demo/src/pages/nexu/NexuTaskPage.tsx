@@ -14,7 +14,7 @@ import {
   Textarea,
   ToggleGroup,
   ToggleGroupItem,
-} from "@nexu/ui-web";
+} from "@nexu-design/ui-web";
 import { Clock, Sparkles, Users, Zap } from "lucide-react";
 import { type FormEvent, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";

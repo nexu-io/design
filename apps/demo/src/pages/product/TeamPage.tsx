@@ -1,4 +1,4 @@
-import { Button, StatsBar, ToggleGroup, ToggleGroupItem } from "@nexu/ui-web";
+import { Button, StatsBar, ToggleGroup, ToggleGroupItem } from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   BarChart3,
@@ -109,23 +109,21 @@ function CardWrapper({
 }) {
   return (
     <div
-      role={onClick ? "button" : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      onClick={onClick}
-      onKeyDown={
-        onClick
-          ? (e) => {
-              if (e.key === "Enter") onClick();
-            }
-          : undefined
-      }
-      className={`border rounded-xl overflow-hidden bg-surface-1 transition-colors ${
+      className={`relative border rounded-xl overflow-hidden bg-surface-1 transition-colors ${
         onClick ? "cursor-pointer" : ""
       } ${selected ? "ring-2 ring-accent/30 border-accent/40" : ""} ${
         accent ? `border-l-2 ${accent}` : "border-border"
       } ${onClick && !selected ? "hover:border-border-hover" : ""}`}
     >
-      {children}
+      {onClick && (
+        <button
+          type="button"
+          aria-label="选择卡片"
+          onClick={onClick}
+          className="absolute inset-0 z-0"
+        />
+      )}
+      <div className="relative z-10">{children}</div>
     </div>
   );
 }
@@ -208,8 +206,8 @@ function SummaryReportIMCard({
             <div className="flex items-center gap-1.5 text-[11px] text-warning font-medium mb-1">
               <AlertTriangle size={11} /> 风险提醒
             </div>
-            {card.risks.map((r, i) => (
-              <div key={i} className="text-[11px] text-text-secondary">
+            {card.risks.map((r) => (
+              <div key={r} className="text-[11px] text-text-secondary">
                 {r}
               </div>
             ))}
@@ -353,8 +351,8 @@ function EventNotificationIMCard({
       <div className="p-4 space-y-3">
         <div className="text-[13px] text-text-primary">{card.impact}</div>
         <div className="space-y-1.5">
-          {card.updates.map((u, i) => (
-            <div key={i} className="flex items-center gap-2 text-[12px] text-text-secondary">
+          {card.updates.map((u) => (
+            <div key={u} className="flex items-center gap-2 text-[12px] text-text-secondary">
               <div className="w-1 h-1 rounded-full bg-success shrink-0" /> {u}
             </div>
           ))}
@@ -522,14 +520,10 @@ function MemberCard({
   selected: boolean;
 }) {
   return (
-    <div
-      role="button"
-      tabIndex={0}
+    <button
+      type="button"
       onClick={onSelect}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") onSelect();
-      }}
-      className={`p-4 border rounded-xl bg-surface-1 transition-colors cursor-pointer ${
+      className={`w-full p-4 border rounded-xl bg-surface-1 transition-colors cursor-pointer text-left ${
         selected
           ? "ring-2 ring-accent/30 border-accent/40"
           : "border-border hover:border-border-hover"
@@ -577,7 +571,7 @@ function MemberCard({
           查看详情 <ChevronRight size={10} />
         </span>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -671,15 +665,11 @@ function AlignmentsTab({
           </div>
           <div className="space-y-2">
             {ALIGNMENT_HISTORY.map((a) => (
-              <div
+              <button
                 key={a.id}
-                role="button"
-                tabIndex={0}
+                type="button"
                 onClick={() => onSelectAlignment(a)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") onSelectAlignment(a);
-                }}
-                className={`flex items-center gap-3 p-3 bg-surface-1 border rounded-lg cursor-pointer transition-colors ${
+                className={`w-full flex items-center gap-3 p-3 bg-surface-1 border rounded-lg cursor-pointer transition-colors text-left ${
                   selectedAlignment?.id === a.id
                     ? "ring-2 ring-accent/30 border-accent/40"
                     : "border-border hover:border-border-hover"
@@ -706,7 +696,7 @@ function AlignmentsTab({
                   {a.status === "accepted" ? "已同意" : "已拒绝"}
                 </span>
                 <ChevronRight size={12} className="text-text-muted shrink-0" />
-              </div>
+              </button>
             ))}
           </div>
         </div>

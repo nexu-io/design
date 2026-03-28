@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Button, SectionHeader } from "@nexu/ui-web";
+import { Button, SectionHeader } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Patterns/SectionHeader",

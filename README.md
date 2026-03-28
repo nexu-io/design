@@ -1,13 +1,13 @@
-# nexu-ui
+# nexu-design
 
-`nexu-ui` is a pnpm workspace for Nexu's React and TypeScript UI library, shared design tokens, a Storybook app, and a Tauri demo app.
+`nexu-design` is a pnpm workspace for Nexu's React and TypeScript UI library, shared design tokens, a Storybook app, and a Tauri demo app.
 
 ## Workspace packages
 
-- `packages/ui-web` — `@nexu/ui-web`, the React component library
-- `packages/tokens` — `@nexu/tokens`, shared design tokens and CSS
-- `apps/storybook` — `@nexu/storybook`, the component playground and docs app
-- `apps/demo` — `@nexu/demo`, the Tauri demo app
+- `packages/ui-web` — `@nexu-design/ui-web`, the React component library
+- `packages/tokens` — `@nexu-design/tokens`, shared design tokens and CSS
+- `apps/storybook` — `@nexu-design/storybook`, the component playground and docs app
+- `apps/demo` — `@nexu-design/demo`, the Tauri demo app
 
 ## Stack
 
@@ -69,12 +69,12 @@ pnpm release:check
 ### Package-specific examples
 
 ```bash
-pnpm --filter @nexu/ui-web test
-pnpm --filter @nexu/ui-web typecheck
-pnpm --filter @nexu/tokens build
-pnpm --filter @nexu/storybook build-storybook
-pnpm --filter @nexu/demo dev
-pnpm --filter @nexu/demo tauri:build
+pnpm --filter @nexu-design/ui-web test
+pnpm --filter @nexu-design/ui-web typecheck
+pnpm --filter @nexu-design/tokens build
+pnpm --filter @nexu-design/storybook build-storybook
+pnpm --filter @nexu-design/demo dev
+pnpm --filter @nexu-design/demo tauri:build
 ```
 
 ## Repository structure
@@ -98,7 +98,7 @@ pnpm --filter @nexu/demo tauri:build
 - Source files are written in TypeScript and React.
 - Component stories live in `apps/storybook/src/stories`.
 - The desktop demo lives in `apps/demo`, with Rust sources in `apps/demo/src-tauri`.
-- Tests for `@nexu/ui-web` are co-located with source files and run with Vitest.
+- Tests for `@nexu-design/ui-web` are co-located with source files and run with Vitest.
 - Formatting and code quality checks are managed with Biome and TypeScript.
 
 ## Release validation

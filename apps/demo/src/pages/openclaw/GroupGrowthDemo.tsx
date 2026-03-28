@@ -1,59 +1,58 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { usePageTitle } from '../../hooks/usePageTitle';
+import { Badge, Button, Input, Label } from "@nexu-design/ui-web";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  Check,
-  ChevronRight,
-  Hash,
-  Send,
-  Sparkles,
-  Users,
-  Bot,
+  Activity,
+  AlertCircle,
   ArrowLeft,
   ArrowRight,
-  Mail,
-  Bold,
-  Italic,
-  AtSign,
-  Smile,
-  Paperclip,
-  ChevronDown,
-  Star,
-  Search,
-  Bookmark,
-  Loader2,
-  Settings,
-  Brain,
-  Home,
-  Activity,
-  Rocket,
   ArrowUpRight,
-  MessageSquare,
-  Shield,
-  ExternalLink,
+  AtSign,
+  Bold,
+  Bookmark,
+  Bot,
+  Brain,
   Calendar,
-  AlertCircle,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Badge, Button, Input, Label } from '@nexu/ui-web';
+  Check,
+  ChevronDown,
+  ChevronRight,
+  ExternalLink,
+  Hash,
+  Home,
+  Italic,
+  Loader2,
+  Mail,
+  MessageSquare,
+  Paperclip,
+  Rocket,
+  Search,
+  Send,
+  Settings,
+  Shield,
+  Smile,
+  Sparkles,
+  Star,
+  Users,
+} from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 /* ------------------------------------------------------------------ */
 /*  Types & Data                                                       */
 /* ------------------------------------------------------------------ */
 
 type DemoStep =
-  | 'group-chat'
-  | 'claim-page'
-  | 'invite-code'
-  | 'setup'
-  | 'workspace'
-  | 'slack-intro'
-  | 'oauth-auth';
-
+  | "group-chat"
+  | "claim-page"
+  | "invite-code"
+  | "setup"
+  | "workspace"
+  | "slack-intro"
+  | "oauth-auth";
 
 interface ChatMessage {
   id: string;
-  role: 'system' | 'user' | 'bot' | 'other-user';
+  role: "system" | "user" | "bot" | "other-user";
   name: string;
   content: string;
   time: string;
@@ -63,60 +62,65 @@ interface ChatMessage {
 
 const INITIAL_MESSAGES: ChatMessage[] = [
   {
-    id: 'welcome',
-    role: 'bot',
-    name: 'nexu',
-    content: '👋 Hi, I\'m nexu — your AI work assistant.\n\nAnyone in this channel can @mention me to get things done:\n• Summarize discussions, write reports, generate briefs\n• Draft docs, troubleshoot issues, schedule meetings\n\nI\'m online 24/7, remember context, and get smarter the more you use me.',
-    time: '09:58',
-    avatar: '🦞',
+    id: "welcome",
+    role: "bot",
+    name: "nexu",
+    content:
+      "👋 Hi, I'm nexu — your AI work assistant.\n\nAnyone in this channel can @mention me to get things done:\n• Summarize discussions, write reports, generate briefs\n• Draft docs, troubleshoot issues, schedule meetings\n\nI'm online 24/7, remember context, and get smarter the more you use me.",
+    time: "09:58",
+    avatar: "🦞",
   },
   {
-    id: 'other-1',
-    role: 'other-user',
-    name: 'Alex',
-    content: '@nexu Can you summarize the Q2 roadmap conclusions from yesterday\'s product meeting?',
-    time: '10:02',
-    avatar: '👩',
+    id: "other-1",
+    role: "other-user",
+    name: "Alex",
+    content: "@nexu Can you summarize the Q2 roadmap conclusions from yesterday's product meeting?",
+    time: "10:02",
+    avatar: "👩",
   },
   {
-    id: 'bot-reply-1',
-    role: 'bot',
-    name: 'nexu',
-    content: 'Summary of yesterday\'s Q2 roadmap discussion:\n\n**Key decisions:**\n• Mobile app launch in April, top priority\n• Enterprise SSO pushed to May\n• Platform team +2 engineers\n\n**Open:** Enterprise pricing (Alex drafting), API rate limit stress test\n**Next review:** Thursday 14:00',
-    time: '10:03',
-    avatar: '🦞',
+    id: "bot-reply-1",
+    role: "bot",
+    name: "nexu",
+    content:
+      "Summary of yesterday's Q2 roadmap discussion:\n\n**Key decisions:**\n• Mobile app launch in April, top priority\n• Enterprise SSO pushed to May\n• Platform team +2 engineers\n\n**Open:** Enterprise pricing (Alex drafting), API rate limit stress test\n**Next review:** Thursday 14:00",
+    time: "10:03",
+    avatar: "🦞",
   },
   {
-    id: 'other-2',
-    role: 'other-user',
-    name: 'Jordan',
-    content: 'Looks good. @nexu Help me draft a one-pager for the VP',
-    time: '10:06',
-    avatar: '👨',
+    id: "other-2",
+    role: "other-user",
+    name: "Jordan",
+    content: "Looks good. @nexu Help me draft a one-pager for the VP",
+    time: "10:06",
+    avatar: "👨",
   },
   {
-    id: 'bot-reply-2',
-    role: 'bot',
-    name: 'nexu',
-    content: '📋 **Q2 Roadmap Status (VP Brief)**\n\n✅ Mobile app April launch, on track\n✅ Platform +2 hires, recruiting\n⏳ Enterprise SSO pushed to May\n🔍 Pricing draft in progress\n\nReview: Thursday 14:00',
-    time: '10:07',
-    avatar: '🦞',
+    id: "bot-reply-2",
+    role: "bot",
+    name: "nexu",
+    content:
+      "📋 **Q2 Roadmap Status (VP Brief)**\n\n✅ Mobile app April launch, on track\n✅ Platform +2 hires, recruiting\n⏳ Enterprise SSO pushed to May\n🔍 Pricing draft in progress\n\nReview: Thursday 14:00",
+    time: "10:07",
+    avatar: "🦞",
   },
   {
-    id: 'other-3',
-    role: 'other-user',
-    name: 'Alex',
-    content: 'Thanks! I\'ll keep working on the pricing doc. @nexu Do you have a pricing reference template?',
-    time: '10:12',
-    avatar: '👩',
+    id: "other-3",
+    role: "other-user",
+    name: "Alex",
+    content:
+      "Thanks! I'll keep working on the pricing doc. @nexu Do you have a pricing reference template?",
+    time: "10:12",
+    avatar: "👩",
   },
   {
-    id: 'bot-reply-3',
-    role: 'bot',
-    name: 'nexu',
-    content: 'Yes. I put together a pricing framework based on your product positioning:\n\n1. **Per seat** — Good for small teams\n2. **Usage-based** — Good for mid/large orgs\n3. **Hybrid** — Base seats + overage\n\nShould I post it in the channel or DM you?',
-    time: '10:13',
-    avatar: '🦞',
+    id: "bot-reply-3",
+    role: "bot",
+    name: "nexu",
+    content:
+      "Yes. I put together a pricing framework based on your product positioning:\n\n1. **Per seat** — Good for small teams\n2. **Usage-based** — Good for mid/large orgs\n3. **Hybrid** — Base seats + overage\n\nShould I post it in the channel or DM you?",
+    time: "10:13",
+    avatar: "🦞",
   },
 ];
 
@@ -126,11 +130,30 @@ const INITIAL_MESSAGES: ChatMessage[] = [
 
 function SlackIcon({ size = 16 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313z" fill="#E01E5A"/>
-      <path d="M8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312z" fill="#36C5F0"/>
-      <path d="M18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312z" fill="#2EB67D"/>
-      <path d="M15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z" fill="#ECB22E"/>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313z"
+        fill="#E01E5A"
+      />
+      <path
+        d="M8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312z"
+        fill="#36C5F0"
+      />
+      <path
+        d="M18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312z"
+        fill="#2EB67D"
+      />
+      <path
+        d="M15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"
+        fill="#ECB22E"
+      />
     </svg>
   );
 }
@@ -139,20 +162,20 @@ function SlackIcon({ size = 16 }: { size?: number }) {
 /*  Shared Slack UI components                                         */
 /* ------------------------------------------------------------------ */
 
-const SLACK_BG = '#1a1d21';
-const SLACK_SIDEBAR = '#19171D';
-const SLACK_ACTIVE = 'rgba(255,255,255,0.12)';
+const SLACK_BG = "#1a1d21";
+const SLACK_SIDEBAR = "#19171D";
+const SLACK_ACTIVE = "rgba(255,255,255,0.12)";
 
 const AVATAR_COLORS: Record<string, string> = {
-  'nexu': '#3db9ce',
-  'Alex': '#36C5F0',
-  'Jordan': '#2EB67D',
-  'You': '#ECB22E',
+  nexu: "#3db9ce",
+  Alex: "#36C5F0",
+  Jordan: "#2EB67D",
+  You: "#ECB22E",
 };
 
 function SlackAvatar({ name, size = 36, isBot }: { name: string; size?: number; isBot?: boolean }) {
   const [imgFailed, setImgFailed] = useState(false);
-  const color = AVATAR_COLORS[name] || '#7C3AED';
+  const color = AVATAR_COLORS[name] || "#7C3AED";
   if (isBot) {
     return (
       <div className="relative shrink-0" style={{ width: size, height: size }}>
@@ -179,9 +202,12 @@ function SlackAvatar({ name, size = 36, isBot }: { name: string; size?: number; 
   );
 }
 
-function SlackSidebar({ mode, activeChannel }: { mode: 'channel' | 'dm'; activeChannel?: string }) {
+function SlackSidebar({ mode, activeChannel }: { mode: "channel" | "dm"; activeChannel?: string }) {
   return (
-    <div className="hidden lg:flex flex-col w-[220px] text-white shrink-0" style={{ backgroundColor: SLACK_SIDEBAR }}>
+    <div
+      className="hidden lg:flex flex-col w-[220px] text-white shrink-0"
+      style={{ backgroundColor: SLACK_SIDEBAR }}
+    >
       {/* Workspace header */}
       <div className="px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -213,20 +239,25 @@ function SlackSidebar({ mode, activeChannel }: { mode: 'channel' | 'dm'; activeC
             <ChevronDown size={12} className="text-white/30" />
           </div>
           {[
-            { name: 'General', id: 'general' },
-            { name: 'Product Roadmap', id: 'roadmap' },
-            { name: 'Engineering', id: 'engineering' },
-            { name: 'Random', id: 'random' },
+            { name: "General", id: "general" },
+            { name: "Product Roadmap", id: "roadmap" },
+            { name: "Engineering", id: "engineering" },
+            { name: "Random", id: "random" },
           ].map((ch) => (
             <div
               key={ch.id}
               className="flex items-center gap-1.5 px-2 py-[5px] rounded-md text-[13px] cursor-pointer"
               style={{
-                backgroundColor: (mode === 'channel' && activeChannel === ch.id) ? SLACK_ACTIVE : 'transparent',
-                color: (mode === 'channel' && activeChannel === ch.id) ? '#fff' : 'rgba(255,255,255,0.65)',
+                backgroundColor:
+                  mode === "channel" && activeChannel === ch.id ? SLACK_ACTIVE : "transparent",
+                color:
+                  mode === "channel" && activeChannel === ch.id ? "#fff" : "rgba(255,255,255,0.65)",
               }}
             >
-              <Hash size={14} style={{ opacity: (mode === 'channel' && activeChannel === ch.id) ? 0.7 : 0.4 }} />
+              <Hash
+                size={14}
+                style={{ opacity: mode === "channel" && activeChannel === ch.id ? 0.7 : 0.4 }}
+              />
               <span>{ch.name}</span>
             </div>
           ))}
@@ -247,9 +278,9 @@ function SlackSidebar({ mode, activeChannel }: { mode: 'channel' | 'dm'; activeC
               </div>
             </div>
             {[
-              { name: 'Alex', online: true },
-              { name: 'Jordan', online: false },
-              { name: 'You', online: true },
+              { name: "Alex", online: true },
+              { name: "Jordan", online: false },
+              { name: "You", online: true },
             ].map((u) => (
               <div
                 key={u.name}
@@ -261,8 +292,8 @@ function SlackSidebar({ mode, activeChannel }: { mode: 'channel' | 'dm'; activeC
                     className="absolute -bottom-0.5 -right-0.5 w-[6px] h-[6px] rounded-full border-[1.5px]"
                     style={{
                       borderColor: SLACK_SIDEBAR,
-                      backgroundColor: u.online ? '#2BAC76' : 'transparent',
-                      ...(u.online ? {} : { border: `1.5px solid rgba(255,255,255,0.3)` }),
+                      backgroundColor: u.online ? "#2BAC76" : "transparent",
+                      ...(u.online ? {} : { border: "1.5px solid rgba(255,255,255,0.3)" }),
                     }}
                   />
                 </div>
@@ -279,16 +310,16 @@ function SlackSidebar({ mode, activeChannel }: { mode: 'channel' | 'dm'; activeC
             <ChevronDown size={12} className="text-white/30" />
           </div>
           {[
-            { name: 'nexu', isBot: true, online: true },
-            { name: 'Alex', online: true },
-            { name: 'Jordan', online: false },
+            { name: "nexu", isBot: true, online: true },
+            { name: "Alex", online: true },
+            { name: "Jordan", online: false },
           ].map((u) => (
             <div
               key={u.name}
               className="flex items-center gap-2 px-2 py-[5px] rounded-md text-[13px] cursor-pointer"
               style={{
-                backgroundColor: (mode === 'dm' && u.name === 'nexu') ? SLACK_ACTIVE : 'transparent',
-                color: (mode === 'dm' && u.name === 'nexu') ? '#fff' : 'rgba(255,255,255,0.65)',
+                backgroundColor: mode === "dm" && u.name === "nexu" ? SLACK_ACTIVE : "transparent",
+                color: mode === "dm" && u.name === "nexu" ? "#fff" : "rgba(255,255,255,0.65)",
               }}
             >
               <div className="relative">
@@ -297,14 +328,16 @@ function SlackSidebar({ mode, activeChannel }: { mode: 'channel' | 'dm'; activeC
                   className="absolute -bottom-0.5 -right-0.5 w-[8px] h-[8px] rounded-full border-[1.5px]"
                   style={{
                     borderColor: SLACK_SIDEBAR,
-                    backgroundColor: u.online ? '#2BAC76' : 'transparent',
-                    ...(u.online ? {} : { border: `1.5px solid rgba(255,255,255,0.3)` }),
+                    backgroundColor: u.online ? "#2BAC76" : "transparent",
+                    ...(u.online ? {} : { border: "1.5px solid rgba(255,255,255,0.3)" }),
                   }}
                 />
               </div>
               <span>{u.name}</span>
               {u.isBot && (
-                <span className="text-[9px] px-1 py-0.5 rounded bg-white/10 text-white/50 font-medium leading-none">APP</span>
+                <span className="text-[9px] px-1 py-0.5 rounded bg-white/10 text-white/50 font-medium leading-none">
+                  APP
+                </span>
               )}
             </div>
           ))}
@@ -320,38 +353,38 @@ function SlackSidebar({ mode, activeChannel }: { mode: 'channel' | 'dm'; activeC
 
 function GroupChatStep({ onClaim }: { onClaim: () => void }) {
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, typing]);
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  });
 
   const handleSend = useCallback(() => {
     if (!input.trim()) return;
     const userMsg: ChatMessage = {
       id: `user-${Date.now()}`,
-      role: 'user',
-      name: 'You',
+      role: "user",
+      name: "You",
       content: input.trim(),
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      avatar: '🧑',
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      avatar: "🧑",
     };
     setMessages((prev) => [...prev, userMsg]);
-    setInput('');
+    setInput("");
     setTyping(true);
 
     setTimeout(() => {
       setTyping(false);
       const botReply: ChatMessage = {
         id: `bot-${Date.now()}`,
-        role: 'bot',
-        name: 'nexu',
+        role: "bot",
+        name: "nexu",
         content: generateBotReply(input.trim()),
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        avatar: '🦞',
+        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        avatar: "🦞",
         showCTA: !hasInteracted,
       };
       setMessages((prev) => [...prev, botReply]);
@@ -371,9 +404,14 @@ function GroupChatStep({ onClaim }: { onClaim: () => void }) {
             <Hash size={16} className="text-[#1d1c1d]/60" />
             <span className="font-[900] text-[15px] text-[#1d1c1d]">General</span>
           </div>
-          <Star size={15} className="hidden sm:block text-[#1d1c1d]/30 ml-1 cursor-pointer hover:text-[#1d1c1d]/60" />
+          <Star
+            size={15}
+            className="hidden sm:block text-[#1d1c1d]/30 ml-1 cursor-pointer hover:text-[#1d1c1d]/60"
+          />
           <div className="hidden sm:block h-4 w-px bg-[#e8e8e8] mx-1" />
-          <span className="hidden sm:block text-[13px] text-[#1d1c1d]/50 truncate">nexu Community — General channel</span>
+          <span className="hidden sm:block text-[13px] text-[#1d1c1d]/50 truncate">
+            nexu Community — General channel
+          </span>
           <div className="ml-auto flex items-center gap-3">
             <div className="flex items-center gap-1 text-[13px] text-[#1d1c1d]/50 cursor-pointer hover:text-[#1d1c1d]/70">
               <Users size={15} />
@@ -387,12 +425,12 @@ function GroupChatStep({ onClaim }: { onClaim: () => void }) {
           {messages.map((msg, idx) => {
             const prevMsg = idx > 0 ? messages[idx - 1] : null;
             const sameAuthor = prevMsg && prevMsg.name === msg.name;
-            const isBot = msg.role === 'bot';
+            const isBot = msg.role === "bot";
 
             return (
               <div
                 key={msg.id}
-                className={`group relative flex gap-2 px-3 sm:px-5 -mx-3 sm:-mx-5 py-0.5 hover:bg-[#f8f8f8] ${!sameAuthor ? 'mt-4 pt-1' : ''}`}
+                className={`group relative flex gap-2 px-3 sm:px-5 -mx-3 sm:-mx-5 py-0.5 hover:bg-[#f8f8f8] ${!sameAuthor ? "mt-4 pt-1" : ""}`}
               >
                 {/* Time on hover */}
                 <div className="hidden sm:block absolute left-0 top-1/2 -translate-y-1/2 w-[52px] text-right pr-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -401,19 +439,21 @@ function GroupChatStep({ onClaim }: { onClaim: () => void }) {
 
                 {/* Avatar or spacer */}
                 <div className="w-9 shrink-0">
-                  {!sameAuthor && (
-                    <SlackAvatar name={msg.name} size={36} isBot={isBot} />
-                  )}
+                  {!sameAuthor && <SlackAvatar name={msg.name} size={36} isBot={isBot} />}
                 </div>
 
                 <div className="min-w-0 flex-1">
                   {!sameAuthor && (
                     <div className="flex items-baseline gap-2 mb-0.5">
-                      <span className={`text-[15px] font-[900] cursor-pointer hover:underline ${isBot ? 'text-[#1264a3]' : 'text-[#1d1c1d]'}`}>
+                      <span
+                        className={`text-[15px] font-[900] cursor-pointer hover:underline ${isBot ? "text-[#1264a3]" : "text-[#1d1c1d]"}`}
+                      >
                         {msg.name}
                       </span>
                       {isBot && (
-                        <span className="text-[10px] px-1 py-0.5 rounded bg-[#ecdeec] text-[#4a154b] font-bold leading-none">APP</span>
+                        <span className="text-[10px] px-1 py-0.5 rounded bg-[#ecdeec] text-[#4a154b] font-bold leading-none">
+                          APP
+                        </span>
                       )}
                       <span className="text-[12px] text-[#616061]">{msg.time}</span>
                     </div>
@@ -426,14 +466,15 @@ function GroupChatStep({ onClaim }: { onClaim: () => void }) {
                       <div className="flex flex-col sm:flex-row items-start gap-3">
                         <SlackIcon size={18} />
                         <div className="flex-1 min-w-0">
-                            <>
-                              <div className="text-[14px] font-[700] text-[#1d1c1d]">
-                                Add nexu to your Slack workspace
-                              </div>
-                              <div className="text-[13px] text-[#616061] mt-0.5">
-                                One click to connect. You and your team can use nexu directly in Slack.
-                              </div>
-                            </>
+                          <>
+                            <div className="text-[14px] font-[700] text-[#1d1c1d]">
+                              Add nexu to your Slack workspace
+                            </div>
+                            <div className="text-[13px] text-[#616061] mt-0.5">
+                              One click to connect. You and your team can use nexu directly in
+                              Slack.
+                            </div>
+                          </>
                         </div>
                         <Button
                           onClick={onClaim}
@@ -456,9 +497,18 @@ function GroupChatStep({ onClaim }: { onClaim: () => void }) {
               <div>
                 <span className="text-[15px] font-[900] text-[#1264a3]">nexu</span>
                 <div className="mt-1 flex gap-1.5 items-center h-5">
-                  <span className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <span
+                    className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  />
+                  <span
+                    className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  />
+                  <span
+                    className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  />
                 </div>
               </div>
             </div>
@@ -474,27 +524,42 @@ function GroupChatStep({ onClaim }: { onClaim: () => void }) {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 placeholder="Message #general"
                 className="flex-1 bg-transparent text-[15px] text-[#1d1c1d] placeholder:text-[#868686] focus:outline-none"
               />
             </div>
             <div className="flex items-center justify-between px-2 py-1.5 border-t border-[#e8e8e8]">
               <div className="flex items-center gap-0.5">
-                <button className="hidden sm:inline-flex p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors">
+                <button
+                  type="button"
+                  className="hidden sm:inline-flex p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors"
+                >
                   <Bold size={15} />
                 </button>
-                <button className="hidden sm:inline-flex p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors">
+                <button
+                  type="button"
+                  className="hidden sm:inline-flex p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors"
+                >
                   <Italic size={15} />
                 </button>
                 <div className="hidden sm:block w-px h-4 bg-[#e8e8e8] mx-1" />
-                <button className="p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors">
+                <button
+                  type="button"
+                  className="p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors"
+                >
                   <Paperclip size={15} />
                 </button>
-                <button className="hidden sm:inline-flex p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors">
+                <button
+                  type="button"
+                  className="hidden sm:inline-flex p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors"
+                >
                   <AtSign size={15} />
                 </button>
-                <button className="p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors">
+                <button
+                  type="button"
+                  className="p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors"
+                >
                   <Smile size={15} />
                 </button>
               </div>
@@ -503,7 +568,9 @@ function GroupChatStep({ onClaim }: { onClaim: () => void }) {
                 disabled={!input.trim()}
                 size="icon"
                 className={`h-7 w-7 rounded ${
-                  input.trim() ? 'bg-[#007a5a] text-white hover:bg-[#148567]' : 'bg-[#dddddd] text-white'
+                  input.trim()
+                    ? "bg-[#007a5a] text-white hover:bg-[#148567]"
+                    : "bg-[#dddddd] text-white"
                 }`}
               >
                 <Send size={15} />
@@ -518,14 +585,19 @@ function GroupChatStep({ onClaim }: { onClaim: () => void }) {
 
 function generateBotReply(input: string): string {
   const lower = input.toLowerCase();
-  if (lower.includes('summarize') || lower.includes('summary')) {
-    return 'Quick summary of recent discussion:\n\n• **Product**: Mobile app April launch, on track\n• **Engineering**: New CI/CD pipeline deployed, 40% faster builds\n• **Design**: Brand v2 approved, rollout next week\n\nWant me to expand on anything?';
+  if (lower.includes("summarize") || lower.includes("summary")) {
+    return "Quick summary of recent discussion:\n\n• **Product**: Mobile app April launch, on track\n• **Engineering**: New CI/CD pipeline deployed, 40% faster builds\n• **Design**: Brand v2 approved, rollout next week\n\nWant me to expand on anything?";
   }
-  if (lower.includes('help') || lower.includes('draft') || lower.includes('write') || lower.includes('report')) {
-    return 'Sure! Here\'s a draft based on context:\n\n---\n**Weekly Report — Week 9**\n\nLaunched new onboarding flow this week, completion rate up 23%. Next week: focus on channel integration layer.\n\n---\n\nNeed tone or content changes?';
+  if (
+    lower.includes("help") ||
+    lower.includes("draft") ||
+    lower.includes("write") ||
+    lower.includes("report")
+  ) {
+    return "Sure! Here's a draft based on context:\n\n---\n**Weekly Report — Week 9**\n\nLaunched new onboarding flow this week, completion rate up 23%. Next week: focus on channel integration layer.\n\n---\n\nNeed tone or content changes?";
   }
-  if (lower.includes('code') || lower.includes('bug') || lower.includes('error')) {
-    return 'Sure! Share the code or error and I\'ll take a look.\n\nI can help with:\n• Code review and optimization\n• Bug diagnosis and fixes\n• Writing tests\n• Architecture advice';
+  if (lower.includes("code") || lower.includes("bug") || lower.includes("error")) {
+    return "Sure! Share the code or error and I'll take a look.\n\nI can help with:\n• Code review and optimization\n• Bug diagnosis and fixes\n• Writing tests\n• Architecture advice";
   }
   return 'Got it! I need a bit more context to help 😄\n\nTry something like:\n• "Summarize the recent discussion"\n• "Draft a weekly report"\n• "Help me debug this error"\n\nThe more specific, the better I can help!';
 }
@@ -539,16 +611,16 @@ function ClaimPageStep({
 }: {
   onAuthorize: () => void;
 }) {
-  const [mode, setMode] = useState<'login' | 'register'>('register');
+  const [mode, setMode] = useState<"login" | "register">("register");
   const [showEmailForm, setShowEmailForm] = useState(false);
-  const [loading, setLoading] = useState<'google' | 'email' | 'slack' | null>(null);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
+  const [loading, setLoading] = useState<"google" | "email" | "slack" | null>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [hovering, setHovering] = useState(false);
 
   const handleSlackAuth = () => {
-    setLoading('slack');
+    setLoading("slack");
     setTimeout(() => {
       setLoading(null);
       onAuthorize();
@@ -556,7 +628,7 @@ function ClaimPageStep({
   };
 
   const handleGoogleAuth = () => {
-    setLoading('google');
+    setLoading("google");
     setTimeout(() => {
       setLoading(null);
       onAuthorize();
@@ -565,11 +637,20 @@ function ClaimPageStep({
 
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setEmailError('');
-    if (!email.trim()) { setEmailError('Enter your email'); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setEmailError('Enter a valid email'); return; }
-    if (!password.trim() || password.length < 6) { setEmailError('Password must be at least 6 characters'); return; }
-    setLoading('email');
+    setEmailError("");
+    if (!email.trim()) {
+      setEmailError("Enter your email");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setEmailError("Enter a valid email");
+      return;
+    }
+    if (!password.trim() || password.length < 6) {
+      setEmailError("Password must be at least 6 characters");
+      return;
+    }
+    setLoading("email");
     setTimeout(() => {
       setLoading(null);
       onAuthorize();
@@ -584,8 +665,8 @@ function ClaimPageStep({
         className="absolute inset-0 opacity-[0.12] pointer-events-none"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)',
-          backgroundSize: '56px 56px',
+            "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
         }}
       />
 
@@ -599,7 +680,6 @@ function ClaimPageStep({
       {/* Main */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-8">
         <div className="w-full max-w-[440px]">
-
           {/* Headline */}
           <div className="text-center mb-10">
             <h1 className="text-[30px] sm:text-[38px] font-bold text-text-primary leading-[1.12] tracking-tight mb-4">
@@ -608,27 +688,34 @@ function ClaimPageStep({
               <span className="text-accent">in IM, 24/7</span>
             </h1>
             <p className="text-[14px] text-text-tertiary leading-relaxed max-w-[340px] mx-auto">
-              One click to connect Slack. nexu auto-configures everything — tools, skills, and personal memory.
+              One click to connect Slack. nexu auto-configures everything — tools, skills, and
+              personal memory.
             </p>
           </div>
 
           {/* Slack — first option */}
           <button
+            type="button"
             onClick={handleSlackAuth}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
             disabled={loading !== null}
             className="group relative w-full flex items-center justify-center gap-3 py-4 rounded-lg text-[16px] font-semibold bg-[#4A154B] text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed overflow-hidden"
           >
-            <div className={`absolute inset-0 bg-gradient-to-r from-[#E01E5A]/20 via-[#36C5F0]/20 to-[#2EB67D]/20 transition-opacity duration-500 ${hovering ? 'opacity-100' : 'opacity-0'}`} />
+            <div
+              className={`absolute inset-0 bg-gradient-to-r from-[#E01E5A]/20 via-[#36C5F0]/20 to-[#2EB67D]/20 transition-opacity duration-500 ${hovering ? "opacity-100" : "opacity-0"}`}
+            />
             <div className="relative flex items-center gap-3">
-              {loading === 'slack' ? (
+              {loading === "slack" ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
                   <SlackIcon size={22} />
                   Continue with Slack
-                  <ArrowRight size={16} className={`transition-transform duration-200 ${hovering ? 'translate-x-0.5' : ''}`} />
+                  <ArrowRight
+                    size={16}
+                    className={`transition-transform duration-200 ${hovering ? "translate-x-0.5" : ""}`}
+                  />
                 </>
               )}
             </div>
@@ -641,15 +728,33 @@ function ClaimPageStep({
             variant="outline"
             className="mt-4 w-full py-3.5 text-[15px] font-medium"
           >
-            {loading === 'google' ? (
+            {loading === "google" ? (
               <div className="w-4 h-4 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
             ) : (
               <>
-                <svg width="18" height="18" viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
-                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  />
                 </svg>
                 Continue with Google
               </>
@@ -671,7 +776,10 @@ function ClaimPageStep({
                   <Input
                     type="email"
                     value={email}
-                    onChange={(e) => { setEmail(e.target.value); setEmailError(''); }}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setEmailError("");
+                    }}
                     placeholder="you@example.com"
                     className="h-10 px-3.5 text-[14px]"
                   />
@@ -681,37 +789,45 @@ function ClaimPageStep({
                   <Input
                     type="password"
                     value={password}
-                    onChange={(e) => { setPassword(e.target.value); setEmailError(''); }}
-                    placeholder={mode === 'register' ? 'At least 6 characters' : 'Enter your password'}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setEmailError("");
+                    }}
+                    placeholder={
+                      mode === "register" ? "At least 6 characters" : "Enter your password"
+                    }
                     className="h-10 px-3.5 text-[14px]"
                   />
                 </div>
-                {emailError && <p className="text-[12px] text-[var(--color-danger)]">{emailError}</p>}
+                {emailError && (
+                  <p className="text-[12px] text-[var(--color-danger)]">{emailError}</p>
+                )}
                 <Button
                   type="submit"
                   disabled={loading !== null}
                   variant="outline"
                   className="w-full py-3 text-[14px] font-medium"
                 >
-                  {loading === 'email' ? (
+                  {loading === "email" ? (
                     <div className="w-4 h-4 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
                   ) : (
                     <>
                       <Mail size={16} />
-                      {mode === 'register' ? 'Sign up with email' : 'Log in with email'}
+                      {mode === "register" ? "Sign up with email" : "Log in with email"}
                     </>
                   )}
                 </Button>
               </form>
               <div className="flex items-center justify-center gap-2 mt-4">
                 <span className="text-[13px] text-text-muted">
-                  {mode === 'register' ? 'Already have an account?' : "Don't have an account?"}
+                  {mode === "register" ? "Already have an account?" : "Don't have an account?"}
                 </span>
                 <button
-                  onClick={() => setMode(mode === 'register' ? 'login' : 'register')}
+                  type="button"
+                  onClick={() => setMode(mode === "register" ? "login" : "register")}
                   className="text-[13px] text-accent font-medium hover:underline underline-offset-2"
                 >
-                  {mode === 'register' ? 'Log in' : 'Sign up'}
+                  {mode === "register" ? "Log in" : "Sign up"}
                 </button>
               </div>
               <Button
@@ -730,17 +846,18 @@ function ClaimPageStep({
                 className="w-full py-3 text-[14px] font-medium"
               >
                 <Mail size={16} />
-                {mode === 'register' ? 'Sign up with email' : 'Log in with email'}
+                {mode === "register" ? "Sign up with email" : "Log in with email"}
               </Button>
               <div className="flex items-center justify-center gap-2 mt-4">
                 <span className="text-[13px] text-text-muted">
-                  {mode === 'register' ? 'Already have an account?' : "Don't have an account?"}
+                  {mode === "register" ? "Already have an account?" : "Don't have an account?"}
                 </span>
                 <button
-                  onClick={() => setMode(mode === 'register' ? 'login' : 'register')}
+                  type="button"
+                  onClick={() => setMode(mode === "register" ? "login" : "register")}
                   className="text-[13px] text-accent font-medium hover:underline underline-offset-2"
                 >
-                  {mode === 'register' ? 'Log in' : 'Sign up'}
+                  {mode === "register" ? "Log in" : "Sign up"}
                 </button>
               </div>
             </div>
@@ -750,14 +867,14 @@ function ClaimPageStep({
           <div className="flex items-center justify-center gap-3 mt-8">
             <div className="flex -space-x-2">
               {[
-                'https://api.dicebear.com/7.x/adventurer/svg?seed=Felix&backgroundColor=b6e3f4',
-                'https://api.dicebear.com/7.x/adventurer/svg?seed=Aneka&backgroundColor=ffd5dc',
-                'https://api.dicebear.com/7.x/adventurer/svg?seed=Leo&backgroundColor=d1f4d9',
-                'https://api.dicebear.com/7.x/adventurer/svg?seed=Mia&backgroundColor=ffe8b6',
-                'https://api.dicebear.com/7.x/adventurer/svg?seed=Sam&backgroundColor=e0d4fc',
-              ].map((src, i) => (
+                "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix&backgroundColor=b6e3f4",
+                "https://api.dicebear.com/7.x/adventurer/svg?seed=Aneka&backgroundColor=ffd5dc",
+                "https://api.dicebear.com/7.x/adventurer/svg?seed=Leo&backgroundColor=d1f4d9",
+                "https://api.dicebear.com/7.x/adventurer/svg?seed=Mia&backgroundColor=ffe8b6",
+                "https://api.dicebear.com/7.x/adventurer/svg?seed=Sam&backgroundColor=e0d4fc",
+              ].map((src) => (
                 <img
-                  key={i}
+                  key={src}
                   src={src}
                   alt=""
                   className="w-7 h-7 rounded-full border-2 border-surface-0 bg-surface-2"
@@ -788,8 +905,8 @@ function ClaimPageStep({
 const INVITE_CELL_COUNT = 8; // 4 + dash + 4
 
 function InviteCodeStep({ onComplete }: { onComplete: () => void }) {
-  const [cells, setCells] = useState<string[]>(Array(INVITE_CELL_COUNT).fill(''));
-  const [error, setError] = useState('');
+  const [cells, setCells] = useState<string[]>(Array(INVITE_CELL_COUNT).fill(""));
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -798,84 +915,93 @@ function InviteCodeStep({ onComplete }: { onComplete: () => void }) {
   }, []);
 
   const handleCellChange = (index: number, value: string) => {
-    const char = value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(-1);
+    const char = value
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, "")
+      .slice(-1);
     const newCells = [...cells];
     newCells[index] = char;
     setCells(newCells);
-    setError('');
+    setError("");
     if (char && index < INVITE_CELL_COUNT - 1) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace') {
+    if (e.key === "Backspace") {
       if (!cells[index] && index > 0) {
         const newCells = [...cells];
-        newCells[index - 1] = '';
+        newCells[index - 1] = "";
         setCells(newCells);
         inputRefs.current[index - 1]?.focus();
       } else {
         const newCells = [...cells];
-        newCells[index] = '';
+        newCells[index] = "";
         setCells(newCells);
       }
-      setError('');
-    } else if (e.key === 'ArrowLeft' && index > 0) {
+      setError("");
+    } else if (e.key === "ArrowLeft" && index > 0) {
       inputRefs.current[index - 1]?.focus();
-    } else if (e.key === 'ArrowRight' && index < INVITE_CELL_COUNT - 1) {
+    } else if (e.key === "ArrowRight" && index < INVITE_CELL_COUNT - 1) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pasted = e.clipboardData.getData('text').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
-    const newCells = Array(INVITE_CELL_COUNT).fill('');
+    const pasted = e.clipboardData
+      .getData("text")
+      .trim()
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, "");
+    const newCells = Array(INVITE_CELL_COUNT).fill("");
     for (let i = 0; i < Math.min(pasted.length, INVITE_CELL_COUNT); i++) {
       newCells[i] = pasted[i];
     }
     setCells(newCells);
-    setError('');
+    setError("");
     const nextEmpty = newCells.findIndex((c: string) => !c);
     inputRefs.current[nextEmpty >= 0 ? nextEmpty : INVITE_CELL_COUNT - 1]?.focus();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const raw = cells.join('');
+    const raw = cells.join("");
     if (raw.length < INVITE_CELL_COUNT) {
-      setError('Please enter the complete invite code');
+      setError("Please enter the complete invite code");
       return;
     }
     setLoading(true);
-    setError('');
+    setError("");
     // Simulate verification, then advance
     setTimeout(() => {
       onComplete();
     }, 1200);
   };
 
-  const isFilled = cells.every((c: string) => c !== '');
+  const isFilled = cells.every((c: string) => c !== "");
 
   const cellInput = (index: number, cell: string) => (
     <input
       key={index}
-      ref={el => { inputRefs.current[index] = el; }}
+      ref={(el) => {
+        inputRefs.current[index] = el;
+      }}
       type="text"
       inputMode="text"
       maxLength={1}
       value={cell}
-      onChange={e => handleCellChange(index, e.target.value)}
-      onKeyDown={e => handleKeyDown(index, e)}
+      onChange={(e) => handleCellChange(index, e.target.value)}
+      onKeyDown={(e) => handleKeyDown(index, e)}
       onPaste={handlePaste}
-      onFocus={e => e.target.select()}
+      onFocus={(e) => e.target.select()}
       className={`w-10 h-12 sm:w-12 sm:h-14 text-center text-[18px] sm:text-[20px] font-mono font-bold rounded-lg border-2 bg-surface-1 text-text-primary focus:outline-none transition-all ${
         cell
-          ? 'border-accent/40 bg-accent/[0.04]'
+          ? "border-accent/40 bg-accent/[0.04]"
           : error
-            ? 'border-red-500/40'
-            : 'border-border hover:border-border-hover'
+            ? "border-red-500/40"
+            : "border-border hover:border-border-hover"
       } focus:border-[var(--color-brand-primary)]/30 focus:ring-2 focus:ring-[var(--color-brand-primary)]/20`}
     />
   );
@@ -888,8 +1014,8 @@ function InviteCodeStep({ onComplete }: { onComplete: () => void }) {
         className="absolute inset-0 opacity-[0.12] pointer-events-none"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)',
-          backgroundSize: '56px 56px',
+            "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
         }}
       />
 
@@ -911,15 +1037,14 @@ function InviteCodeStep({ onComplete }: { onComplete: () => void }) {
               <span className="text-accent">in IM, 24/7</span>
             </h1>
             <p className="text-[14px] text-text-tertiary leading-relaxed max-w-[340px] mx-auto">
-              Enter your invite code to activate nexu — your always-on AI coworker with memory, tools, and skills.
+              Enter your invite code to activate nexu — your always-on AI coworker with memory,
+              tools, and skills.
             </p>
           </div>
 
           {/* Cell-based invite code input */}
           <form onSubmit={handleSubmit}>
-            <Label className="text-[13px] text-text-secondary mb-3 text-center">
-              Invite code
-            </Label>
+            <Label className="text-[13px] text-text-secondary mb-3 text-center">Invite code</Label>
 
             <div className="flex items-center justify-center gap-1.5 sm:gap-2">
               {cells.slice(0, 4).map((cell, i) => cellInput(i, cell))}
@@ -939,8 +1064,8 @@ function InviteCodeStep({ onComplete }: { onComplete: () => void }) {
               disabled={loading || !isFilled}
               className={`mt-6 w-full py-3.5 rounded-xl text-[15px] font-semibold ${
                 isFilled && !loading
-                  ? 'bg-[#111111] hover:bg-[#222222] text-white'
-                  : 'bg-surface-2 text-text-muted'
+                  ? "bg-[#111111] hover:bg-[#222222] text-white"
+                  : "bg-surface-2 text-text-muted"
               }`}
             >
               {loading ? (
@@ -972,7 +1097,10 @@ function InviteCodeStep({ onComplete }: { onComplete: () => void }) {
           {/* Already activated */}
           <div className="flex items-center justify-center gap-2 mt-4">
             <span className="text-[13px] text-text-muted">Already activated?</span>
-            <button className="text-[13px] text-accent font-medium hover:underline underline-offset-2">
+            <button
+              type="button"
+              className="text-[13px] text-accent font-medium hover:underline underline-offset-2"
+            >
               Sign in
             </button>
           </div>
@@ -981,13 +1109,18 @@ function InviteCodeStep({ onComplete }: { onComplete: () => void }) {
           <div className="flex items-center justify-center gap-3 mt-8">
             <div className="flex -space-x-2">
               {[
-                'https://api.dicebear.com/7.x/adventurer/svg?seed=Felix&backgroundColor=b6e3f4',
-                'https://api.dicebear.com/7.x/adventurer/svg?seed=Aneka&backgroundColor=ffd5dc',
-                'https://api.dicebear.com/7.x/adventurer/svg?seed=Leo&backgroundColor=d1f4d9',
-                'https://api.dicebear.com/7.x/adventurer/svg?seed=Mia&backgroundColor=ffe8b6',
-                'https://api.dicebear.com/7.x/adventurer/svg?seed=Sam&backgroundColor=e0d4fc',
-              ].map((src, i) => (
-                <img key={i} src={src} alt="" className="w-7 h-7 rounded-full border-2 border-surface-0 bg-surface-2" />
+                "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix&backgroundColor=b6e3f4",
+                "https://api.dicebear.com/7.x/adventurer/svg?seed=Aneka&backgroundColor=ffd5dc",
+                "https://api.dicebear.com/7.x/adventurer/svg?seed=Leo&backgroundColor=d1f4d9",
+                "https://api.dicebear.com/7.x/adventurer/svg?seed=Mia&backgroundColor=ffe8b6",
+                "https://api.dicebear.com/7.x/adventurer/svg?seed=Sam&backgroundColor=e0d4fc",
+              ].map((src) => (
+                <img
+                  key={src}
+                  src={src}
+                  alt=""
+                  className="w-7 h-7 rounded-full border-2 border-surface-0 bg-surface-2"
+                />
               ))}
             </div>
             <span className="text-[12px] text-text-muted">200+ teams in beta</span>
@@ -1018,44 +1151,68 @@ interface SetupStepDef {
 }
 
 const SETUP_STEPS: SetupStepDef[] = [
-  { id: 'install', label: 'Installing nexu Bot', detail: 'Adding bot to your Slack workspace', duration: 1200, icon: SlackIcon },
-  { id: 'tools', label: 'Authorizing tools', detail: 'Gmail, Calendar, Drive, Docs, Sheets', duration: 1500, icon: Settings },
-  { id: 'skills', label: 'Activating skills', detail: 'Enabling AI capabilities for your team', duration: 1000, icon: Sparkles },
-  { id: 'memory', label: 'Initializing memory', detail: 'Creating your personal memory space', duration: 800, icon: Brain },
+  {
+    id: "install",
+    label: "Installing nexu Bot",
+    detail: "Adding bot to your Slack workspace",
+    duration: 1200,
+    icon: SlackIcon,
+  },
+  {
+    id: "tools",
+    label: "Authorizing tools",
+    detail: "Gmail, Calendar, Drive, Docs, Sheets",
+    duration: 1500,
+    icon: Settings,
+  },
+  {
+    id: "skills",
+    label: "Activating skills",
+    detail: "Enabling AI capabilities for your team",
+    duration: 1000,
+    icon: Sparkles,
+  },
+  {
+    id: "memory",
+    label: "Initializing memory",
+    detail: "Creating your personal memory space",
+    duration: 800,
+    icon: Brain,
+  },
 ];
 
-type SetupPhase = 'connect' | 'installing' | 'done';
-type SetupStepStatus = 'pending' | 'running' | 'done';
+type SetupPhase = "connect" | "installing" | "done";
+type SetupStepStatus = "pending" | "running" | "done";
 
 function SetupStep({ onComplete }: { onComplete: () => void }) {
-  const [phase, setPhase] = useState<SetupPhase>('connect');
+  const [phase, setPhase] = useState<SetupPhase>("connect");
   const [hovering, setHovering] = useState(false);
-  const [stepStatuses, setStepStatuses] = useState<Record<string, SetupStepStatus>>(
-    () => Object.fromEntries(SETUP_STEPS.map(s => [s.id, 'pending']))
+  const [stepStatuses, setStepStatuses] = useState<Record<string, SetupStepStatus>>(() =>
+    Object.fromEntries(SETUP_STEPS.map((s) => [s.id, "pending"])),
   );
 
   const runSteps = useCallback(async () => {
     for (const s of SETUP_STEPS) {
-      setStepStatuses(prev => ({ ...prev, [s.id]: 'running' }));
-      await new Promise(resolve => setTimeout(resolve, s.duration));
-      setStepStatuses(prev => ({ ...prev, [s.id]: 'done' }));
+      setStepStatuses((prev) => ({ ...prev, [s.id]: "running" }));
+      await new Promise((resolve) => setTimeout(resolve, s.duration));
+      setStepStatuses((prev) => ({ ...prev, [s.id]: "done" }));
     }
-    setPhase('done');
+    setPhase("done");
   }, []);
 
   const handleAddToSlack = () => {
-    setPhase('installing');
+    setPhase("installing");
     setTimeout(runSteps, 400);
   };
 
   useEffect(() => {
-    if (phase === 'done') {
+    if (phase === "done") {
       const timer = setTimeout(onComplete, 1500);
       return () => clearTimeout(timer);
     }
   }, [phase, onComplete]);
 
-  const doneCount = SETUP_STEPS.filter(s => stepStatuses[s.id] === 'done').length;
+  const doneCount = SETUP_STEPS.filter((s) => stepStatuses[s.id] === "done").length;
   const progress = (doneCount / SETUP_STEPS.length) * 100;
 
   return (
@@ -1066,15 +1223,14 @@ function SetupStep({ onComplete }: { onComplete: () => void }) {
         className="absolute inset-0 opacity-[0.12] pointer-events-none"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)',
-          backgroundSize: '56px 56px',
+            "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
         }}
       />
 
       {/* Main */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-12">
-
-        {phase === 'connect' && (
+        {phase === "connect" && (
           <div className="w-full max-w-[480px]">
             <div className="flex-1 min-w-0 text-center">
               {/* Connection graphic */}
@@ -1088,7 +1244,11 @@ function SetupStep({ onComplete }: { onComplete: () => void }) {
                   <div className="w-5 h-px bg-border" />
                 </div>
                 <div className="w-12 h-12 rounded-[6px] bg-surface-1 border border-border-subtle flex items-center justify-center p-1.5">
-                  <img src="/brand/nexu logo-black1.svg" alt="nexu" className="h-full w-auto object-contain" />
+                  <img
+                    src="/brand/nexu logo-black1.svg"
+                    alt="nexu"
+                    className="h-full w-auto object-contain"
+                  />
                 </div>
               </div>
 
@@ -1096,30 +1256,39 @@ function SetupStep({ onComplete }: { onComplete: () => void }) {
                 Add nexu to your Slack
               </h1>
               <p className="text-[14px] text-text-tertiary leading-relaxed max-w-[420px] mx-auto mb-8">
-                Your AI coworker joins right where your team works. @ it in any channel — 1,000+ tools built-in, persistent memory, always learning.
+                Your AI coworker joins right where your team works. @ it in any channel — 1,000+
+                tools built-in, persistent memory, always learning.
               </p>
 
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mb-8 justify-center">
-                {['Deploy in 1 min', '1,000+ tools', 'Zero data loss', '24/7 always on'].map(tag => (
-                  <Badge key={tag} variant="outline" size="lg">
-                    {tag}
-                  </Badge>
-                ))}
+                {["Deploy in 1 min", "1,000+ tools", "Zero data loss", "24/7 always on"].map(
+                  (tag) => (
+                    <Badge key={tag} variant="outline" size="lg">
+                      {tag}
+                    </Badge>
+                  ),
+                )}
               </div>
 
               {/* CTA */}
               <button
+                type="button"
                 onClick={handleAddToSlack}
                 onMouseEnter={() => setHovering(true)}
                 onMouseLeave={() => setHovering(false)}
                 className="group relative inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-lg text-[15px] font-semibold bg-[#4A154B] text-white transition-all overflow-hidden shadow-md shadow-[#4A154B]/15 hover:shadow-lg hover:shadow-[#4A154B]/25"
               >
-                <div className={`absolute inset-0 bg-gradient-to-r from-[#E01E5A]/20 via-[#36C5F0]/20 to-[#2EB67D]/20 transition-opacity duration-500 ${hovering ? 'opacity-100' : 'opacity-0'}`} />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-r from-[#E01E5A]/20 via-[#36C5F0]/20 to-[#2EB67D]/20 transition-opacity duration-500 ${hovering ? "opacity-100" : "opacity-0"}`}
+                />
                 <div className="relative flex items-center gap-3">
                   <SlackIcon size={20} />
                   Add to Slack
-                  <ArrowRight size={15} className={`transition-transform duration-200 ${hovering ? 'translate-x-0.5' : ''}`} />
+                  <ArrowRight
+                    size={15}
+                    className={`transition-transform duration-200 ${hovering ? "translate-x-0.5" : ""}`}
+                  />
                 </div>
               </button>
 
@@ -1130,7 +1299,7 @@ function SetupStep({ onComplete }: { onComplete: () => void }) {
           </div>
         )}
 
-        {(phase === 'installing' || phase === 'done') && (
+        {(phase === "installing" || phase === "done") && (
           <div className="w-full max-w-[520px]">
             {/* Animated connection graphic */}
             <div className="flex justify-center mb-8">
@@ -1146,37 +1315,43 @@ function SetupStep({ onComplete }: { onComplete: () => void }) {
                   <motion.div
                     className="w-8 h-0.5 bg-gradient-to-r from-border to-accent/50"
                     animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
+                    transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                   />
                   <motion.div
                     className="w-3 h-3 rounded-full bg-accent"
                     animate={{ scale: [1, 1.2, 1], opacity: [0.8, 1, 0.8] }}
-                    transition={{ duration: 1.2, repeat: Infinity }}
+                    transition={{ duration: 1.2, repeat: Number.POSITIVE_INFINITY }}
                   />
                   <motion.div
                     className="w-8 h-0.5 bg-gradient-to-r from-accent/50 to-border"
                     animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
+                    transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY, delay: 0.3 }}
                   />
                 </div>
                 <div className="w-14 h-14 rounded-[6px] bg-surface-1 border border-border-subtle flex items-center justify-center p-2">
-                  <img src="/brand/nexu logo-black1.svg" alt="nexu" className="h-full w-auto object-contain" />
+                  <img
+                    src="/brand/nexu logo-black1.svg"
+                    alt="nexu"
+                    className="h-full w-auto object-contain"
+                  />
                 </div>
               </motion.div>
             </div>
 
             <div className="text-center">
               <h1 className="text-[28px] sm:text-[34px] font-bold text-text-primary leading-[1.15] tracking-tight mb-3">
-                {phase === 'done' ? (
-                  <>nexu is in your Slack. <span className="text-accent">Let&apos;s go.</span></>
+                {phase === "done" ? (
+                  <>
+                    nexu is in your Slack. <span className="text-accent">Let&apos;s go.</span>
+                  </>
                 ) : (
-                  'Deploying your AI coworker...'
+                  "Deploying your AI coworker..."
                 )}
               </h1>
               <p className="text-[14px] text-text-tertiary leading-relaxed max-w-[420px] mx-auto mb-8">
-                {phase === 'done'
-                  ? '1,000+ tools activated, memory initialized. @ nexu in any channel — or explore your workspace first.'
-                  : 'Connecting Slack, activating 1,000+ tools, and initializing persistent memory. This only takes a few seconds.'}
+                {phase === "done"
+                  ? "1,000+ tools activated, memory initialized. @ nexu in any channel — or explore your workspace first."
+                  : "Connecting Slack, activating 1,000+ tools, and initializing persistent memory. This only takes a few seconds."}
               </p>
 
               {/* Progress bar */}
@@ -1186,12 +1361,16 @@ function SetupStep({ onComplete }: { onComplete: () => void }) {
                     className="h-full rounded-full bg-gradient-to-r from-accent to-accent/80"
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
-                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
                   />
                 </div>
                 <div className="flex justify-between mt-2.5">
-                  <span className="text-[12px] font-medium text-text-secondary">{doneCount}/{SETUP_STEPS.length} steps</span>
-                  <span className="text-[12px] font-medium text-accent">{Math.round(progress)}%</span>
+                  <span className="text-[12px] font-medium text-text-secondary">
+                    {doneCount}/{SETUP_STEPS.length} steps
+                  </span>
+                  <span className="text-[12px] font-medium text-accent">
+                    {Math.round(progress)}%
+                  </span>
                 </div>
               </div>
             </div>
@@ -1209,34 +1388,44 @@ function SetupStep({ onComplete }: { onComplete: () => void }) {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.05 }}
                       className={`flex items-center gap-4 px-4 py-3.5 rounded-lg transition-all text-left ${
-                        status === 'running'
-                          ? 'bg-accent/8 border border-accent/12 shadow-sm shadow-accent/5'
-                          : status === 'done'
-                            ? 'bg-[var(--color-success-subtle)] border border-[rgba(52,110,88,0.15)]'
-                            : 'border border-border/50 bg-surface-1/50 opacity-60'
+                        status === "running"
+                          ? "bg-accent/8 border border-accent/12 shadow-sm shadow-accent/5"
+                          : status === "done"
+                            ? "bg-[var(--color-success-subtle)] border border-[rgba(52,110,88,0.15)]"
+                            : "border border-border/50 bg-surface-1/50 opacity-60"
                       }`}
                     >
                       <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 bg-surface-0 border border-border">
-                        {status === 'done' ? (
+                        {status === "done" ? (
                           <div className="w-6 h-6 rounded-full bg-[rgba(52,110,88,0.20)] flex items-center justify-center">
                             <Check size={14} className="text-[var(--color-success)]" />
                           </div>
-                        ) : status === 'running' ? (
+                        ) : status === "running" ? (
                           <Loader2 size={18} className="text-accent animate-spin" />
                         ) : (
-                          <span className="text-text-muted"><Icon size={18} /></span>
+                          <span className="text-text-muted">
+                            <Icon size={18} />
+                          </span>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className={`text-[14px] font-semibold ${
-                          status === 'done' ? 'text-[var(--color-success)]' : status === 'running' ? 'text-text-primary' : 'text-text-muted'
-                        }`}>
+                        <div
+                          className={`text-[14px] font-semibold ${
+                            status === "done"
+                              ? "text-[var(--color-success)]"
+                              : status === "running"
+                                ? "text-text-primary"
+                                : "text-text-muted"
+                          }`}
+                        >
                           {s.label}
                         </div>
                         <div className="text-[12px] text-text-muted mt-0.5">{s.detail}</div>
                       </div>
-                      {status === 'done' && (
-                        <Badge variant="success" className="shrink-0">Done</Badge>
+                      {status === "done" && (
+                        <Badge variant="success" className="shrink-0">
+                          Done
+                        </Badge>
                       )}
                     </motion.div>
                   );
@@ -1256,40 +1445,35 @@ function SetupStep({ onComplete }: { onComplete: () => void }) {
 
 function WorkspaceStep({ onChatInSlack }: { onChatInSlack: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoHover, setVideoHover] = useState(false);
   const [typingIdx, setTypingIdx] = useState(0);
-  const welcomeMessage = "Welcome! \u{1F389} We're so glad you're here. Your setup is complete \u2014 click \"Chat in Slack\" on the right to start chatting with nexu. We're here whenever you need us.";
+  const welcomeMessage =
+    "Welcome! \u{1F389} We're so glad you're here. Your setup is complete \u2014 click \"Chat in Slack\" on the right to start chatting with nexu. We're here whenever you need us.";
 
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
     v.loop = false;
     v.play().catch(() => {});
-    const onEnded = () => { v.pause(); };
-    v.addEventListener('ended', onEnded);
-    return () => v.removeEventListener('ended', onEnded);
+    const onEnded = () => {
+      v.pause();
+    };
+    v.addEventListener("ended", onEnded);
+    return () => v.removeEventListener("ended", onEnded);
   }, []);
 
   useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (videoHover) { v.loop = true; v.play().catch(() => {}); }
-    else { v.loop = false; v.pause(); }
-  }, [videoHover]);
-
-  useEffect(() => {
     if (typingIdx >= welcomeMessage.length) return;
-    const timer = setTimeout(() => setTypingIdx(i => i + 1), 35);
+    const timer = setTimeout(() => setTypingIdx((i) => i + 1), 35);
     return () => clearTimeout(timer);
-  }, [typingIdx, welcomeMessage.length]);
+  });
 
   const typingDone = typingIdx >= welcomeMessage.length;
 
   const stats = [
-    { label: 'Active channels', value: '3', icon: MessageSquare },
-    { label: 'Total messages', value: '156', icon: Activity },
-    { label: 'Deployments', value: '2', icon: Rocket },
-    { label: 'Skills enabled', value: '42', icon: Sparkles },
+    { label: "Active channels", value: "3", icon: MessageSquare },
+    { label: "Total messages", value: "156", icon: Activity },
+    { label: "Deployments", value: "2", icon: Rocket },
+    { label: "Skills enabled", value: "42", icon: Sparkles },
   ];
 
   return (
@@ -1297,31 +1481,45 @@ function WorkspaceStep({ onChatInSlack }: { onChatInSlack: () => void }) {
       {/* Sidebar */}
       <div className="hidden lg:flex flex-col w-48 shrink-0 border-r border-border bg-surface-1">
         <div className="flex items-center px-3 py-3 gap-2.5 border-b border-border">
-          <img src="/brand/nexu logo-black4.svg" alt="nexu" className="h-6 w-auto max-w-[8rem] shrink-0 object-contain" />
+          <img
+            src="/brand/nexu logo-black4.svg"
+            alt="nexu"
+            className="h-6 w-auto max-w-[8rem] shrink-0 object-contain"
+          />
         </div>
         <div className="flex-1 overflow-y-auto px-2 pt-3 space-y-0.5">
-          {([
-            { label: 'Home', icon: Home, active: true },
-            { label: 'Conversations', icon: MessageSquare, count: '3' },
-            { label: 'Deployments', icon: Rocket },
-            { label: 'Skills', icon: Sparkles, count: '42' },
-            { label: 'Settings', icon: Settings },
-          ] as const).map(item => (
+          {(
+            [
+              { label: "Home", icon: Home, active: true },
+              { label: "Conversations", icon: MessageSquare, count: "3" },
+              { label: "Deployments", icon: Rocket },
+              { label: "Skills", icon: Sparkles, count: "42" },
+              { label: "Settings", icon: Settings },
+            ] as const
+          ).map((item) => (
             <div
               key={item.label}
               className={`flex items-center gap-2.5 w-full rounded-lg px-3 py-2 text-[13px] font-medium transition-colors ${
-                'active' in item && item.active ? 'bg-accent/10 text-accent' : 'text-text-muted'
+                "active" in item && item.active ? "bg-accent/10 text-accent" : "text-text-muted"
               }`}
             >
               <item.icon size={16} />
               {item.label}
-              {'count' in item && <span className="ml-auto text-[10px] text-text-muted font-normal">{item.count}</span>}
+              {"count" in item && (
+                <span className="ml-auto text-[10px] text-text-muted font-normal">
+                  {item.count}
+                </span>
+              )}
             </div>
           ))}
         </div>
         <div className="border-t border-border px-2 py-2">
           <div className="flex gap-2.5 items-center px-2 py-2 rounded-lg">
-            <img src="/default-avatar.png" alt="" className="w-7 h-7 rounded-md object-cover ring-1 ring-accent/10 shrink-0" />
+            <img
+              src="/default-avatar.png"
+              alt=""
+              className="w-7 h-7 rounded-md object-cover ring-1 ring-accent/10 shrink-0"
+            />
             <div className="text-[12px] text-text-primary truncate font-medium">s@nexu.dev</div>
           </div>
         </div>
@@ -1333,11 +1531,7 @@ function WorkspaceStep({ onChatInSlack }: { onChatInSlack: () => void }) {
           {/* nexu intro card */}
           <div className="mb-8 rounded-lg overflow-hidden bg-surface-1 shadow-[var(--shadow-rest)]">
             <div className="relative">
-              <div
-                className="aspect-[16/9] max-h-48 bg-surface-2 cursor-default"
-                onMouseEnter={() => setVideoHover(true)}
-                onMouseLeave={() => setVideoHover(false)}
-              >
+              <div className="aspect-[16/9] max-h-48 bg-surface-2 cursor-default">
                 <video
                   ref={videoRef}
                   src="/nexu-alpha.mp4"
@@ -1348,7 +1542,7 @@ function WorkspaceStep({ onChatInSlack }: { onChatInSlack: () => void }) {
               </div>
               <h2
                 className="absolute right-40 sm:right-56 top-[55%] -translate-y-1/2 text-[40px] sm:text-[52px] font-normal tracking-tight text-text-primary"
-                style={{ fontFamily: 'var(--font-script)' }}
+                style={{ fontFamily: "var(--font-script)" }}
               >
                 nexu Alpha
               </h2>
@@ -1357,7 +1551,9 @@ function WorkspaceStep({ onChatInSlack }: { onChatInSlack: () => void }) {
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <p className="text-[12px] text-text-secondary font-medium leading-relaxed">
-                    {typingDone ? welcomeMessage : (
+                    {typingDone ? (
+                      welcomeMessage
+                    ) : (
                       <>
                         {welcomeMessage.slice(0, typingIdx)}
                         <span className="inline-block w-0.5 h-3.5 ml-0.5 bg-accent animate-pulse align-middle" />
@@ -1376,10 +1572,7 @@ function WorkspaceStep({ onChatInSlack }: { onChatInSlack: () => void }) {
                     </div>
                   )}
                 </div>
-                <Button
-                  onClick={onChatInSlack}
-                  className="shrink-0"
-                >
+                <Button onClick={onChatInSlack} className="shrink-0">
                   <SlackIcon size={14} />
                   Chat in Slack
                   <ArrowUpRight size={12} className="opacity-70" />
@@ -1390,17 +1583,16 @@ function WorkspaceStep({ onChatInSlack }: { onChatInSlack: () => void }) {
 
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-            {stats.map(s => (
-              <div
-                key={s.label}
-                className="card p-4 text-left"
-              >
+            {stats.map((s) => (
+              <div key={s.label} className="card p-4 text-left">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
                     <s.icon size={16} className="text-accent" strokeWidth={2} />
                   </div>
                 </div>
-                <div className="text-[24px] font-bold text-text-primary tracking-tight">{s.value}</div>
+                <div className="text-[24px] font-bold text-text-primary tracking-tight">
+                  {s.value}
+                </div>
                 <div className="text-[11px] text-text-muted mt-0.5">{s.label}</div>
               </div>
             ))}
@@ -1415,57 +1607,63 @@ function WorkspaceStep({ onChatInSlack }: { onChatInSlack: () => void }) {
 /*  Step 5: Slack Intro (nexu self-introduction DM)                    */
 /* ------------------------------------------------------------------ */
 
-const NEXU_INTRO_MESSAGE = '👋 Hi! I\'m nexu — your AI coworker.\n\nI\'ve joined your Slack workspace. Here\'s what I can help with:\n\n• 💬 **Communication** — Channel summaries, emails, meetings, translation\n• 📋 **Collaboration** — Meeting notes, weekly reports, todo creation\n• 📊 **Analysis** — Competitor analysis, metrics tracking, research synthesis\n• 🎨 **Creation** — Image generation, doc handling, slide decks\n• 🔍 **Search** — Web search, content summaries, knowledge organization\n• 🧠 **Memory** — Remembers your preferences, gets smarter over time\n\nJust @mention nexu and tell me what you need — no commands to memorize.\n\nTry: "Summarize the recent discussion" or "Draft a weekly report"';
+const NEXU_INTRO_MESSAGE =
+  '👋 Hi! I\'m nexu — your AI coworker.\n\nI\'ve joined your Slack workspace. Here\'s what I can help with:\n\n• 💬 **Communication** — Channel summaries, emails, meetings, translation\n• 📋 **Collaboration** — Meeting notes, weekly reports, todo creation\n• 📊 **Analysis** — Competitor analysis, metrics tracking, research synthesis\n• 🎨 **Creation** — Image generation, doc handling, slide decks\n• 🔍 **Search** — Web search, content summaries, knowledge organization\n• 🧠 **Memory** — Remembers your preferences, gets smarter over time\n\nJust @mention nexu and tell me what you need — no commands to memorize.\n\nTry: "Summarize the recent discussion" or "Draft a weekly report"';
 
 const SUGGESTION_BUBBLES = [
   {
-    label: 'Summarize #general discussion',
-    reply: 'Sure! Here\'s what\'s been discussed in #general…\n\n📋 **#general Summary (past 24h)**\n\n1. @Alex proposed a new product roadmap, team feedback was positive\n2. @Jordan shared competitor analysis, focusing on pricing strategy\n3. @Sam confirmed the all-hands meeting for next Wednesday\n\nWant me to expand on any topic?',
+    label: "Summarize #general discussion",
+    reply:
+      "Sure! Here's what's been discussed in #general…\n\n📋 **#general Summary (past 24h)**\n\n1. @Alex proposed a new product roadmap, team feedback was positive\n2. @Jordan shared competitor analysis, focusing on pricing strategy\n3. @Sam confirmed the all-hands meeting for next Wednesday\n\nWant me to expand on any topic?",
   },
   {
-    label: 'Draft this week\'s report',
-    reply: 'Done! Based on your Slack activity this week, here\'s a draft 👇\n\n📝 **Weekly Report**\n\n**Done**\n• Q1 product roadmap review complete\n• Launched user feedback collection\n• Fixed 3 customer-reported bugs\n\n**In progress**\n• New feature prototype (ETA next week)\n\n**Next week**\n• Kick off v2.0 requirements review\n• Prep investor monthly update\n\nNeed format or content changes?',
+    label: "Draft this week's report",
+    reply:
+      "Done! Based on your Slack activity this week, here's a draft 👇\n\n📝 **Weekly Report**\n\n**Done**\n• Q1 product roadmap review complete\n• Launched user feedback collection\n• Fixed 3 customer-reported bugs\n\n**In progress**\n• New feature prototype (ETA next week)\n\n**Next week**\n• Kick off v2.0 requirements review\n• Prep investor monthly update\n\nNeed format or content changes?",
   },
   {
-    label: 'Search latest AI Agent trends',
-    reply: 'Searching for the latest… 🔍\n\n**AI Agent Trends (March 2026)**\n\n1. **Multi-Agent collaboration** — Multi-agent workflows for complex tasks becoming mainstream\n2. **Enterprise AI coworkers** — Evolving from personal assistants to team-level roles in Slack and beyond\n3. **Tool-use explosion** — Single agents calling 1,000+ external tools for search, docs, analytics\n\nSources: TechCrunch, The Verge, a16z\n\nWant a full analysis report?',
+    label: "Search latest AI Agent trends",
+    reply:
+      "Searching for the latest… 🔍\n\n**AI Agent Trends (March 2026)**\n\n1. **Multi-Agent collaboration** — Multi-agent workflows for complex tasks becoming mainstream\n2. **Enterprise AI coworkers** — Evolving from personal assistants to team-level roles in Slack and beyond\n3. **Tool-use explosion** — Single agents calling 1,000+ external tools for search, docs, analytics\n\nSources: TechCrunch, The Verge, a16z\n\nWant a full analysis report?",
   },
 ];
 
 function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
-  const [phase, setPhase] = useState<'typing' | 'sent'>('typing');
+  const [phase, setPhase] = useState<"typing" | "sent">("typing");
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [replyPhase, setReplyPhase] = useState<'idle' | 'typing' | 'sent'>('idle');
+  const [replyPhase, setReplyPhase] = useState<"idle" | "typing" | "sent">("idle");
   // OAuth follow-up state
-  const [oauthPhase, setOauthPhase] = useState<'idle' | 'show-suggestion' | 'user-sent' | 'bot-typing' | 'bot-sent'>('idle');
+  const [oauthPhase, setOauthPhase] = useState<
+    "idle" | "show-suggestion" | "user-sent" | "bot-typing" | "bot-sent"
+  >("idle");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setPhase('sent'), 2000);
+    const timer = setTimeout(() => setPhase("sent"), 2000);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [phase, selectedIdx, replyPhase]);
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  });
 
   const handleSuggestion = (idx: number) => {
     setSelectedIdx(idx);
-    setReplyPhase('typing');
-    setTimeout(() => setReplyPhase('sent'), 2000);
+    setReplyPhase("typing");
+    setTimeout(() => setReplyPhase("sent"), 2000);
   };
 
   // Show OAuth suggestion after first reply is sent
   useEffect(() => {
-    if (replyPhase !== 'sent') return;
-    const timer = setTimeout(() => setOauthPhase('show-suggestion'), 1500);
+    if (replyPhase !== "sent") return;
+    const timer = setTimeout(() => setOauthPhase("show-suggestion"), 1500);
     return () => clearTimeout(timer);
   }, [replyPhase]);
 
   const handleOauthSuggestion = () => {
-    setOauthPhase('user-sent');
-    setTimeout(() => setOauthPhase('bot-typing'), 400);
-    setTimeout(() => setOauthPhase('bot-sent'), 2400);
+    setOauthPhase("user-sent");
+    setTimeout(() => setOauthPhase("bot-typing"), 400);
+    setTimeout(() => setOauthPhase("bot-sent"), 2400);
   };
 
   return (
@@ -1477,12 +1675,14 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
         <div className="flex items-center gap-2 px-3 sm:px-5 h-[49px] border-b border-[#e8e8e8] shrink-0">
           <SlackAvatar name="nexu" size={24} isBot />
           <span className="font-[900] text-[15px] text-[#1d1c1d]">nexu</span>
-          <span className="text-[10px] px-1 py-0.5 rounded bg-[#ecdeec] text-[#4a154b] font-bold leading-none">APP</span>
+          <span className="text-[10px] px-1 py-0.5 rounded bg-[#ecdeec] text-[#4a154b] font-bold leading-none">
+            APP
+          </span>
         </div>
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto px-3 sm:px-5 py-3 space-y-4">
-          {phase === 'typing' && (
+          {phase === "typing" && (
             <div className="flex gap-2 mt-2">
               <div className="w-9 shrink-0">
                 <SlackAvatar name="nexu" size={36} isBot />
@@ -1490,15 +1690,24 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
               <div>
                 <span className="text-[15px] font-[900] text-[#1264a3]">nexu</span>
                 <div className="mt-1 flex gap-1.5 items-center h-5">
-                  <span className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <span
+                    className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  />
+                  <span
+                    className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  />
+                  <span
+                    className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  />
                 </div>
               </div>
             </div>
           )}
 
-          {phase === 'sent' && (
+          {phase === "sent" && (
             <>
               {/* nexu intro message */}
               <div className="flex gap-2 mt-2">
@@ -1507,8 +1716,12 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline gap-2 mb-0.5">
-                    <span className="text-[15px] font-[900] text-[#1264a3] cursor-pointer hover:underline">nexu</span>
-                    <span className="text-[10px] px-1 py-0.5 rounded bg-[#ecdeec] text-[#4a154b] font-bold leading-none">APP</span>
+                    <span className="text-[15px] font-[900] text-[#1264a3] cursor-pointer hover:underline">
+                      nexu
+                    </span>
+                    <span className="text-[10px] px-1 py-0.5 rounded bg-[#ecdeec] text-[#4a154b] font-bold leading-none">
+                      APP
+                    </span>
                     <span className="text-[12px] text-[#616061]">Just now</span>
                   </div>
                   <div className="text-[15px] text-[#1d1c1d] leading-[1.46] whitespace-pre-line [&_strong]:font-[700]">
@@ -1528,7 +1741,8 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
                   <span className="text-[13px] text-[#616061] mb-0.5">Try these prompts:</span>
                   {SUGGESTION_BUBBLES.map((s, i) => (
                     <button
-                      key={i}
+                      key={s.label}
+                      type="button"
                       onClick={() => handleSuggestion(i)}
                       className="self-start px-3.5 py-2 rounded-lg border border-[#d1d1d1] text-[13px] text-[#1d1c1d] hover:bg-[#f8f8f8] hover:border-[#1264a3] hover:text-[#1264a3] transition-all cursor-pointer text-left"
                     >
@@ -1546,7 +1760,9 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
                   className="flex gap-2"
                 >
                   <div className="w-9 shrink-0">
-                    <div className="w-9 h-9 rounded-md bg-[#4a154b] flex items-center justify-center text-white text-[14px] font-bold">Y</div>
+                    <div className="w-9 h-9 rounded-md bg-[#4a154b] flex items-center justify-center text-white text-[14px] font-bold">
+                      Y
+                    </div>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 mb-0.5">
@@ -1561,7 +1777,7 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
               )}
 
               {/* nexu reply — typing */}
-              {replyPhase === 'typing' && (
+              {replyPhase === "typing" && (
                 <div className="flex gap-2">
                   <div className="w-9 shrink-0">
                     <SlackAvatar name="nexu" size={36} isBot />
@@ -1569,16 +1785,25 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
                   <div>
                     <span className="text-[15px] font-[900] text-[#1264a3]">nexu</span>
                     <div className="mt-1 flex gap-1.5 items-center h-5">
-                      <span className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <span
+                        className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce"
+                        style={{ animationDelay: "0ms" }}
+                      />
+                      <span
+                        className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce"
+                        style={{ animationDelay: "150ms" }}
+                      />
+                      <span
+                        className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce"
+                        style={{ animationDelay: "300ms" }}
+                      />
                     </div>
                   </div>
                 </div>
               )}
 
               {/* nexu reply — sent */}
-              {replyPhase === 'sent' && selectedIdx !== null && (
+              {replyPhase === "sent" && selectedIdx !== null && (
                 <motion.div
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -1589,8 +1814,12 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 mb-0.5">
-                      <span className="text-[15px] font-[900] text-[#1264a3] cursor-pointer hover:underline">nexu</span>
-                      <span className="text-[10px] px-1 py-0.5 rounded bg-[#ecdeec] text-[#4a154b] font-bold leading-none">APP</span>
+                      <span className="text-[15px] font-[900] text-[#1264a3] cursor-pointer hover:underline">
+                        nexu
+                      </span>
+                      <span className="text-[10px] px-1 py-0.5 rounded bg-[#ecdeec] text-[#4a154b] font-bold leading-none">
+                        APP
+                      </span>
                       <span className="text-[12px] text-[#616061]">Just now</span>
                     </div>
                     <div className="text-[15px] text-[#1d1c1d] leading-[1.46] whitespace-pre-line [&_strong]:font-[700]">
@@ -1601,7 +1830,7 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
               )}
 
               {/* OAuth follow-up: suggestion bubble */}
-              {oauthPhase === 'show-suggestion' && (
+              {oauthPhase === "show-suggestion" && (
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -1610,6 +1839,7 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
                 >
                   <span className="text-[13px] text-[#616061] mb-1.5 block">Keep trying:</span>
                   <button
+                    type="button"
                     onClick={handleOauthSuggestion}
                     className="self-start px-3.5 py-2 rounded-lg border border-[#d1d1d1] text-[13px] text-[#1d1c1d] hover:bg-[#f8f8f8] hover:border-[#1264a3] hover:text-[#1264a3] transition-all cursor-pointer text-left flex items-center gap-2"
                   >
@@ -1620,14 +1850,18 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
               )}
 
               {/* OAuth follow-up: user message */}
-              {(oauthPhase === 'user-sent' || oauthPhase === 'bot-typing' || oauthPhase === 'bot-sent') && (
+              {(oauthPhase === "user-sent" ||
+                oauthPhase === "bot-typing" ||
+                oauthPhase === "bot-sent") && (
                 <motion.div
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="flex gap-2"
                 >
                   <div className="w-9 shrink-0">
-                    <div className="w-9 h-9 rounded-md bg-[#4a154b] flex items-center justify-center text-white text-[14px] font-bold">Y</div>
+                    <div className="w-9 h-9 rounded-md bg-[#4a154b] flex items-center justify-center text-white text-[14px] font-bold">
+                      Y
+                    </div>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 mb-0.5">
@@ -1642,7 +1876,7 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
               )}
 
               {/* OAuth follow-up: bot typing */}
-              {oauthPhase === 'bot-typing' && (
+              {oauthPhase === "bot-typing" && (
                 <div className="flex gap-2">
                   <div className="w-9 shrink-0">
                     <SlackAvatar name="nexu" size={36} isBot />
@@ -1650,16 +1884,25 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
                   <div>
                     <span className="text-[15px] font-[900] text-[#1264a3]">nexu</span>
                     <div className="mt-1 flex gap-1.5 items-center h-5">
-                      <span className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <span
+                        className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce"
+                        style={{ animationDelay: "0ms" }}
+                      />
+                      <span
+                        className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce"
+                        style={{ animationDelay: "150ms" }}
+                      />
+                      <span
+                        className="w-[6px] h-[6px] rounded-full bg-[#868686] animate-bounce"
+                        style={{ animationDelay: "300ms" }}
+                      />
                     </div>
                   </div>
                 </div>
               )}
 
               {/* OAuth follow-up: bot reply with auth card */}
-              {oauthPhase === 'bot-sent' && (
+              {oauthPhase === "bot-sent" && (
                 <motion.div
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -1670,33 +1913,65 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 mb-0.5">
-                      <span className="text-[15px] font-[900] text-[#1264a3] cursor-pointer hover:underline">nexu</span>
-                      <span className="text-[10px] px-1 py-0.5 rounded bg-[#ecdeec] text-[#4a154b] font-bold leading-none">APP</span>
+                      <span className="text-[15px] font-[900] text-[#1264a3] cursor-pointer hover:underline">
+                        nexu
+                      </span>
+                      <span className="text-[10px] px-1 py-0.5 rounded bg-[#ecdeec] text-[#4a154b] font-bold leading-none">
+                        APP
+                      </span>
                       <span className="text-[12px] text-[#616061]">Just now</span>
                     </div>
                     <div className="text-[15px] text-[#1d1c1d] leading-[1.46] whitespace-pre-line">
-                      To complete this, I need access to your Google Calendar and Gmail. Please authorize first 🔐
+                      To complete this, I need access to your Google Calendar and Gmail. Please
+                      authorize first 🔐
                     </div>
                     {/* OAuth authorization card */}
                     <div className="mt-3 rounded-lg border border-[#d1d1d1] bg-white overflow-hidden max-w-[360px]">
                       <div className="p-4">
                         <div className="flex items-center gap-3 mb-3">
                           <div className="w-10 h-10 rounded-lg bg-[#4285F4]/10 flex items-center justify-center shrink-0">
-                            <svg width="20" height="20" viewBox="0 0 24 24">
-                              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
-                              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                              focusable="false"
+                            >
+                              <path
+                                fill="#4285F4"
+                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+                              />
+                              <path
+                                fill="#34A853"
+                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                              />
+                              <path
+                                fill="#FBBC05"
+                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                              />
+                              <path
+                                fill="#EA4335"
+                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                              />
                             </svg>
                           </div>
                           <div>
-                            <div className="text-[14px] font-[700] text-[#1d1c1d]">Google Calendar & Gmail</div>
+                            <div className="text-[14px] font-[700] text-[#1d1c1d]">
+                              Google Calendar & Gmail
+                            </div>
                             <div className="text-[12px] text-[#616061]">Google · OAuth 2.0</div>
                           </div>
                         </div>
                         <div className="space-y-1.5 mb-3">
-                          {['Read calendar events', 'Send email notifications', 'Scope limited to nexu tasks'].map((p, i) => (
-                            <div key={i} className="flex items-center gap-2 text-[12px] text-[#616061]">
+                          {[
+                            "Read calendar events",
+                            "Send email notifications",
+                            "Scope limited to nexu tasks",
+                          ].map((p) => (
+                            <div
+                              key={p}
+                              className="flex items-center gap-2 text-[12px] text-[#616061]"
+                            >
                               <Shield size={11} className="text-[#1264a3] shrink-0" />
                               {p}
                             </div>
@@ -1711,7 +1986,9 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
                         </Button>
                       </div>
                       <div className="px-4 py-2 bg-[#f8f8f8] border-t border-[#e8e8e8]">
-                        <p className="text-[11px] text-[#616061]">nexu uses OAuth 2.0 — your password is never stored.</p>
+                        <p className="text-[11px] text-[#616061]">
+                          nexu uses OAuth 2.0 — your password is never stored.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -1736,20 +2013,35 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
             </div>
             <div className="flex items-center justify-between px-2 py-1.5 border-t border-[#e8e8e8]">
               <div className="flex items-center gap-0.5">
-                <button className="hidden sm:inline-flex p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors">
+                <button
+                  type="button"
+                  className="hidden sm:inline-flex p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors"
+                >
                   <Bold size={15} />
                 </button>
-                <button className="hidden sm:inline-flex p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors">
+                <button
+                  type="button"
+                  className="hidden sm:inline-flex p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors"
+                >
                   <Italic size={15} />
                 </button>
                 <div className="hidden sm:block w-px h-4 bg-[#e8e8e8] mx-1" />
-                <button className="p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors">
+                <button
+                  type="button"
+                  className="p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors"
+                >
                   <Paperclip size={15} />
                 </button>
-                <button className="hidden sm:inline-flex p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors">
+                <button
+                  type="button"
+                  className="hidden sm:inline-flex p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors"
+                >
                   <AtSign size={15} />
                 </button>
-                <button className="p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors">
+                <button
+                  type="button"
+                  className="p-1.5 rounded hover:bg-[#f0f0f0] text-[#616061] transition-colors"
+                >
                   <Smile size={15} />
                 </button>
               </div>
@@ -1768,27 +2060,42 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
 /*  Step 6: OAuth Authorization                                        */
 /* ------------------------------------------------------------------ */
 
-type OAuthPhase = 'connecting' | 'authorizing' | 'success';
+type OAuthPhase = "connecting" | "authorizing" | "success";
 
 function GoogleIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24">
-      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
-      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        fill="#4285F4"
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+      />
     </svg>
   );
 }
 
 function OAuthDemoStep({ onReturnToSlack }: { onReturnToSlack: () => void }) {
-  const [phase, setPhase] = useState<OAuthPhase>('connecting');
+  const [phase, setPhase] = useState<OAuthPhase>("connecting");
   const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase('authorizing'), 1200);
-    const t2 = setTimeout(() => setPhase('success'), 3000);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    const t1 = setTimeout(() => setPhase("authorizing"), 1200);
+    const t2 = setTimeout(() => setPhase("success"), 3000);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, []);
 
   return (
@@ -1799,8 +2106,8 @@ function OAuthDemoStep({ onReturnToSlack }: { onReturnToSlack: () => void }) {
         className="absolute inset-0 opacity-[0.12] pointer-events-none"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)',
-          backgroundSize: '56px 56px',
+            "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
         }}
       />
 
@@ -1814,8 +2121,7 @@ function OAuthDemoStep({ onReturnToSlack }: { onReturnToSlack: () => void }) {
       {/* Main */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-8">
         <div className="w-full max-w-[440px]">
-
-          {phase !== 'success' ? (
+          {phase !== "success" ? (
             <>
               {/* Connection graphic */}
               <div className="flex items-center gap-3 mb-6 justify-center">
@@ -1828,7 +2134,11 @@ function OAuthDemoStep({ onReturnToSlack }: { onReturnToSlack: () => void }) {
                   <div className="w-5 h-px bg-border" />
                 </div>
                 <div className="w-12 h-12 rounded-[6px] bg-surface-1 border border-border-subtle flex items-center justify-center p-1.5">
-                  <img src="/brand/nexu logo-black1.svg" alt="nexu" className="h-full w-auto object-contain" />
+                  <img
+                    src="/brand/nexu logo-black1.svg"
+                    alt="nexu"
+                    className="h-full w-auto object-contain"
+                  />
                 </div>
               </div>
 
@@ -1838,24 +2148,29 @@ function OAuthDemoStep({ onReturnToSlack }: { onReturnToSlack: () => void }) {
                   Connect Google account
                 </h1>
                 <p className="text-[14px] text-text-tertiary leading-relaxed max-w-[340px] mx-auto">
-                  nexu is requesting access to your Google Calendar and Gmail to complete calendar queries and email tasks.
+                  nexu is requesting access to your Google Calendar and Gmail to complete calendar
+                  queries and email tasks.
                 </p>
               </div>
 
               {/* Permissions card */}
               <div className="rounded-[12px] border border-border-subtle bg-surface-1 p-5 mb-6">
-                <div className="text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-3">Requested permissions</div>
+                <div className="text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-3">
+                  Requested permissions
+                </div>
                 <div className="space-y-3">
                   {[
-                    { icon: Calendar, label: 'Read your Google Calendar' },
-                    { icon: Mail, label: 'Send emails via Gmail' },
-                    { icon: Shield, label: 'Scope limited to nexu tasks' },
-                  ].map((perm, i) => (
-                    <div key={i} className="flex items-center gap-3">
+                    { icon: Calendar, label: "Read your Google Calendar" },
+                    { icon: Mail, label: "Send emails via Gmail" },
+                    { icon: Shield, label: "Scope limited to nexu tasks" },
+                  ].map((perm) => (
+                    <div key={perm.label} className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg bg-accent/8 flex items-center justify-center shrink-0">
                         <perm.icon size={14} className="text-accent" />
                       </div>
-                      <span className="text-[13px] text-text-secondary leading-relaxed">{perm.label}</span>
+                      <span className="text-[13px] text-text-secondary leading-relaxed">
+                        {perm.label}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -1865,7 +2180,9 @@ function OAuthDemoStep({ onReturnToSlack }: { onReturnToSlack: () => void }) {
               <div className="flex items-center justify-center gap-3 py-3 mb-4">
                 <div className="w-4 h-4 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
                 <span className="text-[14px] text-text-muted font-medium">
-                  {phase === 'connecting' ? 'Connecting to Google...' : 'Waiting for authorization...'}
+                  {phase === "connecting"
+                    ? "Connecting to Google..."
+                    : "Waiting for authorization..."}
                 </span>
               </div>
 
@@ -1888,7 +2205,8 @@ function OAuthDemoStep({ onReturnToSlack }: { onReturnToSlack: () => void }) {
                   Authorization successful
                 </h1>
                 <p className="text-[14px] text-text-tertiary leading-relaxed max-w-[360px] mx-auto">
-                  Google Calendar and Gmail are now connected to nexu. I can help with calendar and email tasks.
+                  Google Calendar and Gmail are now connected to nexu. I can help with calendar and
+                  email tasks.
                 </p>
               </div>
 
@@ -1904,16 +2222,22 @@ function OAuthDemoStep({ onReturnToSlack }: { onReturnToSlack: () => void }) {
 
               {/* Return to Slack button */}
               <button
+                type="button"
                 onClick={onReturnToSlack}
                 onMouseEnter={() => setHovering(true)}
                 onMouseLeave={() => setHovering(false)}
                 className="group relative w-full inline-flex items-center justify-center gap-3 py-4 rounded-xl text-[16px] font-semibold bg-[#4A154B] text-white transition-all overflow-hidden"
               >
-                <div className={`absolute inset-0 bg-gradient-to-r from-[#E01E5A]/20 via-[#36C5F0]/20 to-[#2EB67D]/20 transition-opacity duration-500 ${hovering ? 'opacity-100' : 'opacity-0'}`} />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-r from-[#E01E5A]/20 via-[#36C5F0]/20 to-[#2EB67D]/20 transition-opacity duration-500 ${hovering ? "opacity-100" : "opacity-0"}`}
+                />
                 <div className="relative flex items-center gap-3">
                   <SlackIcon size={20} />
                   Back to Slack
-                  <ArrowRight size={16} className={`transition-transform duration-200 ${hovering ? 'translate-x-0.5' : ''}`} />
+                  <ArrowRight
+                    size={16}
+                    className={`transition-transform duration-200 ${hovering ? "translate-x-0.5" : ""}`}
+                  />
                 </div>
               </button>
 
@@ -1940,18 +2264,18 @@ function OAuthDemoStep({ onReturnToSlack }: { onReturnToSlack: () => void }) {
 /* ------------------------------------------------------------------ */
 
 export default function GroupGrowthDemo() {
-  usePageTitle('IM Journey');
+  usePageTitle("IM Journey");
   const navigate = useNavigate();
-  const [step, setStep] = useState<DemoStep>('group-chat');
+  const [step, setStep] = useState<DemoStep>("group-chat");
 
   const STEP_LABELS: { id: DemoStep; label: string; num: number }[] = [
-    { id: 'group-chat', label: 'Group chat', num: 1 },
-    { id: 'claim-page', label: 'Sign up / Login', num: 2 },
-    { id: 'invite-code', label: 'Invite code', num: 3 },
-    { id: 'setup', label: 'Add to Slack', num: 4 },
-    { id: 'workspace', label: 'Workspace', num: 5 },
-    { id: 'slack-intro', label: 'Get started', num: 6 },
-    { id: 'oauth-auth', label: 'Authorize tools', num: 7 },
+    { id: "group-chat", label: "Group chat", num: 1 },
+    { id: "claim-page", label: "Sign up / Login", num: 2 },
+    { id: "invite-code", label: "Invite code", num: 3 },
+    { id: "setup", label: "Add to Slack", num: 4 },
+    { id: "workspace", label: "Workspace", num: 5 },
+    { id: "slack-intro", label: "Get started", num: 6 },
+    { id: "oauth-auth", label: "Authorize tools", num: 7 },
   ];
 
   const currentIdx = STEP_LABELS.findIndex((s) => s.id === step);
@@ -1963,7 +2287,7 @@ export default function GroupGrowthDemo() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => navigate('/openclaw')}
+          onClick={() => navigate("/openclaw")}
           className="text-[12px] sm:text-[13px] text-text-muted hover:text-text-primary"
         >
           <ArrowLeft size={14} />
@@ -1981,25 +2305,28 @@ export default function GroupGrowthDemo() {
         <div className="w-full sm:w-auto sm:ml-auto flex items-center gap-1 overflow-x-auto no-scrollbar pt-1 sm:pt-0">
           {STEP_LABELS.map((s, i) => (
             <button
+              type="button"
               key={s.id}
               onClick={() => {
                 if (i <= currentIdx) setStep(s.id);
               }}
               className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] sm:text-[12px] transition-colors shrink-0 ${
                 s.id === step
-                  ? 'bg-accent/10 text-accent font-medium'
+                  ? "bg-accent/10 text-accent font-medium"
                   : i < currentIdx
-                    ? 'text-success cursor-pointer hover:bg-surface-2'
-                    : 'text-text-muted'
+                    ? "text-success cursor-pointer hover:bg-surface-2"
+                    : "text-text-muted"
               }`}
             >
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                i < currentIdx
-                  ? 'bg-success/10 text-success'
-                  : s.id === step
-                    ? 'bg-accent/10 text-accent'
-                    : 'bg-surface-2 text-text-muted'
-              }`}>
+              <span
+                className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                  i < currentIdx
+                    ? "bg-success/10 text-success"
+                    : s.id === step
+                      ? "bg-accent/10 text-accent"
+                      : "bg-surface-2 text-text-muted"
+                }`}
+              >
                 {i < currentIdx ? <Check size={10} /> : s.num}
               </span>
               <span className="inline">{s.label}</span>
@@ -2010,29 +2337,13 @@ export default function GroupGrowthDemo() {
 
       {/* Content */}
       <div className="flex-1 min-h-0">
-        {step === 'group-chat' && (
-          <GroupChatStep onClaim={() => setStep('claim-page')} />
-        )}
-        {step === 'claim-page' && (
-          <ClaimPageStep
-            onAuthorize={() => setStep('invite-code')}
-          />
-        )}
-        {step === 'invite-code' && (
-          <InviteCodeStep onComplete={() => setStep('setup')} />
-        )}
-        {step === 'setup' && (
-          <SetupStep onComplete={() => setStep('workspace')} />
-        )}
-        {step === 'workspace' && (
-          <WorkspaceStep onChatInSlack={() => setStep('slack-intro')} />
-        )}
-        {step === 'slack-intro' && (
-          <SlackIntroStep onNeedAuth={() => setStep('oauth-auth')} />
-        )}
-        {step === 'oauth-auth' && (
-          <OAuthDemoStep onReturnToSlack={() => setStep('slack-intro')} />
-        )}
+        {step === "group-chat" && <GroupChatStep onClaim={() => setStep("claim-page")} />}
+        {step === "claim-page" && <ClaimPageStep onAuthorize={() => setStep("invite-code")} />}
+        {step === "invite-code" && <InviteCodeStep onComplete={() => setStep("setup")} />}
+        {step === "setup" && <SetupStep onComplete={() => setStep("workspace")} />}
+        {step === "workspace" && <WorkspaceStep onChatInSlack={() => setStep("slack-intro")} />}
+        {step === "slack-intro" && <SlackIntroStep onNeedAuth={() => setStep("oauth-auth")} />}
+        {step === "oauth-auth" && <OAuthDemoStep onReturnToSlack={() => setStep("slack-intro")} />}
       </div>
     </div>
   );
