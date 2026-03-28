@@ -1,11 +1,7 @@
 import {
   Button,
-  DetailPanel,
-  DetailPanelCloseButton,
-  DetailPanelContent,
-  DetailPanelHeader,
-  DetailPanelTitle,
-  PanelFooter,
+  FollowUpInput,
+  InspectorPanel,
   PanelFooterActions,
   TagGroup,
   TagGroupItem,
@@ -21,11 +17,10 @@ import {
   FileText,
   GitPullRequest,
   MessageSquare,
-  Send,
   Users,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import type * as React from "react";
 import {
   type ALIGNMENT_HISTORY,
   type ActivityItem,
@@ -65,32 +60,35 @@ function PanelShell({
   footer?: React.ReactNode;
 }) {
   return (
-    <DetailPanel width={400} className="bg-surface-0 animate-slide-in-right">
-      <DetailPanelHeader className="items-center shrink-0">
-        <div className="flex justify-center items-center w-8 h-8 rounded-lg bg-clone/10">
+    <InspectorPanel
+      width={400}
+      title={title}
+      onClose={onClose}
+      className="animate-slide-in-right"
+      contentClassName="overflow-y-auto"
+      footer={footer}
+      footerClassName="px-3 py-3"
+      closeButtonProps={{
+        srLabel: "关闭详情",
+        className: "text-text-muted hover:bg-surface-3",
+      }}
+      leading={
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-clone/10">
           <Icon size={14} className="text-clone" />
         </div>
-        <div className="flex-1 min-w-0">
-          {badge && (
-            <span
-              className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${
-                badgeColor || "bg-clone/10 text-clone"
-              }`}
-            >
-              {badge}
-            </span>
-          )}
-          <DetailPanelTitle className="truncate">{title}</DetailPanelTitle>
-        </div>
-        <DetailPanelCloseButton
-          onClick={onClose}
-          srLabel="关闭详情"
-          className="hover:bg-surface-3 text-text-muted"
-        />
-      </DetailPanelHeader>
-      <DetailPanelContent className="overflow-y-auto">{children}</DetailPanelContent>
-      {footer && <PanelFooter className="shrink-0 px-3 py-3">{footer}</PanelFooter>}
-    </DetailPanel>
+      }
+      badges={
+        badge ? (
+          <span
+            className={`rounded px-1.5 py-0.5 text-[9px] font-medium ${badgeColor || "bg-clone/10 text-clone"}`}
+          >
+            {badge}
+          </span>
+        ) : undefined
+      }
+    >
+      {children}
+    </InspectorPanel>
   );
 }
 
@@ -220,46 +218,6 @@ function getCardPanelTitle(card: IMCard): string {
   if (card.type === "alignment_request") return card.topic;
   if (card.type === "event_notification") return card.event;
   return card.taskTitle;
-}
-
-function FollowUpInput({
-  placeholder,
-  onSend,
-}: {
-  placeholder: string;
-  onSend?: () => void;
-}) {
-  const [value, setValue] = useState("");
-  const handleSend = () => {
-    if (!value.trim()) return;
-    setValue("");
-    onSend?.();
-  };
-  return (
-    <div className="flex gap-2 items-end px-3 py-2 rounded-xl border bg-surface-1 border-border">
-      <textarea
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            handleSend();
-          }
-        }}
-        placeholder={placeholder}
-        rows={1}
-        className="flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed"
-      />
-      <Button
-        type="button"
-        size="inline"
-        onClick={handleSend}
-        className="p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors"
-      >
-        <Send size={12} />
-      </Button>
-    </div>
-  );
 }
 
 // ─── Card Detail Panel ─────────────────────────────────────

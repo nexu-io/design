@@ -50,3 +50,5 @@ export * from "./patterns/page-header";
 export * from "./patterns/page-shell";
 export * from "./patterns/settings-section";
 export * from "./patterns/confirm-dialog";
+export * from "./patterns/inspector-panel";
+export * from "./patterns/follow-up-input";
