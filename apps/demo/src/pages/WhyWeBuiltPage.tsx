@@ -1,3 +1,4 @@
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 import {
   ArrowRight,
   Bot,
@@ -18,7 +19,6 @@ import {
   Zap,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 
 function EraCard({
   era,

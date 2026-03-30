@@ -120,6 +120,7 @@ export default function ProductDemoPage() {
 
   const handleTreeSelect = useCallback(({ node, path }: { node: FileNode; path: string }) => {
     const mapping: Record<string, string> = {
+      ".soul": "clone",
       sessions: "sessions",
       team: "team",
       clone: "clone",

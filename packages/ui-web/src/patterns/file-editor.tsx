@@ -96,7 +96,6 @@ function BinaryPlaceholder({ icon: Icon, label }: { icon: LucideIcon; label: str
 }
 
 function CompactEditor({
-  content,
   draft,
   setDraft,
   mode,
@@ -111,7 +110,6 @@ function CompactEditor({
   onCancel,
   textareaRef,
 }: {
-  content: string;
   draft: string;
   setDraft: (value: string) => void;
   mode: "preview" | "edit";
@@ -191,11 +189,11 @@ function CompactEditor({
           />
         ) : isMarkdown ? (
           <div className="markdown-preview p-3 text-[11px]">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{draft}</ReactMarkdown>
           </div>
         ) : (
           <pre className="whitespace-pre-wrap p-3 font-mono text-[11px] leading-relaxed text-text-secondary">
-            {content}
+            {draft}
           </pre>
         )}
       </div>
@@ -269,7 +267,6 @@ export function FileEditor({
     return (
       <div className={cn("h-full", className)} {...props}>
         <CompactEditor
-          content={initialContent}
           draft={draft}
           setDraft={setDraft}
           mode={mode}
@@ -359,11 +356,11 @@ export function FileEditor({
           />
         ) : isMarkdown ? (
           <div className="markdown-preview p-4">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{initialContent}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{draft}</ReactMarkdown>
           </div>
         ) : (
           <pre className="whitespace-pre-wrap p-4 font-mono text-[12px] leading-relaxed text-text-secondary">
-            {initialContent}
+            {draft}
           </pre>
         )}
       </div>

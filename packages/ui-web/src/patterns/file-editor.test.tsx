@@ -29,6 +29,7 @@ describe("FileEditor", () => {
 
     expect(handleSave).toHaveBeenCalledWith("# Updated sprint");
     expect(screen.getByText(/saved/i)).toBeInTheDocument();
+    expect(screen.getByText("Updated sprint", { selector: "h1" })).toBeInTheDocument();
   });
 
   it("has no accessibility violations", async () => {

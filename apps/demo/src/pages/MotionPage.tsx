@@ -1,7 +1,7 @@
 import { Button } from "@nexu-design/ui-web";
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 import { useEffect, useState } from "react";
 import NexuLoader, { NexuLoadingScreen } from "../components/NexuLoader";
-import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 
 export default function MotionPage() {
   const [showFullscreen, setShowFullscreen] = useState(false);
