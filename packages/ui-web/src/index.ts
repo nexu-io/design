@@ -19,6 +19,7 @@ export * from "./primitives/entity-card";
 export * from "./primitives/input";
 export * from "./primitives/interactive-row";
 export * from "./primitives/label";
+export * from "./primitives/logo";
 export * from "./primitives/panel-footer";
 export * from "./primitives/popover";
 export * from "./primitives/progress";
