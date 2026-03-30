@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 import { expectNoA11yViolations } from "../test/a11y";
 import { WorkspaceShell } from "./workspace-shell";
@@ -33,5 +33,31 @@ describe("WorkspaceShell", () => {
     );
 
     await expectNoA11yViolations(container);
+  });
+
+  it("applies resize deltas relative to the drag start width", () => {
+    const handleSidebarWidthChange = vi.fn();
+
+    render(
+      <div className="h-[420px] w-[960px]">
+        <WorkspaceShell
+          sidebar={<div>Sidebar</div>}
+          onSidebarWidthChange={handleSidebarWidthChange}
+          sidebarDefaultWidth={224}
+        >
+          <div>Main content</div>
+        </WorkspaceShell>
+      </div>,
+    );
+
+    const handle = screen.getByRole("separator", { name: "Resize sidebar" });
+
+    fireEvent.mouseDown(handle, { clientX: 100 });
+    fireEvent.mouseMove(document, { clientX: 130 });
+    fireEvent.mouseMove(document, { clientX: 140 });
+    fireEvent.mouseUp(document);
+
+    expect(handleSidebarWidthChange).toHaveBeenNthCalledWith(1, 254);
+    expect(handleSidebarWidthChange).toHaveBeenNthCalledWith(2, 264);
   });
 });

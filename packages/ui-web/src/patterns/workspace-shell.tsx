@@ -73,6 +73,7 @@ export function WorkspaceShell({
   ...props
 }: WorkspaceShellProps) {
   const [isDragging, setIsDragging] = React.useState(false);
+  const resizeStartWidthRef = React.useRef(sidebarDefaultWidth);
   const [sidebarCollapsed, setSidebarCollapsed] = useControllableState<boolean>({
     value: sidebarCollapsedProp,
     defaultValue: defaultSidebarCollapsed,
@@ -86,9 +87,8 @@ export function WorkspaceShell({
 
   const handleResize = React.useCallback(
     (offset: number) => {
-      setSidebarWidth((currentWidth) => {
-        return Math.max(sidebarMinWidth, Math.min(sidebarMaxWidth, currentWidth + offset));
-      });
+      const nextWidth = resizeStartWidthRef.current + offset;
+      setSidebarWidth(Math.max(sidebarMinWidth, Math.min(sidebarMaxWidth, nextWidth)));
     },
     [setSidebarWidth, sidebarMaxWidth, sidebarMinWidth],
   );
@@ -120,7 +120,10 @@ export function WorkspaceShell({
               "w-1 hover:bg-accent/30 data-[dragging=true]:bg-accent/50",
               sidebarResizerClassName,
             )}
-            onResizeStart={() => setIsDragging(true)}
+            onResizeStart={() => {
+              resizeStartWidthRef.current = sidebarWidth;
+              setIsDragging(true);
+            }}
             onResize={handleResize}
             onResizeEnd={() => setIsDragging(false)}
           />
