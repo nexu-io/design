@@ -1,6 +1,6 @@
 import { Button } from "@nexu-design/ui-web";
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 import { useState } from "react";
-import { PageHeader, PageShell, Section } from "../components/Section";
 
 const SKIN_TONES = [
   "#FDEBD0",
@@ -133,7 +133,11 @@ export default function AvatarPage() {
         description="每个用户的分身都有可自定义的 Avatar。7 层可组合，有状态、有表情、会成长。风格介于 Notion Avatar 和 Memoji 之间。"
       />
 
-      <Section title="Role Presets — 角色预设（一键选择）">
+      <section className="mb-12">
+        <SectionHeader
+          title="Role Presets — 角色预设（一键选择）"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-5 gap-4">
           {ROLE_PRESETS.map((p) => (
             <button
@@ -161,9 +165,13 @@ export default function AvatarPage() {
             </button>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Avatar Editor — 捏脸编辑器">
+      <section className="mb-12">
+        <SectionHeader
+          title="Avatar Editor — 捏脸编辑器"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="flex gap-8">
           {/* Preview */}
           <div className="w-64 shrink-0">
@@ -296,9 +304,13 @@ export default function AvatarPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Avatar Sizes — 尺寸规范">
+      <section className="mb-12">
+        <SectionHeader
+          title="Avatar Sizes — 尺寸规范"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="flex gap-8 items-end">
           {[
             { size: 32, label: "IM 头像", radius: "9999px" },
@@ -326,9 +338,13 @@ export default function AvatarPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Clone Status Card — 分身状态卡片">
+      <section className="mb-12">
+        <SectionHeader
+          title="Clone Status Card — 分身状态卡片"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="p-5 max-w-xs rounded-xl border bg-surface-2 border-border">
           <div className="flex gap-4 items-center mb-4">
             <div
@@ -373,9 +389,13 @@ export default function AvatarPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Team Status Card — 团队分身状态">
+      <section className="mb-12">
+        <SectionHeader
+          title="Team Status Card — 团队分身状态"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="p-5 max-w-xs rounded-xl border bg-surface-2 border-border">
           <div className="flex gap-4 items-center mb-4">
             <div
@@ -456,9 +476,13 @@ export default function AvatarPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Team Avatar Network — 分身网络">
+      <section className="mb-12">
+        <SectionHeader
+          title="Team Avatar Network — 分身网络"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="p-5 max-w-md rounded-xl border bg-surface-2 border-border">
           <div className="mb-4 text-sm font-medium text-text-primary">🤖 分身网络</div>
           <div className="flex gap-4 items-center mb-4">
@@ -526,7 +550,7 @@ export default function AvatarPage() {
             ))}
           </div>
         </div>
-      </Section>
+      </section>
     </PageShell>
   );
 }

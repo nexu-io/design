@@ -1,3 +1,4 @@
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 import {
   Bot,
   Brain,
@@ -12,7 +13,6 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { PageHeader, PageShell, Section } from "../components/Section";
 
 export default function OverviewPage() {
   return (
@@ -22,7 +22,8 @@ export default function OverviewPage() {
         description="nexu（奈苏）— 为你的龙虾打造一间赛博办公室。世界首个人与分身共存的办公协作网络。人做决策，分身做执行。人会离职，分身不会。"
       />
 
-      <Section title="产品定位">
+      <section className="mb-12">
+        <SectionHeader title="产品定位" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="bg-surface-2 border border-border rounded-lg p-6">
           <p className="text-xl font-bold text-text-primary mb-1">
             nexu — 为你的龙虾打造一间赛博办公室
@@ -64,9 +65,10 @@ export default function OverviewPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="核心概念">
+      <section className="mb-12">
+        <SectionHeader title="核心概念" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="grid grid-cols-3 gap-4">
           {[
             {
@@ -119,9 +121,10 @@ export default function OverviewPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="设计信条">
+      <section className="mb-12">
+        <SectionHeader title="设计信条" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="grid grid-cols-2 gap-4">
           {[
             {
@@ -169,9 +172,10 @@ export default function OverviewPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="品牌声音">
+      <section className="mb-12">
+        <SectionHeader title="品牌声音" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="bg-surface-2 border border-border rounded-lg p-5">
           <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-[13px]">
             {[
@@ -232,9 +236,10 @@ export default function OverviewPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="术语对照">
+      <section className="mb-12">
+        <SectionHeader title="术语对照" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="mb-3 text-xs text-text-muted">产品中不暴露技术术语，用分身语言替代。</div>
         <div className="grid grid-cols-3 gap-3">
           {[
@@ -264,9 +269,10 @@ export default function OverviewPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="产品架构概览">
+      <section className="mb-12">
+        <SectionHeader title="产品架构概览" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="bg-surface-2 border border-border rounded-lg p-5">
           <div className="grid grid-cols-4 gap-4 mb-5">
             {[
@@ -333,7 +339,7 @@ export default function OverviewPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
     </PageShell>
   );
 }

@@ -1,4 +1,4 @@
-import { PageHeader, PageShell, Section } from "../components/Section";
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 
 function Swatch({ name, value, token }: { name: string; value: string; token: string }) {
   return (
@@ -19,7 +19,11 @@ export default function ColorsPage() {
         description="Cursor 风格暖白主题。黑色作为主交互色，极简单色调，让内容成为焦点。"
       />
 
-      <Section title="Surface — 背景层级">
+      <section className="mb-12">
+        <SectionHeader
+          title="Surface — 背景层级"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-6 gap-3">
           <Swatch name="Surface 0" value="#fdfcfa" token="--surface-0" />
           <Swatch name="Surface 1" value="#ffffff" token="--surface-1" />
@@ -28,9 +32,13 @@ export default function ColorsPage() {
           <Swatch name="Surface 4" value="#e8e7e3" token="--surface-4" />
           <Swatch name="Surface 5" value="#dfdeda" token="--surface-5" />
         </div>
-      </Section>
+      </section>
 
-      <Section title="Text — 文字层级">
+      <section className="mb-12">
+        <SectionHeader
+          title="Text — 文字层级"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-4 gap-4">
           {[
             { name: "Primary", value: "#1a1a1a", sample: "主标题 / 正文" },
@@ -50,9 +58,13 @@ export default function ColorsPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Accent — 主交互色 (Dark)">
+      <section className="mb-12">
+        <SectionHeader
+          title="Accent — 主交互色 (Dark)"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-10 gap-2">
           {[
             { n: "50", v: "#fafaf8" },
@@ -75,9 +87,13 @@ export default function ColorsPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Clone Signature — 分身标识色 (Warm Amber)">
+      <section className="mb-12">
+        <SectionHeader
+          title="Clone Signature — 分身标识色 (Warm Amber)"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <p className="text-xs text-text-tertiary mb-4">
           分身的"生命信号" — 呼吸光环、在线指示、情感时刻使用此色。它是分身"活着"的视觉证据。
         </p>
@@ -145,9 +161,13 @@ export default function ColorsPage() {
             这让 Clone 色成为产品中最具辨识度的视觉符号。
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Status — 功能色">
+      <section className="mb-12">
+        <SectionHeader
+          title="Status — 功能色"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-4 gap-4">
           {[
             {
@@ -183,9 +203,13 @@ export default function ColorsPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Energy — 能量色">
+      <section className="mb-12">
+        <SectionHeader
+          title="Energy — 能量色"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="flex gap-2 items-end">
           {[
             { label: "Full >50%", color: "#16a34a" },
@@ -209,9 +233,13 @@ export default function ColorsPage() {
           </div>
           <div className="text-[11px] text-text-tertiary mt-1">⚡ 3,200 / 5,000</div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Role Colors — 角色色">
+      <section className="mb-12">
+        <SectionHeader
+          title="Role Colors — 角色色"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="grid grid-cols-5 gap-3">
           {[
             { role: "程序员", color: "#059669", en: "Programmer" },
@@ -236,7 +264,7 @@ export default function ColorsPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
     </PageShell>
   );
 }

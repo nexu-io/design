@@ -3,11 +3,8 @@ import {
   AlertDescription,
   AlertTitle,
   Button,
-  DetailPanel,
-  DetailPanelCloseButton,
-  DetailPanelContent,
-  DetailPanelHeader,
-  DetailPanelTitle,
+  FollowUpInput,
+  InspectorPanel,
   StatCard,
   ToggleGroup,
   ToggleGroupItem,
@@ -32,7 +29,6 @@ import {
   Play,
   Plus,
   Search,
-  Send,
   Shield,
   Sparkles,
   ToggleLeft,
@@ -471,38 +467,70 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
         className="absolute inset-0 bg-black/15 backdrop-blur-[2px]"
         onClick={onClose}
       />
-      <DetailPanel width={400} className="relative shadow-2xl animate-slide-in-right">
-        {/* Header */}
-        <DetailPanelHeader className="items-center shrink-0">
-          <div className="w-9 h-9 rounded-lg bg-clone/10 flex items-center justify-center">
+      <InspectorPanel
+        width={400}
+        title={item.name}
+        onClose={onClose}
+        className="relative animate-slide-in-right shadow-2xl"
+        contentClassName="overflow-y-auto"
+        closeButtonProps={{
+          srLabel: "关闭自动化详情",
+          className: "text-text-muted hover:bg-surface-3",
+        }}
+        leading={
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-clone/10">
             <item.icon size={16} className="text-clone" />
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5 mb-0.5">
-              <span
-                className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${
-                  item.type === "schedule" ? "bg-info-subtle text-info" : "bg-clone/10 text-clone"
-                }`}
+        }
+        badges={
+          <>
+            <span
+              className={`rounded px-1.5 py-0.5 text-[9px] font-medium ${
+                item.type === "schedule" ? "bg-info-subtle text-info" : "bg-clone/10 text-clone"
+              }`}
+            >
+              {item.type === "schedule" ? "定时任务" : "主动规则"}
+            </span>
+            <span
+              className={`rounded px-1.5 py-0.5 text-[9px] ${
+                item.enabled ? "bg-success-subtle text-success" : "bg-surface-3 text-text-muted"
+              }`}
+            >
+              {item.enabled ? "运行中" : "已暂停"}
+            </span>
+          </>
+        }
+        footer={
+          <div className="space-y-2">
+            <FollowUpInput
+              value={followUp}
+              onValueChange={setFollowUp}
+              onSend={handleFollowUp}
+              placeholder="调整配置、查看详情、追问结果..."
+              sendLabel="发送自动化追问"
+            />
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                size="inline"
+                onClick={() => navigate("/app/sessions")}
+                className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-border bg-surface-2 px-3 py-2 text-[11px] text-text-primary transition-colors hover:bg-surface-3"
               >
-                {item.type === "schedule" ? "定时任务" : "主动规则"}
-              </span>
-              <span
-                className={`text-[9px] px-1.5 py-0.5 rounded ${
-                  item.enabled ? "bg-success-subtle text-success" : "bg-surface-3 text-text-muted"
-                }`}
+                <ExternalLink size={11} />在 Session 中编辑
+              </Button>
+              <Button
+                type="button"
+                size="inline"
+                className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-border bg-surface-2 px-3 py-2 text-[11px] text-text-primary transition-colors hover:bg-surface-3"
               >
-                {item.enabled ? "运行中" : "已暂停"}
-              </span>
+                {item.enabled ? <Pause size={11} /> : <Play size={11} />}
+                {item.enabled ? "暂停" : "启动"}
+              </Button>
             </div>
-            <DetailPanelTitle className="truncate">{item.name}</DetailPanelTitle>
           </div>
-          <DetailPanelCloseButton
-            onClick={onClose}
-            srLabel="关闭自动化详情"
-            className="hover:bg-surface-3 text-text-muted"
-          />
-        </DetailPanelHeader>
-
+        }
+        footerClassName="p-3"
+      >
         {/* Config info */}
         <div className="px-4 py-3 border-b border-border shrink-0">
           {task && (
@@ -538,7 +566,7 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
         </div>
 
         {/* Run history */}
-        <DetailPanelContent className="overflow-y-auto">
+        <div>
           <div className="px-4 pt-3 pb-1">
             <div className="text-[10px] text-text-muted font-medium uppercase tracking-wider">
               运行记录
@@ -570,53 +598,8 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
           ) : (
             <div className="px-4 py-8 text-center text-[12px] text-text-muted">暂无运行记录</div>
           )}
-        </DetailPanelContent>
-
-        {/* Actions */}
-        <div className="border-t border-border p-3 space-y-2 shrink-0">
-          <div className="flex items-end gap-2 bg-surface-2 border border-border rounded-xl px-3 py-2">
-            <textarea
-              value={followUp}
-              onChange={(e) => setFollowUp(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleFollowUp();
-                }
-              }}
-              placeholder="调整配置、查看详情、追问结果..."
-              rows={1}
-              className="flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed"
-            />
-            <Button
-              type="button"
-              size="inline"
-              onClick={handleFollowUp}
-              className="p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors"
-            >
-              <Send size={12} />
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              size="inline"
-              onClick={() => navigate("/app/sessions")}
-              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors"
-            >
-              <ExternalLink size={11} />在 Session 中编辑
-            </Button>
-            <Button
-              type="button"
-              size="inline"
-              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors"
-            >
-              {item.enabled ? <Pause size={11} /> : <Play size={11} />}
-              {item.enabled ? "暂停" : "启动"}
-            </Button>
-          </div>
         </div>
-      </DetailPanel>
+      </InspectorPanel>
     </div>
   );
 }

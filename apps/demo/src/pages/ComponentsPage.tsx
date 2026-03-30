@@ -1,5 +1,6 @@
 import { Button } from "@nexu-design/ui-web";
 
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   ArrowRight,
@@ -15,7 +16,6 @@ import {
   XCircle,
   Zap,
 } from "lucide-react";
-import { PageHeader, PageShell, Section } from "../components/Section";
 import ChatCardGroup from "./product/ChatCards";
 
 function Badge({ children, variant = "purple" }: { children: React.ReactNode; variant?: string }) {
@@ -44,7 +44,8 @@ export default function ComponentsPage() {
         description="nexu 原子组件规范。所有组件使用分身语言，6 种标准卡片是核心交互单元，对话即操控一切。"
       />
 
-      <Section title="Buttons">
+      <section className="mb-12">
+        <SectionHeader title="Buttons" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="space-y-4">
           <div className="flex flex-wrap gap-3 items-center">
             <Button>给分身充能 ⚡</Button>
@@ -78,9 +79,10 @@ export default function ComponentsPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Badges">
+      <section className="mb-12">
+        <SectionHeader title="Badges" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="flex flex-wrap gap-3">
           <Badge variant="purple">专业版</Badge>
           <Badge variant="green">在线</Badge>
@@ -91,9 +93,10 @@ export default function ComponentsPage() {
           <Badge variant="purple">新技能 ✨</Badge>
           <Badge variant="purple">分身推荐</Badge>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Energy Bar">
+      <section className="mb-12">
+        <SectionHeader title="Energy Bar" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="space-y-6 max-w-md">
           {[
             { pct: 82, label: "4,100 / 5,000", color: "#16a34a" },
@@ -118,9 +121,10 @@ export default function ComponentsPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Cards">
+      <section className="mb-12">
+        <SectionHeader title="Cards" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-surface-2 border border-border rounded-lg p-4">
             <div className="text-sm font-semibold text-text-primary mb-1">Base Card</div>
@@ -151,9 +155,13 @@ export default function ComponentsPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="IM Card Templates（Legacy）">
+      <section className="mb-12">
+        <SectionHeader
+          title="IM Card Templates（Legacy）"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="text-xs text-text-muted mb-4">这些模板正在被上方的 ChatCard 系统替代。</div>
         <div className="grid grid-cols-2 gap-4 max-w-3xl">
           {/* Daily digest card */}
@@ -250,9 +258,13 @@ export default function ComponentsPage() {
             </div>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Chat Card System — 6 种标准卡片">
+      <section className="mb-12">
+        <SectionHeader
+          title="Chat Card System — 6 种标准卡片"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="space-y-4">
           <div className="text-xs text-text-muted mb-4">
             产品中所有操作产出这 6 种标准卡片，每种卡片都支持交互（打开文件、跳转页面、弹出定价等）
@@ -309,9 +321,13 @@ export default function ComponentsPage() {
             interactive={false}
           />
         </div>
-      </Section>
+      </section>
 
-      <Section title="Scoped Session Badge">
+      <section className="mb-12">
+        <SectionHeader
+          title="Scoped Session Badge"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="space-y-4">
           <div className="text-xs text-text-muted mb-4">
             Scoped Session 是限定了特定 Skills 和上下文的专属会话。在 Team、Sprint、OKR 等页面使用。
@@ -331,9 +347,13 @@ export default function ComponentsPage() {
             </span>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Native Channel Badges">
+      <section className="mb-12">
+        <SectionHeader
+          title="Native Channel Badges"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="space-y-4">
           <div className="text-xs text-text-muted mb-4">
             原生渠道（Email、SMS、WhatsApp）使用'零安装'badge，IM 平台使用'主渠道'或状态 badge。
@@ -353,9 +373,10 @@ export default function ComponentsPage() {
             <Badge variant="outline">3 个 Channel</Badge>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Input">
+      <section className="mb-12">
+        <SectionHeader title="Input" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="max-w-md space-y-3">
           <input
             type="text"
@@ -373,9 +394,13 @@ export default function ComponentsPage() {
             </Button>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Toasts / Notifications">
+      <section className="mb-12">
+        <SectionHeader
+          title="Toasts / Notifications"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="space-y-3 max-w-sm">
           {[
             { icon: CheckCircle2, text: "✅ 记住了", color: "text-success" },
@@ -394,9 +419,10 @@ export default function ComponentsPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Empty States">
+      <section className="mb-12">
+        <SectionHeader title="Empty States" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="grid grid-cols-3 gap-4">
           {[
             { icon: Brain, title: "分身还不了解你", desc: "随便聊点什么，我会开始记住的 💭" },
@@ -452,9 +478,13 @@ export default function ComponentsPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Capability Domain Grid — 主线入口 6 域">
+      <section className="mb-12">
+        <SectionHeader
+          title="Capability Domain Grid — 主线入口 6 域"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="text-xs text-text-muted mb-4">
           Session 入口展示 6 个能力域，每个域对应一种标准卡片类型。
         </div>
@@ -515,9 +545,13 @@ export default function ComponentsPage() {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Session Quick Actions">
+      <section className="mb-12">
+        <SectionHeader
+          title="Session Quick Actions"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="text-xs text-text-muted mb-4">
           NewSessionView 底部快捷操作按钮，引导用户快速启动场景。
         </div>
@@ -540,9 +574,10 @@ export default function ComponentsPage() {
             </Button>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <Section title="Loading States">
+      <section className="mb-12">
+        <SectionHeader title="Loading States" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="flex gap-6 items-center">
           <div className="bg-surface-2 border border-border rounded-lg px-4 py-3 flex items-center gap-2">
             <div className="flex gap-1">
@@ -556,9 +591,10 @@ export default function ComponentsPage() {
             <span className="text-[13px] text-text-secondary">正在处理，给我几秒 ⏳</span>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="Confirm Dialog">
+      <section className="mb-12">
+        <SectionHeader title="Confirm Dialog" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="max-w-sm bg-surface-3 border border-border rounded-xl p-5 shadow-lg">
           <div className="text-sm font-semibold text-text-primary mb-2">
             主人，你要让分身休息吗？🥺
@@ -580,7 +616,7 @@ export default function ComponentsPage() {
             <Button>我再想想</Button>
           </div>
         </div>
-      </Section>
+      </section>
     </PageShell>
   );
 }

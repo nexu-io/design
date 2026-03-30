@@ -10,12 +10,7 @@ import {
   ActivityBarItem,
   Badge,
   Button,
-  DetailPanel,
-  DetailPanelCloseButton,
-  DetailPanelContent,
-  DetailPanelDescription,
-  DetailPanelHeader,
-  DetailPanelTitle,
+  InspectorPanel,
   NavigationMenu,
   NavigationMenuButton,
   NavigationMenuItem,
@@ -150,17 +145,14 @@ export const CompactActivityBar: Story = {
 export const ApprovalDetailPanel: Story = {
   render: () => (
     <div className="h-[360px] overflow-hidden rounded-xl border border-border bg-surface-2">
-      <DetailPanel className="h-full" width={360}>
-        <DetailPanelHeader>
-          <div className="min-w-0 flex-1">
-            <DetailPanelTitle>Approval details</DetailPanelTitle>
-            <DetailPanelDescription>
-              Review the latest automation decision before publishing.
-            </DetailPanelDescription>
-          </div>
-          <DetailPanelCloseButton srLabel="Close details" />
-        </DetailPanelHeader>
-        <DetailPanelContent className="space-y-4 p-4 text-sm text-text-secondary">
+      <InspectorPanel
+        className="h-full"
+        width={360}
+        title="Approval details"
+        description="Review the latest automation decision before publishing."
+        closeButtonProps={{ srLabel: "Close details" }}
+      >
+        <div className="space-y-4 p-4 text-sm text-text-secondary">
           <div className="rounded-lg border border-border bg-surface-1 p-3">
             The workflow is waiting for finance approval because spend exceeds the daily threshold.
           </div>
@@ -168,8 +160,8 @@ export const ApprovalDetailPanel: Story = {
             <span>Current status</span>
             <Badge variant="warning">Pending review</Badge>
           </div>
-        </DetailPanelContent>
-      </DetailPanel>
+        </div>
+      </InspectorPanel>
     </div>
   ),
 };

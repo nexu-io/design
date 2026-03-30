@@ -1,4 +1,4 @@
-import { PageHeader, PageShell, Section } from "../components/Section";
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 
 const FIGMA_ICON_LIBRARY = {
   name: "✕ Untitled UI Icons – 1-100 essential (Figma icons, Community)",
@@ -13,7 +13,11 @@ export default function IconsPage() {
         description="设计稿图标来自 Figma Community 免费库 Untitled UI Icons（1–100 essential）。开发实现可用 Lucide/Heroicons 对齐语义与风格。"
       />
 
-      <Section title="Figma 图标库（设计权威来源）">
+      <section className="mb-12">
+        <SectionHeader
+          title="Figma 图标库（设计权威来源）"
+          className="mb-4 border-b border-border-subtle pb-2"
+        />
         <div className="bg-surface-2 rounded-lg border border-border p-6">
           <div className="font-medium text-text-primary mb-1">{FIGMA_ICON_LIBRARY.name}</div>
           <a
@@ -28,9 +32,10 @@ export default function IconsPage() {
             设计侧在 Figma 中统一使用该库；新增图标时优先从此库选取并注明名称/节点，便于与开发对齐。
           </p>
         </div>
-      </Section>
+      </section>
 
-      <Section title="使用规范">
+      <section className="mb-12">
+        <SectionHeader title="使用规范" className="mb-4 border-b border-border-subtle pb-2" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="rounded-lg border border-border p-4">
             <div className="text-xs font-semibold text-text-primary mb-2">尺寸</div>
@@ -57,9 +62,10 @@ export default function IconsPage() {
             </ul>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section title="设计 ↔ 开发">
+      <section className="mb-12">
+        <SectionHeader title="设计 ↔ 开发" className="mb-4 border-b border-border-subtle pb-2" />
         <p className="text-sm text-text-secondary mb-2">
           Figma 使用本库；代码中可用 <strong className="text-text-primary">Lucide React</strong> 或{" "}
           <strong className="text-text-primary">Heroicons</strong> 实现，以同语义、同尺寸、颜色用
@@ -72,7 +78,7 @@ export default function IconsPage() {
           </code>
           。
         </p>
-      </Section>
+      </section>
     </PageShell>
   );
 }
