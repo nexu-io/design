@@ -48,15 +48,8 @@ type TokensStoryArgs = {
 
 const meta = {
   title: "Foundations/Tokens",
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
-    docs: {
-      description: {
-        component:
-          "Use the toolbar to switch theme, brand preset, and radius preset globally. Use the Playground controls to live-edit key token seeds, inspect token metadata from the tokens package, and copy token references directly from Storybook.",
-      },
-    },
   },
   args: {
     brandColor: getBrandHex("default") ?? "#2563eb",
@@ -91,21 +84,6 @@ export default meta;
 type Story = StoryObj<TokensStoryArgs>;
 
 export const Playground: Story = {
-  render: renderTokensStory,
-};
-
-export const PresetReference: Story = {
-  args: {
-    brandColor: "#2563eb",
-    radiusPreset: "default",
-    shadowPreset: "subtle",
-    motionPreset: "default",
-  },
-  parameters: {
-    controls: {
-      disable: true,
-    },
-  },
   render: renderTokensStory,
 };
 

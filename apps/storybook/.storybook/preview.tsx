@@ -90,6 +90,11 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    options: {
+      storySort: {
+        order: ["Foundations", "Primitives", "Patterns", "Scenarios"],
+      },
+    },
     backgrounds: {
       options: {
         light: { name: "Light", value: "hsl(var(--background))" },
