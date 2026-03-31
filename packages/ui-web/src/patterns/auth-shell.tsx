@@ -35,7 +35,7 @@ export function AuthShell({
   ...props
 }: AuthShellProps) {
   return (
-    <div className={cn("flex min-h-screen bg-[var(--color-dark-bg)]", className)} {...props}>
+    <div className={cn("flex min-h-screen bg-background text-foreground", className)} {...props}>
       {rail ? (
         <div
           className={cn(

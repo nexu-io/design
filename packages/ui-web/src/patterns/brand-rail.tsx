@@ -12,6 +12,7 @@ export interface BrandRailProps extends Omit<React.HTMLAttributes<HTMLDivElement
   footer?: React.ReactNode;
   background?: React.ReactNode;
   bodyClassName?: string;
+  tone?: "light" | "dark";
 }
 
 export function BrandRail({
@@ -25,6 +26,7 @@ export function BrandRail({
   background,
   className,
   bodyClassName,
+  tone = "dark",
   children,
   ...props
 }: BrandRailProps) {
@@ -32,7 +34,11 @@ export function BrandRail({
 
   return (
     <aside
-      className={cn("relative flex min-h-full w-full overflow-hidden text-white", className)}
+      className={cn(
+        "relative flex min-h-full w-full overflow-hidden",
+        tone === "dark" ? "text-white" : "bg-surface-1 text-foreground",
+        className,
+      )}
       {...props}
     >
       {background ? <div className="absolute inset-0">{background}</div> : null}
@@ -57,9 +63,23 @@ export function BrandRail({
         <div className={cn("space-y-8", bodyClassName)}>
           {title || description ? (
             <div>
-              {title ? <div className="max-w-[560px] text-white">{title}</div> : null}
+              {title ? (
+                <div
+                  className={cn(
+                    "max-w-[560px]",
+                    tone === "dark" ? "text-white" : "text-foreground",
+                  )}
+                >
+                  {title}
+                </div>
+              ) : null}
               {description ? (
-                <div className="mt-6 max-w-[460px] text-[14px] leading-[1.8] text-white/58">
+                <div
+                  className={cn(
+                    "mt-6 max-w-[460px] text-[14px] leading-[1.8]",
+                    tone === "dark" ? "text-white/58" : "text-text-secondary",
+                  )}
+                >
                   {description}
                 </div>
               ) : null}

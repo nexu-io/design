@@ -1,5 +1,15 @@
+import type React from "react";
+
+import { DocsContainer, type DocsContainerProps } from "@storybook/addon-docs/blocks";
+import { withThemeByClassName } from "@storybook/addon-themes";
 import type { Preview } from "@storybook/react-vite";
 
+import { darkManagerTheme, lightManagerTheme } from "../src/storybook/storybook-themes";
+import {
+  persistStorybookTheme,
+  readPersistedStorybookTheme,
+  resolveThemeMode,
+} from "../src/storybook/theme-sync";
 import {
   BRAND_PRESET_LABELS,
   RADIUS_PRESET_LABELS,
@@ -7,6 +17,17 @@ import {
 } from "../src/storybook/token-controls";
 
 import "../src/styles.css";
+
+function ThemedDocsContainer({ children, ...props }: React.PropsWithChildren<DocsContainerProps>) {
+  const resolved = resolveThemeMode(readPersistedStorybookTheme());
+  const docsTheme = resolved === "dark" ? darkManagerTheme : lightManagerTheme;
+
+  return (
+    <DocsContainer {...props} theme={docsTheme}>
+      {children}
+    </DocsContainer>
+  );
+}
 
 const preview: Preview = {
   globalTypes: {
@@ -52,12 +73,22 @@ const preview: Preview = {
     },
   },
   decorators: [
+    withThemeByClassName({
+      themes: {
+        light: "",
+        dark: "dark",
+        system: "",
+      },
+      defaultTheme: "light",
+      parentSelector: "html",
+    }),
     (Story, context) => {
       applyGlobalTokenState({
         theme: context.globals.theme,
         brandPreset: context.globals.brandPreset,
         radiusPreset: context.globals.radiusPreset,
       });
+      persistStorybookTheme(context.globals.theme);
 
       return Story();
     },
@@ -69,7 +100,19 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    backgrounds: {
+      options: {
+        light: { name: "Light", value: "hsl(var(--background))" },
+        dark: { name: "Dark", value: "hsl(var(--background))" },
+      },
+    },
+    docs: {
+      container: ThemedDocsContainer,
+    },
     layout: "centered",
+  },
+  initialGlobals: {
+    backgrounds: { value: "light" },
   },
 };
 
