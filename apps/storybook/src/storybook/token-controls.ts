@@ -30,55 +30,77 @@ export const MOTION_PRESET_LABELS: Record<MotionPreset, string> = {
 };
 
 const DEFAULT_RADIUS_VALUES: CssVariableMap = {
-  "--radius-xs": "0.25rem",
   "--radius-sm": "0.375rem",
   "--radius-md": "0.5rem",
   "--radius-lg": "0.75rem",
   "--radius-xl": "1rem",
+  "--radius-2xl": "1.25rem",
+  "--radius-pill": "100px",
 };
 
 const RADIUS_PRESET_VALUES: Record<RadiusPreset, CssVariableMap> = {
   default: DEFAULT_RADIUS_VALUES,
   sharp: {
-    "--radius-xs": "0.125rem",
     "--radius-sm": "0.25rem",
     "--radius-md": "0.375rem",
     "--radius-lg": "0.5rem",
     "--radius-xl": "0.75rem",
+    "--radius-2xl": "1rem",
+    "--radius-pill": "100px",
   },
   soft: {
-    "--radius-xs": "0.375rem",
     "--radius-sm": "0.5rem",
     "--radius-md": "0.75rem",
     "--radius-lg": "1rem",
     "--radius-xl": "1.25rem",
+    "--radius-2xl": "1.5rem",
+    "--radius-pill": "100px",
   },
   round: {
-    "--radius-xs": "0.5rem",
     "--radius-sm": "0.75rem",
     "--radius-md": "1rem",
     "--radius-lg": "1.5rem",
-    "--radius-xl": "999px",
+    "--radius-xl": "2rem",
+    "--radius-2xl": "2.5rem",
+    "--radius-pill": "100px",
   },
 };
 
 const DEFAULT_SHADOW_VALUES: CssVariableMap = {
-  "--shadow-xs": "0 1px 2px 0 rgb(15 23 42 / 0.04)",
-  "--shadow-sm": "0 1px 3px 0 rgb(15 23 42 / 0.08), 0 1px 2px -1px rgb(15 23 42 / 0.08)",
-  "--shadow-md": "0 8px 20px -12px rgb(15 23 42 / 0.2)",
+  "--shadow-xs": "0 1px 3px rgb(0 0 0 / 0.04)",
+  "--shadow-sm": "0 4px 8px 0 rgb(0 0 0 / 0.08)",
+  "--shadow-md": "0 10px 20px -5px rgb(0 0 0 / 0.06)",
+  "--shadow-lg": "0 18px 60px rgb(0 0 0 / 0.08)",
+  "--shadow-xl": "0 18px 38px rgb(0 0 0 / 0.1)",
+  "--shadow-rest": "0 1px 3px rgba(0, 0, 0, 0.04)",
+  "--shadow-card": "0 4px 8px 0 rgba(0, 0, 0, 0.08)",
+  "--shadow-dropdown": "0 8px 24px rgba(0, 0, 0, 0.08)",
+  "--shadow-focus": "0 0 0 2px rgba(61, 185, 206, 0.25)",
 };
 
 const SHADOW_PRESET_VALUES: Record<ShadowPreset, CssVariableMap> = {
   default: DEFAULT_SHADOW_VALUES,
   subtle: {
-    "--shadow-xs": "0 1px 2px 0 rgb(15 23 42 / 0.03)",
-    "--shadow-sm": "0 1px 2px 0 rgb(15 23 42 / 0.06)",
-    "--shadow-md": "0 10px 18px -16px rgb(15 23 42 / 0.12)",
+    "--shadow-xs": "0 1px 2px rgb(0 0 0 / 0.03)",
+    "--shadow-sm": "0 2px 4px rgb(0 0 0 / 0.05)",
+    "--shadow-md": "0 8px 16px -4px rgb(0 0 0 / 0.04)",
+    "--shadow-lg": "0 14px 40px rgb(0 0 0 / 0.05)",
+    "--shadow-xl": "0 14px 30px rgb(0 0 0 / 0.06)",
+    "--shadow-rest": "0 1px 2px rgba(0, 0, 0, 0.03)",
+    "--shadow-card": "0 2px 4px rgba(0, 0, 0, 0.05)",
+    "--shadow-dropdown": "0 6px 16px rgba(0, 0, 0, 0.05)",
+    "--shadow-focus": "0 0 0 2px rgba(61, 185, 206, 0.15)",
   },
   dramatic: {
-    "--shadow-xs": "0 2px 4px 0 rgb(15 23 42 / 0.08)",
-    "--shadow-sm": "0 8px 20px -12px rgb(15 23 42 / 0.18)",
-    "--shadow-md": "0 20px 48px -20px rgb(15 23 42 / 0.32)",
+    "--shadow-xs": "0 2px 4px rgb(0 0 0 / 0.08)",
+    "--shadow-sm": "0 6px 12px 0 rgb(0 0 0 / 0.14)",
+    "--shadow-md": "0 14px 28px -6px rgb(0 0 0 / 0.12)",
+    "--shadow-lg": "0 24px 64px rgb(0 0 0 / 0.16)",
+    "--shadow-xl": "0 24px 48px rgb(0 0 0 / 0.2)",
+    "--shadow-rest": "0 2px 4px rgba(0, 0, 0, 0.08)",
+    "--shadow-card": "0 6px 12px rgba(0, 0, 0, 0.14)",
+    "--shadow-dropdown": "0 12px 32px rgba(0, 0, 0, 0.16)",
+    "--shadow-focus": "0 0 0 2px rgba(61, 185, 206, 0.4)",
   },
 };
 
@@ -103,14 +125,20 @@ const MOTION_PRESET_VALUES: Record<MotionPreset, CssVariableMap> = {
 };
 
 const GLOBAL_OVERRIDE_KEYS = [
-  "--primary",
-  "--primary-foreground",
+  "--accent",
+  "--accent-foreground",
   "--ring",
-  "--radius-xs",
   "--radius-sm",
   "--radius-md",
   "--radius-lg",
   "--radius-xl",
+  "--radius-2xl",
+  "--radius-pill",
+  "--shadow-xs",
+  "--shadow-sm",
+  "--shadow-md",
+  "--shadow-lg",
+  "--shadow-xl",
 ] as const;
 
 export function hexToHslTriplet(hex: string): string {
@@ -124,7 +152,7 @@ export function hexToHslTriplet(hex: string): string {
       : normalized;
 
   if (!/^[0-9a-f]{6}$/i.test(expanded)) {
-    return "221.2 83.2% 53.3%";
+    return "188.7 59.7% 52.4%";
   }
 
   const red = Number.parseInt(expanded.slice(0, 2), 16) / 255;
@@ -171,7 +199,7 @@ export function getReadableForegroundTriplet(hex: string): string {
       : normalized;
 
   if (!/^[0-9a-f]{6}$/i.test(expanded)) {
-    return "210 40% 98%";
+    return "0 0% 100%";
   }
 
   const red = Number.parseInt(expanded.slice(0, 2), 16);
@@ -179,7 +207,7 @@ export function getReadableForegroundTriplet(hex: string): string {
   const blue = Number.parseInt(expanded.slice(4, 6), 16);
   const luminance = (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
 
-  return luminance > 0.62 ? "222.2 47.4% 11.2%" : "210 40% 98%";
+  return luminance > 0.62 ? "214.3 11.1% 12.4%" : "0 0% 100%";
 }
 
 export function getBrandHex(preset: BrandPreset): string | undefined {
@@ -209,15 +237,15 @@ export function buildTokenOverrides(options: {
   motionPreset?: MotionPreset;
 }): CssVariableMap {
   const overrides: CssVariableMap = {
-    ...getRadiusVariables(options.radiusPreset ?? "default"),
     ...getShadowVariables(options.shadowPreset ?? "default"),
+    ...getRadiusVariables(options.radiusPreset ?? "default"),
     ...getMotionVariables(options.motionPreset ?? "default"),
   };
 
   if (options.brandColor) {
-    overrides["--primary"] = hexToHslTriplet(options.brandColor);
-    overrides["--ring"] = overrides["--primary"];
-    overrides["--primary-foreground"] = getReadableForegroundTriplet(options.brandColor);
+    overrides["--accent"] = hexToHslTriplet(options.brandColor);
+    overrides["--ring"] = overrides["--accent"];
+    overrides["--accent-foreground"] = getReadableForegroundTriplet(options.brandColor);
   }
 
   return overrides;

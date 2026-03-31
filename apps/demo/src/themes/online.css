@@ -52,8 +52,8 @@
   --color-success-subtle: rgba(30, 171, 96, 0.08);
   --color-warning: #ff8c00;
   --color-warning-subtle: rgba(255, 140, 0, 0.08);
-  --color-danger: #dc2626;
-  --color-danger-subtle: rgba(220, 38, 38, 0.08);
+  --color-error: #dc2626;
+  --color-error-subtle: rgba(220, 38, 38, 0.08);
   --color-info: #2563eb;
   --color-info-subtle: rgba(37, 99, 235, 0.08);
 
