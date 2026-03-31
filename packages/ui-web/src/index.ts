@@ -42,6 +42,7 @@ export * from "./primitives/table";
 export * from "./primitives/tabs";
 export * from "./primitives/tag-group";
 export * from "./primitives/textarea";
+export * from "./primitives/theme-root";
 export * from "./primitives/toggle";
 export * from "./primitives/tooltip";
 export * from "./patterns/form-field";

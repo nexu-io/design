@@ -4,7 +4,36 @@
 @source "./**/*.{ts,tsx,mdx}";
 
 @layer base {
-  body {
-    @apply p-6;
+  html,
+  body,
+  #storybook-root {
+    @apply bg-background text-foreground;
   }
+
+  body {
+    @apply bg-background p-6 text-foreground;
+  }
+
+  #storybook-root {
+    min-height: calc(100vh - 3rem);
+  }
+}
+
+.sb-show-main,
+.sb-main-padded,
+.sb-main-centered,
+.sb-main-fullscreen {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/*
+ * Docs-page canvas & source blocks.
+ * The docs chrome (title, args table, etc.) is themed via the DocsContainer
+ * theme prop in preview.tsx. These rules only cover the story preview and
+ * source-code areas that render inside the docs page.
+ */
+.docs-story {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
 }

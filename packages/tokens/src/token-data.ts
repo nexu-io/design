@@ -1,0 +1,59 @@
+import tokenSource from "./token-source.json";
+
+export type BrandPreset = keyof typeof tokenSource.brandPresets;
+
+export type TokenCategory = "color" | "radius" | "shadow" | "motion";
+
+export type TokenDefinition = {
+  name: string;
+  cssVar: `--${string}`;
+  category: TokenCategory;
+  utility?: string;
+  value: string;
+  description: string;
+  foreground?: string;
+};
+
+type ThemeVariables = Record<`--${string}`, string>;
+
+type BrandPresetDefinition = {
+  label: string;
+  hex?: string;
+};
+
+type TokenSource = {
+  brandPresets: Record<string, BrandPresetDefinition>;
+  metadata: {
+    colors: TokenDefinition[];
+    radii: TokenDefinition[];
+    shadows: TokenDefinition[];
+    motion: TokenDefinition[];
+  };
+  themes: {
+    light: ThemeVariables;
+    dark: ThemeVariables;
+  };
+};
+
+const typedTokenSource = tokenSource as TokenSource;
+
+export const brandPresets = typedTokenSource.brandPresets as Record<
+  BrandPreset,
+  BrandPresetDefinition
+>;
+
+export const BRAND_PRESET_LABELS = Object.fromEntries(
+  Object.entries(brandPresets).map(([key, preset]) => [key, preset.label]),
+) as Record<BrandPreset, string>;
+
+export const BRAND_PRESET_HEX = Object.fromEntries(
+  Object.entries(brandPresets)
+    .filter(([, preset]) => preset.hex)
+    .map(([key, preset]) => [key, preset.hex]),
+) as Record<Exclude<BrandPreset, "default">, string>;
+
+export const semanticColorTokens = typedTokenSource.metadata.colors;
+export const radiusTokens = typedTokenSource.metadata.radii;
+export const shadowTokens = typedTokenSource.metadata.shadows;
+export const motionTokens = typedTokenSource.metadata.motion;
+export const themeVariables = typedTokenSource.themes;

@@ -20,7 +20,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && cp src/styles.css dist/styles.css",
+    "generate:styles": "node ./scripts/generate-styles.mjs",
+    "build": "pnpm run generate:styles && tsc -p tsconfig.build.json && cp src/styles.css dist/styles.css && cp src/token-source.json dist/token-source.json",
     "clean": "rm -rf dist",
     "pack:check": "pnpm run build && npm pack --dry-run",
     "typecheck": "tsc --noEmit",
