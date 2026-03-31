@@ -133,7 +133,7 @@ export const AccordionTrigger = React.forwardRef<
       data-state={open ? "open" : "closed"}
       aria-expanded={open}
       className={cn(
-        "flex w-full items-center justify-between gap-3 py-4 text-left text-sm font-medium text-text-primary transition-colors hover:text-text-primary/80",
+        "flex w-full items-center justify-between gap-3 px-4 py-4 text-left text-sm font-medium text-text-primary transition-colors hover:text-text-primary/80",
         className,
       )}
       onClick={(event) => {
@@ -177,7 +177,7 @@ export const AccordionContent = React.forwardRef<
       data-slot="accordion-content"
       data-state={open ? "open" : "closed"}
       hidden={hidden ?? !open}
-      className={cn("pb-4 text-sm text-text-secondary", className)}
+      className={cn("px-4 pb-4 text-sm text-text-secondary", className)}
       {...props}
     />
   );

@@ -22,7 +22,7 @@ const rootStyles: Record<ConversationMessageVariant, string> = {
 };
 
 const bubbleStyles: Record<ConversationMessageVariant, string> = {
-  user: "border-transparent bg-accent text-accent-fg rounded-br-sm",
+  user: "border-border-subtle bg-surface-2 text-text-primary rounded-br-sm",
   assistant: "border-border bg-surface-1 text-text-primary rounded-bl-sm",
   system: "border-border-subtle bg-surface-2/70 text-text-secondary rounded-xl",
   status: "border-border-subtle bg-surface-2/60 text-text-muted rounded-full px-3 py-1.5",
@@ -63,7 +63,7 @@ export function ConversationMessage({
         <div
           data-slot="conversation-message-bubble"
           className={cn(
-            "rounded-2xl border px-3 py-2 text-[12px] leading-relaxed shadow-sm whitespace-pre-line",
+            "rounded-2xl border px-3 py-2 text-[12px] leading-relaxed shadow-xs whitespace-pre-line",
             bubbleStyles[variant],
             bubbleClassName,
           )}

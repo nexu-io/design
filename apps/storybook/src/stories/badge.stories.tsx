@@ -1,3 +1,4 @@
+import { AlertCircle, CheckCircle2, CircleDot, Clock, Info } from "lucide-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Badge } from "@nexu-design/ui-web";
@@ -20,6 +21,28 @@ export const Variants: Story = {
       <Badge variant="success">Connected</Badge>
       <Badge variant="warning">Pending</Badge>
       <Badge variant="destructive">Failed</Badge>
+    </div>
+  ),
+};
+
+export const WithIcons: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-2">
+      <Badge variant="success">
+        <CheckCircle2 /> Connected
+      </Badge>
+      <Badge variant="warning">
+        <Clock /> Pending
+      </Badge>
+      <Badge variant="destructive">
+        <AlertCircle /> Failed
+      </Badge>
+      <Badge variant="outline">
+        <Info /> Info
+      </Badge>
+      <Badge>
+        <CircleDot /> Running
+      </Badge>
     </div>
   ),
 };

@@ -43,6 +43,18 @@ export const WithIcons: Story = {
   ),
 };
 
+export const Disabled: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-3">
+      <Button disabled>Primary</Button>
+      <Button variant="secondary" disabled>Secondary</Button>
+      <Button variant="outline" disabled>Outline</Button>
+      <Button variant="ghost" disabled>Ghost</Button>
+      <Button variant="destructive" disabled>Delete</Button>
+    </div>
+  ),
+};
+
 export const Loading: Story = {
   args: {
     loading: true,

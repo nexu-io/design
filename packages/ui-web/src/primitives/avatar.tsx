@@ -2,6 +2,7 @@ import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import type * as React from "react";
 
 import { cn } from "../lib/cn";
+import { NexuMarkIcon } from "./logo";
 
 function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Root>) {
   return (
@@ -25,17 +26,20 @@ function AvatarImage({ className, ...props }: React.ComponentProps<typeof Avatar
 
 function AvatarFallback({
   className,
+  children,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
   return (
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
       className={cn(
-        "flex size-full items-center justify-center rounded-full bg-muted text-[12px] font-medium text-muted-foreground",
+        "flex size-full items-center justify-center rounded-[inherit] bg-muted text-[12px] font-medium text-muted-foreground",
         className,
       )}
       {...props}
-    />
+    >
+      {children ?? <NexuMarkIcon size={16} className="text-muted-foreground" />}
+    </AvatarPrimitive.Fallback>
   );
 }
 

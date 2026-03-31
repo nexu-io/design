@@ -307,12 +307,12 @@ const ComboboxInput = React.forwardRef<HTMLInputElement, ComboboxInputProps>(
       : undefined;
 
     return (
-      <div className="border-b border-border p-2">
+      <div className="border-b border-border px-2 py-1.5">
         <Input
           ref={ref}
           aria-activedescendant={activeItemId}
           autoFocus
-          className={cn("border-none bg-transparent shadow-none focus-within:ring-0", className)}
+          className={cn("h-7 border-none bg-transparent shadow-none focus-within:ring-0", className)}
           data-slot="combobox-input"
           inputClassName={cn("text-[12px]", inputClassName)}
           onChange={(event) => {
@@ -422,8 +422,9 @@ const ComboboxItem = React.forwardRef<HTMLButtonElement, ComboboxItemProps>(
         data-slot="combobox-item"
         disabled={disabled}
         className={cn(
-          "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-[13px] text-foreground transition-colors outline-none hover:bg-accent/50 focus-visible:bg-accent/50 disabled:pointer-events-none disabled:opacity-50",
-          isActive && "bg-accent/50",
+          "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-[13px] text-foreground transition-colors outline-none hover:bg-surface-2 focus-visible:bg-surface-2 disabled:pointer-events-none disabled:opacity-50",
+          isActive && "bg-surface-2",
+          isSelected && "font-semibold text-foreground",
           className,
         )}
         onClick={(event) => {
@@ -437,7 +438,7 @@ const ComboboxItem = React.forwardRef<HTMLButtonElement, ComboboxItemProps>(
         {...props}
       >
         <span className="min-w-0 flex-1">{children}</span>
-        {isSelected ? <Check className="size-4 shrink-0 text-accent" /> : null}
+        {isSelected ? <Check className="size-4 shrink-0 text-foreground" /> : null}
       </button>
     );
   },
