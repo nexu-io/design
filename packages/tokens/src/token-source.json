@@ -1,0 +1,260 @@
+{
+  "brandPresets": {
+    "default": { "label": "Default" },
+    "ocean": { "label": "Ocean", "hex": "#0ea5e9" },
+    "violet": { "label": "Violet", "hex": "#8b5cf6" },
+    "rose": { "label": "Rose", "hex": "#f43f5e" },
+    "emerald": { "label": "Emerald", "hex": "#10b981" }
+  },
+  "metadata": {
+    "colors": [
+      {
+        "name": "Primary",
+        "cssVar": "--primary",
+        "category": "color",
+        "utility": "bg-primary",
+        "value": "hsl(var(--primary))",
+        "foreground": "hsl(var(--primary-foreground))",
+        "description": "Primary brand action and emphasis color."
+      },
+      {
+        "name": "Secondary",
+        "cssVar": "--secondary",
+        "category": "color",
+        "utility": "bg-secondary",
+        "value": "hsl(var(--secondary))",
+        "foreground": "hsl(var(--secondary-foreground))",
+        "description": "Secondary surface for subtle emphasis."
+      },
+      {
+        "name": "Muted",
+        "cssVar": "--muted",
+        "category": "color",
+        "utility": "bg-muted",
+        "value": "hsl(var(--muted))",
+        "foreground": "hsl(var(--muted-foreground))",
+        "description": "Low-contrast surfaces and supporting text."
+      },
+      {
+        "name": "Surface",
+        "cssVar": "--card",
+        "category": "color",
+        "utility": "bg-card",
+        "value": "hsl(var(--card))",
+        "foreground": "hsl(var(--card-foreground))",
+        "description": "Default elevated surface background."
+      },
+      {
+        "name": "Success",
+        "cssVar": "--success",
+        "category": "color",
+        "utility": "bg-success",
+        "value": "hsl(var(--success))",
+        "foreground": "hsl(var(--success-foreground))",
+        "description": "Positive state and confirmation color."
+      },
+      {
+        "name": "Warning",
+        "cssVar": "--warning",
+        "category": "color",
+        "utility": "bg-warning",
+        "value": "hsl(var(--warning))",
+        "foreground": "hsl(var(--warning-foreground))",
+        "description": "Caution and in-progress attention state."
+      }
+    ],
+    "radii": [
+      {
+        "name": "Radius XS",
+        "cssVar": "--radius-xs",
+        "category": "radius",
+        "value": "var(--radius-xs)",
+        "description": "Tight shape for small controls and badges."
+      },
+      {
+        "name": "Radius SM",
+        "cssVar": "--radius-sm",
+        "category": "radius",
+        "value": "var(--radius-sm)",
+        "description": "Small surface corners."
+      },
+      {
+        "name": "Radius MD",
+        "cssVar": "--radius-md",
+        "category": "radius",
+        "value": "var(--radius-md)",
+        "description": "Default component corner radius."
+      },
+      {
+        "name": "Radius LG",
+        "cssVar": "--radius-lg",
+        "category": "radius",
+        "value": "var(--radius-lg)",
+        "description": "Large cards and panels."
+      },
+      {
+        "name": "Radius XL",
+        "cssVar": "--radius-xl",
+        "category": "radius",
+        "value": "var(--radius-xl)",
+        "description": "Hero surfaces and highly rounded UI."
+      }
+    ],
+    "shadows": [
+      {
+        "name": "Shadow XS",
+        "cssVar": "--shadow-xs",
+        "category": "shadow",
+        "value": "var(--shadow-xs)",
+        "description": "Micro depth for chips and inline surfaces."
+      },
+      {
+        "name": "Shadow SM",
+        "cssVar": "--shadow-sm",
+        "category": "shadow",
+        "value": "var(--shadow-sm)",
+        "description": "Default component elevation."
+      },
+      {
+        "name": "Shadow MD",
+        "cssVar": "--shadow-md",
+        "category": "shadow",
+        "value": "var(--shadow-md)",
+        "description": "Higher emphasis overlays and cards."
+      }
+    ],
+    "motion": [
+      {
+        "name": "Duration Fast",
+        "cssVar": "--duration-fast",
+        "category": "motion",
+        "value": "var(--duration-fast)",
+        "description": "Quick hover and affordance transitions."
+      },
+      {
+        "name": "Duration Normal",
+        "cssVar": "--duration-normal",
+        "category": "motion",
+        "value": "var(--duration-normal)",
+        "description": "Default UI transition timing."
+      },
+      {
+        "name": "Ease Standard",
+        "cssVar": "--ease-standard",
+        "category": "motion",
+        "value": "var(--ease-standard)",
+        "description": "Shared motion easing curve."
+      }
+    ]
+  },
+  "themes": {
+    "light": {
+      "--background": "0 0% 100%",
+      "--foreground": "222.2 84% 4.9%",
+      "--card": "0 0% 100%",
+      "--card-foreground": "222.2 84% 4.9%",
+      "--popover": "0 0% 100%",
+      "--popover-foreground": "222.2 84% 4.9%",
+      "--primary": "221.2 83.2% 53.3%",
+      "--primary-foreground": "210 40% 98%",
+      "--secondary": "210 40% 96.1%",
+      "--secondary-foreground": "222.2 47.4% 11.2%",
+      "--muted": "210 40% 96.1%",
+      "--muted-foreground": "215.4 16.3% 46.9%",
+      "--accent": "210 40% 96.1%",
+      "--accent-foreground": "222.2 47.4% 11.2%",
+      "--destructive": "0 84.2% 60.2%",
+      "--destructive-foreground": "210 40% 98%",
+      "--success": "142 72% 29%",
+      "--success-foreground": "138 76% 97%",
+      "--warning": "38 92% 50%",
+      "--warning-foreground": "48 96% 89%",
+      "--border": "214.3 31.8% 91.4%",
+      "--input": "214.3 31.8% 91.4%",
+      "--ring": "221.2 83.2% 53.3%",
+      "--radius-xs": "0.25rem",
+      "--radius-sm": "0.375rem",
+      "--radius-md": "0.5rem",
+      "--radius-lg": "0.75rem",
+      "--radius-xl": "1rem",
+      "--shadow-xs": "0 1px 2px 0 rgb(15 23 42 / 0.04)",
+      "--shadow-sm": "0 1px 3px 0 rgb(15 23 42 / 0.08), 0 1px 2px -1px rgb(15 23 42 / 0.08)",
+      "--shadow-md": "0 8px 20px -12px rgb(15 23 42 / 0.2)",
+      "--duration-fast": "120ms",
+      "--duration-normal": "200ms",
+      "--ease-standard": "cubic-bezier(0.2, 0, 0, 1)",
+      "--color-surface-0": "hsl(var(--background))",
+      "--color-surface-1": "hsl(var(--card))",
+      "--color-surface-2": "hsl(var(--secondary))",
+      "--color-text-primary": "hsl(var(--foreground))",
+      "--color-text-secondary": "hsl(var(--secondary-foreground))",
+      "--color-text-muted": "hsl(var(--muted-foreground))",
+      "--color-brand-primary": "hsl(var(--primary))",
+      "--color-accent": "hsl(var(--primary))",
+      "--color-accent-fg": "hsl(var(--primary-foreground))",
+      "--color-accent-hover": "hsl(var(--primary) / 0.9)",
+      "--color-border": "hsl(var(--border))",
+      "--color-danger": "hsl(var(--destructive))",
+      "--color-success": "hsl(var(--success))",
+      "--color-warning": "hsl(var(--warning))",
+      "--color-brand-subtle": "hsl(var(--primary) / 0.12)",
+      "--color-success-subtle": "hsl(var(--success) / 0.14)",
+      "--color-warning-subtle": "hsl(var(--warning) / 0.18)",
+      "--color-danger-subtle": "hsl(var(--destructive) / 0.14)"
+    },
+    "dark": {
+      "--background": "222.2 84% 4.9%",
+      "--foreground": "210 40% 98%",
+      "--card": "222.2 84% 6.2%",
+      "--card-foreground": "210 40% 98%",
+      "--popover": "222.2 84% 6.2%",
+      "--popover-foreground": "210 40% 98%",
+      "--primary": "217.2 91.2% 59.8%",
+      "--primary-foreground": "222.2 47.4% 11.2%",
+      "--secondary": "217.2 32.6% 17.5%",
+      "--secondary-foreground": "210 40% 98%",
+      "--muted": "217.2 32.6% 17.5%",
+      "--muted-foreground": "215 20.2% 65.1%",
+      "--accent": "217.2 32.6% 17.5%",
+      "--accent-foreground": "210 40% 98%",
+      "--destructive": "0 62.8% 30.6%",
+      "--destructive-foreground": "210 40% 98%",
+      "--success": "142 70% 34%",
+      "--success-foreground": "138 76% 97%",
+      "--warning": "43 96% 56%",
+      "--warning-foreground": "26 83% 14%",
+      "--border": "217.2 32.6% 17.5%",
+      "--input": "217.2 32.6% 17.5%",
+      "--ring": "224.3 76.3% 48%",
+      "--radius-xs": "0.25rem",
+      "--radius-sm": "0.375rem",
+      "--radius-md": "0.5rem",
+      "--radius-lg": "0.75rem",
+      "--radius-xl": "1rem",
+      "--shadow-xs": "0 1px 2px 0 rgb(15 23 42 / 0.04)",
+      "--shadow-sm": "0 1px 3px 0 rgb(15 23 42 / 0.08), 0 1px 2px -1px rgb(15 23 42 / 0.08)",
+      "--shadow-md": "0 8px 20px -12px rgb(15 23 42 / 0.2)",
+      "--duration-fast": "120ms",
+      "--duration-normal": "200ms",
+      "--ease-standard": "cubic-bezier(0.2, 0, 0, 1)",
+      "--color-surface-0": "hsl(var(--background))",
+      "--color-surface-1": "hsl(var(--card))",
+      "--color-surface-2": "hsl(var(--secondary))",
+      "--color-text-primary": "hsl(var(--foreground))",
+      "--color-text-secondary": "hsl(var(--secondary-foreground))",
+      "--color-text-muted": "hsl(var(--muted-foreground))",
+      "--color-brand-primary": "hsl(var(--primary))",
+      "--color-accent": "hsl(var(--primary))",
+      "--color-accent-fg": "hsl(var(--primary-foreground))",
+      "--color-accent-hover": "hsl(var(--primary) / 0.88)",
+      "--color-border": "hsl(var(--border))",
+      "--color-danger": "hsl(var(--destructive))",
+      "--color-success": "hsl(var(--success))",
+      "--color-warning": "hsl(var(--warning))",
+      "--color-brand-subtle": "hsl(var(--primary) / 0.2)",
+      "--color-success-subtle": "hsl(var(--success) / 0.2)",
+      "--color-warning-subtle": "hsl(var(--warning) / 0.22)",
+      "--color-danger-subtle": "hsl(var(--destructive) / 0.24)"
+    }
+  }
+}
