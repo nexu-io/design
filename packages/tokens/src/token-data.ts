@@ -2,7 +2,18 @@ import tokenSource from "./token-source.json";
 
 export type BrandPreset = keyof typeof tokenSource.brandPresets;
 
-export type TokenCategory = "color" | "radius" | "shadow" | "motion" | "spacing" | "typography" | "surface" | "border" | "text" | "darkSurface" | "accentVariant";
+export type TokenCategory =
+  | "color"
+  | "radius"
+  | "shadow"
+  | "motion"
+  | "spacing"
+  | "typography"
+  | "surface"
+  | "border"
+  | "text"
+  | "darkSurface"
+  | "accentVariant";
 
 export type TokenDefinition = {
   name: string;

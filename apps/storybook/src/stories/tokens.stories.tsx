@@ -92,10 +92,10 @@ type Story = StoryObj<TokensStoryArgs>;
 
 export const Playground: Story = {
   args: {
-    brandColor: "rgba(37, 99, 235, 1)"
+    brandColor: "rgba(37, 99, 235, 1)",
   },
 
-  render: renderTokensStory
+  render: renderTokensStory,
 };
 
 function renderTokensStory(
@@ -232,12 +232,18 @@ function renderTokensStory(
           </div>
 
           <div className="grid gap-6 xl:grid-cols-2">
-            <TokenGroupCard title="Border variants" description="Alpha-based borders for layered surfaces.">
+            <TokenGroupCard
+              title="Border variants"
+              description="Alpha-based borders for layered surfaces."
+            >
               {borderTokens.map((token) => (
                 <SwatchCard key={token.cssVar} token={token} />
               ))}
             </TokenGroupCard>
-            <TokenGroupCard title="Text levels" description="Extended text hierarchy beyond primary/secondary/muted.">
+            <TokenGroupCard
+              title="Text levels"
+              description="Extended text hierarchy beyond primary/secondary/muted."
+            >
               {textLevelTokens.map((token) => (
                 <SwatchCard key={token.cssVar} token={token} />
               ))}
@@ -245,19 +251,28 @@ function renderTokensStory(
           </div>
 
           <div className="grid gap-6 xl:grid-cols-2">
-            <TokenGroupCard title="Dark surfaces" description="Intentionally dark panels — hero, brand sections.">
+            <TokenGroupCard
+              title="Dark surfaces"
+              description="Intentionally dark panels — hero, brand sections."
+            >
               {darkSurfaceTokens.map((token) => (
                 <SwatchCard key={token.cssVar} token={token} />
               ))}
             </TokenGroupCard>
-            <TokenGroupCard title="Accent variants" description="Subtle accent washes for hover and active states.">
+            <TokenGroupCard
+              title="Accent variants"
+              description="Subtle accent washes for hover and active states."
+            >
               {accentVariantTokens.map((token) => (
                 <SwatchCard key={token.cssVar} token={token} />
               ))}
             </TokenGroupCard>
           </div>
 
-          <TokenGroupCard title="Spacing scale" description="Base unit 0.25rem (4px). All spacing utilities multiply this value.">
+          <TokenGroupCard
+            title="Spacing scale"
+            description="Base unit 0.25rem (4px). All spacing utilities multiply this value."
+          >
             <div className="space-y-1">
               {spacingTokens.map((token) => (
                 <SpacingRow key={token.cssVar} token={token} />
@@ -266,7 +281,10 @@ function renderTokensStory(
           </TokenGroupCard>
 
           <div className="grid gap-6 xl:grid-cols-2">
-            <TokenGroupCard title="Typography" description="Font stacks registered as design tokens.">
+            <TokenGroupCard
+              title="Typography"
+              description="Font stacks registered as design tokens."
+            >
               {typographyTokens.map((token) => (
                 <TypographyRow key={token.cssVar} token={token} />
               ))}
