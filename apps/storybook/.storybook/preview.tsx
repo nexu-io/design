@@ -1,7 +1,6 @@
 import type React from "react";
 
 import { DocsContainer, type DocsContainerProps } from "@storybook/addon-docs/blocks";
-import { withThemeByClassName } from "@storybook/addon-themes";
 import type { Preview } from "@storybook/react-vite";
 
 import { darkManagerTheme, lightManagerTheme } from "../src/storybook/storybook-themes";
@@ -73,15 +72,6 @@ const preview: Preview = {
     },
   },
   decorators: [
-    withThemeByClassName({
-      themes: {
-        light: "",
-        dark: "dark",
-        system: "",
-      },
-      defaultTheme: "light",
-      parentSelector: "html",
-    }),
     (Story, context) => {
       applyGlobalTokenState({
         theme: context.globals.theme,
