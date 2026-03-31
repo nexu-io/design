@@ -6,10 +6,17 @@ import type { Meta, StoryContext, StoryObj } from "@storybook/react-vite";
 import {
   BRAND_PRESET_LABELS,
   type TokenDefinition,
+  accentVariantTokens,
+  borderTokens,
+  darkSurfaceTokens,
   motionTokens,
   radiusTokens,
   semanticColorTokens,
   shadowTokens,
+  spacingTokens,
+  surfaceTokens,
+  textLevelTokens,
+  typographyTokens,
 } from "@nexu-design/tokens";
 import {
   Badge,
@@ -84,7 +91,11 @@ export default meta;
 type Story = StoryObj<TokensStoryArgs>;
 
 export const Playground: Story = {
-  render: renderTokensStory,
+  args: {
+    brandColor: "rgba(37, 99, 235, 1)"
+  },
+
+  render: renderTokensStory
 };
 
 function renderTokensStory(
@@ -214,34 +225,81 @@ function renderTokensStory(
             ))}
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-3">
-            <TokenGroupCard title="Radius scale" description="Shape personality across surfaces.">
-              {radiusTokens.map((token) => (
-                <TokenValueRow
-                  key={token.cssVar}
-                  token={token}
-                  value={radiusValues[token.cssVar]}
-                />
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {surfaceTokens.map((token) => (
+              <SwatchCard key={token.cssVar} token={token} />
+            ))}
+          </div>
+
+          <div className="grid gap-6 xl:grid-cols-2">
+            <TokenGroupCard title="Border variants" description="Alpha-based borders for layered surfaces.">
+              {borderTokens.map((token) => (
+                <SwatchCard key={token.cssVar} token={token} />
               ))}
             </TokenGroupCard>
-            <TokenGroupCard title="Shadow scale" description="Depth for overlays and cards.">
-              {shadowTokens.map((token) => (
-                <TokenValueRow
-                  key={token.cssVar}
-                  token={token}
-                  value={shadowValues[token.cssVar]}
-                />
+            <TokenGroupCard title="Text levels" description="Extended text hierarchy beyond primary/secondary/muted.">
+              {textLevelTokens.map((token) => (
+                <SwatchCard key={token.cssVar} token={token} />
               ))}
             </TokenGroupCard>
-            <TokenGroupCard title="Motion" description="Shared transition timing primitives.">
-              {motionTokens.map((token) => (
-                <TokenValueRow
-                  key={token.cssVar}
-                  token={token}
-                  value={motionValues[token.cssVar]}
-                />
+          </div>
+
+          <div className="grid gap-6 xl:grid-cols-2">
+            <TokenGroupCard title="Dark surfaces" description="Intentionally dark panels — hero, brand sections.">
+              {darkSurfaceTokens.map((token) => (
+                <SwatchCard key={token.cssVar} token={token} />
               ))}
             </TokenGroupCard>
+            <TokenGroupCard title="Accent variants" description="Subtle accent washes for hover and active states.">
+              {accentVariantTokens.map((token) => (
+                <SwatchCard key={token.cssVar} token={token} />
+              ))}
+            </TokenGroupCard>
+          </div>
+
+          <TokenGroupCard title="Spacing scale" description="Base unit 0.25rem (4px). All spacing utilities multiply this value.">
+            <div className="space-y-1">
+              {spacingTokens.map((token) => (
+                <SpacingRow key={token.cssVar} token={token} />
+              ))}
+            </div>
+          </TokenGroupCard>
+
+          <div className="grid gap-6 xl:grid-cols-2">
+            <TokenGroupCard title="Typography" description="Font stacks registered as design tokens.">
+              {typographyTokens.map((token) => (
+                <TypographyRow key={token.cssVar} token={token} />
+              ))}
+            </TokenGroupCard>
+            <div className="space-y-6">
+              <TokenGroupCard title="Radius scale" description="Shape personality across surfaces.">
+                {radiusTokens.map((token) => (
+                  <TokenValueRow
+                    key={token.cssVar}
+                    token={token}
+                    value={radiusValues[token.cssVar]}
+                  />
+                ))}
+              </TokenGroupCard>
+              <TokenGroupCard title="Shadow scale" description="Depth for overlays and cards.">
+                {shadowTokens.map((token) => (
+                  <TokenValueRow
+                    key={token.cssVar}
+                    token={token}
+                    value={shadowValues[token.cssVar]}
+                  />
+                ))}
+              </TokenGroupCard>
+              <TokenGroupCard title="Motion" description="Shared transition timing primitives.">
+                {motionTokens.map((token) => (
+                  <TokenValueRow
+                    key={token.cssVar}
+                    token={token}
+                    value={motionValues[token.cssVar]}
+                  />
+                ))}
+              </TokenGroupCard>
+            </div>
           </div>
         </section>
       </PageShell>
@@ -273,6 +331,51 @@ function ColorTokenCard({ token }: { token: TokenDefinition }) {
         <code className="block text-xs">{token.cssVar}</code>
         <code className="block text-xs">{token.value}</code>
       </div>
+    </div>
+  );
+}
+
+function SpacingRow({ token }: { token: TokenDefinition }) {
+  return (
+    <div className="flex items-center gap-3 rounded-md border border-border bg-background px-3 py-1.5 text-sm">
+      <code className="w-16 shrink-0 text-xs font-medium text-text-primary">{token.name}</code>
+      <div className="h-3 shrink-0 rounded-sm bg-primary" style={{ width: token.value }} />
+      <code className="w-20 shrink-0 text-xs text-text-secondary">{token.value}</code>
+      <span className="truncate text-xs text-text-muted">{token.description}</span>
+    </div>
+  );
+}
+
+function SwatchCard({ token }: { token: TokenDefinition }) {
+  return (
+    <div className="flex items-center gap-3 overflow-hidden rounded-lg border border-border bg-card p-3 shadow-sm">
+      <div
+        className="h-10 w-10 shrink-0 rounded-md border border-border"
+        style={{ backgroundColor: token.value }}
+      />
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-medium text-text-primary">{token.name}</p>
+        <code className="text-xs text-text-secondary">{token.cssVar}</code>
+      </div>
+      <CopyButton value={token.cssVar} />
+    </div>
+  );
+}
+
+function TypographyRow({ token }: { token: TokenDefinition }) {
+  return (
+    <div className="rounded-md border border-border bg-background px-3 py-2 text-sm">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="font-medium text-text-primary">{token.name}</p>
+          <code className="text-xs text-text-secondary">{token.cssVar}</code>
+        </div>
+        <CopyButton value={token.cssVar} />
+      </div>
+      <p className="mt-1 text-xs text-text-secondary">{token.description}</p>
+      <p className="mt-2 text-sm" style={{ fontFamily: token.value }}>
+        The quick brown fox jumps over the lazy dog — 0123456789
+      </p>
     </div>
   );
 }

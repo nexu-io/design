@@ -201,7 +201,7 @@ export const Onboarding: Story = {
             <StepperItem status="pending" step={3} label="Channels" className="max-w-[120px]" />
           </Stepper>
 
-          <div className="rounded-3xl border border-border bg-surface-1 p-8 shadow-card">
+          <div className="rounded-2xl border border-border bg-surface-1 p-8 shadow-card">
             <h2 className="text-2xl font-semibold text-text-primary">Tell us how you work</h2>
             <p className="mt-2 text-sm leading-6 text-text-secondary">
               Keep the shell stable while onboarding steps swap inside the content slot.

@@ -2,7 +2,7 @@ import tokenSource from "./token-source.json";
 
 export type BrandPreset = keyof typeof tokenSource.brandPresets;
 
-export type TokenCategory = "color" | "radius" | "shadow" | "motion";
+export type TokenCategory = "color" | "radius" | "shadow" | "motion" | "spacing" | "typography" | "surface" | "border" | "text" | "darkSurface" | "accentVariant";
 
 export type TokenDefinition = {
   name: string;
@@ -28,6 +28,13 @@ type TokenSource = {
     radii: TokenDefinition[];
     shadows: TokenDefinition[];
     motion: TokenDefinition[];
+    spacing: TokenDefinition[];
+    typography: TokenDefinition[];
+    surfaces: TokenDefinition[];
+    borders: TokenDefinition[];
+    textLevels: TokenDefinition[];
+    darkSurfaces: TokenDefinition[];
+    accentVariants: TokenDefinition[];
   };
   themes: {
     light: ThemeVariables;
@@ -56,4 +63,11 @@ export const semanticColorTokens = typedTokenSource.metadata.colors;
 export const radiusTokens = typedTokenSource.metadata.radii;
 export const shadowTokens = typedTokenSource.metadata.shadows;
 export const motionTokens = typedTokenSource.metadata.motion;
+export const spacingTokens = typedTokenSource.metadata.spacing;
+export const typographyTokens = typedTokenSource.metadata.typography;
+export const surfaceTokens = typedTokenSource.metadata.surfaces;
+export const borderTokens = typedTokenSource.metadata.borders;
+export const textLevelTokens = typedTokenSource.metadata.textLevels;
+export const darkSurfaceTokens = typedTokenSource.metadata.darkSurfaces;
+export const accentVariantTokens = typedTokenSource.metadata.accentVariants;
 export const themeVariables = typedTokenSource.themes;
