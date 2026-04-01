@@ -49,15 +49,17 @@ export function EntityCardMedia({ className, ...props }: React.HTMLAttributes<HT
   );
 }
 
-export interface EntityCardMediaImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
+export interface EntityCardMediaImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  alt: string;
+}
 
 export function EntityCardMediaImage({ className, alt, ...props }: EntityCardMediaImageProps) {
   return (
     <img
       data-slot="entity-card-media-image"
+      {...props}
       className={cn("size-full object-contain p-2", className)}
       alt={alt}
-      {...props}
     />
   );
 }

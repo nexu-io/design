@@ -42,11 +42,15 @@ console.log(greeting)</code></pre>
 `;
 
 export const Default: Story = {
-  render: () => <Prose className="max-w-2xl" dangerouslySetInnerHTML={{ __html: sampleHTML }} />,
+  render: () => (
+    // biome-ignore lint/security/noDangerouslySetInnerHtml: Prose stories intentionally render pre-defined HTML to demonstrate markdown styling
+    <Prose className="max-w-2xl" dangerouslySetInnerHTML={{ __html: sampleHTML }} />
+  ),
 };
 
 export const Compact: Story = {
   render: () => (
+    // biome-ignore lint/security/noDangerouslySetInnerHtml: Prose stories intentionally render pre-defined HTML to demonstrate markdown styling
     <Prose size="compact" className="max-w-xl" dangerouslySetInnerHTML={{ __html: sampleHTML }} />
   ),
 };

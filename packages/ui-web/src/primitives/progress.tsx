@@ -41,6 +41,7 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
     const percentage = safeValue === null ? 0 : (safeValue / clampedMax) * 100;
 
     return (
+      // biome-ignore lint/a11y/useFocusableInteractive: progressbar is a passive indicator, not an interactive control
       <div
         ref={ref}
         role="progressbar"

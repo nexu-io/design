@@ -61,13 +61,15 @@ describe("EntityCard", () => {
     );
 
     expect(screen.getByTestId("icon")).toBeInTheDocument();
-    const fallback = screen.getByTestId("icon").parentElement!;
+    const fallback = screen.getByTestId("icon").parentElement;
+    expect(fallback).toBeTruthy();
     expect(fallback).toHaveClass("text-text-primary");
   });
 
   it("EntityCardMedia has default border and background styles", () => {
     const { container } = render(<EntityCardMedia>content</EntityCardMedia>);
-    const media = container.querySelector("[data-slot='entity-card-media']")!;
+    const media = container.querySelector("[data-slot='entity-card-media']");
+    expect(media).toBeTruthy();
     expect(media).toHaveClass("border", "border-border-subtle", "bg-surface-0", "rounded-xl");
   });
 });

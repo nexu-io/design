@@ -21,10 +21,12 @@ export function MonoDigits({ children }: { children: React.ReactNode }) {
     <>
       {parts.map((part, i) =>
         DIGIT_RE.test(part) ? (
+          // biome-ignore lint/suspicious/noArrayIndexKey: split() produces positional fragments with no stable identity
           <span key={i} className="font-[family-name:var(--font-mono)]">
             {part}
           </span>
         ) : (
+          // biome-ignore lint/suspicious/noArrayIndexKey: split() produces positional fragments with no stable identity
           <React.Fragment key={i}>{part}</React.Fragment>
         ),
       )}

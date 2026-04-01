@@ -1,5 +1,5 @@
-import { AlertCircle, CheckCircle2, CircleDot, Clock, Info } from "lucide-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { AlertCircle, CheckCircle2, CircleDot, Clock, Info } from "lucide-react";
 
 import { Badge } from "@nexu-design/ui-web";
 
