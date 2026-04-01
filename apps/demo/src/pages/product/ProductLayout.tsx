@@ -6,15 +6,12 @@ import {
   ActivityBarIndicator,
   ActivityBarItem,
   DetailPanel,
-  FileEditor,
-  FileTree,
   NavigationMenu,
   NavigationMenuButton,
   NavigationMenuItem,
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  WorkspaceShell,
 } from "@nexu-design/ui-web";
 import {
   Clock,
@@ -31,7 +28,9 @@ import {
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
-import { CLONE_FILE_TREE, FOLDER_ICONS, FOLDER_ROUTES, type FileNode } from "./FileTree";
+import { FileEditor } from "./FileEditor";
+import { CLONE_FILE_TREE, FileTree, FOLDER_ICONS, FOLDER_ROUTES, type FileNode } from "./FileTree";
+import { WorkspaceShell } from "./WorkspaceShell";
 import { ProductLayoutContext } from "./ProductLayoutContext";
 import { getFile, saveFile } from "./fileStore";
 

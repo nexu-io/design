@@ -9,7 +9,6 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: "bg-secondary text-secondary-foreground",
-        brand: "border border-accent/20 bg-accent/5 text-accent",
         accent: "border border-accent/20 bg-accent/5 text-accent",
         secondary: "border-transparent bg-secondary text-secondary-foreground",
         outline:
@@ -20,10 +19,10 @@ const badgeVariants = cva(
         destructive: "border-transparent bg-destructive text-destructive-foreground",
       },
       size: {
-        xs: "px-1.5 py-0.5 text-[9px]",
-        sm: "px-2 py-0.5 text-[10px]",
-        default: "px-2 py-0.5 text-[11px]",
-        lg: "px-3 py-1.5 text-[13px] font-semibold",
+        xs: "px-1.5 py-0.5 text-2xs",
+        sm: "px-2 py-0.5 text-2xs",
+        default: "px-2 py-0.5 text-xs",
+        lg: "px-3 py-1.5 text-base font-semibold",
       },
       radius: {
         full: "rounded-full",

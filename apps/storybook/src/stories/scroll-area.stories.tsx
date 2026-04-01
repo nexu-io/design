@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { ScrollArea, ScrollBar } from "@nexu-design/ui-web";
+import { ScrollArea } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/ScrollArea",
@@ -28,7 +28,6 @@ export const Default: Story = {
             );
           })}
         </div>
-        <ScrollBar orientation="vertical" />
       </ScrollArea>
     </div>
   ),

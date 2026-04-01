@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Layers3, Sparkles } from "lucide-react";
+import { Server, Zap } from "lucide-react";
 
 import {
-  Badge,
   Button,
   EntityCard,
   EntityCardContent,
@@ -10,6 +9,8 @@ import {
   EntityCardFooter,
   EntityCardHeader,
   EntityCardMedia,
+  EntityCardMediaFallback,
+  EntityCardMediaImage,
   EntityCardMeta,
   EntityCardTitle,
 } from "@nexu-design/ui-web";
@@ -23,46 +24,154 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const SkillCards: Story = {
   render: () => (
-    <div className="grid w-[760px] grid-cols-2 gap-4">
+    <div className="grid w-[640px] grid-cols-2 gap-4">
       <EntityCard interactive>
         <EntityCardHeader>
           <EntityCardMedia>
-            <Sparkles className="size-4" />
+            <EntityCardMediaImage src="/logos/slack.svg" alt="Slack" />
           </EntityCardMedia>
           <div>
-            <EntityCardTitle>Content pipeline</EntityCardTitle>
-            <EntityCardDescription>
-              Automated drafting and approvals for weekly campaigns.
-            </EntityCardDescription>
-            <EntityCardMeta>12 active flows</EntityCardMeta>
+            <EntityCardTitle>Slack Relay</EntityCardTitle>
+            <EntityCardMeta className="mt-0.5">latest</EntityCardMeta>
           </div>
         </EntityCardHeader>
         <EntityCardContent>
-          Built for teams that need a faster handoff from research to publish-ready content.
+          <EntityCardDescription>
+            Route messages, trigger workflows, and manage channels from Slack.
+          </EntityCardDescription>
         </EntityCardContent>
-        <EntityCardFooter>
-          <Badge variant="success">Healthy</Badge>
+        <EntityCardFooter className="justify-end border-0 pt-0">
+          <Button variant="outline" size="sm">
+            Install
+          </Button>
         </EntityCardFooter>
       </EntityCard>
 
-      <EntityCard>
+      <EntityCard interactive>
         <EntityCardHeader>
           <EntityCardMedia>
-            <Layers3 className="size-4" />
+            <EntityCardMediaImage src="/logos/github.svg" alt="GitHub" />
           </EntityCardMedia>
           <div>
-            <EntityCardTitle>Escalation workspace</EntityCardTitle>
-            <EntityCardDescription>
-              Routes urgent issues to the right owner automatically.
-            </EntityCardDescription>
-            <EntityCardMeta>4 connected systems</EntityCardMeta>
+            <EntityCardTitle>Git Bridge</EntityCardTitle>
+            <EntityCardMeta className="mt-0.5">v2.1.0</EntityCardMeta>
           </div>
         </EntityCardHeader>
-        <EntityCardFooter>
+        <EntityCardContent>
+          <EntityCardDescription>
+            Sync repos, automate PR reviews, and manage branches across GitHub and GitLab.
+          </EntityCardDescription>
+        </EntityCardContent>
+        <EntityCardFooter className="justify-end border-0 pt-0">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-text-muted hover:bg-destructive/10 hover:text-destructive"
+          >
+            Uninstall
+          </Button>
+        </EntityCardFooter>
+      </EntityCard>
+
+      <EntityCard interactive>
+        <EntityCardHeader>
+          <EntityCardMedia>
+            <EntityCardMediaImage src="/logos/notion.svg" alt="Notion" />
+          </EntityCardMedia>
+          <div>
+            <EntityCardTitle>Notion Sync</EntityCardTitle>
+            <EntityCardMeta className="mt-0.5">v1.3.0</EntityCardMeta>
+          </div>
+        </EntityCardHeader>
+        <EntityCardContent>
+          <EntityCardDescription>
+            Sync pages, databases, and wikis between Notion and your workspace.
+          </EntityCardDescription>
+        </EntityCardContent>
+        <EntityCardFooter className="justify-end border-0 pt-0">
           <Button variant="outline" size="sm">
-            View details
+            Install
+          </Button>
+        </EntityCardFooter>
+      </EntityCard>
+
+      <EntityCard interactive>
+        <EntityCardHeader>
+          <EntityCardMedia>
+            <EntityCardMediaImage src="/logos/gmail.svg" alt="Gmail" />
+          </EntityCardMedia>
+          <div>
+            <EntityCardTitle>Gmail Agent</EntityCardTitle>
+            <EntityCardMeta className="mt-0.5">latest</EntityCardMeta>
+          </div>
+        </EntityCardHeader>
+        <EntityCardContent>
+          <EntityCardDescription>
+            Read, draft, and send emails. Manage labels and automate inbox workflows.
+          </EntityCardDescription>
+        </EntityCardContent>
+        <EntityCardFooter className="justify-end border-0 pt-0">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-text-muted hover:bg-destructive/10 hover:text-destructive"
+          >
+            Uninstall
+          </Button>
+        </EntityCardFooter>
+      </EntityCard>
+
+      {/* Icon fallback — no third-party logo */}
+      <EntityCard interactive>
+        <EntityCardHeader>
+          <EntityCardMedia>
+            <EntityCardMediaFallback>
+              <Zap className="size-5" />
+            </EntityCardMediaFallback>
+          </EntityCardMedia>
+          <div>
+            <EntityCardTitle>Gog CLI</EntityCardTitle>
+            <EntityCardMeta className="mt-0.5">latest</EntityCardMeta>
+          </div>
+        </EntityCardHeader>
+        <EntityCardContent>
+          <EntityCardDescription>
+            Google Workspace CLI for Gmail, Calendar, Drive, Contacts, Sheets, and more.
+          </EntityCardDescription>
+        </EntityCardContent>
+        <EntityCardFooter className="justify-end border-0 pt-0">
+          <Button variant="outline" size="sm">
+            Install
+          </Button>
+        </EntityCardFooter>
+      </EntityCard>
+
+      <EntityCard interactive>
+        <EntityCardHeader>
+          <EntityCardMedia>
+            <EntityCardMediaFallback>
+              <Server className="size-5" />
+            </EntityCardMediaFallback>
+          </EntityCardMedia>
+          <div>
+            <EntityCardTitle>Infra Monitor</EntityCardTitle>
+            <EntityCardMeta className="mt-0.5">v1.4.2</EntityCardMeta>
+          </div>
+        </EntityCardHeader>
+        <EntityCardContent>
+          <EntityCardDescription>
+            Real-time alerts and dashboards for cloud infrastructure health.
+          </EntityCardDescription>
+        </EntityCardContent>
+        <EntityCardFooter className="justify-end border-0 pt-0">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-text-muted hover:bg-destructive/10 hover:text-destructive"
+          >
+            Uninstall
           </Button>
         </EntityCardFooter>
       </EntityCard>

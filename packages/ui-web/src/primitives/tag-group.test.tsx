@@ -6,7 +6,7 @@ describe("TagGroup", () => {
   it("renders grouped tags with list semantics", () => {
     render(
       <TagGroup>
-        <TagGroupItem variant="brand">Alpha</TagGroupItem>
+        <TagGroupItem variant="accent">Alpha</TagGroupItem>
         <TagGroupItem variant="default">Beta</TagGroupItem>
       </TagGroup>,
     );

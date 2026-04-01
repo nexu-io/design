@@ -15,13 +15,28 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  args: {
+    title: "Color Tokens",
+    description: "Design tokens used across the system for consistent color usage.",
+  },
+};
+
+export const WithAction: Story = {
   render: () => (
-    <div className="w-[640px]">
-      <SectionHeader
-        title="Slack"
-        description="Manage workspace connection and credentials."
-        action={<Button size="sm">Reconnect</Button>}
-      />
-    </div>
+    <SectionHeader
+      title="Recent Activity"
+      description="Events from the last 7 days."
+      action={
+        <Button variant="outline" size="sm">
+          View all
+        </Button>
+      }
+    />
   ),
+};
+
+export const TitleOnly: Story = {
+  args: {
+    title: "Typography",
+  },
 };

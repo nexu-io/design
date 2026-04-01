@@ -152,7 +152,7 @@ export default function NexuDashboardPage() {
                           a.status === "busy"
                             ? "warning"
                             : a.status === "waiting"
-                              ? "brand"
+                              ? "accent"
                               : "success"
                         }
                         size="xs"

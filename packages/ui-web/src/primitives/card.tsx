@@ -3,26 +3,31 @@ import type * as React from "react";
 
 import { cn } from "../lib/cn";
 
-const cardVariants = cva("rounded-lg border bg-card text-card-foreground shadow-xs", {
-  variants: {
-    variant: {
-      default: "",
-      outline: "border-border",
-      muted: "bg-muted/40",
-      interactive: "transition-colors hover:bg-accent/40",
+const cardVariants = cva(
+  "rounded-xl border border-[var(--color-border-subtle)] bg-card text-card-foreground shadow-rest transition-[box-shadow,transform] duration-200 ease-out",
+  {
+    variants: {
+      variant: {
+        default: "hover:shadow-refine hover:-translate-y-px",
+        outline: "border-border hover:shadow-refine hover:-translate-y-px",
+        muted:
+          "bg-muted/40 text-lg text-muted-foreground hover:shadow-refine hover:-translate-y-px [&_[data-slot=card-title]]:text-lg [&_[data-slot=card-title]]:text-secondary-foreground",
+        interactive: "cursor-pointer hover:shadow-refine hover:-translate-y-px",
+        static: "",
+      },
+      padding: {
+        none: "p-0",
+        sm: "p-3",
+        md: "p-5",
+        lg: "p-6",
+      },
     },
-    padding: {
-      none: "p-0",
-      sm: "p-3",
-      md: "p-5",
-      lg: "p-6",
+    defaultVariants: {
+      variant: "default",
+      padding: "md",
     },
   },
-  defaultVariants: {
-    variant: "default",
-    padding: "md",
-  },
-});
+);
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -37,7 +42,13 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
 }
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn("text-base font-semibold tracking-tight", className)} {...props} />;
+  return (
+    <h3
+      data-slot="card-title"
+      className={cn("text-xl font-semibold tracking-tight", className)}
+      {...props}
+    />
+  );
 }
 
 export function CardDescription({

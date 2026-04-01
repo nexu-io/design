@@ -6,7 +6,7 @@ import * as React from "react";
 import { cn } from "../lib/cn";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-[13px] font-medium transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*=size-])]:size-4",
+  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-lg text-base font-medium transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*=size-])]:size-4",
   {
     variants: {
       variant: {
@@ -18,17 +18,17 @@ const buttonVariants = cva(
         outline:
           "border border-input bg-background text-foreground shadow-xs hover:border-foreground/15 hover:bg-foreground/[0.03] hover:text-foreground hover:shadow-sm",
         ghost:
-          "text-[var(--color-text-muted)] hover:bg-accent/5 hover:text-[var(--color-text-secondary)]",
+          "text-[var(--color-text-muted)] hover:bg-surface-2 hover:text-[var(--color-text-secondary)]",
         soft: "bg-accent/10 text-accent hover:bg-accent/20",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         link: "h-auto p-0 text-primary underline-offset-4 hover:underline",
       },
       size: {
-        xs: "h-7 rounded-md px-3 text-[12px] font-semibold",
+        xs: "h-7 rounded-md px-3 text-sm font-semibold",
         default: "h-9 px-4 py-2",
-        sm: "h-8 px-3 text-xs font-semibold",
+        sm: "h-8 px-3 text-sm font-semibold",
         md: "h-10 rounded-xl px-4 py-2 font-semibold",
-        lg: "h-12 rounded-xl px-6 text-[14px] font-semibold shadow-sm hover:shadow-lg hover:shadow-accent/20",
+        lg: "h-12 rounded-xl px-6 text-lg font-semibold shadow-sm hover:shadow-lg hover:shadow-accent/20",
         inline: "h-auto px-0",
         icon: "size-10 p-0",
         "icon-sm": "size-6 p-0",

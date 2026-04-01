@@ -66,8 +66,8 @@ function StoryRail({ tone = "dark" }: { tone?: "light" | "dark" }) {
           href="https://github.com/refly-ai/nexu"
           className={
             isDark
-              ? "inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white/82"
-              : "inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-4 py-3 text-sm text-text-secondary"
+              ? "inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-3 text-lg text-white/82"
+              : "inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-4 py-3 text-lg text-text-secondary"
           }
         >
           GitHub
@@ -101,8 +101,8 @@ function StoryRail({ tone = "dark" }: { tone?: "light" | "dark" }) {
             <p
               className={
                 isDark
-                  ? "text-[13px] leading-[1.6] text-white/58"
-                  : "text-[13px] leading-[1.6] text-text-secondary"
+                  ? "text-base leading-[1.6] text-white/58"
+                  : "text-base leading-[1.6] text-text-secondary"
               }
             >
               {item.text}
@@ -122,7 +122,7 @@ export const Login: Story = {
           <div className="rounded-2xl border border-border bg-surface-1 p-8 shadow-card">
             <div className="mb-6 text-center">
               <h2 className="text-lg font-semibold text-text-primary">Create account</h2>
-              <p className="mt-1 text-sm text-text-secondary">Choose how you want to continue.</p>
+              <p className="mt-1 text-lg text-text-secondary">Choose how you want to continue.</p>
             </div>
 
             <div className="space-y-3">
@@ -132,7 +132,7 @@ export const Login: Story = {
               </Button>
               <div className="flex items-center gap-3 py-1">
                 <div className="flex-1 border-t border-border" />
-                <span className="text-[11px] uppercase tracking-wider text-text-muted">or</span>
+                <span className="text-xs uppercase tracking-wider text-text-muted">or</span>
                 <div className="flex-1 border-t border-border" />
               </div>
               <div className="space-y-2">
@@ -161,7 +161,7 @@ export const LightLogin: Story = {
             <div className="rounded-2xl border border-border bg-surface-1 p-8 shadow-sm">
               <div className="mb-6 text-center">
                 <h2 className="text-lg font-semibold text-text-primary">Create account</h2>
-                <p className="mt-1 text-sm text-text-secondary">Choose how you want to continue.</p>
+                <p className="mt-1 text-lg text-text-secondary">Choose how you want to continue.</p>
               </div>
 
               <div className="space-y-3">
@@ -171,7 +171,7 @@ export const LightLogin: Story = {
                 </Button>
                 <div className="flex items-center gap-3 py-1">
                   <div className="flex-1 border-t border-border" />
-                  <span className="text-[11px] uppercase tracking-wider text-text-muted">or</span>
+                  <span className="text-xs uppercase tracking-wider text-text-muted">or</span>
                   <div className="flex-1 border-t border-border" />
                 </div>
                 <div className="space-y-2">
@@ -202,8 +202,8 @@ export const Onboarding: Story = {
           </Stepper>
 
           <div className="rounded-2xl border border-border bg-surface-1 p-8 shadow-card">
-            <h2 className="text-2xl font-semibold text-text-primary">Tell us how you work</h2>
-            <p className="mt-2 text-sm leading-6 text-text-secondary">
+            <h2 className="text-3xl font-semibold text-text-primary">Tell us how you work</h2>
+            <p className="mt-2 text-lg leading-6 text-text-secondary">
               Keep the shell stable while onboarding steps swap inside the content slot.
             </p>
             <div className="mt-6 grid grid-cols-2 gap-3">
@@ -212,7 +212,7 @@ export const Onboarding: Story = {
                   <button
                     key={item}
                     type="button"
-                    className={`rounded-2xl border px-4 py-5 text-left text-sm font-medium transition-colors ${
+                    className={`rounded-2xl border px-4 py-5 text-left text-lg font-medium transition-colors ${
                       index === 0
                         ? "border-[var(--color-brand-primary)] bg-[var(--color-brand-primary)]/5 text-text-primary"
                         : "border-border bg-surface-0 text-text-secondary"

@@ -16,6 +16,7 @@ const sizeClasses = {
 export function Spinner({ className, size = "md", ...props }: SpinnerProps) {
   return (
     <LoaderCircle
+      aria-hidden="true"
       className={cn("animate-spin text-muted-foreground", sizeClasses[size], className)}
       {...props}
     />

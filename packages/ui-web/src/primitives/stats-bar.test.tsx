@@ -13,9 +13,9 @@ describe("StatsBar", () => {
       />,
     );
 
-    expect(screen.getByText("96%")).toBeInTheDocument();
+    expect(screen.getByText((_, el) => el?.textContent === "96%")).toBeInTheDocument();
     expect(screen.getByText("Success rate")).toBeInTheDocument();
-    expect(screen.getByText("4")).toBeInTheDocument();
+    expect(screen.getAllByText((_, el) => el?.textContent === "4")[0]).toBeInTheDocument();
     expect(screen.getByText("Active agents")).toBeInTheDocument();
   });
 
@@ -28,7 +28,7 @@ describe("StatsBar", () => {
       />,
     );
 
-    const button = screen.getByRole("button", { name: /96% success rate/i });
+    const button = screen.getByRole("button", { name: /96\s*%\s*success rate/i });
     fireEvent.click(button);
 
     expect(button).toHaveAttribute("aria-pressed", "true");

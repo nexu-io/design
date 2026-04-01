@@ -13,7 +13,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <TagGroup>
-      <TagGroupItem variant="brand">AI</TagGroupItem>
+      <TagGroupItem variant="accent">AI</TagGroupItem>
       <TagGroupItem variant="accent">Slack</TagGroupItem>
       <TagGroupItem variant="success">Healthy</TagGroupItem>
       <TagGroupItem variant="warning">Needs review</TagGroupItem>

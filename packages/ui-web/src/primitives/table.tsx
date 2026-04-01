@@ -24,7 +24,7 @@ export function Table({ className, density = "default", hoverable = true, ...pro
       <div data-slot="table-container" className="relative w-full overflow-x-auto">
         <table
           data-slot="table"
-          className={cn("w-full caption-bottom text-sm", className)}
+          className={cn("w-full caption-bottom text-base", className)}
           {...props}
         />
       </div>
@@ -36,7 +36,13 @@ export function TableHeader({
   className,
   ...props
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead data-slot="table-header" className={cn("[&_tr]:border-b", className)} {...props} />;
+  return (
+    <thead
+      data-slot="table-header"
+      className={cn("[&_tr]:border-b [&_tr]:border-border-subtle", className)}
+      {...props}
+    />
+  );
 }
 
 export function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
@@ -61,8 +67,8 @@ export function TableRow({
       data-slot="table-row"
       data-state={selected ? "selected" : undefined}
       className={cn(
-        "border-b border-border transition-colors data-[state=selected]:bg-accent/5",
-        hoverable && "hover:bg-surface-2/60",
+        "border-b border-border-subtle transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] data-[state=selected]:bg-surface-2/40",
+        hoverable && "hover:bg-surface-2/50",
         className,
       )}
       {...props}
@@ -78,7 +84,7 @@ export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTa
       data-slot="table-head"
       className={cn(
         "text-left align-middle font-medium text-text-muted",
-        density === "compact" ? "h-9 px-3 text-[11px]" : "h-11 px-4 text-xs",
+        density === "compact" ? "h-8 px-4 text-xs" : "h-10 px-4 text-sm",
         className,
       )}
       {...props}
@@ -94,7 +100,7 @@ export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTa
       data-slot="table-cell"
       className={cn(
         "align-middle text-text-primary",
-        density === "compact" ? "px-3 py-2 text-[12px]" : "px-4 py-3",
+        density === "compact" ? "px-4 py-2 text-sm" : "px-4 py-2.5 text-base",
         className,
       )}
       {...props}

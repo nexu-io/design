@@ -37,3 +37,34 @@ export const Default: Story = {
     </Card>
   ),
 };
+
+export const Variants: Story = {
+  render: () => (
+    <div className="grid grid-cols-2 gap-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Default</CardTitle>
+          <CardDescription>Hover to see lift effect.</CardDescription>
+        </CardHeader>
+      </Card>
+      <Card variant="interactive">
+        <CardHeader>
+          <CardTitle>Interactive</CardTitle>
+          <CardDescription>Clickable card with bg + lift hover.</CardDescription>
+        </CardHeader>
+      </Card>
+      <Card variant="static">
+        <CardHeader>
+          <CardTitle>Static</CardTitle>
+          <CardDescription>No hover effect — for panels and feeds.</CardDescription>
+        </CardHeader>
+      </Card>
+      <Card variant="muted">
+        <CardHeader>
+          <CardTitle>Muted</CardTitle>
+          <CardDescription>Subtle background with lift hover.</CardDescription>
+        </CardHeader>
+      </Card>
+    </div>
+  ),
+};

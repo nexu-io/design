@@ -6,7 +6,7 @@ import * as React from "react";
 import { cn } from "../lib/cn";
 
 const toggleVariants = cva(
-  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap text-[12px] font-medium outline-none transition-all duration-[var(--duration-fast)] ease-[var(--ease-standard)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*=size-])]:size-4",
+  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap text-sm font-medium outline-none transition-all duration-[var(--duration-fast)] ease-[var(--ease-standard)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*=size-])]:size-4",
   {
     variants: {
       variant: {
@@ -14,14 +14,14 @@ const toggleVariants = cva(
           "rounded-md px-3 py-1.5 text-text-secondary hover:bg-surface-1 hover:text-text-primary data-[state=on]:bg-surface-0 data-[state=on]:text-text-primary data-[state=on]:shadow-sm",
         outline:
           "rounded-full border border-border bg-surface-1 px-3 py-1.5 text-text-secondary hover:border-border-hover hover:text-text-primary data-[state=on]:border-accent data-[state=on]:bg-accent data-[state=on]:text-white",
-        pill: "rounded-full px-4 py-1.5 text-[13px] text-text-secondary hover:bg-surface-2 hover:text-text-primary data-[state=on]:bg-white data-[state=on]:text-text-primary data-[state=on]:shadow-[var(--shadow-rest)]",
+        pill: "rounded-full px-4 py-1.5 text-base text-text-secondary hover:bg-surface-2 hover:text-text-primary data-[state=on]:bg-white data-[state=on]:text-text-primary data-[state=on]:shadow-[var(--shadow-rest)]",
         underline:
-          "rounded-none border-b-2 border-transparent px-3 py-2.5 text-[12px] text-text-muted hover:text-text-secondary data-[state=on]:border-accent data-[state=on]:text-text-primary",
+          "rounded-none border-b-2 border-transparent px-3 py-2.5 text-sm text-text-muted hover:text-text-secondary data-[state=on]:border-accent data-[state=on]:text-text-primary",
       },
       size: {
-        sm: "h-7 text-[11px]",
+        sm: "h-7 text-xs",
         default: "h-8",
-        lg: "h-9 text-[13px]",
+        lg: "h-9 text-base",
       },
     },
     defaultVariants: {
