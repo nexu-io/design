@@ -337,6 +337,7 @@
         "description": "Serif typeface for editorial headings."
       }
     ],
+<<<<<<< HEAD
     "fontSizes": [
       {
         "name": "2XS",
@@ -641,6 +642,7 @@
         "value": "var(--color-accent-glow)",
         "description": "Slightly stronger accent overlay — active states."
       }
+<<<<<<< HEAD
     ],
     "zIndex": [
       {

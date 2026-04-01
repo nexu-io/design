@@ -266,6 +266,7 @@ function renderTokensStory(
             >
               {darkSurfaceTokens.map((token) => (
                 <SwatchCard key={token.cssVar} token={token} />
+<<<<<<< HEAD
               ))}
             </TokenGroupCard>
             <TokenGroupCard
@@ -365,6 +366,65 @@ function renderTokensStory(
                 <TextStyleRow key={style.name} style={style} />
               ))}
             </TokenGroupCard>
+            <TokenGroupCard
+              title="Accent variants"
+              description="Subtle accent washes for hover and active states."
+            >
+              {accentVariantTokens.map((token) => (
+                <SwatchCard key={token.cssVar} token={token} />
+              ))}
+            </TokenGroupCard>
+          </div>
+
+          <TokenGroupCard
+            title="Spacing scale"
+            description="Base unit 0.25rem (4px). All spacing utilities multiply this value."
+          >
+            <div className="space-y-1">
+              {spacingTokens.map((token) => (
+                <SpacingRow key={token.cssVar} token={token} />
+              ))}
+            </div>
+          </TokenGroupCard>
+
+          <div className="grid gap-6 xl:grid-cols-2">
+            <TokenGroupCard
+              title="Typography"
+              description="Font stacks registered as design tokens."
+            >
+              {typographyTokens.map((token) => (
+                <TypographyRow key={token.cssVar} token={token} />
+              ))}
+            </TokenGroupCard>
+            <div className="space-y-6">
+              <TokenGroupCard title="Radius scale" description="Shape personality across surfaces.">
+                {radiusTokens.map((token) => (
+                  <TokenValueRow
+                    key={token.cssVar}
+                    token={token}
+                    value={radiusValues[token.cssVar]}
+                  />
+                ))}
+              </TokenGroupCard>
+              <TokenGroupCard title="Shadow scale" description="Depth for overlays and cards.">
+                {shadowTokens.map((token) => (
+                  <TokenValueRow
+                    key={token.cssVar}
+                    token={token}
+                    value={shadowValues[token.cssVar]}
+                  />
+                ))}
+              </TokenGroupCard>
+              <TokenGroupCard title="Motion" description="Shared transition timing primitives.">
+                {motionTokens.map((token) => (
+                  <TokenValueRow
+                    key={token.cssVar}
+                    token={token}
+                    value={motionValues[token.cssVar]}
+                  />
+                ))}
+              </TokenGroupCard>
+            </div>
           </div>
         </section>
       </PageShell>
