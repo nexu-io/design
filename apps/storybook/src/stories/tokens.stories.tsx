@@ -266,7 +266,6 @@ function renderTokensStory(
             >
               {darkSurfaceTokens.map((token) => (
                 <SwatchCard key={token.cssVar} token={token} />
-<<<<<<< HEAD
               ))}
             </TokenGroupCard>
             <TokenGroupCard

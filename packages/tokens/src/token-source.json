@@ -320,24 +320,23 @@
         "cssVar": "--font-sans",
         "category": "typography",
         "value": "var(--font-sans)",
-        "description": "Primary UI typeface stack with tabular-digit override."
+        "description": "Digits, Manrope, Inter, PingFang SC, -apple-system, Noto Sans SC. Digits @font-face auto-renders 0-9 in JetBrains Mono."
       },
       {
         "name": "Font Mono",
         "cssVar": "--font-mono",
         "category": "typography",
         "value": "var(--font-mono)",
-        "description": "Monospace typeface for code and technical content."
+        "description": "JetBrains Mono, SF Mono, Fira Code, monospace. All characters are fixed-width."
       },
       {
         "name": "Font Heading",
         "cssVar": "--font-heading",
         "category": "typography",
         "value": "var(--font-heading)",
-        "description": "Serif typeface for editorial headings."
+        "description": "Georgia, Times New Roman, serif."
       }
     ],
-<<<<<<< HEAD
     "fontSizes": [
       {
         "name": "2XS",
@@ -642,7 +641,6 @@
         "value": "var(--color-accent-glow)",
         "description": "Slightly stronger accent overlay — active states."
       }
-<<<<<<< HEAD
     ],
     "zIndex": [
       {
