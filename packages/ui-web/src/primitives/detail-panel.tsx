@@ -50,7 +50,7 @@ export function DetailPanelTitle({
   return (
     <h3
       data-slot="detail-panel-title"
-      className={cn("text-[13px] font-semibold text-text-primary", className)}
+      className={cn("text-base font-semibold text-text-primary", className)}
       {...props}
     />
   );
@@ -63,7 +63,7 @@ export function DetailPanelDescription({
   return (
     <p
       data-slot="detail-panel-description"
-      className={cn("mt-0.5 text-[11px] text-text-muted", className)}
+      className={cn("mt-0.5 text-xs text-text-muted", className)}
       {...props}
     />
   );
@@ -86,7 +86,7 @@ export const DetailPanelCloseButton = React.forwardRef<
       className={cn("shrink-0 rounded-md", className)}
       {...props}
     >
-      {children ?? <X size={14} />}
+      {children ?? <X className="size-4" />}
       <span className="sr-only">{srLabel}</span>
     </Button>
   );

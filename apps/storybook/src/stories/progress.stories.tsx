@@ -21,19 +21,19 @@ export const Variants: Story = {
   render: () => (
     <div className="grid w-[360px] gap-4">
       <div className="space-y-2">
-        <div className="text-sm text-text-secondary">Default</div>
+        <div className="text-lg text-text-secondary">Default</div>
         <Progress value={32} />
       </div>
       <div className="space-y-2">
-        <div className="text-sm text-text-secondary">Accent</div>
+        <div className="text-lg text-text-secondary">Accent</div>
         <Progress value={58} variant="accent" />
       </div>
       <div className="space-y-2">
-        <div className="text-sm text-text-secondary">Success</div>
+        <div className="text-lg text-text-secondary">Success</div>
         <Progress value={84} variant="success" />
       </div>
       <div className="space-y-2">
-        <div className="text-sm text-text-secondary">Warning</div>
+        <div className="text-lg text-text-secondary">Warning</div>
         <Progress value={24} variant="warning" />
       </div>
     </div>

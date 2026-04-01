@@ -76,7 +76,7 @@ export function EntityCardMediaFallback({
 }
 
 export function EntityCardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn("text-[14px] font-semibold text-text-primary", className)} {...props} />;
+  return <h3 className={cn("text-lg font-semibold text-text-primary", className)} {...props} />;
 }
 
 export function EntityCardDescription({
@@ -84,10 +84,7 @@ export function EntityCardDescription({
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p
-      className={cn("mt-1 text-[12px] leading-relaxed text-text-secondary", className)}
-      {...props}
-    />
+    <p className={cn("mt-1 text-sm leading-relaxed text-text-secondary", className)} {...props} />
   );
 }
 
@@ -95,10 +92,7 @@ export function EntityCardMeta({ className, ...props }: React.HTMLAttributes<HTM
   return (
     <div
       data-slot="entity-card-meta"
-      className={cn(
-        "mt-3 flex flex-wrap items-center gap-2 text-[11px] text-text-muted",
-        className,
-      )}
+      className={cn("mt-3 flex flex-wrap items-center gap-2 text-xs text-text-muted", className)}
       {...props}
     />
   );

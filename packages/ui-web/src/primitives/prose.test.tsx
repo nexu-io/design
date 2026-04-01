@@ -14,12 +14,12 @@ describe("Prose", () => {
 
   it("applies default size class", () => {
     const { container } = render(<Prose>Content</Prose>);
-    expect(container.firstChild).toHaveClass("text-[13px]");
+    expect(container.firstChild).toHaveClass("text-base");
   });
 
   it("applies compact size", () => {
     const { container } = render(<Prose size="compact">Content</Prose>);
-    expect(container.firstChild).toHaveClass("text-[11px]");
+    expect(container.firstChild).toHaveClass("text-xs");
   });
 
   it("has data-slot attribute", () => {

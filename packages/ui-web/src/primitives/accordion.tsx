@@ -23,7 +23,11 @@ function useAccordionContext() {
   return value;
 }
 
-const AccordionItemContext = React.createContext<{ value: string } | null>(null);
+const AccordionItemContext = React.createContext<{
+  value: string;
+  triggerId: string;
+  contentId: string;
+} | null>(null);
 
 function useAccordionItemContext() {
   const value = React.useContext(AccordionItemContext);
@@ -104,9 +108,12 @@ export interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement>
 export function AccordionItem({ className, value, ...props }: AccordionItemProps) {
   const accordion = useAccordionContext();
   const open = accordion.value.includes(value);
+  const id = React.useId();
+  const triggerId = `${id}trigger`;
+  const contentId = `${id}content`;
 
   return (
-    <AccordionItemContext.Provider value={{ value }}>
+    <AccordionItemContext.Provider value={{ value, triggerId, contentId }}>
       <div
         data-slot="accordion-item"
         data-state={open ? "open" : "closed"}
@@ -129,11 +136,13 @@ export const AccordionTrigger = React.forwardRef<
     <button
       ref={ref}
       type="button"
+      id={item.triggerId}
       data-slot="accordion-trigger"
       data-state={open ? "open" : "closed"}
       aria-expanded={open}
+      aria-controls={item.contentId}
       className={cn(
-        "flex w-full items-center justify-between gap-3 px-4 py-4 text-left text-sm font-medium text-text-primary transition-colors hover:text-text-primary/80",
+        "flex w-full items-center justify-between gap-3 px-4 py-4 text-left text-lg font-medium text-text-primary transition-colors hover:text-text-primary/80",
         className,
       )}
       onClick={(event) => {
@@ -174,10 +183,13 @@ export const AccordionContent = React.forwardRef<
   return (
     <div
       ref={ref}
+      id={item.contentId}
+      role="region"
+      aria-labelledby={item.triggerId}
       data-slot="accordion-content"
       data-state={open ? "open" : "closed"}
       hidden={hidden ?? !open}
-      className={cn("px-4 pb-4 text-sm text-text-secondary", className)}
+      className={cn("px-4 pb-4 text-lg text-text-secondary", className)}
       {...props}
     />
   );

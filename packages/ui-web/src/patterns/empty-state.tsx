@@ -27,7 +27,7 @@ export function EmptyState({
     >
       {icon ? <div className="text-muted-foreground">{icon}</div> : null}
       <div className="space-y-1">
-        <h3 className="text-base font-semibold tracking-tight">{title}</h3>
+        <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
         {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
       </div>
       {action ? <div className="pt-1">{action}</div> : null}

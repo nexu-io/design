@@ -46,7 +46,7 @@ export function DataTableTitle({ className, ...props }: React.HTMLAttributes<HTM
   return (
     <div
       data-slot="data-table-title"
-      className={cn("text-[13px] font-semibold text-text-primary", className)}
+      className={cn("text-base font-semibold text-text-primary", className)}
       {...props}
     />
   );
@@ -59,7 +59,7 @@ export function DataTableDescription({
   return (
     <div
       data-slot="data-table-description"
-      className={cn("text-[11px] text-text-muted", className)}
+      className={cn("text-xs text-text-muted", className)}
       {...props}
     />
   );
@@ -70,7 +70,7 @@ export function DataTableFooter({ className, ...props }: React.HTMLAttributes<HT
     <div
       data-slot="data-table-footer"
       className={cn(
-        "flex items-center justify-between gap-3 border-t border-border-subtle px-4 py-2.5 text-[11px] text-text-muted",
+        "flex items-center justify-between gap-3 border-t border-border-subtle px-4 py-2.5 text-xs text-text-muted",
         className,
       )}
       {...props}
@@ -82,7 +82,7 @@ export function DataTableEmpty({ className, ...props }: React.HTMLAttributes<HTM
   return (
     <div
       data-slot="data-table-empty"
-      className={cn("px-4 py-8 text-center text-[12px] text-text-muted", className)}
+      className={cn("px-4 py-8 text-center text-sm text-text-muted", className)}
       {...props}
     />
   );

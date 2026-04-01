@@ -53,8 +53,8 @@ export function StatCard({
     <Card className={className} variant={variant} padding={padding} {...props}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-[11px] text-text-muted">{label}</div>
-          <div className="mt-1 text-2xl font-bold tracking-tight text-text-primary">
+          <div className="text-xs text-text-muted">{label}</div>
+          <div className="mt-1 text-3xl font-bold tracking-tight text-text-primary">
             <MonoDigits>{value}</MonoDigits>
           </div>
         </div>
@@ -76,7 +76,7 @@ export function StatCard({
               {trend.label}
             </Badge>
           ) : null}
-          {meta ? <div className="text-[11px] text-text-muted">{meta}</div> : null}
+          {meta ? <div className="text-xs text-text-muted">{meta}</div> : null}
         </div>
       )}
       {typeof progress === "number" ? (

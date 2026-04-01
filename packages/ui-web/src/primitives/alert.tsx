@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "../lib/cn";
 
 const alertVariants = cva(
-  "relative flex w-full items-start gap-3 rounded-lg border px-4 py-3 text-sm [&>svg]:size-4 [&>svg]:shrink-0",
+  "relative flex w-full items-start gap-3 rounded-lg border px-4 py-3 text-lg [&>svg]:size-4 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -63,7 +63,7 @@ export const AlertDescription = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("text-xs text-text-secondary [&_p]:leading-relaxed", className)}
+      className={cn("text-sm text-text-secondary [&_p]:leading-relaxed", className)}
       {...props}
     />
   );

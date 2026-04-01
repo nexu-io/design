@@ -36,7 +36,7 @@ export function PanelFooterMeta({ className, ...props }: React.HTMLAttributes<HT
   return (
     <div
       data-slot="panel-footer-meta"
-      className={cn("text-[11px] text-text-muted", className)}
+      className={cn("text-xs text-text-muted", className)}
       {...props}
     />
   );

@@ -14,10 +14,10 @@ const textLinkVariants = cva(
           "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:underline",
       },
       size: {
-        xs: "text-[11px]",
-        sm: "text-[12px]",
-        default: "text-[13px]",
-        lg: "text-[14px]",
+        xs: "text-xs",
+        sm: "text-sm",
+        default: "text-base",
+        lg: "text-lg",
       },
     },
     defaultVariants: {

@@ -66,8 +66,8 @@ export const Default: Story = {
         <SidebarHeader className="flex items-center justify-between gap-2.5 border-b border-border px-4 py-3">
           <NexuLogoIcon size={28} />
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-semibold text-text-primary">Nexu</div>
-            <div className="text-[10px] text-text-tertiary">OpenClaw Desktop</div>
+            <div className="text-lg font-semibold text-text-primary">Nexu</div>
+            <div className="text-2xs text-text-tertiary">OpenClaw Desktop</div>
           </div>
           <button
             type="button"
@@ -91,7 +91,7 @@ export const Default: Story = {
                   <NavigationMenuButton>
                     <Sparkles className="size-4" />
                     Skills
-                    <span className="ml-auto text-[10px] font-normal text-text-tertiary">3</span>
+                    <span className="ml-auto text-2xs font-normal text-text-tertiary">3</span>
                   </NavigationMenuButton>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
@@ -105,7 +105,7 @@ export const Default: Story = {
           </div>
 
           <div className="px-2 pt-4">
-            <div className="mb-1.5 px-3 text-[10px] font-medium uppercase tracking-wider text-text-muted">
+            <div className="mb-1.5 px-3 text-2xs font-medium uppercase tracking-wider text-text-muted">
               Conversations
             </div>
             <div className="space-y-0.5">
@@ -123,8 +123,8 @@ export const Default: Story = {
                     <PlatformLogo platform={s.platform} size={14} />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-[12px] font-medium">{s.title}</div>
-                    <div className="mt-0.5 flex items-center gap-1.5 truncate text-[10px] text-text-muted">
+                    <div className="truncate text-sm font-medium">{s.title}</div>
+                    <div className="mt-0.5 flex items-center gap-1.5 truncate text-2xs text-text-muted">
                       <span>{s.platform.charAt(0).toUpperCase() + s.platform.slice(1)}</span>
                       <span className="text-border">·</span>
                       <span>{s.time}</span>
@@ -157,7 +157,7 @@ export const Default: Story = {
           </div>
           <button
             type="button"
-            className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-[11px] font-medium text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
+            className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
           >
             <Globe size={14} />
             <span>EN</span>
@@ -169,12 +169,12 @@ export const Default: Story = {
             type="button"
             className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 transition-all hover:bg-surface-3"
           >
-            <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-accent/20 to-accent/5 text-[10px] font-bold text-accent ring-1 ring-accent/10">
+            <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-accent/20 to-accent/5 text-2xs font-bold text-accent ring-1 ring-accent/10">
               J
             </div>
             <div className="min-w-0 flex-1 text-left">
-              <div className="truncate text-[12px] font-medium text-text-primary">Joey</div>
-              <div className="truncate text-[10px] text-text-muted">joey@nexu.ai</div>
+              <div className="truncate text-sm font-medium text-text-primary">Joey</div>
+              <div className="truncate text-2xs text-text-muted">joey@nexu.ai</div>
             </div>
             <ChevronUp size={12} className="shrink-0 rotate-180 text-text-muted/50" />
           </button>

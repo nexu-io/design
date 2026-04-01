@@ -24,7 +24,7 @@ export function Table({ className, density = "default", hoverable = true, ...pro
       <div data-slot="table-container" className="relative w-full overflow-x-auto">
         <table
           data-slot="table"
-          className={cn("w-full caption-bottom text-[13px]", className)}
+          className={cn("w-full caption-bottom text-base", className)}
           {...props}
         />
       </div>
@@ -84,7 +84,7 @@ export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTa
       data-slot="table-head"
       className={cn(
         "text-left align-middle font-medium text-text-muted",
-        density === "compact" ? "h-8 px-4 text-[11px]" : "h-10 px-4 text-[12px]",
+        density === "compact" ? "h-8 px-4 text-xs" : "h-10 px-4 text-sm",
         className,
       )}
       {...props}
@@ -100,7 +100,7 @@ export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTa
       data-slot="table-cell"
       className={cn(
         "align-middle text-text-primary",
-        density === "compact" ? "px-4 py-2 text-[12px]" : "px-4 py-2.5 text-[13px]",
+        density === "compact" ? "px-4 py-2 text-sm" : "px-4 py-2.5 text-base",
         className,
       )}
       {...props}
@@ -115,7 +115,7 @@ export function TableCaption({
   return (
     <caption
       data-slot="table-caption"
-      className={cn("mt-3 text-[12px] text-text-muted", className)}
+      className={cn("mt-3 text-sm text-text-muted", className)}
       {...props}
     />
   );

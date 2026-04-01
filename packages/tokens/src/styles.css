@@ -55,6 +55,25 @@
   --font-sans: "Digits", "Manrope", "Inter", "PingFang SC", -apple-system, "Noto Sans SC";
   --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
   --font-heading: "Georgia", "Times New Roman", serif;
+  --text-size-2xs: 0.625rem;
+  --text-size-xs: 0.6875rem;
+  --text-size-sm: 0.75rem;
+  --text-size-base: 0.8125rem;
+  --text-size-lg: 0.875rem;
+  --text-size-xl: 1rem;
+  --text-size-2xl: 1.25rem;
+  --text-size-3xl: 1.5rem;
+  --text-size-4xl: 1.875rem;
+  --text-weight-normal: 400;
+  --text-weight-medium: 500;
+  --text-weight-semibold: 600;
+  --text-weight-bold: 700;
+  --z-base: 0;
+  --z-raised: 10;
+  --z-dropdown: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+  --z-tooltip: 70;
   --color-surface-0: hsl(var(--background));
   --color-surface-1: hsl(var(--card));
   --color-surface-2: hsl(var(--secondary));
@@ -270,6 +289,28 @@
   --shadow-elevated: var(--shadow-elevated);
   --shadow-overlay: var(--shadow-overlay);
   --color-toggle-on: var(--color-toggle-on);
+  --text-2xs: var(--text-size-2xs);
+  --text-2xs--line-height: 1.2;
+  --text-xs: var(--text-size-xs);
+  --text-xs--line-height: 1.45;
+  --text-sm: var(--text-size-sm);
+  --text-sm--line-height: 1.5;
+  --text-base: var(--text-size-base);
+  --text-base--line-height: 1.5;
+  --text-lg: var(--text-size-lg);
+  --text-lg--line-height: 1.5;
+  --text-xl: var(--text-size-xl);
+  --text-xl--line-height: 1.4;
+  --text-2xl: var(--text-size-2xl);
+  --text-2xl--line-height: 1.3;
+  --text-3xl: var(--text-size-3xl);
+  --text-3xl--line-height: 1.2;
+  --text-4xl: var(--text-size-4xl);
+  --text-4xl--line-height: 1.1;
+  --font-weight-normal: var(--text-weight-normal);
+  --font-weight-medium: var(--text-weight-medium);
+  --font-weight-semibold: var(--text-weight-semibold);
+  --font-weight-bold: var(--text-weight-bold);
 }
 
 @keyframes nexu-fade-in {

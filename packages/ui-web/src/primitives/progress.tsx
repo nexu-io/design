@@ -44,7 +44,6 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
       <div
         ref={ref}
         role="progressbar"
-        tabIndex={0}
         aria-valuemax={clampedMax}
         aria-valuemin={0}
         aria-valuenow={safeValue ?? undefined}

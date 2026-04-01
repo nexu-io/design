@@ -20,13 +20,13 @@ function Toaster({ ...props }: ToasterProps) {
       }
       toastOptions={{
         classNames: {
-          toast: "group toast items-start rounded-xl border shadow-md text-[13px]",
+          toast: "group toast items-start rounded-xl border shadow-md text-base",
           icon: "mt-0.5",
           title: "font-medium",
-          description: "text-[12px] text-[var(--color-text-muted)]",
+          description: "text-sm text-[var(--color-text-muted)]",
           actionButton:
-            "bg-[var(--color-surface-2)] text-[var(--color-text-primary)] text-[12px] font-medium rounded-lg hover:bg-[var(--color-surface-3)]",
-          cancelButton: "text-[var(--color-text-muted)] text-[12px] font-medium rounded-lg",
+            "bg-[var(--color-surface-2)] text-[var(--color-text-primary)] text-sm font-medium rounded-lg hover:bg-[var(--color-surface-3)]",
+          cancelButton: "text-[var(--color-text-muted)] text-sm font-medium rounded-lg",
           success: "[&_[data-icon]]:text-[var(--color-success)]",
           error: "[&_[data-icon]]:text-[var(--color-danger)]",
         },

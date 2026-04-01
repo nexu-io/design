@@ -32,7 +32,7 @@ export const Default: Story = {
           </div>
           <DetailPanelCloseButton srLabel="Close details" />
         </DetailPanelHeader>
-        <DetailPanelContent className="space-y-3 p-4 text-[13px] text-text-secondary">
+        <DetailPanelContent className="space-y-3 p-4 text-base text-text-secondary">
           <div className="rounded-lg border border-border-subtle bg-surface-1 p-3">
             The workflow is waiting for finance approval because spend exceeds the daily threshold.
           </div>

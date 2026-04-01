@@ -26,7 +26,7 @@ describe("TextLink", () => {
         Small
       </TextLink>,
     );
-    expect(screen.getByRole("link")).toHaveClass("text-[11px]");
+    expect(screen.getByRole("link")).toHaveClass("text-xs");
   });
 
   it("merges custom className", () => {

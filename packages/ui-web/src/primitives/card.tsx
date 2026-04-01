@@ -11,7 +11,7 @@ const cardVariants = cva(
         default: "hover:shadow-refine hover:-translate-y-px",
         outline: "border-border hover:shadow-refine hover:-translate-y-px",
         muted:
-          "bg-muted/40 text-sm text-muted-foreground hover:shadow-refine hover:-translate-y-px [&_[data-slot=card-title]]:text-sm [&_[data-slot=card-title]]:text-secondary-foreground",
+          "bg-muted/40 text-lg text-muted-foreground hover:shadow-refine hover:-translate-y-px [&_[data-slot=card-title]]:text-lg [&_[data-slot=card-title]]:text-secondary-foreground",
         interactive: "cursor-pointer hover:shadow-refine hover:-translate-y-px",
         static: "",
       },
@@ -45,7 +45,7 @@ export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHead
   return (
     <h3
       data-slot="card-title"
-      className={cn("text-base font-semibold tracking-tight", className)}
+      className={cn("text-xl font-semibold tracking-tight", className)}
       {...props}
     />
   );
@@ -55,7 +55,7 @@ export function CardDescription({
   className,
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("text-xs text-muted-foreground", className)} {...props} />;
+  return <p className={cn("text-sm text-muted-foreground", className)} {...props} />;
 }
 
 export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {

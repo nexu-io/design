@@ -28,9 +28,9 @@ const proseVariants = cva(
   {
     variants: {
       size: {
-        default: "text-[13px] leading-[1.7]",
+        default: "text-base leading-[1.7]",
         compact:
-          "text-[11px] leading-[1.6] [&_h1]:text-[1.2em] [&_h2]:text-[1.1em] [&_pre]:px-[0.7em] [&_pre]:py-[0.5em] [&_table]:text-[0.85em]",
+          "text-xs leading-[1.6] [&_h1]:text-[1.2em] [&_h2]:text-[1.1em] [&_pre]:px-[0.7em] [&_pre]:py-[0.5em] [&_table]:text-[0.85em]",
       },
     },
     defaultVariants: {

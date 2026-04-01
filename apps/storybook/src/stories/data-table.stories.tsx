@@ -56,7 +56,7 @@ export const Default: Story = {
             <TableCell>
               <Badge variant="warning">Needs review</Badge>
             </TableCell>
-            <TableCell className="text-right text-[11px] text-text-muted">2 min ago</TableCell>
+            <TableCell className="text-right text-xs text-text-muted">2 min ago</TableCell>
           </TableRow>
           <TableRow selected>
             <TableCell>Revenue agent</TableCell>
@@ -64,7 +64,7 @@ export const Default: Story = {
             <TableCell>
               <Badge variant="success">Ready</Badge>
             </TableCell>
-            <TableCell className="text-right text-[11px] text-text-muted">12 min ago</TableCell>
+            <TableCell className="text-right text-xs text-text-muted">12 min ago</TableCell>
           </TableRow>
         </TableBody>
       </Table>

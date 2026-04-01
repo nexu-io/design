@@ -82,15 +82,13 @@ export function PricingCard({
           <div
             className={cn(
               "font-semibold text-text-primary",
-              size === "compact" ? "text-[13px]" : "text-sm",
+              size === "compact" ? "text-base" : "text-lg",
             )}
           >
             {name}
           </div>
           {description ? (
-            <div
-              className={cn("text-text-muted", size === "compact" ? "text-[11px]" : "text-[12px]")}
-            >
+            <div className={cn("text-text-muted", size === "compact" ? "text-xs" : "text-sm")}>
               {description}
             </div>
           ) : null}
@@ -101,12 +99,12 @@ export function PricingCard({
         <span
           className={cn(
             "font-bold tracking-tight text-text-primary",
-            size === "compact" ? "text-[20px]" : "text-3xl",
+            size === "compact" ? "text-2xl" : "text-4xl",
           )}
         >
           <MonoDigits>{price}</MonoDigits>
         </span>
-        {period ? <span className="text-[12px] text-text-muted">{period}</span> : null}
+        {period ? <span className="text-sm text-text-muted">{period}</span> : null}
       </div>
 
       <ul className={cn("flex-1 space-y-2.5", size === "compact" ? "mb-4" : "mb-6")}>
@@ -121,7 +119,7 @@ export function PricingCard({
             }
             className={cn(
               "flex items-start gap-2 text-text-secondary",
-              size === "compact" ? "text-[11px]" : "text-[13px]",
+              size === "compact" ? "text-xs" : "text-base",
             )}
           >
             <Check aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" />

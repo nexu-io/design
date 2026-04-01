@@ -63,7 +63,7 @@ export function ConversationMessage({
         <div
           data-slot="conversation-message-bubble"
           className={cn(
-            "rounded-2xl border px-4 py-2.5 text-[13px] leading-relaxed whitespace-pre-line",
+            "rounded-2xl border px-4 py-2.5 text-sm leading-relaxed whitespace-pre-line",
             bubbleStyles[variant],
             bubbleClassName,
           )}
@@ -75,7 +75,7 @@ export function ConversationMessage({
         {(meta || actions) && variant !== "status" ? (
           <div
             className={cn(
-              "mt-1 flex items-center gap-2 px-1 text-[10px] text-text-muted",
+              "mt-1 flex items-center gap-2 px-1 text-2xs text-text-muted",
               variant === "user" && "justify-end",
             )}
           >

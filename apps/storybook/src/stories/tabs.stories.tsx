@@ -12,9 +12,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const CountBadge = ({ count }: { count: number }) => (
-  <span className="ml-1 text-[11px] font-[family-name:var(--font-mono)] text-text-muted">
-    {count}
-  </span>
+  <span className="ml-1 text-xs font-[family-name:var(--font-mono)] text-text-muted">{count}</span>
 );
 
 export const Default: Story = {
@@ -27,21 +25,21 @@ export const Default: Story = {
       </TabsList>
       <TabsContent value="models">
         <Card>
-          <CardContent className="mt-0 text-[13px] text-muted-foreground">
+          <CardContent className="mt-0 text-base text-muted-foreground">
             Manage model providers and priorities.
           </CardContent>
         </Card>
       </TabsContent>
       <TabsContent value="channels">
         <Card>
-          <CardContent className="mt-0 text-[13px] text-muted-foreground">
+          <CardContent className="mt-0 text-base text-muted-foreground">
             Connect Slack, Feishu, WeChat and more.
           </CardContent>
         </Card>
       </TabsContent>
       <TabsContent value="skills">
         <Card>
-          <CardContent className="mt-0 text-[13px] text-muted-foreground">
+          <CardContent className="mt-0 text-base text-muted-foreground">
             Install and organize agent skills.
           </CardContent>
         </Card>
@@ -66,21 +64,21 @@ export const WithCount: Story = {
       </TabsList>
       <TabsContent value="models">
         <Card>
-          <CardContent className="mt-0 text-[13px] text-muted-foreground">
+          <CardContent className="mt-0 text-base text-muted-foreground">
             Manage model providers and priorities.
           </CardContent>
         </Card>
       </TabsContent>
       <TabsContent value="channels">
         <Card>
-          <CardContent className="mt-0 text-[13px] text-muted-foreground">
+          <CardContent className="mt-0 text-base text-muted-foreground">
             Connect Slack, Feishu, WeChat and more.
           </CardContent>
         </Card>
       </TabsContent>
       <TabsContent value="skills">
         <Card>
-          <CardContent className="mt-0 text-[13px] text-muted-foreground">
+          <CardContent className="mt-0 text-base text-muted-foreground">
             Install and organize agent skills.
           </CardContent>
         </Card>

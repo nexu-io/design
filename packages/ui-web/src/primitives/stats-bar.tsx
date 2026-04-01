@@ -54,13 +54,13 @@ export function StatsBar({ className, items, ...props }: StatsBarProps) {
             >
               <span
                 className={cn(
-                  "text-[13px] font-bold tabular-nums",
+                  "text-base font-bold tabular-nums",
                   toneStyles[item.tone ?? "default"],
                 )}
               >
                 <MonoDigits>{item.value}</MonoDigits>
               </span>
-              <span className="text-[10px] text-text-muted">{item.label}</span>
+              <span className="text-2xs text-text-muted">{item.label}</span>
             </div>
           </>
         );

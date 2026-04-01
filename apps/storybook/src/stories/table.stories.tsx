@@ -63,7 +63,7 @@ export const Default: Story = {
               <TableCell>
                 <Badge variant={row.status.variant}>{row.status.label}</Badge>
               </TableCell>
-              <TableCell className="text-right text-[11px] text-text-muted">
+              <TableCell className="text-right text-xs text-text-muted">
                 <MonoDigits>{row.time}</MonoDigits>
               </TableCell>
             </TableRow>
@@ -87,14 +87,14 @@ export const Compact: Story = {
         </TableHeader>
         <TableBody>
           <TableRow>
-            <TableCell className="font-[family-name:var(--font-mono)] text-[11px] text-accent">
+            <TableCell className="font-[family-name:var(--font-mono)] text-xs text-accent">
               chat:write
             </TableCell>
             <TableCell>Send messages</TableCell>
             <TableCell className="text-right text-success">Enabled</TableCell>
           </TableRow>
           <TableRow selected>
-            <TableCell className="font-[family-name:var(--font-mono)] text-[11px] text-accent">
+            <TableCell className="font-[family-name:var(--font-mono)] text-xs text-accent">
               channels:history
             </TableCell>
             <TableCell>Read channel messages</TableCell>
