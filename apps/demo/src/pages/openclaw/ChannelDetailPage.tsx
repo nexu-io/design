@@ -169,7 +169,7 @@ export default function ChannelDetailPage({ channelId }: { channelId: string }) 
               <div className="flex items-center gap-2">
                 <h1 className="text-[15px] font-bold text-text-heading">{channel.name}</h1>
                 <Badge
-                  variant={channel.chatType === "group" ? "brand" : "default"}
+                  variant={channel.chatType === "group" ? "accent" : "default"}
                   className={
                     channel.chatType === "group"
                       ? "bg-[var(--color-info-subtle)] text-[var(--color-info)]"

@@ -6,15 +6,12 @@ import {
   ActivityBarIndicator,
   ActivityBarItem,
   DetailPanel,
-  FileEditor,
-  FileTree,
   NavigationMenu,
   NavigationMenuButton,
   NavigationMenuItem,
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  WorkspaceShell,
 } from "@nexu-design/ui-web";
 import {
   Clock,
@@ -34,7 +31,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import AutomationPage from "./AutomationPage";
 import CloneBuilderPage from "./CloneBuilderPage";
-import { CLONE_FILE_TREE, FOLDER_ICONS, type FileNode } from "./FileTree";
+import { FileEditor } from "./FileEditor";
+import { CLONE_FILE_TREE, FileTree, FOLDER_ICONS, type FileNode } from "./FileTree";
+import { WorkspaceShell } from "./WorkspaceShell";
 import { ProductLayoutContext } from "./ProductLayoutContext";
 import SessionsPage from "./SessionsPage";
 import SkillsPage from "./SkillsPage";
@@ -288,7 +287,7 @@ export default function ProductDemoPage() {
                   lastEditedBy={getFile(openFilePath)?.lastEditedBy}
                   lastEditedAt={getFile(openFilePath)?.lastEditedAt}
                   onClose={handleCloseFile}
-                  onSave={(content) => saveFile(openFilePath, content, "human")}
+                  onSave={(content: string) => saveFile(openFilePath, content, "human")}
                 />
               </DetailPanel>
             ) : null

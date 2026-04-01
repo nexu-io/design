@@ -4,11 +4,12 @@ import {
   AlertTitle,
   Button,
   FollowUpInput,
-  InspectorPanel,
   StatCard,
   ToggleGroup,
   ToggleGroupItem,
 } from "@nexu-design/ui-web";
+import type * as React from "react";
+import { InspectorPanel } from "./InspectorPanel";
 import {
   AlertCircle,
   BarChart3,
