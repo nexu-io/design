@@ -52,8 +52,8 @@ describe("Table", () => {
       </Table>,
     );
 
-    expect(screen.getByRole("columnheader", { name: "Task" })).toHaveClass("h-9", "px-3");
-    expect(screen.getByRole("cell", { name: "Gateway refactor" })).toHaveClass("py-2");
+    expect(screen.getByRole("columnheader", { name: "Task" })).toHaveClass("h-9", "px-4");
+    expect(screen.getByRole("cell", { name: "Gateway refactor" })).toHaveClass("py-2.5");
     expect(screen.getByText("Gateway refactor").closest("tr")).toHaveAttribute(
       "data-state",
       "selected",

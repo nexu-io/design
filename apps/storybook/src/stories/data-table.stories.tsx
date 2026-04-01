@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { ArrowUpRight } from "lucide-react";
 
 import {
   Badge,
@@ -55,7 +56,7 @@ export const Default: Story = {
             <TableCell>
               <Badge variant="warning">Needs review</Badge>
             </TableCell>
-            <TableCell className="text-right text-text-muted">2 min ago</TableCell>
+            <TableCell className="text-right text-[11px] text-text-muted">2 min ago</TableCell>
           </TableRow>
           <TableRow selected>
             <TableCell>Revenue agent</TableCell>
@@ -63,14 +64,14 @@ export const Default: Story = {
             <TableCell>
               <Badge variant="success">Ready</Badge>
             </TableCell>
-            <TableCell className="text-right text-text-muted">12 min ago</TableCell>
+            <TableCell className="text-right text-[11px] text-text-muted">12 min ago</TableCell>
           </TableRow>
         </TableBody>
       </Table>
       <DataTableFooter>
         <span>Showing 2 of 18 approvals</span>
         <Button variant="ghost" size="sm">
-          View all
+          View all <ArrowUpRight className="size-3" />
         </Button>
       </DataTableFooter>
     </DataTable>

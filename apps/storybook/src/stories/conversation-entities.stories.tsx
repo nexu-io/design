@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Bot, Layers3, Sparkles, User } from "lucide-react";
+import { ArrowUpRight, Bot, Layers3, Sparkles, User } from "lucide-react";
 
 import {
+  Avatar,
+  AvatarFallback,
   Badge,
   Button,
   ConversationMessage,
@@ -11,6 +13,7 @@ import {
   EntityCardFooter,
   EntityCardHeader,
   EntityCardMedia,
+  EntityCardMediaFallback,
   EntityCardMeta,
   EntityCardTitle,
   StatsBar,
@@ -31,20 +34,31 @@ export const TeamStatusThread: Story = {
   render: () => (
     <div className="grid w-[720px] gap-4">
       <ConversationMessage
-        avatar={<Bot className="size-4" />}
+        avatar={
+          <Avatar className="size-7">
+            <AvatarFallback><Bot className="size-4" /></AvatarFallback>
+          </Avatar>
+        }
         meta="Just now"
         actions={
           <Button size="sm" variant="ghost">
-            Open task
+            Open task <ArrowUpRight className="size-3" />
           </Button>
         }
       >
         I summarized the new support issues and drafted the follow-up actions.
       </ConversationMessage>
-      <ConversationMessage avatar={<User className="size-4" />} meta="1 min ago" variant="user">
+      <ConversationMessage
+        avatar={
+          <Avatar className="size-7">
+            <AvatarFallback><User className="size-4" /></AvatarFallback>
+          </Avatar>
+        }
+        meta="1 min ago"
+        variant="user"
+      >
         Send the recap to the revenue team and flag anything urgent.
       </ConversationMessage>
-      <ConversationMessage variant="status">Workflow completed successfully.</ConversationMessage>
     </div>
   ),
 };
@@ -89,7 +103,9 @@ export const WorkspaceEntityCards: Story = {
       <EntityCard interactive>
         <EntityCardHeader>
           <EntityCardMedia>
-            <Sparkles className="size-4" />
+            <EntityCardMediaFallback>
+              <Sparkles className="size-4" />
+            </EntityCardMediaFallback>
           </EntityCardMedia>
           <div>
             <EntityCardTitle>Content pipeline</EntityCardTitle>
@@ -109,7 +125,9 @@ export const WorkspaceEntityCards: Story = {
       <EntityCard>
         <EntityCardHeader>
           <EntityCardMedia>
-            <Layers3 className="size-4" />
+            <EntityCardMediaFallback>
+              <Layers3 className="size-4" />
+            </EntityCardMediaFallback>
           </EntityCardMedia>
           <div>
             <EntityCardTitle>Escalation workspace</EntityCardTitle>
@@ -121,7 +139,7 @@ export const WorkspaceEntityCards: Story = {
         </EntityCardHeader>
         <EntityCardFooter>
           <Button variant="outline" size="sm">
-            View details
+            View details <ArrowUpRight className="size-3" />
           </Button>
         </EntityCardFooter>
       </EntityCard>

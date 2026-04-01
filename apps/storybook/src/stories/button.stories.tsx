@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { ArrowUpRight } from "lucide-react";
 
 import { Button } from "@nexu-design/ui-web";
 
@@ -26,7 +27,7 @@ export const Variants: Story = {
       <Button variant="outline">Outline</Button>
       <Button variant="ghost">Ghost</Button>
       <Button variant="destructive">Delete</Button>
-      <Button variant="link">View details</Button>
+      <Button variant="link">View details <ArrowUpRight className="size-3" /></Button>
     </div>
   ),
 };

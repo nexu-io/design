@@ -1,5 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ChevronDown, ChevronsUpDown, Circle, MoreHorizontal, Sparkles } from "lucide-react";
+import {
+  ArrowUpRight,
+  ChevronDown,
+  ChevronsUpDown,
+  Circle,
+  MoreHorizontal,
+  Sparkles,
+} from "lucide-react";
 
 import {
   Accordion,
@@ -209,7 +216,7 @@ export const ApprovalQueueTable: Story = {
       <DataTableFooter>
         <span>Showing 2 of 18 approvals</span>
         <Button variant="ghost" size="sm">
-          View all
+          View all <ArrowUpRight className="size-3" />
         </Button>
       </DataTableFooter>
     </DataTable>

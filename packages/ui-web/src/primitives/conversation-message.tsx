@@ -22,9 +22,9 @@ const rootStyles: Record<ConversationMessageVariant, string> = {
 };
 
 const bubbleStyles: Record<ConversationMessageVariant, string> = {
-  user: "border-border-subtle bg-surface-2 text-text-primary rounded-br-sm",
-  assistant: "border-border bg-surface-1 text-text-primary rounded-bl-sm",
-  system: "border-border-subtle bg-surface-2/70 text-text-secondary rounded-xl",
+  user: "border-transparent bg-surface-3 text-text-primary rounded-br-sm",
+  assistant: "border-border bg-surface-0 text-text-primary rounded-bl-sm",
+  system: "border-border-subtle bg-surface-2/70 text-text-secondary rounded-2xl",
   status: "border-border-subtle bg-surface-2/60 text-text-muted rounded-full px-3 py-1.5",
 };
 
@@ -63,7 +63,7 @@ export function ConversationMessage({
         <div
           data-slot="conversation-message-bubble"
           className={cn(
-            "rounded-2xl border px-3 py-2 text-[12px] leading-relaxed shadow-xs whitespace-pre-line",
+            "rounded-2xl border px-4 py-2.5 text-[13px] leading-relaxed whitespace-pre-line",
             bubbleStyles[variant],
             bubbleClassName,
           )}
@@ -73,8 +73,17 @@ export function ConversationMessage({
           </div>
         </div>
         {(meta || actions) && variant !== "status" ? (
-          <div className="mt-1 flex items-center gap-2 px-1 text-[10px] text-text-muted">
-            {meta ? <div className="min-w-0 flex-1">{meta}</div> : null}
+          <div
+            className={cn(
+              "mt-1 flex items-center gap-2 px-1 text-[10px] text-text-muted",
+              variant === "user" && "justify-end",
+            )}
+          >
+            {meta ? (
+              <div className={cn("min-w-0 flex-1", variant === "user" && "text-right")}>
+                {meta}
+              </div>
+            ) : null}
             {actions ? <div className="shrink-0">{actions}</div> : null}
           </div>
         ) : null}

@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
+import { ArrowUpRight } from "lucide-react";
+
 import { Button, PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 
 const meta = {
@@ -17,7 +19,7 @@ export const Default: Story = {
       <PageHeader
         title="Design system"
         description="Browse the shared primitives, patterns, and documentation shells."
-        actions={<Button>Open tokens</Button>}
+        actions={<Button>Open tokens <ArrowUpRight className="size-3" /></Button>}
       />
 
       <section className="mb-12">
@@ -36,7 +38,7 @@ export const Default: Story = {
           title="Color"
           action={
             <Button variant="outline" size="sm">
-              View tokens
+              View tokens <ArrowUpRight className="size-3" />
             </Button>
           }
           className="mb-4 border-b border-border-subtle pb-2"

@@ -36,7 +36,13 @@ export function TableHeader({
   className,
   ...props
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead data-slot="table-header" className={cn("[&_tr]:border-b", className)} {...props} />;
+  return (
+    <thead
+      data-slot="table-header"
+      className={cn("[&_tr]:border-b [&_tr]:border-border-subtle", className)}
+      {...props}
+    />
+  );
 }
 
 export function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
@@ -61,7 +67,7 @@ export function TableRow({
       data-slot="table-row"
       data-state={selected ? "selected" : undefined}
       className={cn(
-        "border-b border-border transition-colors data-[state=selected]:bg-accent/5",
+        "border-b border-border-subtle transition-colors data-[state=selected]:bg-surface-2/40",
         hoverable && "hover:bg-surface-2/60",
         className,
       )}
@@ -77,8 +83,8 @@ export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTa
     <th
       data-slot="table-head"
       className={cn(
-        "text-left align-middle font-medium text-text-muted",
-        density === "compact" ? "h-9 px-3 text-[11px]" : "h-11 px-4 text-xs",
+        "text-left align-middle font-medium text-text-tertiary",
+        density === "compact" ? "h-9 px-4 text-[11px]" : "h-11 px-4 text-xs",
         className,
       )}
       {...props}
@@ -94,7 +100,7 @@ export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTa
       data-slot="table-cell"
       className={cn(
         "align-middle text-text-primary",
-        density === "compact" ? "px-3 py-2 text-[12px]" : "px-4 py-3",
+        density === "compact" ? "px-4 py-2.5 text-[12px]" : "px-4 py-3",
         className,
       )}
       {...props}

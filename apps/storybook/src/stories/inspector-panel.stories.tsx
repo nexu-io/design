@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ArrowRight, ExternalLink, MessageSquare } from "lucide-react";
+import { ArrowUpRight, ExternalLink, MessageSquare } from "lucide-react";
 
 import { Button, FollowUpInput, InspectorPanel, PanelFooterActions } from "@nexu-design/ui-web";
 
@@ -47,7 +47,7 @@ export const Default: Story = {
                 <ExternalLink size={12} /> Open session
               </Button>
               <Button type="button" size="inline" variant="secondary" className="flex-1 gap-1.5">
-                <ArrowRight size={12} /> View tasks
+                <ArrowUpRight className="size-3" /> View tasks
               </Button>
             </PanelFooterActions>
           </div>
