@@ -11,7 +11,6 @@ import {
   EntityCardHeader,
   EntityCardMeta,
   EntityCardTitle,
-  InspectorPanel,
   PanelFooterActions,
   ScrollArea,
 } from "@nexu-design/ui-web";
@@ -45,6 +44,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import InspectorPanel from "./InspectorPanel";
 import { useProductLayout } from "./ProductLayoutContext";
 
 type TabId = "installed" | "featured" | "explore";

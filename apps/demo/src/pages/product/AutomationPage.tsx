@@ -4,7 +4,6 @@ import {
   AlertTitle,
   Button,
   FollowUpInput,
-  InspectorPanel,
   StatCard,
   ToggleGroup,
   ToggleGroupItem,
@@ -39,6 +38,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import InspectorPanel from "./InspectorPanel";
 import { useProductLayout } from "./ProductLayoutContext";
 
 type TabId = "schedules" | "proactive" | "logs";

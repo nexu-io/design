@@ -1,4 +1,4 @@
-import { Badge, Button, SectionHeader, StatCard } from "@nexu-design/ui-web";
+import { Badge, Button, StatCard } from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -16,6 +16,8 @@ import {
   Zap,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+import { SectionHeader } from "../../components/SectionHeader";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import {
   type Activity,

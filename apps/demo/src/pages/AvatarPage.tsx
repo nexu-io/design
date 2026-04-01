@@ -1,6 +1,8 @@
 import { Button } from "@nexu-design/ui-web";
-import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
+import { PageHeader, PageShell } from "@nexu-design/ui-web";
 import { useState } from "react";
+
+import { SectionHeader } from "../components/SectionHeader";
 
 const SKIN_TONES = [
   "#FDEBD0",

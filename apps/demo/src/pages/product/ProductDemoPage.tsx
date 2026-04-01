@@ -6,15 +6,12 @@ import {
   ActivityBarIndicator,
   ActivityBarItem,
   DetailPanel,
-  FileEditor,
-  FileTree,
   NavigationMenu,
   NavigationMenuButton,
   NavigationMenuItem,
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  WorkspaceShell,
 } from "@nexu-design/ui-web";
 import {
   Clock,
@@ -29,16 +26,18 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import AutomationPage from "./AutomationPage";
 import CloneBuilderPage from "./CloneBuilderPage";
-import { CLONE_FILE_TREE, FOLDER_ICONS, type FileNode } from "./FileTree";
+import FileEditor from "./FileEditor";
+import FileTree from "./FileTree";
 import { ProductLayoutContext } from "./ProductLayoutContext";
 import SessionsPage from "./SessionsPage";
 import SkillsPage from "./SkillsPage";
 import TeamPage from "./TeamPage";
+import WorkspaceShell from "./WorkspaceShell";
 import { getFile, saveFile } from "./fileStore";
 
 const PAGES = [
@@ -53,32 +52,12 @@ const PAGES = [
 const TREE_MIN = 180;
 const TREE_MAX = 480;
 const TREE_DEFAULT = 224;
-const DEFAULT_EXPANDED_PATHS = [
-  ".soul",
-  "contacts",
-  "memory",
-  "memory/decisions",
-  "knowledge",
-  "artifacts",
-  "artifacts/prds",
-  "sessions",
-  "sessions/2026-02-22-clone文件系统验证",
-];
-
 function inferFileType(path: string) {
   if (path.endsWith(".md")) return "markdown" as const;
   if (path.endsWith(".yaml") || path.endsWith(".yml")) return "yaml" as const;
   if (path.endsWith(".json") || path.endsWith(".jsonl")) return "jsonl" as const;
   if (path.endsWith(".ts") || path.endsWith(".tsx") || path.endsWith(".js")) return "code" as const;
   return "markdown" as const;
-}
-
-function decorateTree(nodes: FileNode[]): FileNode[] {
-  return nodes.map((node) => ({
-    ...node,
-    icon: node.type === "folder" ? FOLDER_ICONS[node.name] : node.icon,
-    children: node.children ? decorateTree(node.children) : undefined,
-  }));
 }
 
 export default function ProductDemoPage() {
@@ -88,7 +67,6 @@ export default function ProductDemoPage() {
   const [openFilePath, setOpenFilePath] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const tree = useMemo(() => decorateTree(CLONE_FILE_TREE), []);
 
   useEffect(() => {
     const hash = location.hash.replace("#", "");
@@ -118,27 +96,9 @@ export default function ProductDemoPage() {
     setOpenFilePath(null);
   }, []);
 
-  const handleTreeSelect = useCallback(({ node, path }: { node: FileNode; path: string }) => {
-    const mapping: Record<string, string> = {
-      ".soul": "clone",
-      sessions: "sessions",
-      team: "team",
-      clone: "clone",
-      automation: "automation",
-      skills: "skills",
-    };
-
-    if (node.type === "folder") {
-      const tab = mapping[node.name];
-      if (tab) {
-        setActiveTab(tab);
-      }
-      return;
-    }
-
-    setOpenFilePath(path);
-    const tab = mapping[path.split("/")[0]];
-    if (tab) {
+  const handleTreeNavigate = useCallback((route: string) => {
+    const tab = route.replace("/app/", "").split("?")[0];
+    if (PAGES.some((page) => page.id === tab)) {
       setActiveTab(tab);
     }
   }, []);
@@ -259,19 +219,7 @@ export default function ProductDemoPage() {
                 </NavigationMenu>
               </SidebarHeader>
               <SidebarContent className="overflow-hidden">
-                <FileTree
-                  tree={tree}
-                  rootLabel="~/clone"
-                  defaultExpandedPaths={DEFAULT_EXPANDED_PATHS}
-                  defaultSelectedPath="artifacts/prds/universal-agent-v3.md"
-                  footer={
-                    <div className="flex items-center justify-between text-[10px] text-text-muted">
-                      <span>137 files</span>
-                      <span>1 modified · 4 new</span>
-                    </div>
-                  }
-                  onItemSelect={handleTreeSelect}
-                />
+                <FileTree onNavigate={handleTreeNavigate} onOpenFile={setOpenFilePath} />
               </SidebarContent>
             </Sidebar>
           }
@@ -288,7 +236,7 @@ export default function ProductDemoPage() {
                   lastEditedBy={getFile(openFilePath)?.lastEditedBy}
                   lastEditedAt={getFile(openFilePath)?.lastEditedAt}
                   onClose={handleCloseFile}
-                  onSave={(content) => saveFile(openFilePath, content, "human")}
+                  onSave={(content: string) => saveFile(openFilePath, content, "human")}
                 />
               </DetailPanel>
             ) : null

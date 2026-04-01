@@ -1,7 +1,9 @@
-import { Badge, Button, SectionHeader } from "@nexu-design/ui-web";
+import { Badge, Button } from "@nexu-design/ui-web";
 import { BarChart3, ChevronRight, Clock, MessageSquare, Send, Sparkles, Users } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { SectionHeader } from "../../components/SectionHeader";
 
 const PRESET_AVATARS = [
   {
@@ -152,7 +154,7 @@ export default function NexuDashboardPage() {
                           a.status === "busy"
                             ? "warning"
                             : a.status === "waiting"
-                              ? "brand"
+                              ? "accent"
                               : "success"
                         }
                         size="xs"

@@ -14,7 +14,6 @@ import {
   ComboboxItem,
   ComboboxTrigger,
   DataTable,
-  FileEditor,
   InteractiveRow,
   InteractiveRowContent,
   InteractiveRowTrailing,
@@ -57,8 +56,10 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import ChatCardGroup from "./ChatCards";
 import type { CardAction } from "./ChatCards";
+import FileEditor from "./FileEditor";
 import PricingModal from "./PricingModal";
 import { useProductLayout } from "./ProductLayoutContext";
 import {

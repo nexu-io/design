@@ -1,6 +1,8 @@
 import { Button } from "@nexu-design/ui-web";
 
-import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
+import { PageHeader, PageShell } from "@nexu-design/ui-web";
+
+import { SectionHeader } from "../components/SectionHeader";
 
 function ChatBubble({
   from,
