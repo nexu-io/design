@@ -61,6 +61,7 @@ export function StepperItem({
     <li
       data-slot="stepper-item"
       data-status={status}
+      aria-current={status === "current" ? "step" : undefined}
       className={cn(orientation === "horizontal" ? "min-w-0 flex-1" : "w-full", className)}
       {...props}
     >
@@ -73,7 +74,7 @@ export function StepperItem({
         <div
           data-slot="stepper-indicator"
           className={cn(
-            "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-[11px] font-semibold transition-colors",
+            "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-semibold font-[family-name:var(--font-mono)] transition-colors",
             status === "completed" && "border-success/20 bg-success-subtle text-success",
             status === "current" && "border-accent/30 bg-accent/10 text-accent",
             status === "pending" && "border-border bg-surface-1 text-text-muted",
@@ -83,9 +84,9 @@ export function StepperItem({
         </div>
 
         <div className={cn("min-w-0", orientation === "horizontal" ? "w-full" : "flex-1 pt-0.5")}>
-          {label ? <div className="text-[12px] font-medium text-text-primary">{label}</div> : null}
+          {label ? <div className="text-sm font-medium text-text-primary">{label}</div> : null}
           {description ? (
-            <div className="mt-0.5 text-[11px] leading-relaxed text-text-muted">{description}</div>
+            <div className="mt-0.5 text-xs leading-relaxed text-text-muted">{description}</div>
           ) : null}
           {children ? <div className="mt-2">{children}</div> : null}
         </div>

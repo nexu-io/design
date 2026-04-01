@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
   Badge,
+  MonoDigits,
   Table,
   TableBody,
   TableCaption,
@@ -43,7 +44,7 @@ const rows = [
 
 export const Default: Story = {
   render: () => (
-    <div className="w-[760px] rounded-xl border border-border bg-surface-1 p-4">
+    <div className="w-[760px]">
       <Table>
         <TableCaption>Approval queue snapshot</TableCaption>
         <TableHeader>
@@ -62,7 +63,9 @@ export const Default: Story = {
               <TableCell>
                 <Badge variant={row.status.variant}>{row.status.label}</Badge>
               </TableCell>
-              <TableCell className="text-right text-text-muted">{row.time}</TableCell>
+              <TableCell className="text-right text-xs text-text-muted">
+                <MonoDigits>{row.time}</MonoDigits>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -73,7 +76,7 @@ export const Default: Story = {
 
 export const Compact: Story = {
   render: () => (
-    <div className="w-[760px] rounded-xl border border-border bg-surface-1 p-4">
+    <div className="w-[760px]">
       <Table density="compact">
         <TableHeader>
           <TableRow>
@@ -84,12 +87,16 @@ export const Compact: Story = {
         </TableHeader>
         <TableBody>
           <TableRow>
-            <TableCell className="font-mono text-[11px] text-accent">chat:write</TableCell>
+            <TableCell className="font-[family-name:var(--font-mono)] text-xs text-accent">
+              chat:write
+            </TableCell>
             <TableCell>Send messages</TableCell>
             <TableCell className="text-right text-success">Enabled</TableCell>
           </TableRow>
           <TableRow selected>
-            <TableCell className="font-mono text-[11px] text-accent">channels:history</TableCell>
+            <TableCell className="font-[family-name:var(--font-mono)] text-xs text-accent">
+              channels:history
+            </TableCell>
             <TableCell>Read channel messages</TableCell>
             <TableCell className="text-right text-warning">Pending</TableCell>
           </TableRow>

@@ -1,7 +1,6 @@
 import {
   Button,
   FollowUpInput,
-  InspectorPanel,
   PanelFooterActions,
   TagGroup,
   TagGroupItem,
@@ -21,6 +20,7 @@ import {
   X,
 } from "lucide-react";
 import type * as React from "react";
+import InspectorPanel from "./InspectorPanel";
 import {
   type ALIGNMENT_HISTORY,
   type ActivityItem,

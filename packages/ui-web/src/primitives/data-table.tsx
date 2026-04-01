@@ -8,7 +8,10 @@ export function DataTable({ children, className, ...props }: DataTableProps) {
   return (
     <div
       data-slot="data-table"
-      className={cn("overflow-hidden rounded-xl border border-border bg-surface-1", className)}
+      className={cn(
+        "overflow-hidden rounded-xl border border-border-subtle bg-surface-0",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -21,7 +24,7 @@ export function DataTableHeader({ className, ...props }: React.HTMLAttributes<HT
     <div
       data-slot="data-table-header"
       className={cn(
-        "flex items-center justify-between gap-3 border-b border-border px-4 py-3",
+        "flex items-center justify-between gap-3 border-b border-border-subtle px-4 py-3",
         className,
       )}
       {...props}
@@ -43,7 +46,7 @@ export function DataTableTitle({ className, ...props }: React.HTMLAttributes<HTM
   return (
     <div
       data-slot="data-table-title"
-      className={cn("text-[12px] font-semibold text-text-primary", className)}
+      className={cn("text-base font-semibold text-text-primary", className)}
       {...props}
     />
   );
@@ -56,7 +59,7 @@ export function DataTableDescription({
   return (
     <div
       data-slot="data-table-description"
-      className={cn("text-[11px] text-text-muted", className)}
+      className={cn("text-xs text-text-muted", className)}
       {...props}
     />
   );
@@ -67,7 +70,7 @@ export function DataTableFooter({ className, ...props }: React.HTMLAttributes<HT
     <div
       data-slot="data-table-footer"
       className={cn(
-        "flex items-center justify-between gap-3 border-t border-border px-4 py-3 text-[11px] text-text-muted",
+        "flex items-center justify-between gap-3 border-t border-border-subtle px-4 py-2.5 text-xs text-text-muted",
         className,
       )}
       {...props}
@@ -79,7 +82,7 @@ export function DataTableEmpty({ className, ...props }: React.HTMLAttributes<HTM
   return (
     <div
       data-slot="data-table-empty"
-      className={cn("px-4 py-8 text-center text-[12px] text-text-muted", className)}
+      className={cn("px-4 py-8 text-center text-sm text-text-muted", className)}
       {...props}
     />
   );

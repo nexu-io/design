@@ -54,7 +54,7 @@ function FeatureCard({
           <Icon size={20} className="text-accent" />
         </div>
         {badge && (
-          <Badge variant="brand" size="sm">
+          <Badge variant="accent" size="sm">
             {badge}
           </Badge>
         )}
@@ -150,7 +150,7 @@ export default function NexuLanding() {
               <span className="text-[11px] font-bold text-accent-fg">N</span>
             </div>
             <span className="text-sm font-semibold tracking-tight text-text-primary">nexu</span>
-            <Badge variant="brand" size="sm">
+            <Badge variant="accent" size="sm">
               分身监控管理
             </Badge>
           </div>
@@ -185,7 +185,7 @@ export default function NexuLanding() {
         />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(30,171,96,0.06)_0%,transparent_50%)]" />
         <div className="relative mx-auto max-w-4xl px-6 pt-24 pb-20 text-center">
-          <Badge variant="brand" size="lg" className="mb-8 text-xs">
+          <Badge variant="accent" size="lg" className="mb-8 text-xs">
             <Zap size={12} /> 基于 Refly 能力 · 多数字员工，赛博工作室
           </Badge>
           <h1 className="mb-6 text-[48px] font-bold leading-[1.1] tracking-tight text-text-primary">

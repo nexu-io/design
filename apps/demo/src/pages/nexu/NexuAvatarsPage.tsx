@@ -80,7 +80,7 @@ export default function NexuAvatarsPage() {
                       role.status === "busy"
                         ? "warning"
                         : role.status === "waiting"
-                          ? "brand"
+                          ? "accent"
                           : "success"
                     }
                     className="shrink-0 text-[10px]"

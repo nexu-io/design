@@ -8,12 +8,12 @@ const inputShellVariants = cva(
   {
     variants: {
       size: {
-        sm: "min-h-8 px-2.5 text-xs",
-        md: "min-h-9 px-3 text-[13px]",
-        lg: "min-h-11 px-3.5 text-sm",
+        sm: "min-h-8 px-2.5 text-sm",
+        md: "min-h-9 px-3 text-base",
+        lg: "min-h-11 px-3.5 text-lg",
       },
       invalid: {
-        true: "border-destructive focus-within:ring-destructive",
+        true: "border-destructive focus-within:border-destructive focus-within:ring-destructive/20",
         false: "",
       },
     },
@@ -52,7 +52,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         data-slot="input"
         data-invalid={invalid ? "" : undefined}
       >
-        {leadingIcon ? <span className="text-muted-foreground">{leadingIcon}</span> : null}
+        {leadingIcon ? (
+          <span className="text-muted-foreground" aria-hidden="true">
+            {leadingIcon}
+          </span>
+        ) : null}
         <input
           ref={ref}
           type={type}
@@ -63,7 +67,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           )}
           {...props}
         />
-        {trailingIcon ? <span className="text-muted-foreground">{trailingIcon}</span> : null}
+        {trailingIcon ? (
+          <span className="text-muted-foreground" aria-hidden="true">
+            {trailingIcon}
+          </span>
+        ) : null}
       </div>
     );
   },

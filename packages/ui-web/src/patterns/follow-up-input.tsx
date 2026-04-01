@@ -64,7 +64,7 @@ export function FollowUpInput({
     <div
       data-slot="follow-up-input"
       className={cn(
-        "flex items-end gap-2 rounded-xl border border-border bg-surface-1 px-3 py-2",
+        "flex w-full items-center gap-2 rounded-xl border border-border bg-surface-1 px-3 py-2",
         className,
       )}
       {...props}
@@ -84,7 +84,7 @@ export function FollowUpInput({
         placeholder={placeholder}
         rows={1}
         className={cn(
-          "flex-1 resize-none bg-transparent text-[12px] leading-relaxed text-text-primary placeholder:text-text-muted focus:outline-none",
+          "min-w-0 flex-1 resize-none bg-transparent text-sm leading-normal text-text-primary placeholder:text-text-muted focus:outline-none",
           textareaPropsClassName,
           textareaClassName,
         )}

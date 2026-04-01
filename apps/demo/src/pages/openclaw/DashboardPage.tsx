@@ -1,4 +1,4 @@
-import { Badge, Button, SectionHeader, StatCard } from "@nexu-design/ui-web";
+import { Badge, Button, StatCard } from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -16,6 +16,8 @@ import {
   Zap,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+import { SectionHeader } from "../../components/SectionHeader";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import {
   type Activity,
@@ -41,7 +43,7 @@ function DeploymentRow({ dep }: { dep: Deployment }) {
         <div className="flex gap-2 items-center">
           <span className="text-[13px] font-medium text-text-primary truncate">{dep.title}</span>
           {dep.source === "content" && (
-            <Badge variant="brand" size="xs">
+            <Badge variant="accent" size="xs">
               Content
             </Badge>
           )}

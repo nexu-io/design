@@ -3,7 +3,6 @@ import { render, screen } from "@testing-library/react";
 import { expectNoA11yViolations } from "../test/a11y";
 import { PageHeader } from "./page-header";
 import { PageShell } from "./page-shell";
-import { SectionHeader } from "./section-header";
 
 describe("PageShell", () => {
   it("renders content and merges className", () => {
@@ -11,7 +10,7 @@ describe("PageShell", () => {
       <PageShell data-testid="page-shell" className="bg-surface-1">
         <PageHeader title="Design system" description="Core tokens and patterns." />
         <section className="mb-12">
-          <SectionHeader title="Typography" className="mb-4" />
+          <h2 className="mb-4 text-xl font-semibold">Typography</h2>
           <p>Body copy</p>
         </section>
       </PageShell>,
@@ -33,7 +32,7 @@ describe("PageShell", () => {
       <PageShell>
         <PageHeader title="Design system" description="Core tokens and patterns." />
         <section className="mb-12">
-          <SectionHeader title="Typography" className="mb-4" />
+          <h2 className="mb-4 text-xl font-semibold">Typography</h2>
           <p>Body copy</p>
         </section>
       </PageShell>,

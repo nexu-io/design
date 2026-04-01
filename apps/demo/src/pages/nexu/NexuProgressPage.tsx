@@ -124,7 +124,7 @@ export default function NexuProgressPage() {
                   </div>
                 </div>
                 <Badge
-                  variant={run.status === "success" ? "success" : "brand"}
+                  variant={run.status === "success" ? "success" : "accent"}
                   className="shrink-0 text-[10px]"
                 >
                   {run.status === "success" ? "成功" : "待审批"}

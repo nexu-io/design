@@ -16,7 +16,7 @@ describe("StatCard", () => {
     );
 
     expect(screen.getByText("Success rate")).toBeInTheDocument();
-    expect(screen.getByText("96%")).toBeInTheDocument();
+    expect(screen.getByText((_, el) => el?.textContent === "96%")).toBeInTheDocument();
     expect(screen.getByText("+4.2%")).toBeInTheDocument();
     expect(screen.getByText("vs last week")).toBeInTheDocument();
   });

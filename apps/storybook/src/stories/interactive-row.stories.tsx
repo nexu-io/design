@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Circle, MoreHorizontal, Sparkles } from "lucide-react";
+import { MoreHorizontal, Sparkles } from "lucide-react";
 
 import {
   Badge,
@@ -7,6 +7,7 @@ import {
   InteractiveRowContent,
   InteractiveRowLeading,
   InteractiveRowTrailing,
+  StatusDot,
 } from "@nexu-design/ui-web";
 
 const meta = {
@@ -28,8 +29,8 @@ export const Default: Story = {
           </div>
         </InteractiveRowLeading>
         <InteractiveRowContent>
-          <div className="text-sm font-medium text-text-primary">Summarize customer interviews</div>
-          <div className="text-xs text-text-muted">Content ops • Updated 6 minutes ago</div>
+          <div className="text-lg font-medium text-text-primary">Summarize customer interviews</div>
+          <div className="text-sm text-text-muted">Content ops • Updated 6 minutes ago</div>
         </InteractiveRowContent>
         <InteractiveRowTrailing>
           <Badge variant="accent">Ready</Badge>
@@ -37,15 +38,13 @@ export const Default: Story = {
       </InteractiveRow>
       <InteractiveRow selected tone="subtle" className="p-4">
         <InteractiveRowLeading>
-          <div className="flex size-10 items-center justify-center rounded-lg bg-success/10 text-success">
-            <Circle className="size-4 fill-current" />
-          </div>
+          <StatusDot status="success" size="lg" />
         </InteractiveRowLeading>
         <InteractiveRowContent>
-          <div className="text-sm font-medium text-text-primary">
+          <div className="text-lg font-medium text-text-primary">
             Publish weekly automation recap
           </div>
-          <div className="text-xs text-text-muted">Marketing • Due in 30 minutes</div>
+          <div className="text-sm text-text-muted">Marketing • Due in 30 minutes</div>
         </InteractiveRowContent>
         <InteractiveRowTrailing>
           <MoreHorizontal className="size-4 text-text-muted" />

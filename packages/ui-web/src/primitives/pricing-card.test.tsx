@@ -17,7 +17,7 @@ describe("PricingCard", () => {
     );
 
     expect(screen.getByText("Pro")).toBeInTheDocument();
-    expect(screen.getByText("$29")).toBeInTheDocument();
+    expect(screen.getByText((_, el) => el?.textContent === "$29")).toBeInTheDocument();
     expect(screen.getByText("/ month")).toBeInTheDocument();
     expect(screen.getByText("Best for solo operators")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Upgrade" })).toBeInTheDocument();

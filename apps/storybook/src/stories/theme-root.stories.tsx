@@ -48,7 +48,7 @@ function ThemePreview({ theme, title }: { theme: "light" | "dark"; title: string
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm text-text-secondary">
+          <p className="text-lg text-text-secondary">
             ThemeRoot applies the token-backed light or dark theme locally.
           </p>
           <div className="flex flex-wrap gap-3">

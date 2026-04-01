@@ -12,7 +12,7 @@ import {
 } from "@nexu-design/ui-web";
 
 const meta = {
-  title: "Primitives/ActivityBar",
+  title: "Reserved/ActivityBar",
   component: ActivityBar,
   tags: ["autodocs"],
 } satisfies Meta<typeof ActivityBar>;

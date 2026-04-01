@@ -19,12 +19,16 @@ export const Default: Story = {
         <AvatarFallback>OR</AvatarFallback>
       </Avatar>
 
+      <Avatar>
+        <AvatarFallback />
+      </Avatar>
+
       <Avatar className="size-12">
-        <AvatarFallback className="bg-accent/10 text-accent">NX</AvatarFallback>
+        <AvatarFallback />
       </Avatar>
 
       <Avatar className="size-14 rounded-xl">
-        <AvatarFallback className="rounded-xl bg-success/10 text-success">AI</AvatarFallback>
+        <AvatarFallback>AI</AvatarFallback>
       </Avatar>
     </div>
   ),

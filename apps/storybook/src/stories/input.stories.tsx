@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Input } from "@nexu-design/ui-web";
+import { Search } from "lucide-react";
 
 const meta = {
   title: "Primitives/Input",
@@ -18,7 +19,7 @@ export const Default: Story = {};
 
 export const WithLeadingIcon: Story = {
   args: {
-    leadingIcon: <span aria-hidden="true">🔎</span>,
+    leadingIcon: <Search size={16} />,
     placeholder: "Search skills",
   },
 };

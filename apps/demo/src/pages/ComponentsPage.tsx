@@ -1,6 +1,6 @@
 import { Button } from "@nexu-design/ui-web";
 
-import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
+import { PageHeader, PageShell } from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   ArrowRight,
@@ -16,6 +16,8 @@ import {
   XCircle,
   Zap,
 } from "lucide-react";
+
+import { SectionHeader } from "../components/SectionHeader";
 import ChatCardGroup from "./product/ChatCards";
 
 function Badge({ children, variant = "purple" }: { children: React.ReactNode; variant?: string }) {

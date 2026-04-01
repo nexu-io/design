@@ -76,7 +76,7 @@ export function BrandRail({
               {description ? (
                 <div
                   className={cn(
-                    "mt-6 max-w-[460px] text-[14px] leading-[1.8]",
+                    "mt-6 max-w-[460px] text-lg leading-[1.8]",
                     tone === "dark" ? "text-white/58" : "text-text-secondary",
                   )}
                 >

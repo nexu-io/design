@@ -121,7 +121,7 @@ export default function BillingPage() {
                 value={(totalCredits - totalUsed).toLocaleString()}
                 icon={Crown}
                 tone="success"
-                trend={{ label: "Free plan", variant: "brand" }}
+                trend={{ label: "Free plan", variant: "accent" }}
               />
               <StatCard
                 label="Usage rate"

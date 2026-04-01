@@ -127,7 +127,7 @@ export default function NexuAvatarDetailPage() {
             <EntityCardContent>
               <TagGroup>
                 {avatar.skills.map((skill) => (
-                  <TagGroupItem key={skill} variant="brand" radius="md">
+                  <TagGroupItem key={skill} variant="accent" radius="md">
                     {skill}
                   </TagGroupItem>
                 ))}

@@ -118,7 +118,7 @@ export function FormFieldDescription({
   const { descriptionId } = useFormFieldContext();
 
   return (
-    <p id={descriptionId} className={cn("text-sm text-muted-foreground", className)}>
+    <p id={descriptionId} className={cn("text-xs text-muted-foreground", className)}>
       {children}
     </p>
   );
@@ -131,7 +131,7 @@ export function FormFieldError({
   const { errorId } = useFormFieldContext();
 
   return (
-    <p id={errorId} className={cn("text-sm font-medium text-destructive", className)}>
+    <p id={errorId} className={cn("text-xs font-medium text-destructive", className)}>
       {children}
     </p>
   );
