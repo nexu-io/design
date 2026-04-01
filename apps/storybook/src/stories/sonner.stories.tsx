@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <div className="flex gap-3">
-      <Toaster richColors closeButton position="top-right" />
+      <Toaster position="top-right" />
       <Button
         onClick={() => {
           toast.success("Deployment finished", {

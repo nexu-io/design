@@ -8,7 +8,10 @@ export function DataTable({ children, className, ...props }: DataTableProps) {
   return (
     <div
       data-slot="data-table"
-      className={cn("overflow-hidden rounded-xl border border-border-subtle bg-surface-0", className)}
+      className={cn(
+        "overflow-hidden rounded-xl border border-border-subtle bg-surface-0",
+        className,
+      )}
       {...props}
     >
       {children}

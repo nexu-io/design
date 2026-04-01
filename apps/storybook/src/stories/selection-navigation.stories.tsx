@@ -71,7 +71,7 @@ export const WorkspaceBreadcrumbs: Story = {
 export const RoutingTags: Story = {
   render: () => (
     <TagGroup>
-      <TagGroupItem variant="brand">AI</TagGroupItem>
+      <TagGroupItem variant="accent">AI</TagGroupItem>
       <TagGroupItem variant="accent">Slack</TagGroupItem>
       <TagGroupItem variant="success">Healthy</TagGroupItem>
       <TagGroupItem variant="warning">Needs review</TagGroupItem>

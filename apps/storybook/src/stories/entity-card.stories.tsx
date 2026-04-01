@@ -43,7 +43,9 @@ export const SkillCards: Story = {
           </EntityCardDescription>
         </EntityCardContent>
         <EntityCardFooter className="justify-end border-0 pt-0">
-          <Button variant="outline" size="sm">Install</Button>
+          <Button variant="outline" size="sm">
+            Install
+          </Button>
         </EntityCardFooter>
       </EntityCard>
 
@@ -89,7 +91,9 @@ export const SkillCards: Story = {
           </EntityCardDescription>
         </EntityCardContent>
         <EntityCardFooter className="justify-end border-0 pt-0">
-          <Button variant="outline" size="sm">Install</Button>
+          <Button variant="outline" size="sm">
+            Install
+          </Button>
         </EntityCardFooter>
       </EntityCard>
 
@@ -138,7 +142,9 @@ export const SkillCards: Story = {
           </EntityCardDescription>
         </EntityCardContent>
         <EntityCardFooter className="justify-end border-0 pt-0">
-          <Button variant="outline" size="sm">Install</Button>
+          <Button variant="outline" size="sm">
+            Install
+          </Button>
         </EntityCardFooter>
       </EntityCard>
 

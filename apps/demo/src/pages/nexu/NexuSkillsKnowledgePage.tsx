@@ -59,7 +59,7 @@ export default function NexuSkillsKnowledgePage() {
                 <EntityCardContent>
                   <div className="flex flex-wrap gap-2">
                     {row.skills.map((s) => (
-                      <Badge key={s} variant="brand" size="lg">
+                      <Badge key={s} variant="accent" size="lg">
                         <Wrench size={12} />
                         {s}
                       </Badge>

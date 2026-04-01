@@ -73,7 +73,7 @@ export function StepperItem({
         <div
           data-slot="stepper-indicator"
           className={cn(
-            "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-[11px] font-semibold transition-colors",
+            "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-[11px] font-semibold font-[family-name:var(--font-mono)] transition-colors",
             status === "completed" && "border-success/20 bg-success-subtle text-success",
             status === "current" && "border-accent/30 bg-accent/10 text-accent",
             status === "pending" && "border-border bg-surface-1 text-text-muted",

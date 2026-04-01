@@ -8,7 +8,7 @@ const textareaVariants = cva(
   {
     variants: {
       invalid: {
-        true: "border-destructive focus-visible:ring-destructive",
+        true: "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20",
         false: "",
       },
     },

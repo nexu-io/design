@@ -29,7 +29,7 @@ export const Comparison: Story = {
     features: [],
   },
   render: () => (
-    <div className="grid w-[920px] grid-cols-3 gap-4">
+    <div className="grid w-[920px] grid-cols-3 gap-4 pt-4">
       <PricingCard
         name="Starter"
         price="$0"

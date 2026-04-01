@@ -15,18 +15,19 @@ const cardVariants = cva(
         interactive: "cursor-pointer hover:shadow-refine hover:-translate-y-px",
         static: "",
       },
-    padding: {
-      none: "p-0",
-      sm: "p-3",
-      md: "p-5",
-      lg: "p-6",
+      padding: {
+        none: "p-0",
+        sm: "p-3",
+        md: "p-5",
+        lg: "p-6",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      padding: "md",
     },
   },
-  defaultVariants: {
-    variant: "default",
-    padding: "md",
-  },
-});
+);
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,

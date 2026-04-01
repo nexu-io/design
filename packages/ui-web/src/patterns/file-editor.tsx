@@ -184,7 +184,7 @@ function CompactEditor({
             ref={textareaRef}
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
-            className="h-full w-full resize-none bg-transparent p-3 font-mono text-[11px] leading-relaxed text-text-primary focus:outline-none"
+            className="h-full w-full resize-none bg-transparent p-3 font-[family-name:var(--font-mono)] text-[11px] leading-relaxed text-text-primary focus:outline-none"
             spellCheck={false}
           />
         ) : isMarkdown ? (
@@ -192,7 +192,7 @@ function CompactEditor({
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{draft}</ReactMarkdown>
           </div>
         ) : (
-          <pre className="whitespace-pre-wrap p-3 font-mono text-[11px] leading-relaxed text-text-secondary">
+          <pre className="whitespace-pre-wrap p-3 font-[family-name:var(--font-mono)] text-[11px] leading-relaxed text-text-secondary">
             {draft}
           </pre>
         )}
@@ -351,7 +351,7 @@ export function FileEditor({
             ref={textareaRef}
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
-            className="h-full w-full resize-none bg-transparent p-4 font-mono text-[12px] leading-relaxed text-text-primary focus:outline-none"
+            className="h-full w-full resize-none bg-transparent p-4 font-[family-name:var(--font-mono)] text-[12px] leading-relaxed text-text-primary focus:outline-none"
             spellCheck={false}
           />
         ) : isMarkdown ? (
@@ -359,7 +359,7 @@ export function FileEditor({
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{draft}</ReactMarkdown>
           </div>
         ) : (
-          <pre className="whitespace-pre-wrap p-4 font-mono text-[12px] leading-relaxed text-text-secondary">
+          <pre className="whitespace-pre-wrap p-4 font-[family-name:var(--font-mono)] text-[12px] leading-relaxed text-text-secondary">
             {draft}
           </pre>
         )}

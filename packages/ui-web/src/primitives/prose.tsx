@@ -16,7 +16,7 @@ const proseVariants = cva(
     "[&_em]:italic",
     "[&_a]:text-[var(--color-info)] [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:opacity-80",
     "[&_blockquote]:my-[0.5em] [&_blockquote]:px-[0.8em] [&_blockquote]:py-[0.4em] [&_blockquote]:border-l-[3px] [&_blockquote]:border-[var(--color-border-hover)] [&_blockquote]:text-[var(--color-text-secondary)] [&_blockquote]:bg-[var(--color-surface-2)] [&_blockquote]:rounded-r-[4px]",
-    "[&_code]:font-mono [&_code]:text-[0.88em] [&_code]:px-[0.35em] [&_code]:py-[0.15em] [&_code]:bg-[var(--color-surface-3)] [&_code]:rounded-[3px] [&_code]:text-[var(--color-text-primary)]",
+    "[&_code]:font-[family-name:var(--font-mono)] [&_code]:text-[0.88em] [&_code]:px-[0.35em] [&_code]:py-[0.15em] [&_code]:bg-[var(--color-surface-3)] [&_code]:rounded-[3px] [&_code]:text-[var(--color-text-primary)]",
     "[&_pre]:my-[0.5em] [&_pre]:px-[1em] [&_pre]:py-[0.8em] [&_pre]:bg-[var(--color-surface-2)] [&_pre]:border [&_pre]:border-[var(--color-border)] [&_pre]:rounded-[6px] [&_pre]:overflow-x-auto",
     "[&_pre_code]:p-0 [&_pre_code]:bg-transparent [&_pre_code]:text-[0.85em] [&_pre_code]:leading-[1.5]",
     "[&_table]:w-full [&_table]:my-[0.5em] [&_table]:border-collapse [&_table]:text-[0.9em]",

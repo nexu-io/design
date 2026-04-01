@@ -41,7 +41,7 @@ function DeploymentRow({ dep }: { dep: Deployment }) {
         <div className="flex gap-2 items-center">
           <span className="text-[13px] font-medium text-text-primary truncate">{dep.title}</span>
           {dep.source === "content" && (
-            <Badge variant="brand" size="xs">
+            <Badge variant="accent" size="xs">
               Content
             </Badge>
           )}

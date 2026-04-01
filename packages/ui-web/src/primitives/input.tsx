@@ -13,7 +13,7 @@ const inputShellVariants = cva(
         lg: "min-h-11 px-3.5 text-sm",
       },
       invalid: {
-        true: "border-destructive focus-within:ring-destructive",
+        true: "border-destructive focus-within:border-destructive focus-within:ring-destructive/20",
         false: "",
       },
     },

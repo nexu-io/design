@@ -1,6 +1,7 @@
 import type * as React from "react";
 
 import { cn } from "../lib/cn";
+import { MonoDigits } from "../lib/mono-digits";
 
 const toneStyles = {
   default: "text-text-primary",
@@ -57,7 +58,7 @@ export function StatsBar({ className, items, ...props }: StatsBarProps) {
                   toneStyles[item.tone ?? "default"],
                 )}
               >
-                {item.value}
+                <MonoDigits>{item.value}</MonoDigits>
               </span>
               <span className="text-[10px] text-text-muted">{item.label}</span>
             </div>

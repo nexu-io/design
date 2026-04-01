@@ -36,7 +36,9 @@ export const TeamStatusThread: Story = {
       <ConversationMessage
         avatar={
           <Avatar className="size-7">
-            <AvatarFallback><Bot className="size-4" /></AvatarFallback>
+            <AvatarFallback>
+              <Bot className="size-4" />
+            </AvatarFallback>
           </Avatar>
         }
         meta="Just now"
@@ -51,7 +53,9 @@ export const TeamStatusThread: Story = {
       <ConversationMessage
         avatar={
           <Avatar className="size-7">
-            <AvatarFallback><User className="size-4" /></AvatarFallback>
+            <AvatarFallback>
+              <User className="size-4" />
+            </AvatarFallback>
           </Avatar>
         }
         meta="1 min ago"

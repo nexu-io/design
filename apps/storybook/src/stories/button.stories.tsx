@@ -27,7 +27,9 @@ export const Variants: Story = {
       <Button variant="outline">Outline</Button>
       <Button variant="ghost">Ghost</Button>
       <Button variant="destructive">Delete</Button>
-      <Button variant="link">View details <ArrowUpRight className="size-3" /></Button>
+      <Button variant="link">
+        View details <ArrowUpRight className="size-3" />
+      </Button>
     </div>
   ),
 };
@@ -48,10 +50,18 @@ export const Disabled: Story = {
   render: () => (
     <div className="flex flex-wrap gap-3">
       <Button disabled>Primary</Button>
-      <Button variant="secondary" disabled>Secondary</Button>
-      <Button variant="outline" disabled>Outline</Button>
-      <Button variant="ghost" disabled>Ghost</Button>
-      <Button variant="destructive" disabled>Delete</Button>
+      <Button variant="secondary" disabled>
+        Secondary
+      </Button>
+      <Button variant="outline" disabled>
+        Outline
+      </Button>
+      <Button variant="ghost" disabled>
+        Ghost
+      </Button>
+      <Button variant="destructive" disabled>
+        Delete
+      </Button>
     </div>
   ),
 };

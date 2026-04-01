@@ -312,7 +312,10 @@ const ComboboxInput = React.forwardRef<HTMLInputElement, ComboboxInputProps>(
           ref={ref}
           aria-activedescendant={activeItemId}
           autoFocus
-          className={cn("h-7 border-none bg-transparent shadow-none focus-within:ring-0", className)}
+          className={cn(
+            "h-7 border-none bg-transparent shadow-none focus-within:ring-0",
+            className,
+          )}
           data-slot="combobox-input"
           inputClassName={cn("text-[12px]", inputClassName)}
           onChange={(event) => {

@@ -1,6 +1,7 @@
 import type * as React from "react";
 
 import { cn } from "../lib/cn";
+import { MonoDigits } from "../lib/mono-digits";
 import { Badge, type BadgeProps } from "./badge";
 import { Card, type CardProps } from "./card";
 import { Progress, type ProgressProps } from "./progress";
@@ -53,7 +54,9 @@ export function StatCard({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-[11px] text-text-muted">{label}</div>
-          <div className="mt-1 text-2xl font-bold tracking-tight text-text-primary">{value}</div>
+          <div className="mt-1 text-2xl font-bold tracking-tight text-text-primary">
+            <MonoDigits>{value}</MonoDigits>
+          </div>
         </div>
         {Icon ? (
           <div

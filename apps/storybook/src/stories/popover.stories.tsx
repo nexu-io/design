@@ -18,7 +18,7 @@ export const Default: Story = {
       </PopoverTrigger>
       <PopoverContent className="grid gap-2">
         <div className="text-sm font-medium">Connected workspace</div>
-        <p className="text-sm text-muted-foreground">Switch active workspace or review status.</p>
+        <p className="text-xs text-muted-foreground">Switch active workspace or review status.</p>
       </PopoverContent>
     </Popover>
   ),

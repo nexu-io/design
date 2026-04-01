@@ -7,25 +7,28 @@ function Toaster({ ...props }: ToasterProps) {
       className="toaster group"
       style={
         {
-          "--normal-bg": "var(--color-surface-1)",
+          "--normal-bg": "var(--color-surface-0)",
           "--normal-text": "var(--color-text-primary)",
           "--normal-border": "var(--color-border)",
-          "--success-bg": "var(--color-success-subtle)",
-          "--success-text": "var(--color-success)",
-          "--success-border": "var(--color-success)",
-          "--error-bg": "var(--color-danger-subtle)",
-          "--error-text": "var(--color-danger)",
-          "--error-border": "var(--color-danger)",
+          "--success-bg": "var(--color-surface-0)",
+          "--success-text": "var(--color-text-primary)",
+          "--success-border": "var(--color-border)",
+          "--error-bg": "var(--color-surface-0)",
+          "--error-text": "var(--color-text-primary)",
+          "--error-border": "var(--color-border)",
         } as React.CSSProperties
       }
       toastOptions={{
         classNames: {
-          toast: "group toast rounded-xl border shadow-lg text-[13px]",
+          toast: "group toast items-start rounded-xl border shadow-md text-[13px]",
+          icon: "mt-0.5",
           title: "font-medium",
-          description: "text-[12px] opacity-70",
+          description: "text-[12px] text-[var(--color-text-muted)]",
           actionButton:
-            "bg-[var(--color-accent)] text-[var(--color-accent-fg)] text-[12px] font-medium rounded-lg",
+            "bg-[var(--color-surface-2)] text-[var(--color-text-primary)] text-[12px] font-medium rounded-lg hover:bg-[var(--color-surface-3)]",
           cancelButton: "text-[var(--color-text-muted)] text-[12px] font-medium rounded-lg",
+          success: "[&_[data-icon]]:text-[var(--color-success)]",
+          error: "[&_[data-icon]]:text-[var(--color-danger)]",
         },
       }}
       {...props}

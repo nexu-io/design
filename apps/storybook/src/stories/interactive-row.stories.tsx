@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Circle, MoreHorizontal, Sparkles } from "lucide-react";
+import { MoreHorizontal, Sparkles } from "lucide-react";
 
 import {
   Badge,
@@ -7,6 +7,7 @@ import {
   InteractiveRowContent,
   InteractiveRowLeading,
   InteractiveRowTrailing,
+  StatusDot,
 } from "@nexu-design/ui-web";
 
 const meta = {
@@ -37,9 +38,7 @@ export const Default: Story = {
       </InteractiveRow>
       <InteractiveRow selected tone="subtle" className="p-4">
         <InteractiveRowLeading>
-          <div className="flex size-10 items-center justify-center rounded-lg bg-success/10 text-success">
-            <Circle className="size-4 fill-current" />
-          </div>
+          <StatusDot status="success" size="lg" />
         </InteractiveRowLeading>
         <InteractiveRowContent>
           <div className="text-sm font-medium text-text-primary">

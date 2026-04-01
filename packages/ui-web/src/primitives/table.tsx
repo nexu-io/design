@@ -24,7 +24,7 @@ export function Table({ className, density = "default", hoverable = true, ...pro
       <div data-slot="table-container" className="relative w-full overflow-x-auto">
         <table
           data-slot="table"
-          className={cn("w-full caption-bottom text-sm", className)}
+          className={cn("w-full caption-bottom text-[13px]", className)}
           {...props}
         />
       </div>
@@ -67,8 +67,8 @@ export function TableRow({
       data-slot="table-row"
       data-state={selected ? "selected" : undefined}
       className={cn(
-        "border-b border-border-subtle transition-colors data-[state=selected]:bg-surface-2/40",
-        hoverable && "hover:bg-surface-2/60",
+        "border-b border-border-subtle transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] data-[state=selected]:bg-surface-2/40",
+        hoverable && "hover:bg-surface-2/50",
         className,
       )}
       {...props}
@@ -83,8 +83,8 @@ export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTa
     <th
       data-slot="table-head"
       className={cn(
-        "text-left align-middle font-medium text-text-tertiary",
-        density === "compact" ? "h-9 px-4 text-[11px]" : "h-11 px-4 text-xs",
+        "text-left align-middle font-medium text-text-muted",
+        density === "compact" ? "h-8 px-4 text-[11px]" : "h-10 px-4 text-[12px]",
         className,
       )}
       {...props}
@@ -100,7 +100,7 @@ export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTa
       data-slot="table-cell"
       className={cn(
         "align-middle text-text-primary",
-        density === "compact" ? "px-4 py-2.5 text-[12px]" : "px-4 py-3",
+        density === "compact" ? "px-4 py-2 text-[12px]" : "px-4 py-2.5 text-[13px]",
         className,
       )}
       {...props}
@@ -115,7 +115,7 @@ export function TableCaption({
   return (
     <caption
       data-slot="table-caption"
-      className={cn("mt-3 text-sm text-text-muted", className)}
+      className={cn("mt-3 text-[12px] text-text-muted", className)}
       {...props}
     />
   );

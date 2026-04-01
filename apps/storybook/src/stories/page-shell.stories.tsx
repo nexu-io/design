@@ -19,7 +19,11 @@ export const Default: Story = {
       <PageHeader
         title="Design system"
         description="Browse the shared primitives, patterns, and documentation shells."
-        actions={<Button>Open tokens <ArrowUpRight className="size-3" /></Button>}
+        actions={
+          <Button>
+            Open tokens <ArrowUpRight className="size-3" />
+          </Button>
+        }
       />
 
       <section className="mb-12">

@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "../lib/cn";
+import { MonoDigits } from "../lib/mono-digits";
 import { Badge, type BadgeProps } from "./badge";
 import { Card, type CardProps } from "./card";
 
@@ -47,7 +48,7 @@ export function PricingCard({
   icon: Icon,
   iconClassName,
   badge,
-  badgeVariant = "brand",
+  badgeVariant = "accent",
   features,
   footer,
   featured = false,
@@ -64,7 +65,7 @@ export function PricingCard({
     >
       {badge ? (
         <Badge
-          className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 shadow-sm"
+          className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 bg-surface-0"
           variant={badgeVariant}
         >
           {badge}
@@ -103,7 +104,7 @@ export function PricingCard({
             size === "compact" ? "text-[20px]" : "text-3xl",
           )}
         >
-          {price}
+          <MonoDigits>{price}</MonoDigits>
         </span>
         {period ? <span className="text-[12px] text-text-muted">{period}</span> : null}
       </div>

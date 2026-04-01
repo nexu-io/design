@@ -1,4 +1,4 @@
-import { ExternalLink, FileText } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { TextLink } from "@nexu-design/ui-web";
@@ -25,16 +25,10 @@ export const Variants: Story = {
 
 export const WithIcon: Story = {
   render: () => (
-    <div className="flex flex-col gap-3">
-      <TextLink href="#">
-        <FileText className="size-3" />
-        View documentation
-      </TextLink>
-      <TextLink href="#" target="_blank" rel="noopener noreferrer">
-        Open in browser
-        <ExternalLink className="size-3" />
-      </TextLink>
-    </div>
+    <TextLink href="#" target="_blank" rel="noopener noreferrer">
+      Open in browser
+      <ArrowUpRight className="size-3" />
+    </TextLink>
   ),
 };
 

@@ -1,4 +1,5 @@
 export * from "./lib/cn";
+export * from "./lib/mono-digits";
 export * from "./primitives/badge";
 export * from "./primitives/button";
 export * from "./primitives/avatar";

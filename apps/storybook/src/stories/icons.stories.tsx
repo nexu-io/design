@@ -24,7 +24,7 @@ const providerIds = [
   "siliconflow",
 ] as const;
 
-const platformIds = ["slack", "feishu", "discord", "telegram"] as const;
+const platformIds = ["slack", "feishu", "discord", "telegram", "wechat"] as const;
 const brandIds = ["nexu", "github"] as const;
 
 function IconGrid({

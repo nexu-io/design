@@ -253,7 +253,7 @@ function FeatureCard({
           <Icon size={20} className="text-accent" />
         </div>
         {badge && (
-          <Badge variant="brand" size="sm">
+          <Badge variant="accent" size="sm">
             {badge}
           </Badge>
         )}
@@ -762,13 +762,13 @@ export default function OpenClawLanding() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex gap-2 items-center mb-1.5">
-                  <Badge variant="brand" size="sm">
+                  <Badge variant="accent" size="sm">
                     {c.tag}
                   </Badge>
                 </div>
                 <div className="text-[14px] font-semibold text-text-primary mb-1">{c.prompt}</div>
                 <div className="text-[13px] text-text-muted mb-2">{c.result}</div>
-                <Badge variant="brand">
+                <Badge variant="accent">
                   <Clock size={10} /> {c.time}
                 </Badge>
               </div>

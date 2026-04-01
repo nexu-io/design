@@ -80,9 +80,7 @@ export function ConversationMessage({
             )}
           >
             {meta ? (
-              <div className={cn("min-w-0 flex-1", variant === "user" && "text-right")}>
-                {meta}
-              </div>
+              <div className={cn("min-w-0 flex-1", variant === "user" && "text-right")}>{meta}</div>
             ) : null}
             {actions ? <div className="shrink-0">{actions}</div> : null}
           </div>

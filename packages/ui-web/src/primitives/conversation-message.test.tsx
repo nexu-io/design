@@ -43,10 +43,7 @@ describe("ConversationMessage", () => {
 
   it("has no a11y violations", async () => {
     const { container } = render(
-      <ConversationMessage
-        avatar={<span aria-label="avatar">AI</span>}
-        meta="now"
-      >
+      <ConversationMessage avatar={<span aria-label="avatar">AI</span>} meta="now">
         Accessible message
       </ConversationMessage>,
     );

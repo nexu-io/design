@@ -49,8 +49,7 @@ export function EntityCardMedia({ className, ...props }: React.HTMLAttributes<HT
   );
 }
 
-export interface EntityCardMediaImageProps
-  extends React.ImgHTMLAttributes<HTMLImageElement> {}
+export interface EntityCardMediaImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
 
 export function EntityCardMediaImage({ className, alt, ...props }: EntityCardMediaImageProps) {
   return (
