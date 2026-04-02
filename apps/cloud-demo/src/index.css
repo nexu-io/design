@@ -1,7 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "@nexu-design/tokens/styles.css";
-@import "@nexu-design/ui-web/styles.css";
+@import "../../../packages/tokens/src/styles.css";
+
+@source "../../../packages/ui-web/src/**/*.{ts,tsx}";
+@source "../../../packages/demo-pages/src/**/*.{ts,tsx}";
 
 html,
 body,

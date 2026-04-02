@@ -48,6 +48,7 @@ import {
   EyeOff,
   FileText,
   FolderOpen,
+  Gift,
   Globe,
   Home,
   Loader2,
@@ -72,6 +73,7 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import { openExternal } from "../../utils/open-external";
 import ChannelDetailPage from "./ChannelDetailPage";
 import ImportSkillModal from "./ImportSkillModal";
+import RewardsPage from "./RewardsPage";
 import { MOCK_CHANNELS, MOCK_DEPLOYMENTS, type ModelProvider, getProviderDetails } from "./data";
 import { SKILL_CATEGORIES, type SkillDef, type ToolTag } from "./skillData";
 
@@ -1808,6 +1810,7 @@ type View =
   | { type: "home" }
   | { type: "conversations"; channelId?: string }
   | { type: "deployments" }
+  | { type: "rewards" }
   | { type: "skills" }
   | { type: "settings"; tab?: SettingsTab; providerId?: ModelProvider };
 
@@ -1823,11 +1826,16 @@ function getInitialWorkspaceView(search: string): View {
     };
   }
 
+  if (params.get("view") === "rewards") {
+    return { type: "rewards" };
+  }
+
   return { type: "home" };
 }
 
 const NAV_ITEMS: { id: View["type"]; labelKey: string; icon: typeof Home }[] = [
   { id: "home", labelKey: "ws.nav.home", icon: Home },
+  { id: "rewards", labelKey: "ws.nav.rewards", icon: Gift },
   { id: "skills", labelKey: "ws.nav.skills", icon: Sparkles },
   { id: "settings", labelKey: "ws.nav.settings", icon: Settings },
 ];
@@ -2412,6 +2420,7 @@ export default function OpenClawWorkspace() {
         )}
         {view.type === "conversations" && <ConversationsView initialChannelId={view.channelId} />}
         {view.type === "deployments" && <DeploymentsView />}
+        {view.type === "rewards" && <RewardsPage />}
         {view.type === "skills" && <SkillsPanel />}
         {view.type === "settings" && (
           <SettingsView initialTab={view.tab} initialProviderId={view.providerId} />
