@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@nexu-design/tokens/styles.css";
+@import "@nexu-design/ui-web/styles.css";
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
