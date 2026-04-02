@@ -634,11 +634,35 @@ function DiscordIconSetup({ size = 20 }: { size?: number }) {
     </svg>
   );
 }
+function TelegramIconSetup({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="#26A5E4">
+      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.654 8.22-1.84 8.67c-.138.616-.5.768-.994.478l-2.78-2.048-1.34 1.29c-.148.148-.273.273-.56.273l.2-2.82 5.13-4.636c.224-.198-.048-.308-.348-.11l-6.34 3.99-2.73-.852c-.594-.186-.606-.594.124-.88l10.67-4.11c.494-.178.926.12.764.88z" />
+    </svg>
+  );
+}
+function WhatsAppIconSetup({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="#25D366">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+    </svg>
+  );
+}
+function WeChatIconSetup({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="#07C160">
+      <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.952-7.062-6.122zm-2.18 2.769c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982z" />
+    </svg>
+  );
+}
 
 const ONBOARDING_CHANNELS = [
   { id: 'feishu', name: 'Feishu', shortName: 'Feishu', icon: FeishuIconSetup, color: '#FFFFFF', recommended: true, docUrl: 'https://docs.nexu.ai/channels/feishu', chatUrl: 'https://www.feishu.cn/' },
   { id: 'slack', name: 'Slack', shortName: 'Slack', icon: SlackIconSetup, color: '#FFFFFF', docUrl: 'https://docs.nexu.ai/channels/slack', chatUrl: 'https://slack.com/' },
   { id: 'discord', name: 'Discord', shortName: 'Discord', icon: DiscordIconSetup, color: '#FFFFFF', docUrl: 'https://docs.nexu.ai/channels/discord', chatUrl: 'https://discord.com/' },
+  { id: 'telegram', name: 'Telegram', shortName: 'Telegram', icon: TelegramIconSetup, color: '#FFFFFF', docUrl: 'https://docs.nexu.ai/channels/telegram', chatUrl: 'https://telegram.org/' },
+  { id: 'whatsapp', name: 'WhatsApp', shortName: 'WhatsApp', icon: WhatsAppIconSetup, color: '#FFFFFF', docUrl: 'https://docs.nexu.ai/channels/whatsapp', chatUrl: 'https://web.whatsapp.com/' },
+  { id: 'wechat', name: 'WeChat', shortName: 'WeChat', icon: WeChatIconSetup, color: '#FFFFFF', docUrl: 'https://docs.nexu.ai/channels/wechat', chatUrl: 'https://web.wechat.com/' },
 ];
 
 const CHANNELS_CONNECTED_KEY = 'nexu_channels_connected';
@@ -657,6 +681,17 @@ const CHANNEL_CONFIG_FIELDS: Record<string, { id: string; label: string; placeho
   discord: [
     { id: 'appId', label: 'App ID', placeholder: '000000000000000000', helpText: 'Found in Discord Developer Portal > General Information' },
     { id: 'botToken', label: 'Bot Token', placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', helpText: 'Found in Discord Developer Portal > Bot' },
+  ],
+  telegram: [
+    { id: 'botToken', label: 'Bot Token', placeholder: '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11', helpText: 'Obtain from @BotFather on Telegram' },
+  ],
+  whatsapp: [
+    { id: 'phoneNumberId', label: 'Phone Number ID', placeholder: '000000000000000', helpText: 'Found in Meta Business Suite > WhatsApp > API Setup' },
+    { id: 'accessToken', label: 'Access Token', placeholder: 'EAAxxxxxxxxxxxxxxxx', helpText: 'Found in Meta Business Suite > WhatsApp > API Setup' },
+  ],
+  wechat: [
+    { id: 'appId', label: 'App ID', placeholder: 'wx0000000000000000', helpText: 'Found in WeChat Official Accounts Platform > Basic Configuration' },
+    { id: 'appSecret', label: 'App Secret', placeholder: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', helpText: 'Found in WeChat Official Accounts Platform > Basic Configuration' },
   ],
 };
 
@@ -699,6 +734,8 @@ function ChannelIcon({
       return <svg width={size} height={size} viewBox="7 7 26 26" fill="none"><path d="M21.069 20.504l.063-.06.125-.122.085-.084.256-.254.348-.344.299-.296.281-.278.293-.289.269-.266.374-.37.218-.206.419-.359.404-.306.598-.386.617-.33.606-.265.348-.127.177-.058a14.78 14.78 0 0 0-2.793-5.603c-.252-.318-.639-.502-1.047-.502H12.221c-.196 0-.277.249-.119.364a31.49 31.49 0 0 1 8.943 10.162c.008-.007.016-.015.025-.023z" fill="#00d6b9"/><path d="M16.791 30c5.57 0 10.423-3.074 12.955-7.618.089-.159.175-.321.258-.484a6.12 6.12 0 0 1-.425.699c-.055.078-.111.155-.17.23a6.29 6.29 0 0 1-.225.274c-.062.07-.123.138-.188.206a5.61 5.61 0 0 1-.407.384 5.53 5.53 0 0 1-.24.195 7.12 7.12 0 0 1-.292.21c-.063.043-.126.084-.191.122s-.134.081-.204.119c-.14.078-.282.149-.428.215a5.53 5.53 0 0 1-.385.157 5.81 5.81 0 0 1-.43.138 5.91 5.91 0 0 1-.661.143c-.162.025-.325.044-.491.055-.173.012-.348.016-.525.014-.193-.003-.388-.015-.585-.037-.144-.015-.289-.037-.433-.062-.126-.022-.252-.049-.38-.079l-.2-.051-.555-.155-.275-.081-.41-.125-.334-.107-.317-.104-.215-.073-.26-.091-.186-.066-.367-.134-.212-.081-.284-.11-.299-.119-.193-.079-.24-.1-.185-.078-.192-.084-.166-.073-.152-.067-.153-.07-.159-.073-.2-.093-.208-.099-.222-.108-.189-.093c-3.335-1.668-6.295-3.89-8.822-6.583-.126-.134-.349-.045-.349.138l.005 9.52v.773c0 .448.222.87.595 1.118C10.946 29.092 13.762 30 16.791 30z" fill="#3370ff"/><path d="M33.151 16.582c-1.129-.556-2.399-.869-3.744-.869a8.45 8.45 0 0 0-2.303.317l-.252.075-.177.058-.348.127-.606.265-.617.33-.598.386-.404.306-.419.359-.218.206-.374.37-.269.266-.293.289-.281.278-.299.296-.348.344-.256.254-.085.084-.125.122-.063.06-.095.09-.105.099c-.924.848-1.956 1.581-3.072 2.175l.2.093.159.073.153.07.152.067.166.073.192.084.185.078.24.1.193.079.299.119.284.11.212.081.367.134.186.066.26.09.215.073.317.104.334.107.41.125.275.081.555.155.2.051.379.079.433.062.585.037.525-.014.491-.055a5.61 5.61 0 0 0 .66-.143l.43-.138.385-.158.427-.215.204-.119.191-.122.292-.21.24-.195.407-.384.188-.206.225-.274.17-.23a6.13 6.13 0 0 0 .421-.693l.144-.288 1.305-2.599-.003.006a8.07 8.07 0 0 1 1.697-2.439z" fill="#133c9a"/></svg>;
     case 'facebook':
       return <svg width={size} height={size} viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>;
+    case 'telegram':
+      return <svg width={size} height={size} viewBox="0 0 24 24" fill="#26A5E4"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.654 8.22-1.84 8.67c-.138.616-.5.768-.994.478l-2.78-2.048-1.34 1.29c-.148.148-.273.273-.56.273l.2-2.82 5.13-4.636c.224-.198-.048-.308-.348-.11l-6.34 3.99-2.73-.852c-.594-.186-.606-.594.124-.88l10.67-4.11c.494-.178.926.12.764.88z" /></svg>;
     case 'whatsapp':
       return <svg width={size} height={size} viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>;
     case 'calendar': {
@@ -3735,7 +3772,7 @@ export default function OpenClawWorkspace() {
             <div className="space-y-0.5">
               {MOCK_CHANNELS.map(ch => {
                 const active = view.type === 'conversations' && (view as { type: 'conversations'; channelId?: string }).channelId === ch.id;
-                const ChannelIcon = ({ slack: SlackIconSetup, feishu: FeishuIconSetup, discord: DiscordIconSetup } as Record<string, typeof SlackIconSetup>)[ch.platform] || SlackIconSetup;
+                const ChannelIcon = ({ slack: SlackIconSetup, feishu: FeishuIconSetup, discord: DiscordIconSetup, telegram: TelegramIconSetup, whatsapp: WhatsAppIconSetup, wechat: WeChatIconSetup } as Record<string, typeof SlackIconSetup>)[ch.platform] || SlackIconSetup;
                 return (
                   <button
                     key={ch.id}
@@ -3789,23 +3826,8 @@ export default function OpenClawWorkspace() {
           </div>
         )}
 
-        {/* BYOK mode — prompt to sign in for nexu Official credits (sidebar only) */}
         {!nexuLoggedIn && (
-          <div className="px-3 mb-1.5" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
-            <button
-              onClick={() => openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)}
-              className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-[8px] hover:bg-black/5 transition-colors cursor-pointer group"
-            >
-              <div className="w-6 h-6 rounded-[6px] bg-surface-2 border border-border flex items-center justify-center shrink-0">
-                <img src="/brand/nexu logo-black1.svg" alt="nexu" className="w-3.5 h-3.5" />
-              </div>
-              <div className="flex-1 min-w-0 text-left">
-                <div className="text-[11px] font-medium text-text-secondary truncate">登录 nexu 账号</div>
-                <div className="text-[10px] text-text-muted leading-none mt-0.5">使用官方额度</div>
-              </div>
-              <ChevronRight size={12} className="text-text-muted shrink-0 group-hover:translate-x-0.5 transition-transform duration-200" />
-            </button>
-          </div>
+          <div className="hidden" />
         )}
 
         {/* Sidebar footer — one row: settings · help · GitHub */}
@@ -4153,6 +4175,31 @@ export default function OpenClawWorkspace() {
             </div>
           )}
       </main>
+
+      {/* Not logged in — sign-in button in top-right, same position as avatar */}
+      {!nexuLoggedIn && (
+        <div
+          className="absolute top-5 right-5"
+          style={
+            {
+              WebkitAppRegion: 'no-drag',
+              zIndex: CREDITS_USAGE_TRIGGER_Z,
+            } as React.CSSProperties
+          }
+        >
+          <button
+            type="button"
+            onClick={() => openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)}
+            className="flex items-center gap-2 h-7 pl-3 pr-1 rounded-full bg-surface-0 border border-border cursor-pointer hover:border-border-subtle hover:shadow-sm transition-all shrink-0"
+            title="Sign in to nexu"
+          >
+            <span className="text-[12px] font-medium text-text-secondary leading-none">Sign in</span>
+            <span className="flex items-center justify-center size-5 rounded-full bg-surface-2">
+              <img src="/brand/nexu logo-black1.svg" alt="nexu" className="size-3" />
+            </span>
+          </button>
+        </div>
+      )}
 
       {/* Credits trigger + dropdown — OUTSIDE main to escape its overflow-hidden stacking context */}
       {nexuLoggedIn && (() => {
