@@ -11,10 +11,10 @@ import {
   EntityCardHeader,
   EntityCardMeta,
   EntityCardTitle,
-  InspectorPanel,
   PanelFooterActions,
   ScrollArea,
 } from "@nexu-design/ui-web";
+import { InspectorPanel } from "./InspectorPanel";
 import {
   BarChart3,
   Building,

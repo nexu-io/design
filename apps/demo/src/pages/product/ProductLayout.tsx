@@ -25,11 +25,11 @@ import {
   Wrench,
   Zap,
 } from "lucide-react";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
-import { FileEditor } from "./FileEditor";
-import { CLONE_FILE_TREE, FileTree, FOLDER_ICONS, FOLDER_ROUTES, type FileNode } from "./FileTree";
+import FileEditor from "./FileEditor";
+import FileTree from "./FileTree";
 import { WorkspaceShell } from "./WorkspaceShell";
 import { ProductLayoutContext } from "./ProductLayoutContext";
 import { getFile, saveFile } from "./fileStore";
@@ -46,18 +46,6 @@ const ACTIVITY_NAV = [
 const TREE_MIN = 180;
 const TREE_MAX = 480;
 const TREE_DEFAULT = 224;
-const DEFAULT_EXPANDED_PATHS = [
-  ".soul",
-  "contacts",
-  "memory",
-  "memory/decisions",
-  "knowledge",
-  "artifacts",
-  "artifacts/prds",
-  "sessions",
-  "sessions/2026-02-22-clone文件系统验证",
-];
-
 function inferFileType(path: string) {
   if (path.endsWith(".md")) return "markdown" as const;
   if (path.endsWith(".yaml") || path.endsWith(".yml")) return "yaml" as const;
@@ -73,22 +61,12 @@ function inferFileType(path: string) {
   return "markdown" as const;
 }
 
-function decorateTree(nodes: FileNode[]): FileNode[] {
-  return nodes.map((node) => ({
-    ...node,
-    icon: node.type === "folder" ? FOLDER_ICONS[node.name] : node.icon,
-    children: node.children ? decorateTree(node.children) : undefined,
-  }));
-}
-
 export default function ProductLayout({ children }: { children: ReactNode }) {
   const [treeCollapsed, setTreeCollapsed] = useState(false);
   const [treeWidth, setTreeWidth] = useState(TREE_DEFAULT);
   const [openFilePath, setOpenFilePath] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const tree = useMemo(() => decorateTree(CLONE_FILE_TREE), []);
-
   const isActive = (to: string | null) => {
     if (!to) return !treeCollapsed;
     return location.pathname.startsWith(to);
@@ -105,26 +83,6 @@ export default function ProductLayout({ children }: { children: ReactNode }) {
   const handleCloseFile = useCallback(() => {
     setOpenFilePath(null);
   }, []);
-
-  const handleTreeSelect = useCallback(
-    ({ node, path }: { node: FileNode; path: string }) => {
-      if (node.type === "folder") {
-        const route = FOLDER_ROUTES[node.name];
-        if (route) {
-          navigate(route);
-        }
-        return;
-      }
-
-      setOpenFilePath(path);
-      const parentFolder = path.split("/")[0];
-      const route = FOLDER_ROUTES[parentFolder];
-      if (route) {
-        navigate(route);
-      }
-    },
-    [navigate],
-  );
 
   return (
     <ProductLayoutContext.Provider value={{ expandFileTree, openFile: handleOpenFile }}>
@@ -216,17 +174,10 @@ export default function ProductLayout({ children }: { children: ReactNode }) {
             </SidebarHeader>
             <SidebarContent className="overflow-hidden">
               <FileTree
-                tree={tree}
-                rootLabel="~/clone"
-                defaultExpandedPaths={DEFAULT_EXPANDED_PATHS}
-                defaultSelectedPath="artifacts/prds/universal-agent-v3.md"
-                footer={
-                  <div className="flex items-center justify-between text-[10px] text-text-muted">
-                    <span>137 files</span>
-                    <span>1 modified · 4 new</span>
-                  </div>
-                }
-                onItemSelect={handleTreeSelect}
+                onNavigate={(route) => {
+                  void navigate(route);
+                }}
+                onOpenFile={handleOpenFile}
               />
             </SidebarContent>
           </Sidebar>
@@ -244,7 +195,7 @@ export default function ProductLayout({ children }: { children: ReactNode }) {
                 lastEditedBy={getFile(openFilePath)?.lastEditedBy}
                 lastEditedAt={getFile(openFilePath)?.lastEditedAt}
                 onClose={handleCloseFile}
-                onSave={(content) => saveFile(openFilePath, content, "human")}
+                onSave={(content: string) => saveFile(openFilePath, content, "human")}
               />
             </DetailPanel>
           ) : null

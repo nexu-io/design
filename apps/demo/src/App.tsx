@@ -2,6 +2,7 @@ import {
   Brain,
   Clock,
   Component,
+  Crown,
   Globe,
   Layout,
   Lightbulb,
@@ -55,6 +56,7 @@ import ChannelsPage from "./pages/openclaw/ChannelsPage";
 import ClientWelcomePage from "./pages/openclaw/ClientWelcomePage";
 import GroupGrowthDemo from "./pages/openclaw/GroupGrowthDemo";
 import InvitePage from "./pages/openclaw/InvitePage";
+import NexuPricingPage from "./pages/openclaw/NexuPricingPage";
 import OnboardingPage from "./pages/openclaw/OnboardingPage";
 import OpenClawLanding from "./pages/openclaw/OpenClawLanding";
 import OpenClawSkillsPage from "./pages/openclaw/OpenClawSkillsPage";
@@ -62,6 +64,7 @@ import OpenClawWorkspace from "./pages/openclaw/OpenClawWorkspace";
 import PrivacyPolicyPage from "./pages/openclaw/PrivacyPolicyPage";
 import SkillDetailPage from "./pages/openclaw/SkillDetailPage";
 import TermsOfServicePage from "./pages/openclaw/TermsOfServicePage";
+import UsagePage from "./pages/openclaw/UsagePage";
 import WhatsAppQRPage from "./pages/openclaw/WhatsAppQRPage";
 import AutomationPage from "./pages/product/AutomationPage";
 import CloneBuilderPage from "./pages/product/CloneBuilderPage";
@@ -96,6 +99,7 @@ const PRODUCT_NAV = [
 
 const GROWTH_NAV = [
   { to: "/openclaw", label: "nexu MVP 🦞", icon: Rocket },
+  { to: "/openclaw/pricing", label: "Pricing 定价", icon: Crown },
   { to: "/openclaw/growth-demo/new", label: "首次用户 Demo", icon: Zap },
   { to: "/openclaw/growth-demo/existing", label: "同事已开通 Demo", icon: Zap },
   { to: "/growth-landing", label: "Growth Landing", icon: Globe },
@@ -276,6 +280,8 @@ export default function App() {
     location.pathname === "/openclaw/privacy" ||
     location.pathname === "/openclaw/terms" ||
     location.pathname === "/openclaw/channels" ||
+    location.pathname === "/openclaw/pricing" ||
+    location.pathname === "/openclaw/usage" ||
     location.pathname === "/openclaw/skills" ||
     location.pathname.startsWith("/openclaw/skill/") ||
     location.pathname.startsWith("/openclaw/growth-demo") ||
@@ -297,6 +303,8 @@ export default function App() {
           <Route path="/openclaw/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/openclaw/terms" element={<TermsOfServicePage />} />
           <Route path="/openclaw/channels" element={<ChannelsPage />} />
+          <Route path="/openclaw/pricing" element={<NexuPricingPage />} />
+          <Route path="/openclaw/usage" element={<UsagePage />} />
           <Route path="/openclaw/skills" element={<OpenClawSkillsPage />} />
           <Route path="/openclaw/skill/:id" element={<SkillDetailPage />} />
           <Route path="/openclaw/growth-demo" element={<GroupGrowthDemo />} />

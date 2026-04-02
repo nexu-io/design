@@ -16,7 +16,7 @@ export function SectionHeader({
   ...props
 }: SectionHeaderProps) {
   return (
-    <div className={cn("flex items-start justify-between gap-3", className)} {...props}>
+    <div className={cn("flex items-baseline justify-between gap-3", className)} {...props}>
       <div className="space-y-1">
         <h2 className="text-base font-semibold tracking-tight">{title}</h2>
         {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}

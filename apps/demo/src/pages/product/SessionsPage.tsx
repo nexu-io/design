@@ -14,7 +14,6 @@ import {
   ComboboxItem,
   ComboboxTrigger,
   DataTable,
-  FileEditor,
   InteractiveRow,
   InteractiveRowContent,
   InteractiveRowTrailing,
@@ -26,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nexu-design/ui-web";
+import FileEditor from "./FileEditor";
 import {
   BarChart3,
   Bookmark,

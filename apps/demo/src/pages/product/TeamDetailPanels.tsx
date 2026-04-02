@@ -1,11 +1,11 @@
 import {
   Button,
   FollowUpInput,
-  InspectorPanel,
   PanelFooterActions,
   TagGroup,
   TagGroupItem,
 } from "@nexu-design/ui-web";
+import { InspectorPanel } from "./InspectorPanel";
 import {
   Activity,
   AlertTriangle,

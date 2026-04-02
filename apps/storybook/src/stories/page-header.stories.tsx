@@ -28,3 +28,24 @@ export const Default: Story = {
     />
   ),
 };
+
+export const ShellDensity: Story = {
+  name: "Shell (desktop / Tauri)",
+  render: () => (
+    <PageHeader
+      density="shell"
+      title="Earn more usage"
+      description={
+        <>
+          Complete tasks to get extra usage credits.{" "}
+          <a
+            href="#rewards"
+            className="text-[var(--color-link)] underline-offset-4 hover:underline"
+          >
+            View reward rules
+          </a>
+        </>
+      }
+    />
+  ),
+};
