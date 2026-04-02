@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useLayoutEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -15,6 +16,7 @@ import {
   Search,
   Home,
   FileText,
+  ArrowUp,
   ArrowUpRight,
   X,
   Eye,
@@ -68,23 +70,33 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import {
   Alert,
   AlertDescription,
+  Badge,
+  BrandLogo,
   Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
   cn,
-  DetailPanelCloseButton,
-  DetailPanelHeader,
-  DetailPanelTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  EntityCardMedia,
   InteractiveRow,
   InteractiveRowContent,
   InteractiveRowLeading,
   InteractiveRowTrailing,
   PageHeader,
+  PlatformLogo,
   ScrollArea,
   SectionHeader,
   Select,
   SelectContent,
   SelectTrigger,
   SelectValue,
-  Separator,
   Switch,
   TextLink,
   Tooltip,
@@ -658,7 +670,16 @@ function CreditIcon({ size = 12, className }: { size?: number; className?: strin
   );
 }
 
-function ChannelIcon({ icon, size = 16 }: { icon: string; size?: number; className?: string }) {
+function ChannelIcon({
+  icon,
+  size = 16,
+  accent,
+}: {
+  icon: string;
+  size?: number;
+  /** `brand`: calendar / daily-check-in style (stroke uses brand primary). */
+  accent?: 'default' | 'brand';
+}) {
   switch (icon) {
     case 'github':
       return <svg width={size} height={size} viewBox="0 0 24 24" fill="#181717"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>;
@@ -680,8 +701,28 @@ function ChannelIcon({ icon, size = 16 }: { icon: string; size?: number; classNa
       return <svg width={size} height={size} viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>;
     case 'whatsapp':
       return <svg width={size} height={size} viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>;
-    case 'calendar':
-      return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" /></svg>;
+    case 'calendar': {
+      const useBrand = accent === 'brand';
+      return (
+        <svg
+          width={size}
+          height={size}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke={useBrand ? 'var(--color-brand-primary)' : '#F59E0B'}
+          strokeWidth={useBrand ? 2.35 : 2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+          <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" />
+        </svg>
+      );
+    }
     default:
       return <Gift size={size} />;
   }
@@ -1152,6 +1193,39 @@ function SeedancePromoModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+/** Reward confirm: `EntityCardMedia` + library `PlatformLogo` / `BrandLogo` (official colors). */
+function RewardConfirmLead({ channel }: { channel: RewardChannel }) {
+  const isDaily = channel.repeatable === 'daily';
+  const logoSize = 22;
+  /* No `title` on logos: tile is decorative (`aria-hidden`); dialog title already names the channel. */
+
+  const inner =
+    channel.icon === 'github' ? (
+      <BrandLogo brand="github" size={logoSize} className="text-text-primary" />
+    ) : channel.icon === 'wechat' ? (
+      <PlatformLogo platform="wechat" size={logoSize} />
+    ) : channel.icon === 'whatsapp' ? (
+      <PlatformLogo platform="whatsapp" size={logoSize} />
+    ) : channel.icon === 'feishu' ? (
+      <PlatformLogo platform="feishu" size={logoSize} />
+    ) : (
+      <ChannelIcon icon={channel.icon} size={logoSize} accent={isDaily ? 'brand' : 'default'} />
+    );
+
+  return (
+    <EntityCardMedia
+      className={cn(
+        'mb-4',
+        isDaily &&
+          'border-[var(--color-brand-primary)]/28 bg-[var(--color-brand-subtle)] ring-1 ring-inset ring-[var(--color-brand-primary)]/12',
+      )}
+      aria-hidden
+    >
+      {inner}
+    </EntityCardMedia>
+  );
+}
+
 function RewardConfirmModal({ channel, onConfirm, onCancel, t }: {
   channel: RewardChannel;
   onConfirm: () => void;
@@ -1170,58 +1244,79 @@ function RewardConfirmModal({ channel, onConfirm, onCancel, t }: {
         ? 'budget.confirm.screenshotDesc'
         : 'budget.confirm.desc';
   const amt = formatRewardAmount(channel.reward);
+  const creditsBadge =
+    channel.reward === 1
+      ? t('rewards.creditsPlusOne')
+      : t('rewards.creditsPlusMany').replace('{n}', amt);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]" onClick={onCancel} />
-      <div className="relative w-full max-w-[340px] mx-4 rounded-2xl border border-border bg-surface-1 shadow-[var(--shadow-dropdown)] p-5 animate-in fade-in zoom-in-95 duration-200">
+    <Dialog open onOpenChange={(open) => { if (!open) onCancel(); }}>
+      <DialogContent
+        size="sm"
+        className={cn(
+          'max-w-[min(100vw-2rem,380px)] gap-0 border-border-subtle bg-surface-0 p-6 shadow-[var(--shadow-dropdown)] sm:p-8',
+          '[&>button.absolute]:hidden',
+        )}
+      >
         <div className="flex flex-col items-center text-center">
-          <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${
-            isDaily
-              ? 'bg-amber-50 border border-amber-200/60'
-              : 'bg-[var(--color-success)]/8 border border-[var(--color-success)]/20'
-          }`}>
-            <ChannelIcon icon={channel.icon} size={22} className={isDaily ? 'text-amber-500' : 'text-[var(--color-success)]'} />
-          </div>
-          <h3 className="text-[14px] font-semibold text-text-primary mb-1">
-            {t('budget.confirm.title').replace('{channel}', t(`reward.${channel.id}.name`))}
-          </h3>
-          <p className="text-[12px] text-text-secondary leading-relaxed mb-1">
-            {t(descKey).replace('${n}', amt)}
-          </p>
-          <div className="inline-flex items-center px-3 py-1 rounded-full bg-[var(--color-success)]/8 text-[13px] font-semibold text-[var(--color-success)] mb-4 tabular-nums leading-none">
-            +{amt} 积分
-          </div>
+          <DialogHeader className="w-full items-center gap-0 space-y-0 text-center">
+            <RewardConfirmLead channel={channel} />
+            <DialogTitle className="text-base font-semibold leading-tight text-text-primary">
+              {t('budget.confirm.title').replace('{channel}', t(`reward.${channel.id}.name`))}
+            </DialogTitle>
+            <DialogDescription className="pt-1.5 text-sm leading-relaxed text-text-secondary">
+              {t(descKey).replaceAll('{n}', amt)}
+            </DialogDescription>
+          </DialogHeader>
 
-          {isImage && !imageDownloaded && (
-            <button
-              onClick={() => { downloadShareCard(); setImageDownloaded(true); }}
-              className="flex items-center justify-center gap-2 w-full h-[36px] rounded-[10px] bg-[var(--color-brand-primary)] text-white text-[13px] font-medium hover:opacity-90 active:scale-[0.98] transition-all mb-3"
+          <Badge
+            variant="outline"
+            size="default"
+            radius="full"
+            className="mb-5 mt-4 border-[var(--color-brand-primary)]/25 bg-[var(--color-brand-subtle)] tabular-nums text-sm font-semibold text-[var(--color-brand-primary)]"
+          >
+            {creditsBadge}
+          </Badge>
+
+          {isImage && !imageDownloaded ? (
+            <Button
+              type="button"
+              variant="brand"
+              size="sm"
+              className="mb-4 w-full"
+              onClick={() => {
+                downloadShareCard();
+                setImageDownloaded(true);
+              }}
             >
-              <Download size={14} />
+              <Download size={14} className="shrink-0" aria-hidden />
               {t('budget.confirm.downloadImage')}
-            </button>
-          )}
-          {isImage && imageDownloaded && (
-            <div className="flex items-center gap-1.5 text-[12px] text-[var(--color-success)] font-medium mb-3">
-              <Check size={14} />
+            </Button>
+          ) : null}
+          {isImage && imageDownloaded ? (
+            <div className="mb-4 flex w-full items-center justify-center gap-1.5 text-sm font-medium text-[var(--color-brand-primary)]">
+              <Check size={14} className="shrink-0" aria-hidden />
               {t('budget.confirm.downloadImage')} ✓
             </div>
-          )}
+          ) : null}
 
-          <div className="flex items-center gap-2 w-full">
-            <button
-              onClick={onCancel}
-              className="flex-1 h-[36px] rounded-[10px] border border-border text-[13px] font-medium text-text-secondary hover:bg-surface-2 transition-colors"
-            >{t('budget.confirm.cancel')}</button>
-            <button
+          <DialogFooter className="mt-1 w-full flex-row gap-2 p-0 sm:flex-row sm:justify-stretch [&>button]:min-h-9 [&>button]:flex-1">
+            <Button type="button" variant="outline" size="sm" onClick={onCancel}>
+              {t('budget.confirm.cancel')}
+            </Button>
+            <Button
+              type="button"
+              variant="brand"
+              size="sm"
+              className="bg-[var(--color-text-heading)] text-white hover:bg-[var(--color-text-heading)]/90"
               onClick={onConfirm}
-              className="flex-1 h-[36px] rounded-[10px] bg-neutral-900 text-white text-[13px] font-medium hover:bg-neutral-800 active:scale-[0.98] transition-all"
-            >{t('budget.confirm.done')}</button>
-          </div>
+            >
+              {t('budget.confirm.done')}
+            </Button>
+          </DialogFooter>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -1966,117 +2061,113 @@ function HomeDashboard({ onNavigate, showTyping: _showTyping, onTypingComplete: 
 
         {/* ── Budget warning / depleted card — below Bot, nexu Official only ── */}
         {(budget.status === 'depleted' || budget.status === 'warning') && !budgetBannerDismissed && (() => {
-          const accentColor = budget.status === 'depleted' ? 'var(--color-danger)' : 'var(--color-warning)';
-          const resetText = budget.resetsInDays === 1 ? '明天' : `${budget.resetsInDays} 天后`;
+          const isDepleted = budget.status === 'depleted';
+          const resetText = budget.resetsInDays === 1 ? 'tomorrow' : `in ${budget.resetsInDays} days`;
           const isPro = demoPlan === 'pro';
           const isPlus = demoPlan === 'plus';
 
-          const headlineCopy = budget.status === 'depleted'
-            ? `套餐额度已用尽（${resetText}重置），可采取以下方式继续使用`
-            : '套餐额度即将耗尽，可采取以下方式避免任务中断';
-
-          const btnBase = 'inline-flex items-center justify-center gap-1.5 px-[14px] py-[5px] rounded-[8px] text-[12px] font-medium transition-colors';
+          const headline = isDepleted
+            ? `Plan credits depleted (resets ${resetText}). Choose an option below to continue.`
+            : 'Plan credits running low. Take action to avoid interruptions.';
 
           return (
-            <div className={`relative rounded-xl border px-5 py-4 ${
-              budget.status === 'depleted'
-                ? 'bg-[var(--color-danger)]/6 border-[var(--color-danger)]/25'
-                : 'bg-[var(--color-warning)]/6 border-[var(--color-warning)]/25'
-            }`}>
-              <button
+            <Alert
+              variant={isDepleted ? 'destructive' : 'default'}
+              className={cn(
+                'relative rounded-xl px-5 py-4',
+                !isDepleted && 'border-[hsl(var(--accent)/0.2)] bg-[hsl(var(--accent)/0.05)] [&>svg]:text-[var(--color-brand-primary)]',
+              )}
+            >
+              <Zap size={14} />
+              <div className="flex-1 min-w-0">
+                <AlertDescription className="text-[13px] font-semibold leading-snug">
+                  {headline}
+                </AlertDescription>
+
+                {isPlus && (
+                  <div className="mt-5 flex items-center gap-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="default"
+                      leadingIcon={<ArrowUp className="size-3.5" />}
+                      onClick={() => openExternal(`${window.location.origin}/openclaw/pricing`)}
+                    >
+                      Upgrade to Pro
+                    </Button>
+                    <span className="text-[12px] text-text-muted">11,000 credits/mo · 5.5x more than Plus</span>
+                  </div>
+                )}
+
+                {(isPlus || isPro) && (
+                  <div className="mt-5">
+                    <p className="text-[12px] text-text-tertiary mb-1.5">{isPro ? 'Top up credits' : 'Or top up credits'}</p>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {([
+                        { credits: '2,000',  price: 20  },
+                        { credits: '5,200',  price: 50  },
+                        { credits: '11,000', price: 100 },
+                        { credits: '55,000', price: 500 },
+                      ] as const).map(pack => (
+                        <Button
+                          key={pack.price}
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="w-[140px] gap-1 !bg-[hsl(var(--accent)/0.06)] !border-[hsl(var(--accent)/0.25)] hover:!bg-[hsl(var(--accent)/0.12)] hover:!border-[hsl(var(--accent)/0.4)] shadow-none hover:shadow-sm transition-all"
+                          onClick={() => openExternal(`${window.location.origin}/openclaw/usage?plan=${demoPlan}#credit-packs`)}
+                        >
+                          <CreditIcon size={12} className="shrink-0 text-text-muted" />
+                          <span className="tabular-nums">{pack.credits}</span>
+                          <span className="text-text-muted font-normal tabular-nums">${pack.price}</span>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-5">
+                  {(isPlus || isPro) && (
+                    <p className="text-[12px] text-text-tertiary mb-1.5">
+                      Or switch to BYOK (Bring Your Own Key)
+                    </p>
+                  )}
+                  <div className="flex items-center gap-1.5">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      leadingIcon={<Cpu className="size-3.5" />}
+                      onClick={() => onNavigate({ type: 'settings', tab: 'providers' })}
+                    >
+                      Use your own API Key
+                    </Button>
+                    {!(isPlus || isPro) && (
+                      <Button
+                        type="button"
+                        variant={isDepleted ? 'destructive' : 'default'}
+                        size="sm"
+                        leadingIcon={<ArrowUp className="size-3.5" />}
+                        onClick={() => openExternal(`${window.location.origin}/openclaw/pricing`)}
+                      >
+                        Upgrade plan
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                className="absolute top-3 right-3 text-text-muted hover:text-text-secondary"
                 onClick={() => setBudgetBannerDismissed(true)}
-                className="absolute top-3 right-3 w-5 h-5 flex items-center justify-center rounded-full text-text-muted hover:text-text-secondary hover:bg-black/8 transition-colors"
-                aria-label="关闭"
+                aria-label="Dismiss"
               >
                 <X size={12} />
-              </button>
-
-              {/* Row 1: headline */}
-              <div className="flex items-start gap-3 pr-4">
-                <div className="w-7 h-7 rounded-[8px] flex items-center justify-center shrink-0 mt-px"
-                  style={{ background: `color-mix(in srgb, ${accentColor} 15%, transparent)` }}>
-                  <Zap size={14} style={{ color: accentColor }} />
-                </div>
-                <div className="text-[13px] font-semibold leading-snug pt-[3px]" style={{ color: accentColor }}>
-                  {headlineCopy}
-                </div>
-              </div>
-
-              {/* Row 2: upgrade CTA for Plus users — primary action */}
-              {isPlus && (
-                <div className="mt-3 pl-10">
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => openExternal(`${window.location.origin}/openclaw/pricing`)}
-                      className={`${btnBase} text-white hover:opacity-90`}
-                      style={{ background: 'var(--color-brand-primary)' }}
-                    >
-                      <Sparkles size={12} />
-                      升级 Pro · 11,000 积分/月
-                    </button>
-                    <span className="text-[11px] text-text-muted">当前 Plus 2,000 积分/月 → Pro 提升 5.5 倍额度</span>
-                  </div>
-                </div>
-              )}
-
-              {/* Row 3: credit packs (Plus / Pro) */}
-              {(isPlus || isPro) && (
-                <div className="mt-3 pl-10">
-                  <div className="text-[11px] text-text-tertiary mb-1.5">
-                    {isPlus ? '或购买积分包临时补充' : '购买积分包补充额度'}
-                    <span className="text-text-muted"> · 付款后立即到账，有效期 1 个月</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    {([
-                      { credits: '2,000',  price: 20  },
-                      { credits: '5,200',  price: 50  },
-                      { credits: '11,000', price: 100 },
-                      { credits: '55,000', price: 500 },
-                    ] as const).map(pack => (
-                      <button
-                        key={pack.price}
-                        type="button"
-                        onClick={() => openExternal(`${window.location.origin}/openclaw/usage?plan=${demoPlan}#credit-packs`)}
-                        className={`${btnBase} flex-1 border border-border bg-white hover:bg-surface-1 text-text-primary tabular-nums`}
-                      >
-                        <CreditIcon size={11} className="inline-block shrink-0" /> {pack.credits}
-                        <span className="text-text-muted font-normal">${pack.price}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Row 4: BYOK + upgrade (Free only) */}
-              <div className="mt-3 pl-10">
-                {(isPlus || isPro)
-                  ? <div className="text-[11px] text-text-tertiary mb-1.5">或切换 BYOK（自带 API Key）</div>
-                  : <div className="text-[11px] text-text-tertiary mb-1.5">选择操作</div>
-                }
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => onNavigate({ type: 'settings', tab: 'providers' })}
-                    className={`${btnBase} border border-border bg-white hover:bg-surface-1 text-text-secondary`}
-                  >
-                    <Cpu size={12} />
-                    自带 API Key
-                  </button>
-                  {!(isPlus || isPro) && (
-                    <button
-                      type="button"
-                      onClick={() => openExternal(`${window.location.origin}/openclaw/pricing`)}
-                      className={`${btnBase} text-white hover:opacity-90`}
-                      style={{ background: accentColor }}
-                    >
-                      <ArrowUpRight size={12} />
-                      升级套餐
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
+              </Button>
+            </Alert>
           );
         })()}
 
@@ -3079,8 +3170,10 @@ function RewardsCenter({ budget, onDailyCheckIn, onOpenMaterial, onRequestConfir
   const totalCount = budget.channelCount + 1;
   const creditsCapBaseline = budget.totalRewardAvailable + 100;
   const earnedCredits = budget.totalRewardClaimed;
-  const creditPct =
-    creditsCapBaseline > 0 ? Math.min(100, (earnedCredits / creditsCapBaseline) * 100) : 0;
+  const creditFillPct =
+    creditsCapBaseline > 0
+      ? Math.min(100, Math.max(0, (earnedCredits / creditsCapBaseline) * 100))
+      : 0;
   const weeklyWaitDays = typeof window !== 'undefined' ? (() => { const day = new Date().getDay(); if (day === 1) return 7; if (day === 0) return 1; return 8 - day; })() : 7;
 
   const weeklyCooldownLabel = () =>
@@ -3158,11 +3251,14 @@ function RewardsCenter({ budget, onDailyCheckIn, onOpenMaterial, onRequestConfir
       >
         <InteractiveRowLeading
           className={cn(
-            'w-9 h-9 rounded-[10px] flex items-center justify-center bg-surface-2 border border-transparent',
+            'flex h-9 w-9 items-center justify-center rounded-[10px] border',
+            isDaily
+              ? 'border-[var(--color-brand-primary)]/28 bg-[var(--color-brand-subtle)] ring-1 ring-inset ring-[var(--color-brand-primary)]/12'
+              : 'border-transparent bg-surface-2',
             done && isDaily && 'opacity-55',
           )}
         >
-          <ChannelIcon icon={ch.icon} size={20} />
+          <ChannelIcon icon={ch.icon} size={20} accent={isDaily ? 'brand' : 'default'} />
         </InteractiveRowLeading>
 
         <InteractiveRowContent className="flex items-center gap-2 py-0.5">
@@ -3293,14 +3389,14 @@ function RewardsCenter({ budget, onDailyCheckIn, onOpenMaterial, onRequestConfir
           <div
             className="h-1.5 w-full overflow-hidden rounded-full bg-surface-3"
             role="progressbar"
-            aria-valuenow={Math.round(creditPct)}
+            aria-valuenow={Math.round(creditFillPct)}
             aria-valuemin={0}
             aria-valuemax={100}
             aria-label={t('rewards.creditsShort')}
           >
             <div
-              className="h-full min-w-0 rounded-full bg-border transition-[width] duration-500"
-              style={{ width: `${creditPct}%` }}
+              className="h-full min-w-0 rounded-full bg-[var(--color-brand-primary)] transition-[width] duration-500"
+              style={{ width: `${creditFillPct}%` }}
             />
           </div>
         </div>
@@ -3334,6 +3430,12 @@ function RewardsCenter({ budget, onDailyCheckIn, onOpenMaterial, onRequestConfir
 /* ------------------------------------------------------------------ */
 /*  Main Workspace Shell                                               */
 /* ------------------------------------------------------------------ */
+
+/** Body-portaled credits popover — must sit above demo panel, toasts, and in-page CTAs (e.g. Star on GitHub). */
+const CREDITS_USAGE_TRIGGER_Z = 999_998;
+const CREDITS_USAGE_PANEL_Z = 999_999;
+const CREDITS_USAGE_TOOLTIP_Z = 1_000_000;
+
 type View =
   | { type: 'home' }
   | { type: 'conversations'; channelId?: string }
@@ -3460,6 +3562,63 @@ export default function OpenClawWorkspace() {
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseup', onUp);
   }, [sidebarWidth]);
+
+  const creditsShellRef = useRef<HTMLDivElement>(null);
+  const [usagePanelLayout, setUsagePanelLayout] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  } | null>(null);
+  const usageLeaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearUsageLeaveTimer = useCallback(() => {
+    if (usageLeaveTimerRef.current) {
+      clearTimeout(usageLeaveTimerRef.current);
+      usageLeaveTimerRef.current = null;
+    }
+  }, []);
+
+  const openUsagePanel = useCallback(() => {
+    clearUsageLeaveTimer();
+    setShowUsagePanel(true);
+  }, [clearUsageLeaveTimer]);
+
+  const scheduleCloseUsagePanel = useCallback(() => {
+    clearUsageLeaveTimer();
+    usageLeaveTimerRef.current = setTimeout(() => {
+      setShowUsagePanel(false);
+      usageLeaveTimerRef.current = null;
+    }, 160);
+  }, [clearUsageLeaveTimer]);
+
+  useEffect(
+    () => () => {
+      clearUsageLeaveTimer();
+    },
+    [clearUsageLeaveTimer],
+  );
+
+  useLayoutEffect(() => {
+    if (!showUsagePanel || !nexuLoggedIn) {
+      setUsagePanelLayout(null);
+      return;
+    }
+    const updateLayout = () => {
+      const el = creditsShellRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const w = Math.min(280, Math.max(200, window.innerWidth - 32));
+      const left = Math.min(Math.max(16, r.right - w), window.innerWidth - w - 16);
+      setUsagePanelLayout({ top: r.bottom + 6, left, width: w });
+    };
+    updateLayout();
+    window.addEventListener('scroll', updateLayout, true);
+    window.addEventListener('resize', updateLayout);
+    return () => {
+      window.removeEventListener('scroll', updateLayout, true);
+      window.removeEventListener('resize', updateLayout);
+    };
+  }, [showUsagePanel, nexuLoggedIn, collapsed, sidebarWidth, view.type]);
 
   useEffect(() => {
     if (view.type === 'home') {
@@ -3804,193 +3963,6 @@ export default function OpenClawWorkspace() {
 
       {/* Main content */}
       <main className="relative flex-1 overflow-hidden min-h-0 bg-surface-1 rounded-l-[12px] pt-20 flex flex-col">
-        {/* Budget / plan indicator — floating top-right of canvas */}
-        {nexuLoggedIn && (() => {
-          const planKey = demoPlan;
-          const isFree = planKey === 'free';
-          const isPlus = planKey === 'plus';
-          const PLAN_META: Record<string, { label: string; color: string }> = {
-            free: { label: 'Free', color: 'text-[var(--color-text-muted)]' },
-            plus: { label: 'Plus', color: 'text-[var(--color-info)]' },
-            pro:  { label: 'Pro',  color: 'text-[var(--color-brand-primary)]' },
-          };
-          const plan = PLAN_META[planKey];
-          const baseCredits = Math.round(budget.remaining);
-          const bonusCredits = Math.round(budget.bonusRemaining);
-          const packCredits = creditPackInfo.remaining;
-          const totalCredits = baseCredits + bonusCredits + packCredits;
-
-          return (
-            <div
-              className="absolute top-5 right-5 z-40"
-              style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
-              onMouseEnter={() => setShowUsagePanel(true)}
-              onMouseLeave={() => setShowUsagePanel(false)}
-            >
-              {/* Trigger pill + avatar */}
-              <div className="flex items-center gap-2.5">
-                <div className="flex items-center gap-2 h-9 px-4 rounded-full bg-[var(--color-surface-0)] border border-[var(--color-border)] cursor-default hover:border-[var(--color-border-hover)] transition-colors">
-                  <CreditIcon size={14} className="text-[var(--color-text-secondary)]" />
-                  <span className="text-[15px] tabular-nums text-[var(--color-text-primary)] font-medium leading-none">{totalCredits.toLocaleString()}</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setView({ type: 'settings' })}
-                  className="flex items-center justify-center size-9 rounded-full bg-[var(--color-accent)] text-white text-[13px] font-semibold leading-none cursor-pointer hover:opacity-90 transition-opacity shrink-0"
-                  title={nexuAccountEmail}
-                >
-                  {initialsFromEmail(nexuAccountEmail)}
-                </button>
-              </div>
-
-              {/* Dropdown panel — opens downward */}
-              {showUsagePanel && (
-                <div className="absolute top-full right-0 mt-1.5 pt-0 z-50 w-[260px]">
-                  <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-1)] shadow-[var(--shadow-dropdown)] overflow-visible">
-                    {/* Header */}
-                    <DetailPanelHeader className="!border-0 !px-4 !pt-3.5 !pb-3">
-                      <DetailPanelTitle className={`!text-[14px] !font-bold flex-1 ${plan.color}`}>{plan.label}</DetailPanelTitle>
-                      <div className="flex items-center gap-2">
-                        {(isFree || isPlus) && (
-                          <button
-                            onClick={() => { openExternal(`${window.location.origin}/openclaw/pricing`); setShowUsagePanel(false); }}
-                            className="px-3 py-1 rounded-full bg-[var(--color-text-primary)] text-[var(--color-surface-1)] text-[11px] font-semibold leading-none hover:opacity-85 transition-opacity"
-                          >
-                            {isFree ? '升级' : '升级至 Pro'}
-                          </button>
-                        )}
-                        <DetailPanelCloseButton
-                          onClick={() => setShowUsagePanel(false)}
-                          onMouseDown={e => e.stopPropagation()}
-                          className="!size-5"
-                          srLabel="关闭面板"
-                        />
-                      </div>
-                    </DetailPanelHeader>
-
-                    <Separator className="mx-4 !w-auto opacity-60" />
-
-                    {/* Credits rows */}
-                    <div className="px-4 py-3 space-y-0">
-                      {/* Total */}
-                      <InteractiveRow tone="subtle" className="!rounded-lg !gap-2 !px-0 !py-1.5 !border-0 pointer-events-none items-center">
-                        <InteractiveRowLeading className="flex items-center">
-                          <CreditIcon size={12} className="text-[var(--color-brand-primary)]" />
-                        </InteractiveRowLeading>
-                        <InteractiveRowContent>
-                          <span className="text-[13px] font-semibold text-[var(--color-text-primary)]">剩余积分总量</span>
-                        </InteractiveRowContent>
-                        <InteractiveRowTrailing>
-                          <span className="text-[13px] font-bold text-[var(--color-text-primary)] tabular-nums">{totalCredits}</span>
-                        </InteractiveRowTrailing>
-                      </InteractiveRow>
-
-                      <Separator className="!w-auto opacity-40 my-1" />
-
-                      {/* Plan quota */}
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <InteractiveRow
-                            tone="subtle"
-                            type="button"
-                            className="!rounded-lg !gap-2 !px-0 !py-1.5 !border-0 items-center cursor-default"
-                          >
-                            <InteractiveRowContent>
-                              <div className="flex items-center gap-1 cursor-help">
-                                <span className="text-[12px] text-[var(--color-text-muted)]">套餐积分余额</span>
-                                <Info size={10} className="text-[var(--color-text-muted)] shrink-0" />
-                              </div>
-                            </InteractiveRowContent>
-                            <InteractiveRowTrailing>
-                              <span className="text-[12px] text-[var(--color-text-secondary)] tabular-nums">
-                                {baseCredits}<span className="text-[var(--color-text-muted)]">/{Math.round(budget.total)}</span>
-                              </span>
-                            </InteractiveRowTrailing>
-                          </InteractiveRow>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom" align="start" className="max-w-[220px] text-[10px] leading-relaxed">
-                          每月随套餐发放，周期结束后重置。
-                        </TooltipContent>
-                      </Tooltip>
-
-                      <Separator className="!w-auto opacity-40 my-1" />
-
-                      {/* Bonus credits */}
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <InteractiveRow
-                            tone="subtle"
-                            type="button"
-                            className="!rounded-lg !gap-2 !px-0 !py-1.5 !border-0 items-center cursor-default"
-                          >
-                            <InteractiveRowContent>
-                              <div className="flex items-center gap-1 cursor-help">
-                                <span className="text-[12px] text-[var(--color-text-muted)]">赠送积分余额</span>
-                                <Info size={10} className="text-[var(--color-text-muted)] shrink-0" />
-                              </div>
-                            </InteractiveRowContent>
-                            <InteractiveRowTrailing>
-                              <span className="text-[12px] text-[var(--color-text-secondary)] tabular-nums">{bonusCredits}</span>
-                            </InteractiveRowTrailing>
-                          </InteractiveRow>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom" align="start" className="max-w-[240px] text-[10px] leading-relaxed">
-                          来自注册奖励、完成任务等活动。消耗顺序：套餐积分 → 积分包 → 赠送积分。
-                        </TooltipContent>
-                      </Tooltip>
-
-                      {/* Credit pack */}
-                      {packCredits > 0 && (
-                        <>
-                          <Separator className="!w-auto opacity-40 my-1" />
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <InteractiveRow
-                                tone="subtle"
-                                type="button"
-                                className="!rounded-lg !gap-2 !px-0 !py-1.5 !border-0 items-center cursor-default"
-                              >
-                                <InteractiveRowContent>
-                                  <div className="flex items-center gap-1 cursor-help">
-                                    <span className="text-[12px] text-[var(--color-text-muted)]">积分包余额</span>
-                                    <Info size={10} className="text-[var(--color-text-muted)] shrink-0" />
-                                  </div>
-                                </InteractiveRowContent>
-                                <InteractiveRowTrailing>
-                                  <span className="text-[12px] text-[var(--color-text-secondary)] tabular-nums">{packCredits.toLocaleString()}</span>
-                                </InteractiveRowTrailing>
-                              </InteractiveRow>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom" align="start" className="max-w-[240px] text-[10px] leading-relaxed">
-                              已购买的{creditPackInfo.label}，有效期 1 个月。消耗顺序：套餐积分 → 积分包 → 赠送积分。
-                            </TooltipContent>
-                          </Tooltip>
-                        </>
-                      )}
-                    </div>
-
-                    {/* View usage */}
-                    <div className="mx-4 mb-3.5 pt-1">
-                      <Separator className="!w-auto opacity-40 mb-1" />
-                      <InteractiveRow
-                        tone="subtle"
-                        onClick={() => { openExternal(`${window.location.origin}/openclaw/usage?plan=${demoPlan}${demoCreditPack !== 'none' ? `&pack=${demoCreditPack}` : ''}`); setShowUsagePanel(false); }}
-                        className="!rounded-lg !px-0 !py-2 !border-0 items-center"
-                      >
-                        <InteractiveRowContent>
-                          <span className="text-[12px] font-medium text-[var(--color-text-secondary)]">查看使用情况</span>
-                        </InteractiveRowContent>
-                        <InteractiveRowTrailing>
-                          <ChevronRight size={13} className="text-[var(--color-text-muted)]" />
-                        </InteractiveRowTrailing>
-                      </InteractiveRow>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })()}
 
         {/* Update banner — floating bottom-right of canvas */}
         {hasUpdate && !updateDismissed && (
@@ -4094,7 +4066,7 @@ export default function OpenClawWorkspace() {
           </div>
         )}
           {budget.status === 'depleted' && view.type === 'conversations' ? (
-            <div className="flex-1 flex items-center justify-center">
+            <div className="relative z-0 flex-1 flex items-center justify-center min-h-0">
               <div className="flex flex-col items-center text-center max-w-[360px]">
                 <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-6">
                   <Zap size={28} className="text-neutral-400" />
@@ -4129,7 +4101,7 @@ export default function OpenClawWorkspace() {
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+            <div className="relative z-0 flex-1 flex flex-col overflow-hidden min-h-0">
               {view.type === 'home' && (
                 <HomeDashboard
                   onNavigate={setView}
@@ -4181,6 +4153,258 @@ export default function OpenClawWorkspace() {
             </div>
           )}
       </main>
+
+      {/* Credits trigger + dropdown — OUTSIDE main to escape its overflow-hidden stacking context */}
+      {nexuLoggedIn && (() => {
+        const planKey = demoPlan;
+        const isFree = planKey === 'free';
+        const isPlus = planKey === 'plus';
+        const PLAN_META: Record<string, { label: string; color: string }> = {
+          free: { label: 'Free', color: 'text-[var(--color-text-muted)]' },
+          plus: { label: 'Plus', color: 'text-[var(--color-info)]' },
+          pro:  { label: 'Pro',  color: 'text-[var(--color-brand-primary)]' },
+        };
+        const CREDITS_PILL_STYLES: Record<
+          string,
+          { shell: string; icon: string; value: string }
+        > = {
+          free: {
+            shell:
+              'bg-surface-0 border border-border-subtle hover:border-border transition-colors',
+            icon: 'text-text-secondary',
+            value: 'text-text-primary font-medium',
+          },
+          plus: {
+            shell:
+              'bg-[var(--color-info-subtle)] border border-[var(--color-info)]/35 hover:border-[var(--color-info)]/55 transition-colors',
+            icon: 'text-[var(--color-info)]',
+            value: 'text-[var(--color-info)] font-semibold',
+          },
+          pro: {
+            shell: cn(
+              'relative overflow-hidden border border-[var(--color-brand-primary)]/50',
+              'bg-gradient-to-br from-[hsl(var(--accent)/0.24)] via-[var(--color-surface-0)] to-[hsl(var(--accent)/0.11)]',
+              'shadow-[0_2px_16px_-4px_hsl(var(--accent)/0.42),inset_0_1px_0_rgba(255,255,255,0.72)]',
+              'hover:border-[var(--color-brand-primary)]/70 hover:shadow-[0_4px_22px_-5px_hsl(var(--accent)/0.5),inset_0_1px_0_rgba(255,255,255,0.8)]',
+              'transition-[box-shadow,border-color] duration-200',
+            ),
+            icon: 'text-[var(--color-brand-primary)] drop-shadow-[0_0_10px_hsl(var(--accent)/0.5)]',
+            value: 'text-text-primary font-semibold',
+          },
+        };
+        const plan = PLAN_META[planKey];
+        const pillStyle = CREDITS_PILL_STYLES[planKey] ?? CREDITS_PILL_STYLES.free;
+        const baseCredits = Math.round(budget.remaining);
+        const bonusCredits = Math.round(budget.bonusRemaining);
+        const packCredits = creditPackInfo.remaining;
+        const totalCredits = baseCredits + bonusCredits + packCredits;
+
+        return (
+          <>
+            <div
+              ref={creditsShellRef}
+              className="absolute top-5 right-5"
+              style={
+                {
+                  WebkitAppRegion: 'no-drag',
+                  zIndex: CREDITS_USAGE_TRIGGER_Z,
+                } as React.CSSProperties
+              }
+              onMouseEnter={openUsagePanel}
+              onMouseLeave={scheduleCloseUsagePanel}
+            >
+              <div className="flex items-center gap-2.5">
+                <div
+                  className={cn(
+                    'flex items-center gap-2 h-7 px-3 rounded-full cursor-default text-[13px]',
+                    pillStyle.shell,
+                  )}
+                >
+                    <CreditIcon size={12} className={pillStyle.icon} />
+                    <span className={cn('text-[13px] tabular-nums leading-none', pillStyle.value)}>
+                    {totalCredits.toLocaleString()}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setView({ type: 'settings' })}
+                    className="flex items-center justify-center size-7 rounded-full bg-[var(--color-accent)] text-white text-[11px] font-semibold leading-none cursor-pointer hover:opacity-90 transition-opacity shrink-0"
+                  title={nexuAccountEmail}
+                >
+                  {initialsFromEmail(nexuAccountEmail)}
+                </button>
+              </div>
+            </div>
+
+            {showUsagePanel &&
+              usagePanelLayout &&
+              typeof document !== 'undefined' &&
+              createPortal(
+                <div
+                  className="fixed pointer-events-auto"
+                  style={
+                    {
+                      top: usagePanelLayout.top,
+                      left: usagePanelLayout.left,
+                      width: usagePanelLayout.width,
+                      zIndex: CREDITS_USAGE_PANEL_Z,
+                      isolation: 'isolate',
+                    } as React.CSSProperties
+                  }
+                  onMouseEnter={openUsagePanel}
+                  onMouseLeave={scheduleCloseUsagePanel}
+                >
+                  <Card
+                    variant="static"
+                    padding="none"
+                    className="overflow-visible shadow-[var(--shadow-dropdown)]"
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 border-b border-border-subtle px-4 py-3">
+                      <CardTitle className={cn('text-sm font-bold leading-none', plan.color)}>{plan.label}</CardTitle>
+                      <div className="flex items-center gap-2 shrink-0">
+                        {(isFree || isPlus) && (
+                          <Button
+                            type="button"
+                            size="xs"
+                            variant="default"
+                            className="rounded-full px-3 text-[11px] h-7"
+                            onClick={() => {
+                              openExternal(`${window.location.origin}/openclaw/pricing`);
+                              setShowUsagePanel(false);
+                            }}
+                          >
+                            {isFree ? 'Upgrade' : 'Upgrade to Pro'}
+                          </Button>
+                        )}
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          className="shrink-0 text-text-muted hover:text-text-secondary"
+                          onClick={() => setShowUsagePanel(false)}
+                          onMouseDown={e => e.stopPropagation()}
+                          aria-label="Close"
+                        >
+                          <X className="size-4" />
+                        </Button>
+                      </div>
+                    </CardHeader>
+
+                    <CardContent className="mt-0 flex flex-col gap-3 px-4 py-3">
+                      <InteractiveRow
+                        tone="subtle"
+                        className="!items-center !rounded-lg !gap-2 !px-0 !py-0 !border-0 pointer-events-none"
+                      >
+                        <InteractiveRowLeading className="flex shrink-0 items-center justify-center">
+                          <CreditIcon size={12} className={cn('block shrink-0', pillStyle.icon)} />
+                        </InteractiveRowLeading>
+                        <InteractiveRowContent className="flex min-h-0 min-w-0 flex-1 items-center">
+                          <span className="text-[13px] font-semibold leading-none text-[var(--color-text-primary)]">
+                            Total credits
+                          </span>
+                        </InteractiveRowContent>
+                        <InteractiveRowTrailing className="flex shrink-0 items-center">
+                          <span className="text-[13px] font-bold leading-none tabular-nums text-[var(--color-text-primary)]">
+                            {totalCredits}
+                          </span>
+                        </InteractiveRowTrailing>
+                      </InteractiveRow>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <InteractiveRow
+                            tone="subtle"
+                            type="button"
+                            className="!rounded-lg !gap-2 !px-0 !py-0 !border-0 items-center cursor-default"
+                          >
+                            <InteractiveRowContent>
+                              <div className="flex items-center gap-1 cursor-help">
+                                <span className="text-[12px] text-[var(--color-text-muted)]">Plan credits</span>
+                                <Info size={10} className="text-[var(--color-text-muted)] shrink-0" />
+                              </div>
+                            </InteractiveRowContent>
+                            <InteractiveRowTrailing>
+                              <span className="text-[12px] text-[var(--color-text-secondary)] tabular-nums">
+                                {baseCredits}<span className="text-[var(--color-text-muted)]">/{Math.round(budget.total)}</span>
+                              </span>
+                            </InteractiveRowTrailing>
+                          </InteractiveRow>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="bottom"
+                          align="start"
+                          className={cn('max-w-[220px] text-[10px] leading-relaxed')}
+                          style={{ zIndex: CREDITS_USAGE_TOOLTIP_Z }}
+                        >
+                          Included with your plan each cycle; resets when the period ends.
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <InteractiveRow
+                            tone="subtle"
+                            type="button"
+                            className="!rounded-lg !gap-2 !px-0 !py-0 !border-0 items-center cursor-default"
+                          >
+                            <InteractiveRowContent>
+                              <div className="flex items-center gap-1 cursor-help">
+                                <span className="text-[12px] text-[var(--color-text-muted)]">Bonus credits</span>
+                                <Info size={10} className="text-[var(--color-text-muted)] shrink-0" />
+                              </div>
+                            </InteractiveRowContent>
+                            <InteractiveRowTrailing>
+                              <span className="text-[12px] text-[var(--color-text-secondary)] tabular-nums">{bonusCredits}</span>
+                            </InteractiveRowTrailing>
+                          </InteractiveRow>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="bottom"
+                          align="start"
+                          className={cn('max-w-[240px] text-[10px] leading-relaxed')}
+                          style={{ zIndex: CREDITS_USAGE_TOOLTIP_Z }}
+                        >
+                          From signup rewards, tasks, and promos. Usage order: plan credits → credit pack → bonus credits.
+                        </TooltipContent>
+                      </Tooltip>
+
+                      {packCredits > 0 && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <InteractiveRow
+                              tone="subtle"
+                              type="button"
+                              className="!rounded-lg !gap-2 !px-0 !py-0 !border-0 items-center cursor-default"
+                            >
+                              <InteractiveRowContent>
+                                <div className="flex items-center gap-1 cursor-help">
+                                  <span className="text-[12px] text-[var(--color-text-muted)]">Credit pack balance</span>
+                                  <Info size={10} className="text-[var(--color-text-muted)] shrink-0" />
+                                </div>
+                              </InteractiveRowContent>
+                              <InteractiveRowTrailing>
+                                <span className="text-[12px] text-[var(--color-text-secondary)] tabular-nums">{packCredits.toLocaleString()}</span>
+                              </InteractiveRowTrailing>
+                            </InteractiveRow>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            side="bottom"
+                            align="start"
+                            className={cn('max-w-[240px] text-[10px] leading-relaxed')}
+                            style={{ zIndex: CREDITS_USAGE_TOOLTIP_Z }}
+                          >
+                            Your purchased {creditPackInfo.label}, valid for 1 month. Usage order: plan credits → credit pack → bonus credits.
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>,
+                document.body,
+              )}
+          </>
+        );
+      })()}
 
       {rewardConfirm && (() => {
         const ch = REWARD_CHANNELS.find(c => c.id === rewardConfirm);
