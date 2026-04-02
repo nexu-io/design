@@ -89,6 +89,24 @@ function NavSection({
   );
 }
 
+function resolveCloudDemoUrl(pathname: string, search: string) {
+  if (typeof window === "undefined") return `${pathname}${search}`;
+
+  if (window.location.hostname === "localhost" && window.location.port !== "5176") {
+    return `http://localhost:5176${pathname}${search}`;
+  }
+
+  return `${window.location.origin}${pathname}${search}`;
+}
+
+function CloudDemoRedirect() {
+  if (typeof window !== "undefined") {
+    window.location.replace(resolveCloudDemoUrl(window.location.pathname, window.location.search));
+  }
+
+  return null;
+}
+
 export function DesignSystemShell() {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -147,6 +165,7 @@ export function DesignSystemShell() {
           <Routes>
             <DesignSystemRouteElements />
             <ProductRouteElements />
+            <Route path="/openclaw/*" element={<CloudDemoRedirect />} />
             <Route path="*" element={<Navigate to="/overview" replace />} />
           </Routes>
         </main>

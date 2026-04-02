@@ -1,9 +1,4 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "../../../packages/tokens/src/styles.css";
-
-@source "../../../packages/ui-web/src/**/*.{ts,tsx}";
-@source "../../../packages/demo-pages/src/**/*.{ts,tsx}";
+@import "../../demo/src/index.css";
 
 html,
 body,
