@@ -2,7 +2,6 @@ import {
   Brain,
   Clock,
   Component,
-  Globe,
   Layout,
   Lightbulb,
   MessageSquare,
@@ -12,7 +11,6 @@ import {
   PanelLeftClose,
   Play,
   Presentation,
-  Rocket,
   Route as RouteIcon,
   Sparkles,
   Type,
@@ -24,7 +22,6 @@ import { useState } from "react";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 
 import { CommentSystem } from "../components/CommentSystem";
-import { CloudShellRouteElements } from "./routes/cloud-routes";
 import { DesignSystemRouteElements } from "./routes/design-system-routes";
 import { ProductRouteElements } from "./routes/product-routes";
 
@@ -49,13 +46,6 @@ const PRODUCT_NAV = [
   { to: "/app/clone", label: "分身搭建", icon: Wrench },
   { to: "/app/automation", label: "Automation", icon: Clock },
   { to: "/app/skills", label: "Skills", icon: Sparkles },
-];
-
-const GROWTH_NAV = [
-  { to: "/openclaw", label: "nexu MVP 🦞", icon: Rocket },
-  { to: "/openclaw/growth-demo/new", label: "首次用户 Demo", icon: Zap },
-  { to: "/openclaw/growth-demo/existing", label: "同事已开通 Demo", icon: Zap },
-  { to: "/growth-landing", label: "Growth Landing", icon: Globe },
 ];
 
 function NavSection({
@@ -135,7 +125,6 @@ export function DesignSystemShell() {
           <div className={`flex-1 ${collapsed ? "p-1.5" : "p-3"} space-y-4 overflow-y-auto`}>
             <NavSection title="Design System" items={DESIGN_NAV} collapsed={collapsed} />
             <NavSection title="Product Pages" items={PRODUCT_NAV} collapsed={collapsed} />
-            <NavSection title="nexu MVP" items={GROWTH_NAV} collapsed={collapsed} />
           </div>
 
           <div className="p-4 border-t border-border">
@@ -158,8 +147,7 @@ export function DesignSystemShell() {
           <Routes>
             <DesignSystemRouteElements />
             <ProductRouteElements />
-            <CloudShellRouteElements />
-            <Route path="*" element={<Navigate to="/openclaw/welcome" replace />} />
+            <Route path="*" element={<Navigate to="/overview" replace />} />
           </Routes>
         </main>
       </div>
