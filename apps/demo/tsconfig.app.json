@@ -5,7 +5,7 @@
     "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "types": ["vite/client"],
+    "types": ["vite/client", "react", "react-dom"],
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -22,6 +22,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
+      "@nexu-design/demo-pages": ["../../packages/demo-pages/src/index.ts"],
       "@nexu-design/ui-web": ["../../packages/ui-web/src/index.ts"],
       "@nexu-design/tokens": ["../../packages/tokens/src/index.ts"]
     }

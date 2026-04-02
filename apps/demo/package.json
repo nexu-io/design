@@ -17,6 +17,7 @@
     "tauri:build": "tauri build"
   },
   "dependencies": {
+    "@nexu-design/demo-pages": "workspace:*",
     "@nexu-design/tokens": "workspace:*",
     "@nexu-design/ui-web": "workspace:*",
     "@radix-ui/react-avatar": "^1.1.11",

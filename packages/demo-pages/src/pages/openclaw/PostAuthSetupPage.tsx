@@ -1,0 +1,331 @@
+import {
+  Badge,
+  Button,
+  Progress,
+  SlackIcon,
+  Stepper,
+  StepperItem,
+  StepperSeparator,
+} from "@nexu-design/ui-web";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, Brain, Loader2, Settings, Sparkles } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { usePageTitle } from "../../hooks/usePageTitle";
+
+interface SetupStep {
+  id: string;
+  label: string;
+  detail: string;
+  duration: number;
+  icon: React.ComponentType<{ size?: number }>;
+}
+
+const SETUP_STEPS: SetupStep[] = [
+  {
+    id: "install",
+    label: "Installing nexu Bot",
+    detail: "Adding bot to your Slack workspace",
+    duration: 1200,
+    icon: SlackIcon,
+  },
+  {
+    id: "tools",
+    label: "Authorizing tools",
+    detail: "Gmail, Calendar, Drive, Docs, Sheets",
+    duration: 1500,
+    icon: Settings,
+  },
+  {
+    id: "skills",
+    label: "Activating skills",
+    detail: "Enabling AI capabilities for your team",
+    duration: 1000,
+    icon: Sparkles,
+  },
+  {
+    id: "memory",
+    label: "Initializing memory",
+    detail: "Creating your personal memory space",
+    duration: 800,
+    icon: Brain,
+  },
+];
+
+type StepStatus = "pending" | "running" | "done";
+type Phase = "connect" | "installing" | "done";
+
+export default function PostAuthSetupPage() {
+  usePageTitle("Connect Slack");
+  const navigate = useNavigate();
+  const [phase, setPhase] = useState<Phase>("connect");
+  const [hovering, setHovering] = useState(false);
+  const [stepStatuses, setStepStatuses] = useState<Record<string, StepStatus>>(() =>
+    Object.fromEntries(SETUP_STEPS.map((s) => [s.id, "pending"])),
+  );
+
+  const runSteps = useCallback(async () => {
+    for (const step of SETUP_STEPS) {
+      setStepStatuses((prev) => ({ ...prev, [step.id]: "running" }));
+      await new Promise((resolve) => setTimeout(resolve, step.duration));
+      setStepStatuses((prev) => ({ ...prev, [step.id]: "done" }));
+    }
+    setPhase("done");
+  }, []);
+
+  const handleAddToSlack = () => {
+    setPhase("installing");
+    setTimeout(runSteps, 400);
+  };
+
+  useEffect(() => {
+    if (phase === "done") {
+      const timer = setTimeout(() => {
+        sessionStorage.setItem("nexu_from_setup", "1");
+        navigate("/openclaw/workspace");
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [phase, navigate]);
+
+  const doneCount = SETUP_STEPS.filter((s) => stepStatuses[s.id] === "done").length;
+  const progress = (doneCount / SETUP_STEPS.length) * 100;
+
+  return (
+    <div className="min-h-screen bg-surface-0 flex flex-col relative overflow-hidden">
+      {/* Background layers */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(var(--color-accent-rgb,99,102,241),0.06)_0%,transparent_50%)] pointer-events-none" />
+      <div
+        className="absolute inset-0 opacity-[0.12] pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+        }}
+      />
+
+      {/* Nav */}
+      <nav className="relative z-10 flex items-center justify-between px-6 sm:px-10 h-14 shrink-0">
+        <Button
+          type="button"
+          variant="ghost"
+          size="inline"
+          onClick={() => navigate("/openclaw")}
+          className="h-auto p-0 hover:bg-transparent"
+        >
+          <img src="/brand/nexu logo-black4.svg" alt="nexu" className="h-6 w-auto object-contain" />
+        </Button>
+      </nav>
+
+      {/* Main */}
+      <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-12">
+        {phase === "connect" && (
+          <div className="w-full max-w-[480px]">
+            {/* Content */}
+            <div className="flex-1 min-w-0 text-center">
+              {/* Connection graphic — horizontal */}
+              <div className="flex items-center gap-3 mb-6 justify-center">
+                <div className="w-12 h-12 rounded-[12px] bg-surface-1 border border-border flex items-center justify-center shadow-sm">
+                  <SlackIcon size={26} />
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-5 h-px bg-border" />
+                  <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                  <div className="w-5 h-px bg-border" />
+                </div>
+                <div className="w-12 h-12 rounded-[12px] bg-surface-1 border border-border flex items-center justify-center shadow-sm p-1.5">
+                  <img
+                    src="/brand/nexu logo-black1.svg"
+                    alt="nexu"
+                    className="h-full w-auto object-contain"
+                  />
+                </div>
+              </div>
+
+              <h1 className="text-[26px] sm:text-[32px] font-bold text-text-primary leading-[1.15] tracking-tight mb-3">
+                Add nexu to your Slack
+              </h1>
+              <p className="text-[14px] text-text-tertiary leading-relaxed max-w-[420px] mx-auto mb-8">
+                Your AI coworker joins right where your team works. @ it in any channel — 1,000+
+                tools built-in, persistent memory, always learning.
+              </p>
+
+              {/* Inline highlights */}
+              <div className="flex flex-wrap gap-2 mb-8 justify-center">
+                {["Deploy in 1 min", "1,000+ tools", "Zero data loss", "24/7 always on"].map(
+                  (tag) => (
+                    <Badge key={tag} variant="outline" size="lg">
+                      {tag}
+                    </Badge>
+                  ),
+                )}
+              </div>
+
+              {/* CTA */}
+              <Button
+                onClick={handleAddToSlack}
+                onMouseEnter={() => setHovering(true)}
+                onMouseLeave={() => setHovering(false)}
+                className="group relative inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-lg text-[15px] font-semibold bg-[#4A154B] text-white transition-all overflow-hidden shadow-md shadow-[#4A154B]/15 hover:shadow-lg hover:shadow-[#4A154B]/25"
+              >
+                <div
+                  className={`absolute inset-0 bg-gradient-to-r from-[#E01E5A]/20 via-[#36C5F0]/20 to-[#2EB67D]/20 transition-opacity duration-500 ${hovering ? "opacity-100" : "opacity-0"}`}
+                />
+                <div className="relative flex items-center gap-3">
+                  <SlackIcon size={20} />
+                  Add to Slack
+                  <ArrowRight
+                    size={15}
+                    className={`transition-transform duration-200 ${hovering ? "translate-x-0.5" : ""}`}
+                  />
+                </div>
+              </Button>
+
+              <p className="text-[11px] text-text-muted mt-4 max-w-[380px] mx-auto leading-relaxed">
+                Free during beta. Only accesses channels it's invited to.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {(phase === "installing" || phase === "done") && (
+          <div className="w-full max-w-[520px]">
+            {/* Hero graphic — animated connection */}
+            <div className="flex justify-center mb-8">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative flex items-center gap-4"
+              >
+                <div className="w-14 h-14 rounded-[12px] bg-surface-1 border border-border flex items-center justify-center shadow-sm">
+                  <SlackIcon size={28} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <motion.div
+                    className="w-8 h-0.5 bg-gradient-to-r from-border to-accent/50"
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+                  />
+                  <motion.div
+                    className="w-3 h-3 rounded-full bg-accent"
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.8, 1, 0.8] }}
+                    transition={{ duration: 1.2, repeat: Number.POSITIVE_INFINITY }}
+                  />
+                  <motion.div
+                    className="w-8 h-0.5 bg-gradient-to-r from-accent/50 to-border"
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY, delay: 0.3 }}
+                  />
+                </div>
+                <div className="w-14 h-14 rounded-[12px] bg-surface-1 border border-border flex items-center justify-center shadow-sm p-2">
+                  <img
+                    src="/brand/nexu logo-black1.svg"
+                    alt="nexu"
+                    className="h-full w-auto object-contain"
+                  />
+                </div>
+              </motion.div>
+            </div>
+
+            <div className="text-center">
+              <h1 className="text-[28px] sm:text-[34px] font-bold text-text-primary leading-[1.15] tracking-tight mb-3">
+                {phase === "done" ? (
+                  <>
+                    nexu is in your Slack. <span className="text-accent">Let&apos;s go.</span>
+                  </>
+                ) : (
+                  "Deploying your AI coworker..."
+                )}
+              </h1>
+              <p className="text-[14px] text-text-tertiary leading-relaxed max-w-[420px] mx-auto mb-8">
+                {phase === "done"
+                  ? "1,000+ tools activated, memory initialized. @ nexu in any channel — or explore your workspace first."
+                  : "Connecting Slack, activating 1,000+ tools, and initializing persistent memory. This only takes a few seconds."}
+              </p>
+
+              {/* Progress bar — gradient */}
+              <div className="max-w-[420px] mx-auto mb-10">
+                <Progress
+                  value={progress}
+                  variant="accent"
+                  className="border border-border bg-surface-1"
+                  indicatorClassName="bg-gradient-to-r from-accent to-accent/80"
+                />
+                <div className="flex justify-between mt-2.5">
+                  <span className="text-[12px] font-medium text-text-secondary">
+                    {doneCount}/{SETUP_STEPS.length} steps
+                  </span>
+                  <span className="text-[12px] font-medium text-accent">
+                    {Math.round(progress)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Steps with icons */}
+            <Stepper orientation="vertical" className="max-w-[420px] mx-auto mb-10">
+              <AnimatePresence initial={false}>
+                {SETUP_STEPS.map((step, idx) => {
+                  const status = stepStatuses[step.id];
+                  const Icon = step.icon;
+                  const stepStatus =
+                    status === "done" ? "completed" : status === "running" ? "current" : "pending";
+
+                  return (
+                    <motion.div
+                      key={step.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                    >
+                      <StepperItem
+                        status={stepStatus}
+                        icon={
+                          status === "running" ? (
+                            <Loader2 size={16} className="animate-spin" />
+                          ) : status === "done" ? undefined : (
+                            <Icon size={16} />
+                          )
+                        }
+                        label={step.label}
+                        description={step.detail}
+                        trailing={
+                          status === "done" ? (
+                            <Badge variant="success" className="shrink-0">
+                              Done
+                            </Badge>
+                          ) : null
+                        }
+                        className={`rounded-lg border px-4 py-3.5 text-left transition-all ${
+                          status === "running"
+                            ? "border-accent/12 bg-accent/8 shadow-sm shadow-accent/5"
+                            : status === "done"
+                              ? "border-[rgba(52,110,88,0.15)] bg-[var(--color-success-subtle)]"
+                              : "border-border/50 bg-surface-1/50 opacity-60"
+                        }`}
+                      />
+                      {idx < SETUP_STEPS.length - 1 ? (
+                        <StepperSeparator active={status !== "pending"} />
+                      ) : null}
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </Stepper>
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="relative z-10 flex items-center justify-center gap-4 pb-5 text-[11px] text-text-muted">
+        <Link to="/openclaw/terms" className="hover:text-text-secondary transition-colors">
+          Terms
+        </Link>
+        <Link to="/openclaw/privacy" className="hover:text-text-secondary transition-colors">
+          Privacy
+        </Link>
+        <span>© 2026 Powerformer, Inc.</span>
+      </div>
+    </div>
+  );
+}

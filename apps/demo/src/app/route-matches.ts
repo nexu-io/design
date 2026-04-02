@@ -17,6 +17,7 @@ export function isFullScreenPath(pathname: string) {
   return (
     fullScreenExactPaths.has(pathname) ||
     pathname.startsWith("/openclaw/auth") ||
+    pathname.startsWith("/openclaw/changelog/") ||
     pathname.startsWith("/openclaw/skill/") ||
     pathname.startsWith("/openclaw/growth-demo") ||
     fullScreenPrefixes.some((prefix) => pathname.startsWith(prefix))
