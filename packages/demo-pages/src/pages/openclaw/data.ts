@@ -1,7 +1,6 @@
 export type Platform = "slack" | "feishu" | "discord";
 export type ChannelStatus = "active" | "inactive" | "configuring";
 export type DeploymentSource = "coding" | "content";
-export type WorkflowStatus = "active" | "paused" | "draft";
 export type ModelProvider =
   | "nexu"
   | "anthropic"
@@ -15,7 +14,6 @@ export type ModelProvider =
   | "siliconflow"
   | "ppio"
   | "xiaoxiang";
-export type CredentialMode = "managed" | "byok";
 
 export interface PlatformConfig {
   platform: Platform;
@@ -52,15 +50,6 @@ export interface Deployment {
   contentType?: "newsletter" | "blog" | "tweet-thread" | "landing";
 }
 
-export interface Activity {
-  id: string;
-  channelId?: string;
-  channelName?: string;
-  type: "message" | "deploy" | "config" | "error" | "content";
-  content: string;
-  time: string;
-}
-
 export interface BotMessage {
   id: string;
   role: "user" | "bot";
@@ -74,113 +63,6 @@ export interface BotMessage {
   };
   oauthPrompt?: { toolId: string; toolName: string; provider: string };
 }
-
-export interface Workflow {
-  id: string;
-  channelId: string;
-  name: string;
-  desc: string;
-  trigger: string;
-  status: WorkflowStatus;
-  lastRun?: string;
-  runCount: number;
-  outputs: string[];
-  creditsPerRun: number;
-}
-
-export interface ContentPiece {
-  id: string;
-  channelId: string;
-  title: string;
-  type: "newsletter" | "tweet" | "blog" | "post";
-  status: "published" | "draft" | "scheduled";
-  createdAt: string;
-  workflow: string;
-  previewUrl?: string;
-}
-
-export interface ModelOption {
-  id: string;
-  name: string;
-  provider: ModelProvider;
-  region: "global" | "china";
-  tag: "default" | "reasoning" | "speed" | "chinese";
-  source: "preset" | "custom";
-}
-
-export interface ModelProviderConfig {
-  provider: ModelProvider;
-  label: string;
-  status: "active" | "available";
-}
-
-export interface CredentialEntry {
-  provider: ModelProvider;
-  label: string;
-  configured: boolean;
-  mode: CredentialMode;
-  scopes: string[];
-}
-
-export const MODEL_OPTIONS: ModelOption[] = [
-  {
-    id: "claude-opus-4-6",
-    name: "Claude Opus 4.6",
-    provider: "anthropic",
-    region: "global",
-    tag: "default",
-    source: "preset",
-  },
-  {
-    id: "gpt-5",
-    name: "GPT-5",
-    provider: "openai",
-    region: "global",
-    tag: "reasoning",
-    source: "preset",
-  },
-  {
-    id: "gemini-2-5-pro",
-    name: "Gemini 2.5 Pro",
-    provider: "google",
-    region: "global",
-    tag: "speed",
-    source: "preset",
-  },
-  {
-    id: "kimi-k2",
-    name: "Kimi K2",
-    provider: "kimi",
-    region: "china",
-    tag: "chinese",
-    source: "custom",
-  },
-  {
-    id: "glm-4-5",
-    name: "GLM-4.5",
-    provider: "glm",
-    region: "china",
-    tag: "reasoning",
-    source: "custom",
-  },
-  {
-    id: "minimax-m1",
-    name: "MiniMax M1",
-    provider: "minimax",
-    region: "china",
-    tag: "speed",
-    source: "custom",
-  },
-];
-
-export const MODEL_PROVIDER_CONFIGS: ModelProviderConfig[] = [
-  { provider: "anthropic", label: "Anthropic", status: "active" },
-  { provider: "openai", label: "OpenAI", status: "available" },
-  { provider: "google", label: "Google", status: "available" },
-  { provider: "kimi", label: "Kimi", status: "available" },
-  { provider: "glm", label: "GLM", status: "available" },
-  { provider: "minimax", label: "MiniMax", status: "available" },
-];
 
 export interface ProviderDetail {
   id: ModelProvider;
@@ -203,7 +85,7 @@ export interface ProviderModel {
   outputPrice: string;
 }
 
-export const PROVIDER_DETAILS: ProviderDetail[] = [
+const PROVIDER_DETAILS: ProviderDetail[] = [
   {
     id: "nexu",
     name: "nexu Official",
@@ -530,33 +412,6 @@ export function getProviderDetails(): ProviderDetail[] {
   return PROVIDER_DETAILS;
 }
 
-export const CREDENTIAL_ENTRIES: CredentialEntry[] = [
-  {
-    provider: "anthropic",
-    label: "Anthropic",
-    configured: true,
-    mode: "byok",
-    scopes: ["Claude Opus 4.6"],
-  },
-  { provider: "openai", label: "OpenAI", configured: false, mode: "byok", scopes: ["GPT-5"] },
-  {
-    provider: "google",
-    label: "Google",
-    configured: false,
-    mode: "managed",
-    scopes: ["Gemini 2.5 Pro"],
-  },
-  { provider: "kimi", label: "Kimi", configured: true, mode: "byok", scopes: ["Kimi K2"] },
-  { provider: "glm", label: "GLM", configured: false, mode: "byok", scopes: ["GLM-4.5"] },
-  {
-    provider: "minimax",
-    label: "MiniMax",
-    configured: false,
-    mode: "byok",
-    scopes: ["MiniMax M1"],
-  },
-];
-
 export const MOCK_CHANNELS: Channel[] = [
   {
     id: "1",
@@ -726,83 +581,7 @@ export const MOCK_DEPLOYMENTS: Deployment[] = [
   },
 ];
 
-export const MOCK_ACTIVITIES: Activity[] = [
-  {
-    id: "a1",
-    channelId: "1",
-    channelName: "#product-dev",
-    type: "deploy",
-    content: "Deployed Product Landing Page to landing-abc.nexu.dev",
-    time: "2 min ago",
-  },
-  {
-    id: "a2",
-    channelId: "2",
-    channelName: "#engineering",
-    type: "message",
-    content: "New message: help me write an API health checker",
-    time: "15 min ago",
-  },
-  {
-    id: "a7",
-    channelId: "1",
-    channelName: "#product-dev",
-    type: "content",
-    content: 'nexu generated Twitter Thread "v0.3 Release"',
-    time: "30 min ago",
-  },
-  {
-    id: "a3",
-    channelId: "1",
-    channelName: "#product-dev",
-    type: "deploy",
-    content: "Deployed Data Dashboard to dashboard-xyz.nexu.dev",
-    time: "3 hrs ago",
-  },
-  {
-    id: "a8",
-    channelId: "1",
-    channelName: "#product-dev",
-    type: "content",
-    content: 'nexu generated "nexu v0.3 Changelog" and deployed',
-    time: "5 hrs ago",
-  },
-  {
-    id: "a4",
-    channelId: "2",
-    channelName: "#engineering",
-    type: "deploy",
-    content: "Deployed Team Wiki to wiki-eng.nexu.dev",
-    time: "Yesterday 16:20",
-  },
-  {
-    id: "a9",
-    channelId: "2",
-    channelName: "#engineering",
-    type: "content",
-    content: 'nexu generated blog "How We Built a Cyber Office with AI"',
-    time: "Yesterday 14:30",
-  },
-  {
-    id: "a5",
-    channelId: "1",
-    channelName: "#product-dev",
-    type: "error",
-    content: "Internal Tool - Approval Flow build failed",
-    time: "Yesterday 09:45",
-  },
-  {
-    id: "a10",
-    channelId: "1",
-    channelName: "#product-dev",
-    type: "content",
-    content: 'nexu generated Newsletter "nexu Weekly #8"',
-    time: "2026-02-21",
-  },
-  { id: "a6", type: "config", content: "Added Slack channel #marketing", time: "2026-02-15" },
-];
-
-export const MOCK_MESSAGES: Record<string, BotMessage[]> = {
+const MOCK_MESSAGES: Record<string, BotMessage[]> = {
   "1": [
     {
       id: "m1",
@@ -960,120 +739,7 @@ export const MOCK_MESSAGES: Record<string, BotMessage[]> = {
   ],
 };
 
-export const MOCK_WORKFLOWS: Workflow[] = [
-  {
-    id: "wf-1",
-    channelId: "1",
-    name: "Weekly Newsletter",
-    desc: "Auto-summarize channel messages weekly, generate and publish Newsletter",
-    trigger: "Every Fri 18:00",
-    status: "active",
-    lastRun: "2 days ago",
-    runCount: 8,
-    outputs: ["Markdown", "Email HTML"],
-    creditsPerRun: 30,
-  },
-  {
-    id: "wf-2",
-    channelId: "1",
-    name: "Twitter Thread Generator",
-    desc: "Auto-generate Twitter thread when new product release or tech blog is deployed",
-    trigger: "On new deploy",
-    status: "active",
-    lastRun: "5 hrs ago",
-    runCount: 23,
-    outputs: ["Twitter Thread", "LinkedIn Post"],
-    creditsPerRun: 15,
-  },
-  {
-    id: "wf-3",
-    channelId: "2",
-    name: "Changelog → Blog Post",
-    desc: "Auto-generate product update blog from Git changelog, with screenshots and feature notes",
-    trigger: "On each release",
-    status: "active",
-    lastRun: "1 week ago",
-    runCount: 5,
-    outputs: ["Blog Markdown", "Landing Section"],
-    creditsPerRun: 25,
-  },
-  {
-    id: "wf-4",
-    channelId: "2",
-    name: "Engineering Digest",
-    desc: "Auto-summarize engineering channel discussions weekly, generate and distribute Digest",
-    trigger: "Every Fri 18:00",
-    status: "active",
-    lastRun: "3 days ago",
-    runCount: 12,
-    outputs: ["Newsletter", "Slack Summary"],
-    creditsPerRun: 20,
-  },
-  {
-    id: "wf-5",
-    channelId: "1",
-    name: "Meeting Notes → Action Items",
-    desc: "Extract action items from meeting notes, auto-create and assign tasks",
-    trigger: "Manual trigger",
-    status: "draft",
-    runCount: 0,
-    outputs: ["Task List", "Slack Message"],
-    creditsPerRun: 10,
-  },
-];
-
-export const MOCK_CONTENT: ContentPiece[] = [
-  {
-    id: "cp-1",
-    channelId: "1",
-    title: "nexu Weekly #8 — AI Coding Partner Update",
-    type: "newsletter",
-    status: "published",
-    createdAt: "2026-02-21",
-    workflow: "Weekly Newsletter",
-    previewUrl: "#",
-  },
-  {
-    id: "cp-2",
-    channelId: "1",
-    title: "🧵 We just shipped real-time deployment preview...",
-    type: "tweet",
-    status: "published",
-    createdAt: "2026-02-25",
-    workflow: "Twitter Thread Generator",
-  },
-  {
-    id: "cp-3",
-    channelId: "2",
-    title: "How We Built a Cyber Office with AI",
-    type: "blog",
-    status: "published",
-    createdAt: "2026-02-24",
-    workflow: "Changelog → Blog Post",
-    previewUrl: "#",
-  },
-  {
-    id: "cp-4",
-    channelId: "1",
-    title: "nexu Weekly #9 — Content Automation Launch",
-    type: "newsletter",
-    status: "scheduled",
-    createdAt: "2026-02-28",
-    workflow: "Weekly Newsletter",
-  },
-  {
-    id: "cp-5",
-    channelId: "2",
-    title: "Engineering Weekly Digest #12",
-    type: "post",
-    status: "published",
-    createdAt: "2026-02-22",
-    workflow: "Engineering Digest",
-    previewUrl: "#",
-  },
-];
-
-export const MOCK_PLATFORM_CONFIGS: PlatformConfig[] = [
+const MOCK_PLATFORM_CONFIGS: PlatformConfig[] = [
   {
     platform: "slack",
     configured: true,
@@ -1101,34 +767,6 @@ export function getChannel(id: string): Channel | undefined {
   return MOCK_CHANNELS.find((c) => c.id === id);
 }
 
-export function getChannelDeployments(channelId: string): Deployment[] {
-  return MOCK_DEPLOYMENTS.filter((d) => d.channelId === channelId);
-}
-
-export function getChannelActivities(channelId: string): Activity[] {
-  return MOCK_ACTIVITIES.filter((a) => a.channelId === channelId);
-}
-
 export function getChannelMessages(channelId: string): BotMessage[] {
   return MOCK_MESSAGES[channelId] ?? [];
-}
-
-export function getChannelWorkflows(channelId: string): Workflow[] {
-  return MOCK_WORKFLOWS.filter((w) => w.channelId === channelId);
-}
-
-export function getChannelContent(channelId: string): ContentPiece[] {
-  return MOCK_CONTENT.filter((c) => c.channelId === channelId);
-}
-
-export function getModelOptions(): ModelOption[] {
-  return MODEL_OPTIONS;
-}
-
-export function getModelProviderConfigs(): ModelProviderConfig[] {
-  return MODEL_PROVIDER_CONFIGS;
-}
-
-export function getCredentialEntries(): CredentialEntry[] {
-  return CREDENTIAL_ENTRIES;
 }

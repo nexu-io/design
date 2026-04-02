@@ -1,0 +1,62 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignoreExportsUsedInFile": true,
+  "ignoreIssues": {
+    "packages/ui-web/src/**/*.{ts,tsx}": ["exports"]
+  },
+  "workspaces": {
+    ".": {
+      "entry": ["package.json"],
+      "project": ["*.json", "*.yaml"]
+    },
+    "apps/storybook": {
+      "entry": ["src/styles.css"],
+      "project": [".storybook/**/*.ts", ".storybook/**/*.tsx", "src/**/*.{ts,tsx,mdx}"],
+      "typescript": {
+        "config": "tsconfig.json"
+      },
+      "paths": {
+        "@nexu-design/ui-web": ["../../packages/ui-web/src/index.ts"],
+        "@nexu-design/tokens": ["../../packages/tokens/src/index.ts"]
+      }
+    },
+    "apps/demo": {
+      "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs"],
+      "typescript": {
+        "config": "tsconfig.app.json"
+      },
+      "paths": {
+        "@/*": ["src/*"]
+      }
+    },
+    "apps/cloud-demo": {
+      "project": ["src/**/*.{ts,tsx}"],
+      "typescript": {
+        "config": "tsconfig.app.json"
+      },
+      "paths": {
+        "@/*": ["src/*"]
+      }
+    },
+    "packages/ui-web": {
+      "entry": ["src/styles.css"],
+      "project": ["src/**/*.{ts,tsx,css}"],
+      "typescript": {
+        "config": "tsconfig.json"
+      }
+    },
+    "packages/tokens": {
+      "project": ["src/**/*.{ts,css,json}", "scripts/**/*.mjs"],
+      "typescript": {
+        "config": "tsconfig.json"
+      }
+    },
+    "packages/demo-pages": {
+      "project": ["src/**/*.{ts,tsx}"],
+      "includeEntryExports": true,
+      "typescript": {
+        "config": "tsconfig.json"
+      }
+    }
+  }
+}

@@ -1,5 +1,4 @@
 import { BarChart3, ChevronDown, Code2, FileText, PenTool, Search } from "lucide-react";
-import { useState } from "react";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -421,53 +420,5 @@ export default function SlackDemo({
         </div>
       </div>
     </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  ScenarioTabs — optional tab bar for switching scenarios            */
-/* ------------------------------------------------------------------ */
-
-export function ScenarioTabs({
-  activeKey,
-  onChange,
-}: {
-  activeKey: string;
-  onChange: (key: string) => void;
-}) {
-  return (
-    <div className="flex gap-2 justify-center mb-8 overflow-x-auto no-scrollbar">
-      {DEMO_SCENARIOS.map((s) => (
-        <button
-          key={s.key}
-          type="button"
-          onClick={() => onChange(s.key)}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-[13px] font-medium transition-colors cursor-pointer shrink-0 ${
-            activeKey === s.key
-              ? "bg-accent text-accent-fg"
-              : "bg-surface-1 text-text-secondary border border-border hover:border-border-hover"
-          }`}
-        >
-          <s.icon size={14} />
-          {s.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  SlackDemoWithTabs — convenience wrapper                            */
-/* ------------------------------------------------------------------ */
-
-export function SlackDemoWithTabs() {
-  const [activeDemo, setActiveDemo] = useState("coding");
-  return (
-    <>
-      <ScenarioTabs activeKey={activeDemo} onChange={setActiveDemo} />
-      <div className="mx-auto max-w-4xl">
-        <SlackDemo scenarioKey={activeDemo} />
-      </div>
-    </>
   );
 }

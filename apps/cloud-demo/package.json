@@ -11,8 +11,6 @@
   },
   "dependencies": {
     "@nexu-design/demo-pages": "workspace:*",
-    "@nexu-design/tokens": "workspace:*",
-    "@nexu-design/ui-web": "workspace:*",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.13.0"

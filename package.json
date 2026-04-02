@@ -3,10 +3,11 @@
   "private": true,
   "packageManager": "pnpm@10.16.1",
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4"
+    "@biomejs/biome": "^1.9.4",
+    "knip": "^6.2.0"
   },
   "scripts": {
-    "dev": "pnpm --filter @nexu-design/storybook storybook & pnpm --filter @nexu-design/demo dev & wait",
+    "dev": "sh -c 'pnpm --filter @nexu-design/storybook storybook & pnpm --filter @nexu-design/demo dev & wait'",
     "dev:storybook": "pnpm --filter @nexu-design/storybook storybook",
     "dev:demo": "pnpm --filter @nexu-design/demo dev",
     "dev:demo:web": "pnpm --filter @nexu-design/demo dev:web",
@@ -20,6 +21,8 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "biome:check": "biome check .",
+    "knip": "knip --config knip.json",
+    "knip:production": "knip --config knip.json --production",
     "pack:check": "pnpm --filter @nexu-design/tokens pack:check && pnpm --filter @nexu-design/ui-web pack:check",
     "release:check": "pnpm build:packages && pnpm typecheck && pnpm test && pnpm pack:check",
     "test": "pnpm -r test",

@@ -1,6 +1,6 @@
 import { SESSION_DATA } from "./sessionsData";
 
-export interface FileEntry {
+interface FileEntry {
   content: string;
   lastEditedBy: "human" | "agent";
   lastEditedAt: string;
@@ -128,13 +128,4 @@ export function saveFile(path: string, content: string, editedBy: "human" | "age
     lastEditedAt: new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }),
   });
   notify();
-}
-
-export function subscribe(fn: Listener): () => void {
-  listeners.add(fn);
-  return () => listeners.delete(fn);
-}
-
-export function getAllPaths(): string[] {
-  return Array.from(store.keys());
 }

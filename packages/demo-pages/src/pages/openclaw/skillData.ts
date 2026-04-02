@@ -1498,7 +1498,3 @@ export function findSkillById(id: string): { skill: SkillDef; category: SkillCat
   }
   return null;
 }
-
-export function getAllSkills(): SkillDef[] {
-  return ALL_SKILLS;
-}

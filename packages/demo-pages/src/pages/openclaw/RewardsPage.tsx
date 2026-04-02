@@ -31,7 +31,7 @@ function actionLabel(t: (key: string) => string, channel: RewardChannel, claimed
   return t("budget.cta.post");
 }
 
-export function RewardsPage() {
+function RewardsPage() {
   const { t } = useLocale();
   const budget = useBudget("healthy");
 
