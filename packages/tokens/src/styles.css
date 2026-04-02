@@ -1,31 +1,5 @@
 /* This file is generated from src/token-source.json. Do not edit by hand. */
 
-/* Digits — tabular-width numerals via JetBrains Mono subset */
-@font-face {
-  font-family: "Digits";
-  src: local("JetBrains Mono"), url("/fonts/JetBrainsMono-Regular.woff2") format("woff2");
-  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+003A;
-  font-weight: 400;
-  font-display: swap;
-  size-adjust: 88%;
-}
-@font-face {
-  font-family: "Digits";
-  src: local("JetBrains Mono Medium"), url("/fonts/JetBrainsMono-Medium.woff2") format("woff2");
-  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+003A;
-  font-weight: 500;
-  font-display: swap;
-  size-adjust: 88%;
-}
-@font-face {
-  font-family: "Digits";
-  src: local("JetBrains Mono Bold"), url("/fonts/JetBrainsMono-Bold.woff2") format("woff2");
-  unicode-range: U+0030-0039, U+002E, U+002C, U+0025, U+002B, U+002D, U+003A;
-  font-weight: 600 900;
-  font-display: swap;
-  size-adjust: 88%;
-}
-
 :root {
   --background: 0 0% 98%;
   --foreground: 214.3 11.1% 12.4%;
@@ -70,10 +44,6 @@
   --shadow-card: 0 4px 8px 0 rgba(0, 0, 0, 0.08);
   --shadow-dropdown: 0 8px 24px rgba(0, 0, 0, 0.08);
   --shadow-focus: 0 0 0 2px rgba(61, 185, 206, 0.25);
-  --shadow-refine: 0 10px 20px -5px rgba(0, 0, 0, 0.06);
-  --shadow-elevated: 0 18px 60px rgba(0, 0, 0, 0.08);
-  --shadow-overlay: 0 18px 38px rgba(0, 0, 0, 0.1);
-  --color-toggle-on: #007aff;
   --spacing: 0.25rem;
   --duration-fast: 120ms;
   --duration-normal: 200ms;
@@ -94,12 +64,6 @@
   --text-weight-medium: 500;
   --text-weight-semibold: 600;
   --text-weight-bold: 700;
-  --z-base: 0;
-  --z-raised: 10;
-  --z-dropdown: 40;
-  --z-modal: 50;
-  --z-toast: 60;
-  --z-tooltip: 70;
   --color-surface-0: hsl(var(--background));
   --color-surface-1: hsl(var(--card));
   --color-surface-2: hsl(var(--secondary));
@@ -183,10 +147,6 @@
   --shadow-card: 0 4px 8px 0 rgba(0, 0, 0, 0.14);
   --shadow-dropdown: 0 8px 24px rgba(0, 0, 0, 0.18);
   --shadow-focus: 0 0 0 2px rgba(61, 185, 206, 0.35);
-  --shadow-refine: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
-  --shadow-elevated: 0 18px 60px rgba(0, 0, 0, 0.14);
-  --shadow-overlay: 0 18px 38px rgba(0, 0, 0, 0.18);
-  --color-toggle-on: #007aff;
   --spacing: 0.25rem;
   --duration-fast: 120ms;
   --duration-normal: 200ms;
@@ -194,6 +154,19 @@
   --font-sans: "Digits", "Manrope", "Inter", "PingFang SC", -apple-system, "Noto Sans SC";
   --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
   --font-heading: "Georgia", "Times New Roman", serif;
+  --text-size-2xs: 0.625rem;
+  --text-size-xs: 0.6875rem;
+  --text-size-sm: 0.75rem;
+  --text-size-base: 0.8125rem;
+  --text-size-lg: 0.875rem;
+  --text-size-xl: 1rem;
+  --text-size-2xl: 1.25rem;
+  --text-size-3xl: 1.5rem;
+  --text-size-4xl: 1.875rem;
+  --text-weight-normal: 400;
+  --text-weight-medium: 500;
+  --text-weight-semibold: 600;
+  --text-weight-bold: 700;
   --color-surface-0: hsl(var(--background));
   --color-surface-1: hsl(var(--card));
   --color-surface-2: hsl(var(--secondary));
@@ -311,98 +284,6 @@
   --shadow-card: var(--shadow-card);
   --shadow-dropdown: var(--shadow-dropdown);
   --shadow-focus: var(--shadow-focus);
-  --shadow-refine: var(--shadow-refine);
-  --shadow-elevated: var(--shadow-elevated);
-  --shadow-overlay: var(--shadow-overlay);
-  --color-toggle-on: var(--color-toggle-on);
-  --text-2xs: var(--text-size-2xs);
-  --text-2xs--line-height: 1.2;
-  --text-xs: var(--text-size-xs);
-  --text-xs--line-height: 1.45;
-  --text-sm: var(--text-size-sm);
-  --text-sm--line-height: 1.5;
-  --text-base: var(--text-size-base);
-  --text-base--line-height: 1.5;
-  --text-lg: var(--text-size-lg);
-  --text-lg--line-height: 1.5;
-  --text-xl: var(--text-size-xl);
-  --text-xl--line-height: 1.4;
-  --text-2xl: var(--text-size-2xl);
-  --text-2xl--line-height: 1.3;
-  --text-3xl: var(--text-size-3xl);
-  --text-3xl--line-height: 1.2;
-  --text-4xl: var(--text-size-4xl);
-  --text-4xl--line-height: 1.1;
-  --font-weight-normal: var(--text-weight-normal);
-  --font-weight-medium: var(--text-weight-medium);
-  --font-weight-semibold: var(--text-weight-semibold);
-  --font-weight-bold: var(--text-weight-bold);
-}
-
-@keyframes nexu-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes nexu-scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes nexu-fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes nexu-page-enter {
-  from {
-    opacity: 0;
-    transform: translateX(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes nexu-breathe {
-  0%,
-  100% {
-    border-color: hsl(var(--accent) / 0.12);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-    transform: translateY(0);
-  }
-  50% {
-    border-color: hsl(var(--accent) / 0.35);
-    box-shadow: 0 4px 16px hsl(var(--accent) / 0.1), 0 0 0 1px hsl(var(--accent) / 0.08);
-    transform: translateY(-1px);
-  }
-}
-
-@keyframes nexu-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
 }
 
 @layer base {
