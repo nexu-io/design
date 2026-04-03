@@ -29,6 +29,7 @@ import {
   CircleHelp,
   Cable,
 
+  LoaderCircle,
   Loader2,
   AlertCircle,
   Globe,
@@ -103,6 +104,7 @@ import {
   TooltipTrigger,
   ToggleGroup,
   ToggleGroupItem,
+  StatCard,
 } from '@nexu-design/ui-web';
 import { openUrl } from '@tauri-apps/plugin-opener';
 
@@ -1270,7 +1272,10 @@ function RewardConfirmModal({ channel, onConfirm, onCancel, t }: {
 }) {
   const isDaily = channel.repeatable === 'daily';
   const isImage = channel.shareMode === 'image';
+  const isSocialShare = !isDaily && !isImage && channel.id !== 'github_star';
   const [imageDownloaded, setImageDownloaded] = useState(false);
+  const [shareLink, setShareLink] = useState('');
+  const [linkStatus, setLinkStatus] = useState<'idle' | 'verifying' | 'valid' | 'invalid'>('idle');
 
   const descKey = isDaily
     ? 'budget.confirm.checkinDesc'
@@ -1336,19 +1341,100 @@ function RewardConfirmModal({ channel, onConfirm, onCancel, t }: {
             </div>
           ) : null}
 
+          {isSocialShare && (
+            <div className="mb-4 w-full">
+              <label className="block text-[12px] font-medium text-text-secondary mb-1.5 text-left">
+                Paste your share link to verify
+              </label>
+              <div className="relative">
+                <input
+                  type="url"
+                  value={shareLink}
+                  onChange={e => { setShareLink(e.target.value); setLinkStatus('idle'); }}
+                  placeholder="https://..."
+                  className={cn(
+                    'w-full rounded-lg border bg-surface-0 px-3 py-2 text-[13px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 transition-colors',
+                    linkStatus === 'invalid'
+                      ? 'border-destructive focus:ring-destructive/20 focus:border-destructive/30'
+                      : linkStatus === 'valid'
+                        ? 'border-[var(--color-success)] focus:ring-[var(--color-success)]/20'
+                        : 'border-border focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30',
+                  )}
+                />
+                {linkStatus === 'verifying' && (
+                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2">
+                    <LoaderCircle size={14} className="animate-spin text-text-muted" />
+                  </div>
+                )}
+                {linkStatus === 'valid' && (
+                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2">
+                    <Check size={14} className="text-[var(--color-success)]" />
+                  </div>
+                )}
+              </div>
+              {linkStatus === 'invalid' && (
+                <p className="mt-1 text-[12px] text-destructive text-left">
+                  Invalid link. Please paste the URL of your shared post.
+                </p>
+              )}
+              {linkStatus === 'valid' && (
+                <p className="mt-1 text-[12px] text-[var(--color-success)] text-left">
+                  Link verified successfully!
+                </p>
+              )}
+            </div>
+          )}
+
           <DialogFooter className="mt-1 w-full flex-row gap-2 p-0 sm:flex-row sm:justify-stretch [&>button]:min-h-9 [&>button]:flex-1">
             <Button type="button" variant="outline" size="sm" onClick={onCancel}>
               {t('budget.confirm.cancel')}
             </Button>
-            <Button
-              type="button"
-              variant="brand"
-              size="sm"
-              className="bg-[var(--color-text-heading)] text-white hover:bg-[var(--color-text-heading)]/90"
-              onClick={onConfirm}
-            >
-              {t('budget.confirm.done')}
-            </Button>
+            {isSocialShare ? (
+              linkStatus === 'valid' ? (
+                <Button
+                  type="button"
+                  variant="brand"
+                  size="sm"
+                  className="bg-[var(--color-text-heading)] text-white hover:bg-[var(--color-text-heading)]/90"
+                  onClick={onConfirm}
+                >
+                  {t('budget.confirm.done')}
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant="brand"
+                  size="sm"
+                  className="bg-[var(--color-text-heading)] text-white hover:bg-[var(--color-text-heading)]/90"
+                  disabled={!shareLink.trim() || linkStatus === 'verifying'}
+                  loading={linkStatus === 'verifying'}
+                  onClick={() => {
+                    setLinkStatus('verifying');
+                    setTimeout(() => {
+                      try {
+                        const url = new URL(shareLink.trim());
+                        const valid = /^https?:/.test(url.protocol);
+                        setLinkStatus(valid ? 'valid' : 'invalid');
+                      } catch {
+                        setLinkStatus('invalid');
+                      }
+                    }, 1200);
+                  }}
+                >
+                  Verify link
+                </Button>
+              )
+            ) : (
+              <Button
+                type="button"
+                variant="brand"
+                size="sm"
+                className="bg-[var(--color-text-heading)] text-white hover:bg-[var(--color-text-heading)]/90"
+                onClick={onConfirm}
+              >
+                {t('budget.confirm.done')}
+              </Button>
+            )}
           </DialogFooter>
         </div>
       </DialogContent>
@@ -3400,41 +3486,23 @@ function RewardsCenter({ budget, onDailyCheckIn, onOpenMaterial, onRequestConfir
         />
 
         <div
-          className="mt-8 mb-8 space-y-2.5"
+          className="mt-8 mb-8"
           title={t('rewards.creditsMaxHint')}
         >
-          <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
-            <div className="flex min-w-0 flex-wrap items-baseline gap-x-0">
-              <span className="text-[20px] font-bold tabular-nums leading-none tracking-tight text-text-heading">
-                {formatCreditsPlain(earnedCredits)}
-              </span>
-              <span className="text-[20px] font-bold tabular-nums leading-none text-text-tertiary">
-                /{formatCreditsPlain(creditsCapBaseline)}
-              </span>
-              <span className="ml-2 text-[12px] font-semibold leading-none text-text-secondary">
-                · credits
-              </span>
+          <Card variant="outlined" padding="none" className="relative overflow-hidden px-5 py-4">
+            <Gift size={64} className="absolute right-4 top-1/2 -translate-y-1/2 text-text-heading/[0.06]" />
+            <div className="relative">
+              <div className="text-sm font-semibold text-text-secondary">{t('rewards.creditsShort')}</div>
+              <div className="mt-2.5 flex items-center gap-3">
+                <div className="flex items-center text-xl font-bold tracking-tight text-text-primary">
+                  <CreditIcon size={14} className="text-text-heading mr-1.5 shrink-0" />
+                  {formatCreditsPlain(earnedCredits)}
+                  <span className="text-text-muted font-normal"> / {formatCreditsPlain(creditsCapBaseline)}</span>
+                </div>
+                <span className="text-[12px] text-text-muted">{totalCount - completedCount} earnable {(totalCount - completedCount) === 1 ? 'task' : 'tasks'}</span>
+              </div>
             </div>
-            <p className="m-0 shrink-0 text-[12px] tabular-nums leading-snug text-text-tertiary">
-              <span className="font-medium text-text-secondary">{t('rewards.tasksShort')}</span>
-              <span className="text-text-tertiary"> · </span>
-              <span className="text-text-secondary">{completedCount}</span>
-              <span className="text-text-tertiary"> / {totalCount}</span>
-            </p>
-          </div>
-          <div
-            className="h-1.5 w-full overflow-hidden rounded-full bg-surface-3"
-            role="progressbar"
-            aria-valuenow={Math.round(creditFillPct)}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label={t('rewards.creditsShort')}
-          >
-            <div
-              className="h-full min-w-0 rounded-full bg-[var(--color-brand-primary)] transition-[width] duration-500"
-              style={{ width: `${creditFillPct}%` }}
-            />
-          </div>
+          </Card>
         </div>
 
         <div className="space-y-10">
@@ -4260,19 +4328,37 @@ export default function OpenClawWorkspace() {
               <div className="flex items-center gap-2.5">
                 <div
                   className={cn(
-                    'flex items-center gap-2 h-7 px-3 rounded-full cursor-default text-[13px]',
+                    'flex items-center gap-1 h-7 pl-3 pr-3 rounded-full cursor-default text-[13px]',
                     pillStyle.shell,
                   )}
                 >
-                    <CreditIcon size={12} className={pillStyle.icon} />
-                    <span className={cn('text-[13px] tabular-nums leading-none', pillStyle.value)}>
+                  <CreditIcon size={12} className={pillStyle.icon} />
+                  <span className={cn('text-[13px] tabular-nums leading-none', pillStyle.value)}>
                     {totalCredits.toLocaleString()}
                   </span>
+                  {(isFree || isPlus) && (
+                    <>
+                      <span className="w-px h-3 bg-border-subtle mx-1.5" />
+                      <button
+                        type="button"
+                        className={cn(
+                          'text-[13px] font-semibold leading-none cursor-pointer hover:opacity-75 transition-opacity',
+                          isPlus ? 'text-[var(--color-info)]' : 'text-[var(--color-text-heading)]',
+                        )}
+                        onClick={e => {
+                          e.stopPropagation();
+                          openExternal(`${window.location.origin}/openclaw/pricing`);
+                        }}
+                      >
+                        Upgrade
+                      </button>
+                    </>
+                  )}
                 </div>
                 <button
                   type="button"
                   onClick={() => setView({ type: 'settings' })}
-                    className="flex items-center justify-center size-7 rounded-full bg-[var(--color-accent)] text-white text-[11px] font-semibold leading-none cursor-pointer hover:opacity-90 transition-opacity shrink-0"
+                  className="flex items-center justify-center size-7 rounded-full bg-[var(--color-accent)] text-white text-[11px] font-semibold leading-none cursor-pointer hover:opacity-90 transition-opacity shrink-0"
                   title={nexuAccountEmail}
                 >
                   {initialsFromEmail(nexuAccountEmail)}
@@ -4303,20 +4389,6 @@ export default function OpenClawWorkspace() {
                     <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 border-b border-border-subtle px-4 py-3">
                       <CardTitle className={cn('text-sm font-bold leading-none', plan.color)}>{plan.label}</CardTitle>
                       <div className="flex items-center gap-2 shrink-0">
-                        {(isFree || isPlus) && (
-                          <Button
-                            type="button"
-                            size="xs"
-                            variant="default"
-                            className="rounded-full px-3 text-[11px] h-7"
-                            onClick={() => {
-                              openExternal(`${window.location.origin}/openclaw/pricing`);
-                              setShowUsagePanel(false);
-                            }}
-                          >
-                            {isFree ? 'Upgrade' : 'Upgrade to Pro'}
-                          </Button>
-                        )}
                         <Button
                           type="button"
                           variant="ghost"
