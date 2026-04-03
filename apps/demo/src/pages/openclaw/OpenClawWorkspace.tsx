@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback, useLayoutEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -3468,10 +3467,11 @@ function RewardsCenter({ budget, onDailyCheckIn, onOpenMaterial, onRequestConfir
 /*  Main Workspace Shell                                               */
 /* ------------------------------------------------------------------ */
 
-/** Body-portaled credits popover — must sit above demo panel, toasts, and in-page CTAs (e.g. Star on GitHub). */
-const CREDITS_USAGE_TRIGGER_Z = 999_998;
-const CREDITS_USAGE_PANEL_Z = 999_999;
-const CREDITS_USAGE_TOOLTIP_Z = 1_000_000;
+/** Body-portaled credits popover — must sit above demo panel, toasts, and in-page CTAs. */
+const CREDITS_USAGE_TRIGGER_Z = 2_147_483_646;
+const CREDITS_USAGE_PANEL_Z = 2_147_483_647;
+const CREDITS_USAGE_TOOLTIP_Z = 2_147_483_647;
+
 
 type View =
   | { type: 'home' }
@@ -4284,9 +4284,7 @@ export default function OpenClawWorkspace() {
             </div>
 
             {showUsagePanel &&
-              usagePanelLayout &&
-              typeof document !== 'undefined' &&
-              createPortal(
+              usagePanelLayout && (
                 <div
                   className="fixed pointer-events-auto"
                   style={
@@ -4295,7 +4293,6 @@ export default function OpenClawWorkspace() {
                       left: usagePanelLayout.left,
                       width: usagePanelLayout.width,
                       zIndex: CREDITS_USAGE_PANEL_Z,
-                      isolation: 'isolate',
                     } as React.CSSProperties
                   }
                   onMouseEnter={openUsagePanel}
@@ -4304,7 +4301,7 @@ export default function OpenClawWorkspace() {
                   <Card
                     variant="static"
                     padding="none"
-                    className="overflow-visible shadow-[var(--shadow-dropdown)]"
+                    className="overflow-visible bg-white shadow-[var(--shadow-dropdown)]"
                   >
                     <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 border-b border-border-subtle px-4 py-3">
                       <CardTitle className={cn('text-sm font-bold leading-none', plan.color)}>{plan.label}</CardTitle>
@@ -4446,8 +4443,7 @@ export default function OpenClawWorkspace() {
                       )}
                     </CardContent>
                   </Card>
-                </div>,
-                document.body,
+                </div>
               )}
           </>
         );
