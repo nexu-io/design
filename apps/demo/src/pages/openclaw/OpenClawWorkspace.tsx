@@ -53,6 +53,7 @@ import {
   Zap,
   Gift,
   ChevronRight,
+  LogOut,
 } from 'lucide-react';
 import {
   MOCK_CHANNELS,
@@ -3703,6 +3704,42 @@ export default function OpenClawWorkspace() {
     [clearUsageLeaveTimer],
   );
 
+  const [showAccountPanel, setShowAccountPanel] = useState(false);
+  const accountLeaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const avatarRef = useRef<HTMLButtonElement>(null);
+  const [accountPanelLayout, setAccountPanelLayout] = useState<{ top: number; right: number } | null>(null);
+
+  const clearAccountLeaveTimer = useCallback(() => {
+    if (accountLeaveTimerRef.current) {
+      clearTimeout(accountLeaveTimerRef.current);
+      accountLeaveTimerRef.current = null;
+    }
+  }, []);
+
+  const openAccountPanel = useCallback(() => {
+    clearAccountLeaveTimer();
+    if (avatarRef.current) {
+      const rect = avatarRef.current.getBoundingClientRect();
+      setAccountPanelLayout({ top: rect.bottom + 8, right: window.innerWidth - rect.right });
+    }
+    setShowAccountPanel(true);
+  }, [clearAccountLeaveTimer]);
+
+  const scheduleCloseAccountPanel = useCallback(() => {
+    clearAccountLeaveTimer();
+    accountLeaveTimerRef.current = setTimeout(() => {
+      setShowAccountPanel(false);
+      accountLeaveTimerRef.current = null;
+    }, 160);
+  }, [clearAccountLeaveTimer]);
+
+  useEffect(
+    () => () => {
+      clearAccountLeaveTimer();
+    },
+    [clearAccountLeaveTimer],
+  );
+
   useLayoutEffect(() => {
     if (!showUsagePanel || !nexuLoggedIn) {
       setUsagePanelLayout(null);
@@ -4322,11 +4359,11 @@ export default function OpenClawWorkspace() {
                   zIndex: CREDITS_USAGE_TRIGGER_Z,
                 } as React.CSSProperties
               }
-              onMouseEnter={openUsagePanel}
-              onMouseLeave={scheduleCloseUsagePanel}
             >
               <div className="flex items-center gap-2.5">
                 <div
+                  onMouseEnter={() => { openUsagePanel(); clearAccountLeaveTimer(); setShowAccountPanel(false); }}
+                  onMouseLeave={scheduleCloseUsagePanel}
                   className={cn(
                     'flex items-center gap-1 h-7 pl-3 pr-3 rounded-full cursor-default text-[13px]',
                     pillStyle.shell,
@@ -4356,8 +4393,11 @@ export default function OpenClawWorkspace() {
                   )}
                 </div>
                 <button
+                  ref={avatarRef}
                   type="button"
                   onClick={() => setView({ type: 'settings' })}
+                  onMouseEnter={() => { openAccountPanel(); clearUsageLeaveTimer(); setShowUsagePanel(false); }}
+                  onMouseLeave={scheduleCloseAccountPanel}
                   className="flex items-center justify-center size-7 rounded-full bg-[var(--color-accent)] text-white text-[11px] font-semibold leading-none cursor-pointer hover:opacity-90 transition-opacity shrink-0"
                   title={nexuAccountEmail}
                 >
@@ -4514,6 +4554,45 @@ export default function OpenClawWorkspace() {
                   </Card>
                 </div>
               )}
+
+            {showAccountPanel && accountPanelLayout && (
+              <div
+                className="fixed pointer-events-auto"
+                style={{
+                  top: accountPanelLayout.top,
+                  right: accountPanelLayout.right,
+                  zIndex: CREDITS_USAGE_PANEL_Z,
+                } as React.CSSProperties}
+                onMouseEnter={openAccountPanel}
+                onMouseLeave={scheduleCloseAccountPanel}
+              >
+                <Card
+                  variant="static"
+                  padding="none"
+                  className="overflow-visible bg-white shadow-[var(--shadow-dropdown)] min-w-[200px]"
+                >
+                  <div className="px-4 py-3 flex items-center gap-2.5">
+                    <span className="flex items-center justify-center size-8 rounded-full bg-[var(--color-accent)] text-white text-[12px] font-semibold leading-none shrink-0">
+                      {initialsFromEmail(nexuAccountEmail)}
+                    </span>
+                    <span className="text-[13px] font-medium text-text-primary truncate">{nexuAccountEmail}</span>
+                  </div>
+                  <div className="border-t border-border-subtle px-4 py-2.5">
+                    <button
+                      type="button"
+                      className="flex items-center gap-1.5 text-[12px] text-text-muted hover:text-destructive cursor-pointer transition-colors"
+                      onClick={() => {
+                        setShowAccountPanel(false);
+                        setNexuLoggedIn(false);
+                      }}
+                    >
+                      <LogOut size={12} />
+                      Sign out
+                    </button>
+                  </div>
+                </Card>
+              </div>
+            )}
           </>
         );
       })()}
