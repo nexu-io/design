@@ -3477,7 +3477,7 @@ function RewardsCenter({ budget, onDailyCheckIn, onOpenMaterial, onRequestConfir
                 target="_blank"
                 rel="noopener noreferrer"
                 size="sm"
-                className="inline-flex items-center gap-1 leading-none"
+                className="inline-flex items-center gap-1 leading-none text-[var(--color-link)]"
               >
                 {t('budget.viral.rules')}
                 <ArrowUpRight size={12} className="shrink-0" aria-hidden />
