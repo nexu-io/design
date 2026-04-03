@@ -41,6 +41,9 @@ const buttonVariants = cva(
   },
 );
 
+/**
+ * Native button attributes plus variants, optional icons, loading, and `asChild`.
+ */
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
@@ -50,6 +53,21 @@ export interface ButtonProps
   trailingIcon?: React.ReactNode;
 }
 
+/**
+ * Action control with CVA-driven variants, optional leading/trailing icons, and loading spinner.
+ *
+ * @example
+ * <Button>Save</Button>
+ *
+ * @example
+ * <Button variant="outline" size="sm">
+ *   <ArrowUp size={14} />
+ *   Upgrade
+ * </Button>
+ *
+ * @example
+ * <Button loading>Saving...</Button>
+ */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
