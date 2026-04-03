@@ -2,11 +2,24 @@ import * as React from "react";
 
 import { cn } from "../lib/cn";
 
+/**
+ * Props for `InteractiveRow`; adds `selected` and `tone` on top of native button attributes.
+ */
 export interface InteractiveRowProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   selected?: boolean;
   tone?: "default" | "subtle";
 }
 
+/**
+ * Full-width interactive row for lists and settings; compose with leading, content, and trailing slots.
+ *
+ * @example
+ * <InteractiveRow onClick={handleClick}>
+ *   <InteractiveRowLeading><Icon size={16} /></InteractiveRowLeading>
+ *   <InteractiveRowContent>Label text</InteractiveRowContent>
+ *   <InteractiveRowTrailing><ChevronRight size={14} /></InteractiveRowTrailing>
+ * </InteractiveRow>
+ */
 export const InteractiveRow = React.forwardRef<HTMLButtonElement, InteractiveRowProps>(
   ({ className, selected, tone = "default", type = "button", ...props }, ref) => {
     return (
@@ -31,6 +44,7 @@ export const InteractiveRow = React.forwardRef<HTMLButtonElement, InteractiveRow
 
 InteractiveRow.displayName = "InteractiveRow";
 
+/** Icon or avatar column; does not shrink. */
 export function InteractiveRowLeading({
   className,
   ...props
@@ -40,6 +54,7 @@ export function InteractiveRowLeading({
   );
 }
 
+/** Primary text and details; grows and truncates in a flex row. */
 export function InteractiveRowContent({
   className,
   ...props
@@ -53,6 +68,7 @@ export function InteractiveRowContent({
   );
 }
 
+/** Meta, chevron, or actions; does not shrink. */
 export function InteractiveRowTrailing({
   className,
   ...props

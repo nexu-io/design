@@ -38,10 +38,22 @@ const badgeVariants = cva(
   },
 );
 
+/**
+ * Div attributes plus badge variant, size, and radius from CVA.
+ */
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {}
 
+/**
+ * Small status or metadata label with semantic color variants.
+ *
+ * @example
+ * <Badge variant="accent">New</Badge>
+ *
+ * @example
+ * <Badge variant="success">Live</Badge>
+ */
 export function Badge({ className, variant, size, radius, ...props }: BadgeProps) {
   return (
     <div

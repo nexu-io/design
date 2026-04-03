@@ -50,6 +50,29 @@ const DialogOverlay = React.forwardRef<
 
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+/**
+ * Modal surface with overlay and built-in close control; compose with {@link DialogHeader}, {@link DialogBody}, and {@link DialogFooter}.
+ *
+ * @example
+ * <Dialog>
+ *   <DialogTrigger asChild>
+ *     <Button>Open dialog</Button>
+ *   </DialogTrigger>
+ *   <DialogContent size="md">
+ *     <DialogHeader>
+ *       <DialogTitle>Connect channel</DialogTitle>
+ *       <DialogDescription>Add credentials to finish setup.</DialogDescription>
+ *     </DialogHeader>
+ *     <DialogBody>
+ *       <Input placeholder="Client ID" />
+ *     </DialogBody>
+ *     <DialogFooter>
+ *       <Button variant="outline">Cancel</Button>
+ *       <Button>Continue</Button>
+ *     </DialogFooter>
+ *   </DialogContent>
+ * </Dialog>
+ */
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
@@ -85,6 +108,9 @@ const DialogContent = React.forwardRef<
 
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
+/**
+ * Top section of a dialog, typically holding {@link DialogTitle} and {@link DialogDescription}.
+ */
 function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
@@ -95,6 +121,9 @@ function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
   );
 }
 
+/**
+ * Action row at the bottom of a dialog (stacks on small screens, aligns end on `sm+`).
+ */
 function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
@@ -105,10 +134,16 @@ function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
   );
 }
 
+/**
+ * Main content area between header and footer.
+ */
 function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return <div data-slot="dialog-body" className={cn("space-y-4", className)} {...props} />;
 }
 
+/**
+ * Accessible dialog title (Radix `Dialog.Title`).
+ */
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
@@ -123,6 +158,9 @@ const DialogTitle = React.forwardRef<
 
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
+/**
+ * Supplementary description linked to the dialog title (Radix `Dialog.Description`).
+ */
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>

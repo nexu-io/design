@@ -2,12 +2,24 @@ import type * as React from "react";
 
 import { cn } from "../lib/cn";
 
+/**
+ * Page-level header: title, optional description and actions.
+ *
+ * @example
+ * <PageHeader title="Dashboard" description="Overview." actions={<button type="button">New</button>} />
+ */
 export interface PageHeaderProps extends Omit<React.HTMLAttributes<HTMLElement>, "title"> {
   title: React.ReactNode;
   description?: React.ReactNode;
   actions?: React.ReactNode;
 }
 
+/**
+ * Renders a `<header>` with an `<h1>`, optional description, and optional action area.
+ *
+ * @example
+ * <PageHeader title="Dashboard" description="Overview." actions={<button type="button">New</button>} />
+ */
 export function PageHeader({ title, description, actions, className, ...props }: PageHeaderProps) {
   return (
     <header

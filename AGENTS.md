@@ -151,6 +151,17 @@
 - Keep accessibility props and roles intact when wrapping Radix or native elements.
 - When using `asChild`, preserve disabled/loading behavior carefully.
 
+## Icon sizing in buttons and interactive elements
+- Icons placed inside buttons or alongside text must have a visual weight that matches the adjacent text.
+- Rule of thumb: use an icon size roughly equal to or slightly larger than the font size of the companion text so that the two feel balanced.
+- Reference sizes for `Button` variants:
+  - `size="xs"` (text ~11px) → icon 12px (`size={12}` or `className="size-3"`)
+  - `size="sm"` (text ~13px) → icon 14px (`size={14}` or `className="size-3.5"`)
+  - `size="default"` (text ~14px) → icon 16px (`size={16}` or `className="size-4"`)
+  - `size="lg"` (text ~16px) → icon 18px (`size={18}` or `className="size-4.5"`)
+- When an icon looks visually smaller or larger than the text next to it, adjust the icon size rather than the text size.
+- Apply the same principle to inline icons in labels, badges, and navigation items.
+
 ## Styling conventions
 - Styling is Tailwind-utility-driven, with a shared `cn()` helper built from `clsx` + `twMerge`.
 - Use tokens and CSS custom properties from `@nexu-design/tokens` and package `styles.css` files.
@@ -198,3 +209,234 @@
 - Prefer improving existing primitives/patterns over creating parallel abstractions.
 - Verify with the smallest relevant command first, then broader checks if needed.
 - If changing test behavior, include the exact single-test command in your notes or handoff.
+
+---
+
+## Component usage quick-reference
+
+Use this section when consuming `@nexu-design/ui-web` components. For exhaustive props and examples, see `packages/ui-web/COMPONENT_REFERENCE.md`.
+
+### Button
+- **Variants:** `default`, `brand`, `primary`, `secondary`, `outline`, `ghost`, `soft`, `destructive`, `link`
+- **Sizes:** `xs`, `sm`, `md` (default), `lg`, `inline`, `icon`, `icon-sm`
+- **Key props:** `loading` (shows spinner, disables), `disabled`, `leadingIcon`, `trailingIcon`, `asChild`
+- **Example:** `<Button variant="outline" size="sm"><ArrowUp size={14} /> Upgrade</Button>`
+
+### Card
+- **Variants:** `default`, `outline`, `muted`, `interactive`, `static`
+- **Padding:** `none`, `sm`, `md` (default), `lg`
+- **Composition:** `Card > CardHeader > CardTitle / CardDescription` + `CardContent` + `CardFooter`
+- **Example:**
+  ```tsx
+  <Card variant="outlined" padding="sm">
+    <CardHeader><CardTitle>Title</CardTitle></CardHeader>
+    <CardContent>Body</CardContent>
+  </Card>
+  ```
+
+### Badge
+- **Variants:** `default`, `accent`, `secondary`, `outline`, `success`, `warning`, `danger`, `destructive`
+- **Sizes:** `xs`, `sm`, `default`, `lg`
+- **Radius:** `full` (default), `md`, `lg`
+- **Example:** `<Badge variant="accent" size="xs">New</Badge>`
+
+### Alert
+- **Variants:** `default`, `info`, `success`, `warning`, `destructive`
+- **Composition:** `Alert > AlertTitle + AlertDescription`; first `<svg>` child is auto-styled as the icon.
+- **Example:**
+  ```tsx
+  <Alert variant="warning">
+    <AlertCircle size={16} />
+    <AlertTitle>Warning</AlertTitle>
+    <AlertDescription>Credits running low.</AlertDescription>
+  </Alert>
+  ```
+
+### Dialog
+- **Sizes (on DialogContent):** `sm`, `md` (default), `lg`, `xl`, `full`
+- **Composition:** `Dialog > DialogContent > DialogHeader > DialogTitle / DialogDescription` + `DialogBody` + `DialogFooter`
+- **Key prop:** `closeOnOverlayClick` (default `true`)
+- **Example:**
+  ```tsx
+  <Dialog open onOpenChange={setOpen}>
+    <DialogContent size="sm">
+      <DialogHeader>
+        <DialogTitle>Confirm</DialogTitle>
+        <DialogDescription>Are you sure?</DialogDescription>
+      </DialogHeader>
+      <DialogFooter>
+        <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+        <Button onClick={handleConfirm}>Confirm</Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+  ```
+
+### InteractiveRow
+- **Tone:** `default`, `subtle`
+- **Composition:** `InteractiveRow > InteractiveRowLeading + InteractiveRowContent + InteractiveRowTrailing`
+- **Key props:** `selected`, `tone`, inherits `<button>` attributes
+- **Example:**
+  ```tsx
+  <InteractiveRow tone="subtle" onClick={handleClick}>
+    <InteractiveRowLeading><Icon size={16} /></InteractiveRowLeading>
+    <InteractiveRowContent>Label text</InteractiveRowContent>
+    <InteractiveRowTrailing><ChevronRight size={14} /></InteractiveRowTrailing>
+  </InteractiveRow>
+  ```
+
+### StatCard
+- **Props:** `label` (required), `value` (required), `icon` (ElementType), `tone` (`default` | `info` | `accent` | `success` | `warning` | `danger`), `trend` (`{ label, variant? }`), `meta` (ReactNode), `progress` (number), `progressVariant`, `progressMax`
+- Inherits Card's `variant` and `padding` props.
+- **Example:** `<StatCard label="Credits" value="1,200" icon={Zap} tone="accent" variant="outlined" padding="sm" />`
+
+### PageHeader
+- **Props:** `title` (required), `description`, `actions`
+- Renders `<header>` with `<h1>`.
+
+### Input
+- **Sizes:** `sm`, `md` (default), `lg`
+- **Key props:** `invalid` (boolean), `leadingIcon`, `trailingIcon`, `inputClassName`
+- Default type is `text`. Sets `aria-invalid` when `invalid`.
+
+### Select
+- **Composition:** `Select > SelectTrigger > SelectValue` + `SelectContent > SelectGroup > SelectItem`
+- Radix-based; `SelectContent` defaults to `position="popper"`.
+
+### Switch
+- **Sizes:** `default`, `sm`
+- Radix-based; accepts `checked`, `onCheckedChange`, `disabled`.
+
+### Checkbox
+- Radix-based; accepts `checked`, `onCheckedChange`, `disabled`, `required`.
+
+### FormField (pattern)
+- **Props:** `label`, `description`, `error`, `required`, `invalid`, `orientation` (`vertical` | `horizontal`)
+- **Composition:** `FormField > FormFieldLabel + FormFieldControl > (input) + FormFieldDescription + FormFieldError`
+- Provides context to wire `id`, `aria-invalid`, `aria-describedby` automatically.
+- **Example:**
+  ```tsx
+  <FormField label="Email" required invalid={!!error} error={error}>
+    <FormFieldControl>
+      <Input type="email" placeholder="you@example.com" />
+    </FormFieldControl>
+  </FormField>
+  ```
+
+### Tabs
+- **Variants (TabsList / TabsTrigger):** `default`, `pill`, `underline`
+- **Composition:** `Tabs > TabsList > TabsTrigger` + `TabsContent`
+
+### TextLink
+- **Variants:** `default`, `muted`
+- **Sizes:** `xs`, `sm` (default), `default`, `lg`
+- Renders `<a>`; supports `asChild`.
+
+### Tooltip
+- **Composition:** `TooltipProvider > Tooltip > TooltipTrigger + TooltipContent`
+- `TooltipContent` default `sideOffset={4}`.
+
+### Popover
+- **Composition:** `Popover > PopoverTrigger + PopoverContent`
+- `PopoverContent` defaults: `align="center"`, `sideOffset={4}`.
+
+### Separator
+- **Props:** `orientation` (`horizontal` default, `vertical`), `decorative` (default `true`)
+
+### ScrollArea
+- **Composition:** `ScrollArea` wraps scrollable content. Optional `ScrollBar` with `orientation` (`vertical` | `horizontal`).
+
+---
+
+## Design tokens cheat-sheet
+
+Use these CSS custom properties via `var(--name)` in inline styles or Tailwind arbitrary values like `text-[var(--color-brand-primary)]`.
+
+### Color — Text
+| Token | Purpose |
+|-------|---------|
+| `--color-text-heading` | Strongest emphasis — headings, key numbers |
+| `--color-text-primary` | Default body text |
+| `--color-text-secondary` | Supporting text, labels |
+| `--color-text-muted` | Hints, placeholders, disabled-adjacent |
+| `--color-text-tertiary` | Weakest text (meta, timestamps) |
+| `--color-text-disabled` | Disabled controls |
+
+### Color — Surface
+| Token | Purpose |
+|-------|---------|
+| `--color-surface-0` | Page canvas / background |
+| `--color-surface-1` | Cards, panels |
+| `--color-surface-2` | Secondary fills, hover states |
+| `--color-surface-3` | Tertiary fills, dividers |
+| `--color-surface-4` | Strong dividers, scrollbar tracks |
+
+### Color — Brand & Semantic
+| Token | Purpose |
+|-------|---------|
+| `--color-brand-primary` | Brand teal — links, accents, focus |
+| `--color-brand-subtle` | Light brand wash background |
+| `--color-accent` | Primary UI accent (near-black in light) |
+| `--color-accent-fg` | Foreground on accent |
+| `--color-accent-hover` | Accent hover state |
+| `--color-success` | Positive states |
+| `--color-success-subtle` | Success background wash |
+| `--color-warning` | Caution states |
+| `--color-warning-subtle` | Warning background wash |
+| `--color-info` | Informational (blue) |
+| `--color-info-subtle` | Info background wash |
+| `--color-error` | Error / validation |
+| `--color-error-subtle` | Error background wash |
+
+### Color — Border
+| Token | Purpose |
+|-------|---------|
+| `--color-border` | Default borders |
+| `--color-border-subtle` | Lightest dividers |
+| `--color-border-strong` | Emphasized dividers |
+| `--color-border-hover` | Hovered controls |
+| `--color-border-card` | Card outlines |
+
+### Shadow
+| Token | Purpose |
+|-------|---------|
+| `--shadow-xs` | Micro elevation |
+| `--shadow-sm` | Small / subtle cards |
+| `--shadow-md` | Medium panels |
+| `--shadow-lg` | Large overlays |
+| `--shadow-xl` | Heavy overlays |
+| `--shadow-card` | Card elevation |
+| `--shadow-dropdown` | Menus, popovers, dropdowns |
+| `--shadow-focus` | Focus ring glow |
+
+### Radius
+| Token | Value | Use case |
+|-------|-------|----------|
+| `--radius-sm` | 6px | Small elements |
+| `--radius-md` | 8px | Default controls |
+| `--radius-lg` | 12px | Cards, panels |
+| `--radius-xl` | 16px | Large cards |
+| `--radius-2xl` | 20px | Hero sections |
+| `--radius-pill` | 100px | Badges, pills |
+
+### Typography
+| Token | Value |
+|-------|-------|
+| `--font-sans` | Digits, Manrope, Inter, PingFang SC, system |
+| `--font-mono` | JetBrains Mono, SF Mono, Fira Code |
+| `--font-heading` | Georgia, Times New Roman, serif |
+| `--text-size-2xs` | 0.625rem (10px) |
+| `--text-size-xs` | 0.6875rem (11px) |
+| `--text-size-sm` | 0.75rem (12px) |
+| `--text-size-base` | 0.8125rem (13px) |
+| `--text-size-lg` | 0.875rem (14px) |
+| `--text-size-xl` | 1rem (16px) |
+| `--text-size-2xl` | 1.25rem (20px) |
+| `--text-size-3xl` | 1.5rem (24px) |
+
+### Animation
+| Token | Value | Purpose |
+|-------|-------|---------|
+| `--duration-fast` | 120ms | Quick hovers |
+| `--duration-normal` | 200ms | Default transitions |
+| `--ease-standard` | cubic-bezier(0.2, 0, 0, 1) | Shared easing |

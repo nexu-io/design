@@ -27,12 +27,24 @@ const textLinkVariants = cva(
   },
 );
 
+/**
+ * Anchor link with variant and size options; supports `asChild` for composition.
+ *
+ * @example
+ * <TextLink href="/docs">Read the docs</TextLink>
+ */
 export interface TextLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof textLinkVariants> {
   asChild?: boolean;
 }
 
+/**
+ * Styled inline link using design tokens; forwards to `<a>` or `Slot` when `asChild`.
+ *
+ * @example
+ * <TextLink href="/docs">Read the docs</TextLink>
+ */
 export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "a";
