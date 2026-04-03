@@ -3804,10 +3804,10 @@ export default function OpenClawWorkspace() {
                   openExternal(`${window.location.origin}/openclaw/auth?desktop=1`);
                 }
               }}
-              className="!rounded-[10px] !bg-[var(--color-brand-subtle)] !border !border-[var(--color-brand-primary)]/12 hover:!border-[var(--color-brand-primary)]/20 hover:!bg-[var(--color-brand-primary)]/[0.06] px-3 py-2 items-center"
+              className="!rounded-[10px] !bg-[var(--color-brand-subtle)] !border !border-[var(--color-brand-primary)]/12 hover:!border-[var(--color-brand-primary)]/20 hover:!bg-[var(--color-brand-primary)]/[0.06] px-3 py-3 items-center"
             >
               <InteractiveRowLeading className="flex items-center justify-center">
-                <Gift size={15} className="text-[var(--color-brand-primary)]" />
+                <Gift size={15} className="text-[var(--color-brand-primary)] animate-[wiggle_2s_ease-in-out_infinite]" />
               </InteractiveRowLeading>
               <InteractiveRowContent className="overflow-hidden">
                 {nexuLoggedIn ? (
@@ -3816,10 +3816,7 @@ export default function OpenClawWorkspace() {
                   <span className="block text-[12px] font-semibold text-[var(--color-brand-primary)] leading-[1.4] truncate">{t('budget.viral.loginFirst')}</span>
                 )}
               </InteractiveRowContent>
-              <InteractiveRowTrailing className="inline-flex items-center gap-0.5 shrink-0 ml-1">
-                {nexuLoggedIn && (
-                  <span className="text-[11px] text-[var(--color-brand-primary)]/50 tabular-nums whitespace-nowrap">{budget.claimedCount}/{budget.channelCount}</span>
-                )}
+              <InteractiveRowTrailing className="inline-flex items-center shrink-0 ml-1">
                 <ChevronRight size={13} className="text-[var(--color-brand-primary)]/40" />
               </InteractiveRowTrailing>
             </InteractiveRow>
