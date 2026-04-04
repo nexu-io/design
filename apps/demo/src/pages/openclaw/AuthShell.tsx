@@ -2,10 +2,12 @@ import { Button } from "@nexu-design/ui-web";
 import { AnimatePresence, motion } from "framer-motion";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
+import { useLocale } from "../../hooks/useLocale";
 
 export default function AuthShell() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLocale();
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -30,7 +32,7 @@ export default function AuthShell() {
 
       <footer className="px-6 py-6 sm:px-8">
         <div className="mx-auto flex max-w-[520px] items-center justify-center gap-4 text-[12px] text-text-muted">
-          <span>© {new Date().getFullYear()} nexu</span>
+          <span>© 2026 Powerformer, Inc.</span>
           <span className="text-border select-none">·</span>
           <Button
             type="button"
@@ -39,7 +41,7 @@ export default function AuthShell() {
             onClick={() => navigate("/openclaw/terms")}
             className="h-auto p-0 text-[12px] text-text-muted transition-colors hover:bg-transparent hover:text-text-secondary"
           >
-            Terms
+            {t("auth.terms")}
           </Button>
           <span className="text-border select-none">·</span>
           <Button
@@ -49,7 +51,7 @@ export default function AuthShell() {
             onClick={() => navigate("/openclaw/privacy")}
             className="h-auto p-0 text-[12px] text-text-muted transition-colors hover:bg-transparent hover:text-text-secondary"
           >
-            Privacy
+            {t("auth.privacy")}
           </Button>
         </div>
       </footer>

@@ -1,20 +1,41 @@
-import { ArrowRight, KeyRound, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocale } from "../../hooks/useLocale";
 import { usePageTitle } from "../../hooks/usePageTitle";
 
-function FadeIn({
-  children,
-  delay = 0,
-  className = "",
-}: { children: React.ReactNode; delay?: number; className?: string }) {
+const IM_CHANNELS = ["WeChat", "Feishu", "Telegram", "Discord", "Slack"];
+
+function RotatingChannel() {
+  const [index, setIndex] = useState(0);
+  const [animating, setAnimating] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setAnimating(true);
+      window.setTimeout(() => {
+        setIndex((prev) => (prev + 1) % IM_CHANNELS.length);
+        setAnimating(false);
+      }, 350);
+    }, 2200);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
-    <div
-      className={`animate-fade-in-up ${className}`}
-      style={{ animationDelay: `${delay}ms`, animationFillMode: "both" }}
+    <span
+      className="relative inline-flex overflow-hidden align-bottom"
+      style={{ height: "1.15em" }}
     >
-      {children}
-    </div>
+      <span
+        className="transition-all duration-300 ease-in-out"
+        style={{
+          transform: animating ? "translateY(-110%)" : "translateY(0)",
+          opacity: animating ? 0 : 1,
+        }}
+      >
+        {IM_CHANNELS[index]}
+      </span>
+    </span>
   );
 }
 
@@ -23,80 +44,69 @@ export default function ClientWelcomePage() {
   usePageTitle(t("welcome.pageTitle"));
   const navigate = useNavigate();
 
-  const handleAccountLogin = () => {
-    navigate("/openclaw/auth");
-  };
-  const handleByokEntry = () => {
-    navigate("/openclaw/workspace?view=settings&tab=providers&provider=anthropic");
-  };
-
   return (
-    <div className="w-full max-w-[520px] mx-auto">
-      <FadeIn delay={120}>
-        <div className="rounded-[24px] border border-border bg-white px-6 py-7 shadow-card sm:px-8 sm:py-8">
-          <img src="/brand/logo-black-1.svg" alt="nexu" className="h-6 w-auto mx-auto" />
+    <div className="flex max-w-[420px] flex-col items-start">
+      <img src="/brand/nexu-welcome-logo.svg" alt="nexu" className="mb-10 h-32 w-32" />
 
-          <div className="mt-5 text-center">
-            <h2
-              className="text-[24px] leading-[1.1] tracking-tight text-text-heading"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              {t("welcome.title")}
-            </h2>
-            <p className="mt-2 text-[13px] leading-[1.7] text-text-secondary">
-              {t("welcome.option.login.description")}
-            </p>
-          </div>
+      <h1 className="text-[32px] font-bold leading-[1.25] tracking-tight text-neutral-900">
+        {t("welcome.landing.title")
+          .split("\n")
+          .map((line, index, all) => (
+            <span key={line}>
+              {line}
+              {index < all.length - 1 && <br />}
+            </span>
+          ))}
+        <span className="whitespace-nowrap">
+          {" "}
+          <RotatingChannel />
+        </span>
+      </h1>
 
-          <div className="mt-6 space-y-2.5">
-            <button
-              type="button"
-              onClick={handleAccountLogin}
-              className="group flex w-full items-center justify-between rounded-2xl border border-border bg-surface-0 px-4 py-3.5 text-left transition-all hover:border-border-hover hover:bg-surface-2"
-            >
-              <span className="flex items-center gap-3">
-                <span className="inline-flex size-9 items-center justify-center rounded-xl bg-surface-2 text-text-primary">
-                  <Sparkles size={16} />
-                </span>
-                <span>
-                  <span className="block text-[14px] font-semibold text-text-primary">
-                    {t("welcome.option.login.title")}
-                  </span>
-                  <span className="block text-[12px] text-text-muted">
-                    {t("welcome.option.login.badge")}
-                  </span>
-                </span>
-              </span>
-              <ArrowRight size={14} className="text-text-muted" />
-            </button>
+      <div className="mt-5 flex flex-col text-[14px] leading-[1.7] text-neutral-500">
+        {t("welcome.landing.subtitle")
+          .split("\n")
+          .map((line) => (
+            <span key={line} className="whitespace-nowrap">
+              {line}
+            </span>
+          ))}
+      </div>
 
-            <button
-              type="button"
-              onClick={handleByokEntry}
-              className="group flex w-full items-center justify-between rounded-2xl border border-border bg-surface-0 px-4 py-3.5 text-left transition-all hover:border-border-hover hover:bg-surface-2"
-            >
-              <span className="flex items-center gap-3">
-                <span className="inline-flex size-9 items-center justify-center rounded-xl bg-surface-2 text-text-primary">
-                  <KeyRound size={16} />
-                </span>
-                <span>
-                  <span className="block text-[14px] font-semibold text-text-primary">
-                    {t("welcome.option.byok.title")}
-                  </span>
-                  <span className="block text-[12px] text-text-muted">
-                    {t("welcome.option.byok.badge")}
-                  </span>
-                </span>
-              </span>
-              <ArrowRight size={14} className="text-text-muted" />
-            </button>
-          </div>
+      <div className="mt-10 w-full space-y-3">
+        <button
+          type="button"
+          onClick={() => navigate("/openclaw/auth")}
+          className="flex h-[50px] w-full cursor-pointer items-center justify-center gap-2.5 rounded-full bg-neutral-900 text-[14px] font-medium text-white transition-all hover:bg-neutral-800 active:scale-[0.98]"
+        >
+          <svg
+            aria-hidden="true"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <polyline points="10 17 15 12 10 7" />
+            <line x1="15" y1="12" x2="3" y2="12" />
+          </svg>
+          {t("welcome.hero.cta")}
+        </button>
 
-          <p className="mt-5 text-center text-[12px] text-text-muted">
-            {t("welcome.option.byok.description")}
-          </p>
-        </div>
-      </FadeIn>
+        <button
+          type="button"
+          onClick={() =>
+            navigate("/openclaw/workspace?view=settings&tab=providers&provider=anthropic")
+          }
+          className="block w-full cursor-pointer text-center text-[13px] text-neutral-400 transition-colors hover:text-neutral-600"
+        >
+          {t("welcome.hero.byok")}
+        </button>
+      </div>
     </div>
   );
 }

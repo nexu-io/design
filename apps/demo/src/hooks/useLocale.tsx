@@ -248,6 +248,11 @@ const en: Record<string, string> = {
   "welcome.byok.verify.idle": "Verify connection",
   "welcome.byok.success": "Connected, enter nexu",
   "welcome.customEndpoint": "API Base URL (e.g. http://localhost:11434/v1)",
+  "welcome.hero.cta": "Sign in to nexu Cloud",
+  "welcome.hero.byok": "Use your own API key",
+  "welcome.landing.title": "The simplest open-source\nopenclaw desktop app for",
+  "welcome.landing.subtitle":
+    "Bridge your Agent to WeChat, Feishu, Slack & Discord in one click.\nWorks with Claude Code, Codex & any LLM.\nBYOK, OAuth, local-first, chat from your phone 24/7.",
 
   // Workspace — Nav & Sidebar
   "ws.nav.home": "Home",
@@ -545,6 +550,11 @@ const zh: Record<string, string> = {
   "welcome.byok.verify.idle": "验证连接",
   "welcome.byok.success": "连接成功，进入 nexu",
   "welcome.customEndpoint": "API Base URL（例如 http://localhost:11434/v1）",
+  "welcome.hero.cta": "登录 nexu Cloud",
+  "welcome.hero.byok": "使用自己的 API Key",
+  "welcome.landing.title": "最简洁的开源\nOpenClaw 桌面客户端，适用于",
+  "welcome.landing.subtitle":
+    "一键将你的 Agent 桥接到微信、飞书、Slack 和 Discord。\n支持 Claude Code、Codex 及任何 LLM。\nBYOK、OAuth、本地优先，随时随地用手机对话。",
 
   // Workspace — Nav & Sidebar
   "ws.nav.home": "首页",
