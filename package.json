@@ -19,6 +19,7 @@
     "format:check": "biome format .",
     "biome:check": "biome check .",
     "pack:check": "pnpm --filter @nexu-design/tokens pack:check && pnpm --filter @nexu-design/ui-web pack:check",
+    "release:check:ui-web": "pnpm --filter @nexu-design/tokens build && pnpm --filter @nexu-design/ui-web pack:check",
     "release:check": "pnpm build:packages && pnpm typecheck && pnpm test && pnpm pack:check",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
