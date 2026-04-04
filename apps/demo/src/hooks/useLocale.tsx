@@ -252,6 +252,7 @@ const en: Record<string, string> = {
   // Workspace — Nav & Sidebar
   "ws.nav.home": "Home",
   "ws.nav.skills": "Skills",
+  "ws.nav.usage": "Usage",
   "ws.nav.settings": "Settings",
   "ws.nav.conversations": "Conversations",
   "ws.sidebar.expand": "Expand sidebar",
@@ -342,6 +343,7 @@ const en: Record<string, string> = {
 
   // Workspace — Settings
   "ws.settings.title": "Settings",
+  "ws.settings.tab.usage": "Usage",
   "ws.settings.subtitle": "Manage AI model providers",
   "ws.settings.workspace": "Workspace",
   "ws.settings.nexuBotModel": "nexu Bot Model",
@@ -547,6 +549,7 @@ const zh: Record<string, string> = {
   // Workspace — Nav & Sidebar
   "ws.nav.home": "首页",
   "ws.nav.skills": "Skills",
+  "ws.nav.usage": "用量",
   "ws.nav.settings": "设置",
   "ws.nav.conversations": "对话",
   "ws.sidebar.expand": "展开侧边栏",
@@ -637,6 +640,7 @@ const zh: Record<string, string> = {
 
   // Workspace — Settings
   "ws.settings.title": "设置",
+  "ws.settings.tab.usage": "用量",
   "ws.settings.subtitle": "管理 AI 模型服务商",
   "ws.settings.workspace": "工作区",
   "ws.settings.nexuBotModel": "nexu Bot 模型",

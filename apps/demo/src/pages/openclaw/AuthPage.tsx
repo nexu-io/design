@@ -284,31 +284,6 @@ export default function AuthPage() {
           </div>
         </div>
       </FadeIn>
-
-      {/* Footer */}
-      <FadeIn delay={300}>
-        <div className="flex items-center justify-center gap-4 mt-6 text-[12px] text-text-muted">
-          <Button
-            type="button"
-            variant="ghost"
-            size="inline"
-            onClick={() => navigate("/openclaw/terms")}
-            className="h-auto p-0 text-[12px] text-text-muted transition-colors hover:bg-transparent hover:text-text-secondary"
-          >
-            {t("auth.terms")}
-          </Button>
-          <span className="text-border select-none">·</span>
-          <Button
-            type="button"
-            variant="ghost"
-            size="inline"
-            onClick={() => navigate("/openclaw/privacy")}
-            className="h-auto p-0 text-[12px] text-text-muted transition-colors hover:bg-transparent hover:text-text-secondary"
-          >
-            {t("auth.privacy")}
-          </Button>
-        </div>
-      </FadeIn>
     </div>
   );
 }

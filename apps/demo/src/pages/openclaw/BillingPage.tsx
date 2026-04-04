@@ -1,6 +1,7 @@
 import {
   Badge,
   Button,
+  PageHeader,
   PricingCard,
   StatCard,
   Tabs,
@@ -9,6 +10,7 @@ import {
   TabsTrigger,
 } from "@nexu-design/ui-web";
 import { ArrowRight, ChevronRight, Code2, Crown, Globe, Sparkles, TrendingUp } from "lucide-react";
+import { useMemo, useState } from "react";
 import { usePageTitle } from "../../hooks/usePageTitle";
 
 const PLANS = [
@@ -84,21 +86,69 @@ const USAGE = [
   },
 ];
 
-export default function BillingPage() {
+type BillingPageProps = {
+  initialTab?: "usage" | "plans";
+};
+
+export default function BillingPage({ initialTab = "usage" }: BillingPageProps) {
   usePageTitle("Billing");
+  const [activePlan, setActivePlan] = useState<"free" | "pro" | "team">("free");
+  const [billingMode, setBillingMode] = useState<"fixed" | "unlimited" | "disabled">("fixed");
   const totalUsed = USAGE.reduce((s, u) => s + u.used, 0);
-  const totalCredits = 5000;
+  const totalCredits = activePlan === "free" ? 5000 : activePlan === "pro" ? 50000 : 200000;
+  const usagePercent = (totalUsed / totalCredits) * 100;
+
+  const primaryCta = useMemo(() => {
+    if (activePlan === "free")
+      return {
+        title: "Upgrade to Pro",
+        copy: "Get 10x credits and priority compute",
+        action: "See Pro plan",
+      };
+    if (activePlan === "pro")
+      return {
+        title: "Upgrade to Team",
+        copy: "Scale with shared workspaces and dedicated support",
+        action: "See Team plan",
+      };
+    return {
+      title: "Enable on-demand billing",
+      copy: "Keep work running after monthly credits are used",
+      action: "Configure usage billing",
+    };
+  }, [activePlan]);
 
   return (
     <div className="max-w-4xl p-4 sm:p-8 mx-auto">
-      <div className="mb-8">
-        <h1 className="heading-page">Billing & Credits</h1>
-        <p className="heading-page-desc">Manage your plan and credit usage.</p>
+      <PageHeader
+        title="Billing & Credits"
+        description="Manage your plan, usage, and billing controls."
+      />
+
+      <div className="mb-6 rounded-xl border border-accent/20 bg-accent/5 p-4">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <div className="text-[12px] text-text-muted">Current plan</div>
+            <div className="text-sm font-semibold text-text-primary capitalize">{activePlan}</div>
+          </div>
+          <div className="flex gap-2">
+            {(["free", "pro", "team"] as const).map((plan) => (
+              <Button
+                key={plan}
+                size="sm"
+                variant={activePlan === plan ? "default" : "outline"}
+                onClick={() => setActivePlan(plan)}
+              >
+                {plan}
+              </Button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <Tabs defaultValue="overview">
+      <Tabs defaultValue={initialTab}>
         <TabsList variant="default" className="mb-6 w-fit">
-          <TabsTrigger value="overview">
+          <TabsTrigger value="usage">
             <TrendingUp size={14} /> Usage overview
           </TabsTrigger>
           <TabsTrigger value="plans">
@@ -106,7 +156,7 @@ export default function BillingPage() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview">
+        <TabsContent value="usage">
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <StatCard
@@ -125,7 +175,7 @@ export default function BillingPage() {
               />
               <StatCard
                 label="Usage rate"
-                value={`${((totalUsed / totalCredits) * 100).toFixed(1)}%`}
+                value={`${usagePercent.toFixed(1)}%`}
                 icon={Sparkles}
                 tone="accent"
                 progress={(totalUsed / totalCredits) * 100}
@@ -136,7 +186,7 @@ export default function BillingPage() {
             <div className="card p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-sm font-semibold text-text-primary">Usage this month</h2>
-                <Badge>Free Plan</Badge>
+                <Badge>{activePlan.toUpperCase()} plan</Badge>
               </div>
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex-1">
@@ -196,45 +246,58 @@ export default function BillingPage() {
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <Crown size={16} className="text-accent" />
-                    <h3 className="text-sm font-semibold text-text-primary">Upgrade to Pro</h3>
+                    <h3 className="text-sm font-semibold text-text-primary">{primaryCta.title}</h3>
                   </div>
-                  <p className="text-[13px] text-text-muted">
-                    Get 10x credits, priority compute, custom domain, and advanced Workflows
-                  </p>
+                  <p className="text-[13px] text-text-muted">{primaryCta.copy}</p>
                 </div>
                 <Button asChild>
                   <a href="#plans">
-                    View plans <ArrowRight size={14} />
+                    {primaryCta.action} <ArrowRight size={14} />
                   </a>
                 </Button>
               </div>
             </div>
 
             <div className="card p-6">
-              <h2 className="text-sm font-semibold text-text-primary mb-4">Extra credit packs</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <h2 className="text-sm font-semibold text-text-primary mb-4">On-demand billing</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                 {[
-                  { credits: "5,000", price: "$5", savings: "" },
-                  { credits: "20,000", price: "$15", savings: "Save 25%" },
-                  { credits: "50,000", price: "$30", savings: "Save 40%" },
-                ].map((pack) => (
+                  { id: "fixed", title: "Fixed cap", desc: "Stop at monthly cap" },
+                  { id: "unlimited", title: "Unlimited", desc: "Continue with usage billing" },
+                  { id: "disabled", title: "Disabled", desc: "Pause when credits end" },
+                ].map((mode) => (
                   <button
-                    key={pack.credits}
+                    key={mode.id}
                     type="button"
-                    className="p-4 rounded-[12px] border border-border-subtle hover:border-accent/30 hover:bg-accent/5 transition-all cursor-pointer text-left group"
+                    onClick={() => setBillingMode(mode.id as typeof billingMode)}
+                    className={`rounded-[12px] border p-4 text-left transition-all ${billingMode === mode.id ? "border-accent bg-accent/5" : "border-border-subtle"}`}
                   >
-                    <div className="text-lg font-bold text-text-primary group-hover:text-accent transition-colors">
-                      {pack.credits}
-                    </div>
-                    <div className="text-[12px] text-text-muted">credits</div>
-                    <div className="flex items-center gap-2 mt-3">
-                      <span className="text-[14px] font-semibold text-text-primary">
-                        {pack.price}
-                      </span>
-                      {pack.savings && <Badge variant="success">{pack.savings}</Badge>}
-                    </div>
+                    <div className="text-[13px] font-semibold text-text-primary">{mode.title}</div>
+                    <div className="mt-1 text-[12px] text-text-muted">{mode.desc}</div>
                   </button>
                 ))}
+              </div>
+              <p className="text-[12px] text-text-muted">
+                Current mode:{" "}
+                <span className="font-medium text-text-primary capitalize">{billingMode}</span>
+              </p>
+            </div>
+
+            <div className="card p-6">
+              <h2 className="text-sm font-semibold text-text-primary mb-4">Billing FAQ</h2>
+              <div className="space-y-3 text-[13px]">
+                <p>
+                  <span className="font-medium">When do credits reset?</span> Monthly on your
+                  billing cycle.
+                </p>
+                <p>
+                  <span className="font-medium">Can I switch plans anytime?</span> Yes, upgrades
+                  apply immediately.
+                </p>
+                <p>
+                  <span className="font-medium">Can I use my own API keys?</span> Yes, BYOK remains
+                  available in settings.
+                </p>
               </div>
             </div>
           </div>

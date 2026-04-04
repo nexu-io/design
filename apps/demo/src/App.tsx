@@ -51,6 +51,7 @@ import YourClonePage from "./pages/docs/YourClonePage";
 import JourneyPage from "./pages/journey/JourneyPage";
 import AuthPage from "./pages/openclaw/AuthPage";
 import AuthShell from "./pages/openclaw/AuthShell";
+import BillingPage from "./pages/openclaw/BillingPage";
 import ChannelsPage from "./pages/openclaw/ChannelsPage";
 import ClientWelcomePage from "./pages/openclaw/ClientWelcomePage";
 import GroupGrowthDemo from "./pages/openclaw/GroupGrowthDemo";
@@ -62,6 +63,7 @@ import OpenClawWorkspace from "./pages/openclaw/OpenClawWorkspace";
 import PrivacyPolicyPage from "./pages/openclaw/PrivacyPolicyPage";
 import SkillDetailPage from "./pages/openclaw/SkillDetailPage";
 import TermsOfServicePage from "./pages/openclaw/TermsOfServicePage";
+import UsagePage from "./pages/openclaw/UsagePage";
 import WhatsAppQRPage from "./pages/openclaw/WhatsAppQRPage";
 import AutomationPage from "./pages/product/AutomationPage";
 import CloneBuilderPage from "./pages/product/CloneBuilderPage";
@@ -276,6 +278,8 @@ export default function App() {
     location.pathname === "/openclaw/privacy" ||
     location.pathname === "/openclaw/terms" ||
     location.pathname === "/openclaw/channels" ||
+    location.pathname === "/openclaw/pricing" ||
+    location.pathname === "/openclaw/usage" ||
     location.pathname === "/openclaw/skills" ||
     location.pathname.startsWith("/openclaw/skill/") ||
     location.pathname.startsWith("/openclaw/growth-demo") ||
@@ -297,6 +301,8 @@ export default function App() {
           <Route path="/openclaw/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/openclaw/terms" element={<TermsOfServicePage />} />
           <Route path="/openclaw/channels" element={<ChannelsPage />} />
+          <Route path="/openclaw/pricing" element={<BillingPage />} />
+          <Route path="/openclaw/usage" element={<UsagePage />} />
           <Route path="/openclaw/skills" element={<OpenClawSkillsPage />} />
           <Route path="/openclaw/skill/:id" element={<SkillDetailPage />} />
           <Route path="/openclaw/growth-demo" element={<GroupGrowthDemo />} />

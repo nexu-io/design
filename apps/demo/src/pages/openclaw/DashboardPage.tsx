@@ -1,4 +1,4 @@
-import { Badge, Button, StatCard } from "@nexu-design/ui-web";
+import { Badge, Button, PageHeader, StatCard } from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -143,10 +143,10 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-5xl p-4 sm:p-8 mx-auto">
-      <div className="mb-8">
-        <h1 className="heading-page">Dashboard</h1>
-        <p className="heading-page-desc">Cyber office overview — Lobster 🦞 status report.</p>
-      </div>
+      <PageHeader
+        title="Dashboard"
+        description="Cyber office overview — Lobster 🦞 status report."
+      />
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         <StatCard
