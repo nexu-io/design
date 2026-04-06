@@ -39,54 +39,54 @@ Run package builds before consuming:
 pnpm --dir ../ui build:packages
 ```
 
-### 3) npm publish flow for `@nexu-design/ui-web`
+### 3) Automated npm release flow with Changesets
 
-`@nexu-design/ui-web` now has a dedicated GitHub Actions release workflow at
-`.github/workflows/release-ui-web.yml`.
+This repo now uses Changesets for package versioning and npm release automation.
+
+Core files:
+
+- `.changeset/config.json`
+- `.github/workflows/release.yml`
 
 #### Recommended setup
 
 Use npm trusted publishing for this repository instead of a long-lived `NPM_TOKEN`:
 
-1. In npm package settings for `@nexu-design/ui-web`, add this repo/workflow as a trusted publisher.
-2. Keep the workflow file name stable: `.github/workflows/release-ui-web.yml`.
+1. In npm package settings for both `@nexu-design/tokens` and `@nexu-design/ui-web`, add this repo/workflow as a trusted publisher.
+2. Keep the workflow file name stable: `.github/workflows/release.yml`.
 3. Publish from GitHub Actions on a GitHub-hosted runner.
+
+#### Authoring a release
+
+For any consumer-visible package change, add a changeset from the repo root:
+
+```bash
+pnpm changeset
+```
+
+Choose the affected package(s), select the semver bump type, and write a short summary.
 
 #### What the workflow does
 
 - installs dependencies with pnpm
-- runs `pnpm release:check`
-- verifies the target `@nexu-design/ui-web` version is not already published
-- verifies the required `@nexu-design/tokens` npm version/range already exists
-- publishes `@nexu-design/ui-web` to npm when the workflow is triggered in publish mode
-
-#### Trigger options
-
-- **Manual validation / publish**: run the `Release ui-web to npm` workflow with
-  the `publish` input set to `false` for validation-only or `true` to publish.
-- **GitHub release publish**: publishing a GitHub Release also triggers npm publish.
+- runs on pushes to `main`
+- creates or updates a version PR when unreleased changesets are present
+- applies version bumps and internal dependency updates in that PR
+- publishes all unpublished public packages after the version PR is merged
+- runs `pnpm release:check` before publishing
 
 #### Local release checks
-
-For the full workspace gate:
 
 ```bash
 pnpm release:check
 ```
 
-For a faster package-focused gate:
-
-```bash
-pnpm release:check:ui-web
-```
-
 #### Release checklist
 
-1. Bump `packages/ui-web/package.json` version.
-2. Ensure the referenced `@nexu-design/tokens` range is already available on npm.
-3. Add release notes describing consumer-visible changes and migration impact.
-4. Run `pnpm release:check` locally if you want a preflight before CI.
-5. Trigger the GitHub Actions workflow manually or publish a GitHub Release.
+1. Add a changeset for each consumer-visible change.
+2. Merge changesets into `main`.
+3. Review and merge the generated `chore: version packages` PR.
+4. Let the release workflow publish the new npm versions.
 
 ## Versioning + release notes expectations
 
@@ -105,11 +105,14 @@ pnpm release:check:ui-web
   - `pnpm build:packages`
 - Type safety + tests + package tarball dry run:
   - `pnpm release:check`
- - Package-focused ui-web release dry run:
-   - `pnpm release:check:ui-web`
+- Package-focused tokens release dry run:
+  - `pnpm release:check:tokens`
+- Package-focused ui-web release dry run:
+  - `pnpm release:check:ui-web`
 
 ## Notes about `@nexu-design/tokens`
 
 `@nexu-design/ui-web` depends on `@nexu-design/tokens`, so a ui-web npm release is
 only installable if the required tokens version/range is already published.
-The workflow fails early when that dependency is missing from npm.
+Changesets handles this by updating internal workspace dependency ranges during the
+versioning step and publishing both packages from the same release flow when needed.

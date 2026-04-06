@@ -28,12 +28,15 @@
 - Start Storybook: `pnpm dev`
 - Build Storybook: `pnpm build`
 - Build publishable packages: `pnpm build:packages`
+- Create a changeset entry: `pnpm changeset`
 - Format everything: `pnpm format`
 - Check formatting: `pnpm format:check`
 - Run Biome checks: `pnpm biome:check`
 - Run all tests in workspace: `pnpm test`
 - Run all type checks: `pnpm typecheck`
 - Run all package lint scripts: `pnpm lint`
+- Apply pending version bumps: `pnpm version:packages`
+- Publish pending releases: `pnpm release`
 - Run release readiness checks: `pnpm release:check`
 
 ## Package-specific commands
@@ -101,6 +104,16 @@
   - `pnpm biome:check`
 - Before release-oriented changes: run
   - `pnpm release:check`
+
+## Release flow
+- Versioning and npm publishing are automated with Changesets.
+- Author consumer-visible package releases with `pnpm changeset`.
+- Changesets config lives in `.changeset/config.json`.
+- The release workflow is `.github/workflows/release.yml`.
+- Pushes to `main` with pending changesets create or update a `chore: version packages` PR.
+- Merging that PR publishes any unpublished public packages to npm.
+- `apps/demo` and `apps/storybook` are ignored by Changesets and should not receive release entries.
+- Keep the workflow filename stable if npm trusted publishing is configured against it.
 
 ## Formatting rules
 - Formatter is Biome (`biome.json`).

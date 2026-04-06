@@ -3,7 +3,8 @@
   "private": true,
   "packageManager": "pnpm@10.16.1",
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4"
+    "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^2.30.0"
   },
   "scripts": {
     "dev": "pnpm --filter @nexu-design/storybook storybook & pnpm --filter @nexu-design/demo dev & wait",
@@ -15,14 +16,18 @@
     "build:demo": "pnpm --filter @nexu-design/demo build",
     "build:tauri": "pnpm --filter @nexu-design/demo tauri:build",
     "build:packages": "pnpm --filter @nexu-design/tokens build && pnpm --filter @nexu-design/ui-web build",
+    "changeset": "changeset",
     "format": "biome format --write .",
     "format:check": "biome format .",
     "biome:check": "biome check .",
     "pack:check": "pnpm --filter @nexu-design/tokens pack:check && pnpm --filter @nexu-design/ui-web pack:check",
+    "release:check:tokens": "pnpm --filter @nexu-design/tokens pack:check",
     "release:check:ui-web": "pnpm --filter @nexu-design/tokens build && pnpm --filter @nexu-design/ui-web pack:check",
     "release:check": "pnpm build:packages && pnpm typecheck && pnpm test && pnpm pack:check",
+    "release": "pnpm release:check && changeset publish",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
+    "version:packages": "changeset version && pnpm install --lockfile-only",
     "lint": "pnpm -r lint",
     "clean": "rm -rf node_modules apps/storybook/node_modules apps/demo/node_modules packages/ui-web/node_modules packages/tokens/node_modules apps/storybook/storybook-static apps/demo/dist"
   }
