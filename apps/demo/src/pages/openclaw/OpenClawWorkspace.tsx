@@ -1730,10 +1730,20 @@ function DeploymentsView() {
 /*  Settings View                                                      */
 /* ------------------------------------------------------------------ */
 
-type SettingsTab = "providers";
+type SettingsTab = "general" | "providers";
 
 function isSettingsTab(value: string | null): value is SettingsTab {
-  return value === "providers";
+  return value === "general" || value === "providers";
+}
+
+function getAccountInitials(email: string) {
+  return email
+    .split("@")[0]
+    .split(/[._-]/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
 }
 
 function isModelProvider(value: string | null): value is ModelProvider {
@@ -1754,15 +1764,28 @@ function isModelProvider(value: string | null): value is ModelProvider {
 }
 
 function SettingsView({
-  initialTab = "providers",
+  initialTab = "general",
   initialProviderId = "anthropic",
+  appVersion,
+  updateStatus,
+  onCheckForUpdates,
+  onOpenChangelog,
 }: {
   initialTab?: SettingsTab;
   initialProviderId?: ModelProvider;
+  appVersion: string;
+  updateStatus: "idle" | "checking" | "available" | "ready" | "error";
+  onCheckForUpdates: () => void;
+  onOpenChangelog: () => void;
 }) {
   const { t } = useLocale();
-  const settingsTab: SettingsTab = initialTab;
+  const [settingsTab, setSettingsTab] = useState<SettingsTab>(initialTab);
   const providers = getProviderDetails();
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [launchAtLogin, setLaunchAtLogin] = useState(true);
+  const [showInDock, setShowInDock] = useState(true);
+  const [usageAnalytics, setUsageAnalytics] = useState(true);
+  const [crashReports, setCrashReports] = useState(true);
   const [configuredProviders, setConfiguredProviders] = useState<Set<string>>(
     () => new Set(["nexu"]),
   );
@@ -1788,11 +1811,16 @@ function SettingsView({
     Record<string, "idle" | "checking" | "success" | "error">
   >({});
   const modelDropdownRef = useRef<HTMLDivElement>(null);
+  const signedInEmail = "ralph.wiggum@nexu.ai";
 
   const activeProvider = providers.find((p) => p.id === activeProviderId) ?? providers[0];
   const selectedModel = selectedModelId
     ? (availableModels.find((m) => m.id === selectedModelId) ?? null)
     : null;
+
+  useEffect(() => {
+    setSettingsTab(initialTab);
+  }, [initialTab]);
 
   useEffect(() => {
     if (!showModelDropdown) return;
@@ -1866,6 +1894,16 @@ function SettingsView({
   const checkState = checkStates[activeProvider.id] ?? "idle";
   const providerDirty = activeProvider.id !== "nexu" && isDirty(activeProvider.id);
   const showSaved = saveState === "saved" && !providerDirty;
+  const updateStatusLabel =
+    updateStatus === "checking"
+      ? t("ws.update.checking")
+      : updateStatus === "ready"
+        ? t("ws.update.ready").replace("{{version}}", appVersion)
+        : updateStatus === "error"
+          ? t("ws.update.failed")
+          : updateStatus === "available"
+            ? t("ws.update.available").replace("{{version}}", appVersion)
+            : t("ws.update.upToDateSub").replace("{{version}}", appVersion);
 
   return (
     <div className="h-full overflow-y-auto">
@@ -1904,302 +1942,543 @@ function SettingsView({
           </div>
         </div>
 
-        {/* Nexu Bot model selector */}
-        <div className="relative mb-8" ref={modelDropdownRef}>
-          <div className="rounded-xl border border-border bg-surface-1 px-4 py-3.5">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center shrink-0">
-                  <img src="/brand/nexu logo-black1.svg" alt="nexu" className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-[13px] font-semibold text-text-primary">
-                    {t("ws.settings.nexuBotModel")}
-                  </div>
-                  <div className="text-[11px] text-text-tertiary">
-                    {t("ws.settings.nexuBotModelDesc")}
-                  </div>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowModelDropdown((v) => !v)}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-0 hover:bg-surface-2 hover:border-border-hover transition-all text-[12px] font-medium text-text-primary"
-              >
-                {selectedModel ? (
-                  <>
-                    <span className="w-4 h-4 shrink-0 flex items-center justify-center">
-                      <ProviderLogo provider={selectedModel.providerId} size={14} />
-                    </span>
-                    {selectedModel.name}
-                  </>
-                ) : (
-                  <span className="text-text-muted">{t("ws.settings.select")}</span>
-                )}
-                <ChevronDown size={13} className="text-text-muted" />
-              </button>
-            </div>
+        <div className="mb-6" role="tablist" aria-label={t("ws.settings.title")}>
+          <div className="inline-flex rounded-xl border border-border bg-surface-1 p-1">
+            {[
+              { id: "general" as const, label: t("ws.settings.tab.general") },
+              { id: "providers" as const, label: t("ws.settings.tab.providers") },
+            ].map((tab) => {
+              const active = settingsTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setSettingsTab(tab.id)}
+                  className={`rounded-lg px-4 py-2 text-[13px] font-medium transition-colors ${
+                    active
+                      ? "bg-surface-0 text-text-primary shadow-sm"
+                      : "text-text-secondary hover:text-text-primary"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
           </div>
-
-          {showModelDropdown && (
-            <div className="absolute top-full left-0 right-0 z-20 mt-1 rounded-xl border border-border bg-surface-0 shadow-lg overflow-hidden max-h-[320px] overflow-y-auto">
-              {providers
-                .filter((p) => p.id === "nexu" || configuredProviders.has(p.id))
-                .map((p) => (
-                  <div key={p.id}>
-                    <div className="px-3 pt-2.5 pb-1 text-[10px] font-semibold text-text-tertiary uppercase tracking-wider sticky top-0 bg-surface-0">
-                      {p.name}
-                    </div>
-                    {p.models.map((m) => {
-                      const isSelected = m.id === selectedModelId;
-                      return (
-                        <button
-                          type="button"
-                          key={m.id}
-                          onClick={() => {
-                            setSelectedModelId(m.id);
-                            setShowModelDropdown(false);
-                          }}
-                          className={`w-full flex items-center gap-2.5 px-3 py-2 text-left transition-colors ${isSelected ? "bg-accent/5" : "hover:bg-surface-2"}`}
-                        >
-                          <span className="w-5 h-5 shrink-0 flex items-center justify-center">
-                            <ProviderLogo provider={p.id} size={14} />
-                          </span>
-                          <div className="flex-1 min-w-0">
-                            <div
-                              className={`text-[12px] truncate ${isSelected ? "font-semibold text-accent" : "font-medium text-text-primary"}`}
-                            >
-                              {m.name}
-                            </div>
-                            <div className="text-[10px] text-text-tertiary">{p.name}</div>
-                          </div>
-                          {isSelected && <Check size={14} className="text-accent shrink-0" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                ))}
-            </div>
-          )}
         </div>
 
-        {settingsTab === "providers" && (
-          <div
-            className="flex gap-0 rounded-xl border border-border bg-surface-1 overflow-hidden"
-            style={{ minHeight: 520 }}
-          >
-            {/* Left: Provider list — flat, no enabled/disabled split */}
-            <div className="w-56 shrink-0 bg-surface-0 overflow-y-auto">
-              <div className="p-2 space-y-0.5">
-                {providers.map((p) => {
-                  const active = p.id === activeProviderId;
-                  return (
-                    <button
+        {settingsTab === "general" && (
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-border bg-surface-1 p-5">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="text-[15px] font-semibold text-text-primary">
+                    {t("ws.settings.account.title")}
+                  </div>
+                  <div className="mt-1 text-[12px] text-text-secondary">
+                    {isSignedIn
+                      ? t("ws.settings.account.signedInDesc")
+                      : t("ws.settings.account.signedOutDesc")}
+                  </div>
+                </div>
+
+                {isSignedIn ? (
+                  <div className="flex items-center gap-3 rounded-xl border border-border bg-surface-0 px-3 py-3 sm:min-w-[280px] sm:justify-between">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-[13px] font-semibold text-accent-fg">
+                        {getAccountInitials(signedInEmail)}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-[13px] font-medium text-text-primary">
+                          {t("ws.settings.account.connected")}
+                        </div>
+                        <div className="truncate text-[12px] text-text-secondary">
+                          {signedInEmail}
+                        </div>
+                      </div>
+                    </div>
+                    <Button
                       type="button"
-                      key={p.id}
-                      onClick={() => setActiveProviderId(p.id)}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${
-                        active ? "bg-surface-3" : "hover:bg-surface-2"
-                      }`}
+                      size="inline"
+                      variant="ghost"
+                      onClick={() => setIsSignedIn(false)}
+                      className="text-[12px] text-text-secondary hover:text-text-primary"
                     >
-                      <span className="w-5 h-5 shrink-0 flex items-center justify-center">
-                        <ProviderLogo provider={p.id} size={16} />
-                      </span>
-                      <span
-                        className={`flex-1 text-[12px] font-medium truncate ${active ? "text-accent" : "text-text-primary"}`}
-                      >
-                        {p.name}
-                      </span>
-                    </button>
-                  );
-                })}
+                      {t("ws.settings.account.signOut")}
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    type="button"
+                    size="inline"
+                    onClick={() => setIsSignedIn(true)}
+                    className="inline-flex items-center gap-2 rounded-lg bg-accent px-3.5 py-2 text-[12px] font-medium text-accent-fg transition-colors hover:bg-accent/90"
+                  >
+                    {t("ws.settings.account.signIn")}
+                    <ArrowUpRight size={12} />
+                  </Button>
+                )}
               </div>
             </div>
 
-            {/* Right: Provider detail */}
-            <div className="flex-1 overflow-y-auto p-5">
-              {/* Header — no enable/disable switch */}
-              <div className="flex items-center justify-between gap-3 mb-5">
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-2 shrink-0">
-                    <ProviderLogo provider={activeProvider.id} size={20} />
-                  </span>
-                  <div className="min-w-0">
-                    <div className="text-[14px] font-semibold text-text-primary">
-                      {activeProvider.name}
-                    </div>
-                    <div className="text-[11px] text-text-tertiary">
-                      {activeProvider.description}
-                    </div>
+            <div className="grid gap-4 lg:grid-cols-2">
+              <div className="rounded-2xl border border-border bg-surface-1 p-5">
+                <div className="mb-4">
+                  <div className="text-[15px] font-semibold text-text-primary">
+                    {t("ws.settings.behavior.title")}
+                  </div>
+                  <div className="mt-1 text-[12px] text-text-secondary">
+                    {t("ws.settings.behavior.subtitle")}
                   </div>
                 </div>
-                {activeProvider.apiDocsUrl && (
-                  <a
-                    href={activeProvider.apiDocsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shrink-0 text-[11px] text-[var(--color-brand-primary)] hover:text-[var(--color-brand-primary)] no-underline hover:no-underline inline-flex items-center gap-1 leading-none"
-                  >
-                    {t("ws.settings.getApiKey")}
-                    <ExternalLink size={10} className="shrink-0" />
-                  </a>
-                )}
+                <div className="space-y-3">
+                  {[
+                    {
+                      key: "launch-at-login",
+                      title: t("ws.settings.behavior.launchAtLogin"),
+                      description: t("ws.settings.behavior.launchAtLoginDesc"),
+                      checked: launchAtLogin,
+                      onCheckedChange: setLaunchAtLogin,
+                    },
+                    {
+                      key: "show-in-dock",
+                      title: t("ws.settings.behavior.showInDock"),
+                      description: t("ws.settings.behavior.showInDockDesc"),
+                      checked: showInDock,
+                      onCheckedChange: setShowInDock,
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.key}
+                      className="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface-0 px-4 py-3"
+                    >
+                      <div className="min-w-0">
+                        <div className="text-[13px] font-medium text-text-primary">
+                          {item.title}
+                        </div>
+                        <div className="mt-1 text-[12px] text-text-secondary">
+                          {item.description}
+                        </div>
+                      </div>
+                      <Switch
+                        size="sm"
+                        checked={item.checked}
+                        aria-label={item.title}
+                        onCheckedChange={item.onCheckedChange}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {/* Nexu login card */}
-              {activeProvider.id === "nexu" && (
-                <div className="rounded-xl border border-[var(--color-brand-primary)]/25 bg-[var(--color-brand-subtle)] px-4 py-4 mb-6">
-                  <div className="text-[13px] font-semibold text-[var(--color-brand-primary)]">
-                    {t("ws.settings.signInTitle")}
+              <div className="rounded-2xl border border-border bg-surface-1 p-5">
+                <div className="mb-4">
+                  <div className="text-[15px] font-semibold text-text-primary">
+                    {t("ws.settings.privacy.title")}
                   </div>
-                  <div className="text-[12px] leading-[1.7] text-text-secondary mt-1.5">
-                    {t("ws.settings.signInDesc")}
+                  <div className="mt-1 text-[12px] text-text-secondary">
+                    {t("ws.settings.privacy.subtitle")}
                   </div>
-                  <Button
-                    size="inline"
-                    onClick={() =>
-                      openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)
-                    }
-                    className="mt-4 inline-flex items-center gap-2 rounded-lg bg-accent px-3.5 py-2 text-[12px] font-medium text-accent-fg transition-colors hover:bg-accent/90 cursor-pointer"
+                </div>
+                <div className="space-y-3">
+                  {[
+                    {
+                      key: "usage-analytics",
+                      title: t("ws.settings.privacy.usageAnalytics"),
+                      description: t("ws.settings.privacy.usageAnalyticsDesc"),
+                      checked: usageAnalytics,
+                      onCheckedChange: setUsageAnalytics,
+                    },
+                    {
+                      key: "crash-reports",
+                      title: t("ws.settings.privacy.crashReports"),
+                      description: t("ws.settings.privacy.crashReportsDesc"),
+                      checked: crashReports,
+                      onCheckedChange: setCrashReports,
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.key}
+                      className="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface-0 px-4 py-3"
+                    >
+                      <div className="min-w-0">
+                        <div className="text-[13px] font-medium text-text-primary">
+                          {item.title}
+                        </div>
+                        <div className="mt-1 text-[12px] text-text-secondary">
+                          {item.description}
+                        </div>
+                      </div>
+                      <Switch
+                        size="sm"
+                        checked={item.checked}
+                        aria-label={item.title}
+                        onCheckedChange={item.onCheckedChange}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border bg-surface-1 p-5">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div>
+                  <div className="text-[15px] font-semibold text-text-primary">
+                    {t("ws.settings.about.title")}
+                  </div>
+                  <div className="mt-1 text-[12px] text-text-secondary">
+                    {t("ws.settings.about.subtitle")}
+                  </div>
+                </div>
+                <div className="min-w-[220px] rounded-xl border border-border bg-surface-0 px-4 py-3">
+                  <div className="text-[11px] uppercase tracking-wider text-text-tertiary">
+                    {t("ws.settings.about.version")}
+                  </div>
+                  <div className="mt-1 text-[15px] font-semibold text-text-primary">
+                    v{appVersion}
+                  </div>
+                  <div className="mt-1 text-[12px] text-text-secondary">{updateStatusLabel}</div>
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  size="inline"
+                  onClick={onCheckForUpdates}
+                  className="inline-flex items-center gap-2 rounded-lg bg-accent px-3.5 py-2 text-[12px] font-medium text-accent-fg transition-colors hover:bg-accent/90"
+                >
+                  {updateStatus === "checking" && <Loader2 size={12} className="animate-spin" />}
+                  {t("ws.settings.about.checkForUpdates")}
+                </Button>
+                <Button
+                  type="button"
+                  size="inline"
+                  variant="ghost"
+                  onClick={onOpenChangelog}
+                  className="text-[12px] text-text-secondary hover:text-text-primary"
+                >
+                  {t("ws.update.changelog")}
+                </Button>
+                <a
+                  href={GITHUB_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-[12px] font-medium text-text-secondary transition-colors hover:bg-surface-0 hover:text-text-primary"
+                >
+                  {t("ws.common.starOnGitHub")}
+                  <ArrowUpRight size={12} />
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {settingsTab === "providers" && (
+          <>
+            <div className="relative mb-8" ref={modelDropdownRef}>
+              <div className="rounded-xl border border-border bg-surface-1 px-4 py-3.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center shrink-0">
+                      <img src="/brand/nexu logo-black1.svg" alt="nexu" className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-[13px] font-semibold text-text-primary">
+                        {t("ws.settings.nexuBotModel")}
+                      </div>
+                      <div className="text-[11px] text-text-tertiary">
+                        {t("ws.settings.nexuBotModelDesc")}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowModelDropdown((v) => !v)}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-0 hover:bg-surface-2 hover:border-border-hover transition-all text-[12px] font-medium text-text-primary"
                   >
-                    {t("ws.settings.signInBtn")}
-                    <ArrowUpRight size={12} />
-                  </Button>
+                    {selectedModel ? (
+                      <>
+                        <span className="w-4 h-4 shrink-0 flex items-center justify-center">
+                          <ProviderLogo provider={selectedModel.providerId} size={14} />
+                        </span>
+                        {selectedModel.name}
+                      </>
+                    ) : (
+                      <span className="text-text-muted">{t("ws.settings.select")}</span>
+                    )}
+                    <ChevronDown size={13} className="text-text-muted" />
+                  </button>
+                </div>
+              </div>
+
+              {showModelDropdown && (
+                <div className="absolute top-full left-0 right-0 z-20 mt-1 rounded-xl border border-border bg-surface-0 shadow-lg overflow-hidden max-h-[320px] overflow-y-auto">
+                  {providers
+                    .filter((p) => p.id === "nexu" || configuredProviders.has(p.id))
+                    .map((p) => (
+                      <div key={p.id}>
+                        <div className="px-3 pt-2.5 pb-1 text-[10px] font-semibold text-text-tertiary uppercase tracking-wider sticky top-0 bg-surface-0">
+                          {p.name}
+                        </div>
+                        {p.models.map((m) => {
+                          const isSelected = m.id === selectedModelId;
+                          return (
+                            <button
+                              type="button"
+                              key={m.id}
+                              onClick={() => {
+                                setSelectedModelId(m.id);
+                                setShowModelDropdown(false);
+                              }}
+                              className={`w-full flex items-center gap-2.5 px-3 py-2 text-left transition-colors ${isSelected ? "bg-accent/5" : "hover:bg-surface-2"}`}
+                            >
+                              <span className="w-5 h-5 shrink-0 flex items-center justify-center">
+                                <ProviderLogo provider={p.id} size={14} />
+                              </span>
+                              <div className="flex-1 min-w-0">
+                                <div
+                                  className={`text-[12px] truncate ${isSelected ? "font-semibold text-accent" : "font-medium text-text-primary"}`}
+                                >
+                                  {m.name}
+                                </div>
+                                <div className="text-[10px] text-text-tertiary">{p.name}</div>
+                              </div>
+                              {isSelected && <Check size={14} className="text-accent shrink-0" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ))}
                 </div>
               )}
+            </div>
 
-              {/* API Key + Proxy URL + Save (hidden for nexu) */}
-              {activeProvider.id !== "nexu" && (
-                <div className="space-y-4 mb-6">
-                  <div className="text-[10px] uppercase tracking-wider text-text-muted mb-3">
-                    {t("ws.settings.apiKeySteps")}
-                  </div>
-                  <div>
-                    <label
-                      htmlFor={`${activeProvider.id}-api-key`}
-                      className="block text-[13px] font-semibold text-text-primary mb-3"
-                    >
-                      {t("ws.settings.apiKey")}
-                    </label>
-                    <input
-                      id={`${activeProvider.id}-api-key`}
-                      type="password"
-                      placeholder={activeProvider.apiKeyPlaceholder}
-                      value={getFormValues(activeProvider.id).apiKey}
-                      onChange={(e) => setFormField(activeProvider.id, "apiKey", e.target.value)}
-                      className="w-full rounded-lg border border-border bg-surface-0 px-3 py-2 text-[12px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor={`${activeProvider.id}-proxy-url`}
-                      className="block text-[13px] font-semibold text-text-primary mb-3"
-                    >
-                      {t("ws.settings.apiProxyUrl")}
-                    </label>
-                    <input
-                      id={`${activeProvider.id}-proxy-url`}
-                      type="text"
-                      value={getFormValues(activeProvider.id).proxyUrl}
-                      onChange={(e) => setFormField(activeProvider.id, "proxyUrl", e.target.value)}
-                      className="w-full rounded-lg border border-border bg-surface-0 px-3 py-2 text-[12px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30"
-                    />
-                  </div>
-                  <div className="flex items-center justify-end gap-3 flex-wrap">
-                    <Button
-                      size="inline"
-                      variant="ghost"
-                      type="button"
-                      onClick={() => handleCheck(activeProvider.id)}
-                      disabled={checkState === "checking" || saveState === "saving"}
-                      className="text-[11px] text-text-muted hover:text-text-secondary disabled:opacity-50"
-                    >
-                      {checkState === "checking" && t("ws.settings.testing")}
-                      {checkState === "success" && t("ws.settings.connectedStatus")}
-                      {checkState === "error" && t("ws.settings.retryTest")}
-                      {checkState === "idle" && t("ws.settings.testConnection")}
-                    </Button>
-                    <Button
-                      size="inline"
-                      onClick={() => handleSave(activeProvider.id)}
-                      disabled={saveState === "saving" || showSaved}
-                      className={`w-[120px] shrink-0 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2 text-[12px] font-medium transition-all ${
-                        showSaved
-                          ? "bg-[var(--color-success)]/10 text-[var(--color-success)] border border-[var(--color-success)]/20"
-                          : "bg-accent text-accent-fg hover:bg-accent-hover"
-                      } disabled:opacity-50`}
-                    >
-                      {saveState === "saving" && (
-                        <Loader2 size={13} className="animate-spin shrink-0" />
-                      )}
-                      {showSaved && <Check size={13} className="shrink-0" />}
-                      {!showSaved && saveState !== "saving" && t("ws.common.save")}
-                      {saveState === "saving" && t("ws.common.saving")}
-                      {showSaved && t("ws.common.saved")}
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Model list — flat, no switches */}
-              <div>
-                {showSaved && showSavedBannerFor === activeProvider.id && (
-                  <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-[var(--color-success)]/8 text-[11px] text-[var(--color-success)]">
-                    <Check size={12} className="shrink-0" />
-                    {t("ws.settings.savedSelectModel")}
-                  </div>
-                )}
-                {saveError && (
-                  <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-[var(--color-error)]/8 text-[11px] text-[var(--color-error)]">
-                    <AlertCircle size={12} className="shrink-0" />
-                    <span>{t("ws.settings.connectionFailed")}</span>
-                  </div>
-                )}
-                <div className="text-[13px] font-semibold text-text-primary mb-3">
-                  {t("ws.settings.model")}{" "}
-                  <span className="text-text-tertiary font-normal">
-                    {activeProvider.models.length}
-                  </span>
-                </div>
-                <div className="space-y-1.5">
-                  {activeProvider.models.map((model) => {
-                    const isActive = model.id === selectedModelId;
+            <div
+              className="flex gap-0 rounded-xl border border-border bg-surface-1 overflow-hidden"
+              style={{ minHeight: 520 }}
+            >
+              {/* Left: Provider list — flat, no enabled/disabled split */}
+              <div className="w-56 shrink-0 bg-surface-0 overflow-y-auto">
+                <div className="p-2 space-y-0.5">
+                  {providers.map((p) => {
+                    const active = p.id === activeProviderId;
                     return (
                       <button
                         type="button"
-                        key={model.id}
-                        onClick={() => setSelectedModelId(model.id)}
-                        className={`w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left transition-all border-none ${
-                          isActive
-                            ? "ring-1 ring-[var(--color-brand-primary)]/50 bg-[var(--color-brand-subtle)]"
-                            : "bg-surface-2 hover:bg-surface-3"
+                        key={p.id}
+                        onClick={() => setActiveProviderId(p.id)}
+                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${
+                          active ? "bg-surface-3" : "hover:bg-surface-2"
                         }`}
                       >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <span className="w-6 h-6 rounded-md flex items-center justify-center shrink-0">
-                            <ProviderLogo provider={activeProvider.id} size={16} />
-                          </span>
-                          <div className="min-w-0">
-                            <div
-                              className={`text-[13px] truncate ${isActive ? "font-semibold text-text-primary" : "font-medium text-text-secondary"}`}
-                            >
-                              {model.name}
-                            </div>
-                            <div className="text-[10px] text-text-tertiary">
-                              {activeProvider.name}
-                            </div>
-                          </div>
-                        </div>
-                        {isActive && (
-                          <Check size={14} className="text-[var(--color-brand-primary)] shrink-0" />
-                        )}
+                        <span className="w-5 h-5 shrink-0 flex items-center justify-center">
+                          <ProviderLogo provider={p.id} size={16} />
+                        </span>
+                        <span
+                          className={`flex-1 text-[12px] font-medium truncate ${active ? "text-accent" : "text-text-primary"}`}
+                        >
+                          {p.name}
+                        </span>
                       </button>
                     );
                   })}
                 </div>
               </div>
+
+              {/* Right: Provider detail */}
+              <div className="flex-1 overflow-y-auto p-5">
+                {/* Header — no enable/disable switch */}
+                <div className="flex items-center justify-between gap-3 mb-5">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-2 shrink-0">
+                      <ProviderLogo provider={activeProvider.id} size={20} />
+                    </span>
+                    <div className="min-w-0">
+                      <div className="text-[14px] font-semibold text-text-primary">
+                        {activeProvider.name}
+                      </div>
+                      <div className="text-[11px] text-text-tertiary">
+                        {activeProvider.description}
+                      </div>
+                    </div>
+                  </div>
+                  {activeProvider.apiDocsUrl && (
+                    <a
+                      href={activeProvider.apiDocsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 text-[11px] text-[var(--color-brand-primary)] hover:text-[var(--color-brand-primary)] no-underline hover:no-underline inline-flex items-center gap-1 leading-none"
+                    >
+                      {t("ws.settings.getApiKey")}
+                      <ExternalLink size={10} className="shrink-0" />
+                    </a>
+                  )}
+                </div>
+
+                {/* Nexu login card */}
+                {activeProvider.id === "nexu" && (
+                  <div className="rounded-xl border border-[var(--color-brand-primary)]/25 bg-[var(--color-brand-subtle)] px-4 py-4 mb-6">
+                    <div className="text-[13px] font-semibold text-[var(--color-brand-primary)]">
+                      {t("ws.settings.signInTitle")}
+                    </div>
+                    <div className="text-[12px] leading-[1.7] text-text-secondary mt-1.5">
+                      {t("ws.settings.signInDesc")}
+                    </div>
+                    <Button
+                      size="inline"
+                      onClick={() =>
+                        openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)
+                      }
+                      className="mt-4 inline-flex items-center gap-2 rounded-lg bg-accent px-3.5 py-2 text-[12px] font-medium text-accent-fg transition-colors hover:bg-accent/90 cursor-pointer"
+                    >
+                      {t("ws.settings.signInBtn")}
+                      <ArrowUpRight size={12} />
+                    </Button>
+                  </div>
+                )}
+
+                {/* API Key + Proxy URL + Save (hidden for nexu) */}
+                {activeProvider.id !== "nexu" && (
+                  <div className="space-y-4 mb-6">
+                    <div className="text-[10px] uppercase tracking-wider text-text-muted mb-3">
+                      {t("ws.settings.apiKeySteps")}
+                    </div>
+                    <div>
+                      <label
+                        htmlFor={`${activeProvider.id}-api-key`}
+                        className="block text-[13px] font-semibold text-text-primary mb-3"
+                      >
+                        {t("ws.settings.apiKey")}
+                      </label>
+                      <input
+                        id={`${activeProvider.id}-api-key`}
+                        type="password"
+                        placeholder={activeProvider.apiKeyPlaceholder}
+                        value={getFormValues(activeProvider.id).apiKey}
+                        onChange={(e) => setFormField(activeProvider.id, "apiKey", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-surface-0 px-3 py-2 text-[12px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor={`${activeProvider.id}-proxy-url`}
+                        className="block text-[13px] font-semibold text-text-primary mb-3"
+                      >
+                        {t("ws.settings.apiProxyUrl")}
+                      </label>
+                      <input
+                        id={`${activeProvider.id}-proxy-url`}
+                        type="text"
+                        value={getFormValues(activeProvider.id).proxyUrl}
+                        onChange={(e) =>
+                          setFormField(activeProvider.id, "proxyUrl", e.target.value)
+                        }
+                        className="w-full rounded-lg border border-border bg-surface-0 px-3 py-2 text-[12px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30"
+                      />
+                    </div>
+                    <div className="flex items-center justify-end gap-3 flex-wrap">
+                      <Button
+                        size="inline"
+                        variant="ghost"
+                        type="button"
+                        onClick={() => handleCheck(activeProvider.id)}
+                        disabled={checkState === "checking" || saveState === "saving"}
+                        className="text-[11px] text-text-muted hover:text-text-secondary disabled:opacity-50"
+                      >
+                        {checkState === "checking" && t("ws.settings.testing")}
+                        {checkState === "success" && t("ws.settings.connectedStatus")}
+                        {checkState === "error" && t("ws.settings.retryTest")}
+                        {checkState === "idle" && t("ws.settings.testConnection")}
+                      </Button>
+                      <Button
+                        size="inline"
+                        onClick={() => handleSave(activeProvider.id)}
+                        disabled={saveState === "saving" || showSaved}
+                        className={`w-[120px] shrink-0 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2 text-[12px] font-medium transition-all ${
+                          showSaved
+                            ? "bg-[var(--color-success)]/10 text-[var(--color-success)] border border-[var(--color-success)]/20"
+                            : "bg-accent text-accent-fg hover:bg-accent-hover"
+                        } disabled:opacity-50`}
+                      >
+                        {saveState === "saving" && (
+                          <Loader2 size={13} className="animate-spin shrink-0" />
+                        )}
+                        {showSaved && <Check size={13} className="shrink-0" />}
+                        {!showSaved && saveState !== "saving" && t("ws.common.save")}
+                        {saveState === "saving" && t("ws.common.saving")}
+                        {showSaved && t("ws.common.saved")}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Model list — flat, no switches */}
+                <div>
+                  {showSaved && showSavedBannerFor === activeProvider.id && (
+                    <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-[var(--color-success)]/8 text-[11px] text-[var(--color-success)]">
+                      <Check size={12} className="shrink-0" />
+                      {t("ws.settings.savedSelectModel")}
+                    </div>
+                  )}
+                  {saveError && (
+                    <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-[var(--color-error)]/8 text-[11px] text-[var(--color-error)]">
+                      <AlertCircle size={12} className="shrink-0" />
+                      <span>{t("ws.settings.connectionFailed")}</span>
+                    </div>
+                  )}
+                  <div className="text-[13px] font-semibold text-text-primary mb-3">
+                    {t("ws.settings.model")}{" "}
+                    <span className="text-text-tertiary font-normal">
+                      {activeProvider.models.length}
+                    </span>
+                  </div>
+                  <div className="space-y-1.5">
+                    {activeProvider.models.map((model) => {
+                      const isActive = model.id === selectedModelId;
+                      return (
+                        <button
+                          type="button"
+                          key={model.id}
+                          onClick={() => setSelectedModelId(model.id)}
+                          className={`w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left transition-all border-none ${
+                            isActive
+                              ? "ring-1 ring-[var(--color-brand-primary)]/50 bg-[var(--color-brand-subtle)]"
+                              : "bg-surface-2 hover:bg-surface-3"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <span className="w-6 h-6 rounded-md flex items-center justify-center shrink-0">
+                              <ProviderLogo provider={activeProvider.id} size={16} />
+                            </span>
+                            <div className="min-w-0">
+                              <div
+                                className={`text-[13px] truncate ${isActive ? "font-semibold text-text-primary" : "font-medium text-text-secondary"}`}
+                              >
+                                {model.name}
+                              </div>
+                              <div className="text-[10px] text-text-tertiary">
+                                {activeProvider.name}
+                              </div>
+                            </div>
+                          </div>
+                          {isActive && (
+                            <Check
+                              size={14}
+                              className="text-[var(--color-brand-primary)] shrink-0"
+                            />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>
@@ -2223,7 +2502,7 @@ function getInitialWorkspaceView(search: string): View {
     const provider = params.get("provider");
     return {
       type: "settings",
-      tab: isSettingsTab(tab) ? tab : "providers",
+      tab: isSettingsTab(tab) ? tab : "general",
       providerId: isModelProvider(provider) ? provider : "anthropic",
     };
   }
@@ -2274,6 +2553,32 @@ export default function OpenClawWorkspace() {
     return saved ? Math.max(SIDEBAR_MIN, Math.min(SIDEBAR_MAX, Number(saved))) : SIDEBAR_DEFAULT;
   });
   const isResizing = useRef(false);
+
+  const openChangelog = useCallback(() => {
+    void openExternal("https://github.com/nexu-io/nexu/releases");
+  }, []);
+
+  const handleCheckForUpdates = useCallback(() => {
+    setCheckingUpdate(true);
+    setShowUpToDate(false);
+    setTimeout(() => {
+      setCheckingUpdate(false);
+      if (hasUpdate && !updateDismissed) {
+        return;
+      }
+      setShowUpToDate(true);
+    }, 1500);
+  }, [hasUpdate, updateDismissed]);
+
+  const settingsUpdateStatus: "idle" | "checking" | "available" | "ready" | "error" = checkingUpdate
+    ? "checking"
+    : updateReady
+      ? "ready"
+      : updateError
+        ? "error"
+        : hasUpdate && !updateDismissed
+          ? "available"
+          : "idle";
 
   const handleResizeStart = useCallback(
     (e: React.MouseEvent) => {
@@ -2664,15 +2969,7 @@ export default function OpenClawWorkspace() {
                         type="button"
                         onClick={() => {
                           setShowHelpMenu(false);
-                          setCheckingUpdate(true);
-                          setTimeout(() => {
-                            setCheckingUpdate(false);
-                            if (hasUpdate && !updateDismissed) {
-                              /* new version → sidebar card already visible */
-                            } else {
-                              setShowUpToDate(true);
-                            }
-                          }, 1500);
+                          handleCheckForUpdates();
                         }}
                         className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
                       >
@@ -2821,7 +3118,14 @@ export default function OpenClawWorkspace() {
         {view.type === "deployments" && <DeploymentsView />}
         {view.type === "skills" && <SkillsPanel />}
         {view.type === "settings" && (
-          <SettingsView initialTab={view.tab} initialProviderId={view.providerId} />
+          <SettingsView
+            initialTab={view.tab}
+            initialProviderId={view.providerId}
+            appVersion={MOCK_VERSION}
+            updateStatus={settingsUpdateStatus}
+            onCheckForUpdates={handleCheckForUpdates}
+            onOpenChangelog={openChangelog}
+          />
         )}
       </main>
 
