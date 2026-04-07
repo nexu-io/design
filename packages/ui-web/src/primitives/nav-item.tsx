@@ -10,7 +10,7 @@ const navItemVariants = cva(
     variants: {
       tone: {
         default:
-          "bg-transparent text-text-primary hover:bg-[rgba(0,0,0,0.06)] hover:text-text-primary",
+          "bg-transparent text-text-secondary hover:bg-[rgba(0,0,0,0.06)] hover:text-text-primary",
         accent: "bg-transparent text-text-secondary hover:bg-surface-3 hover:text-text-primary",
       },
       size: {
@@ -18,7 +18,7 @@ const navItemVariants = cva(
         compact: "px-3 py-1.5",
       },
       selected: {
-        true: "bg-[rgba(0,0,0,0.08)] text-text-primary",
+        true: "bg-[rgba(0,0,0,0.08)] text-text-primary font-semibold",
         false: "",
       },
     },
