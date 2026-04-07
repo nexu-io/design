@@ -1,3 +1,3 @@
 # @nexu-design/tokens
 
-Shared design tokens and CSS theme primitives for Nexu UI packages.
+Design tokens, theme variables, and shared CSS for Nexu UI packages.

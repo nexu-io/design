@@ -2,7 +2,7 @@
   "name": "@nexu-design/tokens",
   "version": "0.1.0",
   "private": false,
-  "description": "Nexu design tokens and shared styles",
+  "description": "Design tokens, theme variables, and shared CSS for Nexu UI packages",
   "license": "UNLICENSED",
   "files": ["dist", "README.md"],
   "type": "module",
