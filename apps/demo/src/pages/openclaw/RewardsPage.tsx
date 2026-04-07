@@ -31,7 +31,7 @@ import {
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { SectionHeader } from "../../components/SectionHeader";
-import { useBudget, type RewardTaskState } from "../../hooks/useBudget";
+import { type RewardTaskState, useBudget } from "../../hooks/useBudget";
 import { usePageTitle } from "../../hooks/usePageTitle";
 
 type RewardGroupKey = "daily" | "community" | "social";

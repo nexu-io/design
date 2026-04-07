@@ -6,10 +6,16 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import RewardsPage from "./RewardsPage";
 
+type MockButtonProps = {
+  children: React.ReactNode;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  asChild?: boolean;
+};
+
 vi.mock("@nexu-design/ui-web", () => {
   return {
     Badge: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
-    Button: ({ children, onClick, asChild }: any) => {
+    Button: ({ children, onClick, asChild }: MockButtonProps) => {
       if (asChild && React.isValidElement(children)) {
         return React.cloneElement(children);
       }

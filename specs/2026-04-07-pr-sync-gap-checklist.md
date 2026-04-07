@@ -88,10 +88,10 @@
 
 参考 PR：https://github.com/refly-ai/agent-digital-cowork/pull/121
 
-- [ ] 将 `SectionHeader` 纳入 `ui-web` 正式导出
-- [ ] 评估并补齐 credits capsule 相关 UI
-- [ ] 评估并补齐 budget popover 相关 UI
-- [ ] 检查 demo 是否仍有本地实现可替换为 `ui-web` 组件
+- [x] 将 `SectionHeader` 纳入 `ui-web` 正式导出
+- [x] 评估并补齐 credits capsule 相关 UI
+- [x] 评估并补齐 budget popover 相关 UI
+- [x] 检查 demo 是否仍有本地实现可替换为 `ui-web` 组件
 
 **参考当前文件**
 - `packages/ui-web/src/primitives/tooltip.tsx`
@@ -140,7 +140,7 @@
 - [x] 2. PR #114 — Pricing / Usage UX
 - [x] 3. PR #117 — Budget Banner
 - [x] 4. PR #111 — Rewards
-- [ ] 5. PR #121 — 组件库收口
+- [x] 5. PR #121 — 组件库收口
 - [ ] 6. PR #124 — Windows polish
 - [ ] 7. PR #115 — 命名 / 抽象统一
 
@@ -155,7 +155,7 @@
 - [x] 在 `apps/demo` 的 Home 原型中增加额度预警 Banner，并按云端套餐状态联动
 - [x] 在 `apps/demo` 中补齐 Rewards 入口与页面原型，供云端用量激励链路串联
 - [ ] 将左下角用量指示器改造成可跳转到云端 `Settings > Usage` 的入口
-- [ ] 评估并抽离云端 Web 原型共用组件，优先沉淀到 `packages/ui-web`，页面仍放在 `apps/demo`
+- [x] 评估并抽离云端 Web 原型共用组件，优先沉淀到 `packages/ui-web`，页面仍放在 `apps/demo`
 - [ ] 避免把云端页面继续实现到仓库外部或旧目录，新增需求默认先落 `apps/demo`
 - [ ] 为 `apps/demo` 的云端原型补充统一命名规范，避免同时出现 `PricingPage` / `NexuPricingPage` 这类重复概念
 - [ ] 在 `apps/demo/src/App.tsx` 统一收口相关路由，保证云端原型入口清晰可发现
