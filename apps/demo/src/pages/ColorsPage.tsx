@@ -1,6 +1,6 @@
 import { PageHeader, PageShell } from "@nexu-design/ui-web";
 
-import { SectionHeader } from "../components/SectionHeader";
+import { SectionHeader } from "@nexu-design/ui-web";
 
 function Swatch({ name, value, token }: { name: string; value: string; token: string }) {
   return (

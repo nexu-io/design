@@ -11,6 +11,7 @@ import {
   InteractiveRowContent,
   InteractiveRowLeading,
   InteractiveRowTrailing,
+  NavItem,
   PanelFooter,
   PanelFooterActions,
   ProviderLogo,
@@ -78,7 +79,7 @@ import {
   type BillingPlanId,
   type UsageQuotaState,
   UsageSummaryPanel,
-} from "./billingDemo";
+} from "./pricing-demo";
 import { MOCK_CHANNELS, MOCK_DEPLOYMENTS, type ModelProvider, getProviderDetails } from "./data";
 import { SKILL_CATEGORIES, type SkillDef, type ToolTag } from "./skillData";
 
@@ -3004,13 +3005,10 @@ export default function OpenClawWorkspace() {
               {NAV_ITEMS.map((item) => {
                 const active = view.type === item.id;
                 return (
-                  <button
-                    type="button"
+                  <NavItem
                     key={item.id}
                     onClick={() => setWorkspaceRoute({ type: item.id } as View)}
-                    className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-2 ${
-                      active ? "nav-item-active" : "nav-item"
-                    }`}
+                    selected={active}
                   >
                     <item.icon size={16} />
                     {t(item.labelKey)}
@@ -3019,7 +3017,7 @@ export default function OpenClawWorkspace() {
                         {allSkillsCount}
                       </span>
                     )}
-                  </button>
+                  </NavItem>
                 );
               })}
             </div>
@@ -3041,13 +3039,11 @@ export default function OpenClawWorkspace() {
                       } as Record<string, typeof SlackIcon>
                     )[ch.platform] || SlackIcon;
                   return (
-                    <button
-                      type="button"
+                    <NavItem
                       key={ch.id}
+                      size="compact"
                       onClick={() => setWorkspaceRoute({ type: "conversations", channelId: ch.id })}
-                      className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-1.5 ${
-                        active ? "nav-item-active" : "nav-item"
-                      }`}
+                      selected={active}
                     >
                       <span className="shrink-0 w-4 h-4 flex items-center justify-center">
                         <ChannelIcon size={14} />
@@ -3055,7 +3051,7 @@ export default function OpenClawWorkspace() {
                       <span className={`truncate text-[12px] ${active ? "" : "text-text-primary"}`}>
                         {ch.name}
                       </span>
-                    </button>
+                    </NavItem>
                   );
                 })}
               </div>
@@ -3390,7 +3386,9 @@ export default function OpenClawWorkspace() {
             quotaState={usageQuotaState}
             onOpenPricing={(target) =>
               navigate(
-                target === "credit-packs" ? "/openclaw/pricing#credit-packs" : "/openclaw/pricing",
+                target === "credit-packs"
+                  ? "/openclaw/pricing?tab=plans#credit-packs"
+                  : "/openclaw/pricing?tab=plans",
               )
             }
             showTyping={showTyping}

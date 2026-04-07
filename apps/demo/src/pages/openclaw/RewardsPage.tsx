@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { SectionHeader } from "../../components/SectionHeader";
+import { SectionHeader } from "@nexu-design/ui-web";
 import { type RewardTaskState, useBudget } from "../../hooks/useBudget";
 import { usePageTitle } from "../../hooks/usePageTitle";
 

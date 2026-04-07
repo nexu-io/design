@@ -3,7 +3,7 @@ import { PageHeader, PageShell } from "@nexu-design/ui-web";
 import { useEffect, useState } from "react";
 
 import NexuLoader, { NexuLoadingScreen } from "../components/NexuLoader";
-import { SectionHeader } from "../components/SectionHeader";
+import { SectionHeader } from "@nexu-design/ui-web";
 
 export default function MotionPage() {
   const [showFullscreen, setShowFullscreen] = useState(false);

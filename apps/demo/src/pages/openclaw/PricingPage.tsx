@@ -1,22 +1,29 @@
-import { PageHeader, Tabs, TabsContent, TabsList, TabsTrigger } from "@nexu-design/ui-web";
+import {
+  PageHeader,
+  UnderlineTabs,
+  UnderlineTabsContent,
+  UnderlineTabsList,
+  UnderlineTabsTrigger,
+} from "@nexu-design/ui-web";
 import { Crown, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import {
-  BillingDemoControls,
+  PricingDemoControls,
   type BillingPlanId,
   PlanComparisonGrid,
   type UsageQuotaState,
   UsageSummaryPanel,
-} from "./billingDemo";
+} from "./pricing-demo";
 
-type BillingPageProps = {
+type PricingPageProps = {
   initialTab?: "usage" | "plans";
 };
 
-export default function BillingPage({ initialTab = "usage" }: BillingPageProps) {
+export default function PricingPage({ initialTab = "usage" }: PricingPageProps) {
   usePageTitle("Pricing & Usage");
+  const location = useLocation();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<"usage" | "plans">(initialTab);
@@ -25,8 +32,21 @@ export default function BillingPage({ initialTab = "usage" }: BillingPageProps) 
   const [isSignedIn, setIsSignedIn] = useState(true);
 
   useEffect(() => {
+    const tab = new URLSearchParams(location.search).get("tab");
+    const hash = location.hash.replace(/^#/, "");
+
+    if (tab === "plans" || hash === "plans" || hash === "credit-packs") {
+      setActiveTab("plans");
+      return;
+    }
+
+    if (tab === "usage" || hash === "usage") {
+      setActiveTab("usage");
+      return;
+    }
+
     setActiveTab(initialTab);
-  }, [initialTab]);
+  }, [initialTab, location.hash, location.search]);
 
   return (
     <div className="mx-auto max-w-6xl p-4 sm:p-8">
@@ -35,7 +55,7 @@ export default function BillingPage({ initialTab = "usage" }: BillingPageProps) 
         description="Preview plan comparison, credit usage, rewards, and upgrade states for the cloud prototype."
       />
 
-      <BillingDemoControls
+      <PricingDemoControls
         isSignedIn={isSignedIn}
         onSignedInChange={setIsSignedIn}
         planId={activePlan}
@@ -44,17 +64,20 @@ export default function BillingPage({ initialTab = "usage" }: BillingPageProps) 
         onUsageStateChange={setUsageState}
       />
 
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "usage" | "plans")}>
-        <TabsList variant="default" className="mb-6 w-fit">
-          <TabsTrigger value="usage">
+      <UnderlineTabs
+        value={activeTab}
+        onValueChange={(value) => setActiveTab(value as "usage" | "plans")}
+      >
+        <UnderlineTabsList className="mb-6 w-full sm:w-fit">
+          <UnderlineTabsTrigger value="usage">
             <TrendingUp size={14} /> Usage overview
-          </TabsTrigger>
-          <TabsTrigger value="plans">
+          </UnderlineTabsTrigger>
+          <UnderlineTabsTrigger value="plans">
             <Crown size={14} /> Plan comparison
-          </TabsTrigger>
-        </TabsList>
+          </UnderlineTabsTrigger>
+        </UnderlineTabsList>
 
-        <TabsContent value="usage">
+        <UnderlineTabsContent value="usage">
           <div className="space-y-6">
             <UsageSummaryPanel
               planId={activePlan}
@@ -65,7 +88,9 @@ export default function BillingPage({ initialTab = "usage" }: BillingPageProps) 
             />
 
             <div className="card p-6">
-              <h2 className="mb-4 text-sm font-semibold text-text-primary">Billing FAQ</h2>
+              <h2 className="mb-4 text-sm font-semibold text-text-primary">
+                Pricing &amp; usage FAQ
+              </h2>
               <div className="space-y-3 text-[13px]">
                 <p>
                   <span className="font-medium">When do credits reset?</span> Credits refresh on
@@ -82,10 +107,10 @@ export default function BillingPage({ initialTab = "usage" }: BillingPageProps) 
               </div>
             </div>
           </div>
-        </TabsContent>
+        </UnderlineTabsContent>
 
-        <TabsContent value="plans">
-          <div className="space-y-4">
+        <UnderlineTabsContent value="plans">
+          <div id="credit-packs" className="space-y-4 scroll-mt-6">
             <div className="rounded-2xl border border-border bg-surface-1 p-5">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -104,8 +129,8 @@ export default function BillingPage({ initialTab = "usage" }: BillingPageProps) 
 
             <PlanComparisonGrid activePlan={activePlan} />
           </div>
-        </TabsContent>
-      </Tabs>
+        </UnderlineTabsContent>
+      </UnderlineTabs>
     </div>
   );
 }

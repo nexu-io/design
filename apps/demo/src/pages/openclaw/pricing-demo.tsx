@@ -1,4 +1,12 @@
-import { Badge, Button, PricingCard, StatCard } from "@nexu-design/ui-web";
+import {
+  Badge,
+  Button,
+  FilterPills,
+  FilterPillsList,
+  FilterPillTrigger,
+  PricingCard,
+  StatCard,
+} from "@nexu-design/ui-web";
 import {
   ArrowRight,
   Clock3,
@@ -243,7 +251,7 @@ function PromoPrice({ promoPrice, price }: { promoPrice?: string; price: string 
   );
 }
 
-export function BillingDemoControls({
+export function PricingDemoControls({
   isSignedIn,
   onSignedInChange,
   planId,
@@ -311,21 +319,15 @@ function ControlGroup({
   return (
     <div>
       <div className="mb-2 text-[12px] font-medium text-text-secondary">{label}</div>
-      <div className="flex flex-wrap gap-2">
-        {options.map((option) => {
-          const active = option.id === value;
-          return (
-            <Button
-              key={option.id}
-              size="sm"
-              variant={active ? "default" : "outline"}
-              onClick={() => onChange(option.id)}
-            >
+      <FilterPills value={value} onValueChange={onChange}>
+        <FilterPillsList className="flex-wrap gap-2 bg-transparent p-0">
+          {options.map((option) => (
+            <FilterPillTrigger key={option.id} value={option.id} className="border border-border">
               {option.label}
-            </Button>
-          );
-        })}
-      </div>
+            </FilterPillTrigger>
+          ))}
+        </FilterPillsList>
+      </FilterPills>
     </div>
   );
 }

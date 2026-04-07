@@ -72,11 +72,11 @@
 
 参考 PR：https://github.com/refly-ai/agent-digital-cowork/pull/115
 
-- [ ] 评估是否补齐 `filter-pills` 组件或等价封装
-- [ ] 评估是否补齐 `underline-tabs` 组件或等价封装
-- [ ] 评估是否补齐 `nav-item` 组件或等价封装
-- [ ] 将 `SectionHeader` 收敛进 `packages/ui-web`
-- [ ] 评估 demo 中散落样式是否继续抽到组件库统一
+- [x] 评估是否补齐 `filter-pills` 组件或等价封装
+- [x] 评估是否补齐 `underline-tabs` 组件或等价封装
+- [x] 评估是否补齐 `nav-item` 组件或等价封装
+- [x] 将 `SectionHeader` 收敛进 `packages/ui-web`
+- [x] 评估 demo 中散落样式是否继续抽到组件库统一
 
 **参考当前文件**
 - `packages/ui-web/src/index.ts`
@@ -142,7 +142,7 @@
 - [x] 4. PR #111 — Rewards
 - [x] 5. PR #121 — 组件库收口
 - [x] 6. PR #124 — Windows polish
-- [ ] 7. PR #115 — 命名 / 抽象统一
+- [x] 7. PR #115 — 命名 / 抽象统一
 
 ## 追加待办：统一落到 `apps/demo` 的云端 Web 原型
 
@@ -157,6 +157,6 @@
 - [ ] 将左下角用量指示器改造成可跳转到云端 `Settings > Usage` 的入口
 - [x] 评估并抽离云端 Web 原型共用组件，优先沉淀到 `packages/ui-web`，页面仍放在 `apps/demo`
 - [ ] 避免把云端页面继续实现到仓库外部或旧目录，新增需求默认先落 `apps/demo`
-- [ ] 为 `apps/demo` 的云端原型补充统一命名规范，避免同时出现 `PricingPage` / `NexuPricingPage` 这类重复概念
-- [ ] 在 `apps/demo/src/App.tsx` 统一收口相关路由，保证云端原型入口清晰可发现
-- [ ] 如有必要，新增一个明确的云端原型导航分组，和桌面端原型区分展示
+- [x] 为 `apps/demo` 的云端原型补充统一命名规范，避免同时出现 `PricingPage` / `NexuPricingPage` 这类重复概念
+- [x] 在 `apps/demo/src/App.tsx` 统一收口相关路由，保证云端原型入口清晰可发现
+- [x] 如有必要，新增一个明确的云端原型导航分组，和桌面端原型区分展示

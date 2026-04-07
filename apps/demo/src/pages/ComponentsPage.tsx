@@ -17,7 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 
-import { SectionHeader } from "../components/SectionHeader";
+import { SectionHeader } from "@nexu-design/ui-web";
 import ChatCardGroup from "./product/ChatCards";
 
 function Badge({ children, variant = "purple" }: { children: React.ReactNode; variant?: string }) {

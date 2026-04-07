@@ -1,5 +1,5 @@
-import BillingPage from "./BillingPage";
+import PricingPage from "./PricingPage";
 
 export default function UsagePage() {
-  return <BillingPage initialTab="usage" />;
+  return <PricingPage initialTab="usage" />;
 }
