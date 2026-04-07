@@ -103,11 +103,11 @@
 
 参考 PR：https://github.com/refly-ai/agent-digital-cowork/pull/124
 
-- [ ] 调整 Windows 专属顶部间距
-- [ ] 调整侧栏 toggle 为贴边跟随式表现
-- [ ] 调整侧栏与主内容区的贴合样式
-- [ ] 移除频道头冗余平台 icon
-- [ ] 增加 `run-nexu-client.bat`
+- [x] 调整 Windows 专属顶部间距
+- [x] 调整侧栏 toggle 为贴边跟随式表现
+- [x] 调整侧栏与主内容区的贴合样式
+- [x] 移除频道头冗余平台 icon
+- [x] 增加 `run-nexu-client.bat`
 
 **参考当前文件**
 - `apps/demo/src/pages/openclaw/OpenClawWorkspace.tsx:2368-2403`
@@ -141,7 +141,7 @@
 - [x] 3. PR #117 — Budget Banner
 - [x] 4. PR #111 — Rewards
 - [x] 5. PR #121 — 组件库收口
-- [ ] 6. PR #124 — Windows polish
+- [x] 6. PR #124 — Windows polish
 - [ ] 7. PR #115 — 命名 / 抽象统一
 
 ## 追加待办：统一落到 `apps/demo` 的云端 Web 原型

@@ -2758,6 +2758,8 @@ export default function OpenClawWorkspace() {
   const location = useLocation();
   const { stars } = useGitHubStars();
   const { locale, setLocale, t } = useLocale();
+  const isWindowsDesktop =
+    typeof window !== "undefined" && /windows/i.test(window.navigator.userAgent);
   const [collapsed, setCollapsed] = useState(() => {
     const saved = localStorage.getItem("nexu_sidebar_collapsed");
     return saved !== null ? saved === "true" : true;
@@ -2807,6 +2809,9 @@ export default function OpenClawWorkspace() {
   const SIDEBAR_MAX = 320;
   const SIDEBAR_DEFAULT = 192;
   const MAIN_MIN = 480;
+  const sidebarTopClearanceClass = isWindowsDesktop ? "h-10" : "h-14";
+  const mainTopPaddingClass = isWindowsDesktop ? "pt-3" : "pt-8";
+  const sidebarToggleTop = isWindowsDesktop ? 10 : 8;
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const saved = localStorage.getItem("nexu_sidebar_width");
     return saved ? Math.max(SIDEBAR_MIN, Math.min(SIDEBAR_MAX, Number(saved))) : SIDEBAR_DEFAULT;
@@ -2941,8 +2946,15 @@ export default function OpenClawWorkspace() {
           setCollapsed(next);
           localStorage.setItem("nexu_sidebar_collapsed", String(next));
         }}
-        className="absolute top-2 left-[88px] z-50 p-1.5 rounded-md text-text-tertiary hover:text-text-primary hover:bg-black/5 transition-colors"
-        style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
+        className="absolute z-50 inline-flex items-center justify-center rounded-full border border-border/70 bg-surface-0/90 p-1.5 text-text-tertiary shadow-sm backdrop-blur-sm transition-[left,top,transform,color,background-color] duration-200 hover:bg-surface-0 hover:text-text-primary"
+        style={
+          {
+            top: sidebarToggleTop,
+            left: collapsed ? 12 : sidebarWidth,
+            transform: collapsed ? "none" : "translateX(-50%)",
+            WebkitAppRegion: "no-drag",
+          } as React.CSSProperties
+        }
         title={collapsed ? t("ws.sidebar.expand") : t("ws.sidebar.collapse")}
       >
         {collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
@@ -2955,7 +2967,7 @@ export default function OpenClawWorkspace() {
         className="overflow-hidden"
       >
         <Sidebar
-          className="h-full border-r-0 bg-transparent"
+          className="h-full border-r border-border/60 bg-surface-0/90 backdrop-blur-sm"
           style={
             {
               transition: isResizing.current ? "none" : "width 200ms",
@@ -2964,7 +2976,7 @@ export default function OpenClawWorkspace() {
           }
         >
           {/* Traffic light clearance */}
-          <SidebarHeader className="h-14 shrink-0" />
+          <SidebarHeader className={`${sidebarTopClearanceClass} shrink-0`} />
 
           {/* Brand */}
           <SidebarHeader
@@ -3359,15 +3371,17 @@ export default function OpenClawWorkspace() {
       {!collapsed && (
         <ResizableHandle
           onMouseDown={handleResizeStart}
-          className="group relative z-10 w-[3px]"
+          className="group relative z-20 -ml-px w-2 cursor-col-resize"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
-          <div className="absolute inset-y-0 -left-[2px] -right-[2px]" />
+          <div className="absolute inset-y-0 left-0 w-px bg-border/50 transition-colors group-hover:bg-text-tertiary/40" />
         </ResizableHandle>
       )}
 
       {/* Main content */}
-      <main className="flex-1 overflow-hidden min-h-0 bg-surface-1 rounded-l-[12px] pt-8">
+      <main
+        className={`-ml-px flex-1 overflow-hidden min-h-0 rounded-l-[14px] border-l border-white/70 bg-surface-1 shadow-[-12px_0_28px_-20px_rgba(15,23,42,0.4)] ${mainTopPaddingClass}`}
+      >
         {view.type === "home" && (
           <HomeDashboard
             onNavigate={setWorkspaceRoute}

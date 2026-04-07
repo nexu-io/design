@@ -21,23 +21,6 @@ const PLATFORM_OPEN_LABELS: Record<Platform, string> = {
   discord: "Open in Discord",
 };
 
-function PlatformIcon({ platform, size = 20 }: { platform: Platform; size?: number }) {
-  const config: Record<Platform, { bg: string; emoji: string }> = {
-    slack: { bg: "bg-[rgba(217,153,247,0.15)]", emoji: "#" },
-    feishu: { bg: "bg-[var(--color-info-subtle)]", emoji: "#" },
-    discord: { bg: "bg-[var(--color-info-subtle)]", emoji: "#" },
-  };
-  const { bg, emoji } = config[platform];
-  return (
-    <div
-      className={`flex justify-center items-center rounded-lg ${bg}`}
-      style={{ width: size + 8, height: size + 8 }}
-    >
-      <span style={{ fontSize: size * 0.6 }}>{emoji}</span>
-    </div>
-  );
-}
-
 const USER_AVATAR =
   "https://api.dicebear.com/7.x/lorelei/svg?seed=user&backgroundColor=b6e3f4,c0aede";
 const BOT_AVATAR = "/brand/ip-nexu.svg";
@@ -166,7 +149,6 @@ export default function ChannelDetailPage({ channelId }: { channelId: string }) 
       <div className="shrink-0 border-b border-border px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex gap-3 items-center">
-            <PlatformIcon platform={channel.platform} size={22} />
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-[15px] font-bold text-text-heading">{channel.name}</h1>
