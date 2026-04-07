@@ -335,12 +335,14 @@ export function UsageSummaryPanel({
   usageState,
   isSignedIn,
   onViewPlans,
+  onOpenRewards,
   compact = false,
 }: {
   planId: BillingPlanId;
   usageState: UsageQuotaState;
   isSignedIn: boolean;
   onViewPlans?: () => void;
+  onOpenRewards?: () => void;
   compact?: boolean;
 }) {
   const summary = getUsageBreakdown(planId, usageState);
@@ -539,7 +541,11 @@ export function UsageSummaryPanel({
                 +500 credits / teammate
               </div>
             </div>
-            <Button className="mt-4 w-full" variant={isSignedIn ? "default" : "outline"}>
+            <Button
+              className="mt-4 w-full"
+              variant={isSignedIn ? "default" : "outline"}
+              onClick={onOpenRewards}
+            >
               {isSignedIn ? "Open share rewards" : "Sign in to unlock sharing"}
             </Button>
           </div>

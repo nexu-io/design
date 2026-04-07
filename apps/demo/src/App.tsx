@@ -61,6 +61,7 @@ import OpenClawLanding from "./pages/openclaw/OpenClawLanding";
 import OpenClawSkillsPage from "./pages/openclaw/OpenClawSkillsPage";
 import OpenClawWorkspace from "./pages/openclaw/OpenClawWorkspace";
 import PrivacyPolicyPage from "./pages/openclaw/PrivacyPolicyPage";
+import RewardsPage from "./pages/openclaw/RewardsPage";
 import SkillDetailPage from "./pages/openclaw/SkillDetailPage";
 import TermsOfServicePage from "./pages/openclaw/TermsOfServicePage";
 import UsagePage from "./pages/openclaw/UsagePage";
@@ -279,6 +280,7 @@ export default function App() {
     location.pathname === "/openclaw/terms" ||
     location.pathname === "/openclaw/channels" ||
     location.pathname === "/openclaw/pricing" ||
+    location.pathname === "/openclaw/rewards" ||
     location.pathname === "/openclaw/usage" ||
     location.pathname === "/openclaw/skills" ||
     location.pathname.startsWith("/openclaw/skill/") ||
@@ -302,6 +304,7 @@ export default function App() {
           <Route path="/openclaw/terms" element={<TermsOfServicePage />} />
           <Route path="/openclaw/channels" element={<ChannelsPage />} />
           <Route path="/openclaw/pricing" element={<BillingPage />} />
+          <Route path="/openclaw/rewards" element={<RewardsPage />} />
           <Route path="/openclaw/usage" element={<UsagePage />} />
           <Route path="/openclaw/skills" element={<OpenClawSkillsPage />} />
           <Route path="/openclaw/skill/:id" element={<SkillDetailPage />} />

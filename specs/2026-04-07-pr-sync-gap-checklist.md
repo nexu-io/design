@@ -55,13 +55,13 @@
 
 参考 PR：https://github.com/refly-ai/agent-digital-cowork/pull/111
 
-- [ ] 增加 Rewards 页面
-- [ ] 增加奖励任务列表
-- [ ] 增加每日 / 每周状态展示
-- [ ] 增加分享素材弹窗与确认流
-- [ ] 增加 `useBudget` 或等价状态管理
-- [ ] 增加小红书 / 即刻 / 飞书等分享链路素材支持
-- [ ] 增加 rewards 相关页面入口与数据结构
+- [x] 增加 Rewards 页面
+- [x] 增加奖励任务列表
+- [x] 增加每日 / 每周状态展示
+- [x] 增加分享素材弹窗与确认流
+- [x] 增加 `useBudget` 或等价状态管理
+- [x] 增加小红书 / 即刻 / 飞书等分享链路素材支持
+- [x] 增加 rewards 相关页面入口与数据结构
 
 **参考当前文件**
 - `packages/ui-web/src/primitives/interactive-row.tsx`
@@ -139,7 +139,7 @@
 - [x] 1. PR #113 — Settings General Tab
 - [x] 2. PR #114 — Pricing / Usage UX
 - [x] 3. PR #117 — Budget Banner
-- [ ] 4. PR #111 — Rewards
+- [x] 4. PR #111 — Rewards
 - [ ] 5. PR #121 — 组件库收口
 - [ ] 6. PR #124 — Windows polish
 - [ ] 7. PR #115 — 命名 / 抽象统一
@@ -153,7 +153,7 @@
 - [x] 将 PR #114 的 Pricing 相关 UI 以 `apps/demo` 页面原型方式实现，不依赖旧 `design-system` 路径
 - [x] 在 `apps/demo` 的 Settings 原型中增加 `Usage` tab，并与云端套餐/额度逻辑保持一致
 - [x] 在 `apps/demo` 的 Home 原型中增加额度预警 Banner，并按云端套餐状态联动
-- [ ] 在 `apps/demo` 中补齐 Rewards 入口与页面原型，供云端用量激励链路串联
+- [x] 在 `apps/demo` 中补齐 Rewards 入口与页面原型，供云端用量激励链路串联
 - [ ] 将左下角用量指示器改造成可跳转到云端 `Settings > Usage` 的入口
 - [ ] 评估并抽离云端 Web 原型共用组件，优先沉淀到 `packages/ui-web`，页面仍放在 `apps/demo`
 - [ ] 避免把云端页面继续实现到仓库外部或旧目录，新增需求默认先落 `apps/demo`

@@ -1,6 +1,7 @@
 import { PageHeader, Tabs, TabsContent, TabsList, TabsTrigger } from "@nexu-design/ui-web";
 import { Crown, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import {
   BillingDemoControls,
@@ -16,6 +17,7 @@ type BillingPageProps = {
 
 export default function BillingPage({ initialTab = "usage" }: BillingPageProps) {
   usePageTitle("Pricing & Usage");
+  const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<"usage" | "plans">(initialTab);
   const [activePlan, setActivePlan] = useState<BillingPlanId>("plus");
@@ -59,6 +61,7 @@ export default function BillingPage({ initialTab = "usage" }: BillingPageProps) 
               usageState={usageState}
               isSignedIn={isSignedIn}
               onViewPlans={() => setActiveTab("plans")}
+              onOpenRewards={() => navigate("/openclaw/rewards")}
             />
 
             <div className="card p-6">
