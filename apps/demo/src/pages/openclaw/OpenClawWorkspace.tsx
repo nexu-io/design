@@ -74,13 +74,13 @@ import { useLocale } from "../../hooks/useLocale";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import ChannelDetailPage from "./ChannelDetailPage";
 import ImportSkillModal from "./ImportSkillModal";
+import { MOCK_CHANNELS, MOCK_DEPLOYMENTS, type ModelProvider, getProviderDetails } from "./data";
 import {
   BILLING_PLANS,
   type BillingPlanId,
   type UsageQuotaState,
   UsageSummaryPanel,
 } from "./pricing-demo";
-import { MOCK_CHANNELS, MOCK_DEPLOYMENTS, type ModelProvider, getProviderDetails } from "./data";
 import { SKILL_CATEGORIES, type SkillDef, type ToolTag } from "./skillData";
 
 const openExternal = async (url: string) => {
@@ -538,7 +538,7 @@ function SeedanceCountdownBlocks({ now, compact = false }: { now: number; compac
       <div
         className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none shadow-sm"
         style={{
-          color: "white",
+          color: "var(--color-text-primary)",
           background:
             "linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 82%, white), color-mix(in srgb, var(--color-danger) 78%, var(--color-warning) 22%))",
           borderColor:
@@ -981,7 +981,11 @@ function HomeDashboard({
                 <div className="mt-4 flex flex-wrap gap-2">
                   {plan === "plus" && (
                     <>
-                      <Button size="sm" onClick={() => onOpenPricing("plans")}>
+                      <Button
+                        size="sm"
+                        className="text-white hover:text-white"
+                        onClick={() => onOpenPricing("plans")}
+                      >
                         Upgrade to Pro · {proPlan.credits.toLocaleString()} credits / month
                       </Button>
                       <Button
