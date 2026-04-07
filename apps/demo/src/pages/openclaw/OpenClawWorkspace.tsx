@@ -73,7 +73,12 @@ import { useLocale } from "../../hooks/useLocale";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import ChannelDetailPage from "./ChannelDetailPage";
 import ImportSkillModal from "./ImportSkillModal";
-import { type BillingPlanId, type UsageQuotaState, UsageSummaryPanel } from "./billingDemo";
+import {
+  BILLING_PLANS,
+  type BillingPlanId,
+  type UsageQuotaState,
+  UsageSummaryPanel,
+} from "./billingDemo";
 import { MOCK_CHANNELS, MOCK_DEPLOYMENTS, type ModelProvider, getProviderDetails } from "./data";
 import { SKILL_CATEGORIES, type SkillDef, type ToolTag } from "./skillData";
 
@@ -86,6 +91,7 @@ const openExternal = async (url: string) => {
 };
 
 const GITHUB_URL = "https://github.com/refly-ai/nexu";
+const BUDGET_BANNER_DISMISSED_KEY = "nexu_budget_banner_dismissed";
 
 type SkillFilter = "all" | ToolTag;
 
@@ -831,12 +837,18 @@ const CHANNEL_CONFIG_FIELDS: Record<
 function HomeDashboard({
   onNavigate,
   onRequestSeedanceModal,
+  plan,
+  quotaState,
+  onOpenPricing,
   showTyping: _showTyping,
   onTypingComplete: _onTypingComplete,
   stars,
 }: {
   onNavigate: (view: View) => void;
   onRequestSeedanceModal: () => void;
+  plan: BillingPlanId;
+  quotaState: UsageQuotaState;
+  onOpenPricing: (target?: "plans" | "credit-packs") => void;
   showTyping?: boolean;
   onTypingComplete?: () => void;
   stars?: number | null;
@@ -866,6 +878,13 @@ function HomeDashboard({
       return true;
     }
   });
+  const [dismissedBudgetBanner, setDismissedBudgetBanner] = useState(() => {
+    try {
+      return localStorage.getItem(BUDGET_BANNER_DISMISSED_KEY) ?? "";
+    } catch {
+      return "";
+    }
+  });
   const [seedanceNow, setSeedanceNow] = useState(Date.now());
   const hasChannel = connectedIds.size > 0;
   const connectedChannels = ONBOARDING_CHANNELS.filter((c) => connectedIds.has(c.id));
@@ -878,6 +897,161 @@ function HomeDashboard({
   );
   const selectedModel =
     allEnabledModels.find((m) => m.id === selectedModelId) ?? allEnabledModels[0];
+  const currentPlan = BILLING_PLANS.find((item) => item.id === plan) ?? BILLING_PLANS[0];
+  const proPlan = BILLING_PLANS.find((item) => item.id === "pro") ?? BILLING_PLANS[0];
+  const budgetBannerSignature = `${plan}:${quotaState}`;
+  const quotaAlert = quotaState === "warning" || quotaState === "depleted";
+
+  const dismissBudgetBanner = () => {
+    setDismissedBudgetBanner(budgetBannerSignature);
+    try {
+      localStorage.setItem(BUDGET_BANNER_DISMISSED_KEY, budgetBannerSignature);
+    } catch {
+      // noop
+    }
+  };
+
+  const budgetBanner =
+    quotaAlert &&
+    dismissedBudgetBanner !== budgetBannerSignature &&
+    selectedModel?.providerId === "nexu"
+      ? (() => {
+          const isDepleted = quotaState === "depleted";
+          const accentClass = isDepleted
+            ? "border-[var(--color-danger)]/25 bg-[var(--color-danger)]/6"
+            : "border-[var(--color-warning)]/25 bg-[var(--color-warning)]/6";
+          const iconClass = isDepleted
+            ? "bg-[var(--color-danger)]/12 text-[var(--color-danger)]"
+            : "bg-[var(--color-warning)]/12 text-[var(--color-warning)]";
+          const headline = isDepleted
+            ? `${currentPlan.name} credits are exhausted`
+            : `${currentPlan.name} credits are running low`;
+          const proCapacityMultiple = Math.max(
+            1,
+            Math.round(proPlan.credits / Math.max(currentPlan.credits, 1)),
+          );
+          const planSpecificCopy =
+            plan === "free"
+              ? "Switch to BYOK now, or upgrade to unlock more included nexu credits."
+              : plan === "plus"
+                ? `Upgrade to Pro for ${proCapacityMultiple}x more monthly credits, or top up with credit packs.`
+                : plan === "pro"
+                  ? "Top up with credit packs now, or switch to BYOK while this cycle resets."
+                  : "Top up with credit packs now, or review higher-cap options for your workspace.";
+
+          return (
+            <div
+              className={`relative overflow-hidden rounded-2xl border p-4 sm:p-5 ${accentClass}`}
+            >
+              <button
+                type="button"
+                aria-label="Dismiss budget banner"
+                onClick={dismissBudgetBanner}
+                className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-white/70 hover:text-text-primary"
+              >
+                <X size={14} />
+              </button>
+
+              <div className="pr-8">
+                <div className="flex items-start gap-3">
+                  <div
+                    className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${iconClass}`}
+                  >
+                    <AlertCircle size={18} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[15px] font-semibold text-text-primary">
+                        {headline}
+                      </span>
+                      <span className="rounded-full border border-white/70 bg-white/80 px-2 py-0.5 text-[11px] font-medium text-text-secondary">
+                        {currentPlan.name}
+                      </span>
+                      <span className="rounded-full border border-white/70 bg-white/60 px-2 py-0.5 text-[11px] font-medium text-text-secondary">
+                        {isDepleted ? "Depleted" : "Warning"}
+                      </span>
+                    </div>
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
+                      You’re using nexu-managed models in Home. {planSpecificCopy}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {plan === "plus" && (
+                    <>
+                      <Button size="sm" onClick={() => onOpenPricing("plans")}>
+                        Upgrade to Pro · {proPlan.credits.toLocaleString()} credits / month
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onOpenPricing("credit-packs")}
+                      >
+                        Browse credit packs
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => onNavigate({ type: "settings", tab: "providers" })}
+                      >
+                        Use BYOK
+                      </Button>
+                    </>
+                  )}
+
+                  {plan === "pro" && (
+                    <>
+                      <Button size="sm" onClick={() => onOpenPricing("credit-packs")}>
+                        Buy credit packs
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onNavigate({ type: "settings", tab: "providers" })}
+                      >
+                        Use BYOK
+                      </Button>
+                    </>
+                  )}
+
+                  {plan === "ultimate" && (
+                    <>
+                      <Button size="sm" onClick={() => onOpenPricing("credit-packs")}>
+                        Buy credit packs
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => onOpenPricing("plans")}>
+                        Review plan options
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => onNavigate({ type: "settings", tab: "providers" })}
+                      >
+                        Use BYOK
+                      </Button>
+                    </>
+                  )}
+
+                  {plan === "free" && (
+                    <>
+                      <Button
+                        size="sm"
+                        onClick={() => onNavigate({ type: "settings", tab: "providers" })}
+                      >
+                        Use BYOK
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => onOpenPricing("plans")}>
+                        Upgrade plan
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })()
+      : null;
 
   const persistChannels = (ids: Set<string>, active: string) => {
     localStorage.setItem(CHANNELS_CONNECTED_KEY, JSON.stringify([...ids]));
@@ -1069,6 +1243,8 @@ function HomeDashboard({
               </span>
             </div>
           </div>
+
+          {budgetBanner}
 
           {/* ═══ MIDDLE: Channels — default open, Feishu highlighted ═══ */}
           <div className="card overflow-visible">
@@ -1373,6 +1549,8 @@ function HomeDashboard({
             </div>
           </div>
         </div>
+
+        {budgetBanner}
 
         {/* ═══ MIDDLE: Channels Panel ═══ */}
         <div className="card card-static">
@@ -1772,6 +1950,10 @@ function SettingsView({
   onCheckForUpdates,
   onOpenChangelog,
   onOpenPricing,
+  usagePlan,
+  onUsagePlanChange,
+  usageQuotaState,
+  onUsageQuotaStateChange,
 }: {
   initialTab?: SettingsTab;
   initialProviderId?: ModelProvider;
@@ -1780,6 +1962,10 @@ function SettingsView({
   onCheckForUpdates: () => void;
   onOpenChangelog: () => void;
   onOpenPricing: () => void;
+  usagePlan: BillingPlanId;
+  onUsagePlanChange: (plan: BillingPlanId) => void;
+  usageQuotaState: UsageQuotaState;
+  onUsageQuotaStateChange: (state: UsageQuotaState) => void;
 }) {
   const { t } = useLocale();
   const [settingsTab, setSettingsTab] = useState<SettingsTab>(initialTab);
@@ -1789,8 +1975,6 @@ function SettingsView({
   const [showInDock, setShowInDock] = useState(true);
   const [usageAnalytics, setUsageAnalytics] = useState(true);
   const [crashReports, setCrashReports] = useState(true);
-  const [usagePlan, setUsagePlan] = useState<BillingPlanId>("plus");
-  const [usageQuotaState, setUsageQuotaState] = useState<UsageQuotaState>("warning");
   const [configuredProviders, setConfiguredProviders] = useState<Set<string>>(
     () => new Set(["nexu"]),
   );
@@ -2200,7 +2384,7 @@ function SettingsView({
                       key={plan}
                       size="inline"
                       variant={usagePlan === plan ? "default" : "outline"}
-                      onClick={() => setUsagePlan(plan)}
+                      onClick={() => onUsagePlanChange(plan)}
                     >
                       {plan}
                     </Button>
@@ -2210,7 +2394,7 @@ function SettingsView({
                       key={state}
                       size="inline"
                       variant={usageQuotaState === state ? "default" : "outline"}
-                      onClick={() => setUsageQuotaState(state)}
+                      onClick={() => onUsageQuotaStateChange(state)}
                     >
                       {state}
                     </Button>
@@ -2595,6 +2779,8 @@ export default function OpenClawWorkspace() {
   const [view, setView] = useState<View>(() => getInitialWorkspaceView(location.search));
   const [showTyping, setShowTyping] = useState(shouldShowTypingEffect);
   const [showSeedanceModal, setShowSeedanceModal] = useState(false);
+  const [usagePlan, setUsagePlan] = useState<BillingPlanId>("plus");
+  const [usageQuotaState, setUsageQuotaState] = useState<UsageQuotaState>("warning");
 
   const setWorkspaceRoute = useCallback(
     (nextView: View) => {
@@ -3186,6 +3372,13 @@ export default function OpenClawWorkspace() {
           <HomeDashboard
             onNavigate={setWorkspaceRoute}
             onRequestSeedanceModal={() => setShowSeedanceModal(true)}
+            plan={usagePlan}
+            quotaState={usageQuotaState}
+            onOpenPricing={(target) =>
+              navigate(
+                target === "credit-packs" ? "/openclaw/pricing#credit-packs" : "/openclaw/pricing",
+              )
+            }
             showTyping={showTyping}
             onTypingComplete={handleTypingComplete}
             stars={stars}
@@ -3203,6 +3396,10 @@ export default function OpenClawWorkspace() {
             onCheckForUpdates={handleCheckForUpdates}
             onOpenChangelog={openChangelog}
             onOpenPricing={() => navigate("/openclaw/pricing")}
+            usagePlan={usagePlan}
+            onUsagePlanChange={setUsagePlan}
+            usageQuotaState={usageQuotaState}
+            onUsageQuotaStateChange={setUsageQuotaState}
           />
         )}
       </main>

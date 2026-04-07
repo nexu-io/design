@@ -39,13 +39,13 @@
 
 参考 PR：https://github.com/refly-ai/agent-digital-cowork/pull/117
 
-- [ ] 在 Home 增加额度预警 banner
-- [ ] 支持 warning / depleted 两种状态
-- [ ] 按套餐区分 CTA：Free / Plus / Pro / Ultimate
-- [ ] Plus：主 CTA 为升级 Pro
-- [ ] Pro：主 CTA 为 credit packs
-- [ ] Free：展示 BYOK + 升级套餐
-- [ ] 增加 banner dismiss 逻辑
+- [x] 在 Home 增加额度预警 banner
+- [x] 支持 warning / depleted 两种状态
+- [x] 按套餐区分 CTA：Free / Plus / Pro / Ultimate
+- [x] Plus：主 CTA 为升级 Pro
+- [x] Pro：主 CTA 为 credit packs
+- [x] Free：展示 BYOK + 升级套餐
+- [x] 增加 banner dismiss 逻辑
 
 **参考当前文件**
 - `apps/demo/src/pages/openclaw/OpenClawWorkspace.tsx`
@@ -138,7 +138,7 @@
 
 - [x] 1. PR #113 — Settings General Tab
 - [x] 2. PR #114 — Pricing / Usage UX
-- [ ] 3. PR #117 — Budget Banner
+- [x] 3. PR #117 — Budget Banner
 - [ ] 4. PR #111 — Rewards
 - [ ] 5. PR #121 — 组件库收口
 - [ ] 6. PR #124 — Windows polish
@@ -152,7 +152,7 @@
 - [x] 新增或整理云端定价页原型，统一落到 `apps/demo/src/pages/openclaw/` 下
 - [x] 将 PR #114 的 Pricing 相关 UI 以 `apps/demo` 页面原型方式实现，不依赖旧 `design-system` 路径
 - [x] 在 `apps/demo` 的 Settings 原型中增加 `Usage` tab，并与云端套餐/额度逻辑保持一致
-- [ ] 在 `apps/demo` 的 Home 原型中增加额度预警 Banner，并按云端套餐状态联动
+- [x] 在 `apps/demo` 的 Home 原型中增加额度预警 Banner，并按云端套餐状态联动
 - [ ] 在 `apps/demo` 中补齐 Rewards 入口与页面原型，供云端用量激励链路串联
 - [ ] 将左下角用量指示器改造成可跳转到云端 `Settings > Usage` 的入口
 - [ ] 评估并抽离云端 Web 原型共用组件，优先沉淀到 `packages/ui-web`，页面仍放在 `apps/demo`
