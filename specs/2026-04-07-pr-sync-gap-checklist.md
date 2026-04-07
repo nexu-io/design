@@ -21,14 +21,14 @@
 
 参考 PR：https://github.com/refly-ai/agent-digital-cowork/pull/114
 
-- [ ] 将 Pricing 对齐为四档套餐：Free / Plus / Pro / Ultimate
-- [ ] 增加首月促销价 + 原价划线展示
-- [ ] 增加套餐内模型列表与可用性 badge
-- [ ] 在 Settings 中增加 `Usage` tab
-- [ ] 增加套餐信息卡 / 重置倒计时 / 升级 CTA / 权益列表
-- [ ] 增加奖励积分拆分区块
-- [ ] 增加“分享 nexu 获取额外积分”入口
-- [ ] 增加 Demo 控制面板：切换登录态 / 套餐 / 额度状态
+- [x] 将 Pricing 对齐为四档套餐：Free / Plus / Pro / Ultimate
+- [x] 增加首月促销价 + 原价划线展示
+- [x] 增加套餐内模型列表与可用性 badge
+- [x] 在 Settings 中增加 `Usage` tab
+- [x] 增加套餐信息卡 / 重置倒计时 / 升级 CTA / 权益列表
+- [x] 增加奖励积分拆分区块
+- [x] 增加“分享 nexu 获取额外积分”入口
+- [x] 增加 Demo 控制面板：切换登录态 / 套餐 / 额度状态
 
 **参考当前文件**
 - `apps/demo/src/App.tsx:304-305`
@@ -137,7 +137,7 @@
 ## 建议顺序
 
 - [x] 1. PR #113 — Settings General Tab
-- [ ] 2. PR #114 — Pricing / Usage UX
+- [x] 2. PR #114 — Pricing / Usage UX
 - [ ] 3. PR #117 — Budget Banner
 - [ ] 4. PR #111 — Rewards
 - [ ] 5. PR #121 — 组件库收口
@@ -149,9 +149,9 @@
 - [ ] 统一约定：云端 Web 原型优先放在 `apps/demo/src/pages/openclaw/` 下，避免继续分散到其他目录
 - [ ] 梳理 `apps/demo` 下现有 openclaw 页面路由，标记哪些属于云端 Web、哪些属于桌面端工作台壳层
 - [ ] 为云端 Web 原型补一份页面地图，明确保留页面、待新增页面、待废弃页面
-- [ ] 新增或整理云端定价页原型，统一落到 `apps/demo/src/pages/openclaw/` 下
-- [ ] 将 PR #114 的 Pricing 相关 UI 以 `apps/demo` 页面原型方式实现，不依赖旧 `design-system` 路径
-- [ ] 在 `apps/demo` 的 Settings 原型中增加 `Usage` tab，并与云端套餐/额度逻辑保持一致
+- [x] 新增或整理云端定价页原型，统一落到 `apps/demo/src/pages/openclaw/` 下
+- [x] 将 PR #114 的 Pricing 相关 UI 以 `apps/demo` 页面原型方式实现，不依赖旧 `design-system` 路径
+- [x] 在 `apps/demo` 的 Settings 原型中增加 `Usage` tab，并与云端套餐/额度逻辑保持一致
 - [ ] 在 `apps/demo` 的 Home 原型中增加额度预警 Banner，并按云端套餐状态联动
 - [ ] 在 `apps/demo` 中补齐 Rewards 入口与页面原型，供云端用量激励链路串联
 - [ ] 将左下角用量指示器改造成可跳转到云端 `Settings > Usage` 的入口

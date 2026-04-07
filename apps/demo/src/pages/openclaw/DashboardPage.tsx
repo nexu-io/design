@@ -190,7 +190,7 @@ export default function DashboardPage() {
           <Button
             variant="link"
             size="sm"
-            onClick={() => navigate("/openclaw/workspace/billing")}
+            onClick={() => navigate("/openclaw/workspace?view=settings&tab=usage")}
             className="text-[11px]"
           >
             View details <ArrowUpRight size={12} />
@@ -254,7 +254,7 @@ export default function DashboardPage() {
           <Button
             variant="soft"
             size="xs"
-            onClick={() => navigate("/openclaw/workspace/billing")}
+            onClick={() => navigate("/openclaw/pricing")}
             className="font-semibold"
           >
             <Crown size={10} /> Upgrade to Pro for 10x credits

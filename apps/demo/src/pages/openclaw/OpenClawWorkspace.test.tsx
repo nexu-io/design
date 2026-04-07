@@ -93,6 +93,19 @@ describe("OpenClawWorkspace bot manager panel", () => {
     expect(screen.getByRole("button", { name: "ws.settings.account.signOut" })).toBeTruthy();
   });
 
+  it("opens the usage settings tab from query params", () => {
+    render(
+      <MemoryRouter initialEntries={["/openclaw/workspace?view=settings&tab=usage"]}>
+        <OpenClawWorkspace />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("tab", { name: "Usage" }).getAttribute("aria-selected")).toBe("true");
+    expect(screen.getByText("Usage & billing")).toBeTruthy();
+    expect(screen.getByText("Current package")).toBeTruthy();
+    expect(screen.getByText("Rewards credits split")).toBeTruthy();
+  });
+
   it("opens settings from the sidebar navigation", () => {
     render(
       <MemoryRouter>

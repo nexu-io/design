@@ -73,6 +73,7 @@ import { useLocale } from "../../hooks/useLocale";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import ChannelDetailPage from "./ChannelDetailPage";
 import ImportSkillModal from "./ImportSkillModal";
+import { type BillingPlanId, type UsageQuotaState, UsageSummaryPanel } from "./billingDemo";
 import { MOCK_CHANNELS, MOCK_DEPLOYMENTS, type ModelProvider, getProviderDetails } from "./data";
 import { SKILL_CATEGORIES, type SkillDef, type ToolTag } from "./skillData";
 
@@ -1730,10 +1731,10 @@ function DeploymentsView() {
 /*  Settings View                                                      */
 /* ------------------------------------------------------------------ */
 
-type SettingsTab = "general" | "providers";
+type SettingsTab = "general" | "usage" | "providers";
 
 function isSettingsTab(value: string | null): value is SettingsTab {
-  return value === "general" || value === "providers";
+  return value === "general" || value === "usage" || value === "providers";
 }
 
 function getAccountInitials(email: string) {
@@ -1770,6 +1771,7 @@ function SettingsView({
   updateStatus,
   onCheckForUpdates,
   onOpenChangelog,
+  onOpenPricing,
 }: {
   initialTab?: SettingsTab;
   initialProviderId?: ModelProvider;
@@ -1777,6 +1779,7 @@ function SettingsView({
   updateStatus: "idle" | "checking" | "available" | "ready" | "error";
   onCheckForUpdates: () => void;
   onOpenChangelog: () => void;
+  onOpenPricing: () => void;
 }) {
   const { t } = useLocale();
   const [settingsTab, setSettingsTab] = useState<SettingsTab>(initialTab);
@@ -1786,6 +1789,8 @@ function SettingsView({
   const [showInDock, setShowInDock] = useState(true);
   const [usageAnalytics, setUsageAnalytics] = useState(true);
   const [crashReports, setCrashReports] = useState(true);
+  const [usagePlan, setUsagePlan] = useState<BillingPlanId>("plus");
+  const [usageQuotaState, setUsageQuotaState] = useState<UsageQuotaState>("warning");
   const [configuredProviders, setConfiguredProviders] = useState<Set<string>>(
     () => new Set(["nexu"]),
   );
@@ -1946,6 +1951,7 @@ function SettingsView({
           <div className="inline-flex rounded-xl border border-border bg-surface-1 p-1">
             {[
               { id: "general" as const, label: t("ws.settings.tab.general") },
+              { id: "usage" as const, label: "Usage" },
               { id: "providers" as const, label: t("ws.settings.tab.providers") },
             ].map((tab) => {
               const active = settingsTab === tab.id;
@@ -2174,6 +2180,52 @@ function SettingsView({
                 </a>
               </div>
             </div>
+          </div>
+        )}
+
+        {settingsTab === "usage" && (
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-border bg-surface-1 p-5">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <div className="text-[15px] font-semibold text-text-primary">Usage & billing</div>
+                  <div className="mt-1 text-[12px] text-text-secondary">
+                    Review current plan benefits, reset countdown, rewards credits, and upgrade
+                    paths.
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {(["free", "plus", "pro", "ultimate"] as const).map((plan) => (
+                    <Button
+                      key={plan}
+                      size="inline"
+                      variant={usagePlan === plan ? "default" : "outline"}
+                      onClick={() => setUsagePlan(plan)}
+                    >
+                      {plan}
+                    </Button>
+                  ))}
+                  {(["healthy", "warning", "depleted"] as const).map((state) => (
+                    <Button
+                      key={state}
+                      size="inline"
+                      variant={usageQuotaState === state ? "default" : "outline"}
+                      onClick={() => setUsageQuotaState(state)}
+                    >
+                      {state}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <UsageSummaryPanel
+              planId={usagePlan}
+              usageState={usageQuotaState}
+              isSignedIn={isSignedIn}
+              onViewPlans={onOpenPricing}
+              compact
+            />
           </div>
         )}
 
@@ -2544,6 +2596,27 @@ export default function OpenClawWorkspace() {
   const [showTyping, setShowTyping] = useState(shouldShowTypingEffect);
   const [showSeedanceModal, setShowSeedanceModal] = useState(false);
 
+  const setWorkspaceRoute = useCallback(
+    (nextView: View) => {
+      setView(nextView);
+
+      if (nextView.type !== "settings") {
+        navigate("/openclaw/workspace");
+        return;
+      }
+
+      const params = new URLSearchParams();
+      params.set("view", "settings");
+      params.set("tab", nextView.tab ?? "general");
+      if (nextView.providerId) {
+        params.set("provider", nextView.providerId);
+      }
+
+      navigate(`/openclaw/workspace?${params.toString()}`);
+    },
+    [navigate],
+  );
+
   const SIDEBAR_MIN = 160;
   const SIDEBAR_MAX = 320;
   const SIDEBAR_DEFAULT = 192;
@@ -2615,6 +2688,10 @@ export default function OpenClawWorkspace() {
     },
     [sidebarWidth],
   );
+
+  useEffect(() => {
+    setView(getInitialWorkspaceView(location.search));
+  }, [location.search]);
 
   useEffect(() => {
     if (view.type === "home") {
@@ -2732,7 +2809,7 @@ export default function OpenClawWorkspace() {
                   <button
                     type="button"
                     key={item.id}
-                    onClick={() => setView({ type: item.id } as View)}
+                    onClick={() => setWorkspaceRoute({ type: item.id } as View)}
                     className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-2 ${
                       active ? "nav-item-active" : "nav-item"
                     }`}
@@ -2769,7 +2846,7 @@ export default function OpenClawWorkspace() {
                     <button
                       type="button"
                       key={ch.id}
-                      onClick={() => setView({ type: "conversations", channelId: ch.id })}
+                      onClick={() => setWorkspaceRoute({ type: "conversations", channelId: ch.id })}
                       className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-1.5 ${
                         active ? "nav-item-active" : "nav-item"
                       }`}
@@ -3085,7 +3162,7 @@ export default function OpenClawWorkspace() {
         <LanguageSwitcher variant="muted" />
         <button
           type="button"
-          onClick={() => setView({ type: "settings" })}
+          onClick={() => setWorkspaceRoute({ type: "settings" })}
           className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary"
         >
           <Settings size={16} />
@@ -3107,7 +3184,7 @@ export default function OpenClawWorkspace() {
       <main className="flex-1 overflow-hidden min-h-0 bg-surface-1 rounded-l-[12px] pt-8">
         {view.type === "home" && (
           <HomeDashboard
-            onNavigate={setView}
+            onNavigate={setWorkspaceRoute}
             onRequestSeedanceModal={() => setShowSeedanceModal(true)}
             showTyping={showTyping}
             onTypingComplete={handleTypingComplete}
@@ -3125,6 +3202,7 @@ export default function OpenClawWorkspace() {
             updateStatus={settingsUpdateStatus}
             onCheckForUpdates={handleCheckForUpdates}
             onOpenChangelog={openChangelog}
+            onOpenPricing={() => navigate("/openclaw/pricing")}
           />
         )}
       </main>
