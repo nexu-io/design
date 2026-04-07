@@ -3,10 +3,10 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Card,
   CardContent,
+  FilterPillTrigger,
   FilterPills,
   FilterPillsContent,
   FilterPillsList,
-  FilterPillTrigger,
 } from "@nexu-design/ui-web";
 
 const meta = {

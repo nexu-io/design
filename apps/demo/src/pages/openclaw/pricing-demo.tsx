@@ -1,9 +1,9 @@
 import {
   Badge,
   Button,
+  FilterPillTrigger,
   FilterPills,
   FilterPillsList,
-  FilterPillTrigger,
   PricingCard,
   StatCard,
 } from "@nexu-design/ui-web";

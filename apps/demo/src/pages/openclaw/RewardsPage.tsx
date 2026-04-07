@@ -15,6 +15,7 @@ import {
   PageHeader,
   StatCard,
 } from "@nexu-design/ui-web";
+import { SectionHeader } from "@nexu-design/ui-web";
 import {
   ArrowUpRight,
   Check,
@@ -30,7 +31,6 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { SectionHeader } from "@nexu-design/ui-web";
 import { type RewardTaskState, useBudget } from "../../hooks/useBudget";
 import { usePageTitle } from "../../hooks/usePageTitle";
 
