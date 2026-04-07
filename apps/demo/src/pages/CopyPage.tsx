@@ -2,15 +2,9 @@ import { Button } from "@nexu-design/ui-web";
 
 import { PageHeader, PageShell } from "@nexu-design/ui-web";
 
-import { SectionHeader } from "../components/SectionHeader";
+import { SectionHeader } from "@nexu-design/ui-web";
 
-function ChatBubble({
-  from,
-  children,
-}: {
-  from: "user" | "clone";
-  children: React.ReactNode;
-}) {
+function ChatBubble({ from, children }: { from: "user" | "clone"; children: React.ReactNode }) {
   return (
     <div className={`flex ${from === "user" ? "justify-end" : "justify-start"} mb-3`}>
       {from === "clone" && (

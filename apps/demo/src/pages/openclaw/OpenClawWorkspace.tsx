@@ -5,12 +5,11 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxTrigger,
-  DiscordIcon,
-  FeishuIcon,
   InteractiveRow,
   InteractiveRowContent,
   InteractiveRowLeading,
   InteractiveRowTrailing,
+  NavItem,
   PanelFooter,
   PanelFooterActions,
   ProviderLogo,
@@ -21,7 +20,6 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SlackIcon,
   SplitView,
   Switch,
   Tabs,
@@ -42,6 +40,7 @@ import {
   Check,
   ChevronDown,
   CircleHelp,
+  Clock,
   Compass,
   Cpu,
   ExternalLink,
@@ -73,6 +72,12 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import ChannelDetailPage from "./ChannelDetailPage";
 import ImportSkillModal from "./ImportSkillModal";
 import { MOCK_CHANNELS, MOCK_DEPLOYMENTS, type ModelProvider, getProviderDetails } from "./data";
+import {
+  BILLING_PLANS,
+  type BillingPlanId,
+  type UsageQuotaState,
+  UsageSummaryPanel,
+} from "./pricing-demo";
 import { SKILL_CATEGORIES, type SkillDef, type ToolTag } from "./skillData";
 
 const openExternal = async (url: string) => {
@@ -84,6 +89,7 @@ const openExternal = async (url: string) => {
 };
 
 const GITHUB_URL = "https://github.com/refly-ai/nexu";
+const BUDGET_BANNER_DISMISSED_KEY = "nexu_budget_banner_dismissed";
 
 type SkillFilter = "all" | ToolTag;
 
@@ -461,12 +467,62 @@ function shouldShowTypingEffect(): boolean {
 
 /* ── Channel icons for onboarding ── */
 
+function FeishuIconSetup({ size = 20 }: { size?: number }) {
+  return (
+    <img
+      src="/feishu-logo.png"
+      width={size}
+      height={size}
+      alt="Feishu"
+      className="object-contain"
+    />
+  );
+}
+
+function SlackIconSetup({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zm1.271 0a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313z"
+        fill="#E01E5A"
+      />
+      <path
+        d="M8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zm0 1.271a2.527 2.527 0 0 1 2.521 2.521 2.527 2.527 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312z"
+        fill="#36C5F0"
+      />
+      <path
+        d="M18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zm-1.27 0a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.163 0a2.528 2.528 0 0 1 2.523 2.522v6.312z"
+        fill="#2EB67D"
+      />
+      <path
+        d="M15.163 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.163 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zm0-1.27a2.527 2.527 0 0 1-2.52-2.523 2.527 2.527 0 0 1 2.52-2.52h6.315A2.528 2.528 0 0 1 24 15.163a2.528 2.528 0 0 1-2.522 2.523h-6.315z"
+        fill="#ECB22E"
+      />
+    </svg>
+  );
+}
+
+function DiscordIconSetup({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"
+        fill="#5865F2"
+      />
+      <path
+        d="M8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"
+        fill="#fff"
+      />
+    </svg>
+  );
+}
+
 const ONBOARDING_CHANNELS = [
   {
     id: "feishu",
     name: "Feishu",
     shortName: "Feishu",
-    icon: FeishuIcon,
+    icon: FeishuIconSetup,
     color: "#FFFFFF",
     recommended: true,
     docUrl: "https://docs.nexu.ai/channels/feishu",
@@ -476,7 +532,7 @@ const ONBOARDING_CHANNELS = [
     id: "slack",
     name: "Slack",
     shortName: "Slack",
-    icon: SlackIcon,
+    icon: SlackIconSetup,
     color: "#FFFFFF",
     docUrl: "https://docs.nexu.ai/channels/slack",
     chatUrl: "https://slack.com/",
@@ -485,7 +541,7 @@ const ONBOARDING_CHANNELS = [
     id: "discord",
     name: "Discord",
     shortName: "Discord",
-    icon: DiscordIcon,
+    icon: DiscordIconSetup,
     color: "#FFFFFF",
     docUrl: "https://docs.nexu.ai/channels/discord",
     chatUrl: "https://discord.com/",
@@ -494,6 +550,289 @@ const ONBOARDING_CHANNELS = [
 
 const CHANNELS_CONNECTED_KEY = "nexu_channels_connected";
 const CHANNEL_ACTIVE_KEY = "nexu_channel_active";
+const SEEDANCE_BANNER_DISMISSED_KEY = "nexu_seedance_banner_dismissed";
+
+const SEEDANCE_COUNTDOWN_CYCLE_MS = 2 * 24 * 60 * 60 * 1000;
+const SEEDANCE_COUNTDOWN_LOOP_END_MS = Date.now() + SEEDANCE_COUNTDOWN_CYCLE_MS - 1000;
+
+function getSeedanceCountdown(now: number) {
+  const cycleRemainingMs =
+    (((SEEDANCE_COUNTDOWN_LOOP_END_MS - now) % SEEDANCE_COUNTDOWN_CYCLE_MS) +
+      SEEDANCE_COUNTDOWN_CYCLE_MS) %
+    SEEDANCE_COUNTDOWN_CYCLE_MS;
+  const remainingMs =
+    cycleRemainingMs === 0 ? SEEDANCE_COUNTDOWN_CYCLE_MS - 1000 : cycleRemainingMs;
+  const totalSeconds = Math.floor(remainingMs / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return {
+    compactLabel: `${String(days).padStart(2, "0")}天 ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
+    days,
+    hours,
+    minutes,
+    seconds,
+  };
+}
+
+function SeedanceCountdownBlocks({ now, compact = false }: { now: number; compact?: boolean }) {
+  const countdown = getSeedanceCountdown(now);
+
+  if (compact) {
+    return (
+      <div
+        className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none shadow-sm"
+        style={{
+          color: "var(--color-text-primary)",
+          background:
+            "linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 82%, white), color-mix(in srgb, var(--color-danger) 78%, var(--color-warning) 22%))",
+          borderColor:
+            "color-mix(in srgb, var(--color-danger) 56%, var(--color-warning) 32%, white)",
+          boxShadow: "var(--shadow-focus)",
+        }}
+      >
+        <Clock size={10} />
+        <span className="tabular-nums">{countdown.compactLabel}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-4 gap-2">
+      {[
+        { label: "天", value: countdown.days },
+        { label: "时", value: countdown.hours },
+        { label: "分", value: countdown.minutes },
+        { label: "秒", value: countdown.seconds },
+      ].map((item) => (
+        <div
+          key={item.label}
+          className="rounded-[12px] border px-2 py-2 text-center shadow-sm"
+          style={{
+            background:
+              "linear-gradient(180deg, color-mix(in srgb, white 42%, var(--color-warning) 58%), color-mix(in srgb, white 58%, var(--color-danger) 42%))",
+            borderColor:
+              "color-mix(in srgb, var(--color-danger) 42%, var(--color-warning) 38%, white)",
+            boxShadow: "var(--shadow-focus)",
+          }}
+        >
+          <div
+            className="text-[18px] font-semibold tabular-nums"
+            style={{
+              color: "color-mix(in srgb, var(--color-danger) 58%, var(--color-warning) 42%)",
+            }}
+          >
+            {String(item.value).padStart(2, "0")}
+          </div>
+          <div
+            className="mt-0.5 text-[10px] leading-none"
+            style={{
+              color: "color-mix(in srgb, var(--color-danger) 46%, var(--color-warning) 54%)",
+            }}
+          >
+            {item.label}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+type SeedanceStep = "star" | "feishu";
+
+const FEISHU_GROUP_URL =
+  "https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=98drf9e0-928f-4706-b0af-e515abfb12c0";
+const SEEDANCE_TUTORIAL_URL = "https://powerformer.feishu.cn/wiki/OFxFw2MpyiFWKpk9n2Dc7joEngc";
+
+function SeedancePromoModal({ onClose }: { onClose: () => void }) {
+  const [step, setStep] = useState<SeedanceStep>("star");
+  const [starred, setStarred] = useState(false);
+  const [countdownNow, setCountdownNow] = useState(Date.now());
+
+  const handleStar = () => {
+    openExternal(GITHUB_URL);
+    setStarred(true);
+  };
+
+  const stepDots: SeedanceStep[] = ["star", "feishu"];
+  const stepMeta: Record<SeedanceStep, string> = {
+    star: "第一步：GitHub Star 并截图",
+    feishu: "第二步：加入飞书群并填写问卷",
+  };
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setCountdownNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-[300] flex items-center justify-center">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/50 backdrop-blur-[4px]"
+        onClick={onClose}
+      />
+      <div
+        className="relative w-full max-w-[348px] mx-4 rounded-2xl border border-border bg-surface-1 shadow-[0_24px_64px_rgba(0,0,0,0.24),0_0_0_1px_rgba(0,0,0,0.06)] overflow-hidden"
+        style={{ animation: "scaleIn 220ms cubic-bezier(0.16,1,0.3,1)" }}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-3.5 right-3.5 z-20 w-6 h-6 flex items-center justify-center rounded-full text-text-muted hover:text-text-primary hover:bg-white/70 transition-colors"
+        >
+          <X size={13} />
+        </button>
+
+        <div
+          className="relative border-b"
+          style={{
+            background:
+              "linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 16%, white), color-mix(in srgb, var(--color-brand-primary) 8%, white))",
+            borderColor: "color-mix(in srgb, var(--color-warning) 18%, white)",
+          }}
+        >
+          <div
+            className="absolute inset-0 opacity-60"
+            style={{
+              background:
+                "radial-gradient(circle at top right, color-mix(in srgb, var(--color-brand-primary) 12%, transparent), transparent 45%)",
+            }}
+          />
+          <div className="relative px-5 pt-5 pb-4">
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-white/60 bg-white/75 px-2.5 py-1 text-[10px] font-semibold text-[var(--color-warning)] leading-none shadow-sm">
+                <Sparkles size={10} />
+                限时体验
+              </div>
+              <SeedanceCountdownBlocks now={countdownNow} compact />
+            </div>
+            <div className="mt-3">
+              <h2 className="text-[18px] leading-tight font-semibold text-text-primary">
+                领取 Seedance 2.0 体验 Key
+              </h2>
+            </div>
+          </div>
+        </div>
+
+        <div className="px-5 pt-4 pb-5">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="text-[14px] font-semibold text-text-primary">{stepMeta[step]}</div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              {stepDots.map((s) => (
+                <div
+                  key={s}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    s === step
+                      ? "w-5 bg-[var(--color-brand-primary)]"
+                      : stepDots.indexOf(s) < stepDots.indexOf(step)
+                        ? "w-2 bg-[var(--color-brand-primary)]/40"
+                        : "w-2 bg-border"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {step === "star" && (
+            <>
+              <div
+                className="rounded-[12px] border px-4 py-3 mb-4"
+                style={{
+                  background: "color-mix(in srgb, var(--color-warning) 7%, white)",
+                  borderColor: "color-mix(in srgb, var(--color-warning) 16%, white)",
+                }}
+              >
+                <div className="flex items-start gap-3">
+                  <div
+                    className="flex h-9 w-9 items-center justify-center rounded-[12px] border shrink-0"
+                    style={{
+                      background: "color-mix(in srgb, var(--color-warning) 12%, white)",
+                      borderColor: "color-mix(in srgb, var(--color-warning) 18%, white)",
+                    }}
+                  >
+                    <Star
+                      size={18}
+                      className="text-[var(--color-warning)] fill-[var(--color-warning)]"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[11px] text-text-muted leading-relaxed">
+                      在 GitHub 为 nexu star；并将点完后的仓库页面进行截图。
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleStar}
+                className={`w-full h-[40px] rounded-[10px] text-[13px] font-semibold flex items-center justify-center gap-2 transition-colors mb-2.5 ${
+                  starred
+                    ? "border border-border bg-surface-1 text-text-secondary hover:bg-surface-2"
+                    : "bg-[#24292f] hover:bg-[#1c2026] text-white"
+                }`}
+              >
+                {starred ? (
+                  <Check size={13} className="text-[var(--color-success)]" />
+                ) : (
+                  <Star size={13} className="fill-amber-400 text-amber-400" />
+                )}
+                {starred ? "已点 Star" : "去 GitHub Star"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep("feishu")}
+                disabled={!starred}
+                className={`w-full rounded-[10px] text-[12px] font-medium transition-colors ${
+                  starred
+                    ? "h-[40px] bg-[#24292f] hover:bg-[#1c2026] text-white"
+                    : "h-[38px] border border-border text-text-secondary hover:bg-surface-2 disabled:opacity-30 disabled:cursor-not-allowed"
+                }`}
+              >
+                我已经截图，去进群填问卷
+              </button>
+            </>
+          )}
+
+          {step === "feishu" && (
+            <>
+              <p className="text-[12px] text-text-secondary leading-relaxed mb-4">
+                加入飞书群并填写问卷后，我们会联系并发送 Key。拿到 Key 后，将其输入到 nexu Bot
+                即可开始体验。
+              </p>
+              <button
+                type="button"
+                onClick={() => openExternal(SEEDANCE_TUTORIAL_URL)}
+                className="w-full mb-3 inline-flex items-center justify-center gap-1.5 text-[12px] font-medium text-[var(--color-brand-primary)] hover:underline"
+              >
+                <ArrowUpRight size={12} />
+                查看教程：如何在 nexu Bot 中体验 Seedance 2.0
+              </button>
+
+              <button
+                type="button"
+                onClick={() => openExternal(FEISHU_GROUP_URL)}
+                className="w-full h-[40px] rounded-[10px] bg-[var(--color-brand-primary)] hover:opacity-90 text-white text-[13px] font-semibold flex items-center justify-center gap-2 transition-opacity mb-2.5"
+              >
+                <ExternalLink size={13} />
+                点击链接加入飞书群
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full h-[36px] rounded-[10px] text-[12px] text-text-muted hover:text-text-secondary hover:bg-surface-2 transition-colors"
+              >
+                好的，已了解
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const CHANNEL_CONFIG_FIELDS: Record<
   string,
@@ -545,11 +884,19 @@ const CHANNEL_CONFIG_FIELDS: Record<
 
 function HomeDashboard({
   onNavigate,
+  onRequestSeedanceModal,
+  plan,
+  quotaState,
+  onOpenPricing,
   showTyping: _showTyping,
   onTypingComplete: _onTypingComplete,
   stars,
 }: {
   onNavigate: (view: View) => void;
+  onRequestSeedanceModal: () => void;
+  plan: BillingPlanId;
+  quotaState: UsageQuotaState;
+  onOpenPricing: (target?: "plans" | "credit-packs") => void;
   showTyping?: boolean;
   onTypingComplete?: () => void;
   stars?: number | null;
@@ -572,6 +919,21 @@ function HomeDashboard({
   const [configValues, setConfigValues] = useState<Record<string, string>>({});
   const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
   const [selectedModelId, setSelectedModelId] = useState("nexu-claude-opus-4-6");
+  const [showSeedanceBanner, setShowSeedanceBanner] = useState(() => {
+    try {
+      return localStorage.getItem(SEEDANCE_BANNER_DISMISSED_KEY) !== "1";
+    } catch {
+      return true;
+    }
+  });
+  const [dismissedBudgetBanner, setDismissedBudgetBanner] = useState(() => {
+    try {
+      return localStorage.getItem(BUDGET_BANNER_DISMISSED_KEY) ?? "";
+    } catch {
+      return "";
+    }
+  });
+  const [seedanceNow, setSeedanceNow] = useState(Date.now());
   const hasChannel = connectedIds.size > 0;
   const connectedChannels = ONBOARDING_CHANNELS.filter((c) => connectedIds.has(c.id));
   const providerDetails = getProviderDetails();
@@ -583,6 +945,165 @@ function HomeDashboard({
   );
   const selectedModel =
     allEnabledModels.find((m) => m.id === selectedModelId) ?? allEnabledModels[0];
+  const currentPlan = BILLING_PLANS.find((item) => item.id === plan) ?? BILLING_PLANS[0];
+  const proPlan = BILLING_PLANS.find((item) => item.id === "pro") ?? BILLING_PLANS[0];
+  const budgetBannerSignature = `${plan}:${quotaState}`;
+  const quotaAlert = quotaState === "warning" || quotaState === "depleted";
+
+  const dismissBudgetBanner = () => {
+    setDismissedBudgetBanner(budgetBannerSignature);
+    try {
+      localStorage.setItem(BUDGET_BANNER_DISMISSED_KEY, budgetBannerSignature);
+    } catch {
+      // noop
+    }
+  };
+
+  const budgetBanner =
+    quotaAlert &&
+    dismissedBudgetBanner !== budgetBannerSignature &&
+    selectedModel?.providerId === "nexu"
+      ? (() => {
+          const isDepleted = quotaState === "depleted";
+          const accentClass = isDepleted
+            ? "border-[var(--color-danger)]/25 bg-[var(--color-danger)]/6"
+            : "border-[var(--color-warning)]/25 bg-[var(--color-warning)]/6";
+          const iconClass = isDepleted
+            ? "bg-[var(--color-danger)]/12 text-[var(--color-danger)]"
+            : "bg-[var(--color-warning)]/12 text-[var(--color-warning)]";
+          const headline = isDepleted
+            ? `${currentPlan.name} credits are exhausted`
+            : `${currentPlan.name} credits are running low`;
+          const proCapacityMultiple = Math.max(
+            1,
+            Math.round(proPlan.credits / Math.max(currentPlan.credits, 1)),
+          );
+          const planSpecificCopy =
+            plan === "free"
+              ? "Switch to BYOK now, or upgrade to unlock more included nexu credits."
+              : plan === "plus"
+                ? `Upgrade to Pro for ${proCapacityMultiple}x more monthly credits, or top up with credit packs.`
+                : plan === "pro"
+                  ? "Top up with credit packs now, or switch to BYOK while this cycle resets."
+                  : "Top up with credit packs now, or review higher-cap options for your workspace.";
+
+          return (
+            <div
+              className={`relative overflow-hidden rounded-2xl border p-4 sm:p-5 ${accentClass}`}
+            >
+              <button
+                type="button"
+                aria-label="Dismiss budget banner"
+                onClick={dismissBudgetBanner}
+                className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-white/70 hover:text-text-primary"
+              >
+                <X size={14} />
+              </button>
+
+              <div className="pr-8">
+                <div className="flex items-start gap-3">
+                  <div
+                    className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${iconClass}`}
+                  >
+                    <AlertCircle size={18} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[15px] font-semibold text-text-primary">
+                        {headline}
+                      </span>
+                      <span className="rounded-full border border-white/70 bg-white/80 px-2 py-0.5 text-[11px] font-medium text-text-secondary">
+                        {currentPlan.name}
+                      </span>
+                      <span className="rounded-full border border-white/70 bg-white/60 px-2 py-0.5 text-[11px] font-medium text-text-secondary">
+                        {isDepleted ? "Depleted" : "Warning"}
+                      </span>
+                    </div>
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
+                      You’re using nexu-managed models in Home. {planSpecificCopy}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {plan === "plus" && (
+                    <>
+                      <Button
+                        size="sm"
+                        className="text-white hover:text-white"
+                        onClick={() => onOpenPricing("plans")}
+                      >
+                        Upgrade to Pro · {proPlan.credits.toLocaleString()} credits / month
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onOpenPricing("credit-packs")}
+                      >
+                        Browse credit packs
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => onNavigate({ type: "settings", tab: "providers" })}
+                      >
+                        Use BYOK
+                      </Button>
+                    </>
+                  )}
+
+                  {plan === "pro" && (
+                    <>
+                      <Button size="sm" onClick={() => onOpenPricing("credit-packs")}>
+                        Buy credit packs
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onNavigate({ type: "settings", tab: "providers" })}
+                      >
+                        Use BYOK
+                      </Button>
+                    </>
+                  )}
+
+                  {plan === "ultimate" && (
+                    <>
+                      <Button size="sm" onClick={() => onOpenPricing("credit-packs")}>
+                        Buy credit packs
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => onOpenPricing("plans")}>
+                        Review plan options
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => onNavigate({ type: "settings", tab: "providers" })}
+                      >
+                        Use BYOK
+                      </Button>
+                    </>
+                  )}
+
+                  {plan === "free" && (
+                    <>
+                      <Button
+                        size="sm"
+                        onClick={() => onNavigate({ type: "settings", tab: "providers" })}
+                      >
+                        Use BYOK
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => onOpenPricing("plans")}>
+                        Upgrade plan
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })()
+      : null;
 
   const persistChannels = (ids: Set<string>, active: string) => {
     localStorage.setItem(CHANNELS_CONNECTED_KEY, JSON.stringify([...ids]));
@@ -646,6 +1167,87 @@ function HomeDashboard({
     }
   }, [videoHover]);
 
+  useEffect(() => {
+    const timer = window.setInterval(() => setSeedanceNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    setShowSeedanceBanner(true);
+    try {
+      localStorage.removeItem(SEEDANCE_BANNER_DISMISSED_KEY);
+    } catch {
+      // noop
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleReset = () => {
+      setShowSeedanceBanner(true);
+      try {
+        localStorage.removeItem(SEEDANCE_BANNER_DISMISSED_KEY);
+      } catch {
+        // noop
+      }
+    };
+    window.addEventListener("seedance-banner-reset", handleReset);
+    return () => window.removeEventListener("seedance-banner-reset", handleReset);
+  }, []);
+
+  const dismissSeedanceBanner = () => {
+    setShowSeedanceBanner(false);
+    try {
+      localStorage.setItem(SEEDANCE_BANNER_DISMISSED_KEY, "1");
+    } catch {
+      // noop
+    }
+  };
+
+  const seedanceBanner = showSeedanceBanner ? (
+    <button
+      type="button"
+      onClick={onRequestSeedanceModal}
+      className="group relative w-full overflow-hidden rounded-xl border border-[var(--color-warning)]/25 text-left transition-all hover:shadow-[var(--shadow-card)]"
+      style={{
+        background:
+          "linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 16%, white), color-mix(in srgb, var(--color-brand-primary) 10%, white))",
+      }}
+    >
+      <div className="flex items-start gap-3 px-4 py-3.5 pr-11">
+        <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-[10px] border border-white/50 bg-white/80 shrink-0">
+          <span className="text-[18px] leading-none">🎬</span>
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[13px] font-semibold text-text-primary">
+              Seedance 2.0 体验 Key
+            </span>
+            <SeedanceCountdownBlocks now={seedanceNow} compact />
+          </div>
+          <p className="mt-1 text-[12px] text-text-secondary leading-relaxed">
+            nexu 已支持 Seedance 2.0。Star 后加入飞书群并填写问卷，我们会联系并发送 Key。
+          </p>
+        </div>
+        <ArrowRight
+          size={14}
+          className="shrink-0 text-text-muted transition-transform group-hover:translate-x-0.5"
+        />
+      </div>
+      <button
+        type="button"
+        aria-label="关闭活动横幅"
+        onClick={(e) => {
+          e.stopPropagation();
+          dismissSeedanceBanner();
+        }}
+        className="absolute right-2.5 top-2.5 flex h-5 w-5 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-white/70 hover:text-text-primary"
+      >
+        <X size={12} />
+      </button>
+    </button>
+  ) : null;
+
   /* ── Scene A: First-run — Top (Hero) + Middle (Channels) only ── */
   if (!hasChannel) {
     return (
@@ -694,6 +1296,8 @@ function HomeDashboard({
             </div>
           </div>
 
+          {budgetBanner}
+
           {/* ═══ MIDDLE: Channels — default open, Feishu highlighted ═══ */}
           <div className="card overflow-visible">
             <div className="px-5 pt-4 pb-3">
@@ -715,8 +1319,8 @@ function HomeDashboard({
                       }`}
                     >
                       <div className="flex items-start gap-2.5">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center border border-border bg-white shrink-0">
-                          <Icon size={16} />
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center border border-border bg-surface-1 shrink-0">
+                          <Icon size={18} />
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="text-[13px] font-medium text-text-primary">{ch.name}</div>
@@ -735,6 +1339,17 @@ function HomeDashboard({
               </div>
             </div>
           </div>
+
+          {seedanceBanner}
+          {import.meta.env.DEV && !showSeedanceBanner ? (
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event("seedance-banner-reset"))}
+              className="w-full rounded-lg border border-[var(--color-warning)]/30 bg-[var(--color-warning)]/12 py-1.5 text-[11px] font-medium text-[var(--color-warning)] transition-colors hover:bg-[var(--color-warning)]/18"
+            >
+              恢复 Seedance Banner
+            </button>
+          ) : null}
         </div>
 
         {/* Channel config modal */}
@@ -987,6 +1602,8 @@ function HomeDashboard({
           </div>
         </div>
 
+        {budgetBanner}
+
         {/* ═══ MIDDLE: Channels Panel ═══ */}
         <div className="card card-static">
           <div className="px-5 pt-4 pb-3">
@@ -1067,6 +1684,17 @@ function HomeDashboard({
             )}
           </div>
         </div>
+
+        {seedanceBanner}
+        {import.meta.env.DEV && !showSeedanceBanner ? (
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event("seedance-banner-reset"))}
+            className="w-full rounded-lg border border-[var(--color-warning)]/30 bg-[var(--color-warning)]/12 py-1.5 text-[11px] font-medium text-[var(--color-warning)] transition-colors hover:bg-[var(--color-warning)]/18"
+          >
+            恢复 Seedance Banner
+          </button>
+        ) : null}
 
         {/* ═══ BOTTOM: GitHub Star Banner — echoes link-github-star, disappears after star ═══ */}
         <a
@@ -1333,10 +1961,20 @@ function DeploymentsView() {
 /*  Settings View                                                      */
 /* ------------------------------------------------------------------ */
 
-type SettingsTab = "providers";
+type SettingsTab = "general" | "usage" | "providers";
 
 function isSettingsTab(value: string | null): value is SettingsTab {
-  return value === "providers";
+  return value === "general" || value === "usage" || value === "providers";
+}
+
+function getAccountInitials(email: string) {
+  return email
+    .split("@")[0]
+    .split(/[._-]/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
 }
 
 function isModelProvider(value: string | null): value is ModelProvider {
@@ -1357,15 +1995,38 @@ function isModelProvider(value: string | null): value is ModelProvider {
 }
 
 function SettingsView({
-  initialTab = "providers",
+  initialTab = "general",
   initialProviderId = "anthropic",
+  appVersion,
+  updateStatus,
+  onCheckForUpdates,
+  onOpenChangelog,
+  onOpenPricing,
+  usagePlan,
+  onUsagePlanChange,
+  usageQuotaState,
+  onUsageQuotaStateChange,
 }: {
   initialTab?: SettingsTab;
   initialProviderId?: ModelProvider;
+  appVersion: string;
+  updateStatus: "idle" | "checking" | "available" | "ready" | "error";
+  onCheckForUpdates: () => void;
+  onOpenChangelog: () => void;
+  onOpenPricing: () => void;
+  usagePlan: BillingPlanId;
+  onUsagePlanChange: (plan: BillingPlanId) => void;
+  usageQuotaState: UsageQuotaState;
+  onUsageQuotaStateChange: (state: UsageQuotaState) => void;
 }) {
   const { t } = useLocale();
-  const settingsTab: SettingsTab = initialTab;
+  const [settingsTab, setSettingsTab] = useState<SettingsTab>(initialTab);
   const providers = getProviderDetails();
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [launchAtLogin, setLaunchAtLogin] = useState(true);
+  const [showInDock, setShowInDock] = useState(true);
+  const [usageAnalytics, setUsageAnalytics] = useState(true);
+  const [crashReports, setCrashReports] = useState(true);
   const [configuredProviders, setConfiguredProviders] = useState<Set<string>>(
     () => new Set(["nexu"]),
   );
@@ -1391,11 +2052,16 @@ function SettingsView({
     Record<string, "idle" | "checking" | "success" | "error">
   >({});
   const modelDropdownRef = useRef<HTMLDivElement>(null);
+  const signedInEmail = "ralph.wiggum@nexu.ai";
 
   const activeProvider = providers.find((p) => p.id === activeProviderId) ?? providers[0];
   const selectedModel = selectedModelId
     ? (availableModels.find((m) => m.id === selectedModelId) ?? null)
     : null;
+
+  useEffect(() => {
+    setSettingsTab(initialTab);
+  }, [initialTab]);
 
   useEffect(() => {
     if (!showModelDropdown) return;
@@ -1469,6 +2135,16 @@ function SettingsView({
   const checkState = checkStates[activeProvider.id] ?? "idle";
   const providerDirty = activeProvider.id !== "nexu" && isDirty(activeProvider.id);
   const showSaved = saveState === "saved" && !providerDirty;
+  const updateStatusLabel =
+    updateStatus === "checking"
+      ? t("ws.update.checking")
+      : updateStatus === "ready"
+        ? t("ws.update.ready").replace("{{version}}", appVersion)
+        : updateStatus === "error"
+          ? t("ws.update.failed")
+          : updateStatus === "available"
+            ? t("ws.update.available").replace("{{version}}", appVersion)
+            : t("ws.update.upToDateSub").replace("{{version}}", appVersion);
 
   return (
     <div className="h-full overflow-y-auto">
@@ -1507,302 +2183,590 @@ function SettingsView({
           </div>
         </div>
 
-        {/* Nexu Bot model selector */}
-        <div className="relative mb-8" ref={modelDropdownRef}>
-          <div className="rounded-xl border border-border bg-surface-1 px-4 py-3.5">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center shrink-0">
-                  <img src="/brand/nexu logo-black1.svg" alt="nexu" className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-[13px] font-semibold text-text-primary">
-                    {t("ws.settings.nexuBotModel")}
-                  </div>
-                  <div className="text-[11px] text-text-tertiary">
-                    {t("ws.settings.nexuBotModelDesc")}
-                  </div>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowModelDropdown((v) => !v)}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-0 hover:bg-surface-2 hover:border-border-hover transition-all text-[12px] font-medium text-text-primary"
-              >
-                {selectedModel ? (
-                  <>
-                    <span className="w-4 h-4 shrink-0 flex items-center justify-center">
-                      <ProviderLogo provider={selectedModel.providerId} size={14} />
-                    </span>
-                    {selectedModel.name}
-                  </>
-                ) : (
-                  <span className="text-text-muted">{t("ws.settings.select")}</span>
-                )}
-                <ChevronDown size={13} className="text-text-muted" />
-              </button>
-            </div>
+        <div className="mb-6" role="tablist" aria-label={t("ws.settings.title")}>
+          <div className="inline-flex rounded-xl border border-border bg-surface-1 p-1">
+            {[
+              { id: "general" as const, label: t("ws.settings.tab.general") },
+              { id: "usage" as const, label: "Usage" },
+              { id: "providers" as const, label: t("ws.settings.tab.providers") },
+            ].map((tab) => {
+              const active = settingsTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setSettingsTab(tab.id)}
+                  className={`rounded-lg px-4 py-2 text-[13px] font-medium transition-colors ${
+                    active
+                      ? "bg-surface-0 text-text-primary shadow-sm"
+                      : "text-text-secondary hover:text-text-primary"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
           </div>
-
-          {showModelDropdown && (
-            <div className="absolute top-full left-0 right-0 z-20 mt-1 rounded-xl border border-border bg-surface-0 shadow-lg overflow-hidden max-h-[320px] overflow-y-auto">
-              {providers
-                .filter((p) => p.id === "nexu" || configuredProviders.has(p.id))
-                .map((p) => (
-                  <div key={p.id}>
-                    <div className="px-3 pt-2.5 pb-1 text-[10px] font-semibold text-text-tertiary uppercase tracking-wider sticky top-0 bg-surface-0">
-                      {p.name}
-                    </div>
-                    {p.models.map((m) => {
-                      const isSelected = m.id === selectedModelId;
-                      return (
-                        <button
-                          type="button"
-                          key={m.id}
-                          onClick={() => {
-                            setSelectedModelId(m.id);
-                            setShowModelDropdown(false);
-                          }}
-                          className={`w-full flex items-center gap-2.5 px-3 py-2 text-left transition-colors ${isSelected ? "bg-accent/5" : "hover:bg-surface-2"}`}
-                        >
-                          <span className="w-5 h-5 shrink-0 flex items-center justify-center">
-                            <ProviderLogo provider={p.id} size={14} />
-                          </span>
-                          <div className="flex-1 min-w-0">
-                            <div
-                              className={`text-[12px] truncate ${isSelected ? "font-semibold text-accent" : "font-medium text-text-primary"}`}
-                            >
-                              {m.name}
-                            </div>
-                            <div className="text-[10px] text-text-tertiary">{p.name}</div>
-                          </div>
-                          {isSelected && <Check size={14} className="text-accent shrink-0" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                ))}
-            </div>
-          )}
         </div>
 
-        {settingsTab === "providers" && (
-          <div
-            className="flex gap-0 rounded-xl border border-border bg-surface-1 overflow-hidden"
-            style={{ minHeight: 520 }}
-          >
-            {/* Left: Provider list — flat, no enabled/disabled split */}
-            <div className="w-56 shrink-0 bg-surface-0 overflow-y-auto">
-              <div className="p-2 space-y-0.5">
-                {providers.map((p) => {
-                  const active = p.id === activeProviderId;
-                  return (
-                    <button
+        {settingsTab === "general" && (
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-border bg-surface-1 p-5">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="text-[15px] font-semibold text-text-primary">
+                    {t("ws.settings.account.title")}
+                  </div>
+                  <div className="mt-1 text-[12px] text-text-secondary">
+                    {isSignedIn
+                      ? t("ws.settings.account.signedInDesc")
+                      : t("ws.settings.account.signedOutDesc")}
+                  </div>
+                </div>
+
+                {isSignedIn ? (
+                  <div className="flex items-center gap-3 rounded-xl border border-border bg-surface-0 px-3 py-3 sm:min-w-[280px] sm:justify-between">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-[13px] font-semibold text-accent-fg">
+                        {getAccountInitials(signedInEmail)}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-[13px] font-medium text-text-primary">
+                          {t("ws.settings.account.connected")}
+                        </div>
+                        <div className="truncate text-[12px] text-text-secondary">
+                          {signedInEmail}
+                        </div>
+                      </div>
+                    </div>
+                    <Button
                       type="button"
-                      key={p.id}
-                      onClick={() => setActiveProviderId(p.id)}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${
-                        active ? "bg-surface-3" : "hover:bg-surface-2"
-                      }`}
+                      size="inline"
+                      variant="ghost"
+                      onClick={() => setIsSignedIn(false)}
+                      className="text-[12px] text-text-secondary hover:text-text-primary"
                     >
-                      <span className="w-5 h-5 shrink-0 flex items-center justify-center">
-                        <ProviderLogo provider={p.id} size={16} />
-                      </span>
-                      <span
-                        className={`flex-1 text-[12px] font-medium truncate ${active ? "text-accent" : "text-text-primary"}`}
-                      >
-                        {p.name}
-                      </span>
-                    </button>
-                  );
-                })}
+                      {t("ws.settings.account.signOut")}
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    type="button"
+                    size="inline"
+                    onClick={() => setIsSignedIn(true)}
+                    className="inline-flex items-center gap-2 rounded-lg bg-accent px-3.5 py-2 text-[12px] font-medium text-accent-fg transition-colors hover:bg-accent/90"
+                  >
+                    {t("ws.settings.account.signIn")}
+                    <ArrowUpRight size={12} />
+                  </Button>
+                )}
               </div>
             </div>
 
-            {/* Right: Provider detail */}
-            <div className="flex-1 overflow-y-auto p-5">
-              {/* Header — no enable/disable switch */}
-              <div className="flex items-center justify-between gap-3 mb-5">
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-2 shrink-0">
-                    <ProviderLogo provider={activeProvider.id} size={20} />
-                  </span>
-                  <div className="min-w-0">
-                    <div className="text-[14px] font-semibold text-text-primary">
-                      {activeProvider.name}
-                    </div>
-                    <div className="text-[11px] text-text-tertiary">
-                      {activeProvider.description}
-                    </div>
+            <div className="grid gap-4 lg:grid-cols-2">
+              <div className="rounded-2xl border border-border bg-surface-1 p-5">
+                <div className="mb-4">
+                  <div className="text-[15px] font-semibold text-text-primary">
+                    {t("ws.settings.behavior.title")}
+                  </div>
+                  <div className="mt-1 text-[12px] text-text-secondary">
+                    {t("ws.settings.behavior.subtitle")}
                   </div>
                 </div>
-                {activeProvider.apiDocsUrl && (
-                  <a
-                    href={activeProvider.apiDocsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shrink-0 text-[11px] text-[var(--color-brand-primary)] hover:text-[var(--color-brand-primary)] no-underline hover:no-underline inline-flex items-center gap-1 leading-none"
-                  >
-                    {t("ws.settings.getApiKey")}
-                    <ExternalLink size={10} className="shrink-0" />
-                  </a>
-                )}
+                <div className="space-y-3">
+                  {[
+                    {
+                      key: "launch-at-login",
+                      title: t("ws.settings.behavior.launchAtLogin"),
+                      description: t("ws.settings.behavior.launchAtLoginDesc"),
+                      checked: launchAtLogin,
+                      onCheckedChange: setLaunchAtLogin,
+                    },
+                    {
+                      key: "show-in-dock",
+                      title: t("ws.settings.behavior.showInDock"),
+                      description: t("ws.settings.behavior.showInDockDesc"),
+                      checked: showInDock,
+                      onCheckedChange: setShowInDock,
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.key}
+                      className="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface-0 px-4 py-3"
+                    >
+                      <div className="min-w-0">
+                        <div className="text-[13px] font-medium text-text-primary">
+                          {item.title}
+                        </div>
+                        <div className="mt-1 text-[12px] text-text-secondary">
+                          {item.description}
+                        </div>
+                      </div>
+                      <Switch
+                        size="sm"
+                        checked={item.checked}
+                        aria-label={item.title}
+                        onCheckedChange={item.onCheckedChange}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {/* Nexu login card */}
-              {activeProvider.id === "nexu" && (
-                <div className="rounded-xl border border-[var(--color-brand-primary)]/25 bg-[var(--color-brand-subtle)] px-4 py-4 mb-6">
-                  <div className="text-[13px] font-semibold text-[var(--color-brand-primary)]">
-                    {t("ws.settings.signInTitle")}
+              <div className="rounded-2xl border border-border bg-surface-1 p-5">
+                <div className="mb-4">
+                  <div className="text-[15px] font-semibold text-text-primary">
+                    {t("ws.settings.privacy.title")}
                   </div>
-                  <div className="text-[12px] leading-[1.7] text-text-secondary mt-1.5">
-                    {t("ws.settings.signInDesc")}
+                  <div className="mt-1 text-[12px] text-text-secondary">
+                    {t("ws.settings.privacy.subtitle")}
                   </div>
-                  <Button
-                    size="inline"
-                    onClick={() =>
-                      openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)
-                    }
-                    className="mt-4 inline-flex items-center gap-2 rounded-lg bg-accent px-3.5 py-2 text-[12px] font-medium text-accent-fg transition-colors hover:bg-accent/90 cursor-pointer"
+                </div>
+                <div className="space-y-3">
+                  {[
+                    {
+                      key: "usage-analytics",
+                      title: t("ws.settings.privacy.usageAnalytics"),
+                      description: t("ws.settings.privacy.usageAnalyticsDesc"),
+                      checked: usageAnalytics,
+                      onCheckedChange: setUsageAnalytics,
+                    },
+                    {
+                      key: "crash-reports",
+                      title: t("ws.settings.privacy.crashReports"),
+                      description: t("ws.settings.privacy.crashReportsDesc"),
+                      checked: crashReports,
+                      onCheckedChange: setCrashReports,
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.key}
+                      className="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface-0 px-4 py-3"
+                    >
+                      <div className="min-w-0">
+                        <div className="text-[13px] font-medium text-text-primary">
+                          {item.title}
+                        </div>
+                        <div className="mt-1 text-[12px] text-text-secondary">
+                          {item.description}
+                        </div>
+                      </div>
+                      <Switch
+                        size="sm"
+                        checked={item.checked}
+                        aria-label={item.title}
+                        onCheckedChange={item.onCheckedChange}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border bg-surface-1 p-5">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div>
+                  <div className="text-[15px] font-semibold text-text-primary">
+                    {t("ws.settings.about.title")}
+                  </div>
+                  <div className="mt-1 text-[12px] text-text-secondary">
+                    {t("ws.settings.about.subtitle")}
+                  </div>
+                </div>
+                <div className="min-w-[220px] rounded-xl border border-border bg-surface-0 px-4 py-3">
+                  <div className="text-[11px] uppercase tracking-wider text-text-tertiary">
+                    {t("ws.settings.about.version")}
+                  </div>
+                  <div className="mt-1 text-[15px] font-semibold text-text-primary">
+                    v{appVersion}
+                  </div>
+                  <div className="mt-1 text-[12px] text-text-secondary">{updateStatusLabel}</div>
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  size="inline"
+                  onClick={onCheckForUpdates}
+                  className="inline-flex items-center gap-2 rounded-lg bg-accent px-3.5 py-2 text-[12px] font-medium text-accent-fg transition-colors hover:bg-accent/90"
+                >
+                  {updateStatus === "checking" && <Loader2 size={12} className="animate-spin" />}
+                  {t("ws.settings.about.checkForUpdates")}
+                </Button>
+                <Button
+                  type="button"
+                  size="inline"
+                  variant="ghost"
+                  onClick={onOpenChangelog}
+                  className="text-[12px] text-text-secondary hover:text-text-primary"
+                >
+                  {t("ws.update.changelog")}
+                </Button>
+                <a
+                  href={GITHUB_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-[12px] font-medium text-text-secondary transition-colors hover:bg-surface-0 hover:text-text-primary"
+                >
+                  {t("ws.common.starOnGitHub")}
+                  <ArrowUpRight size={12} />
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {settingsTab === "usage" && (
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-border bg-surface-1 p-5">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <div className="text-[15px] font-semibold text-text-primary">Usage & billing</div>
+                  <div className="mt-1 text-[12px] text-text-secondary">
+                    Review current plan benefits, reset countdown, rewards credits, and upgrade
+                    paths.
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {(["free", "plus", "pro", "ultimate"] as const).map((plan) => (
+                    <Button
+                      key={plan}
+                      size="inline"
+                      variant={usagePlan === plan ? "default" : "outline"}
+                      onClick={() => onUsagePlanChange(plan)}
+                    >
+                      {plan}
+                    </Button>
+                  ))}
+                  {(["healthy", "warning", "depleted"] as const).map((state) => (
+                    <Button
+                      key={state}
+                      size="inline"
+                      variant={usageQuotaState === state ? "default" : "outline"}
+                      onClick={() => onUsageQuotaStateChange(state)}
+                    >
+                      {state}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <UsageSummaryPanel
+              planId={usagePlan}
+              usageState={usageQuotaState}
+              isSignedIn={isSignedIn}
+              onViewPlans={onOpenPricing}
+              compact
+            />
+          </div>
+        )}
+
+        {settingsTab === "providers" && (
+          <>
+            <div className="relative mb-8" ref={modelDropdownRef}>
+              <div className="rounded-xl border border-border bg-surface-1 px-4 py-3.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center shrink-0">
+                      <img src="/brand/nexu logo-black1.svg" alt="nexu" className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-[13px] font-semibold text-text-primary">
+                        {t("ws.settings.nexuBotModel")}
+                      </div>
+                      <div className="text-[11px] text-text-tertiary">
+                        {t("ws.settings.nexuBotModelDesc")}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowModelDropdown((v) => !v)}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-0 hover:bg-surface-2 hover:border-border-hover transition-all text-[12px] font-medium text-text-primary"
                   >
-                    {t("ws.settings.signInBtn")}
-                    <ArrowUpRight size={12} />
-                  </Button>
+                    {selectedModel ? (
+                      <>
+                        <span className="w-4 h-4 shrink-0 flex items-center justify-center">
+                          <ProviderLogo provider={selectedModel.providerId} size={14} />
+                        </span>
+                        {selectedModel.name}
+                      </>
+                    ) : (
+                      <span className="text-text-muted">{t("ws.settings.select")}</span>
+                    )}
+                    <ChevronDown size={13} className="text-text-muted" />
+                  </button>
+                </div>
+              </div>
+
+              {showModelDropdown && (
+                <div className="absolute top-full left-0 right-0 z-20 mt-1 rounded-xl border border-border bg-surface-0 shadow-lg overflow-hidden max-h-[320px] overflow-y-auto">
+                  {providers
+                    .filter((p) => p.id === "nexu" || configuredProviders.has(p.id))
+                    .map((p) => (
+                      <div key={p.id}>
+                        <div className="px-3 pt-2.5 pb-1 text-[10px] font-semibold text-text-tertiary uppercase tracking-wider sticky top-0 bg-surface-0">
+                          {p.name}
+                        </div>
+                        {p.models.map((m) => {
+                          const isSelected = m.id === selectedModelId;
+                          return (
+                            <button
+                              type="button"
+                              key={m.id}
+                              onClick={() => {
+                                setSelectedModelId(m.id);
+                                setShowModelDropdown(false);
+                              }}
+                              className={`w-full flex items-center gap-2.5 px-3 py-2 text-left transition-colors ${isSelected ? "bg-accent/5" : "hover:bg-surface-2"}`}
+                            >
+                              <span className="w-5 h-5 shrink-0 flex items-center justify-center">
+                                <ProviderLogo provider={p.id} size={14} />
+                              </span>
+                              <div className="flex-1 min-w-0">
+                                <div
+                                  className={`text-[12px] truncate ${isSelected ? "font-semibold text-accent" : "font-medium text-text-primary"}`}
+                                >
+                                  {m.name}
+                                </div>
+                                <div className="text-[10px] text-text-tertiary">{p.name}</div>
+                              </div>
+                              {isSelected && <Check size={14} className="text-accent shrink-0" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ))}
                 </div>
               )}
+            </div>
 
-              {/* API Key + Proxy URL + Save (hidden for nexu) */}
-              {activeProvider.id !== "nexu" && (
-                <div className="space-y-4 mb-6">
-                  <div className="text-[10px] uppercase tracking-wider text-text-muted mb-3">
-                    {t("ws.settings.apiKeySteps")}
-                  </div>
-                  <div>
-                    <label
-                      htmlFor={`${activeProvider.id}-api-key`}
-                      className="block text-[13px] font-semibold text-text-primary mb-3"
-                    >
-                      {t("ws.settings.apiKey")}
-                    </label>
-                    <input
-                      id={`${activeProvider.id}-api-key`}
-                      type="password"
-                      placeholder={activeProvider.apiKeyPlaceholder}
-                      value={getFormValues(activeProvider.id).apiKey}
-                      onChange={(e) => setFormField(activeProvider.id, "apiKey", e.target.value)}
-                      className="w-full rounded-lg border border-border bg-surface-0 px-3 py-2 text-[12px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor={`${activeProvider.id}-proxy-url`}
-                      className="block text-[13px] font-semibold text-text-primary mb-3"
-                    >
-                      {t("ws.settings.apiProxyUrl")}
-                    </label>
-                    <input
-                      id={`${activeProvider.id}-proxy-url`}
-                      type="text"
-                      value={getFormValues(activeProvider.id).proxyUrl}
-                      onChange={(e) => setFormField(activeProvider.id, "proxyUrl", e.target.value)}
-                      className="w-full rounded-lg border border-border bg-surface-0 px-3 py-2 text-[12px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30"
-                    />
-                  </div>
-                  <div className="flex items-center justify-end gap-3 flex-wrap">
-                    <Button
-                      size="inline"
-                      variant="ghost"
-                      type="button"
-                      onClick={() => handleCheck(activeProvider.id)}
-                      disabled={checkState === "checking" || saveState === "saving"}
-                      className="text-[11px] text-text-muted hover:text-text-secondary disabled:opacity-50"
-                    >
-                      {checkState === "checking" && t("ws.settings.testing")}
-                      {checkState === "success" && t("ws.settings.connectedStatus")}
-                      {checkState === "error" && t("ws.settings.retryTest")}
-                      {checkState === "idle" && t("ws.settings.testConnection")}
-                    </Button>
-                    <Button
-                      size="inline"
-                      onClick={() => handleSave(activeProvider.id)}
-                      disabled={saveState === "saving" || showSaved}
-                      className={`w-[120px] shrink-0 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2 text-[12px] font-medium transition-all ${
-                        showSaved
-                          ? "bg-[var(--color-success)]/10 text-[var(--color-success)] border border-[var(--color-success)]/20"
-                          : "bg-accent text-accent-fg hover:bg-accent-hover"
-                      } disabled:opacity-50`}
-                    >
-                      {saveState === "saving" && (
-                        <Loader2 size={13} className="animate-spin shrink-0" />
-                      )}
-                      {showSaved && <Check size={13} className="shrink-0" />}
-                      {!showSaved && saveState !== "saving" && t("ws.common.save")}
-                      {saveState === "saving" && t("ws.common.saving")}
-                      {showSaved && t("ws.common.saved")}
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Model list — flat, no switches */}
-              <div>
-                {showSaved && showSavedBannerFor === activeProvider.id && (
-                  <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-[var(--color-success)]/8 text-[11px] text-[var(--color-success)]">
-                    <Check size={12} className="shrink-0" />
-                    {t("ws.settings.savedSelectModel")}
-                  </div>
-                )}
-                {saveError && (
-                  <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-[var(--color-error)]/8 text-[11px] text-[var(--color-error)]">
-                    <AlertCircle size={12} className="shrink-0" />
-                    <span>{t("ws.settings.connectionFailed")}</span>
-                  </div>
-                )}
-                <div className="text-[13px] font-semibold text-text-primary mb-3">
-                  {t("ws.settings.model")}{" "}
-                  <span className="text-text-tertiary font-normal">
-                    {activeProvider.models.length}
-                  </span>
-                </div>
-                <div className="space-y-1.5">
-                  {activeProvider.models.map((model) => {
-                    const isActive = model.id === selectedModelId;
+            <div
+              className="flex gap-0 rounded-xl border border-border bg-surface-1 overflow-hidden"
+              style={{ minHeight: 520 }}
+            >
+              {/* Left: Provider list — flat, no enabled/disabled split */}
+              <div className="w-56 shrink-0 bg-surface-0 overflow-y-auto">
+                <div className="p-2 space-y-0.5">
+                  {providers.map((p) => {
+                    const active = p.id === activeProviderId;
                     return (
                       <button
                         type="button"
-                        key={model.id}
-                        onClick={() => setSelectedModelId(model.id)}
-                        className={`w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left transition-all border-none ${
-                          isActive
-                            ? "ring-1 ring-[var(--color-brand-primary)]/50 bg-[var(--color-brand-subtle)]"
-                            : "bg-surface-2 hover:bg-surface-3"
+                        key={p.id}
+                        onClick={() => setActiveProviderId(p.id)}
+                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${
+                          active ? "bg-surface-3" : "hover:bg-surface-2"
                         }`}
                       >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <span className="w-6 h-6 rounded-md flex items-center justify-center shrink-0">
-                            <ProviderLogo provider={activeProvider.id} size={16} />
-                          </span>
-                          <div className="min-w-0">
-                            <div
-                              className={`text-[13px] truncate ${isActive ? "font-semibold text-text-primary" : "font-medium text-text-secondary"}`}
-                            >
-                              {model.name}
-                            </div>
-                            <div className="text-[10px] text-text-tertiary">
-                              {activeProvider.name}
-                            </div>
-                          </div>
-                        </div>
-                        {isActive && (
-                          <Check size={14} className="text-[var(--color-brand-primary)] shrink-0" />
-                        )}
+                        <span className="w-5 h-5 shrink-0 flex items-center justify-center">
+                          <ProviderLogo provider={p.id} size={16} />
+                        </span>
+                        <span
+                          className={`flex-1 text-[12px] font-medium truncate ${active ? "text-accent" : "text-text-primary"}`}
+                        >
+                          {p.name}
+                        </span>
                       </button>
                     );
                   })}
                 </div>
               </div>
+
+              {/* Right: Provider detail */}
+              <div className="flex-1 overflow-y-auto p-5">
+                {/* Header — no enable/disable switch */}
+                <div className="flex items-center justify-between gap-3 mb-5">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-2 shrink-0">
+                      <ProviderLogo provider={activeProvider.id} size={20} />
+                    </span>
+                    <div className="min-w-0">
+                      <div className="text-[14px] font-semibold text-text-primary">
+                        {activeProvider.name}
+                      </div>
+                      <div className="text-[11px] text-text-tertiary">
+                        {activeProvider.description}
+                      </div>
+                    </div>
+                  </div>
+                  {activeProvider.apiDocsUrl && (
+                    <a
+                      href={activeProvider.apiDocsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 text-[11px] text-[var(--color-brand-primary)] hover:text-[var(--color-brand-primary)] no-underline hover:no-underline inline-flex items-center gap-1 leading-none"
+                    >
+                      {t("ws.settings.getApiKey")}
+                      <ExternalLink size={10} className="shrink-0" />
+                    </a>
+                  )}
+                </div>
+
+                {/* Nexu login card */}
+                {activeProvider.id === "nexu" && (
+                  <div className="rounded-xl border border-[var(--color-brand-primary)]/25 bg-[var(--color-brand-subtle)] px-4 py-4 mb-6">
+                    <div className="text-[13px] font-semibold text-[var(--color-brand-primary)]">
+                      {t("ws.settings.signInTitle")}
+                    </div>
+                    <div className="text-[12px] leading-[1.7] text-text-secondary mt-1.5">
+                      {t("ws.settings.signInDesc")}
+                    </div>
+                    <Button
+                      size="inline"
+                      onClick={() =>
+                        openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)
+                      }
+                      className="mt-4 inline-flex items-center gap-2 rounded-lg bg-accent px-3.5 py-2 text-[12px] font-medium text-accent-fg transition-colors hover:bg-accent/90 cursor-pointer"
+                    >
+                      {t("ws.settings.signInBtn")}
+                      <ArrowUpRight size={12} />
+                    </Button>
+                  </div>
+                )}
+
+                {/* API Key + Proxy URL + Save (hidden for nexu) */}
+                {activeProvider.id !== "nexu" && (
+                  <div className="space-y-4 mb-6">
+                    <div className="text-[10px] uppercase tracking-wider text-text-muted mb-3">
+                      {t("ws.settings.apiKeySteps")}
+                    </div>
+                    <div>
+                      <label
+                        htmlFor={`${activeProvider.id}-api-key`}
+                        className="block text-[13px] font-semibold text-text-primary mb-3"
+                      >
+                        {t("ws.settings.apiKey")}
+                      </label>
+                      <input
+                        id={`${activeProvider.id}-api-key`}
+                        type="password"
+                        placeholder={activeProvider.apiKeyPlaceholder}
+                        value={getFormValues(activeProvider.id).apiKey}
+                        onChange={(e) => setFormField(activeProvider.id, "apiKey", e.target.value)}
+                        className="w-full rounded-lg border border-border bg-surface-0 px-3 py-2 text-[12px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor={`${activeProvider.id}-proxy-url`}
+                        className="block text-[13px] font-semibold text-text-primary mb-3"
+                      >
+                        {t("ws.settings.apiProxyUrl")}
+                      </label>
+                      <input
+                        id={`${activeProvider.id}-proxy-url`}
+                        type="text"
+                        value={getFormValues(activeProvider.id).proxyUrl}
+                        onChange={(e) =>
+                          setFormField(activeProvider.id, "proxyUrl", e.target.value)
+                        }
+                        className="w-full rounded-lg border border-border bg-surface-0 px-3 py-2 text-[12px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30"
+                      />
+                    </div>
+                    <div className="flex items-center justify-end gap-3 flex-wrap">
+                      <Button
+                        size="inline"
+                        variant="ghost"
+                        type="button"
+                        onClick={() => handleCheck(activeProvider.id)}
+                        disabled={checkState === "checking" || saveState === "saving"}
+                        className="text-[11px] text-text-muted hover:text-text-secondary disabled:opacity-50"
+                      >
+                        {checkState === "checking" && t("ws.settings.testing")}
+                        {checkState === "success" && t("ws.settings.connectedStatus")}
+                        {checkState === "error" && t("ws.settings.retryTest")}
+                        {checkState === "idle" && t("ws.settings.testConnection")}
+                      </Button>
+                      <Button
+                        size="inline"
+                        onClick={() => handleSave(activeProvider.id)}
+                        disabled={saveState === "saving" || showSaved}
+                        className={`w-[120px] shrink-0 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2 text-[12px] font-medium transition-all ${
+                          showSaved
+                            ? "bg-[var(--color-success)]/10 text-[var(--color-success)] border border-[var(--color-success)]/20"
+                            : "bg-accent text-accent-fg hover:bg-accent-hover"
+                        } disabled:opacity-50`}
+                      >
+                        {saveState === "saving" && (
+                          <Loader2 size={13} className="animate-spin shrink-0" />
+                        )}
+                        {showSaved && <Check size={13} className="shrink-0" />}
+                        {!showSaved && saveState !== "saving" && t("ws.common.save")}
+                        {saveState === "saving" && t("ws.common.saving")}
+                        {showSaved && t("ws.common.saved")}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Model list — flat, no switches */}
+                <div>
+                  {showSaved && showSavedBannerFor === activeProvider.id && (
+                    <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-[var(--color-success)]/8 text-[11px] text-[var(--color-success)]">
+                      <Check size={12} className="shrink-0" />
+                      {t("ws.settings.savedSelectModel")}
+                    </div>
+                  )}
+                  {saveError && (
+                    <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-[var(--color-error)]/8 text-[11px] text-[var(--color-error)]">
+                      <AlertCircle size={12} className="shrink-0" />
+                      <span>{t("ws.settings.connectionFailed")}</span>
+                    </div>
+                  )}
+                  <div className="text-[13px] font-semibold text-text-primary mb-3">
+                    {t("ws.settings.model")}{" "}
+                    <span className="text-text-tertiary font-normal">
+                      {activeProvider.models.length}
+                    </span>
+                  </div>
+                  <div className="space-y-1.5">
+                    {activeProvider.models.map((model) => {
+                      const isActive = model.id === selectedModelId;
+                      return (
+                        <button
+                          type="button"
+                          key={model.id}
+                          onClick={() => setSelectedModelId(model.id)}
+                          className={`w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left transition-all border-none ${
+                            isActive
+                              ? "ring-1 ring-[var(--color-brand-primary)]/50 bg-[var(--color-brand-subtle)]"
+                              : "bg-surface-2 hover:bg-surface-3"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <span className="w-6 h-6 rounded-md flex items-center justify-center shrink-0">
+                              <ProviderLogo provider={activeProvider.id} size={16} />
+                            </span>
+                            <div className="min-w-0">
+                              <div
+                                className={`text-[13px] truncate ${isActive ? "font-semibold text-text-primary" : "font-medium text-text-secondary"}`}
+                              >
+                                {model.name}
+                              </div>
+                              <div className="text-[10px] text-text-tertiary">
+                                {activeProvider.name}
+                              </div>
+                            </div>
+                          </div>
+                          {isActive && (
+                            <Check
+                              size={14}
+                              className="text-[var(--color-brand-primary)] shrink-0"
+                            />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>
@@ -1826,7 +2790,7 @@ function getInitialWorkspaceView(search: string): View {
     const provider = params.get("provider");
     return {
       type: "settings",
-      tab: isSettingsTab(tab) ? tab : "providers",
+      tab: isSettingsTab(tab) ? tab : "general",
       providerId: isModelProvider(provider) ? provider : "anthropic",
     };
   }
@@ -1846,6 +2810,8 @@ export default function OpenClawWorkspace() {
   const location = useLocation();
   const { stars } = useGitHubStars();
   const { locale, setLocale, t } = useLocale();
+  const isWindowsDesktop =
+    typeof window !== "undefined" && /windows/i.test(window.navigator.userAgent);
   const [collapsed, setCollapsed] = useState(() => {
     const saved = localStorage.getItem("nexu_sidebar_collapsed");
     return saved !== null ? saved === "true" : true;
@@ -1866,16 +2832,69 @@ export default function OpenClawWorkspace() {
   const langRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<View>(() => getInitialWorkspaceView(location.search));
   const [showTyping, setShowTyping] = useState(shouldShowTypingEffect);
+  const [showSeedanceModal, setShowSeedanceModal] = useState(false);
+  const [usagePlan, setUsagePlan] = useState<BillingPlanId>("plus");
+  const [usageQuotaState, setUsageQuotaState] = useState<UsageQuotaState>("warning");
+
+  const setWorkspaceRoute = useCallback(
+    (nextView: View) => {
+      setView(nextView);
+
+      if (nextView.type !== "settings") {
+        navigate("/openclaw/workspace");
+        return;
+      }
+
+      const params = new URLSearchParams();
+      params.set("view", "settings");
+      params.set("tab", nextView.tab ?? "general");
+      if (nextView.providerId) {
+        params.set("provider", nextView.providerId);
+      }
+
+      navigate(`/openclaw/workspace?${params.toString()}`);
+    },
+    [navigate],
+  );
 
   const SIDEBAR_MIN = 160;
   const SIDEBAR_MAX = 320;
   const SIDEBAR_DEFAULT = 192;
   const MAIN_MIN = 480;
+  const sidebarTopClearanceClass = isWindowsDesktop ? "h-10" : "h-14";
+  const mainTopPaddingClass = isWindowsDesktop ? "pt-3" : "pt-8";
+  const sidebarToggleTop = isWindowsDesktop ? 10 : 8;
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const saved = localStorage.getItem("nexu_sidebar_width");
     return saved ? Math.max(SIDEBAR_MIN, Math.min(SIDEBAR_MAX, Number(saved))) : SIDEBAR_DEFAULT;
   });
   const isResizing = useRef(false);
+
+  const openChangelog = useCallback(() => {
+    void openExternal("https://github.com/nexu-io/nexu/releases");
+  }, []);
+
+  const handleCheckForUpdates = useCallback(() => {
+    setCheckingUpdate(true);
+    setShowUpToDate(false);
+    setTimeout(() => {
+      setCheckingUpdate(false);
+      if (hasUpdate && !updateDismissed) {
+        return;
+      }
+      setShowUpToDate(true);
+    }, 1500);
+  }, [hasUpdate, updateDismissed]);
+
+  const settingsUpdateStatus: "idle" | "checking" | "available" | "ready" | "error" = checkingUpdate
+    ? "checking"
+    : updateReady
+      ? "ready"
+      : updateError
+        ? "error"
+        : hasUpdate && !updateDismissed
+          ? "available"
+          : "idle";
 
   const handleResizeStart = useCallback(
     (e: React.MouseEvent) => {
@@ -1912,6 +2931,10 @@ export default function OpenClawWorkspace() {
     },
     [sidebarWidth],
   );
+
+  useEffect(() => {
+    setView(getInitialWorkspaceView(location.search));
+  }, [location.search]);
 
   useEffect(() => {
     if (view.type === "home") {
@@ -1975,8 +2998,15 @@ export default function OpenClawWorkspace() {
           setCollapsed(next);
           localStorage.setItem("nexu_sidebar_collapsed", String(next));
         }}
-        className="absolute top-2 left-[88px] z-50 p-1.5 rounded-md text-text-tertiary hover:text-text-primary hover:bg-black/5 transition-colors"
-        style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
+        className="absolute z-50 inline-flex items-center justify-center rounded-full border border-border/70 bg-surface-0/90 p-1.5 text-text-tertiary shadow-sm backdrop-blur-sm transition-[left,top,transform,color,background-color] duration-200 hover:bg-surface-0 hover:text-text-primary"
+        style={
+          {
+            top: sidebarToggleTop,
+            left: collapsed ? 12 : sidebarWidth,
+            transform: collapsed ? "none" : "translateX(-50%)",
+            WebkitAppRegion: "no-drag",
+          } as React.CSSProperties
+        }
         title={collapsed ? t("ws.sidebar.expand") : t("ws.sidebar.collapse")}
       >
         {collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
@@ -1989,7 +3019,7 @@ export default function OpenClawWorkspace() {
         className="overflow-hidden"
       >
         <Sidebar
-          className="h-full border-r-0 bg-transparent"
+          className="h-full border-r border-border/60 bg-surface-0/90 backdrop-blur-sm"
           style={
             {
               transition: isResizing.current ? "none" : "width 200ms",
@@ -1998,7 +3028,7 @@ export default function OpenClawWorkspace() {
           }
         >
           {/* Traffic light clearance */}
-          <SidebarHeader className="h-14 shrink-0" />
+          <SidebarHeader className={`${sidebarTopClearanceClass} shrink-0`} />
 
           {/* Brand */}
           <SidebarHeader
@@ -2026,22 +3056,23 @@ export default function OpenClawWorkspace() {
               {NAV_ITEMS.map((item) => {
                 const active = view.type === item.id;
                 return (
-                  <button
-                    type="button"
+                  <NavItem
                     key={item.id}
-                    onClick={() => setView({ type: item.id } as View)}
-                    className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-2 ${
-                      active ? "nav-item-active" : "nav-item"
-                    }`}
+                    onClick={() => setWorkspaceRoute({ type: item.id } as View)}
+                    selected={active}
                   >
                     <item.icon size={16} />
                     {t(item.labelKey)}
                     {item.id === "skills" && (
-                      <span className="ml-auto text-[10px] text-text-tertiary font-normal">
+                      <span
+                        className={`ml-auto text-[10px] font-normal ${
+                          active ? "text-text-secondary" : "text-text-tertiary"
+                        }`}
+                      >
                         {allSkillsCount}
                       </span>
                     )}
-                  </button>
+                  </NavItem>
                 );
               })}
             </div>
@@ -2057,19 +3088,17 @@ export default function OpenClawWorkspace() {
                   const ChannelIcon =
                     (
                       {
-                        slack: SlackIcon,
-                        feishu: FeishuIcon,
-                        discord: DiscordIcon,
-                      } as Record<string, typeof SlackIcon>
-                    )[ch.platform] || SlackIcon;
+                        slack: SlackIconSetup,
+                        feishu: FeishuIconSetup,
+                        discord: DiscordIconSetup,
+                      } as Record<string, typeof SlackIconSetup>
+                    )[ch.platform] || SlackIconSetup;
                   return (
-                    <button
-                      type="button"
+                    <NavItem
                       key={ch.id}
-                      onClick={() => setView({ type: "conversations", channelId: ch.id })}
-                      className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-1.5 ${
-                        active ? "nav-item-active" : "nav-item"
-                      }`}
+                      size="compact"
+                      onClick={() => setWorkspaceRoute({ type: "conversations", channelId: ch.id })}
+                      selected={active}
                     >
                       <span className="shrink-0 w-4 h-4 flex items-center justify-center">
                         <ChannelIcon size={14} />
@@ -2077,7 +3106,7 @@ export default function OpenClawWorkspace() {
                       <span className={`truncate text-[12px] ${active ? "" : "text-text-primary"}`}>
                         {ch.name}
                       </span>
-                    </button>
+                    </NavItem>
                   );
                 })}
               </div>
@@ -2266,15 +3295,7 @@ export default function OpenClawWorkspace() {
                         type="button"
                         onClick={() => {
                           setShowHelpMenu(false);
-                          setCheckingUpdate(true);
-                          setTimeout(() => {
-                            setCheckingUpdate(false);
-                            if (hasUpdate && !updateDismissed) {
-                              /* new version → sidebar card already visible */
-                            } else {
-                              setShowUpToDate(true);
-                            }
-                          }, 1500);
+                          handleCheckForUpdates();
                         }}
                         className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
                       >
@@ -2390,7 +3411,7 @@ export default function OpenClawWorkspace() {
         <LanguageSwitcher variant="muted" />
         <button
           type="button"
-          onClick={() => setView({ type: "settings" })}
+          onClick={() => setWorkspaceRoute({ type: "settings" })}
           className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary"
         >
           <Settings size={16} />
@@ -2401,18 +3422,30 @@ export default function OpenClawWorkspace() {
       {!collapsed && (
         <ResizableHandle
           onMouseDown={handleResizeStart}
-          className="group relative z-10 w-[3px]"
+          className="group relative z-20 -ml-px w-2 cursor-col-resize"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
-          <div className="absolute inset-y-0 -left-[2px] -right-[2px]" />
+          <div className="absolute inset-y-0 left-0 w-px bg-border/50 transition-colors group-hover:bg-text-tertiary/40" />
         </ResizableHandle>
       )}
 
       {/* Main content */}
-      <main className="flex-1 overflow-hidden min-h-0 bg-surface-1 rounded-l-[12px] pt-8">
+      <main
+        className={`-ml-px flex-1 overflow-hidden min-h-0 rounded-l-[14px] border-l border-white/70 bg-surface-1 shadow-[-12px_0_28px_-20px_rgba(15,23,42,0.4)] ${mainTopPaddingClass}`}
+      >
         {view.type === "home" && (
           <HomeDashboard
-            onNavigate={setView}
+            onNavigate={setWorkspaceRoute}
+            onRequestSeedanceModal={() => setShowSeedanceModal(true)}
+            plan={usagePlan}
+            quotaState={usageQuotaState}
+            onOpenPricing={(target) =>
+              navigate(
+                target === "credit-packs"
+                  ? "/openclaw/pricing?tab=plans#credit-packs"
+                  : "/openclaw/pricing?tab=plans",
+              )
+            }
             showTyping={showTyping}
             onTypingComplete={handleTypingComplete}
             stars={stars}
@@ -2422,9 +3455,23 @@ export default function OpenClawWorkspace() {
         {view.type === "deployments" && <DeploymentsView />}
         {view.type === "skills" && <SkillsPanel />}
         {view.type === "settings" && (
-          <SettingsView initialTab={view.tab} initialProviderId={view.providerId} />
+          <SettingsView
+            initialTab={view.tab}
+            initialProviderId={view.providerId}
+            appVersion={MOCK_VERSION}
+            updateStatus={settingsUpdateStatus}
+            onCheckForUpdates={handleCheckForUpdates}
+            onOpenChangelog={openChangelog}
+            onOpenPricing={() => navigate("/openclaw/pricing")}
+            usagePlan={usagePlan}
+            onUsagePlanChange={setUsagePlan}
+            usageQuotaState={usageQuotaState}
+            onUsageQuotaStateChange={setUsageQuotaState}
+          />
         )}
       </main>
+
+      {showSeedanceModal && <SeedancePromoModal onClose={() => setShowSeedanceModal(false)} />}
 
       {/* Update check dialog — checking / up-to-date */}
       {(checkingUpdate || showUpToDate) && (
