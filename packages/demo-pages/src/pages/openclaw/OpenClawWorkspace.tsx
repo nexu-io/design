@@ -121,9 +121,9 @@ const SHARE_MATERIAL_STAMP_OPTIONS = [
 ] as const;
 
 function downloadShareCard() {
-  const W = 1080,
-    H = 1080,
-    PAD = 80;
+  const W = 1080;
+  const H = 1080;
+  const PAD = 80;
   const canvas = document.createElement("canvas");
   canvas.width = W;
   canvas.height = H;
@@ -3004,7 +3004,6 @@ function HomeDashboard({
                               }}
                               placeholder={t("ws.home.searchModels")}
                               className="flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted/50 outline-none"
-                              autoFocus
                             />
                           </div>
                         </div>
