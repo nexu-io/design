@@ -200,6 +200,14 @@ The primary confirmation action belongs at the bottom-right of the configuration
 
 ## 6. When to create a dedicated `ui-web` pattern
 
+### Current decision status
+
+Current decision: keep this as a **documented composition recipe**, not a new exported `ui-web` pattern.
+
+- Do **not** add `ProviderSettingsCard` or `AuthSwitcher` yet.
+- The current gap is discoverability, not missing primitives.
+- Revisit only after 2–3 real product surfaces need the same behavior contract, not just the same visual layout.
+
 Do **not** add a new `provider settings card` primitive until the composition gap is proven.
 
 Consider a dedicated pattern only if multiple real surfaces repeatedly need all of the following at once:

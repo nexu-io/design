@@ -631,6 +631,13 @@ Shared guardrails for the most common polish regressions.
 - Do not add serif styling to `PageHeader`, standard settings pages, dashboards, dialogs, or dense app sections.
 - `ui-web` keeps sans-serif as the default for reusable heading patterns; apply serif only at composition level for hero or brand-rail moments.
 
+### Provider settings composition
+
+- Build provider settings surfaces from existing primitives instead of a dedicated `ProviderSettingsCard` or `AuthSwitcher` export.
+- Recommended stack: `Card` + region `Tabs` + auth `ToggleGroup`/`RadioGroup` + `FormField` inputs + trailing save row.
+- Saved API keys should stay in the form as a masked field with inline `Replace key` / `Edit`, not a detached success banner.
+- Revisit a dedicated pattern only after multiple real surfaces repeat the same behavior contract around region switching, auth switching, saved-secret masking, and save semantics.
+
 ### Related docs and stories
 
 - Spec: `specs/ui-polish-conventions.md`

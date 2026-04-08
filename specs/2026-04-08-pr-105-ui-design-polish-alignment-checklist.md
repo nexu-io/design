@@ -73,7 +73,7 @@
 
 - [x] 在 `specs/` 中补一份独立规范，固化“Region > Auth tab > Inputs > Save”的 3 层层级
 - [x] 盘点当前仓库是否已有可复用组合：`Card` + segmented control + `FormField` + trailing actions
-- [ ] 如缺少组合能力，评估是否在 `packages/ui-web` 新增高频 pattern（例如 provider settings card / auth method switcher）
+- [x] 评估结论：暂不在 `packages/ui-web` 新增 provider settings card / auth switcher export；现有组合栈足够，待多个真实场景重复出现相同行为契约后再考虑抽象
 - [ ] 为“已保存 API key”场景定义统一模式：masked input + inline replace，而不是独立成功 banner
 - [ ] 为底部右对齐 Save CTA 定义统一布局约定，并写入相关 pattern docs
 - [ ] 在 Storybook 增加 provider settings / BYOK card 场景页，展示 Global/CN、OAuth/API Key、masked key、proxy URL、Save CTA
