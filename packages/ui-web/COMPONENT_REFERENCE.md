@@ -659,6 +659,13 @@ Shared guardrails for the most common polish regressions.
 - Prefer a single-line row anatomy: logo, label, optional single compact badge, trailing muted metadata.
 - If a picker needs larger artwork or two-line descriptions, promote it to a roomier custom menu pattern instead of squeezing it into the dense picker baseline.
 
+### Skills / marketplace card icons
+
+- Keep brand/logo mapping in the data layer, not inside `SkillMarketplaceCard`.
+- Prefer local SVG logos keyed by stable product ids for known integrations and marketplace entries.
+- Use semantic Lucide icons only as fallbacks for unknown, custom, or internal skills.
+- Keep the existing marketplace card slot sizing: 18px mark inside the 36px leading carrier.
+
 ### Related docs and stories
 
 - Spec: `specs/ui-polish-conventions.md`
@@ -668,6 +675,7 @@ Shared guardrails for the most common polish regressions.
 - Status patterns: `apps/storybook/src/stories/status-dot.stories.tsx`, `apps/storybook/src/stories/interactive-row.stories.tsx`
 - Sidebar/session rows: `apps/storybook/src/stories/sidebar.stories.tsx`
 - Dense picker baseline: `apps/storybook/src/stories/model-picker.stories.tsx`
+- Skills / marketplace cards: `apps/storybook/src/stories/skill-marketplace-card.stories.tsx`
 - Tabs: `apps/storybook/src/stories/tabs.stories.tsx`
 - Toggle: `apps/storybook/src/stories/toggle.stories.tsx`
 - TextLink: `apps/storybook/src/stories/text-link.stories.tsx`

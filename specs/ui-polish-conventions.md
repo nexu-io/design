@@ -227,3 +227,36 @@ Provider configuration surfaces should use a consistent three-layer layout:
 This hierarchy should be used in Storybook scenario docs and future reusable patterns.
 
 For the full standalone spec, see `specs/provider-settings-hierarchy.md`.
+
+---
+
+## 10. Skills / marketplace icon mapping
+
+Skills and marketplace cards should use a **stable, data-driven icon mapping** instead of ad-hoc generic placeholders.
+
+### Rules
+
+- Keep icon mapping in the composition or data layer, not inside `SkillMarketplaceCard` itself. The card should stay presentation-only: it accepts `logo` and `icon`, but it should not infer brands from labels.
+- Prefer a **local branded SVG logo** for known third-party products, integrations, and marketplace entries. Use a normalized asset set with consistent visual weight rather than mixing favicons, screenshots, or random remote image sources.
+- Match each known skill or integration to a **stable product key** (for example `github`, `slack`, `google-calendar`) and resolve the logo from a dedicated map such as `SKILL_ICON`. Do not key the map off mutable marketing copy.
+- When the entry represents a branded product, treat a category glyph as a **fallback only**, not the primary identity.
+- Fallback order should be:
+  1. explicit local logo from the stable mapping
+  2. an intentionally supplied branded logo asset
+  3. a semantic Lucide icon that matches the skill category or capability
+- Use generic category icons only for custom, internal, or genuinely unknown skills where no stable product identity exists yet.
+- When a logo fails to load, fall back to the semantic icon in the same visual slot instead of leaving an empty box.
+
+### Asset + sizing guidance
+
+- Prefer local SVG assets checked into the repo over runtime-fetched favicons.
+- Normalize marketplace card artwork to the existing `SkillMarketplaceCard` slot: **18px mark inside a 36px carrier** (`size-9` wrapper).
+- Keep logo backgrounds neutral and lightweight; do not introduce decorative colored tiles unless the brand asset requires it.
+
+### Recommended implementation split
+
+- **Data layer:** stable id, category, optional `logo`, semantic fallback `icon`
+- **Mapping module:** product-id → local SVG asset map
+- **UI layer:** render `logo` first, then `icon` fallback through `SkillMarketplaceCard`
+
+Reference implementation: `packages/demo-pages/src/pages/openclaw/skillData.ts`.

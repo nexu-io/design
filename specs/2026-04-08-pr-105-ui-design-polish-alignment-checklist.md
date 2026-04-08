@@ -95,7 +95,7 @@
 
 ### 9. Skills / docs / help-link polish
 
-- [ ] 为 skills / marketplace 类型卡片建立统一 icon 映射策略，避免 generic 图标占位
+- [x] 为 skills / marketplace 类型卡片建立统一 icon 映射策略，避免 generic 图标占位
 - [x] 统一帮助链接风格：链接色使用 `--color-link`，外链图标使用 `ArrowUpRight`
 - [ ] 审查 channel setup / docs / community 等页面，移除无必要的装饰性帮助图标
 - [ ] 检查免责声明、辅助说明文案的标点和结尾风格是否统一
