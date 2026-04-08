@@ -7,6 +7,7 @@ See also:
 - Alignment checklist: `specs/2026-04-08-pr-105-ui-design-polish-alignment-checklist.md`
 - Consumer docs: `packages/ui-web/COMPONENT_REFERENCE.md#ui-polish-conventions`
 - Storybook audit surface: `apps/storybook/src/stories/ui-polish-audit.stories.tsx`
+- Storybook provider settings scenario: `apps/storybook/src/stories/provider-settings.stories.tsx`
 
 ---
 

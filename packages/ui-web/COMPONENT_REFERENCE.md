@@ -647,7 +647,7 @@ Shared guardrails for the most common polish regressions.
 - Spec: `specs/ui-polish-conventions.md`
 - Tokens: `apps/storybook/src/stories/tokens.stories.tsx`
 - Buttons: `apps/storybook/src/stories/button.stories.tsx`
-- Provider settings hierarchy: `apps/storybook/src/stories/ui-polish-audit.stories.tsx`
+- Provider settings hierarchy: `apps/storybook/src/stories/provider-settings.stories.tsx`
 - Status patterns: `apps/storybook/src/stories/status-dot.stories.tsx`, `apps/storybook/src/stories/interactive-row.stories.tsx`
 - Tabs: `apps/storybook/src/stories/tabs.stories.tsx`
 - Toggle: `apps/storybook/src/stories/toggle.stories.tsx`

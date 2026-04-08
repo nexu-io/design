@@ -76,7 +76,7 @@
 - [x] 评估结论：暂不在 `packages/ui-web` 新增 provider settings card / auth switcher export；现有组合栈足够，待多个真实场景重复出现相同行为契约后再考虑抽象
 - [x] 为“已保存 API key”场景定义统一模式：masked input + inline replace，而不是独立成功 banner
 - [x] 为底部右对齐 Save CTA 定义统一布局约定，并写入相关 pattern docs
-- [ ] 在 Storybook 增加 provider settings / BYOK card 场景页，展示 Global/CN、OAuth/API Key、masked key、proxy URL、Save CTA
+- [x] 在 Storybook 增加 provider settings / BYOK card 场景页，展示 Global/CN、OAuth/API Key、masked key、proxy URL、Save CTA
 - [x] 对 `packages/demo-pages/src/pages/openclaw/OpenClawWorkspace.tsx` 中相关 provider 配置原型做一次对照审查
 
 ### 7. Status / sidebar / dense UI polish

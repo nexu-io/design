@@ -6,7 +6,7 @@ See also:
 
 - Alignment checklist: `specs/2026-04-08-pr-105-ui-design-polish-alignment-checklist.md`
 - Shared polish rules: `specs/ui-polish-conventions.md#7-provider-settings-hierarchy`
-- Storybook reference: `apps/storybook/src/stories/ui-polish-audit.stories.tsx`
+- Storybook reference: `apps/storybook/src/stories/provider-settings.stories.tsx`
 
 ---
 
@@ -97,7 +97,7 @@ The building blocks above already have dedicated Storybook references, including
 - No provider-settings-specific composite such as `ProviderSettingsCard`
 - No dedicated auth-switcher pattern beyond general `ToggleGroup` / `RadioGroup`
 - No API-key-specific helper for masked saved-secret display + inline replace
-- No dedicated provider-settings / BYOK Storybook scenario that demonstrates the full composition in one place
+- Dedicated provider-settings / BYOK Storybook scenario: `apps/storybook/src/stories/provider-settings.stories.tsx`
 
 Recommended structure:
 
