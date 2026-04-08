@@ -98,7 +98,7 @@
 - [x] 为 skills / marketplace 类型卡片建立统一 icon 映射策略，避免 generic 图标占位
 - [x] 统一帮助链接风格：链接色使用 `--color-link`，外链图标使用 `ArrowUpRight`
 - [x] 审查 channel setup / docs / community 等页面，移除无必要的装饰性帮助图标（已移除 `FaqPage` 头部 `HelpCircle`、`QuickStartPage` 的 `Key concepts` 装饰 `Info`；`ChannelsPage` / `CommunityPage` 未发现需要保留外的帮助图标）
-- [ ] 检查免责声明、辅助说明文案的标点和结尾风格是否统一
+- [x] 检查免责声明、辅助说明文案的标点和结尾风格是否统一
 
 ### 10. Storybook / docs 同步
 

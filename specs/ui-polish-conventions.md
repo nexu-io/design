@@ -230,7 +230,26 @@ For the full standalone spec, see `specs/provider-settings-hierarchy.md`.
 
 ---
 
-## 10. Skills / marketplace icon mapping
+## 10. Helper and disclaimer copy endings
+
+Helper text, disclaimers, inline notes, and similar supporting copy should read consistently across Storybook examples, docs, and product-facing patterns.
+
+### Rules
+
+- Use **sentence case** for helper copy, disclaimer copy, descriptions, and alert body text.
+- If the copy reads as a full sentence, end it with a period.
+- If the block contains multiple sentences, punctuate each sentence normally.
+- Keep short labels, button text, badge text, tabs, and compact metadata fragments **without terminal punctuation**.
+- Treat footer metadata such as `Last saved 2 minutes ago` or `Global defaults apply across shared provider traffic` as compact fragments, not sentence copy.
+
+### Preferred split
+
+- **Helper / disclaimer / description copy:** `Stored keys stay masked until replaced.`
+- **Compact meta / status fragments:** `Last saved 2 minutes ago`
+
+---
+
+## 11. Skills / marketplace icon mapping
 
 Skills and marketplace cards should use a **stable, data-driven icon mapping** instead of ad-hoc generic placeholders.
 

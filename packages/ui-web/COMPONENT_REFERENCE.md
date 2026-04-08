@@ -642,6 +642,13 @@ Shared guardrails for the most common polish regressions.
 - Keep exactly one visually primary CTA in the row, and use `loading` on `Save` while async submission is in flight.
 - Revisit a dedicated pattern only after multiple real surfaces repeat the same behavior contract around region switching, auth switching, saved-secret masking, and save semantics.
 
+### Helper and disclaimer copy endings
+
+- Use sentence case for helper text, disclaimers, descriptions, and alert body copy.
+- End full-sentence supporting copy with a period.
+- Keep compact meta fragments such as `Last saved 2 minutes ago` or `Global defaults apply across shared provider traffic` without terminal punctuation.
+- Keep labels, tabs, buttons, and badges punctuation-free unless the punctuation is part of the product name itself.
+
 ### Status expression
 
 - Prefer `StatusDot` for lightweight live/presence state inside dense rows, sidebars, and session lists.

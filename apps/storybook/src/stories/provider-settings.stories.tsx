@@ -185,8 +185,8 @@ function ProviderSettingsScenario() {
           <PanelFooter>
             <PanelFooterMeta>
               {region === 'global'
-                ? 'Global defaults apply across shared provider traffic.'
-                : 'CN settings stay scoped to regional traffic only.'}
+                ? 'Global defaults apply across shared provider traffic'
+                : 'CN settings stay scoped to regional traffic only'}
             </PanelFooterMeta>
             <PanelFooterActions>
               <Button variant="outline">Cancel</Button>
