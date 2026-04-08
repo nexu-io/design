@@ -50,3 +50,21 @@ export const Groups: Story = {
     </div>
   ),
 };
+
+export const Compact: Story = {
+  render: () => (
+    <div className="grid gap-3">
+      <p className="text-sm text-text-secondary">
+        Compact segmented controls use a 12px minimum label size.
+      </p>
+      <ToggleGroup type="single" variant="compact" defaultValue="api-key" aria-label="Auth method">
+        <ToggleGroupItem variant="compact" value="oauth">
+          OAuth
+        </ToggleGroupItem>
+        <ToggleGroupItem variant="compact" value="api-key">
+          API Key
+        </ToggleGroupItem>
+      </ToggleGroup>
+    </div>
+  ),
+};

@@ -49,3 +49,33 @@ export const ShellDensity: Story = {
     />
   ),
 };
+
+export const WithLongDescription: Story = {
+  render: () => (
+    <PageHeader
+      title="Provider settings"
+      description="Configure regions, authentication methods, and network overrides without scattering custom margins between the title, helper copy, and trailing actions."
+      actions={
+        <>
+          <Button variant="outline">Cancel</Button>
+          <Button>Save changes</Button>
+        </>
+      }
+    />
+  ),
+};
+
+export const WithDescriptionLink: Story = {
+  render: () => (
+    <PageHeader
+      title="Channel setup"
+      description={
+        <>
+          Review the rollout requirements before connecting production channels.{" "}
+          <a href="#docs">Read setup guide</a>
+        </>
+      }
+      actions={<Button variant="outline">Open docs</Button>}
+    />
+  ),
+};

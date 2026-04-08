@@ -16,7 +16,7 @@ const toggleVariants = cva(
           "rounded-full border border-border bg-surface-1 px-3 py-1.5 text-text-secondary hover:border-border-hover hover:text-text-primary data-[state=on]:border-foreground data-[state=on]:bg-foreground data-[state=on]:text-background",
         /** Low-height segmented control — `rounded-[4px]` chip inside `rounded-[6px]` track; selected `surface-0` + shadow, unselected transparent. */
         compact:
-          "h-6 min-h-6 rounded-[4px] border border-transparent bg-transparent px-2.5 py-0 text-[11px] font-medium leading-none text-text-secondary hover:bg-surface-1/70 hover:text-text-primary data-[state=on]:!border-border/40 data-[state=on]:!bg-white data-[state=on]:!text-text-primary data-[state=on]:!shadow-[0_1px_3px_rgba(0,0,0,0.08)]",
+          "h-6 min-h-6 rounded-[4px] border border-transparent bg-transparent px-2.5 py-0 text-sm font-medium leading-none text-text-secondary hover:bg-surface-1/70 hover:text-text-primary data-[state=on]:!border-border/40 data-[state=on]:!bg-white data-[state=on]:!text-text-primary data-[state=on]:!shadow-[0_1px_3px_rgba(0,0,0,0.08)]",
         pill: "rounded-full px-4 py-1.5 text-base text-text-secondary hover:bg-surface-2 hover:text-text-primary data-[state=on]:bg-white data-[state=on]:text-text-primary data-[state=on]:shadow-[var(--shadow-rest)]",
         underline:
           "rounded-none border-b-2 border-transparent px-3 py-2.5 text-sm text-text-muted hover:text-text-secondary data-[state=on]:border-accent data-[state=on]:text-text-primary",

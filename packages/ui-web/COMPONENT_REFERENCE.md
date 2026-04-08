@@ -22,6 +22,7 @@
 - [FormField](#formfield)
 - [Tabs](#tabs)
 - [TextLink](#textlink)
+- [UI Polish Conventions](#ui-polish-conventions)
 - [Tooltip](#tooltip)
 - [Popover](#popover)
 - [Separator](#separator)
@@ -375,6 +376,14 @@ Also inherits Card's `variant`, `padding`, `className`.
 | `title` | `ReactNode` | required | Main heading (renders `<h1>`) |
 | `description` | `ReactNode` | — | Subtitle text |
 | `actions` | `ReactNode` | — | Right-aligned action buttons |
+| `density` | `'default' \| 'shell'` | `'default'` | Spacing + typography contract for standard vs embedded shell headers |
+
+### Spacing contract
+
+- Prefer `PageHeader` over handwritten page-title spacing.
+- `default` density uses a roomier title block (`gap-3 pb-6`, `space-y-2`).
+- `shell` density uses tighter desktop-shell spacing (`gap-2 pb-4`, `space-y-1`).
+- Links inside descriptions should use `--color-link`; avoid ad-hoc blue utility classes.
 
 ### Examples
 
@@ -572,6 +581,12 @@ FormField
 | `size` | `'xs' \| 'sm' \| 'default' \| 'lg'` | `'sm'` | Text size |
 | `asChild` | `boolean` | `false` | Render as Radix Slot |
 
+### External-link standard
+
+- Use `ArrowUpRight` for external links.
+- Keep the icon inline with `gap-1.5` spacing.
+- Match icon size to text; for `size="sm"`, use 12px.
+
 ### Examples
 
 ```tsx
@@ -579,6 +594,47 @@ FormField
   View documentation <ArrowUpRight size={12} />
 </TextLink>
 ```
+
+---
+
+## UI Polish Conventions
+
+Shared guardrails for the most common polish regressions.
+
+### Link color + help links
+
+- Use `--color-link` for inline links and supporting help links.
+- Do not introduce raw blue utilities or hex values for product links.
+- For external destinations, use `ArrowUpRight` instead of `ExternalLink`.
+
+### Focus rings
+
+- Default interactive controls should use `focus-visible:ring-2 focus-visible:ring-ring`.
+- Add `focus-visible:ring-offset-2 focus-visible:ring-offset-background` on filled or elevated surfaces.
+- Reuse the shared focus token rather than creating per-component glow colors.
+
+### Interactive typography floor
+
+- Interactive text has a 12px minimum.
+- Do not use `text-[10px]` or `text-[11px]` on tabs, pills, segmented controls, or compact clickable labels.
+
+### Page header spacing
+
+- `PageHeader` is the preferred page-title abstraction.
+- Prefer its `density` prop over custom per-page title margins.
+
+### Related docs and stories
+
+- Spec: `specs/ui-polish-conventions.md`
+- Tokens: `apps/storybook/src/stories/tokens.stories.tsx`
+- Buttons: `apps/storybook/src/stories/button.stories.tsx`
+- Provider settings hierarchy: `apps/storybook/src/stories/ui-polish-audit.stories.tsx`
+- Status patterns: `apps/storybook/src/stories/status-dot.stories.tsx`, `apps/storybook/src/stories/interactive-row.stories.tsx`
+- Tabs: `apps/storybook/src/stories/tabs.stories.tsx`
+- Toggle: `apps/storybook/src/stories/toggle.stories.tsx`
+- TextLink: `apps/storybook/src/stories/text-link.stories.tsx`
+- PageHeader: `apps/storybook/src/stories/page-header.stories.tsx`
+- Audit surface: `apps/storybook/src/stories/ui-polish-audit.stories.tsx`
 
 ---
 

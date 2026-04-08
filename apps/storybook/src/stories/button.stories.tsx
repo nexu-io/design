@@ -72,3 +72,30 @@ export const Loading: Story = {
     children: "Saving...",
   },
 };
+
+export const PolishStates: Story = {
+  render: () => (
+    <div className="grid gap-4">
+      <div>
+        <p className="mb-2 text-sm font-medium text-text-secondary">
+          Surface-first hover treatment
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Button variant="outline">Outline action</Button>
+          <Button variant="ghost">Ghost action</Button>
+        </div>
+      </div>
+      <div>
+        <p className="mb-2 text-sm font-medium text-text-secondary">
+          Focus-visible uses the shared ring token
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Button autoFocus variant="outline">
+            Keyboard focus
+          </Button>
+          <Button variant="ghost">Secondary action</Button>
+        </div>
+      </div>
+    </div>
+  ),
+};
