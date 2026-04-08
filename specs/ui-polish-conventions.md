@@ -113,7 +113,35 @@ Secondary button surfaces should feel like surface affordances, not dark accent 
 
 ---
 
-## 6. Provider settings hierarchy
+## 6. Serif heading boundary
+
+`--font-heading` is a **brand-expression accent**, not the default product heading font.
+
+### Use serif headings for
+
+- marketing hero headlines
+- welcome / onboarding hero copy
+- auth-shell or brand-rail title blocks
+- other deliberate brand moments where the heading is the visual focal point of the page
+
+### Do not use serif headings for
+
+- `PageHeader` titles
+- standard product pages, settings pages, dashboards, tables, forms, or dialogs
+- section headings inside cards or dense application surfaces
+- a general `ui-web` heading variant meant for routine product usage
+
+### Design-system decision
+
+- Keep `font-sans` as the default for all reusable heading primitives and patterns.
+- Do **not** add a generic serif heading option to `ui-web` just to expose `--font-heading` at the component API layer.
+- When a product surface needs serif treatment, apply it intentionally at the page or story composition layer, with a documented marketing/welcome rationale.
+
+This keeps serif usage rare, brand-forward, and away from dense product UI where sans-serif headings read more consistently.
+
+---
+
+## 7. Provider settings hierarchy
 
 Provider configuration surfaces should use a consistent three-layer layout:
 

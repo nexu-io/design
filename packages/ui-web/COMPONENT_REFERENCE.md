@@ -625,6 +625,12 @@ Shared guardrails for the most common polish regressions.
 - `PageHeader` is the preferred page-title abstraction.
 - Prefer its `density` prop over custom per-page title margins.
 
+### Serif heading boundary
+
+- Treat `var(--font-heading)` as a marketing / welcome accent, not the default product heading font.
+- Do not add serif styling to `PageHeader`, standard settings pages, dashboards, dialogs, or dense app sections.
+- `ui-web` keeps sans-serif as the default for reusable heading patterns; apply serif only at composition level for hero or brand-rail moments.
+
 ### Related docs and stories
 
 - Spec: `specs/ui-polish-conventions.md`

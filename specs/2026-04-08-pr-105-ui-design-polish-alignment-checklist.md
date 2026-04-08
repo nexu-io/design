@@ -67,7 +67,7 @@
 - [x] 若没有统一 spacing contract，为 `PageHeader` 补显式 props / 文档约束，避免页面自己写散落 margin
 - [x] 审查 demo pages 中自定义 header 区块，尽量替换到 `PageHeader` / `SectionHeader` / 统一 pattern
 - [x] 在 Storybook 中增加 page header 的长描述、带链接描述、带 actions 等规范示例
-- [ ] 决定 serif heading 的使用边界：仅 marketing / welcome 页面使用，还是 design system 层开放为通用 heading 选项
+- [x] 决定 serif heading 的使用边界：仅 marketing / welcome 页面使用，还是 design system 层开放为通用 heading 选项
 
 ### 6. Provider settings card / 3-layer hierarchy
 
