@@ -38,4 +38,21 @@ describe("Toggle", () => {
     expect(list).toHaveAttribute("data-state", "off");
     expect(board).toHaveAttribute("data-state", "on");
   });
+
+  it("renders compact tab group with selected state", () => {
+    render(
+      <ToggleGroup type="single" defaultValue="a" variant="compact" aria-label="Tabs">
+        <ToggleGroupItem value="a" variant="compact">
+          A
+        </ToggleGroupItem>
+        <ToggleGroupItem value="b" variant="compact">
+          B
+        </ToggleGroupItem>
+      </ToggleGroup>,
+    );
+
+    const a = screen.getByRole("radio", { name: "A" });
+    expect(a).toHaveAttribute("data-state", "on");
+    expect(a).toHaveClass("h-6");
+  });
 });

@@ -13,12 +13,24 @@ const PLATFORM_ICONS: Record<Platform, typeof SlackIcon> = {
   slack: SlackIcon,
   feishu: FeishuIcon,
   discord: DiscordIcon,
+  telegram: SlackIcon,
+  wechat: SlackIcon,
+  whatsapp: SlackIcon,
+  dingtalk: SlackIcon,
+  qqbot: SlackIcon,
+  wecom: SlackIcon,
 };
 
 const PLATFORM_OPEN_LABELS: Record<Platform, string> = {
   slack: "Open in Slack",
   feishu: "Open in Feishu",
   discord: "Open in Discord",
+  telegram: "Open in Telegram",
+  wechat: "Open in WeChat",
+  whatsapp: "Open in WhatsApp",
+  dingtalk: "Open in DingTalk",
+  qqbot: "Open in QQ Bot",
+  wecom: "Open in WeCom",
 };
 
 function PlatformIcon({ platform, size = 20 }: { platform: Platform; size?: number }) {
@@ -26,6 +38,12 @@ function PlatformIcon({ platform, size = 20 }: { platform: Platform; size?: numb
     slack: { bg: "bg-[rgba(217,153,247,0.15)]", emoji: "#" },
     feishu: { bg: "bg-[var(--color-info-subtle)]", emoji: "#" },
     discord: { bg: "bg-[var(--color-info-subtle)]", emoji: "#" },
+    telegram: { bg: "bg-[var(--color-info-subtle)]", emoji: "#" },
+    wechat: { bg: "bg-[var(--color-info-subtle)]", emoji: "#" },
+    whatsapp: { bg: "bg-[var(--color-info-subtle)]", emoji: "#" },
+    dingtalk: { bg: "bg-[var(--color-info-subtle)]", emoji: "#" },
+    qqbot: { bg: "bg-[var(--color-info-subtle)]", emoji: "#" },
+    wecom: { bg: "bg-[var(--color-info-subtle)]", emoji: "#" },
   };
   const { bg, emoji } = config[platform];
   return (

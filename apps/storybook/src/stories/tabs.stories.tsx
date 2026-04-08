@@ -86,3 +86,32 @@ export const WithCount: Story = {
     </Tabs>
   ),
 };
+
+export const Compact: Story = {
+  render: () => (
+    <Tabs defaultValue="web" className="w-[360px]">
+      <TabsList variant="compact">
+        <TabsTrigger value="web" variant="compact">
+          Share on Web
+        </TabsTrigger>
+        <TabsTrigger value="mobile" variant="compact">
+          Share on Mobile
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="web">
+        <Card>
+          <CardContent className="mt-0 text-sm text-muted-foreground">
+            Web share tasks (X, Reddit, …).
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="mobile">
+        <Card>
+          <CardContent className="mt-0 text-sm text-muted-foreground">
+            Mobile share tasks (image cards for WeChat, Feishu, …).
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
+  ),
+};

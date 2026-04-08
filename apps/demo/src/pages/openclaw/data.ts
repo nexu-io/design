@@ -1,4 +1,4 @@
-export type Platform = "slack" | "feishu" | "discord" | "telegram" | "whatsapp" | "wechat";
+export type Platform = "slack" | "feishu" | "discord" | "telegram" | "whatsapp" | "wechat" | "dingtalk" | "qqbot" | "wecom";
 export type ChannelStatus = "active" | "inactive" | "configuring";
 export type DeploymentSource = "coding" | "content";
 export type WorkflowStatus = "active" | "paused" | "draft";
@@ -1096,6 +1096,9 @@ export function getPlatformLabel(platform: Platform): string {
     telegram: "Telegram",
     whatsapp: "WhatsApp",
     wechat: "WeChat",
+    dingtalk: "DingTalk",
+    qqbot: "QQ Bot",
+    wecom: "WeCom",
   };
   return labels[platform];
 }
