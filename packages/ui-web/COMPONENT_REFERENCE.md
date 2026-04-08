@@ -651,6 +651,14 @@ Shared guardrails for the most common polish regressions.
 - Recommended session/sidebar row: leading logo/icon + title + muted subtitle/meta + trailing `StatusDot`.
 - Keep the title line visually dominant and keep passive context on a single secondary line instead of introducing extra pills or helper icons.
 
+### Dense picker rows
+
+- For dense `Select` / `Combobox` menus, use a 16px visual slot for the leading provider logo or mark.
+- If the leading asset is a stroked icon rather than a real logo, keep it optically balanced inside that slot (for example, 14px inside a 16px carrier).
+- Keep interactive picker rows at a 36px minimum height (`h-9` baseline); do not compress below that for dense model/provider menus.
+- Prefer a single-line row anatomy: logo, label, optional single compact badge, trailing muted metadata.
+- If a picker needs larger artwork or two-line descriptions, promote it to a roomier custom menu pattern instead of squeezing it into the dense picker baseline.
+
 ### Related docs and stories
 
 - Spec: `specs/ui-polish-conventions.md`
@@ -659,6 +667,7 @@ Shared guardrails for the most common polish regressions.
 - Provider settings hierarchy: `apps/storybook/src/stories/provider-settings.stories.tsx`
 - Status patterns: `apps/storybook/src/stories/status-dot.stories.tsx`, `apps/storybook/src/stories/interactive-row.stories.tsx`
 - Sidebar/session rows: `apps/storybook/src/stories/sidebar.stories.tsx`
+- Dense picker baseline: `apps/storybook/src/stories/model-picker.stories.tsx`
 - Tabs: `apps/storybook/src/stories/tabs.stories.tsx`
 - Toggle: `apps/storybook/src/stories/toggle.stories.tsx`
 - TextLink: `apps/storybook/src/stories/text-link.stories.tsx`

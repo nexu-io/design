@@ -184,7 +184,30 @@ Recommended hierarchy:
 
 ---
 
-## 8. Provider settings hierarchy
+## 8. Dense picker item sizing
+
+Dense `Select` / `Combobox` rows for model pickers, provider pickers, and similar menus should keep logos readable without making the menu feel oversized.
+
+### Rules
+
+- Use a **16px visual slot** for the leading provider logo / mark in dense picker rows.
+- If the leading asset is a simple stroked icon rather than a real logo, keep it optically balanced inside that slot (for example, a 14px glyph inside a 16px carrier).
+- Keep dense interactive picker rows at **36px minimum height** (`h-9` baseline). Do not compress below that just to fit more items.
+- Keep the row single-line when possible: leading logo, primary label, optional compact badge, trailing muted metadata.
+- If a picker needs larger artwork, two-line descriptions, or helper copy, treat it as a roomier custom menu pattern instead of the default dense picker baseline.
+
+### Default anatomy
+
+1. **Leading logo** — 16px visual slot
+2. **Primary label** — 13px+ label-first text
+3. **Optional inline badge** — one compact badge at most
+4. **Trailing metadata** — muted provider / cost / capability summary
+
+Use the dense picker Storybook scenario as the baseline reference: `apps/storybook/src/stories/model-picker.stories.tsx`.
+
+---
+
+## 9. Provider settings hierarchy
 
 Provider configuration surfaces should use a consistent three-layer layout:
 
