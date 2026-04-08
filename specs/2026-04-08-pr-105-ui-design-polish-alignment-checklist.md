@@ -121,7 +121,10 @@
   - [ ] Skills page：同步 skills / marketplace 卡片的稳定 icon mapping、帮助链接写法和卡片辅助文案风格，避免 generic 图标占位或多套说明文案语气并存
   - [ ] Session sidebar：同步会话列表行模式（title + subtitle/meta + trailing status dot）、最小 12px 可点击文本和 ghost/outline 风格 hover，替换冗余的 `Live`/文本 pill 状态
   - [ ] Model picker：同步 dense picker 的基线（最小 12px、约 16px logo、最小行高、弱化 trailing meta），并以设计仓库的 dense model/provider picker story 作为验收参考
-- [ ] 把 favicon、`index.html` metadata、toast 文案更新列入下游宿主应用清单
+- [x] 把 favicon、`index.html` metadata、toast 文案更新列入下游宿主应用清单
+  - [ ] favicon / app icon：在宿主应用统一浏览器 favicon、PWA/app icon、桌面壳 icon 的来源、尺寸裁切和品牌留白，避免继续沿用旧图标或出现不同入口图标不一致
+  - [ ] `index.html` / metadata：统一 title template、description、Open Graph / Twitter metadata、theme-color、app name 等宿主级元信息，避免页面各自补丁式覆盖或继续暴露过时品牌文案
+  - [ ] toast copy：统一成功 / 失败 / 进行中 toast 的语气、标点、动词时态和 CTA 写法，优先短句 + 明确结果，避免同类操作同时出现多套提示文案风格
 
 ## 建议执行顺序
 
