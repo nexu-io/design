@@ -40,7 +40,7 @@
 - [x] 审查 `packages/ui-web/src/primitives/toggle.tsx` 中 `text-[11px]` 的 trigger 文本，决定是否提升到 12px
 - [x] 审查 `packages/ui-web` 内其余交互性 primitive / pattern，清理 `text-[10px]`、`text-[11px]` 的可点击文本
 - [x] 对 `packages/demo-pages/src/pages/openclaw/*` 做一次 typography audit，优先处理 clickable / selectable / dismissible 元素上的 10px/11px 文本
-- [ ] 对 `packages/demo-pages/src/pages/product/*` 做同类审计，区分“说明文字”与“交互文字”，只强制升级后者
+- [x] 对 `packages/demo-pages/src/pages/product/*` 做同类审计，区分“说明文字”与“交互文字”，只强制升级后者
 - [ ] 如有必要，新增 lint 规则、grep 脚本或 review checklist，阻止交互控件继续引入 `text-[10px]`
 - [x] 在 Storybook 中新增或更新示例，展示 tabs / pills / filters / compact buttons 的最小字号基线
 
