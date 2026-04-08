@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Pre-built confirm/cancel prompt for destructive or irreversible actions. For custom modal content use **Dialog** directly.',
+          "Pre-built confirm/cancel prompt for destructive or irreversible actions. For custom modal content use **Dialog** directly.",
       },
     },
   },

@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Centered modal with focus trap for forms and confirmations. For slide-over panels use **Sheet**; for simple confirm/cancel prompts use **ConfirmDialog**.',
+          "Centered modal with focus trap for forms and confirmations. For slide-over panels use **Sheet**; for simple confirm/cancel prompts use **ConfirmDialog**.",
       },
     },
   },

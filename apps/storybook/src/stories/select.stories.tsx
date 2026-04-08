@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Form value picker for closed lists. For action/command menus use **DropdownMenu**; for searchable lists use **Combobox**.',
+          "Form value picker for closed lists. For action/command menus use **DropdownMenu**; for searchable lists use **Combobox**.",
       },
     },
   },

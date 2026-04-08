@@ -26,7 +26,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Action/command menu triggered by a button. For picking a form value use **Select**; for searchable value lists use **Combobox**.',
+          "Action/command menu triggered by a button. For picking a form value use **Select**; for searchable value lists use **Combobox**.",
       },
     },
   },

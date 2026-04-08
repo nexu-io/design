@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Slide-over panel from a screen edge for settings, detail views, or secondary workflows. For centered modals use **Dialog**.',
+          "Slide-over panel from a screen edge for settings, detail views, or secondary workflows. For centered modals use **Dialog**.",
       },
     },
   },

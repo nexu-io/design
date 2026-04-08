@@ -15,7 +15,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Searchable value picker with type-ahead filtering. For simple closed lists use **Select**; for action menus use **DropdownMenu**.',
+          "Searchable value picker with type-ahead filtering. For simple closed lists use **Select**; for action menus use **DropdownMenu**.",
       },
     },
   },
