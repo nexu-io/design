@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { MoreHorizontal, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 import {
   Badge,
@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <div className="grid w-[640px] gap-3">
-      <InteractiveRow className="p-4">
+      <InteractiveRow className="p-4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
         <InteractiveRowLeading>
           <div className="flex size-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
             <Sparkles className="size-4" />
@@ -36,9 +36,15 @@ export const Default: Story = {
           <Badge variant="accent">Ready</Badge>
         </InteractiveRowTrailing>
       </InteractiveRow>
-      <InteractiveRow selected tone="subtle" className="p-4">
+      <InteractiveRow
+        selected
+        tone="subtle"
+        className="p-4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
         <InteractiveRowLeading>
-          <StatusDot status="success" size="lg" />
+          <div className="flex size-10 items-center justify-center rounded-lg bg-[var(--color-success-subtle)] text-[var(--color-success)]">
+            <Sparkles className="size-4" />
+          </div>
         </InteractiveRowLeading>
         <InteractiveRowContent>
           <div className="text-lg font-medium text-text-primary">
@@ -47,7 +53,10 @@ export const Default: Story = {
           <div className="text-sm text-text-muted">Marketing • Due in 30 minutes</div>
         </InteractiveRowContent>
         <InteractiveRowTrailing>
-          <MoreHorizontal className="size-4 text-text-muted" />
+          <div className="flex items-center gap-2 text-sm text-text-muted">
+            <span>Running</span>
+            <StatusDot status="success" />
+          </div>
         </InteractiveRowTrailing>
       </InteractiveRow>
     </div>

@@ -52,6 +52,25 @@ export const Sizes: Story = {
   ),
 };
 
+export const WithLabels: Story = {
+  render: () => (
+    <div className="flex items-center gap-4 text-sm text-text-secondary">
+      <div className="inline-flex items-center gap-2">
+        <StatusDot status="success" pulse />
+        <span className="text-text-primary">Connected</span>
+      </div>
+      <div className="inline-flex items-center gap-2">
+        <StatusDot status="warning" />
+        <span>Syncing</span>
+      </div>
+      <div className="inline-flex items-center gap-2">
+        <StatusDot status="neutral" />
+        <span>Offline</span>
+      </div>
+    </div>
+  ),
+};
+
 export const Pulsing: Story = {
   render: () => (
     <div className="flex items-center gap-4">

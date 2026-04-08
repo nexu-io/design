@@ -14,6 +14,7 @@ import {
   NavigationMenu,
   NavigationMenuButton,
   NavigationMenuItem,
+  NavigationMenuLabel,
   NavigationMenuList,
   NexuLogoIcon,
   PlatformLogo,
@@ -105,15 +106,13 @@ export const Default: Story = {
           </div>
 
           <div className="px-2 pt-4">
-            <div className="mb-1.5 px-3 text-2xs font-medium uppercase tracking-wider text-text-muted">
-              Conversations
-            </div>
+            <NavigationMenuLabel className="pb-1.5">Conversations</NavigationMenuLabel>
             <div className="space-y-0.5">
               {sessions.map((s) => (
                 <button
                   key={s.id}
                   type="button"
-                  className={`flex w-full items-center gap-2.5 rounded-[10px] px-3 py-2 text-left transition-colors ${
+                  className={`flex w-full items-center gap-2.5 rounded-[10px] px-3 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                     s.id === "1"
                       ? "bg-surface-2 text-text-primary"
                       : "text-text-secondary hover:bg-surface-2 hover:text-text-primary"
@@ -124,6 +123,7 @@ export const Default: Story = {
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-sm font-medium">{s.title}</div>
+                    {/* interactive-typography-ignore: passive timestamp metadata inside dense row */}
                     <div className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-text-muted">
                       <span>{s.platform.charAt(0).toUpperCase() + s.platform.slice(1)}</span>
                       <span className="text-border">·</span>
@@ -140,7 +140,7 @@ export const Default: Story = {
           <div className="flex items-center gap-1">
             <button
               type="button"
-              className="flex size-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
+              className="flex size-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               title="Help"
             >
               <CircleHelp size={16} />
@@ -149,7 +149,7 @@ export const Default: Story = {
               href="https://github.com/nexu-io/nexu"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex size-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
+              className="flex size-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               title="GitHub"
             >
               <GitHubIcon size={16} />
@@ -157,7 +157,7 @@ export const Default: Story = {
           </div>
           <button
             type="button"
-            className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary"
+            className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Globe size={14} />
             <span>EN</span>
@@ -167,7 +167,7 @@ export const Default: Story = {
         <SidebarFooter className="border-t border-border px-2 py-2">
           <button
             type="button"
-            className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 transition-all hover:bg-surface-3"
+            className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 transition-all hover:bg-surface-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-accent/20 to-accent/5 text-xs font-bold text-accent ring-1 ring-accent/10">
               J
