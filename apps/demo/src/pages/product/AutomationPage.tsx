@@ -8,7 +8,6 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@nexu-design/ui-web";
-import type * as React from "react";
 import {
   AlertCircle,
   BarChart3,
@@ -37,6 +36,7 @@ import {
   Users,
   Zap,
 } from "lucide-react";
+import type * as React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 

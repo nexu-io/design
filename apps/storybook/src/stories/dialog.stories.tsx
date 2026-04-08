@@ -16,6 +16,14 @@ const meta = {
   title: "Primitives/Dialog",
   component: Dialog,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "Centered modal with focus trap for forms and confirmations. For slide-over panels use **Sheet**; for simple confirm/cancel prompts use **ConfirmDialog**.",
+      },
+    },
+  },
 } satisfies Meta<typeof Dialog>;
 
 export default meta;

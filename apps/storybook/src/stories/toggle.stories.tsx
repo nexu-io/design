@@ -7,6 +7,14 @@ const meta = {
   title: "Primitives/Toggle",
   component: Toggle,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "Single on/off toggle button (e.g. bold, pin). For switching between views use **Tabs**; for segmented filters use **Segmented**.",
+      },
+    },
+  },
 } satisfies Meta<typeof Toggle>;
 
 export default meta;
