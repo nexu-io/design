@@ -1,4 +1,13 @@
-export type Platform = "slack" | "feishu" | "discord" | "telegram" | "whatsapp" | "wechat" | "dingtalk" | "qqbot" | "wecom";
+export type Platform =
+  | "slack"
+  | "feishu"
+  | "discord"
+  | "telegram"
+  | "whatsapp"
+  | "wechat"
+  | "dingtalk"
+  | "qqbot"
+  | "wecom";
 export type ChannelStatus = "active" | "inactive" | "configuring";
 export type DeploymentSource = "coding" | "content";
 export type WorkflowStatus = "active" | "paused" | "draft";

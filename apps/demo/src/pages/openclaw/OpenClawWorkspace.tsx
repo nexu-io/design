@@ -4484,7 +4484,6 @@ function RewardsCenter({
   const mobileScanDone = budget.claimedChannels.has("wechat");
   const mobileScanReward = 200;
 
-
   const renderRewardRow = (ch: RewardChannel) => {
     const isDaily = ch.repeatable === "daily";
     const done = isDaily ? budget.dailyCheckedInToday : budget.claimedChannels.has(ch.id);
@@ -4682,7 +4681,10 @@ function RewardsCenter({
                   role="region"
                   aria-label={t("rewards.shareMobile.qrRegion")}
                 >
-                  <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl opacity-30" aria-hidden>
+                  <div
+                    className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl opacity-30"
+                    aria-hidden
+                  >
                     <span className="absolute top-[34%] left-[22%] -rotate-12">
                       <ChannelIcon icon="wechat" size={40} />
                     </span>

@@ -33,7 +33,6 @@ const PLATFORM_OPEN_LABELS: Record<Platform, string> = {
   wecom: "Open in WeCom",
 };
 
-
 const USER_AVATAR =
   "https://api.dicebear.com/7.x/lorelei/svg?seed=user&backgroundColor=b6e3f4,c0aede";
 const BOT_AVATAR = "/brand/ip-nexu.svg";
