@@ -1,9 +1,9 @@
 import {
+  ArrowUpRight,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   CreditCard,
-  ExternalLink,
   Info,
   Package,
   RefreshCw,
@@ -403,7 +403,7 @@ export default function UsagePage() {
                       >
                         <CreditCard size={12} />
                         绑定支付方式
-                        <ExternalLink size={10} className="opacity-60" />
+                        <ArrowUpRight size={12} className="shrink-0 opacity-60" />
                       </button>
                     )}
                   </div>

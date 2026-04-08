@@ -1,8 +1,9 @@
-import { ArrowRight, ExternalLink, FileText, Github, MessageSquare, Users } from "lucide-react";
+import { GitHubIcon } from "@nexu-design/ui-web";
+import { ArrowRight, ArrowUpRight, FileText, MessageSquare, Users } from "lucide-react";
 import { usePageTitle } from "../../hooks/usePageTitle";
 
 const RESOURCES = [
-  { icon: Github, label: "GitHub", desc: "Source code, issues, and contributions", href: "#" },
+  { icon: GitHubIcon, label: "GitHub", desc: "Source code, issues, and contributions", href: "#" },
   { icon: MessageSquare, label: "Community", desc: "Join the discussion on Discord", href: "#" },
   { icon: FileText, label: "API docs", desc: "Reference for developers", href: "#" },
 ];
@@ -27,15 +28,17 @@ export default function CommunityPage() {
             <a
               key={r.label}
               href={r.href}
+              target="_blank"
+              rel="noreferrer"
               className="flex flex-col gap-2 p-4 rounded-xl border border-border bg-surface-1 hover:border-border-hover hover:shadow-sm transition-all group"
             >
               <div className="flex items-center justify-between">
                 <div className="w-9 h-9 rounded-lg bg-surface-2 flex items-center justify-center shrink-0">
                   <Icon size={16} className="text-text-secondary" />
                 </div>
-                <ExternalLink
+                <ArrowUpRight
                   size={14}
-                  className="text-text-muted group-hover:text-accent transition-colors"
+                  className="text-text-muted group-hover:text-accent shrink-0 transition-colors"
                 />
               </div>
               <div>

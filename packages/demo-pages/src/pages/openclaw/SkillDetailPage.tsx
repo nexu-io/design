@@ -14,10 +14,10 @@ import {
 import {
   ArrowLeft,
   ArrowRight,
+  ArrowUpRight,
   Check,
   ChevronDown,
   Copy,
-  ExternalLink,
   Lock,
   RefreshCw,
   Shield,
@@ -507,7 +507,7 @@ export default function SkillDetailPage() {
                           </>
                         ) : (
                           <>
-                            <ExternalLink size={12} />
+                            <ArrowUpRight size={14} className="shrink-0" />
                             Connect
                           </>
                         )}

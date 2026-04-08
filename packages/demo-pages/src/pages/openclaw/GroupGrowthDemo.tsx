@@ -15,7 +15,6 @@ import {
   Check,
   ChevronDown,
   ChevronRight,
-  ExternalLink,
   Hash,
   Home,
   Italic,
@@ -1947,7 +1946,7 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
                           onClick={onNeedAuth}
                           className="w-full bg-[#007a5a] hover:bg-[#148567] text-white text-[13px] font-[700] rounded-md"
                         >
-                          <ExternalLink size={13} />
+                          <ArrowUpRight size={14} className="shrink-0" />
                           Connect Google Account
                         </Button>
                       </div>

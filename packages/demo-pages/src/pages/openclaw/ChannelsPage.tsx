@@ -15,12 +15,12 @@ import {
 import {
   AlertCircle,
   ArrowLeft,
+  ArrowUpRight,
   BookOpen,
   Check,
   CheckCircle2,
   ChevronRight,
   Copy,
-  ExternalLink,
   Key,
   Lock,
   RotateCcw,
@@ -383,7 +383,7 @@ function SlackOAuthView() {
               </div>
               <Button variant="outline" size="sm" asChild className="rounded-full">
                 <a href="https://api.slack.com/apps" target="_blank" rel="noreferrer">
-                  <ExternalLink size={12} />
+                  <ArrowUpRight size={12} className="shrink-0" />
                   Open Slack API Dashboard
                 </a>
               </Button>

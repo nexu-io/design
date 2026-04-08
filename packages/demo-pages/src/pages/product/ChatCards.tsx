@@ -5,11 +5,11 @@ import {
   ConversationMessageStatusIcon,
 } from "@nexu-design/ui-web";
 import {
+  ArrowUpRight,
   Brain,
   ChevronRight,
   Clock,
   Crown,
-  ExternalLink,
   FileText,
   Minus,
   Plus,
@@ -181,7 +181,7 @@ function CardItem({
           {card.path && (
             <span className="flex items-center gap-1 text-[10px] text-text-muted group-hover:text-accent transition-colors">
               <span className="font-mono truncate">~/clone/{card.path}</span>
-              <ExternalLink size={9} className="shrink-0 opacity-50 group-hover:opacity-100" />
+              <ArrowUpRight size={12} className="shrink-0 opacity-50 group-hover:opacity-100" />
             </span>
           )}
         </div>

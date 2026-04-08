@@ -47,10 +47,10 @@
 ### 3. Link + external-link icon 统一
 
 - [x] 在 `ui-web` 层明确规范：外链默认使用 `ArrowUpRight`，不再推荐 `ExternalLink`
-- [ ] 全仓 grep `ExternalLink`，整理替换清单并按 package 分批处理
-- [ ] 优先替换 `packages/demo-pages/src/pages/openclaw/*` 中仍在使用的 `ExternalLink`
-- [ ] 优先替换 `packages/demo-pages/src/pages/product/*` 与 `packages/demo-pages/src/pages/docs/*` 中仍在使用的 `ExternalLink`
-- [ ] 对替换后的外链组件统一 icon size / 对齐方式 / 间距规范
+- [x] 全仓 grep `ExternalLink`，整理替换清单并按 package 分批处理
+- [x] 优先替换 `packages/demo-pages/src/pages/openclaw/*` 中仍在使用的 `ExternalLink`
+- [x] 优先替换 `packages/demo-pages/src/pages/product/*` 与 `packages/demo-pages/src/pages/docs/*` 中仍在使用的 `ExternalLink`
+- [x] 对替换后的外链组件统一 icon size / 对齐方式 / 间距规范
 - [x] 在 `TextLink` / 文档示例中增加“外链写法”标准示例
 
 ### 4. Button / hover / focus 行为一致性
@@ -96,7 +96,7 @@
 ### 9. Skills / docs / help-link polish
 
 - [ ] 为 skills / marketplace 类型卡片建立统一 icon 映射策略，避免 generic 图标占位
-- [ ] 统一帮助链接风格：链接色使用 `--color-link`，外链图标使用 `ArrowUpRight`
+- [x] 统一帮助链接风格：链接色使用 `--color-link`，外链图标使用 `ArrowUpRight`
 - [ ] 审查 channel setup / docs / community 等页面，移除无必要的装饰性帮助图标
 - [ ] 检查免责声明、辅助说明文案的标点和结尾风格是否统一
 

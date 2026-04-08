@@ -18,7 +18,6 @@ import {
   Check,
   ChevronRight,
   Database,
-  ExternalLink,
   FileText,
   FolderOpen,
   Globe,
@@ -882,7 +881,7 @@ function FeedDetailPanel({ item, onClose }: { item: FeedItem; onClose: () => voi
               onClick={() => navigate("/app/sessions")}
               className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors"
             >
-              <ExternalLink size={11} />在 Session 中展开
+              <ArrowUpRight size={12} className="shrink-0" />在 Session 中展开
             </Button>
           )}
           <Button

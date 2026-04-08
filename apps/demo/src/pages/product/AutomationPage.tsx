@@ -10,6 +10,7 @@ import {
 } from "@nexu-design/ui-web";
 import {
   AlertCircle,
+  ArrowUpRight,
   BarChart3,
   Bell,
   Brain,
@@ -17,7 +18,6 @@ import {
   CheckCircle,
   Clock,
   Database,
-  ExternalLink,
   FileText,
   FolderOpen,
   Mail,
@@ -518,7 +518,7 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
                 onClick={() => navigate("/app/sessions")}
                 className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-border bg-surface-2 px-3 py-2 text-[11px] text-text-primary transition-colors hover:bg-surface-3"
               >
-                <ExternalLink size={11} />在 Session 中编辑
+                <ArrowUpRight size={12} className="shrink-0" />在 Session 中编辑
               </Button>
               <Button
                 type="button"

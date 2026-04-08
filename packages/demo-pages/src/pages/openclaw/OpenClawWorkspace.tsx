@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   EntityCardMedia,
+  GitHubIcon,
   Input,
   InteractiveRow,
   InteractiveRowContent,
@@ -61,7 +62,6 @@ import {
   Cpu,
   Database,
   Download,
-  ExternalLink,
   Eye,
   EyeOff,
   FileText,
@@ -1966,7 +1966,7 @@ function SeedancePromoModal({ onClose }: { onClose: () => void }) {
                 onClick={() => openExternal(FEISHU_GROUP_URL)}
                 className="w-full h-[40px] rounded-[10px] bg-[var(--color-brand-primary)] hover:opacity-90 text-white text-[13px] font-semibold flex items-center justify-center gap-2 transition-opacity mb-2.5"
               >
-                <ExternalLink size={13} />
+                <ArrowUpRight size={14} className="shrink-0" />
                 点击链接加入飞书群
               </button>
               <button
@@ -4083,7 +4083,7 @@ function SettingsView({
                       url: "https://docs.nexu.io",
                       icon: BookOpen,
                     },
-                    { labelKey: "ws.settings.about.github", url: GITHUB_URL, icon: ExternalLink },
+                    { labelKey: "ws.settings.about.github", url: GITHUB_URL, icon: GitHubIcon },
                     {
                       labelKey: "ws.settings.about.changelog",
                       url: "https://docs.nexu.io/changelog",
@@ -4249,7 +4249,7 @@ function SettingsView({
                       className="shrink-0 text-[11px] text-[var(--color-brand-primary)] hover:text-[var(--color-brand-primary)] no-underline hover:no-underline inline-flex items-center gap-1 leading-none"
                     >
                       {t("ws.settings.getApiKey")}
-                      <ExternalLink size={10} className="shrink-0" />
+                      <ArrowUpRight size={12} className="shrink-0" />
                     </a>
                   )}
                 </div>

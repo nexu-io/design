@@ -9,10 +9,10 @@ import {
   Activity,
   AlertTriangle,
   ArrowRight,
+  ArrowUpRight,
   BarChart3,
   CheckCircle,
   Clock,
-  ExternalLink,
   FileText,
   GitPullRequest,
   MessageSquare,
@@ -263,7 +263,7 @@ export function CardDetailPanel({
               size="inline"
               className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors"
             >
-              <ExternalLink size={10} /> 在 Session 中展开
+              <ArrowUpRight size={12} className="shrink-0" /> 在 Session 中展开
             </Button>
             <Button
               type="button"
@@ -582,7 +582,7 @@ export function AlignmentDetailPanel({
             size="inline"
             className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors"
           >
-            <ExternalLink size={10} /> 查看相关对话
+            <ArrowUpRight size={12} className="shrink-0" /> 查看相关对话
           </Button>
           <Button
             type="button"
@@ -1271,7 +1271,7 @@ export function OKRDetailPanel({
             size="inline"
             className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[11px] text-text-primary hover:bg-surface-3 transition-colors"
           >
-            <ExternalLink size={10} /> 编辑目标
+            <ArrowUpRight size={12} className="shrink-0" /> 编辑目标
           </Button>
         </div>
       }
@@ -1677,7 +1677,7 @@ export function TaskItemDetailPanel({
                 className="flex items-center gap-1.5 text-[11px] text-info hover:underline cursor-pointer p-1.5 rounded hover:bg-surface-1"
               >
                 <FileText size={11} /> {f}
-                <ExternalLink size={9} className="ml-auto text-text-muted shrink-0" />
+                <ArrowUpRight size={12} className="ml-auto text-text-muted shrink-0" />
               </div>
             ))}
           </div>
