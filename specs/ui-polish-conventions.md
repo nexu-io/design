@@ -158,3 +158,5 @@ Provider configuration surfaces should use a consistent three-layer layout:
 - Place the primary `Save` action in a trailing `flex justify-end gap-2` row.
 
 This hierarchy should be used in Storybook scenario docs and future reusable patterns.
+
+For the full standalone spec, see `specs/provider-settings-hierarchy.md`.
