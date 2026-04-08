@@ -317,7 +317,7 @@ const ComboboxInput = React.forwardRef<HTMLInputElement, ComboboxInputProps>(
             className,
           )}
           data-slot="combobox-input"
-          inputClassName={cn("text-sm", inputClassName)}
+          inputClassName={cn("text-base", inputClassName)}
           onChange={(event) => {
             const nextQuery = event.target.value;
             context.setQuery(nextQuery);
