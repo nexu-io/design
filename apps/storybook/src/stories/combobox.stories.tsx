@@ -11,6 +11,14 @@ import {
 const meta = {
   title: "Primitives/Combobox",
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Searchable value picker with type-ahead filtering. For simple closed lists use **Select**; for action menus use **DropdownMenu**.',
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

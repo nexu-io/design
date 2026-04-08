@@ -164,7 +164,16 @@
 - Keep accessibility props and roles intact when wrapping Radix or native elements.
 - When using `asChild`, preserve disabled/loading behavior carefully.
 
-## Icon sizing in buttons and interactive elements
+## Design & styling
+
+### Styling conventions
+- Styling is Tailwind-utility-driven, with a shared `cn()` helper built from `clsx` + `twMerge`.
+- Use tokens and CSS custom properties from `@nexu-design/tokens` and package `styles.css` files.
+- Prefer variant classes via CVA over ad hoc conditional string concatenation.
+- Reuse existing spacing, radius, typography, and color tokens when possible.
+- Keep global styles in package-level `styles.css`; keep component styles inline via class names.
+
+### Icon sizing in buttons and interactive elements
 - Icons placed inside buttons or alongside text must have a visual weight that matches the adjacent text.
 - Rule of thumb: use an icon size roughly equal to or slightly larger than the font size of the companion text so that the two feel balanced.
 - Reference sizes for `Button` variants:
@@ -175,12 +184,104 @@
 - When an icon looks visually smaller or larger than the text next to it, adjust the icon size rather than the text size.
 - Apply the same principle to inline icons in labels, badges, and navigation items.
 
-## Styling conventions
-- Styling is Tailwind-utility-driven, with a shared `cn()` helper built from `clsx` + `twMerge`.
-- Use tokens and CSS custom properties from `@nexu-design/tokens` and package `styles.css` files.
-- Prefer variant classes via CVA over ad hoc conditional string concatenation.
-- Reuse existing spacing, radius, typography, and color tokens when possible.
-- Keep global styles in package-level `styles.css`; keep component styles inline via class names.
+### Layout conventions
+- Action buttons (Save, Confirm, Submit) default to the **right** side of their container.
+- In horizontal form rows the confirm button sits at the trailing (right) edge; in vertical stacks it right-aligns via `flex justify-end` or `ml-auto`.
+- Cancel / secondary actions appear to the **left** of the primary confirm button.
+- Use `DialogFooter` (which already right-aligns) for dialogs; for standalone form sections use `<div className="flex justify-end gap-2">`.
+
+### Button variant selection
+- Choose the variant that matches the action's weight and intent:
+  | Scenario | Variant | Example |
+  |----------|---------|---------|
+  | Page-level primary action | `default` or `brand` | "Create project", "Deploy" |
+  | Secondary / supporting action | `outline` | "Cancel", "View details" |
+  | Tertiary / minimal-weight action | `ghost` | "Skip", "Not now" |
+  | Destructive / irreversible action | `destructive` | "Delete workspace", "Revoke key" |
+  | In-context soft action | `soft` | "Edit", "Retry" |
+  | Navigation-like text action | `link` | "Learn more", "View docs" |
+- A button group should have **at most one** `default`/`brand` button; others use `outline` or `ghost`.
+- Pair `loading` prop with async actions; never leave a button clickable while a request is in flight.
+
+### Typography hierarchy
+- Use design tokens consistently to establish visual hierarchy:
+  | Role | Token / Class | Weight |
+  |------|--------------|--------|
+  | Page title (`<h1>`) | `--text-size-2xl` / `--text-size-3xl` | `font-semibold` or `font-bold` |
+  | Section heading (`<h2>`) | `--text-size-xl` | `font-semibold` |
+  | Sub-heading (`<h3>`) | `--text-size-lg` | `font-medium` |
+  | Body text | `--text-size-base` (13px) | `font-normal` |
+  | Label / caption | `--text-size-sm` (12px) | `font-medium` |
+  | Hint / meta / timestamp | `--text-size-xs` (11px) | `font-normal` |
+- Pair text sizes with the correct text-color token:
+  - Headings → `--color-text-heading`
+  - Body → `--color-text-primary`
+  - Labels → `--color-text-secondary`
+  - Hints / placeholders → `--color-text-muted`
+  - Disabled → `--color-text-disabled`
+- Prefer `font-heading` (serif) only for hero / marketing headings; use `font-sans` everywhere else.
+- Do not skip heading levels (e.g. `h1` → `h3`); keep the hierarchy sequential for accessibility.
+
+### Spacing scale
+- Use a consistent spacing scale to create rhythm:
+  | Context | Recommended spacing |
+  |---------|-------------------|
+  | Between form fields | `space-y-4` or `gap-4` |
+  | Between items in a compact list | `space-y-2` or `gap-2` |
+  | Between page-level sections | `space-y-8` to `space-y-12` |
+  | Between heading and its content | `mb-2` to `mb-4` |
+  | Between card body elements | `space-y-3` |
+  | Inline element groups (buttons, badges) | `gap-2` to `gap-3` |
+  | Padding inside cards | Use Card's `padding` prop (`sm` / `md` / `lg`); avoid ad-hoc padding |
+- Prefer Tailwind spacing utilities (`gap-*`, `space-y-*`, `p-*`) over custom pixel values.
+- Keep spacing proportional: tighter inside components, looser between sections.
+
+### Color usage
+- **Semantic colors** — use for states and feedback only:
+  | Color | Use for |
+  |-------|---------|
+  | `success` / `success-subtle` | Positive outcomes, completion, online status |
+  | `warning` / `warning-subtle` | Caution states, approaching limits, pending |
+  | `error` / `error-subtle` | Validation errors, failures, destructive emphasis |
+  | `info` / `info-subtle` | Informational callouts, tips, neutral highlights |
+- **Brand color** (`--color-brand-primary`) — links, focus rings, accented badges, brand emphasis. Do not use for status.
+- **Accent color** (`--color-accent`) — primary interactive surfaces (filled buttons, toggles). Use `--color-accent-fg` for text on accent backgrounds.
+- **Neutral text colors** — follow the hierarchy in "Typography hierarchy" above; never use raw hex/rgb.
+- **Surface colors** — use the numbered scale in order: `surface-0` (page bg) → `surface-1` (cards) → `surface-2` (hover/secondary) → `surface-3` (dividers/tertiary). Do not skip levels.
+- Do not mix semantic colors for decoration; they must convey meaning.
+
+### Component selection guide
+- Choosing between similar components:
+  | Need | Use | Not |
+  |------|-----|-----|
+  | User picks a value from a closed list | `Select` | `DropdownMenu` |
+  | User picks a value with search/filter | `Combobox` | `Select` |
+  | Menu of actions / commands | `DropdownMenu` | `Select` |
+  | Binary on/off setting | `Switch` | `Checkbox` |
+  | Multiple independent boolean options | `Checkbox` (each) | `Switch` |
+  | Confirmation before destructive action | `ConfirmDialog` | plain `Dialog` |
+  | Slide-over panel from edge | `Sheet` | `Dialog` |
+  | Centered modal with focus trap | `Dialog` | `Sheet` |
+  | Brief helper text on hover | `Tooltip` | `Popover` |
+  | Rich interactive overlay (forms, menus) | `Popover` | `Tooltip` |
+  | Navigation between views | `Tabs` | `Select` |
+  | Inline status indicator | `Badge` or `StatusDot` | plain `<span>` |
+  | Labeled form input with validation | `FormField > Input` | bare `Input` |
+- When in doubt, prefer the higher-level pattern (`FormField`, `ConfirmDialog`, `PageHeader`) over manually composing primitives.
+
+### Elevation & shadow
+- Apply shadows to convey depth, not decoration:
+  | Element | Shadow token |
+  |---------|-------------|
+  | Cards (resting) | `--shadow-card` or `--shadow-sm` |
+  | Cards (hover / interactive) | `--shadow-md` |
+  | Dropdowns, popovers, select menus | `--shadow-dropdown` |
+  | Dialogs / modals | `--shadow-lg` |
+  | Heavy overlays / command palettes | `--shadow-xl` |
+  | Focus rings | `--shadow-focus` |
+- Do not stack multiple shadow tokens on the same element.
+- Elevation should increase with z-index: page content → cards → popovers → modals.
+- Match `border-radius` to context: `--radius-md` for controls, `--radius-lg` for cards, `--radius-xl` for large panels.
 
 ## Accessibility and UX expectations
 - Accessibility is actively tested with `vitest-axe`.

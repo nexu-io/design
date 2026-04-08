@@ -6,6 +6,14 @@ const meta = {
   title: "Primitives/Select",
   component: Select,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Form value picker for closed lists. For action/command menus use **DropdownMenu**; for searchable lists use **Combobox**.',
+      },
+    },
+  },
 } satisfies Meta<typeof Select>;
 
 export default meta;

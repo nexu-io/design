@@ -16,6 +16,14 @@ const meta = {
   title: "Primitives/Sheet",
   component: Sheet,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Slide-over panel from a screen edge for settings, detail views, or secondary workflows. For centered modals use **Dialog**.',
+      },
+    },
+  },
 } satisfies Meta<typeof Sheet>;
 
 export default meta;
