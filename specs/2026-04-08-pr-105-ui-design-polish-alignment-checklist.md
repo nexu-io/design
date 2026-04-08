@@ -115,7 +115,12 @@
   - [ ] IPC contract：梳理 renderer ↔ main 的 update 事件、命令与 payload，补齐命名规范、错误态和幂等约束，避免 banner / setting / menu 各自直连不同 IPC 事件
   - [ ] menu sync：让应用菜单中的“检查更新 / 重启并更新”与页面 banner / settings 状态保持同一来源，避免菜单可点但页面状态滞后
   - [ ] install CTA：统一“Restart to update / Install update / Download update”触发入口与禁用规则，确保只保留一个主 CTA，并定义何时需要二次确认
-- [ ] 把 “Home page / Welcome page / Skills page / Session sidebar / model picker” 的具体页面改动同步到对应产品仓库或产品原型仓库
+- [x] 把 “Home page / Welcome page / Skills page / Session sidebar / model picker” 的具体页面改动同步到对应产品仓库或产品原型仓库
+  - [ ] Home / landing page：同步页头层级、帮助链接样式、外链图标统一和首页技能入口的视觉权重，避免继续混用 serif heading、装饰性帮助图标或裸蓝色链接
+  - [ ] Welcome page：同步 welcome / onboarding hero 的 heading 边界、说明文案标点风格，以及 provider setup / BYOK 区块的三层层级与右对齐 Save CTA
+  - [ ] Skills page：同步 skills / marketplace 卡片的稳定 icon mapping、帮助链接写法和卡片辅助文案风格，避免 generic 图标占位或多套说明文案语气并存
+  - [ ] Session sidebar：同步会话列表行模式（title + subtitle/meta + trailing status dot）、最小 12px 可点击文本和 ghost/outline 风格 hover，替换冗余的 `Live`/文本 pill 状态
+  - [ ] Model picker：同步 dense picker 的基线（最小 12px、约 16px logo、最小行高、弱化 trailing meta），并以设计仓库的 dense model/provider picker story 作为验收参考
 - [ ] 把 favicon、`index.html` metadata、toast 文案更新列入下游宿主应用清单
 
 ## 建议执行顺序
