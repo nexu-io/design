@@ -637,6 +637,9 @@ Shared guardrails for the most common polish regressions.
 - Recommended stack: `Card` + region `Tabs` + auth `ToggleGroup`/`RadioGroup` + `FormField` inputs + trailing save row.
 - Saved API keys should stay in the form as a masked read-only field with inline `Replace key` / `Edit`, not a detached success banner.
 - Clicking `Replace key` should reveal an editable empty input in the same field position; the card footer `Save` remains the primary confirmation action.
+- Save actions belong in a trailing footer row inside the same card or panel as the fields they submit.
+- Use `flex justify-end gap-2` for that row; secondary actions sit to the left of the primary `Save` button.
+- Keep exactly one visually primary CTA in the row, and use `loading` on `Save` while async submission is in flight.
 - Revisit a dedicated pattern only after multiple real surfaces repeat the same behavior contract around region switching, auth switching, saved-secret masking, and save semantics.
 
 ### Related docs and stories
