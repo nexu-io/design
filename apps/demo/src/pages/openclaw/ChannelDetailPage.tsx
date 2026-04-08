@@ -13,12 +13,24 @@ const PLATFORM_ICONS: Record<Platform, typeof SlackIcon> = {
   slack: SlackIcon,
   feishu: FeishuIcon,
   discord: DiscordIcon,
+  telegram: SlackIcon,
+  wechat: SlackIcon,
+  whatsapp: SlackIcon,
+  dingtalk: SlackIcon,
+  qqbot: SlackIcon,
+  wecom: SlackIcon,
 };
 
 const PLATFORM_OPEN_LABELS: Record<Platform, string> = {
   slack: "Open in Slack",
   feishu: "Open in Feishu",
   discord: "Open in Discord",
+  telegram: "Open in Telegram",
+  wechat: "Open in WeChat",
+  whatsapp: "Open in WhatsApp",
+  dingtalk: "Open in DingTalk",
+  qqbot: "Open in QQ Bot",
+  wecom: "Open in WeCom",
 };
 
 const USER_AVATAR =

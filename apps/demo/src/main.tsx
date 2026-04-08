@@ -1,3 +1,4 @@
+import { Toaster, TooltipProvider } from "@nexu-design/ui-web";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
@@ -15,7 +16,10 @@ createRoot(root).render(
   <StrictMode>
     <BrowserRouter>
       <LocaleProvider>
-        <App />
+        <TooltipProvider delayDuration={300} skipDelayDuration={100}>
+          <App />
+          <Toaster position="top-center" />
+        </TooltipProvider>
       </LocaleProvider>
     </BrowserRouter>
   </StrictMode>,

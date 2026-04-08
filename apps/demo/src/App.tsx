@@ -2,6 +2,7 @@ import {
   Brain,
   Clock,
   Component,
+  Crown,
   Globe,
   Layout,
   Lightbulb,
@@ -21,7 +22,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useState } from "react";
-import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { NavLink, Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { CommentSystem } from "./components/CommentSystem";
 import AvatarPage from "./pages/AvatarPage";
 import BPPage from "./pages/BPPage";
@@ -49,17 +50,27 @@ import StarOnGitHubPage from "./pages/docs/StarOnGitHubPage";
 import WhatIsNexuPage from "./pages/docs/WhatIsNexuPage";
 import YourClonePage from "./pages/docs/YourClonePage";
 import JourneyPage from "./pages/journey/JourneyPage";
+import NexuApprovalsPage from "./pages/nexu/NexuApprovalsPage";
+import NexuAvatarDetailPage from "./pages/nexu/NexuAvatarDetailPage";
+import NexuAvatarsPage from "./pages/nexu/NexuAvatarsPage";
+import NexuDashboardPage from "./pages/nexu/NexuDashboardPage";
+import NexuLanding from "./pages/nexu/NexuLanding";
+import NexuProductLayout from "./pages/nexu/NexuProductLayout";
+import NexuProgressPage from "./pages/nexu/NexuProgressPage";
+import NexuSettingsPage from "./pages/nexu/NexuSettingsPage";
+import NexuSkillsKnowledgePage from "./pages/nexu/NexuSkillsKnowledgePage";
+import NexuTaskPage from "./pages/nexu/NexuTaskPage";
 import AuthPage from "./pages/openclaw/AuthPage";
 import AuthShell from "./pages/openclaw/AuthShell";
 import ChannelsPage from "./pages/openclaw/ChannelsPage";
 import ClientWelcomePage from "./pages/openclaw/ClientWelcomePage";
 import GroupGrowthDemo from "./pages/openclaw/GroupGrowthDemo";
 import InvitePage from "./pages/openclaw/InvitePage";
+import NexuPricingPage from "./pages/openclaw/NexuPricingPage";
 import OnboardingPage from "./pages/openclaw/OnboardingPage";
 import OpenClawLanding from "./pages/openclaw/OpenClawLanding";
 import OpenClawSkillsPage from "./pages/openclaw/OpenClawSkillsPage";
 import OpenClawWorkspace from "./pages/openclaw/OpenClawWorkspace";
-import PricingPage from "./pages/openclaw/PricingPage";
 import PrivacyPolicyPage from "./pages/openclaw/PrivacyPolicyPage";
 import RewardsPage from "./pages/openclaw/RewardsPage";
 import SkillDetailPage from "./pages/openclaw/SkillDetailPage";
@@ -89,6 +100,7 @@ const DESIGN_NAV = [
 
 const PRODUCT_NAV = [
   { to: "/demo", label: "Product Demo", icon: Play },
+  { to: "/nexu/welcome", label: "Nexu Digital", icon: Sparkles },
   { to: "/journey", label: "User Journey", icon: RouteIcon },
   { to: "/app/sessions", label: "Sessions", icon: Monitor },
   { to: "/app/team", label: "团队协作", icon: Users },
@@ -99,6 +111,7 @@ const PRODUCT_NAV = [
 
 const GROWTH_NAV = [
   { to: "/openclaw", label: "nexu MVP 🦞", icon: Rocket },
+  { to: "/openclaw/pricing", label: "Pricing 定价", icon: Crown },
   { to: "/openclaw/growth-demo/new", label: "首次用户 Demo", icon: Zap },
   { to: "/openclaw/growth-demo/existing", label: "同事已开通 Demo", icon: Zap },
   { to: "/growth-landing", label: "Growth Landing", icon: Globe },
@@ -225,6 +238,20 @@ function DesignSystemShell() {
           <Route path="/landing" element={<LandingPreview />} />
           <Route path="/demo" element={<ProductDemoPage />} />
           <Route path="/journey" element={<JourneyPage />} />
+          {/* Nexu Digital: nested so RR v7 always resolves /nexu vs /nexu/welcome unambiguously */}
+          <Route path="/nexu" element={<Outlet />}>
+            <Route path="welcome" element={<NexuLanding />} />
+            <Route element={<NexuProductLayout />}>
+              <Route index element={<NexuDashboardPage />} />
+              <Route path="avatars" element={<NexuAvatarsPage />} />
+              <Route path="avatars/:id" element={<NexuAvatarDetailPage />} />
+              <Route path="task" element={<NexuTaskPage />} />
+              <Route path="approvals" element={<NexuApprovalsPage />} />
+              <Route path="progress" element={<NexuProgressPage />} />
+              <Route path="skills" element={<NexuSkillsKnowledgePage />} />
+              <Route path="settings" element={<NexuSettingsPage />} />
+            </Route>
+          </Route>
           <Route path="/app" element={<Navigate to="/app/clone" replace />} />
           <Route
             path="/app/sessions"
@@ -312,7 +339,7 @@ export default function App() {
           <Route path="/openclaw/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/openclaw/terms" element={<TermsOfServicePage />} />
           <Route path="/openclaw/channels" element={<ChannelsPage />} />
-          <Route path="/openclaw/pricing" element={<PricingPage />} />
+          <Route path="/openclaw/pricing" element={<NexuPricingPage />} />
           <Route path="/openclaw/rewards" element={<RewardsPage />} />
           <Route path="/openclaw/usage" element={<UsagePage />} />
           <Route path="/openclaw/skills" element={<OpenClawSkillsPage />} />

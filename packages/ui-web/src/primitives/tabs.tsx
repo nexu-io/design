@@ -11,6 +11,9 @@ const tabsListVariants = cva("inline-flex items-center", {
     variant: {
       default: "gap-1 rounded-lg border border-border bg-surface-2/50 p-1 text-muted-foreground",
       pill: "gap-1 rounded-full bg-surface-2 p-1 text-muted-foreground",
+      /** Dense row (toolbars, reward rows). Matches `ToggleGroup` `variant="compact"`. */
+      compact:
+        "gap-0.5 rounded-[6px] border border-border bg-surface-2/50 p-0.5 text-muted-foreground",
       underline:
         "w-full gap-0 rounded-none border-b border-[var(--color-border)] bg-transparent p-0 text-muted-foreground",
     },
@@ -28,6 +31,8 @@ const tabsTriggerVariants = cva(
         default:
           "rounded-md px-3 py-1.5 data-[state=active]:bg-surface-0 data-[state=active]:text-foreground data-[state=active]:shadow-sm",
         pill: "rounded-full px-4 py-1.5 text-base text-text-secondary hover:bg-transparent hover:text-text-primary data-[state=active]:bg-white data-[state=active]:text-text-primary data-[state=active]:shadow-[var(--shadow-rest)]",
+        compact:
+          "h-6 min-h-6 rounded-[4px] border border-transparent bg-transparent px-2.5 py-0 text-[11px] font-medium leading-none text-text-secondary hover:bg-surface-1/70 hover:text-text-primary data-[state=active]:border-transparent data-[state=active]:bg-surface-0 data-[state=active]:text-text-primary data-[state=active]:shadow-sm",
         underline:
           "rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:shadow-none",
       },
