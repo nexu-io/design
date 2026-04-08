@@ -5076,7 +5076,7 @@ export default function OpenClawWorkspace() {
           setCollapsed(next);
           localStorage.setItem("nexu_sidebar_collapsed", String(next));
         }}
-        className="absolute top-2 left-[88px] z-50 p-1.5 rounded-md text-text-tertiary hover:text-text-primary hover:bg-black/5 transition-colors"
+        className="absolute top-2 left-[88px] z-50 p-1.5 rounded-md text-text-tertiary hover:text-text-primary hover:bg-surface-2 transition-colors"
         style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         title={collapsed ? t("ws.sidebar.expand") : t("ws.sidebar.collapse")}
       >
@@ -5242,14 +5242,14 @@ export default function OpenClawWorkspace() {
                       href="https://docs.nexu.ai"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
+                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-all"
                     >
                       <BookOpen size={14} />
                       {t("ws.help.documentation")}
                     </a>
                     <a
                       href="mailto:hi@nexu.ai"
-                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
+                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-all"
                     >
                       <Mail size={14} />
                       {t("ws.help.contactUs")}
@@ -5270,7 +5270,7 @@ export default function OpenClawWorkspace() {
                           }
                         }, 1500);
                       }}
-                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
+                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-all"
                     >
                       <Loader2 size={14} />
                       Check for Updates…
@@ -5279,7 +5279,7 @@ export default function OpenClawWorkspace() {
                       href="https://nexu.ai/changelog"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 transition-all"
+                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-all"
                     >
                       <ScrollText size={14} />
                       {t("ws.help.changelog")}
@@ -5303,8 +5303,8 @@ export default function OpenClawWorkspace() {
                           }}
                           className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-[12px] font-medium transition-all ${
                             locale === opt.value
-                              ? "text-text-primary bg-black/5"
-                              : "text-text-secondary hover:text-text-primary hover:bg-black/5"
+                              ? "text-text-primary bg-surface-2"
+                              : "text-text-secondary hover:text-text-primary hover:bg-surface-2"
                           }`}
                         >
                           <Globe size={14} className="shrink-0 opacity-60" />
@@ -5320,7 +5320,7 @@ export default function OpenClawWorkspace() {
             <button
               type="button"
               onClick={() => setShowHelpMenu(!showHelpMenu)}
-              className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors cursor-pointer ${showHelpMenu ? "text-text-primary bg-black/5" : "text-text-secondary hover:text-text-primary hover:bg-black/5"}`}
+              className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors cursor-pointer ${showHelpMenu ? "text-text-primary bg-surface-2" : "text-text-secondary hover:text-text-primary hover:bg-surface-2"}`}
               title={t("ws.help.title")}
             >
               <CircleHelp size={16} />
@@ -5330,7 +5330,7 @@ export default function OpenClawWorkspace() {
             href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 w-7 h-7 flex items-center justify-center rounded-md text-text-secondary hover:text-text-primary hover:bg-black/5 transition-colors"
+            className="shrink-0 w-7 h-7 flex items-center justify-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
             title={
               stars && stars > 0
                 ? `${t("ws.help.github")} · ${stars.toLocaleString()} stars`

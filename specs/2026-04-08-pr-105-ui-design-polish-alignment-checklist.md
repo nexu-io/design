@@ -56,7 +56,7 @@
 ### 4. Button / hover / focus 行为一致性
 
 - [x] 确认 `Button` 的 `outline` hover 是否与 PR 文档目标完全一致，必要时补视觉回归说明
-- [ ] 审查其他近似按钮类组件（如 nav item、inline action、capsule button、demo 内自定义按钮）是否仍使用偏黑 hover
+- [x] 审查其他近似按钮类组件（如 nav item、inline action、capsule button、demo 内自定义按钮）是否仍使用偏黑 hover
 - [x] 将“ghost / outline hover 应偏 surface，而非偏 accent 黑底”写入组件设计规范
 - [x] 为 `button.stories.tsx` 增加 ghost / outline / focus states 的对比示例
 - [ ] 必要时补测试，覆盖 `ghost` / `outline` className 的关键状态回归
