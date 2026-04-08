@@ -109,7 +109,12 @@
 
 ### 11. 下游产品仓库同步（本仓库记录，不在此直接实现）
 
-- [ ] 把“Desktop Update Interaction Refactoring”拆成下游产品仓库 checklist：UpdateBanner、hook、IPC、menu sync、install CTA
+- [x] 把“Desktop Update Interaction Refactoring”拆成下游产品仓库 checklist：UpdateBanner、hook、IPC、menu sync、install CTA
+  - [ ] `UpdateBanner`：统一 banner 的信息层级、按钮文案、关闭/稍后处理、下载中/已下载/待重启等状态映射，避免页面内散落多套 update UI
+  - [ ] update hook：把“检查更新、下载进度、已就绪、失败、忽略/稍后”状态机集中到单一 hook 或 store，对外暴露稳定的 UI-facing contract
+  - [ ] IPC contract：梳理 renderer ↔ main 的 update 事件、命令与 payload，补齐命名规范、错误态和幂等约束，避免 banner / setting / menu 各自直连不同 IPC 事件
+  - [ ] menu sync：让应用菜单中的“检查更新 / 重启并更新”与页面 banner / settings 状态保持同一来源，避免菜单可点但页面状态滞后
+  - [ ] install CTA：统一“Restart to update / Install update / Download update”触发入口与禁用规则，确保只保留一个主 CTA，并定义何时需要二次确认
 - [ ] 把 “Home page / Welcome page / Skills page / Session sidebar / model picker” 的具体页面改动同步到对应产品仓库或产品原型仓库
 - [ ] 把 favicon、`index.html` metadata、toast 文案更新列入下游宿主应用清单
 
