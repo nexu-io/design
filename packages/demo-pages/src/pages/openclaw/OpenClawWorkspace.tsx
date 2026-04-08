@@ -2949,7 +2949,7 @@ function HomeDashboard({
               <div className="relative" ref={modelDropdownRef}>
                 <button
                   onClick={() => setShowModelDropdown(!showModelDropdown)}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-surface-0 hover:border-border-hover hover:bg-surface-1 transition-all text-[12px] text-text-primary"
+                  className="inline-flex min-h-9 items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-0 text-base font-medium text-text-primary transition-all hover:border-border-hover hover:bg-surface-1"
                 >
                   {selectedModel ? (
                     <span className="w-4 h-4 shrink-0 flex items-center justify-center">
@@ -2961,13 +2961,13 @@ function HomeDashboard({
                       />
                     </span>
                   ) : (
-                    <Cpu size={13} className="text-text-muted" />
+                    <Cpu size={14} className="text-text-muted" />
                   )}
                   <span className="font-medium">
                     {selectedModel?.name ?? t("ws.home.notSelected")}
                   </span>
                   <ChevronDown
-                    size={10}
+                    size={12}
                     className={`text-text-muted transition-transform ${showModelDropdown ? "rotate-180" : ""}`}
                   />
                 </button>
@@ -2991,8 +2991,8 @@ function HomeDashboard({
                     return (
                       <div className="absolute z-50 mt-2 left-0 w-[280px] rounded-xl border border-border bg-surface-1 shadow-xl">
                         <div className="px-3 pt-3 pb-2">
-                          <div className="flex items-center gap-2.5 rounded-lg bg-surface-0 border border-border px-3 py-1.5">
-                            <Search size={12} className="text-text-muted shrink-0" />
+                          <div className="flex items-center gap-2.5 rounded-lg bg-surface-0 border border-border px-3 py-2">
+                            <Search size={14} className="text-text-muted shrink-0" />
                             <input
                               type="text"
                               value={modelSearch}
@@ -3003,7 +3003,7 @@ function HomeDashboard({
                                 }
                               }}
                               placeholder={t("ws.home.searchModels")}
-                              className="flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted/50 outline-none"
+                              className="flex-1 bg-transparent text-base text-text-primary placeholder:text-text-muted/50 outline-none"
                             />
                           </div>
                         </div>
@@ -3031,19 +3031,19 @@ function HomeDashboard({
                                           return next;
                                         });
                                       }}
-                                      className="w-full px-3 py-1.5 flex items-center gap-2 hover:bg-surface-2/50 transition-colors"
+                                      className="flex min-h-9 w-full items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-surface-2/50"
                                     >
                                       <ChevronDown
-                                        size={10}
+                                        size={12}
                                         className={`text-text-muted/50 transition-transform ${isExpanded ? "" : "-rotate-90"}`}
                                       />
-                                      <span className="w-4 h-4 shrink-0 flex items-center justify-center">
-                                        <ProviderLogo provider={provider.id} size={13} />
+                                      <span className="flex size-4 shrink-0 items-center justify-center">
+                                        <ProviderLogo provider={provider.id} size={14} />
                                       </span>
-                                      <span className="text-[11px] font-medium text-text-secondary">
+                                      <span className="text-sm font-medium text-text-secondary">
                                         {provider.name}
                                       </span>
-                                      <span className="text-[10px] text-text-muted/40 ml-auto tabular-nums">
+                                      <span className="ml-auto text-sm text-text-muted/60 tabular-nums">
                                         {provider.models.length}
                                       </span>
                                     </button>
@@ -3055,17 +3055,17 @@ function HomeDashboard({
                                             setSelectedModelId(model.id);
                                             setShowModelDropdown(false);
                                           }}
-                                          className={`w-full flex items-center gap-2 pl-8 pr-3 py-1.5 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/5" : ""}`}
+                                          className={`flex min-h-9 w-full items-center gap-2.5 pl-8 pr-3 py-2 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/5" : ""}`}
                                         >
                                           {model.id === selectedModelId ? (
-                                            <Check size={11} className="text-accent shrink-0" />
+                                            <Check size={14} className="text-accent shrink-0" />
                                           ) : (
-                                            <span className="w-[11px] shrink-0" />
+                                            <span className="size-4 shrink-0" />
                                           )}
-                                          <span className="text-[12px] font-medium text-text-primary truncate flex-1">
+                                          <span className="flex-1 truncate text-base font-medium text-text-primary">
                                             {model.name}
                                           </span>
-                                          <span className="text-[10px] text-text-muted/50 tabular-nums shrink-0">
+                                          <span className="shrink-0 text-sm text-text-muted/60 tabular-nums">
                                             {model.contextWindow}
                                           </span>
                                         </button>
@@ -3082,13 +3082,13 @@ function HomeDashboard({
                               setShowModelDropdown(false);
                               onNavigate({ type: "settings" });
                             }}
-                            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors hover:bg-surface-2"
+                            className="flex min-h-9 w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-surface-2"
                           >
-                            <Settings size={11} className="text-text-primary" />
-                            <span className="text-[11px] font-medium text-text-primary">
+                            <Settings size={14} className="text-text-primary" />
+                            <span className="text-sm font-medium text-text-primary">
                               {t("ws.home.configureProviders")}
                             </span>
-                            <ArrowRight size={10} className="text-text-secondary ml-auto" />
+                            <ArrowRight size={12} className="ml-auto text-text-secondary" />
                           </button>
                         </div>
                       </div>
@@ -4135,7 +4135,7 @@ function SettingsView({
                   </div>
                   <button
                     onClick={() => setShowModelDropdown((v) => !v)}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-0 hover:bg-surface-2 hover:border-border-hover transition-all text-[12px] font-medium text-text-primary"
+                    className="inline-flex min-h-9 items-center gap-2 px-3 py-2 rounded-lg border border-border bg-surface-0 text-base font-medium text-text-primary transition-all hover:border-border-hover hover:bg-surface-2"
                   >
                     {selectedModel ? (
                       <>
@@ -4147,7 +4147,7 @@ function SettingsView({
                     ) : (
                       <span className="text-text-muted">{t("ws.settings.select")}</span>
                     )}
-                    <ChevronDown size={13} className="text-text-muted" />
+                    <ChevronDown size={14} className="text-text-muted" />
                   </button>
                 </div>
               </div>
@@ -4158,7 +4158,7 @@ function SettingsView({
                     .filter((p) => p.id === "nexu" || configuredProviders.has(p.id))
                     .map((p) => (
                       <div key={p.id}>
-                        <div className="px-3 pt-2.5 pb-1 text-[10px] font-semibold text-text-tertiary uppercase tracking-wider sticky top-0 bg-surface-0">
+                        <div className="sticky top-0 bg-surface-0 px-3 pt-2.5 pb-1 text-sm font-semibold uppercase tracking-wider text-text-tertiary">
                           {p.name}
                         </div>
                         {p.models.map((m) => {
@@ -4170,19 +4170,16 @@ function SettingsView({
                                 setSelectedModelId(m.id);
                                 setShowModelDropdown(false);
                               }}
-                              className={`w-full flex items-center gap-2.5 px-3 py-2 text-left transition-colors ${isSelected ? "bg-accent/5" : "hover:bg-surface-2"}`}
+                              className={`flex min-h-9 w-full items-center gap-2.5 px-3 py-2 text-left transition-colors ${isSelected ? "bg-accent/5" : "hover:bg-surface-2"}`}
                             >
-                              <span className="w-5 h-5 shrink-0 flex items-center justify-center">
+                              <span className="flex size-4 shrink-0 items-center justify-center">
                                 <ProviderLogo provider={p.id} size={14} />
                               </span>
-                              <div className="flex-1 min-w-0">
-                                <div
-                                  className={`text-[12px] truncate ${isSelected ? "font-semibold text-accent" : "font-medium text-text-primary"}`}
-                                >
-                                  {m.name}
-                                </div>
-                                <div className="text-[10px] text-text-tertiary">{p.name}</div>
-                              </div>
+                              <span
+                                className={`min-w-0 flex-1 truncate text-base ${isSelected ? "font-semibold text-accent" : "font-medium text-text-primary"}`}
+                              >
+                                {m.name}
+                              </span>
                               {isSelected && <Check size={14} className="text-accent shrink-0" />}
                             </button>
                           );
@@ -4372,33 +4369,33 @@ function SettingsView({
                         <button
                           key={model.id}
                           onClick={() => setSelectedModelId(model.id)}
-                          className={`w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left transition-all border-none ${
+                          className={`w-full min-h-9 flex items-center justify-between gap-3 rounded-lg border-none px-3 py-2.5 text-left transition-all ${
                             isActive
                               ? "ring-1 ring-[var(--color-brand-primary)]/50 bg-[var(--color-brand-subtle)]"
                               : "bg-surface-2 hover:bg-surface-3"
                           }`}
                         >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <span className="w-6 h-6 rounded-md flex items-center justify-center shrink-0">
-                              <ProviderLogo provider={activeProvider.id} size={16} />
+                          <div className="flex min-w-0 flex-1 items-center gap-2.5">
+                            <span className="flex size-4 shrink-0 items-center justify-center rounded-md">
+                              <ProviderLogo provider={activeProvider.id} size={14} />
                             </span>
-                            <div className="min-w-0">
-                              <div
-                                className={`text-[13px] truncate ${isActive ? "font-semibold text-text-primary" : "font-medium text-text-secondary"}`}
-                              >
-                                {model.name}
-                              </div>
-                              <div className="text-[10px] text-text-tertiary">
-                                {activeProvider.name}
-                              </div>
+                            <div
+                              className={`truncate text-base ${isActive ? "font-semibold text-text-primary" : "font-medium text-text-secondary"}`}
+                            >
+                              {model.name}
                             </div>
                           </div>
-                          {isActive && (
-                            <Check
-                              size={14}
-                              className="text-[var(--color-brand-primary)] shrink-0"
-                            />
-                          )}
+                          <div className="flex shrink-0 items-center gap-2">
+                            <span className="text-sm text-text-tertiary tabular-nums">
+                              {model.contextWindow}
+                            </span>
+                            {isActive && (
+                              <Check
+                                size={14}
+                                className="shrink-0 text-[var(--color-brand-primary)]"
+                              />
+                            )}
+                          </div>
                         </button>
                       );
                     })}

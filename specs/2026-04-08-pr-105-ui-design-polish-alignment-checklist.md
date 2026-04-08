@@ -91,7 +91,7 @@
 - [x] 审查 `Select` / `Combobox` / 相关 story，确认默认 item 字号、行高、图标尺寸是否足够可读
 - [x] 若当前 primitives 过于通用，补一个“model picker / provider picker”场景 story 作为密集下拉菜单的基线
 - [x] 为带 logo 的下拉项定义图标尺寸建议（例如 16px）和最小行高
-- [ ] 对 `packages/demo-pages/src/pages/openclaw/*` 中模型选择器做一次对齐检查
+- [x] 对 `packages/demo-pages/src/pages/openclaw/*` 中模型选择器做一次对齐检查
 
 ### 9. Skills / docs / help-link polish
 
