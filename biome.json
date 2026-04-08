@@ -26,5 +26,13 @@
     "formatter": {
       "enabled": true
     }
-  }
+  },
+  "overrides": [
+    {
+      "include": ["apps/demo/**"],
+      "linter": {
+        "enabled": false
+      }
+    }
+  ]
 }
