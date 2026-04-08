@@ -77,6 +77,12 @@ All clickable, selectable, dismissible, or otherwise interactive text in the des
 - Avoid `text-[10px]` and `text-[11px]` on interactive controls.
 - `text-sm` is the minimum supported interactive size across compact controls in `ui-web`.
 
+### Review + enforcement
+
+- Run `pnpm check:interactive-typography` before merging typography-sensitive UI work.
+- The script flags `text-[10px]` / `text-[11px]` when they appear in interactive control contexts across `ui-web` and Storybook source files.
+- Reviewed exceptions must be rare and explicitly annotated with `interactive-typography-ignore`.
+
 ---
 
 ## 4. PageHeader contract

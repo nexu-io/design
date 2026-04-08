@@ -618,6 +618,7 @@ Shared guardrails for the most common polish regressions.
 
 - Interactive text has a 12px minimum.
 - Do not use `text-[10px]` or `text-[11px]` on tabs, pills, segmented controls, or compact clickable labels.
+- Run `pnpm check:interactive-typography` when touching compact control styling.
 
 ### Page header spacing
 

@@ -23,6 +23,7 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "biome:check": "biome check .",
+    "check:interactive-typography": "node ./scripts/check-interactive-typography.mjs",
     "knip": "knip --config knip.json",
     "knip:production": "knip --config knip.json --production",
     "pack:check": "pnpm --filter @nexu-design/tokens pack:check && pnpm --filter @nexu-design/ui-web pack:check",
