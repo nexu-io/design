@@ -24,6 +24,7 @@ const inputShellVariants = cva(
   },
 );
 
+/** Native input wrapped in a bordered shell; supports sizes, invalid state, and optional icons. */
 export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
     VariantProps<typeof inputShellVariants> {
@@ -32,6 +33,20 @@ export interface InputProps
   inputClassName?: string;
 }
 
+/**
+ * Text input with optional leading/trailing icons, size variants, and invalid styling.
+ *
+ * @example
+ * <Input type="email" placeholder="you@example.com" />
+ *
+ * @example
+ * <Input
+ *   leadingIcon={<Search size={16} />}
+ *   trailingIcon={<AlertCircle size={16} />}
+ *   invalid
+ *   placeholder="Fix errors"
+ * />
+ */
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
     {

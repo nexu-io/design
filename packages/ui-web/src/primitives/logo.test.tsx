@@ -9,12 +9,14 @@ describe("logo primitives", () => {
       <div>
         <ProviderLogo provider="anthropic" title="Anthropic" />
         <PlatformLogo platform="slack" title="Slack" />
+        <PlatformLogo platform="whatsapp" title="WhatsApp" />
         <BrandLogo brand="github" title="GitHub" />
       </div>,
     );
 
     expect(screen.getByRole("img", { name: "Anthropic" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Slack" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "WhatsApp" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "GitHub" })).toBeInTheDocument();
   });
 

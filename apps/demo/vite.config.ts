@@ -2,7 +2,23 @@ import { copyFileSync, existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { type Plugin, defineConfig } from "vite";
+
+/** Prints Nexu Digital URLs; avoids guessing port when multiple Vite instances run. */
+function nexuDemoEntryHint(): Plugin {
+  return {
+    name: "nexu-demo-entry-hint",
+    configureServer(server) {
+      server.httpServer?.once("listening", () => {
+        const addr = server.httpServer?.address();
+        const port = typeof addr === "object" && addr !== null && "port" in addr ? addr.port : 5175;
+        console.log(
+          `\n  \x1b[96mNexu Digital — open in browser\x1b[0m\n    http://127.0.0.1:${port}/nexu/welcome\n    http://127.0.0.1:${port}/nexu\n  (If startup fails with “port in use”, close other Vite/Storybook on 5175 or run: lsof -i :5175)\n`,
+        );
+      });
+    },
+  };
+}
 
 function copyChangelog() {
   const src = resolve(__dirname, "../clone/artifacts/changelog/changelog.json");
@@ -20,7 +36,7 @@ function copyChangelog() {
 }
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), copyChangelog()],
+  plugins: [react(), tailwindcss(), copyChangelog(), nexuDemoEntryHint()],
   resolve: {
     alias: {
       "@": resolve(__dirname, "./src"),
@@ -31,5 +47,11 @@ export default defineConfig({
       "@nexu-design/tokens/styles.css": resolve(__dirname, "../../packages/tokens/src/styles.css"),
     },
   },
-  server: { port: 5175 },
+  server: {
+    port: 5175,
+    /** Expose LAN URL; use 127.0.0.1 in browser if localhost misbehaves */
+    host: true,
+    /** Must stay on 5175: matches Tauri devUrl; silent port drift caused “wrong port / can’t open” */
+    strictPort: true,
+  },
 });

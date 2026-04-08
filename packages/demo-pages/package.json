@@ -13,11 +13,13 @@
   },
   "dependencies": {
     "@nexu-design/ui-web": "workspace:*",
+    "@radix-ui/react-select": "^2.2.6",
     "framer-motion": "^12.34.5",
     "lucide-react": "^0.575.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.13.0"
+    "react-router-dom": "^7.13.0",
+    "sonner": "^2.0.7"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -26,6 +28,7 @@
   "devDependencies": {
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "vite": "^8.0.7"
   }
 }

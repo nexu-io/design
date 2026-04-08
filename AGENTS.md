@@ -28,12 +28,15 @@
 - Start Storybook: `pnpm dev`
 - Build Storybook: `pnpm build`
 - Build publishable packages: `pnpm build:packages`
+- Create a changeset entry: `pnpm changeset`
 - Format everything: `pnpm format`
 - Check formatting: `pnpm format:check`
 - Run Biome checks: `pnpm biome:check`
 - Run all tests in workspace: `pnpm test`
 - Run all type checks: `pnpm typecheck`
 - Run all package lint scripts: `pnpm lint`
+- Apply pending version bumps: `pnpm version:packages`
+- Publish pending releases: `pnpm release`
 - Run release readiness checks: `pnpm release:check`
 
 ## Package-specific commands
@@ -102,6 +105,26 @@
 - Before release-oriented changes: run
   - `pnpm release:check`
 
+## Release flow
+- Versioning and npm publishing are automated with Changesets.
+- Author consumer-visible package releases with `pnpm changeset`.
+- Changesets config lives in `.changeset/config.json`.
+- The release workflow is `.github/workflows/release.yml`.
+- First-time package creation on npm must be done manually with `npm publish --access public`.
+- Publish `@nexu-design/tokens` before `@nexu-design/ui-web` for the initial manual release.
+- After the first manual publish, configure npm trusted publishing for both packages against `.github/workflows/release.yml`.
+- Pushes to `main` with pending changesets create or update a `chore: version packages` PR.
+- Merging that PR publishes any unpublished public packages to npm.
+- `apps/demo` and `apps/storybook` are ignored by Changesets and should not receive release entries.
+- Keep the workflow filename stable if npm trusted publishing is configured against it.
+
+### Future release checklist
+1. Run `pnpm changeset` for each consumer-visible package change.
+2. Commit the generated `.changeset/*.md` file(s).
+3. Open and merge the feature PR into `main`.
+4. Review and merge the generated `chore: version packages` PR.
+5. Let GitHub Actions publish the new package versions from `.github/workflows/release.yml`.
+
 ## Formatting rules
 - Formatter is Biome (`biome.json`).
 - Indentation: 2 spaces.
@@ -151,12 +174,124 @@
 - Keep accessibility props and roles intact when wrapping Radix or native elements.
 - When using `asChild`, preserve disabled/loading behavior carefully.
 
-## Styling conventions
+## Design & styling
+
+### Styling conventions
 - Styling is Tailwind-utility-driven, with a shared `cn()` helper built from `clsx` + `twMerge`.
 - Use tokens and CSS custom properties from `@nexu-design/tokens` and package `styles.css` files.
 - Prefer variant classes via CVA over ad hoc conditional string concatenation.
 - Reuse existing spacing, radius, typography, and color tokens when possible.
 - Keep global styles in package-level `styles.css`; keep component styles inline via class names.
+
+### Icon sizing in buttons and interactive elements
+- Icons placed inside buttons or alongside text must have a visual weight that matches the adjacent text.
+- Rule of thumb: use an icon size roughly equal to or slightly larger than the font size of the companion text so that the two feel balanced.
+- Reference sizes for `Button` variants:
+  - `size="xs"` (text ~11px) → icon 12px (`size={12}` or `className="size-3"`)
+  - `size="sm"` (text ~13px) → icon 14px (`size={14}` or `className="size-3.5"`)
+  - `size="default"` (text ~14px) → icon 16px (`size={16}` or `className="size-4"`)
+  - `size="lg"` (text ~16px) → icon 18px (`size={18}` or `className="size-4.5"`)
+- When an icon looks visually smaller or larger than the text next to it, adjust the icon size rather than the text size.
+- Apply the same principle to inline icons in labels, badges, and navigation items.
+
+### Layout conventions
+- Action buttons (Save, Confirm, Submit) default to the **right** side of their container.
+- In horizontal form rows the confirm button sits at the trailing (right) edge; in vertical stacks it right-aligns via `flex justify-end` or `ml-auto`.
+- Cancel / secondary actions appear to the **left** of the primary confirm button.
+- Use `DialogFooter` (which already right-aligns) for dialogs; for standalone form sections use `<div className="flex justify-end gap-2">`.
+
+### Button variant selection
+- Choose the variant that matches the action's weight and intent:
+  | Scenario | Variant | Example |
+  |----------|---------|---------|
+  | Page-level primary action | `default` or `brand` | "Create project", "Deploy" |
+  | Secondary / supporting action | `outline` | "Cancel", "View details" |
+  | Tertiary / minimal-weight action | `ghost` | "Skip", "Not now" |
+  | Destructive / irreversible action | `destructive` | "Delete workspace", "Revoke key" |
+  | In-context soft action | `soft` | "Edit", "Retry" |
+  | Navigation-like text action | `link` | "Learn more", "View docs" |
+- A button group should have **at most one** `default`/`brand` button; others use `outline` or `ghost`.
+- Pair `loading` prop with async actions; never leave a button clickable while a request is in flight.
+
+### Typography hierarchy
+- Use design tokens consistently to establish visual hierarchy:
+  | Role | Token / Class | Weight |
+  |------|--------------|--------|
+  | Page title (`<h1>`) | `--text-size-2xl` / `--text-size-3xl` | `font-semibold` or `font-bold` |
+  | Section heading (`<h2>`) | `--text-size-xl` | `font-semibold` |
+  | Sub-heading (`<h3>`) | `--text-size-lg` | `font-medium` |
+  | Body text | `--text-size-base` (13px) | `font-normal` |
+  | Label / caption | `--text-size-sm` (12px) | `font-medium` |
+  | Hint / meta / timestamp | `--text-size-xs` (11px) | `font-normal` |
+- Pair text sizes with the correct text-color token:
+  - Headings → `--color-text-heading`
+  - Body → `--color-text-primary`
+  - Labels → `--color-text-secondary`
+  - Hints / placeholders → `--color-text-muted`
+  - Disabled → `--color-text-disabled`
+- Prefer `font-heading` (serif) only for hero / marketing headings; use `font-sans` everywhere else.
+- Do not skip heading levels (e.g. `h1` → `h3`); keep the hierarchy sequential for accessibility.
+
+### Spacing scale
+- Use a consistent spacing scale to create rhythm:
+  | Context | Recommended spacing |
+  |---------|-------------------|
+  | Between form fields | `space-y-4` or `gap-4` |
+  | Between items in a compact list | `space-y-2` or `gap-2` |
+  | Between page-level sections | `space-y-8` to `space-y-12` |
+  | Between heading and its content | `mb-2` to `mb-4` |
+  | Between card body elements | `space-y-3` |
+  | Inline element groups (buttons, badges) | `gap-2` to `gap-3` |
+  | Padding inside cards | Use Card's `padding` prop (`sm` / `md` / `lg`); avoid ad-hoc padding |
+- Prefer Tailwind spacing utilities (`gap-*`, `space-y-*`, `p-*`) over custom pixel values.
+- Keep spacing proportional: tighter inside components, looser between sections.
+
+### Color usage
+- **Semantic colors** — use for states and feedback only:
+  | Color | Use for |
+  |-------|---------|
+  | `success` / `success-subtle` | Positive outcomes, completion, online status |
+  | `warning` / `warning-subtle` | Caution states, approaching limits, pending |
+  | `error` / `error-subtle` | Validation errors, failures, destructive emphasis |
+  | `info` / `info-subtle` | Informational callouts, tips, neutral highlights |
+- **Brand color** (`--color-brand-primary`) — links, focus rings, accented badges, brand emphasis. Do not use for status.
+- **Accent color** (`--color-accent`) — primary interactive surfaces (filled buttons, toggles). Use `--color-accent-fg` for text on accent backgrounds.
+- **Neutral text colors** — follow the hierarchy in "Typography hierarchy" above; never use raw hex/rgb.
+- **Surface colors** — use the numbered scale in order: `surface-0` (page bg) → `surface-1` (cards) → `surface-2` (hover/secondary) → `surface-3` (dividers/tertiary). Do not skip levels.
+- Do not mix semantic colors for decoration; they must convey meaning.
+
+### Component selection guide
+- Choosing between similar components:
+  | Need | Use | Not |
+  |------|-----|-----|
+  | User picks a value from a closed list | `Select` | `DropdownMenu` |
+  | User picks a value with search/filter | `Combobox` | `Select` |
+  | Menu of actions / commands | `DropdownMenu` | `Select` |
+  | Binary on/off setting | `Switch` | `Checkbox` |
+  | Multiple independent boolean options | `Checkbox` (each) | `Switch` |
+  | Confirmation before destructive action | `ConfirmDialog` | plain `Dialog` |
+  | Slide-over panel from edge | `Sheet` | `Dialog` |
+  | Centered modal with focus trap | `Dialog` | `Sheet` |
+  | Brief helper text on hover | `Tooltip` | `Popover` |
+  | Rich interactive overlay (forms, menus) | `Popover` | `Tooltip` |
+  | Navigation between views | `Tabs` | `Select` |
+  | Inline status indicator | `Badge` or `StatusDot` | plain `<span>` |
+  | Labeled form input with validation | `FormField > Input` | bare `Input` |
+- When in doubt, prefer the higher-level pattern (`FormField`, `ConfirmDialog`, `PageHeader`) over manually composing primitives.
+
+### Elevation & shadow
+- Apply shadows to convey depth, not decoration:
+  | Element | Shadow token |
+  |---------|-------------|
+  | Cards (resting) | `--shadow-card` or `--shadow-sm` |
+  | Cards (hover / interactive) | `--shadow-md` |
+  | Dropdowns, popovers, select menus | `--shadow-dropdown` |
+  | Dialogs / modals | `--shadow-lg` |
+  | Heavy overlays / command palettes | `--shadow-xl` |
+  | Focus rings | `--shadow-focus` |
+- Do not stack multiple shadow tokens on the same element.
+- Elevation should increase with z-index: page content → cards → popovers → modals.
+- Match `border-radius` to context: `--radius-md` for controls, `--radius-lg` for cards, `--radius-xl` for large panels.
 
 ## Accessibility and UX expectations
 - Accessibility is actively tested with `vitest-axe`.
@@ -198,3 +333,234 @@
 - Prefer improving existing primitives/patterns over creating parallel abstractions.
 - Verify with the smallest relevant command first, then broader checks if needed.
 - If changing test behavior, include the exact single-test command in your notes or handoff.
+
+---
+
+## Component usage quick-reference
+
+Use this section when consuming `@nexu-design/ui-web` components. For exhaustive props and examples, see `packages/ui-web/COMPONENT_REFERENCE.md`.
+
+### Button
+- **Variants:** `default`, `brand`, `primary`, `secondary`, `outline`, `ghost`, `soft`, `destructive`, `link`
+- **Sizes:** `xs`, `sm`, `md` (default), `lg`, `inline`, `icon`, `icon-sm`
+- **Key props:** `loading` (shows spinner, disables), `disabled`, `leadingIcon`, `trailingIcon`, `asChild`
+- **Example:** `<Button variant="outline" size="sm"><ArrowUp size={14} /> Upgrade</Button>`
+
+### Card
+- **Variants:** `default`, `outline`, `muted`, `interactive`, `static`
+- **Padding:** `none`, `sm`, `md` (default), `lg`
+- **Composition:** `Card > CardHeader > CardTitle / CardDescription` + `CardContent` + `CardFooter`
+- **Example:**
+  ```tsx
+  <Card variant="outlined" padding="sm">
+    <CardHeader><CardTitle>Title</CardTitle></CardHeader>
+    <CardContent>Body</CardContent>
+  </Card>
+  ```
+
+### Badge
+- **Variants:** `default`, `accent`, `secondary`, `outline`, `success`, `warning`, `danger`, `destructive`
+- **Sizes:** `xs`, `sm`, `default`, `lg`
+- **Radius:** `full` (default), `md`, `lg`
+- **Example:** `<Badge variant="accent" size="xs">New</Badge>`
+
+### Alert
+- **Variants:** `default`, `info`, `success`, `warning`, `destructive`
+- **Composition:** `Alert > AlertTitle + AlertDescription`; first `<svg>` child is auto-styled as the icon.
+- **Example:**
+  ```tsx
+  <Alert variant="warning">
+    <AlertCircle size={16} />
+    <AlertTitle>Warning</AlertTitle>
+    <AlertDescription>Credits running low.</AlertDescription>
+  </Alert>
+  ```
+
+### Dialog
+- **Sizes (on DialogContent):** `sm`, `md` (default), `lg`, `xl`, `full`
+- **Composition:** `Dialog > DialogContent > DialogHeader > DialogTitle / DialogDescription` + `DialogBody` + `DialogFooter`
+- **Key prop:** `closeOnOverlayClick` (default `true`)
+- **Example:**
+  ```tsx
+  <Dialog open onOpenChange={setOpen}>
+    <DialogContent size="sm">
+      <DialogHeader>
+        <DialogTitle>Confirm</DialogTitle>
+        <DialogDescription>Are you sure?</DialogDescription>
+      </DialogHeader>
+      <DialogFooter>
+        <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+        <Button onClick={handleConfirm}>Confirm</Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+  ```
+
+### InteractiveRow
+- **Tone:** `default`, `subtle`
+- **Composition:** `InteractiveRow > InteractiveRowLeading + InteractiveRowContent + InteractiveRowTrailing`
+- **Key props:** `selected`, `tone`, inherits `<button>` attributes
+- **Example:**
+  ```tsx
+  <InteractiveRow tone="subtle" onClick={handleClick}>
+    <InteractiveRowLeading><Icon size={16} /></InteractiveRowLeading>
+    <InteractiveRowContent>Label text</InteractiveRowContent>
+    <InteractiveRowTrailing><ChevronRight size={14} /></InteractiveRowTrailing>
+  </InteractiveRow>
+  ```
+
+### StatCard
+- **Props:** `label` (required), `value` (required), `icon` (ElementType), `tone` (`default` | `info` | `accent` | `success` | `warning` | `danger`), `trend` (`{ label, variant? }`), `meta` (ReactNode), `progress` (number), `progressVariant`, `progressMax`
+- Inherits Card's `variant` and `padding` props.
+- **Example:** `<StatCard label="Credits" value="1,200" icon={Zap} tone="accent" variant="outlined" padding="sm" />`
+
+### PageHeader
+- **Props:** `title` (required), `description`, `actions`
+- Renders `<header>` with `<h1>`.
+
+### Input
+- **Sizes:** `sm`, `md` (default), `lg`
+- **Key props:** `invalid` (boolean), `leadingIcon`, `trailingIcon`, `inputClassName`
+- Default type is `text`. Sets `aria-invalid` when `invalid`.
+
+### Select
+- **Composition:** `Select > SelectTrigger > SelectValue` + `SelectContent > SelectGroup > SelectItem`
+- Radix-based; `SelectContent` defaults to `position="popper"`.
+
+### Switch
+- **Sizes:** `default`, `sm`
+- Radix-based; accepts `checked`, `onCheckedChange`, `disabled`.
+
+### Checkbox
+- Radix-based; accepts `checked`, `onCheckedChange`, `disabled`, `required`.
+
+### FormField (pattern)
+- **Props:** `label`, `description`, `error`, `required`, `invalid`, `orientation` (`vertical` | `horizontal`)
+- **Composition:** `FormField > FormFieldLabel + FormFieldControl > (input) + FormFieldDescription + FormFieldError`
+- Provides context to wire `id`, `aria-invalid`, `aria-describedby` automatically.
+- **Example:**
+  ```tsx
+  <FormField label="Email" required invalid={!!error} error={error}>
+    <FormFieldControl>
+      <Input type="email" placeholder="you@example.com" />
+    </FormFieldControl>
+  </FormField>
+  ```
+
+### Tabs
+- **Variants (TabsList / TabsTrigger):** `default`, `pill`, `underline`
+- **Composition:** `Tabs > TabsList > TabsTrigger` + `TabsContent`
+
+### TextLink
+- **Variants:** `default`, `muted`
+- **Sizes:** `xs`, `sm` (default), `default`, `lg`
+- Renders `<a>`; supports `asChild`.
+
+### Tooltip
+- **Composition:** `TooltipProvider > Tooltip > TooltipTrigger + TooltipContent`
+- `TooltipContent` default `sideOffset={4}`.
+
+### Popover
+- **Composition:** `Popover > PopoverTrigger + PopoverContent`
+- `PopoverContent` defaults: `align="center"`, `sideOffset={4}`.
+
+### Separator
+- **Props:** `orientation` (`horizontal` default, `vertical`), `decorative` (default `true`)
+
+### ScrollArea
+- **Composition:** `ScrollArea` wraps scrollable content. Optional `ScrollBar` with `orientation` (`vertical` | `horizontal`).
+
+---
+
+## Design tokens cheat-sheet
+
+Use these CSS custom properties via `var(--name)` in inline styles or Tailwind arbitrary values like `text-[var(--color-brand-primary)]`.
+
+### Color — Text
+| Token | Purpose |
+|-------|---------|
+| `--color-text-heading` | Strongest emphasis — headings, key numbers |
+| `--color-text-primary` | Default body text |
+| `--color-text-secondary` | Supporting text, labels |
+| `--color-text-muted` | Hints, placeholders, disabled-adjacent |
+| `--color-text-tertiary` | Weakest text (meta, timestamps) |
+| `--color-text-disabled` | Disabled controls |
+
+### Color — Surface
+| Token | Purpose |
+|-------|---------|
+| `--color-surface-0` | Page canvas / background |
+| `--color-surface-1` | Cards, panels |
+| `--color-surface-2` | Secondary fills, hover states |
+| `--color-surface-3` | Tertiary fills, dividers |
+| `--color-surface-4` | Strong dividers, scrollbar tracks |
+
+### Color — Brand & Semantic
+| Token | Purpose |
+|-------|---------|
+| `--color-brand-primary` | Brand teal — links, accents, focus |
+| `--color-brand-subtle` | Light brand wash background |
+| `--color-accent` | Primary UI accent (near-black in light) |
+| `--color-accent-fg` | Foreground on accent |
+| `--color-accent-hover` | Accent hover state |
+| `--color-success` | Positive states |
+| `--color-success-subtle` | Success background wash |
+| `--color-warning` | Caution states |
+| `--color-warning-subtle` | Warning background wash |
+| `--color-info` | Informational (blue) |
+| `--color-info-subtle` | Info background wash |
+| `--color-error` | Error / validation |
+| `--color-error-subtle` | Error background wash |
+
+### Color — Border
+| Token | Purpose |
+|-------|---------|
+| `--color-border` | Default borders |
+| `--color-border-subtle` | Lightest dividers |
+| `--color-border-strong` | Emphasized dividers |
+| `--color-border-hover` | Hovered controls |
+| `--color-border-card` | Card outlines |
+
+### Shadow
+| Token | Purpose |
+|-------|---------|
+| `--shadow-xs` | Micro elevation |
+| `--shadow-sm` | Small / subtle cards |
+| `--shadow-md` | Medium panels |
+| `--shadow-lg` | Large overlays |
+| `--shadow-xl` | Heavy overlays |
+| `--shadow-card` | Card elevation |
+| `--shadow-dropdown` | Menus, popovers, dropdowns |
+| `--shadow-focus` | Focus ring glow |
+
+### Radius
+| Token | Value | Use case |
+|-------|-------|----------|
+| `--radius-sm` | 6px | Small elements |
+| `--radius-md` | 8px | Default controls |
+| `--radius-lg` | 12px | Cards, panels |
+| `--radius-xl` | 16px | Large cards |
+| `--radius-2xl` | 20px | Hero sections |
+| `--radius-pill` | 100px | Badges, pills |
+
+### Typography
+| Token | Value |
+|-------|-------|
+| `--font-sans` | Digits, Manrope, Inter, PingFang SC, system |
+| `--font-mono` | JetBrains Mono, SF Mono, Fira Code |
+| `--font-heading` | Georgia, Times New Roman, serif |
+| `--text-size-2xs` | 0.625rem (10px) |
+| `--text-size-xs` | 0.6875rem (11px) |
+| `--text-size-sm` | 0.75rem (12px) |
+| `--text-size-base` | 0.8125rem (13px) |
+| `--text-size-lg` | 0.875rem (14px) |
+| `--text-size-xl` | 1rem (16px) |
+| `--text-size-2xl` | 1.25rem (20px) |
+| `--text-size-3xl` | 1.5rem (24px) |
+
+### Animation
+| Token | Value | Purpose |
+|-------|-------|---------|
+| `--duration-fast` | 120ms | Quick hovers |
+| `--duration-normal` | 200ms | Default transitions |
+| `--ease-standard` | cubic-bezier(0.2, 0, 0, 1) | Shared easing |

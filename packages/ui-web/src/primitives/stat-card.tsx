@@ -22,6 +22,9 @@ export interface StatCardTrend {
   variant?: BadgeProps["variant"];
 }
 
+/**
+ * Card that highlights a metric with optional icon, trend badge, meta line, and progress bar.
+ */
 export interface StatCardProps extends Omit<CardProps, "children"> {
   label: React.ReactNode;
   value: React.ReactNode;
@@ -34,6 +37,20 @@ export interface StatCardProps extends Omit<CardProps, "children"> {
   progressMax?: number;
 }
 
+/**
+ * Renders a labeled statistic inside `Card`, with optional trend and progress.
+ *
+ * @example
+ * <StatCard label="Active users" value="3,421" />
+ *
+ * @example
+ * <StatCard
+ *   label="Conversion"
+ *   value="12.4%"
+ *   trend={{ label: "+2.1%", variant: "success" }}
+ *   progress={72}
+ * />
+ */
 export function StatCard({
   className,
   label,

@@ -8,6 +8,22 @@ const Select = SelectPrimitive.Root;
 const SelectGroup = SelectPrimitive.Group;
 const SelectValue = SelectPrimitive.Value;
 
+/**
+ * Button that opens the select; shows the current value or placeholder.
+ *
+ * @example
+ * <Select value={value} onValueChange={setValue}>
+ *   <SelectTrigger>
+ *     <SelectValue placeholder="Choose" />
+ *   </SelectTrigger>
+ *   <SelectContent>
+ *     <SelectGroup>
+ *       <SelectItem value="a">Option A</SelectItem>
+ *       <SelectItem value="b">Option B</SelectItem>
+ *     </SelectGroup>
+ *   </SelectContent>
+ * </Select>
+ */
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
@@ -60,6 +76,7 @@ const SelectScrollDownButton = React.forwardRef<
 
 SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
 
+/** Portal-mounted dropdown panel listing options; defaults to `position="popper"`. */
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
@@ -107,6 +124,7 @@ const SelectLabel = React.forwardRef<
 
 SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
+/** A single selectable option; shows a check indicator when selected. */
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
@@ -115,17 +133,17 @@ const SelectItem = React.forwardRef<
     ref={ref}
     data-slot="select-item"
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-lg py-2 pl-8 pr-2 text-base outline-none focus:bg-surface-2 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-default select-none items-center rounded-lg py-2 pl-3 pr-8 text-base outline-none focus:bg-surface-2 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}
   >
-    <span className="absolute left-2 flex size-3.5 items-center justify-center">
+    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    <span className="absolute right-2 flex size-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
         <Check className="size-4" />
       </SelectPrimitive.ItemIndicator>
     </span>
-    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
 ));
 

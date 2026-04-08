@@ -6,6 +6,14 @@ const meta = {
   title: "Patterns/ConfirmDialog",
   component: ConfirmDialog,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "Pre-built confirm/cancel prompt for destructive or irreversible actions. For custom modal content use **Dialog** directly.",
+      },
+    },
+  },
   args: {
     title: "Confirm action",
   },

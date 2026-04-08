@@ -22,6 +22,14 @@ const meta = {
   title: "Primitives/DropdownMenu",
   component: DropdownMenu,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "Action/command menu triggered by a button. For picking a form value use **Select**; for searchable value lists use **Combobox**.",
+      },
+    },
+  },
 } satisfies Meta<typeof DropdownMenu>;
 
 export default meta;

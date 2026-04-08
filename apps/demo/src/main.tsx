@@ -1,4 +1,5 @@
 import { LocaleProvider, configureOpenExternal } from "@nexu-design/demo-pages";
+import { Toaster, TooltipProvider } from "@nexu-design/ui-web";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -24,7 +25,10 @@ createRoot(root).render(
   <StrictMode>
     <BrowserRouter>
       <LocaleProvider>
-        <App />
+        <TooltipProvider delayDuration={300} skipDelayDuration={100}>
+          <App />
+          <Toaster position="top-center" />
+        </TooltipProvider>
       </LocaleProvider>
     </BrowserRouter>
   </StrictMode>,

@@ -84,6 +84,8 @@ pnpm --filter @nexu-design/demo tauri:build
 ├── apps/
 │   ├── demo/
 │   └── storybook/
+├── design-md/
+│   └── … third-party DESIGN.md references (see design-md/README.md)
 ├── docs/
 ├── packages/
 │   ├── tokens/

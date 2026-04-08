@@ -157,28 +157,26 @@ export default function OpenClawSkillsPage() {
 
         {/* Category text tabs (Explore only) */}
         {topTab === "explore" && (
-          <div className="mb-5 overflow-x-auto pb-0.5">
-            <ToggleGroup
-              type="single"
-              value={tagFilter}
-              onValueChange={(value: string) => {
-                if (value) setTagFilter(value as TagFilter);
-              }}
-              variant="underline"
-              aria-label="Skill categories"
-              className="min-w-max"
-            >
-              {tagTabs.map((tab) => (
-                <ToggleGroupItem
-                  key={tab.id}
-                  value={tab.id}
-                  variant="underline"
-                  className="shrink-0 text-[13px]"
-                >
-                  {tab.label}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
+          <div className="mb-5 overflow-x-auto border-b border-border/80">
+            <div className="flex min-w-max items-center gap-5">
+              {tagTabs.map((tab) => {
+                const active = tagFilter === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setTagFilter(tab.id)}
+                    className={`shrink-0 border-b-2 pb-2 text-[13px] transition-colors ${
+                      active
+                        ? "border-text-primary text-text-primary"
+                        : "border-transparent text-text-tertiary hover:text-text-secondary"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
 
@@ -214,13 +212,6 @@ export default function OpenClawSkillsPage() {
               padding: 16,
               transition: "box-shadow 0.15s ease, border-color 0.15s ease",
               cursor: isCustom ? "default" : "pointer",
-            };
-
-            const handleEnter = (e: React.MouseEvent<HTMLElement>) => {
-              e.currentTarget.style.boxShadow = "var(--shadow-card)";
-            };
-            const handleLeave = (e: React.MouseEvent<HTMLElement>) => {
-              e.currentTarget.style.boxShadow = "none";
             };
 
             const content = (
@@ -292,12 +283,7 @@ export default function OpenClawSkillsPage() {
             );
 
             return isCustom ? (
-              <div
-                key={skill.id}
-                style={cardStyle}
-                onMouseEnter={handleEnter}
-                onMouseLeave={handleLeave}
-              >
+              <div key={skill.id} style={cardStyle} className="hover:shadow-card">
                 {content}
               </div>
             ) : (
@@ -305,8 +291,7 @@ export default function OpenClawSkillsPage() {
                 key={skill.id}
                 to={`/openclaw/skill/${skill.id}`}
                 style={{ ...cardStyle, textDecoration: "none" }}
-                onMouseEnter={handleEnter}
-                onMouseLeave={handleLeave}
+                className="hover:shadow-card"
               >
                 {content}
               </Link>

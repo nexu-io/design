@@ -1,4 +1,4 @@
-import { PageHeader, PageShell } from "@nexu-design/ui-web";
+import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
 
 import {
   Bot,
@@ -14,7 +14,6 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { SectionHeader } from "../components/SectionHeader";
 
 export default function OverviewPage() {
   return (
