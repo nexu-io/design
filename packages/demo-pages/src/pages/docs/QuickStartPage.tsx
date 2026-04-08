@@ -1,4 +1,4 @@
-import { FastForward, Info, KeyRound, Rocket } from "lucide-react";
+import { FastForward, KeyRound, Rocket } from "lucide-react";
 import Callout from "../../components/docs/Callout";
 import { usePageTitle } from "../../hooks/usePageTitle";
 
@@ -120,10 +120,7 @@ export default function QuickStartPage() {
       </section>
 
       <section>
-        <h2 className="text-[16px] font-semibold text-text-primary flex items-center gap-2 mb-3">
-          <Info size={16} className="text-text-muted" />
-          Key concepts
-        </h2>
+        <h2 className="text-[16px] font-semibold text-text-primary mb-3">Key concepts</h2>
         <div className="space-y-3 max-w-2xl">
           <div className="flex items-start gap-3">
             <span className="w-2 h-2 rounded-full bg-accent mt-1.5 shrink-0" />

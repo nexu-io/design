@@ -1,4 +1,4 @@
-import { ChevronDown, HelpCircle } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { usePageTitle } from "../../hooks/usePageTitle";
 
@@ -35,10 +35,7 @@ export default function FaqPage() {
 
   return (
     <>
-      <h1 className="text-[22px] font-semibold text-text-primary flex items-center gap-2">
-        <HelpCircle size={20} className="text-text-muted" />
-        FAQ
-      </h1>
+      <h1 className="text-[22px] font-semibold text-text-primary">FAQ</h1>
 
       <section className="mt-8 space-y-1 max-w-2xl">
         {FAQ_ITEMS.map((item, idx) => {
