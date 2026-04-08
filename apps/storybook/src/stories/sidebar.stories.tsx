@@ -22,6 +22,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  StatusDot,
 } from "@nexu-design/ui-web";
 
 const meta = {
@@ -39,24 +40,28 @@ const sessions = [
     title: "Customer onboarding flow",
     platform: "slack" as const,
     time: "2m ago",
+    status: "success" as const,
   },
   {
     id: "2",
     title: "Weekly report automation",
     platform: "feishu" as const,
     time: "15m ago",
+    status: "success" as const,
   },
   {
     id: "3",
     title: "Team standup bot",
     platform: "discord" as const,
     time: "1h ago",
+    status: "warning" as const,
   },
   {
     id: "4",
     title: "Support ticket triage",
     platform: "wechat" as const,
     time: "3h ago",
+    status: "neutral" as const,
   },
 ];
 
@@ -130,6 +135,7 @@ export const Default: Story = {
                       <span>{s.time}</span>
                     </div>
                   </div>
+                  <StatusDot status={s.status} size="sm" aria-hidden="true" />
                 </button>
               ))}
             </div>
@@ -180,6 +186,48 @@ export const Default: Story = {
           </button>
         </SidebarFooter>
       </Sidebar>
+    </div>
+  ),
+};
+
+export const SessionListPattern: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Recommended dense sidebar/session item: leading logo, stronger title, muted subtitle/meta, and a trailing StatusDot instead of a redundant Live pill.",
+      },
+    },
+  },
+  render: () => (
+    <div className="w-[320px] rounded-xl border border-border bg-surface-1 p-3">
+      <NavigationMenuLabel className="px-1 pb-2">Recent sessions</NavigationMenuLabel>
+      <div className="space-y-1">
+        {sessions.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            className={`flex w-full items-center gap-2.5 rounded-[10px] px-3 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              s.id === "1"
+                ? "bg-surface-2 text-text-primary"
+                : "text-text-secondary hover:bg-surface-2 hover:text-text-primary"
+            }`}
+          >
+            <span className="flex size-5 shrink-0 items-center justify-center">
+              <PlatformLogo platform={s.platform} size={14} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-sm font-medium text-text-primary">{s.title}</div>
+              <div className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-text-muted">
+                <span>{s.platform.charAt(0).toUpperCase() + s.platform.slice(1)}</span>
+                <span className="text-border">·</span>
+                <span>{s.time}</span>
+              </div>
+            </div>
+            <StatusDot status={s.status} size="sm" aria-hidden="true" />
+          </button>
+        ))}
+      </div>
     </div>
   ),
 };

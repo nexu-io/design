@@ -648,6 +648,8 @@ Shared guardrails for the most common polish regressions.
 - Prefer `Badge` when the state must stand on its own as a semantic chip or filterable label.
 - Do not pair a dot with a redundant `Live` / `Online` / `Connected` text pill that repeats the same meaning.
 - In compact rows, use one primary status affordance unless multiple indicators carry different information.
+- Recommended session/sidebar row: leading logo/icon + title + muted subtitle/meta + trailing `StatusDot`.
+- Keep the title line visually dominant and keep passive context on a single secondary line instead of introducing extra pills or helper icons.
 
 ### Related docs and stories
 
@@ -656,6 +658,7 @@ Shared guardrails for the most common polish regressions.
 - Buttons: `apps/storybook/src/stories/button.stories.tsx`
 - Provider settings hierarchy: `apps/storybook/src/stories/provider-settings.stories.tsx`
 - Status patterns: `apps/storybook/src/stories/status-dot.stories.tsx`, `apps/storybook/src/stories/interactive-row.stories.tsx`
+- Sidebar/session rows: `apps/storybook/src/stories/sidebar.stories.tsx`
 - Tabs: `apps/storybook/src/stories/tabs.stories.tsx`
 - Toggle: `apps/storybook/src/stories/toggle.stories.tsx`
 - TextLink: `apps/storybook/src/stories/text-link.stories.tsx`

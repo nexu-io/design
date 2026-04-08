@@ -160,6 +160,22 @@ Use the lightest status treatment that still communicates state clearly.
 - reusable cards or tables: status `Badge` when the state must stand on its own
 - dense rows: dot for presence/live-ness, badge for explicit workflow states such as `Beta`, `Paused`, or `Deprecated`
 
+### Recommended session list / sidebar item anatomy
+
+- Use a single compact row with four layers: leading icon/logo, primary title, secondary subtitle/meta, and a trailing status affordance.
+- Keep the title as the strongest text in the row (`text-sm font-medium text-text-primary` or equivalent).
+- Keep subtitle/meta on one lighter line for source, owner, timestamp, or environment; prefer muted text and compact separators such as `·`.
+- Prefer a trailing `StatusDot` for lightweight live/online/running presence. Only add a trailing badge when the row needs a standalone workflow label.
+- Keep row height compact but comfortable; avoid stacking multiple badges, pills, and helper icons in the same dense sidebar item.
+- When the row is selectable, the selected state should come from the row container background/text treatment, not from adding extra status chips.
+
+Recommended hierarchy:
+
+1. **Leading** — provider logo, avatar, or simple icon
+2. **Title** — session or destination name
+3. **Subtitle/meta** — source + timestamp, workspace, or other passive context
+4. **Trailing status** — `StatusDot` by default, optional single badge only when the state itself is the primary thing users scan
+
 ### Avoid
 
 - `Live` pill next to a green dot that already means live
