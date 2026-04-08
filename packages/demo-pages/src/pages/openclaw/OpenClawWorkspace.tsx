@@ -4250,7 +4250,7 @@ function SettingsView({
                         href={activeProvider.apiDocsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-[11px] leading-none text-[var(--color-link)] no-underline hover:no-underline"
+                        className="inline-flex items-center gap-1 text-[12px] leading-none text-[var(--color-link)] no-underline hover:no-underline"
                       >
                         {t("ws.settings.getApiKey")}
                         <ArrowUpRight size={12} className="shrink-0" />
@@ -4316,7 +4316,7 @@ function SettingsView({
                         type="button"
                         onClick={() => handleCheck(activeProvider.id)}
                         disabled={checkState === "checking" || saveState === "saving"}
-                        className="text-[11px] text-text-muted hover:text-text-secondary disabled:opacity-50"
+                        className="text-[12px] text-text-muted hover:text-text-secondary disabled:opacity-50"
                       >
                         {checkState === "checking" && t("ws.settings.testing")}
                         {checkState === "success" && t("ws.settings.connectedStatus")}
@@ -5107,7 +5107,7 @@ export default function OpenClawWorkspace() {
           {hasUpdate && updateDismissed && (
             <button
               onClick={() => setUpdateDismissed(false)}
-              className="rounded-full px-2 py-1 text-[10px] leading-none font-semibold bg-[var(--color-brand-primary)] text-white hover:opacity-85 transition-opacity"
+              className="rounded-full px-2 py-1 text-[12px] leading-none font-semibold bg-[var(--color-brand-primary)] text-white hover:opacity-85 transition-opacity"
             >
               {t("ws.sidebar.update")}
             </button>
@@ -5448,13 +5448,13 @@ export default function OpenClawWorkspace() {
                       }
                     }, 200);
                   }}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[11px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
+                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[12px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
                 >
                   {t("ws.update.download")}
                 </button>
                 <button
                   onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[11px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
+                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[12px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
                 >
                   {t("ws.update.changelog")}
                 </button>
@@ -5467,13 +5467,13 @@ export default function OpenClawWorkspace() {
                     setUpdateReady(false);
                     setHasUpdate(false);
                   }}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[11px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
+                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[12px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
                 >
                   {t("ws.update.restart")}
                 </button>
                 <button
                   onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[11px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
+                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[12px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
                 >
                   {t("ws.update.changelog")}
                 </button>
@@ -5486,13 +5486,13 @@ export default function OpenClawWorkspace() {
                     setUpdateError(false);
                     setHasUpdate(true);
                   }}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[11px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
+                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[12px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
                 >
                   {t("ws.update.retry")}
                 </button>
                 <button
                   onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[11px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
+                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[12px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
                 >
                   {t("ws.update.changelog")}
                 </button>
@@ -5727,7 +5727,7 @@ export default function OpenClawWorkspace() {
                       setShowUsagePanel(false);
                     }}
                     onMouseLeave={scheduleCloseAccountPanel}
-                    className="flex items-center justify-center size-7 rounded-full bg-[var(--color-accent)] text-white text-[11px] font-semibold leading-none cursor-pointer hover:opacity-90 transition-opacity shrink-0"
+                    className="flex items-center justify-center size-7 rounded-full bg-[var(--color-accent)] text-white text-[12px] font-semibold leading-none cursor-pointer hover:opacity-90 transition-opacity shrink-0"
                     title={nexuAccountEmail}
                   >
                     {initialsFromEmail(nexuAccountEmail)}
@@ -6120,7 +6120,7 @@ export default function OpenClawWorkspace() {
                     <button
                       key={p}
                       onClick={() => setDemoPlan(p)}
-                      className={`py-1 rounded-lg text-[11px] font-medium transition-colors capitalize ${
+                      className={`py-1 rounded-lg text-[12px] font-medium transition-colors capitalize ${
                         demoPlan === p
                           ? "bg-[var(--color-brand-primary)] text-white"
                           : "bg-surface-2 text-text-secondary hover:bg-surface-0"
@@ -6146,7 +6146,7 @@ export default function OpenClawWorkspace() {
                     <button
                       key={key}
                       onClick={() => setDemoBudgetStatus(key)}
-                      className={`py-1 rounded-lg text-[11px] font-medium transition-colors ${
+                      className={`py-1 rounded-lg text-[12px] font-medium transition-colors ${
                         demoBudgetStatus === key
                           ? "text-white"
                           : "bg-surface-2 text-text-secondary hover:bg-surface-0"
@@ -6168,7 +6168,7 @@ export default function OpenClawWorkspace() {
                       key={key}
                       type="button"
                       onClick={() => setDemoCreditPack(key)}
-                      className={`py-1 rounded-md text-[10px] font-medium transition-colors ${
+                      className={`py-1 rounded-md text-[12px] font-medium transition-colors ${
                         demoCreditPack === key
                           ? "bg-text-primary text-white"
                           : "bg-surface-2 text-text-secondary hover:bg-surface-0"
@@ -6190,14 +6190,14 @@ export default function OpenClawWorkspace() {
                       setStarModalStep("prompt");
                       setShowStarModal(true);
                     }}
-                    className="w-full py-1.5 rounded-lg text-[11px] font-medium bg-surface-2 text-text-secondary hover:bg-surface-0 border border-border transition-colors"
+                    className="w-full py-1.5 rounded-lg text-[12px] font-medium bg-surface-2 text-text-secondary hover:bg-surface-0 border border-border transition-colors"
                   >
                     GitHub Star 引导弹窗
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowSeedanceModal(true)}
-                    className="w-full py-1.5 rounded-lg text-[11px] font-medium bg-violet-500/10 text-violet-600 hover:bg-violet-500/20 border border-violet-200/60 transition-colors"
+                    className="w-full py-1.5 rounded-lg text-[12px] font-medium bg-violet-500/10 text-violet-600 hover:bg-violet-500/20 border border-violet-200/60 transition-colors"
                   >
                     🎬 Seedance 2.0 推广弹窗
                   </button>
@@ -6211,7 +6211,7 @@ export default function OpenClawWorkspace() {
                       }
                       window.dispatchEvent(new Event("seedance-banner-reset"));
                     }}
-                    className="w-full py-1.5 rounded-lg text-[11px] font-medium bg-[var(--color-warning)]/12 text-[var(--color-warning)] hover:bg-[var(--color-warning)]/18 border border-[var(--color-warning)]/30 transition-colors"
+                    className="w-full py-1.5 rounded-lg text-[12px] font-medium bg-[var(--color-warning)]/12 text-[var(--color-warning)] hover:bg-[var(--color-warning)]/18 border border-[var(--color-warning)]/30 transition-colors"
                   >
                     恢复 Seedance Banner
                   </button>

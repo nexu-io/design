@@ -2275,7 +2275,7 @@ export default function GroupGrowthDemo() {
               onClick={() => {
                 if (i <= currentIdx) setStep(s.id);
               }}
-              className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] sm:text-[12px] transition-colors shrink-0 ${
+              className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[12px] transition-colors shrink-0 ${
                 s.id === step
                   ? "bg-accent/10 text-accent font-medium"
                   : i < currentIdx
@@ -2284,7 +2284,7 @@ export default function GroupGrowthDemo() {
               }`}
             >
               <span
-                className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                className={`w-5 h-5 rounded-full flex items-center justify-center text-[12px] font-bold ${
                   i < currentIdx
                     ? "bg-success/10 text-success"
                     : s.id === step
