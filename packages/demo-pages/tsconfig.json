@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["react", "react-dom", "vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@nexu-design/ui-web": ["../ui-web/src/index.ts"],
+      "@nexu-design/tokens": ["../tokens/src/index.ts"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
+}

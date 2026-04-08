@@ -1,0 +1,34 @@
+{
+  "name": "@nexu-design/demo-pages",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./routes/design-system": "./src/app/routes/design-system-routes.tsx",
+    "./routes/docs": "./src/app/routes/docs-routes.tsx",
+    "./routes/cloud": "./src/app/routes/cloud-routes.tsx",
+    "./locale": "./src/hooks/useLocale.tsx",
+    "./open-external": "./src/utils/open-external.ts"
+  },
+  "dependencies": {
+    "@nexu-design/ui-web": "workspace:*",
+    "@radix-ui/react-select": "^2.2.6",
+    "framer-motion": "^12.34.5",
+    "lucide-react": "^0.575.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.13.0",
+    "sonner": "^2.0.7"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "~5.9.3",
+    "vite": "^8.0.7"
+  }
+}

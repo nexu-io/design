@@ -29,7 +29,7 @@
   },
   "overrides": [
     {
-      "include": ["apps/demo/**"],
+      "include": ["apps/demo/**", "packages/demo-pages/**", "apps/cloud-demo/**"],
       "linter": {
         "enabled": false
       }
