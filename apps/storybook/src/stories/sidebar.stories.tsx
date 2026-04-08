@@ -91,7 +91,7 @@ export const Default: Story = {
                   <NavigationMenuButton>
                     <Sparkles className="size-4" />
                     Skills
-                    <span className="ml-auto text-2xs font-normal text-text-tertiary">3</span>
+                    <span className="ml-auto text-xs font-normal text-text-tertiary">3</span>
                   </NavigationMenuButton>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
@@ -124,7 +124,7 @@ export const Default: Story = {
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-sm font-medium">{s.title}</div>
-                    <div className="mt-0.5 flex items-center gap-1.5 truncate text-2xs text-text-muted">
+                    <div className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-text-muted">
                       <span>{s.platform.charAt(0).toUpperCase() + s.platform.slice(1)}</span>
                       <span className="text-border">·</span>
                       <span>{s.time}</span>
@@ -169,12 +169,12 @@ export const Default: Story = {
             type="button"
             className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 transition-all hover:bg-surface-3"
           >
-            <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-accent/20 to-accent/5 text-2xs font-bold text-accent ring-1 ring-accent/10">
+            <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-accent/20 to-accent/5 text-xs font-bold text-accent ring-1 ring-accent/10">
               J
             </div>
             <div className="min-w-0 flex-1 text-left">
               <div className="truncate text-sm font-medium text-text-primary">Joey</div>
-              <div className="truncate text-2xs text-text-muted">joey@nexu.ai</div>
+              <div className="truncate text-xs text-text-muted">joey@nexu.ai</div>
             </div>
             <ChevronUp size={12} className="shrink-0 rotate-180 text-text-muted/50" />
           </button>

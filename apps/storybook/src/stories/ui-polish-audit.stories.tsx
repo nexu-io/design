@@ -7,6 +7,9 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  FilterPillTrigger,
+  FilterPills,
+  FilterPillsList,
   FormField,
   FormFieldControl,
   Input,
@@ -107,6 +110,14 @@ export const Overview: Story = {
                 API Key
               </ToggleGroupItem>
             </ToggleGroup>
+
+            <FilterPills defaultValue="all" className="w-fit">
+              <FilterPillsList>
+                <FilterPillTrigger value="all">All</FilterPillTrigger>
+                <FilterPillTrigger value="open">Open</FilterPillTrigger>
+                <FilterPillTrigger value="flagged">Flagged</FilterPillTrigger>
+              </FilterPillsList>
+            </FilterPills>
           </CardContent>
         </Card>
 

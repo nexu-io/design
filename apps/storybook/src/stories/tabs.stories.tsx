@@ -20,7 +20,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const CountBadge = ({ count }: { count: number }) => (
-  <span className="ml-1 text-xs font-[family-name:var(--font-mono)] text-text-muted">{count}</span>
+  <span className="ml-1 text-sm font-[family-name:var(--font-mono)] text-text-muted">{count}</span>
 );
 
 export const Default: Story = {

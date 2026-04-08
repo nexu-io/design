@@ -24,7 +24,7 @@ const toggleVariants = cva(
       size: {
         /** Skip fixed height (used with `variant="compact"`, which sets its own). */
         none: "",
-        sm: "h-7 text-xs",
+        sm: "h-7 text-sm",
         default: "h-8",
         lg: "h-9 text-base",
       },

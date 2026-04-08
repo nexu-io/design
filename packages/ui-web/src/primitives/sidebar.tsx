@@ -50,7 +50,7 @@ export function NavigationMenuLabel({ className, ...props }: React.HTMLAttribute
     <div
       data-slot="navigation-menu-label"
       className={cn(
-        "px-3 pb-2 text-2xs font-medium uppercase tracking-wider text-text-muted",
+        "px-3 pb-2 text-xs font-medium uppercase tracking-wider text-text-muted",
         className,
       )}
       {...props}

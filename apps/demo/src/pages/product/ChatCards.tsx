@@ -162,7 +162,7 @@ function CardItem({
       }`}
       meta={
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[10px] font-medium text-text-primary">{card.title}</span>
+          <span className="text-xs font-medium text-text-primary">{card.title}</span>
           <Badge
             className="gap-1 text-[9px]"
             variant={
@@ -179,7 +179,7 @@ function CardItem({
             {st.label}
           </Badge>
           {card.path && (
-            <span className="flex items-center gap-1 text-[10px] text-text-muted group-hover:text-accent transition-colors">
+            <span className="flex items-center gap-1 text-xs text-text-muted transition-colors group-hover:text-accent">
               <span className="font-mono truncate">~/clone/{card.path}</span>
               <ArrowUpRight size={12} className="shrink-0 opacity-50 group-hover:opacity-100" />
             </span>
@@ -218,7 +218,7 @@ function CardItem({
                 onClick={(e) => handleActionBtn(btn, e)}
                 size="xs"
                 variant={btn.primary ? "default" : "secondary"}
-                className="text-[10px]"
+                className="text-xs"
               >
                 {btn.label}
               </Button>
@@ -233,7 +233,7 @@ function CardItem({
         {card.viralCta && (
           <div className="flex items-center gap-2 border-t border-accent/10 bg-gradient-to-r from-accent/5 to-transparent px-1 py-2">
             <ConversationMessageStatusIcon className="h-4 w-4" />
-            <span className="text-[9px] text-accent cursor-pointer hover:underline">
+            <span className="cursor-pointer text-xs text-accent hover:underline">
               {card.viralCta}
             </span>
           </div>
