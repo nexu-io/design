@@ -65,7 +65,7 @@
 
 - [x] 确认 `PageHeader` 是否已经覆盖 PR 文档中“标题区间距统一”的需求
 - [x] 若没有统一 spacing contract，为 `PageHeader` 补显式 props / 文档约束，避免页面自己写散落 margin
-- [ ] 审查 demo pages 中自定义 header 区块，尽量替换到 `PageHeader` / `SectionHeader` / 统一 pattern
+- [x] 审查 demo pages 中自定义 header 区块，尽量替换到 `PageHeader` / `SectionHeader` / 统一 pattern
 - [x] 在 Storybook 中增加 page header 的长描述、带链接描述、带 actions 等规范示例
 - [ ] 决定 serif heading 的使用边界：仅 marketing / welcome 页面使用，还是 design system 层开放为通用 heading 选项
 
@@ -77,7 +77,7 @@
 - [ ] 为“已保存 API key”场景定义统一模式：masked input + inline replace，而不是独立成功 banner
 - [ ] 为底部右对齐 Save CTA 定义统一布局约定，并写入相关 pattern docs
 - [ ] 在 Storybook 增加 provider settings / BYOK card 场景页，展示 Global/CN、OAuth/API Key、masked key、proxy URL、Save CTA
-- [ ] 对 `packages/demo-pages/src/pages/openclaw/OpenClawWorkspace.tsx` 中相关 provider 配置原型做一次对照审查
+- [x] 对 `packages/demo-pages/src/pages/openclaw/OpenClawWorkspace.tsx` 中相关 provider 配置原型做一次对照审查
 
 ### 7. Status / sidebar / dense UI polish
 

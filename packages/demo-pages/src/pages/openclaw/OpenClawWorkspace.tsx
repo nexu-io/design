@@ -540,12 +540,11 @@ function SkillsPanel() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="heading-page">{t("ws.skills.title")}</h2>
-            <p className="heading-page-desc">{t("ws.skills.subtitle")}</p>
-          </div>
-        </div>
+        <PageHeader
+          density="shell"
+          title={t("ws.skills.title")}
+          description={t("ws.skills.subtitle")}
+        />
 
         <div className="flex items-center gap-4 mb-5">
           <ToggleGroup
@@ -755,16 +754,17 @@ function SchedulePanel() {
     <div className="h-full overflow-y-auto">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="heading-page">{t("ws.schedule.title")}</h1>
-            <p className="heading-page-desc">{t("ws.schedule.subtitle")}</p>
-          </div>
-          <button className="inline-flex items-center gap-1.5 rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium border border-border text-text-primary hover:bg-surface-2 transition-colors">
-            <Plus size={14} />
-            {t("ws.schedule.addTask")}
-          </button>
-        </div>
+        <PageHeader
+          density="shell"
+          title={t("ws.schedule.title")}
+          description={t("ws.schedule.subtitle")}
+          actions={
+            <Button variant="outline" size="sm" className="gap-1.5">
+              <Plus size={14} />
+              {t("ws.schedule.addTask")}
+            </Button>
+          }
+        />
 
         {/* Stats strip */}
         <div className="flex items-center gap-4 mb-5">
@@ -3471,10 +3471,11 @@ function DeploymentsView() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <div className="mb-6">
-          <h1 className="heading-page">{t("ws.deployments.title")}</h1>
-          <p className="heading-page-desc">{t("ws.deployments.subtitle")}</p>
-        </div>
+        <PageHeader
+          density="shell"
+          title={t("ws.deployments.title")}
+          description={t("ws.deployments.subtitle")}
+        />
 
         <div className="data-table">
           <div className="data-table-header" style={colStyle}>
@@ -3787,12 +3788,11 @@ function SettingsView({
   return (
     <div className="h-full overflow-y-auto">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="heading-page">{t("ws.settings.title")}</h2>
-            <p className="heading-page-desc">{t("ws.settings.subtitle")}</p>
-          </div>
-          <div className="flex items-center gap-2">
+        <PageHeader
+          density="shell"
+          title={t("ws.settings.title")}
+          description={t("ws.settings.subtitle")}
+          actions={
             <a
               href={GITHUB_URL}
               target="_blank"
@@ -3806,8 +3806,8 @@ function SettingsView({
               {t("ws.common.starOnGitHub")}
               <ArrowUpRight size={11} className="shrink-0 translate-y-px" />
             </a>
-          </div>
-        </div>
+          }
+        />
 
         {/* Tab switcher */}
         <div className="flex items-center gap-0 mb-6 border-b border-border">
@@ -4227,32 +4227,37 @@ function SettingsView({
               {/* Right: Provider detail */}
               <div className="flex-1 overflow-y-auto p-5">
                 {/* Header — no enable/disable switch */}
-                <div className="flex items-center justify-between gap-3 mb-5">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="w-8 h-8 rounded-lg flex items-center justify-center bg-surface-2 shrink-0">
-                      <ProviderLogo provider={activeProvider.id} size={20} />
-                    </span>
-                    <div className="min-w-0">
-                      <div className="text-[14px] font-semibold text-text-primary">
-                        {activeProvider.name}
-                      </div>
-                      <div className="text-[11px] text-text-tertiary">
-                        {activeProvider.description}
+                <SectionHeader
+                  className="mb-5 items-start"
+                  title={
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-2">
+                        <ProviderLogo provider={activeProvider.id} size={20} />
+                      </span>
+                      <div className="min-w-0">
+                        <div className="text-[14px] font-semibold text-text-primary">
+                          {activeProvider.name}
+                        </div>
+                        <div className="text-[11px] text-text-tertiary">
+                          {activeProvider.description}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  {activeProvider.apiDocsUrl && (
-                    <a
-                      href={activeProvider.apiDocsUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="shrink-0 text-[11px] text-[var(--color-brand-primary)] hover:text-[var(--color-brand-primary)] no-underline hover:no-underline inline-flex items-center gap-1 leading-none"
-                    >
-                      {t("ws.settings.getApiKey")}
-                      <ArrowUpRight size={12} className="shrink-0" />
-                    </a>
-                  )}
-                </div>
+                  }
+                  action={
+                    activeProvider.apiDocsUrl ? (
+                      <a
+                        href={activeProvider.apiDocsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-[11px] leading-none text-[var(--color-link)] no-underline hover:no-underline"
+                      >
+                        {t("ws.settings.getApiKey")}
+                        <ArrowUpRight size={12} className="shrink-0" />
+                      </a>
+                    ) : undefined
+                  }
+                />
 
                 {/* Nexu login card */}
                 {activeProvider.id === "nexu" && (
@@ -4285,25 +4290,25 @@ function SettingsView({
                       <label className="block text-[13px] font-semibold text-text-primary mb-3">
                         {t("ws.settings.apiKey")}
                       </label>
-                      <input
+                      <Input
                         type="password"
                         placeholder={activeProvider.apiKeyPlaceholder}
                         value={getFormValues(activeProvider.id).apiKey}
                         onChange={(e) => setFormField(activeProvider.id, "apiKey", e.target.value)}
-                        className="w-full rounded-lg border border-border bg-surface-0 px-3 py-2 text-[12px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30"
+                        className="w-full text-[12px]"
                       />
                     </div>
                     <div>
                       <label className="block text-[13px] font-semibold text-text-primary mb-3">
                         {t("ws.settings.apiProxyUrl")}
                       </label>
-                      <input
+                      <Input
                         type="text"
                         value={getFormValues(activeProvider.id).proxyUrl}
                         onChange={(e) =>
                           setFormField(activeProvider.id, "proxyUrl", e.target.value)
                         }
-                        className="w-full rounded-lg border border-border bg-surface-0 px-3 py-2 text-[12px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30"
+                        className="w-full text-[12px]"
                       />
                     </div>
                     <div className="flex items-center justify-end gap-3 flex-wrap">
@@ -4318,23 +4323,19 @@ function SettingsView({
                         {checkState === "error" && t("ws.settings.retryTest")}
                         {checkState === "idle" && t("ws.settings.testConnection")}
                       </button>
-                      <button
+                      <Button
                         onClick={() => handleSave(activeProvider.id)}
-                        disabled={saveState === "saving" || showSaved}
-                        className={`w-[120px] shrink-0 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2 text-[12px] font-medium transition-all ${
-                          showSaved
-                            ? "bg-[var(--color-success)]/10 text-[var(--color-success)] border border-[var(--color-success)]/20"
-                            : "bg-accent text-accent-fg hover:bg-accent-hover"
-                        } disabled:opacity-50`}
-                      >
-                        {saveState === "saving" && (
-                          <Loader2 size={13} className="animate-spin shrink-0" />
+                        disabled={showSaved}
+                        loading={saveState === "saving"}
+                        size="sm"
+                        className={cn(
+                          "w-[120px] shrink-0",
+                          showSaved &&
+                            "border border-[var(--color-success)]/20 bg-[var(--color-success)]/10 text-[var(--color-success)] hover:bg-[var(--color-success)]/10",
                         )}
-                        {showSaved && <Check size={13} className="shrink-0" />}
-                        {!showSaved && saveState !== "saving" && t("ws.common.save")}
-                        {saveState === "saving" && t("ws.common.saving")}
-                        {showSaved && t("ws.common.saved")}
-                      </button>
+                      >
+                        {showSaved ? t("ws.common.saved") : t("ws.common.save")}
+                      </Button>
                     </div>
                   </div>
                 )}
@@ -4353,12 +4354,17 @@ function SettingsView({
                       <span>{t("ws.settings.connectionFailed")}</span>
                     </div>
                   )}
-                  <div className="text-[13px] font-semibold text-text-primary mb-3">
-                    {t("ws.settings.model")}{" "}
-                    <span className="text-text-tertiary font-normal">
-                      {activeProvider.models.length}
-                    </span>
-                  </div>
+                  <SectionHeader
+                    className="mb-3"
+                    title={
+                      <div className="text-[13px] font-semibold text-text-primary">
+                        {t("ws.settings.model")}{" "}
+                        <span className="font-normal text-text-tertiary">
+                          {activeProvider.models.length}
+                        </span>
+                      </div>
+                    }
+                  />
                   <div className="space-y-1.5">
                     {activeProvider.models.map((model) => {
                       const isActive = model.id === selectedModelId;

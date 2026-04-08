@@ -5,6 +5,7 @@ import {
   Button,
   Input,
   Label,
+  PageHeader,
   Table,
   TableBody,
   TableCell,
@@ -853,21 +854,18 @@ export default function ChannelsPage() {
       }}
     >
       <div className="max-w-4xl mx-auto px-8 py-8">
-        <div className="flex items-center gap-3">
-          {currentConfig.configured && forceGuide && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setForceGuide(false)}
-              className="size-8"
-            >
-              <ArrowLeft size={16} />
-            </Button>
-          )}
-          <h1 className="heading-page">Slack configuration</h1>
-        </div>
-
-        <p className="heading-page-desc mb-6">Manage nexu connection to your Slack workspace</p>
+        <PageHeader
+          density="shell"
+          title="Slack configuration"
+          description="Manage nexu connection to your Slack workspace"
+          actions={
+            currentConfig.configured && forceGuide ? (
+              <Button variant="ghost" size="icon" onClick={() => setForceGuide(false)}>
+                <ArrowLeft size={16} />
+              </Button>
+            ) : undefined
+          }
+        />
 
         {showGuide ? (
           <SlackOAuthView />
