@@ -26,4 +26,25 @@ describe("Tabs", () => {
 
     expect(screen.getByRole("tab", { name: "Channels" })).toHaveAttribute("aria-selected", "true");
   });
+
+  it("renders compact variant triggers", () => {
+    render(
+      <Tabs defaultValue="a">
+        <TabsList variant="compact">
+          <TabsTrigger value="a" variant="compact">
+            A
+          </TabsTrigger>
+          <TabsTrigger value="b" variant="compact">
+            B
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="a">A content</TabsContent>
+        <TabsContent value="b">B content</TabsContent>
+      </Tabs>,
+    );
+
+    const a = screen.getByRole("tab", { name: "A" });
+    expect(a).toHaveAttribute("aria-selected", "true");
+    expect(a.className).toContain("h-6");
+  });
 });

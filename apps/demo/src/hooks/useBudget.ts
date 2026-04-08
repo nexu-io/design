@@ -1,195 +1,384 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-export type RewardTaskGroup = "daily" | "community" | "social";
-export type RewardCadence = "daily" | "weekly" | "once";
-export type SharePlatform = "xiaohongshu" | "jike" | "feishu";
+/* ── Reward Channel Config ── */
 
-export type RewardTask = {
+export type RewardGroup = "daily" | "opensource" | "social";
+
+/**
+ * How the user shares on this channel:
+ *  - 'link'  → open a URL in browser (GitHub, Reddit, LinkedIn)
+ *  - 'tweet' → open X intent URL with pre-filled text
+ *  - 'image' → download a share card image, user posts it manually (WeChat, Xiaohongshu, Jike)
+ */
+export type ShareMode = "link" | "tweet" | "image";
+
+/**
+ * Claim cadence:
+ *  - undefined → one-time (permanent, e.g. GitHub Star)
+ *  - 'daily'  → once per calendar day
+ *  - 'weekly' → once per calendar week (resets every Monday)
+ */
+export type RepeatMode = "daily" | "weekly";
+
+export interface RewardChannel {
   id: string;
-  title: string;
-  description: string;
-  helper: string;
-  credits: number;
-  group: RewardTaskGroup;
-  cadence: RewardCadence;
-  platform?: SharePlatform;
-  requiresMaterial?: boolean;
-  materialTitle?: string;
-  materialBody?: string;
-  caption?: string;
-};
+  group: RewardGroup;
+  icon: string;
+  reward: number;
+  shareMode: ShareMode;
+  url?: string;
+  requiresScreenshot: boolean;
+  repeatable?: RepeatMode;
+}
 
-export type RewardTaskStatus = "available" | "claimed" | "cooldown" | "locked";
+const GITHUB_URL = "https://github.com/refly-ai/nexu";
+const X_SHARE_URL = `https://x.com/intent/tweet?text=${encodeURIComponent("Just discovered nexu — the simplest open-source openclaw desktop app. Bridge your Agent to WeChat, Feishu, Slack & Discord in one click. Try it free → https://github.com/refly-ai/nexu")}`;
+const REDDIT_SHARE_URL = `https://www.reddit.com/submit?url=${encodeURIComponent("https://github.com/refly-ai/nexu")}&title=${encodeURIComponent("nexu — open-source openclaw desktop app for WeChat, Feishu, Slack & Discord")}`;
+const LINKEDIN_SHARE_URL = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://github.com/refly-ai/nexu")}`;
+const FACEBOOK_SHARE_URL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent("https://github.com/refly-ai/nexu")}`;
+const WHATSAPP_SHARE_TEXT =
+  "Just discovered nexu — open-source openclaw desktop for WeChat, Feishu, Slack & Discord. Try it free → https://github.com/refly-ai/nexu";
+const WHATSAPP_SHARE_URL = `https://wa.me/?text=${encodeURIComponent(WHATSAPP_SHARE_TEXT)}`;
 
-export type RewardTaskState = RewardTask & {
-  status: RewardTaskStatus;
-  cooldownLabel?: string;
-  claimedLabel?: string;
-};
+export const DAILY_CHECKIN_BONUS = 100;
 
-type RewardClaimState = Record<string, string>;
-
-const ONE_DAY = 1000 * 60 * 60 * 24;
-
-const INITIAL_CLAIMS: RewardClaimState = {
-  "github-star": "2026-04-05T09:00:00.000Z",
-  "discord-feedback": "2026-04-06T09:00:00.000Z",
-  xiaohongshu: "2026-04-05T09:00:00.000Z",
-};
-
-export const REWARD_TASKS: RewardTask[] = [
+export const REWARD_CHANNELS: RewardChannel[] = [
   {
-    id: "daily-check-in",
-    title: "Daily usage check-in",
-    description: "Open your usage dashboard and collect a small daily refill.",
-    helper: "Resets every day",
-    credits: 100,
+    id: "daily_checkin",
     group: "daily",
-    cadence: "daily",
+    icon: "calendar",
+    reward: DAILY_CHECKIN_BONUS,
+    shareMode: "link",
+    requiresScreenshot: false,
+    repeatable: "daily",
   },
   {
-    id: "github-star",
-    title: "Star nexu on GitHub",
-    description: "Support the open-source repo to unlock a one-time bonus.",
-    helper: "One-time reward",
-    credits: 300,
-    group: "community",
-    cadence: "once",
+    id: "github_star",
+    group: "opensource",
+    icon: "github",
+    reward: 300,
+    shareMode: "link",
+    url: GITHUB_URL,
+    requiresScreenshot: false,
   },
   {
-    id: "discord-feedback",
-    title: "Share a workflow in Discord",
-    description: "Post one useful workflow screenshot in the community channel.",
-    helper: "One-time reward",
-    credits: 250,
-    group: "community",
-    cadence: "once",
+    id: "x_share",
+    group: "social",
+    icon: "x",
+    reward: 200,
+    shareMode: "tweet",
+    url: X_SHARE_URL,
+    requiresScreenshot: false,
+    repeatable: "weekly",
+  },
+  {
+    id: "reddit",
+    group: "social",
+    icon: "reddit",
+    reward: 200,
+    shareMode: "link",
+    url: REDDIT_SHARE_URL,
+    requiresScreenshot: false,
+    repeatable: "weekly",
   },
   {
     id: "xiaohongshu",
-    title: "Post on 小红书",
-    description: "Download the campaign card and publish your setup publicly.",
-    helper: "Once per week",
-    credits: 500,
     group: "social",
-    cadence: "weekly",
-    platform: "xiaohongshu",
-    requiresMaterial: true,
-    materialTitle: "Launch your Agent to 小红书 creators",
-    materialBody: "Highlight fast onboarding, premium model access, and referral credits.",
-    caption:
-      "Just shipped a new nexu workflow — connect your agent to WeChat, Feishu, Slack, and Discord in minutes. https://github.com/refly-ai/nexu",
+    icon: "xiaohongshu",
+    reward: 200,
+    shareMode: "image",
+    requiresScreenshot: true,
+    repeatable: "weekly",
+  },
+  {
+    id: "lingying",
+    group: "social",
+    icon: "lingying",
+    reward: 200,
+    shareMode: "link",
+    url: LINKEDIN_SHARE_URL,
+    requiresScreenshot: false,
+    repeatable: "weekly",
   },
   {
     id: "jike",
-    title: "Post on 即刻",
-    description: "Share your favorite automation loop with the Jike maker crowd.",
-    helper: "Once per week",
-    credits: 350,
     group: "social",
-    cadence: "weekly",
-    platform: "jike",
-    requiresMaterial: true,
-    materialTitle: "Show your weekly agent stack",
-    materialBody: "Focus on the channels you connected and the credits you earned.",
-    caption:
-      "Been testing nexu this week — open-source desktop agent bridge for Feishu, Slack, Discord, and more. Worth a look: https://github.com/refly-ai/nexu",
+    icon: "jike",
+    reward: 200,
+    shareMode: "image",
+    requiresScreenshot: true,
+    repeatable: "weekly",
+  },
+  {
+    id: "wechat",
+    group: "social",
+    icon: "wechat",
+    reward: 100,
+    shareMode: "image",
+    requiresScreenshot: true,
+    repeatable: "weekly",
   },
   {
     id: "feishu",
-    title: "Share to 飞书",
-    description: "Bring the launch card into your team chat and invite collaborators.",
-    helper: "Once per week",
-    credits: 400,
     group: "social",
-    cadence: "weekly",
-    platform: "feishu",
-    requiresMaterial: true,
-    materialTitle: "Invite your team into nexu",
-    materialBody: "Use the team-facing card with rollout highlights and reward callouts.",
-    caption:
-      "We are testing nexu for team workflows — lightweight open-source desktop bridge for Feishu, Slack, Discord, and more. Join the pilot: https://github.com/refly-ai/nexu",
+    icon: "feishu",
+    reward: 100,
+    shareMode: "image",
+    requiresScreenshot: true,
+    repeatable: "weekly",
+  },
+  {
+    id: "facebook",
+    group: "social",
+    icon: "facebook",
+    reward: 200,
+    shareMode: "link",
+    url: FACEBOOK_SHARE_URL,
+    requiresScreenshot: false,
+    repeatable: "weekly",
+  },
+  {
+    id: "whatsapp",
+    group: "social",
+    icon: "whatsapp",
+    reward: 200,
+    shareMode: "link",
+    url: WHATSAPP_SHARE_URL,
+    requiresScreenshot: false,
+    repeatable: "weekly",
   },
 ];
 
-function startOfDay(value: Date) {
-  return new Date(value.getFullYear(), value.getMonth(), value.getDate());
+/** Channels that appear in the task list (excludes daily check-in) */
+const TASK_CHANNELS = REWARD_CHANNELS.filter((c) => c.repeatable !== "daily");
+
+/** Max one-time + weekly reward per cycle (if all tasks completed once) */
+export const TOTAL_REWARD_AVAILABLE = TASK_CHANNELS.reduce((s, c) => s + c.reward, 0);
+
+const STORAGE_DAILY_LAST = "nexu_daily_checkin_last";
+const STORAGE_DAILY_TOTAL = "nexu_daily_checkin_total";
+
+/* ── Storage helpers ── */
+
+function storageKey(channelId: string) {
+  return `nexu_reward_${channelId}`;
+}
+function weeklyStorageKey(channelId: string) {
+  return `nexu_reward_weekly_${channelId}`;
 }
 
-function getDaysSince(timestamp: string, now: Date) {
-  const claimedAt = new Date(timestamp);
-  return Math.floor((startOfDay(now).getTime() - startOfDay(claimedAt).getTime()) / ONE_DAY);
+function readFlag(key: string): boolean {
+  try {
+    return localStorage.getItem(key) === "1";
+  } catch {
+    return false;
+  }
+}
+function writeFlag(key: string) {
+  try {
+    localStorage.setItem(key, "1");
+  } catch {
+    /* noop */
+  }
 }
 
-function getWeeklyCooldownLabel(daysSince: number) {
-  const daysLeft = Math.max(7 - daysSince, 0);
-  if (daysLeft <= 0) return undefined;
-  if (daysLeft === 1) return "Available tomorrow";
-  return `Available in ${daysLeft} days`;
+function localDateString(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
-export function useBudget() {
-  const [isSignedIn, setIsSignedIn] = useState(true);
-  const [claims, setClaims] = useState<RewardClaimState>(INITIAL_CLAIMS);
+/**
+ * Days until next calendar Monday (local). Used for weekly reward cooldown copy (1–7).
+ * If today is Monday, returns 7 (next week's window).
+ */
+export function daysUntilNextMondayLocal(): number {
+  const day = new Date().getDay();
+  if (day === 1) return 7;
+  if (day === 0) return 1;
+  return 8 - day;
+}
 
-  const tasks = useMemo<RewardTaskState[]>(() => {
-    const now = new Date();
+/** ISO week number (Mon=start). Used to detect weekly reset. */
+function currentWeekKey(): string {
+  const d = new Date();
+  const jan1 = new Date(d.getFullYear(), 0, 1);
+  const dayOfYear = Math.floor((d.getTime() - jan1.getTime()) / 86400000) + 1;
+  const weekNum = Math.ceil((dayOfYear + jan1.getDay()) / 7);
+  return `${d.getFullYear()}-W${String(weekNum).padStart(2, "0")}`;
+}
 
-    return REWARD_TASKS.map((task) => {
-      if (!isSignedIn && task.group === "social") {
-        return { ...task, status: "locked" };
+function readDailyCheckin(): { checkedInToday: boolean; cumulativeBonus: number } {
+  const today = localDateString();
+  let last = "";
+  let cumulative = 0;
+  try {
+    last = localStorage.getItem(STORAGE_DAILY_LAST) || "";
+    cumulative = Number.parseFloat(localStorage.getItem(STORAGE_DAILY_TOTAL) || "0") || 0;
+  } catch {
+    /* noop */
+  }
+  return { checkedInToday: last === today, cumulativeBonus: cumulative };
+}
+
+function readAllClaimed(): Set<string> {
+  const set = new Set<string>();
+  const week = currentWeekKey();
+
+  for (const ch of REWARD_CHANNELS) {
+    if (ch.repeatable === "daily") continue;
+
+    if (ch.repeatable === "weekly") {
+      try {
+        const stored = localStorage.getItem(weeklyStorageKey(ch.id));
+        if (stored === week) set.add(ch.id);
+      } catch {
+        /* noop */
       }
+    } else {
+      if (readFlag(storageKey(ch.id))) set.add(ch.id);
+    }
+  }
+  return set;
+}
 
-      const claimedAt = claims[task.id];
-      if (!claimedAt) {
-        return { ...task, status: "available" };
+/* ── Budget State ── */
+
+export type BudgetStatus = "healthy" | "warning" | "depleted";
+
+export interface BudgetState {
+  total: number;
+  used: number;
+  remaining: number;
+  percentage: number;
+  resetsInDays: number;
+  bonusTotal: number;
+  bonusUsed: number;
+  bonusRemaining: number;
+  bonusExpiresInDays: number;
+  status: BudgetStatus;
+  starClaimed: boolean;
+  shareClaimed: boolean;
+  claimedChannels: Set<string>;
+  claimChannel: (channelId: string) => void;
+  claimDailyCheckIn: () => void;
+  totalRewardAvailable: number;
+  totalRewardClaimed: number;
+  /** One-time task progress (excludes daily) */
+  claimedCount: number;
+  channelCount: number;
+  dailyCheckedInToday: boolean;
+  dailyCheckinBonusTotal: number;
+  oneTimeRewardClaimed: number;
+}
+
+export function useBudget(scenario: "healthy" | "warning" | "depleted" = "healthy"): BudgetState {
+  const baseTotal = 2000;
+
+  const defaults: Record<
+    typeof scenario,
+    { used: number; resetsInDays: number; bonusUsed: number }
+  > = {
+    healthy: { used: 300, resetsInDays: 5, bonusUsed: 0 },
+    warning: { used: 1800, resetsInDays: 2, bonusUsed: 50 },
+    depleted: { used: 2000, resetsInDays: 1, bonusUsed: 0 },
+  };
+
+  const d = defaults[scenario];
+
+  const [claimedChannels, setClaimedChannels] = useState<Set<string>>(() => readAllClaimed());
+  const [dailyState, setDailyState] = useState(() => readDailyCheckin());
+
+  const claimDailyCheckIn = useCallback(() => {
+    const today = localDateString();
+    setDailyState((prev) => {
+      if (prev.checkedInToday) return prev;
+      const nextCumulative = prev.cumulativeBonus + DAILY_CHECKIN_BONUS;
+      try {
+        localStorage.setItem(STORAGE_DAILY_LAST, today);
+        localStorage.setItem(STORAGE_DAILY_TOTAL, String(nextCumulative));
+      } catch {
+        /* noop */
       }
-
-      if (task.cadence === "once") {
-        return { ...task, status: "claimed", claimedLabel: "Completed" };
-      }
-
-      const daysSince = getDaysSince(claimedAt, now);
-      if (task.cadence === "daily") {
-        return daysSince >= 1
-          ? { ...task, status: "available" }
-          : { ...task, status: "claimed", claimedLabel: "Claimed today" };
-      }
-
-      const cooldownLabel = getWeeklyCooldownLabel(daysSince);
-      return cooldownLabel
-        ? { ...task, status: "cooldown", cooldownLabel }
-        : { ...task, status: "available" };
+      return { checkedInToday: true, cumulativeBonus: nextCumulative };
     });
-  }, [claims, isSignedIn]);
+  }, []);
 
-  const totalEarned = tasks.reduce((sum, task) => {
-    const claimed = task.status === "claimed" || task.status === "cooldown";
-    return claimed ? sum + task.credits : sum;
-  }, 0);
+  const claimChannel = useCallback(
+    (channelId: string) => {
+      if (channelId === "daily_checkin") {
+        claimDailyCheckIn();
+        return;
+      }
+      const ch = REWARD_CHANNELS.find((c) => c.id === channelId);
+      if (!ch) return;
 
-  const oneTimeTasks = tasks.filter((task) => task.cadence === "once");
-  const oneTimeCompleted = oneTimeTasks.filter((task) => task.status === "claimed").length;
-  const socialTasks = tasks.filter((task) => task.group === "social");
-  const nextWeeklyReward = socialTasks.find((task) => task.status === "available");
+      if (ch.repeatable === "weekly") {
+        try {
+          localStorage.setItem(weeklyStorageKey(channelId), currentWeekKey());
+        } catch {
+          /* noop */
+        }
+      } else {
+        writeFlag(storageKey(channelId));
+      }
+      setClaimedChannels((prev) => new Set([...prev, channelId]));
+    },
+    [claimDailyCheckIn],
+  );
+
+  const taskRewardClaimed = useMemo(
+    () => TASK_CHANNELS.reduce((s, ch) => s + (claimedChannels.has(ch.id) ? ch.reward : 0), 0),
+    [claimedChannels],
+  );
+
+  const bonusTotal = useMemo(
+    () => taskRewardClaimed + dailyState.cumulativeBonus,
+    [taskRewardClaimed, dailyState.cumulativeBonus],
+  );
+
+  const totalRewardClaimed = bonusTotal;
+  const claimedCount = useMemo(
+    () => TASK_CHANNELS.filter((ch) => claimedChannels.has(ch.id)).length,
+    [claimedChannels],
+  );
+  const channelCount = TASK_CHANNELS.length;
+
+  const bonusRemaining = Math.max(0, bonusTotal - d.bonusUsed);
+  const bonusExpiresInDays = bonusTotal > 0 ? 6 : 0;
+
+  const remaining = Math.max(0, baseTotal - d.used);
+  const percentage = Math.round((remaining / baseTotal) * 100);
+
+  let status: BudgetStatus = "healthy";
+  if (remaining <= 0 && bonusRemaining <= 0) status = "depleted";
+  else if (remaining <= 0 && bonusRemaining > 0) status = "warning";
+  else if (percentage <= 20) status = "warning";
 
   return {
-    isSignedIn,
-    setIsSignedIn,
-    tasks,
-    totalEarned,
-    oneTimeCompleted,
-    oneTimeTotal: oneTimeTasks.length,
-    nextWeeklyReward,
-    reset() {
-      setClaims(INITIAL_CLAIMS);
-      setIsSignedIn(true);
-    },
-    claimTask(taskId: string) {
-      setClaims((current) => ({
-        ...current,
-        [taskId]: new Date().toISOString(),
-      }));
-    },
+    total: baseTotal,
+    used: d.used,
+    remaining,
+    percentage,
+    bonusTotal,
+    bonusUsed: d.bonusUsed,
+    bonusRemaining,
+    bonusExpiresInDays,
+    resetsInDays: d.resetsInDays,
+    status,
+    starClaimed: claimedChannels.has("github_star"),
+    shareClaimed: claimedChannels.has("x_share"),
+    claimedChannels,
+    claimChannel,
+    claimDailyCheckIn,
+    totalRewardAvailable: TOTAL_REWARD_AVAILABLE,
+    totalRewardClaimed,
+    claimedCount,
+    channelCount,
+    dailyCheckedInToday: dailyState.checkedInToday,
+    dailyCheckinBonusTotal: dailyState.cumulativeBonus,
+    oneTimeRewardClaimed: taskRewardClaimed,
   };
 }

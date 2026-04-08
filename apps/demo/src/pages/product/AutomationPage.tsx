@@ -8,6 +8,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@nexu-design/ui-web";
+import type * as React from "react";
 import {
   AlertCircle,
   BarChart3,

@@ -18,7 +18,7 @@ export type ProviderName =
   | "deepseek"
   | "qwen";
 
-export type PlatformName = "slack" | "feishu" | "discord" | "telegram" | "wechat";
+export type PlatformName = "slack" | "feishu" | "discord" | "telegram" | "wechat" | "whatsapp";
 
 export type BrandName = "nexu" | "github";
 
@@ -349,6 +349,8 @@ export function PlatformLogo({ platform, ...props }: LogoProps & { platform: Pla
     case "telegram":
       return <TelegramIcon {...props} />;
     case "wechat":
+      return <WeChatIcon {...props} />;
+    case "whatsapp":
       return <WeChatIcon {...props} />;
   }
 }

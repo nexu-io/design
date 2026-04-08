@@ -63,3 +63,4 @@ export * from "./patterns/confirm-dialog";
 export * from "./patterns/follow-up-input";
 export * from "./patterns/auth-shell";
 export * from "./patterns/brand-rail";
+export * from "./patterns/skill-marketplace-card";
