@@ -192,7 +192,7 @@ function localDateString(): string {
 
 /**
  * Days until next calendar Monday (local). Used for weekly reward cooldown copy (1–7).
- * If today is Monday, returns 7 (next week’s window).
+ * If today is Monday, returns 7 (next week's window).
  */
 export function daysUntilNextMondayLocal(): number {
   const day = new Date().getDay();

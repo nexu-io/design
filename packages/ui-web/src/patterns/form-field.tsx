@@ -22,6 +22,7 @@ function useFormFieldContext() {
   return context;
 }
 
+/** Label, description, error, and layout options for a field; children receive ids via context. */
 export interface FormFieldProps {
   label?: React.ReactNode;
   description?: React.ReactNode;
@@ -33,6 +34,16 @@ export interface FormFieldProps {
   children: React.ReactNode;
 }
 
+/**
+ * Wraps a control with optional label, description, and error; clones the control with a11y wiring.
+ *
+ * @example
+ * <FormField label="Email" required invalid={!!error} error={error}>
+ *   <FormFieldControl>
+ *     <Input type="email" placeholder="you@example.com" />
+ *   </FormFieldControl>
+ * </FormField>
+ */
 export function FormField({
   label,
   description,
@@ -69,6 +80,7 @@ export function FormField({
   );
 }
 
+/** Associates the visible label with the field control via `htmlFor`. */
 export function FormFieldLabel({
   className,
   required,
@@ -84,6 +96,7 @@ export function FormFieldLabel({
   );
 }
 
+/** Clones its child to set `id`, `aria-invalid`, and `aria-describedby` from context. */
 export function FormFieldControl({
   className,
   children,
@@ -111,6 +124,7 @@ export function FormFieldControl({
   });
 }
 
+/** Helper or hint text linked to the control for screen readers. */
 export function FormFieldDescription({
   className,
   children,
@@ -124,6 +138,7 @@ export function FormFieldDescription({
   );
 }
 
+/** Validation or error message linked to the control when `invalid` is true. */
 export function FormFieldError({
   className,
   children,

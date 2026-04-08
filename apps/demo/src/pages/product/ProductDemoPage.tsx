@@ -33,11 +33,11 @@ import AutomationPage from "./AutomationPage";
 import CloneBuilderPage from "./CloneBuilderPage";
 import FileEditor from "./FileEditor";
 import FileTree from "./FileTree";
-import { WorkspaceShell } from "./WorkspaceShell";
 import { ProductLayoutContext } from "./ProductLayoutContext";
 import SessionsPage from "./SessionsPage";
 import SkillsPage from "./SkillsPage";
 import TeamPage from "./TeamPage";
+import WorkspaceShell from "./WorkspaceShell";
 import { getFile, saveFile } from "./fileStore";
 
 const PAGES = [
@@ -67,6 +67,7 @@ export default function ProductDemoPage() {
   const [openFilePath, setOpenFilePath] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+
   useEffect(() => {
     const hash = location.hash.replace("#", "");
     if (hash && PAGES.some((page) => page.id === hash && page.component)) {
@@ -95,17 +96,9 @@ export default function ProductDemoPage() {
     setOpenFilePath(null);
   }, []);
 
-  const handleFileTreeNavigate = useCallback((route: string) => {
-    const base = route.split("?")[0];
-    const tabByRoute: Record<string, string> = {
-      "/app/sessions": "sessions",
-      "/app/team": "team",
-      "/app/automation": "automation",
-      "/app/skills": "skills",
-      "/app/clone": "clone",
-    };
-    const tab = tabByRoute[base];
-    if (tab && PAGES.some((p) => p.id === tab)) {
+  const handleTreeNavigate = useCallback((route: string) => {
+    const tab = route.replace("/app/", "").split("?")[0];
+    if (PAGES.some((page) => page.id === tab)) {
       setActiveTab(tab);
     }
   }, []);
@@ -226,10 +219,7 @@ export default function ProductDemoPage() {
                 </NavigationMenu>
               </SidebarHeader>
               <SidebarContent className="overflow-hidden">
-                <FileTree
-                  onNavigate={handleFileTreeNavigate}
-                  onOpenFile={handleOpenFile}
-                />
+                <FileTree onNavigate={handleTreeNavigate} onOpenFile={setOpenFilePath} />
               </SidebarContent>
             </Sidebar>
           }

@@ -30,8 +30,8 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 import FileEditor from "./FileEditor";
 import FileTree from "./FileTree";
-import { WorkspaceShell } from "./WorkspaceShell";
 import { ProductLayoutContext } from "./ProductLayoutContext";
+import WorkspaceShell from "./WorkspaceShell";
 import { getFile, saveFile } from "./fileStore";
 
 const ACTIVITY_NAV = [
@@ -67,6 +67,7 @@ export default function ProductLayout({ children }: { children: ReactNode }) {
   const [openFilePath, setOpenFilePath] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+
   const isActive = (to: string | null) => {
     if (!to) return !treeCollapsed;
     return location.pathname.startsWith(to);
@@ -173,12 +174,7 @@ export default function ProductLayout({ children }: { children: ReactNode }) {
               </NavigationMenu>
             </SidebarHeader>
             <SidebarContent className="overflow-hidden">
-              <FileTree
-                onNavigate={(route) => {
-                  void navigate(route);
-                }}
-                onOpenFile={handleOpenFile}
-              />
+              <FileTree onNavigate={navigate} onOpenFile={setOpenFilePath} />
             </SidebarContent>
           </Sidebar>
         }

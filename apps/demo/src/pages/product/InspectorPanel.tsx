@@ -1,90 +1,85 @@
-import type * as React from "react";
+import { X } from "lucide-react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-import {
-  DetailPanel,
-  DetailPanelCloseButton,
-  type DetailPanelCloseButtonProps,
-  DetailPanelContent,
-  DetailPanelDescription,
-  DetailPanelHeader,
-  type DetailPanelProps,
-  DetailPanelTitle,
-} from "@nexu-design/ui-web";
-
-export interface InspectorPanelProps extends Omit<DetailPanelProps, "children" | "title"> {
-  title: React.ReactNode;
-  children?: React.ReactNode;
-  description?: React.ReactNode;
-  meta?: React.ReactNode;
-  leading?: React.ReactNode;
-  badges?: React.ReactNode;
-  footer?: React.ReactNode;
-  onClose?: () => void;
-  closeButtonProps?: Omit<DetailPanelCloseButtonProps, "onClick">;
+interface InspectorPanelProps {
+  width?: number;
+  title?: ReactNode;
+  description?: ReactNode;
+  meta?: ReactNode;
+  leading?: ReactNode;
+  badges?: ReactNode;
+  footer?: ReactNode;
+  className?: string;
   headerClassName?: string;
   contentClassName?: string;
   footerClassName?: string;
-  titleClassName?: string;
-  descriptionClassName?: string;
-  metaClassName?: string;
-  badgesClassName?: string;
+  onClose?: () => void;
+  closeButtonProps?: {
+    srLabel?: string;
+    className?: string;
+  } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type" | "onClick">;
+  children?: ReactNode;
 }
 
-export function InspectorPanel({
+export default function InspectorPanel({
+  width = 400,
   title,
-  children,
   description,
   meta,
   leading,
   badges,
   footer,
-  onClose,
-  closeButtonProps,
   className,
   headerClassName,
   contentClassName,
   footerClassName,
-  titleClassName,
-  descriptionClassName,
-  metaClassName,
-  badgesClassName,
-  width = 400,
-  ...props
+  onClose,
+  closeButtonProps,
+  children,
 }: InspectorPanelProps) {
   return (
-    <DetailPanel width={width} className={`bg-surface-0 ${className ?? ""}`} {...props}>
-      <DetailPanelHeader className={`items-center shrink-0 ${headerClassName ?? ""}`}>
+    <aside
+      className={`flex h-full max-w-full flex-col border-l border-border bg-surface-0 ${className ?? ""}`.trim()}
+      style={{ width }}
+    >
+      <header
+        className={`flex items-start gap-3 border-b border-border px-4 py-3 ${headerClassName ?? ""}`.trim()}
+      >
         {leading}
         <div className="min-w-0 flex-1">
-          {badges ? (
-            <div className={`mb-0.5 flex flex-wrap items-center gap-1.5 ${badgesClassName ?? ""}`}>
-              {badges}
-            </div>
+          {title ? (
+            <div className="text-[13px] font-semibold text-text-primary">{title}</div>
           ) : null}
-          <DetailPanelTitle className={`truncate ${titleClassName ?? ""}`}>
-            {title}
-          </DetailPanelTitle>
           {description ? (
-            <DetailPanelDescription className={descriptionClassName}>
-              {description}
-            </DetailPanelDescription>
+            <div className="mt-0.5 text-[11px] text-text-secondary">{description}</div>
           ) : null}
           {meta ? (
-            <div
-              className={`mt-2 flex flex-wrap items-center gap-3 text-[11px] text-text-muted ${metaClassName ?? ""}`}
-            >
+            <div className="mt-1 flex flex-wrap items-center gap-2 text-[10px] text-text-muted">
               {meta}
             </div>
           ) : null}
         </div>
-        {onClose ? <DetailPanelCloseButton onClick={onClose} {...closeButtonProps} /> : null}
-      </DetailPanelHeader>
-      <DetailPanelContent className={contentClassName}>{children}</DetailPanelContent>
+        {badges ? <div className="flex shrink-0 items-center gap-1">{badges}</div> : null}
+        {onClose ? (
+          <button
+            type="button"
+            aria-label={closeButtonProps?.srLabel ?? "Close panel"}
+            className={`rounded p-1 transition-colors hover:bg-surface-3 ${closeButtonProps?.className ?? ""}`.trim()}
+            onClick={onClose}
+            {...closeButtonProps}
+          >
+            <X size={14} />
+          </button>
+        ) : null}
+      </header>
+
+      <div className={`min-h-0 flex-1 ${contentClassName ?? ""}`.trim()}>{children}</div>
+
       {footer ? (
-        <div className={`shrink-0 border-t border-border px-4 py-3 ${footerClassName ?? ""}`}>
+        <footer className={`border-t border-border ${footerClassName ?? "px-4 py-3"}`.trim()}>
           {footer}
-        </div>
+        </footer>
       ) : null}
-    </DetailPanel>
+    </aside>
   );
 }

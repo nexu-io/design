@@ -22,10 +22,30 @@ const alertVariants = cva(
   },
 );
 
+/**
+ * Props for the alert container (`role="alert"`), including `variant` and standard div attributes.
+ */
 export interface AlertProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof alertVariants> {}
 
+/**
+ * Inline alert with semantic variants; place an icon and {@link AlertTitle} / {@link AlertDescription} inside.
+ *
+ * @example
+ * <Alert variant="warning">
+ *   <TriangleAlert className="size-4" />
+ *   <AlertTitle>Warning</AlertTitle>
+ *   <AlertDescription>Two integrations need re-authentication.</AlertDescription>
+ * </Alert>
+ *
+ * @example
+ * <Alert variant="destructive">
+ *   <CircleAlert className="size-4" />
+ *   <AlertTitle>Action required</AlertTitle>
+ *   <AlertDescription>Publishing is paused until you resolve the error.</AlertDescription>
+ * </Alert>
+ */
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
   ({ className, variant, ...props }, ref) => {
     return (
@@ -41,6 +61,9 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
 
 Alert.displayName = "Alert";
 
+/**
+ * Primary heading line inside an {@link Alert} (renders `h5`).
+ */
 export const AlertTitle = React.forwardRef<
   HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
@@ -56,6 +79,9 @@ export const AlertTitle = React.forwardRef<
 
 AlertTitle.displayName = "AlertTitle";
 
+/**
+ * Supporting body copy inside an {@link Alert}.
+ */
 export const AlertDescription = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>

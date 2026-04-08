@@ -2,7 +2,7 @@
   "name": "@nexu-design/ui-web",
   "version": "0.1.0",
   "private": false,
-  "description": "Nexu React web component library",
+  "description": "React primitives and patterns for building Nexu web interfaces",
   "license": "UNLICENSED",
   "files": ["dist", "README.md"],
   "type": "module",

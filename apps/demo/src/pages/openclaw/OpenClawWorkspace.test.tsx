@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import OpenClawWorkspace from "./OpenClawWorkspace";
@@ -37,24 +37,17 @@ describe("OpenClawWorkspace bot manager panel", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("设置")).toBeTruthy();
-    expect(screen.getByRole("button", { name: /AI 模型服务商/i })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "ws.settings.title" })).toBeTruthy();
+    expect(
+      screen.getByRole("tab", { name: "ws.settings.tab.providers" }).getAttribute("aria-selected"),
+    ).toBe("true");
     expect(screen.getAllByText("Anthropic").length).toBeGreaterThan(0);
-    expect(screen.getByText("Claude 系列模型，擅长推理、编码和长文本理解")).toBeTruthy();
+    expect(
+      screen.getByText("Claude models, strong at reasoning, coding and long context"),
+    ).toBeTruthy();
     expect(screen.getByDisplayValue("https://api.anthropic.com")).toBeTruthy();
-
-    const modelListSection = screen.getByText(/模型列表/).parentElement;
-    const enabledModelsSection = within(modelListSection as HTMLElement)
-      .getByText("已启用")
-      .closest("div")?.parentElement;
-    const disabledModelsSection = within(modelListSection as HTMLElement)
-      .getByText("未启用")
-      .closest("div")?.parentElement;
-
-    expect(enabledModelsSection).toBeTruthy();
-    expect(disabledModelsSection).toBeTruthy();
-    expect(within(enabledModelsSection as HTMLElement).getByText("暂无")).toBeTruthy();
-    expect(within(disabledModelsSection as HTMLElement).getByText("Claude Opus 4.6")).toBeTruthy();
+    expect(screen.getByText("ws.settings.model")).toBeTruthy();
+    expect(screen.getByText("Claude Opus 4.6")).toBeTruthy();
   });
 
   it("shows a login guide for nexu official provider", () => {
@@ -66,42 +59,66 @@ describe("OpenClawWorkspace bot manager panel", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getAllByText("nexu 官方").length).toBeGreaterThan(0);
-    expect(screen.getByText(/登录 nexu 账号后，即可直接使用官方无限量高级模型/i)).toBeTruthy();
-    expect(screen.getByRole("button", { name: /登录 nexu 账号/i })).toBeTruthy();
-
-    const modelListSection = screen.getByText(/模型列表/).parentElement;
-    const enabledModelsSection = within(modelListSection as HTMLElement)
-      .getByText("已启用")
-      .closest("div")?.parentElement;
-    const disabledModelsSection = within(modelListSection as HTMLElement)
-      .getByText("未启用")
-      .closest("div")?.parentElement;
-
-    expect(enabledModelsSection).toBeTruthy();
-    expect(disabledModelsSection).toBeTruthy();
-    expect(within(enabledModelsSection as HTMLElement).getByText("暂无")).toBeTruthy();
-    expect(within(disabledModelsSection as HTMLElement).getByText("Claude Opus 4.6")).toBeTruthy();
+    expect(screen.getAllByText("nexu Official").length).toBeGreaterThan(0);
+    expect(screen.getByText("ws.settings.signInDesc")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "ws.settings.signInBtn" })).toBeTruthy();
+    expect(screen.getByText("ws.settings.model")).toBeTruthy();
+    expect(screen.getByText("Claude Opus 4.6")).toBeTruthy();
   });
 
-  it("shows channel and model tabs inside the existing manager panel", () => {
+  it("defaults settings to the general tab and supports account state switching", () => {
+    render(
+      <MemoryRouter initialEntries={["/openclaw/workspace?view=settings"]}>
+        <OpenClawWorkspace />
+      </MemoryRouter>,
+    );
+
+    expect(
+      screen.getByRole("tab", { name: "ws.settings.tab.general" }).getAttribute("aria-selected"),
+    ).toBe("true");
+    expect(
+      screen.getByRole("tab", { name: "ws.settings.tab.providers" }).getAttribute("aria-selected"),
+    ).toBe("false");
+    expect(screen.getByText("ws.settings.account.title")).toBeTruthy();
+    expect(screen.getByRole("switch", { name: "ws.settings.behavior.launchAtLogin" })).toBeTruthy();
+    expect(screen.getByRole("switch", { name: "ws.settings.behavior.showInDock" })).toBeTruthy();
+    expect(screen.getByRole("switch", { name: "ws.settings.privacy.usageAnalytics" })).toBeTruthy();
+    expect(screen.getByRole("switch", { name: "ws.settings.privacy.crashReports" })).toBeTruthy();
+    expect(screen.getByText("v0.2.0")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "ws.settings.account.signIn" }));
+
+    expect(screen.getByText("ws.settings.account.connected")).toBeTruthy();
+    expect(screen.getByText("ralph.wiggum@nexu.ai")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "ws.settings.account.signOut" })).toBeTruthy();
+  });
+
+  it("opens the usage settings tab from query params", () => {
+    render(
+      <MemoryRouter initialEntries={["/openclaw/workspace?view=settings&tab=usage"]}>
+        <OpenClawWorkspace />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("tab", { name: "Usage" }).getAttribute("aria-selected")).toBe("true");
+    expect(screen.getByText("Usage & billing")).toBeTruthy();
+    expect(screen.getByText("Current package")).toBeTruthy();
+    expect(screen.getByText("Rewards credits split")).toBeTruthy();
+  });
+
+  it("opens settings from the sidebar navigation", () => {
     render(
       <MemoryRouter>
         <OpenClawWorkspace />
       </MemoryRouter>,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /更改配置/i }));
+    fireEvent.click(screen.getByRole("button", { name: "ws.nav.settings" }));
 
-    expect(screen.getByRole("button", { name: "渠道" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "模型 & Key" })).toBeTruthy();
-    expect(screen.getByText("飞书 / Feishu")).toBeTruthy();
-    expect(screen.getByText("Slack")).toBeTruthy();
-    expect(screen.getByText("Discord")).toBeTruthy();
-    expect(screen.queryByText("连接其他渠道")).toBeNull();
-
-    fireEvent.click(screen.getByRole("button", { name: "模型 & Key" }));
-    expect(screen.getAllByText("Claude Opus 4.6").length).toBeGreaterThan(0);
+    expect(screen.getByRole("heading", { name: "ws.settings.title" })).toBeTruthy();
+    expect(
+      screen.getByRole("tab", { name: "ws.settings.tab.general" }).getAttribute("aria-selected"),
+    ).toBe("true");
   });
 
   it("hides the top stats cards after workspace is configured", () => {
@@ -116,22 +133,19 @@ describe("OpenClawWorkspace bot manager panel", () => {
     expect(screen.queryByText("Skills enabled")).toBeNull();
   });
 
-  it("shows three compact action cards without the open workspace entry", () => {
+  it("shows the GitHub star banner on the home dashboard", () => {
     render(
       <MemoryRouter>
         <OpenClawWorkspace />
       </MemoryRouter>,
     );
 
-    expect(screen.queryByText("Quick actions")).toBeNull();
-    expect(screen.queryByText("Open 飞书")).toBeNull();
-    expect(screen.getByText("View conversations")).toBeTruthy();
-    expect(screen.getByText("Manage skills")).toBeTruthy();
-    expect(screen.getByText("Star on GitHub")).toBeTruthy();
-    expect(screen.getByText("Follow updates, code, and releases")).toBeTruthy();
-    expect(screen.queryByText(/stars/i)).toBeNull();
-    expect(screen.queryByText("Open source")).toBeNull();
-    expect(screen.queryByText(/MIT/i)).toBeNull();
+    expect(screen.getByText("4,200")).toBeTruthy();
+    expect(
+      screen
+        .getAllByRole("link")
+        .some((link) => link.getAttribute("href")?.includes("github.com/refly-ai/nexu")),
+    ).toBe(true);
   });
 
   it("uses a segmented switcher for the skills source and updates selected state", () => {

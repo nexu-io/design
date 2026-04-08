@@ -66,47 +66,6 @@ export const Disabled: Story = {
   ),
 };
 
-export const Sizes: Story = {
-  render: () => (
-    <div className="flex flex-wrap items-end gap-4">
-      <Button size="xs">xs · 28px</Button>
-      <Button size="sm">sm · 32px</Button>
-      <Button size="default">default · 36px</Button>
-      <Button size="md">md · 40px</Button>
-      <Button size="lg">lg · 48px</Button>
-      <Button size="icon" variant="outline" aria-label="Icon">
-        <span aria-hidden="true">⚙️</span>
-      </Button>
-      <Button size="icon-sm" variant="outline" aria-label="Small icon">
-        <span aria-hidden="true">✦</span>
-      </Button>
-    </div>
-  ),
-};
-
-export const SizesOutline: Story = {
-  name: "Sizes (Outline)",
-  render: () => (
-    <div className="flex flex-wrap items-end gap-4">
-      <Button variant="outline" size="xs">
-        xs · 28px
-      </Button>
-      <Button variant="outline" size="sm">
-        sm · 32px
-      </Button>
-      <Button variant="outline" size="default">
-        default · 36px
-      </Button>
-      <Button variant="outline" size="md">
-        md · 40px
-      </Button>
-      <Button variant="outline" size="lg">
-        lg · 48px
-      </Button>
-    </div>
-  ),
-};
-
 export const Loading: Story = {
   args: {
     loading: true,

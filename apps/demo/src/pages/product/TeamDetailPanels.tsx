@@ -5,7 +5,6 @@ import {
   TagGroup,
   TagGroupItem,
 } from "@nexu-design/ui-web";
-import { InspectorPanel } from "./InspectorPanel";
 import {
   Activity,
   AlertTriangle,
@@ -21,6 +20,7 @@ import {
   X,
 } from "lucide-react";
 import type * as React from "react";
+import InspectorPanel from "./InspectorPanel";
 import {
   type ALIGNMENT_HISTORY,
   type ActivityItem,

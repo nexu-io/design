@@ -1,7 +1,9 @@
-import { Badge, Button, SectionHeader } from "@nexu-design/ui-web";
+import { Badge, Button } from "@nexu-design/ui-web";
 import { BarChart3, ChevronRight, Clock, MessageSquare, Send, Sparkles, Users } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { SectionHeader } from "@nexu-design/ui-web";
 
 const PRESET_AVATARS = [
   {

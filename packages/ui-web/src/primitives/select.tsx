@@ -8,6 +8,22 @@ const Select = SelectPrimitive.Root;
 const SelectGroup = SelectPrimitive.Group;
 const SelectValue = SelectPrimitive.Value;
 
+/**
+ * Button that opens the select; shows the current value or placeholder.
+ *
+ * @example
+ * <Select value={value} onValueChange={setValue}>
+ *   <SelectTrigger>
+ *     <SelectValue placeholder="Choose" />
+ *   </SelectTrigger>
+ *   <SelectContent>
+ *     <SelectGroup>
+ *       <SelectItem value="a">Option A</SelectItem>
+ *       <SelectItem value="b">Option B</SelectItem>
+ *     </SelectGroup>
+ *   </SelectContent>
+ * </Select>
+ */
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
@@ -60,6 +76,7 @@ const SelectScrollDownButton = React.forwardRef<
 
 SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
 
+/** Portal-mounted dropdown panel listing options; defaults to `position="popper"`. */
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
@@ -107,6 +124,7 @@ const SelectLabel = React.forwardRef<
 
 SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
+/** A single selectable option; shows a check indicator when selected. */
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>

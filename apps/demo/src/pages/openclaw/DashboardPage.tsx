@@ -1,4 +1,12 @@
-import { Badge, Button, SectionHeader, StatCard } from "@nexu-design/ui-web";
+import {
+  Badge,
+  BudgetPopover,
+  Button,
+  CreditsCapsule,
+  PageHeader,
+  SectionHeader,
+  StatCard,
+} from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -16,6 +24,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 import { usePageTitle } from "../../hooks/usePageTitle";
 import {
   type Activity,
@@ -138,13 +147,39 @@ export default function DashboardPage() {
   const activeChannels = MOCK_CHANNELS.filter((c) => c.status === "active").length;
   const liveDeployments = MOCK_DEPLOYMENTS.filter((d) => d.status === "live").length;
   const activeWorkflows = MOCK_WORKFLOWS.filter((w) => w.status === "active").length;
+  const usageCategories = [
+    {
+      label: "AI coding",
+      used: 1280,
+      icon: Code2,
+      color: "text-[var(--color-info)]",
+      bg: "bg-[var(--color-info)]",
+    },
+    {
+      label: "Content automation",
+      used: 620,
+      icon: Sparkles,
+      color: "text-[var(--color-pink)]",
+      bg: "bg-[var(--color-pink)]",
+    },
+    {
+      label: "Deployments",
+      used: 100,
+      icon: Globe,
+      color: "text-[var(--color-success)]",
+      bg: "bg-[var(--color-success)]",
+    },
+  ] as const;
+  const usedCredits = usageCategories.reduce((sum, category) => sum + category.used, 0);
+  const totalCredits = 5000;
+  const remainingCredits = totalCredits - usedCredits;
 
   return (
     <div className="max-w-5xl p-4 sm:p-8 mx-auto">
-      <div className="mb-8">
-        <h1 className="heading-page">Dashboard</h1>
-        <p className="heading-page-desc">Cyber office overview — Lobster 🦞 status report.</p>
-      </div>
+      <PageHeader
+        title="Dashboard"
+        description="Cyber office overview — Lobster 🦞 status report."
+      />
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         <StatCard
@@ -178,87 +213,91 @@ export default function DashboardPage() {
       </div>
 
       {/* Credit usage */}
-      <div className="card mb-8 p-5">
-        <div className="flex items-center justify-between mb-4">
+      <CreditsCapsule
+        className="mb-8"
+        title={
           <div className="flex items-center gap-2">
             <Zap size={14} className="text-accent" />
-            <h2 className="text-sm font-semibold text-text-primary">Credit usage this month</h2>
-            <Badge size="xs">Free Plan</Badge>
+            <span>Credit usage this month</span>
           </div>
-          <Button
-            variant="link"
-            size="sm"
-            onClick={() => navigate("/openclaw/workspace/billing")}
-            className="text-[11px]"
-          >
-            View details <ArrowUpRight size={12} />
-          </Button>
-        </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-4">
-          <div className="flex-1 relative h-2.5 rounded-full bg-surface-3 overflow-hidden">
-            <div
-              className="absolute inset-y-0 left-0 rounded-full bg-[var(--color-info)]/80"
-              style={{ width: "25.6%" }}
-            />
-            <div
-              className="absolute inset-y-0 rounded-full bg-[var(--color-pink)]/80"
-              style={{ left: "25.6%", width: "12.4%" }}
-            />
-            <div
-              className="absolute inset-y-0 rounded-full bg-[var(--color-success)]/80"
-              style={{ left: "38%", width: "2%" }}
-            />
+        }
+        badge={<Badge size="xs">Free Plan</Badge>}
+        value={`${remainingCredits.toLocaleString()} left`}
+        meta={`${usedCredits.toLocaleString()} / ${totalCredits.toLocaleString()} used this month`}
+        hint="~12 days until reset"
+        progress={usedCredits}
+        progressMax={totalCredits}
+        progressVariant="accent"
+        action={
+          <BudgetPopover
+            trigger={
+              <Button variant="link" size="sm" className="text-[11px]">
+                View details <ArrowUpRight size={12} />
+              </Button>
+            }
+            title="Credit usage this month"
+            description="Review current usage mix, then jump into Settings → Usage for the full plan and rewards breakdown."
+            items={usageCategories.map((category) => ({
+              id: category.label.toLowerCase().replace(/\s+/g, "-"),
+              label: category.label,
+              value: category.used.toLocaleString(),
+              icon: category.icon,
+              dotClassName: category.bg,
+            }))}
+            summary={
+              <>
+                <span className="font-semibold text-text-primary">
+                  {remainingCredits.toLocaleString()} credits left
+                </span>{" "}
+                this month · resets in ~12 days.
+              </>
+            }
+            footer={
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/openclaw/workspace?view=settings&tab=usage")}
+                >
+                  Open Settings → Usage
+                </Button>
+                <Button size="sm" onClick={() => navigate("/openclaw/pricing")}>
+                  Upgrade plan
+                </Button>
+              </>
+            }
+          />
+        }
+        breakdown={
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {usageCategories.map((category) => (
+              <div key={category.label} className="flex items-center gap-2.5">
+                <div className={`h-2 w-2 shrink-0 rounded-full ${category.bg}`} />
+                <category.icon size={12} className={category.color} />
+                <span className="text-[12px] text-text-secondary">{category.label}</span>
+                <span className="ml-auto text-[12px] font-semibold text-text-primary">
+                  {category.used.toLocaleString()}
+                </span>
+              </div>
+            ))}
           </div>
-          <span className="text-[12px] font-medium text-text-primary shrink-0">2,000 / 5,000</span>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {[
-            {
-              label: "AI coding",
-              used: 1280,
-              icon: Code2,
-              color: "text-[var(--color-info)]",
-              bg: "bg-[var(--color-info)]",
-            },
-            {
-              label: "Content automation",
-              used: 620,
-              icon: Sparkles,
-              color: "text-[var(--color-pink)]",
-              bg: "bg-[var(--color-pink)]",
-            },
-            {
-              label: "Deployments",
-              used: 100,
-              icon: Globe,
-              color: "text-[var(--color-success)]",
-              bg: "bg-[var(--color-success)]",
-            },
-          ].map((cat) => (
-            <div key={cat.label} className="flex items-center gap-2.5">
-              <div className={`w-2 h-2 rounded-full ${cat.bg} shrink-0`} />
-              <cat.icon size={12} className={cat.color} />
-              <span className="text-[12px] text-text-secondary">{cat.label}</span>
-              <span className="text-[12px] font-semibold text-text-primary ml-auto">
-                {cat.used.toLocaleString()}
-              </span>
+        }
+        footer={
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-[11px] text-text-muted">
+              Rewards credits stack on top of your plan credits once weekly tasks are claimed.
             </div>
-          ))}
-        </div>
-        <div className="mt-4 pt-3 border-t border-border/50 flex flex-col sm:flex-row gap-3 sm:gap-0 sm:items-center sm:justify-between">
-          <div className="text-[11px] text-text-muted">
-            3,000 credits left this month · ~12 days remaining
+            <Button
+              variant="soft"
+              size="xs"
+              onClick={() => navigate("/openclaw/pricing")}
+              className="font-semibold"
+            >
+              <Crown size={10} /> Upgrade to Pro for 10x credits
+            </Button>
           </div>
-          <Button
-            variant="soft"
-            size="xs"
-            onClick={() => navigate("/openclaw/workspace/billing")}
-            className="font-semibold"
-          >
-            <Crown size={10} /> Upgrade to Pro for 10x credits
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-3 space-y-6">

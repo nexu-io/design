@@ -9,7 +9,6 @@ import {
   ToggleGroupItem,
 } from "@nexu-design/ui-web";
 import type * as React from "react";
-import { InspectorPanel } from "./InspectorPanel";
 import {
   AlertCircle,
   BarChart3,
@@ -40,6 +39,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import InspectorPanel from "./InspectorPanel";
 import { useProductLayout } from "./ProductLayoutContext";
 
 type TabId = "schedules" | "proactive" | "logs";

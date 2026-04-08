@@ -265,8 +265,8 @@ const en: Record<string, string> = {
   "ws.nav.skills": "Skills",
   "ws.nav.capabilities": "Capabilities",
   "ws.nav.schedule": "Schedule",
-  "ws.nav.settings": "Settings",
   "ws.nav.usage": "Usage",
+  "ws.nav.settings": "Settings",
   "ws.nav.conversations": "Conversations",
 
   // Workspace — Schedule
@@ -583,7 +583,7 @@ const en: Record<string, string> = {
 
   // Workspace — Settings
   "ws.settings.title": "Settings",
-  "ws.settings.subtitle": "Account, language, models, and more",
+  "ws.settings.subtitle": "Manage your account, app behavior, privacy, and model providers",
   "ws.settings.folders": "Local folders",
   "ws.settings.folders.nexuSpace": "nexu Space",
   "ws.settings.folders.nexuSpaceDesc":
@@ -595,6 +595,25 @@ const en: Record<string, string> = {
   "ws.settings.folders.open": "Open folder",
   "ws.settings.folders.hint":
     "The desktop app resolves real paths; this prototype uses placeholder locations.",
+  "ws.settings.workspace": "Workspace",
+  "ws.settings.account.title": "Account",
+  "ws.settings.account.signedOutDesc":
+    "Sign in to sync your nexu account and unlock official hosted models.",
+  "ws.settings.account.signedInDesc": "Your desktop app is connected to a nexu cloud account.",
+  "ws.settings.account.connected": "Signed in",
+  "ws.settings.behavior.title": "App behavior",
+  "ws.settings.behavior.subtitle": "Choose how nexu behaves on this device.",
+  "ws.settings.privacy.title": "Data & privacy",
+  "ws.settings.privacy.subtitle": "Control the diagnostic data shared from this prototype.",
+  "ws.settings.privacy.usageAnalytics": "Usage analytics",
+  "ws.settings.privacy.usageAnalyticsDesc":
+    "Share anonymous feature usage to help improve the product.",
+  "ws.settings.privacy.crashReports": "Crash reports",
+  "ws.settings.privacy.crashReportsDesc":
+    "Automatically send crash diagnostics when something goes wrong.",
+  "ws.settings.about.title": "About",
+  "ws.settings.about.subtitle": "Version details and desktop update controls in one place.",
+  "ws.settings.about.checkForUpdates": "Check for updates",
   "ws.settings.nexuBotModel": "nexu Bot Model",
   "ws.settings.nexuBotModelDesc": "The model your nexu bot uses for conversations and tasks",
   "ws.settings.currentModel": "Current Model",
@@ -629,8 +648,6 @@ const en: Record<string, string> = {
   "ws.settings.account.signOut": "Sign out",
   "ws.settings.account.notSignedIn": "Not signed in",
   "ws.settings.account.signInDesc": "Sign in to sync settings and access premium models.",
-  "ws.settings.account.signedInDesc":
-    "Settings sync is on. Premium models available with your Nexu account.",
   "ws.settings.account.signIn": "Sign in",
   "ws.settings.appearance": "Appearance",
   "ws.settings.appearance.theme": "Theme",
@@ -879,8 +896,8 @@ const zh: Record<string, string> = {
   "ws.nav.skills": "Skills",
   "ws.nav.capabilities": "能力",
   "ws.nav.schedule": "日程",
-  "ws.nav.settings": "设置",
   "ws.nav.usage": "用量",
+  "ws.nav.settings": "设置",
   "ws.nav.conversations": "对话",
 
   // Workspace — Schedule
@@ -1184,7 +1201,7 @@ const zh: Record<string, string> = {
 
   // Workspace — Settings
   "ws.settings.title": "设置",
-  "ws.settings.subtitle": "账户、语言、模型及更多设置",
+  "ws.settings.subtitle": "管理账号、应用行为、隐私和模型服务商",
   "ws.settings.folders": "本地文件夹",
   "ws.settings.folders.nexuSpace": "nexu Space",
   "ws.settings.folders.nexuSpaceDesc": "clone、memory 与本地知识库所在的主工作区目录。",
@@ -1194,6 +1211,22 @@ const zh: Record<string, string> = {
   "ws.settings.folders.configDesc": "应用与模型服务商相关配置文件所在目录。",
   "ws.settings.folders.open": "打开文件夹",
   "ws.settings.folders.hint": "桌面端会解析真实路径；此处原型为占位路径。",
+  "ws.settings.workspace": "工作区",
+  "ws.settings.account.title": "账号",
+  "ws.settings.account.signedOutDesc": "登录后可同步 nexu 账号，并直接使用官方托管模型。",
+  "ws.settings.account.signedInDesc": "你的桌面端已连接到 nexu 云端账号。",
+  "ws.settings.account.connected": "已登录",
+  "ws.settings.behavior.title": "应用行为",
+  "ws.settings.behavior.subtitle": "选择 nexu 在当前设备上的运行方式。",
+  "ws.settings.privacy.title": "数据与隐私",
+  "ws.settings.privacy.subtitle": "控制这个原型会分享哪些诊断数据。",
+  "ws.settings.privacy.usageAnalytics": "使用分析",
+  "ws.settings.privacy.usageAnalyticsDesc": "分享匿名功能使用情况，帮助我们改进产品。",
+  "ws.settings.privacy.crashReports": "崩溃报告",
+  "ws.settings.privacy.crashReportsDesc": "应用异常时自动发送崩溃诊断信息。",
+  "ws.settings.about.title": "关于",
+  "ws.settings.about.subtitle": "把版本信息和桌面端更新操作集中放在这里。",
+  "ws.settings.about.checkForUpdates": "检查更新",
   "ws.settings.nexuBotModel": "nexu Bot 模型",
   "ws.settings.nexuBotModelDesc": "nexu Bot 用于对话和任务的模型",
   "ws.settings.currentModel": "当前模型",
@@ -1227,7 +1260,6 @@ const zh: Record<string, string> = {
   "ws.settings.account.signOut": "退出登录",
   "ws.settings.account.notSignedIn": "未登录",
   "ws.settings.account.signInDesc": "登录后可同步设置并使用高级模型。",
-  "ws.settings.account.signedInDesc": "设置已同步。可使用 Nexu 账户下的高级模型。",
   "ws.settings.account.signIn": "登录",
   "ws.settings.appearance": "外观",
   "ws.settings.appearance.theme": "主题",

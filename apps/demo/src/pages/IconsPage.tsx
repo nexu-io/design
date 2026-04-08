@@ -1,4 +1,6 @@
-import { PageHeader, PageShell, SectionHeader } from "@nexu-design/ui-web";
+import { PageHeader, PageShell } from "@nexu-design/ui-web";
+
+import { SectionHeader } from "@nexu-design/ui-web";
 
 const FIGMA_ICON_LIBRARY = {
   name: "✕ Untitled UI Icons – 1-100 essential (Figma icons, Community)",

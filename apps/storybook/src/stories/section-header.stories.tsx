@@ -7,7 +7,7 @@ const meta = {
   component: SectionHeader,
   tags: ["autodocs"],
   args: {
-    title: "Section",
+    title: "Recent activity",
   },
 } satisfies Meta<typeof SectionHeader>;
 
@@ -15,28 +15,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    title: "Color Tokens",
-    description: "Design tokens used across the system for consistent color usage.",
-  },
-};
-
-export const WithAction: Story = {
   render: () => (
     <SectionHeader
-      title="Recent Activity"
-      description="Events from the last 7 days."
+      title={<span className="text-sm font-semibold text-text-primary">Recent activity</span>}
       action={
-        <Button variant="outline" size="sm">
+        <Button size="sm" variant="outline">
           View all
         </Button>
       }
     />
   ),
-};
-
-export const TitleOnly: Story = {
-  args: {
-    title: "Typography",
-  },
 };
