@@ -6,6 +6,14 @@ const meta = {
   title: "Primitives/Tabs",
   component: Tabs,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "Content panel switcher — each tab reveals a different content area. For in-place filtering without content panels use **Segmented**; for single on/off use **Toggle**.",
+      },
+    },
+  },
 } satisfies Meta<typeof Tabs>;
 
 export default meta;
