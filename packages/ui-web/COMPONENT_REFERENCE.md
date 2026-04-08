@@ -642,6 +642,13 @@ Shared guardrails for the most common polish regressions.
 - Keep exactly one visually primary CTA in the row, and use `loading` on `Save` while async submission is in flight.
 - Revisit a dedicated pattern only after multiple real surfaces repeat the same behavior contract around region switching, auth switching, saved-secret masking, and save semantics.
 
+### Status expression
+
+- Prefer `StatusDot` for lightweight live/presence state inside dense rows, sidebars, and session lists.
+- Prefer `Badge` when the state must stand on its own as a semantic chip or filterable label.
+- Do not pair a dot with a redundant `Live` / `Online` / `Connected` text pill that repeats the same meaning.
+- In compact rows, use one primary status affordance unless multiple indicators carry different information.
+
 ### Related docs and stories
 
 - Spec: `specs/ui-polish-conventions.md`

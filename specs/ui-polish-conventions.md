@@ -142,7 +142,33 @@ This keeps serif usage rare, brand-forward, and away from dense product UI where
 
 ---
 
-## 7. Provider settings hierarchy
+## 7. Status expression contract
+
+Use the lightest status treatment that still communicates state clearly.
+
+### Rules
+
+- Prefer a `StatusDot` plus nearby label or row context for lightweight live state such as online, syncing, running, connected, or draft/published presence.
+- Prefer a `Badge` when the status itself needs a persistent semantic chip, filtering affordance, or stronger standalone emphasis.
+- Do not add a second text pill when the row already has a `StatusDot`, label, subtitle, or badge communicating the same state.
+- Avoid redundant patterns such as `Live` / `Online` / `Connected` pills when the same meaning can be expressed by a dot next to the title or metadata.
+- Reserve text pills for cases where the status word is the primary artifact users scan, not a duplicate of adjacent context.
+
+### Preferred patterns
+
+- sidebar and session lists: title + subtitle/meta + trailing `StatusDot`
+- reusable cards or tables: status `Badge` when the state must stand on its own
+- dense rows: dot for presence/live-ness, badge for explicit workflow states such as `Beta`, `Paused`, or `Deprecated`
+
+### Avoid
+
+- `Live` pill next to a green dot that already means live
+- `Online` badge next to a row subtitle that already says `Connected`
+- multiple colored status affordances competing in the same compact row unless each conveys different information
+
+---
+
+## 8. Provider settings hierarchy
 
 Provider configuration surfaces should use a consistent three-layer layout:
 

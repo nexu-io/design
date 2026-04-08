@@ -81,7 +81,7 @@
 
 ### 7. Status / sidebar / dense UI polish
 
-- [ ] 将“状态优先用 dot / badge，不重复用文本 pill”写入状态组件规范
+- [x] 将“状态优先用 dot / badge，不重复用文本 pill”写入状态组件规范
 - [ ] 审查 `StatusDot`、`InteractiveRow`、sidebar 相关 story，确认是否能承接 PR 文档里的 sidebar polish 语言
 - [ ] 为 session list / sidebar item 补一个推荐 pattern，规范 title / subtitle / meta / status dot 的层级
 - [ ] 检查 demo 中是否仍有 `Live` 这类可替换成 dot 的文本状态标记
