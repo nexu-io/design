@@ -149,20 +149,68 @@ Recommended structure:
 
 For an already configured API key, prefer a **masked field with inline replace**.
 
+Express the saved state as part of the same field row the user would edit.
+
+### Pattern shape
+
+1. Keep the field label as `API key`.
+2. Show the saved value as a masked, read-only input such as `sk-••••••••••••1234`.
+3. Place a lightweight inline action beside the field: `Replace key` by default, or `Edit` if the product language is already standardized that way.
+4. When the user chooses `Replace key`, swap the masked read-only field into an editable empty input in the same position.
+5. Keep `Save` as the only primary confirmation for the overall card or panel.
+
+This keeps the saved-secret state discoverable without introducing a separate “connected” surface.
+
 ### Do
 
 - show a masked value such as `sk-••••••••••••1234`
 - keep the field in the normal form layout
 - use an inline secondary action such as `Replace key` or `Edit`
+- keep the inline action visually secondary (`outline`, `ghost`, or text-level depending on the surface)
+- swap to an empty editable input inline when replacing the key
+- keep helper text directly under the field when you need to explain scope, rotation, or proxy behavior
 - keep `Save` as the final confirmation action for the overall form
 
 ### Do not
 
 - move the saved-key state into a detached success banner above the form
 - replace the entire field area with passive “Connected” messaging
+- auto-save immediately when the inline replace action is clicked
 - force users into a separate modal just to understand whether a key is stored
+- render a second success pill or badge that repeats the same “saved” state already implied by the masked field
 
 The saved-secret state should remain legible inside the same configuration surface where it can be edited.
+
+### Recommended interaction states
+
+#### Saved state
+
+- Input: read-only, masked value visible
+- Inline action: `Replace key`
+- Primary footer action: `Save` remains available for any other changed fields
+
+#### Replace state
+
+- Input: empty, editable, same field position
+- Inline action: optional `Cancel` only if the surface already supports multi-action field rows cleanly
+- Primary footer action: `Save`
+
+Avoid adding a second confirmation button inside the field itself. The footer `Save` should remain the commit point.
+
+### Example
+
+```tsx
+<FormField label="API key" description="Stored keys stay masked until replaced.">
+  <div className="flex items-start gap-2">
+    <FormFieldControl>
+      <Input value="sk-••••••••••••1234" readOnly className="flex-1" />
+    </FormFieldControl>
+    <Button variant="outline" type="button">
+      Replace key
+    </Button>
+  </div>
+</FormField>
+```
 
 ---
 

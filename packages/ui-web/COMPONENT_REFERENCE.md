@@ -635,7 +635,8 @@ Shared guardrails for the most common polish regressions.
 
 - Build provider settings surfaces from existing primitives instead of a dedicated `ProviderSettingsCard` or `AuthSwitcher` export.
 - Recommended stack: `Card` + region `Tabs` + auth `ToggleGroup`/`RadioGroup` + `FormField` inputs + trailing save row.
-- Saved API keys should stay in the form as a masked field with inline `Replace key` / `Edit`, not a detached success banner.
+- Saved API keys should stay in the form as a masked read-only field with inline `Replace key` / `Edit`, not a detached success banner.
+- Clicking `Replace key` should reveal an editable empty input in the same field position; the card footer `Save` remains the primary confirmation action.
 - Revisit a dedicated pattern only after multiple real surfaces repeat the same behavior contract around region switching, auth switching, saved-secret masking, and save semantics.
 
 ### Related docs and stories

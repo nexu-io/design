@@ -154,7 +154,8 @@ Provider configuration surfaces should use a consistent three-layer layout:
 - Prefer `Card` as the container.
 - Use tabs or segmented controls for region/auth switching.
 - Use `FormField` for labeled inputs.
-- For saved secrets, prefer masked values with inline replace/edit rather than a detached success banner.
+- For saved secrets, prefer a masked read-only input plus inline `Replace key` / `Edit` in the same field row.
+- Replacing a saved key should swap that field inline to an editable empty state; do not introduce a separate success banner or modal-only edit path.
 - Place the primary `Save` action in a trailing `flex justify-end gap-2` row.
 
 This hierarchy should be used in Storybook scenario docs and future reusable patterns.
