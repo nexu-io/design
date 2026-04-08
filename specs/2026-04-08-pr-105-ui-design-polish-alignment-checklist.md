@@ -30,7 +30,7 @@
 - [x] 补一条正式 spec：明确 focus ring 使用 `--color-ring` / `focus-visible:ring-ring` 的统一规则
 - [x] 检查 `packages/tokens/src/token-source.json` 是否也完整声明 link / ring 相关 token，避免只在生成后的 `styles.css` 可见
 - [x] 为 `PageHeader` 补一个明确的 foundation 规范：是否需要官方 `.page-header` utility，还是以 React pattern 组件为唯一入口
-- [ ] 如果保留 utility class 方案，在 tokens 或 shared styles 中补 `.page-header` 的官方定义与文档
+- [x] 如果保留 utility class 方案，在 tokens 或 shared styles 中补 `.page-header` 的官方定义与文档
 - [x] 在 `packages/ui-web/COMPONENT_REFERENCE.md` 或单独 docs 中补“链接颜色 / 焦点样式 / 页面标题间距”设计约束
 
 ### 2. Interactive typography floor（交互元素最小 12px）

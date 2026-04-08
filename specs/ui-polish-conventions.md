@@ -83,6 +83,8 @@ All clickable, selectable, dismissible, or otherwise interactive text in the des
 
 `PageHeader` is the official page-title entry point in `ui-web`. Prefer the React pattern over ad-hoc `.page-header` utility classes.
 
+No shared `.page-header` utility is shipped from tokens or `ui-web` styles. If a product surface needs page-title polish, use `PageHeader` directly rather than recreating a parallel utility contract.
+
 ### Layout contract
 
 - Title + description stack on the left; actions stay in the trailing area.

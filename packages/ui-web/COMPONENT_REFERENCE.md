@@ -381,6 +381,7 @@ Also inherits Card's `variant`, `padding`, `className`.
 ### Spacing contract
 
 - Prefer `PageHeader` over handwritten page-title spacing.
+- `ui-web` does not ship an official `.page-header` utility class; use the `PageHeader` component as the source of truth.
 - `default` density uses a roomier title block (`gap-3 pb-6`, `space-y-2`).
 - `shell` density uses tighter desktop-shell spacing (`gap-2 pb-4`, `space-y-1`).
 - Links inside descriptions should use `--color-link`; avoid ad-hoc blue utility classes.
