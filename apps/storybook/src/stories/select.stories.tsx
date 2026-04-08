@@ -13,16 +13,16 @@ import {
 
 const modelOptions = {
   anthropic: [
-    { label: 'Claude Sonnet 4', value: 'claude-sonnet-4' },
-    { label: 'Claude 3.7 Sonnet', value: 'claude-3-7-sonnet' },
+    { label: "Claude Sonnet 4", value: "claude-sonnet-4" },
+    { label: "Claude 3.7 Sonnet", value: "claude-3-7-sonnet" },
   ],
   openai: [
-    { label: 'GPT-4.1', value: 'gpt-4-1' },
-    { label: 'GPT-4.1 mini', value: 'gpt-4-1-mini' },
+    { label: "GPT-4.1", value: "gpt-4-1" },
+    { label: "GPT-4.1 mini", value: "gpt-4-1-mini" },
   ],
   google: [
-    { label: 'Gemini 2.5 Pro', value: 'gemini-2-5-pro' },
-    { label: 'Gemini 2.5 Flash', value: 'gemini-2-5-flash' },
+    { label: "Gemini 2.5 Pro", value: "gemini-2-5-pro" },
+    { label: "Gemini 2.5 Flash", value: "gemini-2-5-flash" },
   ],
 } as const;
 

@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { KeyRound, ShieldCheck } from 'lucide-react';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { KeyRound, ShieldCheck } from "lucide-react";
+import { useState } from "react";
 
 import {
   Alert,
@@ -24,27 +24,27 @@ import {
   TabsTrigger,
   ToggleGroup,
   ToggleGroupItem,
-} from '@nexu-design/ui-web';
+} from "@nexu-design/ui-web";
 
-type Region = 'global' | 'cn';
-type AuthMethod = 'oauth' | 'api-key';
+type Region = "global" | "cn";
+type AuthMethod = "oauth" | "api-key";
 
 const regionCopy: Record<Region, { label: string; proxyPlaceholder: string; helper: string }> = {
   global: {
-    label: 'Global',
-    proxyPlaceholder: 'https://proxy.example.com',
-    helper: 'Default scope for shared provider traffic and managed routing.',
+    label: "Global",
+    proxyPlaceholder: "https://proxy.example.com",
+    helper: "Default scope for shared provider traffic and managed routing.",
   },
   cn: {
-    label: 'CN',
-    proxyPlaceholder: 'https://cn-proxy.example.com',
-    helper: 'Keep regional routing and compliance overrides separate from global settings.',
+    label: "CN",
+    proxyPlaceholder: "https://cn-proxy.example.com",
+    helper: "Keep regional routing and compliance overrides separate from global settings.",
   },
 };
 
 function ProviderSettingsScenario() {
-  const [region, setRegion] = useState<Region>('global');
-  const [authMethod, setAuthMethod] = useState<AuthMethod>('api-key');
+  const [region, setRegion] = useState<Region>("global");
+  const [authMethod, setAuthMethod] = useState<AuthMethod>("api-key");
   const [isReplacingKey, setIsReplacingKey] = useState(false);
 
   const currentRegion = regionCopy[region];
@@ -55,8 +55,8 @@ function ProviderSettingsScenario() {
         title="Provider settings"
         description={
           <>
-            Use this BYOK scenario to review the recommended Region → Auth method → Inputs →
-            Save hierarchy. <a href="#provider-settings-spec">Open provider settings spec</a>.
+            Use this BYOK scenario to review the recommended Region → Auth method → Inputs → Save
+            hierarchy. <a href="#provider-settings-spec">Open provider settings spec</a>.
           </>
         }
         actions={<Button variant="outline">View integration docs</Button>}
@@ -87,7 +87,7 @@ function ProviderSettingsScenario() {
                 </TabsTrigger>
               </TabsList>
 
-              {(['global', 'cn'] as const).map((value) => {
+              {(["global", "cn"] as const).map((value) => {
                 const copy = regionCopy[value];
 
                 return (
@@ -102,7 +102,7 @@ function ProviderSettingsScenario() {
                       variant="compact"
                       value={authMethod}
                       onValueChange={(nextValue) => {
-                        if (nextValue === 'oauth' || nextValue === 'api-key') {
+                        if (nextValue === "oauth" || nextValue === "api-key") {
                           setAuthMethod(nextValue);
                           setIsReplacingKey(false);
                         }
@@ -117,7 +117,7 @@ function ProviderSettingsScenario() {
                       </ToggleGroupItem>
                     </ToggleGroup>
 
-                    {authMethod === 'oauth' ? (
+                    {authMethod === "oauth" ? (
                       <Alert variant="info">
                         <ShieldCheck size={16} />
                         <AlertTitle>OAuth keeps long-lived keys out of the form</AlertTitle>
@@ -151,7 +151,7 @@ function ProviderSettingsScenario() {
                                 disabled={isReplacingKey}
                                 onClick={() => setIsReplacingKey(true)}
                               >
-                                {isReplacingKey ? 'Replacing key' : 'Replace key'}
+                                {isReplacingKey ? "Replacing key" : "Replace key"}
                               </Button>
                             </div>
                           </FormField>
@@ -184,9 +184,9 @@ function ProviderSettingsScenario() {
 
           <PanelFooter>
             <PanelFooterMeta>
-              {region === 'global'
-                ? 'Global defaults apply across shared provider traffic'
-                : 'CN settings stay scoped to regional traffic only'}
+              {region === "global"
+                ? "Global defaults apply across shared provider traffic"
+                : "CN settings stay scoped to regional traffic only"}
             </PanelFooterMeta>
             <PanelFooterActions>
               <Button variant="outline">Cancel</Button>
@@ -206,15 +206,15 @@ function ProviderSettingsScenario() {
 }
 
 const meta = {
-  title: 'Scenarios/Provider Settings',
+  title: "Scenarios/Provider Settings",
   component: Card,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
     docs: {
       description: {
         component:
-          'Dedicated BYOK scenario showing the recommended Region → Auth method → Inputs → Save hierarchy for provider settings surfaces.',
+          "Dedicated BYOK scenario showing the recommended Region → Auth method → Inputs → Save hierarchy for provider settings surfaces.",
       },
     },
   },
@@ -224,6 +224,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ByokHierarchy: Story = {
-  name: 'BYOK hierarchy',
+  name: "BYOK hierarchy",
   render: () => <ProviderSettingsScenario />,
 };

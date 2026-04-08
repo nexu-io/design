@@ -43,8 +43,8 @@ const segmentActiveClass = "bg-surface-1 text-text-primary shadow-[var(--shadow-
 const segmentInactiveClass = "text-text-secondary hover:text-text-primary";
 
 const sizeMap = {
-  sm: { button: 'h-7 px-3 text-xs', count: 'text-xs', emoji: 'text-xs' },
-  md: { button: 'h-8 px-4 text-sm', count: 'text-xs', emoji: 'text-xs' },
+  sm: { button: "h-7 px-3 text-xs", count: "text-xs", emoji: "text-xs" },
+  md: { button: "h-8 px-4 text-sm", count: "text-xs", emoji: "text-xs" },
 } as const;
 
 export const FilterPills = React.forwardRef<HTMLDivElement, FilterPillsProps>(
