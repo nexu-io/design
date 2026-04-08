@@ -70,7 +70,34 @@ Prefer existing reusable pieces before inventing a dedicated pattern component.
 - **Layer 1:** `Tabs` or another segmented top-level selector
 - **Layer 2:** `ToggleGroup` / segmented control for auth method
 - **Layer 3:** `FormField` + `Input` (and related field primitives)
-- **Actions:** trailing row with `Button`
+- **Actions:** `PanelFooter` or a trailing `flex justify-end gap-2` row with `Button`
+
+### Audit summary — reusable building blocks already in the repo
+
+The current repository already has enough reusable pieces to compose a provider settings surface without adding a new primitive first.
+
+#### Core composition stack
+
+- **Shell / heading:** `PageHeader`, `SectionHeader`
+- **Container:** `Card`
+- **Region selector:** `Tabs`
+- **Auth selector:** `ToggleGroup`, `RadioGroup`
+- **Fields:** `FormField`, `Input`, `Textarea`, `Select`, `Combobox`
+- **Binary settings:** `Switch`, `Checkbox`
+- **Feedback / status:** `Alert`, `Badge`, `StatusDot`
+- **Actions:** `PanelFooter`, `Button`, `ConfirmDialog`
+- **Optional dense row / navigation support:** `InteractiveRow`
+
+#### Existing Storybook coverage
+
+The building blocks above already have dedicated Storybook references, including `card.stories.tsx`, `form-field.stories.tsx`, `input.stories.tsx`, `select.stories.tsx`, `combobox.stories.tsx`, `radio-group.stories.tsx`, `checkbox.stories.tsx`, `switch.stories.tsx`, `tabs.stories.tsx`, `page-header.stories.tsx`, `section-header.stories.tsx`, `panel-footer.stories.tsx`, `alert.stories.tsx`, `badge.stories.tsx`, `status-dot.stories.tsx`, and `interactive-row.stories.tsx`.
+
+#### Current gaps
+
+- No provider-settings-specific composite such as `ProviderSettingsCard`
+- No dedicated auth-switcher pattern beyond general `ToggleGroup` / `RadioGroup`
+- No API-key-specific helper for masked saved-secret display + inline replace
+- No dedicated provider-settings / BYOK Storybook scenario that demonstrates the full composition in one place
 
 Recommended structure:
 
