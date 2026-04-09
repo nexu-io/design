@@ -1505,10 +1505,7 @@ function WorkspaceStep({ onChatInSlack }: { onChatInSlack: () => void }) {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h2
-                className="absolute right-40 sm:right-56 top-[55%] -translate-y-1/2 text-[40px] sm:text-[52px] font-normal tracking-tight text-text-primary"
-                style={{ fontFamily: "var(--font-script)" }}
-              >
+              <h2 className="font-script absolute right-40 sm:right-56 top-[55%] -translate-y-1/2 text-[40px] sm:text-[52px] font-normal tracking-tight text-text-primary">
                 nexu Alpha
               </h2>
             </div>

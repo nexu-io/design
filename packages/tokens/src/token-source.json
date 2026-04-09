@@ -335,6 +335,13 @@
         "category": "typography",
         "value": "var(--font-heading)",
         "description": "Georgia, Times New Roman, serif."
+      },
+      {
+        "name": "Font Script",
+        "cssVar": "--font-script",
+        "category": "typography",
+        "value": "var(--font-script)",
+        "description": "Caveat, cursive. Used for the nexu alpha script wordmark."
       }
     ],
     "fontSizes": [
@@ -739,6 +746,7 @@
       "--font-sans": "\"Digits\", \"Manrope\", \"Inter\", \"PingFang SC\", -apple-system, \"Noto Sans SC\"",
       "--font-mono": "\"JetBrains Mono\", \"SF Mono\", \"Fira Code\", monospace",
       "--font-heading": "\"Georgia\", \"Times New Roman\", serif",
+      "--font-script": "\"Caveat\", cursive",
       "--text-size-2xs": "0.625rem",
       "--text-size-xs": "0.6875rem",
       "--text-size-sm": "0.75rem",
@@ -841,6 +849,7 @@
       "--font-sans": "\"Digits\", \"Manrope\", \"Inter\", \"PingFang SC\", -apple-system, \"Noto Sans SC\"",
       "--font-mono": "\"JetBrains Mono\", \"SF Mono\", \"Fira Code\", monospace",
       "--font-heading": "\"Georgia\", \"Times New Roman\", serif",
+      "--font-script": "\"Caveat\", cursive",
       "--text-size-2xs": "0.625rem",
       "--text-size-xs": "0.6875rem",
       "--text-size-sm": "0.75rem",

@@ -2481,9 +2481,9 @@ function HomeDashboard({
   const [connectedIds, setConnectedIds] = useState<Set<string>>(() => {
     try {
       const v = localStorage.getItem(CHANNELS_CONNECTED_KEY);
-      return v ? new Set(JSON.parse(v)) : new Set();
+      return v ? new Set(JSON.parse(v)) : new Set(["wechat", "feishu"]);
     } catch {
-      return new Set();
+      return new Set(["wechat", "feishu"]);
     }
   });
   const [activeChannelId, setActiveChannelId] = useState(
@@ -2709,7 +2709,7 @@ function HomeDashboard({
           {/* ═══ TOP: Hero — Bot idle, waiting to be activated ═══ */}
           <div className="flex flex-col items-center text-center">
             <div
-              className="relative w-32 h-32 mb-1 cursor-default"
+              className="relative w-24 h-24 mb-1 cursor-default"
               onMouseEnter={() => setVideoHover(true)}
               onMouseLeave={() => setVideoHover(false)}
             >
@@ -2724,10 +2724,7 @@ function HomeDashboard({
                 className="w-full h-full object-contain"
               />
             </div>
-            <h2
-              className="text-[32px] font-normal tracking-tight text-text-primary mb-1.5"
-              style={{ fontFamily: "var(--font-script)" }}
-            >
+            <h2 className="font-script text-[26px] font-normal tracking-tight text-text-primary mb-1.5">
               nexu alpha
             </h2>
             <div className="flex items-center gap-3 text-[11px] text-text-muted">
@@ -2915,14 +2912,11 @@ function HomeDashboard({
             />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2.5 w-full">
-              <h2
-                className="text-[32px] font-normal tracking-tight text-text-primary leading-none m-0"
-                style={{ fontFamily: "var(--font-script)" }}
-              >
+            <div className="flex items-center gap-2.5">
+              <h2 className="font-script text-[26px] font-normal tracking-tight text-text-primary mb-1.5">
                 nexu alpha
               </h2>
-              <span className="flex items-center gap-1 px-1.5 py-1 rounded-full bg-[var(--color-success)]/10 text-[var(--color-success)] text-[10px] font-medium leading-none">
+              <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[var(--color-success)]/10 text-[var(--color-success)] text-[10px] font-medium leading-none">
                 <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] shrink-0" />
                 {t("ws.home.running")}
               </span>
@@ -3096,6 +3090,10 @@ function HomeDashboard({
                   })()}
               </div>
               <div className="flex items-center gap-2 text-[11px] text-text-muted ml-3">
+                <span className="flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] shrink-0" />
+                  Agent running
+                </span>
                 <span>{t("ws.home.messagesToday")}</span>
                 <span className="text-border">·</span>
                 <span>{t("ws.home.activeAgo")}</span>
@@ -3103,8 +3101,6 @@ function HomeDashboard({
             </div>
           </div>
         </div>
-
-        {seedanceBanner}
 
         {/* ── Budget warning / depleted card — below Bot, nexu Official only ── */}
         {(budget.status === "depleted" || budget.status === "warning") &&
@@ -3234,6 +3230,8 @@ function HomeDashboard({
             );
           })()}
 
+        {seedanceBanner}
+
         {/* ═══ MIDDLE: Channels Panel ═══ */}
         <div className="card card-static">
           <div className="px-5 pt-4 pb-3">
@@ -3251,9 +3249,9 @@ function HomeDashboard({
                         <div
                           key={ch.id}
                           onClick={() => openExternal(ch.chatUrl)}
-                          className="flex items-center gap-3 rounded-xl border border-border bg-surface-1 px-4 py-3 cursor-pointer transition-all hover:bg-surface-1"
+                          className="flex w-full items-center gap-3 rounded-xl border border-border bg-white px-4 py-3 cursor-pointer transition-all hover:bg-surface-1"
                         >
-                          <div className="w-8 h-8 rounded-[10px] flex items-center justify-center border border-border bg-surface-1 shrink-0">
+                          <div className="w-8 h-8 rounded-[10px] flex items-center justify-center border border-border bg-white shrink-0">
                             <Icon size={16} />
                           </div>
                           <div className="flex-1 min-w-0 flex items-center gap-2">
@@ -3267,9 +3265,12 @@ function HomeDashboard({
                               e.stopPropagation();
                               handleDisconnectChannel(ch.id);
                             }}
-                            className="rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium bg-surface-2 text-text-secondary hover:text-[var(--color-danger)] hover:bg-surface-3 transition-colors shrink-0"
+                            className="group rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium bg-surface-2 text-text-secondary hover:text-[var(--color-danger)] hover:bg-surface-3 transition-colors shrink-0"
                           >
-                            {t("ws.home.connected")}
+                            <span className="group-hover:hidden">{t("ws.home.connected")}</span>
+                            <span className="hidden group-hover:inline">
+                              {t("ws.home.disconnect")}
+                            </span>
                           </button>
                           <span className="inline-flex items-center gap-1 text-[12px] font-medium text-text-secondary hover:text-text-primary transition-colors ml-3 shrink-0 leading-none">
                             {t("ws.home.chat")}
@@ -3293,7 +3294,7 @@ function HomeDashboard({
                           className="group flex items-center gap-2.5 rounded-lg border border-dashed border-border bg-surface-0 px-3 py-2 text-left hover:border-solid hover:border-border-hover hover:bg-surface-1 transition-all"
                         >
                           <div className="w-6 h-6 rounded-md flex items-center justify-center bg-surface-1 shrink-0">
-                            <Icon size={13} />
+                            <Icon size={16} />
                           </div>
                           <span className="text-[12px] font-medium text-text-muted group-hover:text-text-secondary flex-1 truncate">
                             {ch.name}
@@ -3309,6 +3310,81 @@ function HomeDashboard({
                 )}
               </div>
             )}
+          </div>
+        </div>
+
+        {/* ═══ Recent Activity ═══ */}
+        <div className="card card-static">
+          <div className="px-5 pt-4 pb-3">
+            <h2 className="text-[14px] font-semibold text-text-primary">Recent Activity</h2>
+          </div>
+          <div className="px-5 pb-5 space-y-4">
+            {MOCK_CHANNELS.slice(0, 3).map((ch) => {
+              const ChannelIcon =
+                (
+                  {
+                    slack: SlackIconSetup,
+                    feishu: FeishuIconSetup,
+                    discord: DiscordIconSetup,
+                    telegram: TelegramIconSetup,
+                    whatsapp: WhatsAppIconSetup,
+                    wechat: WeChatIconSetup,
+                    dingtalk: DingTalkIconSetup,
+                    qqbot: QQBotIconSetup,
+                    wecom: WeComIconSetup,
+                  } as Record<string, typeof SlackIconSetup>
+                )[ch.platform] || SlackIconSetup;
+              return (
+                <div key={ch.id} className="flex items-start gap-3">
+                  <span className="w-2 h-2 rounded-full bg-[var(--color-success)] shrink-0 mt-1.5" />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[13px] font-medium text-text-primary block truncate">
+                      {ch.name}
+                    </span>
+                    <div className="flex items-center gap-2 mt-1">
+                      {ch.platform && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[10px] font-medium text-text-secondary">
+                          <ChannelIcon size={10} />
+                          {ch.platform}
+                        </span>
+                      )}
+                      <span className="text-[11px] text-text-muted">
+                        Active {ch.lastMessage}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ═══ Star Nexu on GitHub CTA ═══ */}
+        <div className="card card-static">
+          <div className="flex items-center gap-4 px-5 py-4">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-amber-50 shrink-0">
+              <Star size={20} className="text-amber-500 fill-amber-400" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-[14px] font-semibold text-text-primary">
+                {t("ws.home.starNexu")}
+              </h3>
+              <p className="text-[12px] text-text-muted mt-0.5">
+                {t("ws.home.starCta")}
+              </p>
+            </div>
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-github-star group shrink-0"
+            >
+              <svg viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+              </svg>
+              GitHub
+              <ArrowUpRight size={11} className="shrink-0 translate-y-px" />
+            </a>
           </div>
         </div>
       </div>

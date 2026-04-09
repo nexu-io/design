@@ -68,6 +68,7 @@ const themeMappings = [
   ["--font-sans", "--font-sans"],
   ["--font-mono", "--font-mono"],
   ["--font-heading", "--font-heading"],
+  ["--font-script", "--font-script"],
   ["--spacing", "--spacing"],
   ["--radius-sm", "--radius-sm"],
   ["--radius-md", "--radius-md"],
@@ -86,7 +87,9 @@ const themeMappings = [
   ["--shadow-focus", "--shadow-focus"],
 ];
 
-const generated = `${banner()}${renderBlock(":root", tokenSource.themes.light)}
+const generated = `${banner()}${renderFontFaces()}
+
+${renderBlock(":root", tokenSource.themes.light)}
 
 ${renderBlock(".dark", tokenSource.themes.dark)}
 
@@ -108,6 +111,12 @@ ${renderThemeMappings(themeMappings)}
     font-family: var(--font-sans, Inter, ui-sans-serif, system-ui, sans-serif);
   }
 }
+
+@layer utilities {
+  .font-script {
+    font-family: var(--font-script, cursive);
+  }
+}
 `;
 
 mkdirSync(dirname(outputPath), { recursive: true });
@@ -115,6 +124,16 @@ writeFileSync(outputPath, generated);
 
 function banner() {
   return "/* This file is generated from src/token-source.json. Do not edit by hand. */\n\n";
+}
+
+function renderFontFaces() {
+  return `@font-face {
+  font-family: "Caveat";
+  src: local("Caveat"), url("./fonts/Caveat-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}`;
 }
 
 function renderBlock(selector, variables) {

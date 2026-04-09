@@ -7,9 +7,6 @@
    ═══════════════════════════════════════════════════════════════════ */
 
 @theme {
-  /* ── Typography (demo-only) ── */
-  --font-script: "Caveat", cursive;
-
   /* ── Neutral palette (demo-only, not in token package) ── */
   --color-neutral-0: #ffffff;
   --color-neutral-50: #f9f9f9;
