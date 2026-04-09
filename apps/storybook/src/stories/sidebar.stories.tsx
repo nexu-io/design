@@ -110,7 +110,7 @@ export const Default: Story = {
             </NavigationMenu>
           </div>
 
-          <div className="px-2 pt-4">
+          <div className="px-2 pt-6">
             <NavigationMenuLabel className="pb-1.5">Conversations</NavigationMenuLabel>
             <div className="space-y-0.5">
               {sessions.map((s) => (
