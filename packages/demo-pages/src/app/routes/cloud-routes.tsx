@@ -50,8 +50,8 @@ export function CloudFullScreenRouteElements() {
       <Route path="/openclaw/growth-demo" element={<GroupGrowthDemo />} />
       <Route path="/openclaw/growth-demo/new" element={<GroupGrowthDemo />} />
       <Route path="/openclaw/growth-demo/existing" element={<GroupGrowthDemo />} />
-      <Route path="/openclaw/changelog" element={<Navigate to="/docs/get-started" replace />} />
-      <Route path="/openclaw/changelog/*" element={<Navigate to="/docs/get-started" replace />} />
+      <Route path="/openclaw/changelog" element={<Navigate to="/openclaw/workspace" replace />} />
+      <Route path="/openclaw/changelog/*" element={<Navigate to="/openclaw/workspace" replace />} />
     </>
   );
 }

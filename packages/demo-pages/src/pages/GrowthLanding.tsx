@@ -181,25 +181,25 @@ export default function GrowthLanding() {
           </div>
           <div className="flex items-center gap-6">
             <a
-              href="/why#problem"
+              href="/openclaw/workspace"
               className="text-xs text-text-secondary hover:text-text-primary transition-colors"
             >
               Problem
             </a>
             <a
-              href="/why#segments"
+              href="/openclaw/workspace"
               className="text-xs text-text-secondary hover:text-text-primary transition-colors"
             >
               Use Cases
             </a>
             <a
-              href="/why#how"
+              href="/openclaw/workspace"
               className="text-xs text-text-secondary hover:text-text-primary transition-colors"
             >
               How It Works
             </a>
             <a
-              href="/why#pricing"
+              href="/openclaw/workspace"
               className="text-xs text-text-secondary hover:text-text-primary transition-colors"
             >
               Pricing

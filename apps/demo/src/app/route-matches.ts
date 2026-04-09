@@ -1,5 +1,3 @@
-const fullScreenPrefixes = ['/docs/'];
-
 const fullScreenExactPaths = new Set([
   '/openclaw/workspace',
   '/openclaw/welcome',
@@ -22,7 +20,6 @@ export function isFullScreenPath(pathname: string) {
     pathname.startsWith('/openclaw/auth') ||
     pathname.startsWith('/openclaw/changelog/') ||
     pathname.startsWith('/openclaw/skill/') ||
-    pathname.startsWith('/openclaw/growth-demo') ||
-    fullScreenPrefixes.some((prefix) => pathname.startsWith(prefix))
+    pathname.startsWith('/openclaw/growth-demo')
   );
 }
