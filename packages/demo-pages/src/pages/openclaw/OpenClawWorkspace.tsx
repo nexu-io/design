@@ -109,7 +109,7 @@ import ChannelDetailPage from "./ChannelDetailPage";
 import { MOCK_CHANNELS, MOCK_DEPLOYMENTS, type ModelProvider, getProviderDetails } from "./data";
 import { SKILL_CATEGORIES, TOOL_TAG_LABELS, type ToolTag } from "./skillData";
 
-const GITHUB_URL = "https://github.com/refly-ai/nexu";
+const GITHUB_URL = "https://github.com/nexu-io/nexu";
 
 /** Reward share modal: selectable stamp previews (paths under `public/share-material/`). */
 const SHARE_MATERIAL_STAMP_OPTIONS = [
@@ -1580,7 +1580,7 @@ function SeedanceCountdownBlocks({ now, compact = false }: { now: number; compac
   if (compact) {
     return (
       <div
-        className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none shadow-sm"
+        className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none shadow-sm tabular-nums"
         style={{
           color: "white",
           background:
@@ -1590,8 +1590,8 @@ function SeedanceCountdownBlocks({ now, compact = false }: { now: number; compac
           boxShadow: "var(--shadow-focus)",
         }}
       >
-        <Clock size={10} />
-        <span className="tabular-nums">{countdown.compactLabel}</span>
+        <Clock size={10} className="shrink-0" />
+        <span>{countdown.compactLabel}</span>
       </div>
     );
   }
@@ -2913,11 +2913,23 @@ function HomeDashboard({
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2.5">
-              <h2 className="font-script text-[26px] font-normal tracking-tight text-text-primary mb-1.5">
+              <h2
+                className="font-normal tracking-tight text-text-primary"
+                style={{ fontFamily: "var(--font-script)", fontSize: "26px" }}
+              >
                 nexu alpha
               </h2>
-              <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[var(--color-success)]/10 text-[var(--color-success)] text-[10px] font-medium leading-none">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] shrink-0" />
+              <span
+                className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium"
+                style={{
+                  backgroundColor: "color-mix(in srgb, var(--color-success) 10%, transparent)",
+                  color: "var(--color-success)",
+                }}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full shrink-0"
+                  style={{ backgroundColor: "var(--color-success)" }}
+                />
                 {t("ws.home.running")}
               </span>
               <a
@@ -2943,7 +2955,7 @@ function HomeDashboard({
               <div className="relative" ref={modelDropdownRef}>
                 <button
                   onClick={() => setShowModelDropdown(!showModelDropdown)}
-                  className="inline-flex min-h-9 items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-0 text-base font-medium text-text-primary transition-all hover:border-border-hover hover:bg-surface-1"
+                  className="inline-flex min-h-9 items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-0 text-xs font-normal text-text-primary transition-all hover:border-border-hover hover:bg-surface-1"
                 >
                   {selectedModel ? (
                     <span className="w-4 h-4 shrink-0 flex items-center justify-center">
@@ -2985,7 +2997,7 @@ function HomeDashboard({
                     return (
                       <div className="absolute z-50 mt-2 left-0 w-[280px] rounded-xl border border-border bg-surface-1 shadow-xl">
                         <div className="px-3 pt-3 pb-2">
-                          <div className="flex items-center gap-2.5 rounded-lg bg-surface-0 border border-border px-3 py-2">
+                          <div className="flex items-center gap-2.5 rounded-lg border border-border bg-surface-0 px-3 py-2">
                             <Search size={14} className="text-text-muted shrink-0" />
                             <input
                               type="text"
@@ -2997,17 +3009,17 @@ function HomeDashboard({
                                 }
                               }}
                               placeholder={t("ws.home.searchModels")}
-                              className="flex-1 bg-transparent text-base text-text-primary placeholder:text-text-muted/50 outline-none"
+                              className="flex-1 bg-transparent text-xs font-normal text-text-primary placeholder:text-text-muted/50 outline-none"
                             />
                           </div>
                         </div>
-                        <div className="relative">
+                        <div className="relative px-3 pb-2">
                           <div
                             className="max-h-[280px] overflow-y-auto py-1"
                             style={{ overscrollBehavior: "contain" }}
                           >
                             {filteredProviders.length === 0 ? (
-                              <div className="px-4 py-6 text-center text-[12px] text-text-muted">
+                              <div className="px-4 py-6 text-center text-xs text-text-muted">
                                 {t("ws.home.noMatchingModels")}
                               </div>
                             ) : (
@@ -3025,7 +3037,7 @@ function HomeDashboard({
                                           return next;
                                         });
                                       }}
-                                      className="flex min-h-9 w-full items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-surface-2/50"
+                                      className="flex min-h-9 w-full items-center gap-2 rounded-lg pl-4 pr-3 py-2 transition-colors hover:bg-surface-2/50"
                                     >
                                       <ChevronDown
                                         size={12}
@@ -3034,10 +3046,10 @@ function HomeDashboard({
                                       <span className="flex size-4 shrink-0 items-center justify-center">
                                         <ProviderLogo provider={provider.id} size={14} />
                                       </span>
-                                      <span className="text-sm font-medium text-text-secondary">
+                                      <span className="text-xs font-normal text-text-secondary">
                                         {provider.name}
                                       </span>
-                                      <span className="ml-auto text-sm text-text-muted/60 tabular-nums">
+                                      <span className="ml-auto text-[10px] font-normal text-text-muted/60 tabular-nums">
                                         {provider.models.length}
                                       </span>
                                     </button>
@@ -3049,17 +3061,17 @@ function HomeDashboard({
                                             setSelectedModelId(model.id);
                                             setShowModelDropdown(false);
                                           }}
-                                          className={`flex min-h-9 w-full items-center gap-2.5 pl-8 pr-3 py-2 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/5" : ""}`}
+                                          className={`flex min-h-9 w-full items-center gap-2.5 pl-10 pr-3 py-2 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/5" : ""}`}
                                         >
                                           {model.id === selectedModelId ? (
                                             <Check size={14} className="text-accent shrink-0" />
                                           ) : (
                                             <span className="size-4 shrink-0" />
                                           )}
-                                          <span className="flex-1 truncate text-base font-medium text-text-primary">
+                                          <span className="flex-1 truncate text-xs font-normal text-text-primary">
                                             {model.name}
                                           </span>
-                                          <span className="shrink-0 text-sm text-text-muted/60 tabular-nums">
+                                          <span className="shrink-0 text-[10px] font-normal text-text-muted/60 tabular-nums">
                                             {model.contextWindow}
                                           </span>
                                         </button>
@@ -3070,13 +3082,13 @@ function HomeDashboard({
                             )}
                           </div>
                         </div>
-                        <div className="border-t border-border px-2 py-1.5">
+                        <div className="border-t border-border px-3 py-2">
                           <button
                             onClick={() => {
                               setShowModelDropdown(false);
                               onNavigate({ type: "settings" });
                             }}
-                            className="flex min-h-9 w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-surface-2"
+                            className="flex min-h-9 w-full items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors hover:bg-surface-2"
                           >
                             <Settings size={14} className="text-text-primary" />
                             <span className="text-sm font-medium text-text-primary">
@@ -3089,11 +3101,14 @@ function HomeDashboard({
                     );
                   })()}
               </div>
+              <span
+                className="flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium"
+                title="Agent running"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-success)]" />
+                Agent running
+              </span>
               <div className="flex items-center gap-2 text-[11px] text-text-muted ml-3">
-                <span className="flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] shrink-0" />
-                  Agent running
-                </span>
                 <span>{t("ws.home.messagesToday")}</span>
                 <span className="text-border">·</span>
                 <span>{t("ws.home.activeAgo")}</span>
@@ -3261,21 +3276,30 @@ function HomeDashboard({
                             <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] shrink-0" />
                           </div>
                           <button
+                            type="button"
+                            aria-label={t("ws.home.connected")}
+                            title={t("ws.home.connected")}
                             onClick={(e) => {
                               e.stopPropagation();
                               handleDisconnectChannel(ch.id);
                             }}
-                            className="group rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium bg-surface-2 text-text-secondary hover:text-[var(--color-danger)] hover:bg-surface-3 transition-colors shrink-0"
+                            className="group rounded-[8px] bg-surface-2 px-[14px] py-[5px] text-[12px] font-medium text-text-secondary transition-colors shrink-0 hover:bg-surface-3 hover:text-[var(--color-danger)]"
                           >
                             <span className="group-hover:hidden">{t("ws.home.connected")}</span>
                             <span className="hidden group-hover:inline">
                               {t("ws.home.disconnect")}
                             </span>
                           </button>
-                          <span className="inline-flex items-center gap-1 text-[12px] font-medium text-text-secondary hover:text-text-primary transition-colors ml-3 shrink-0 leading-none">
+                          <a
+                            href={ch.chatUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="ml-3 inline-flex shrink-0 items-center gap-1 text-[12px] font-medium leading-none text-text-secondary transition-colors hover:text-text-primary"
+                          >
                             {t("ws.home.chat")}
                             <ArrowUpRight size={12} className="-mt-px" />
-                          </span>
+                          </a>
                         </div>
                       );
                     })}
@@ -3348,9 +3372,7 @@ function HomeDashboard({
                           {ch.platform}
                         </span>
                       )}
-                      <span className="text-[11px] text-text-muted">
-                        Active {ch.lastMessage}
-                      </span>
+                      <span className="text-[11px] text-text-muted">Active {ch.lastMessage}</span>
                     </div>
                   </div>
                 </div>
@@ -3369,9 +3391,7 @@ function HomeDashboard({
               <h3 className="text-[14px] font-semibold text-text-primary">
                 {t("ws.home.starNexu")}
               </h3>
-              <p className="text-[12px] text-text-muted mt-0.5">
-                {t("ws.home.starCta")}
-              </p>
+              <p className="text-[12px] text-text-muted mt-0.5">{t("ws.home.starCta")}</p>
             </div>
             <a
               href={GITHUB_URL}
@@ -4657,11 +4677,11 @@ function RewardsCenter({
           ) : null}
           <span
             className={cn(
-              'inline-flex min-w-[120px] items-center justify-center rounded-lg px-3 text-sm font-semibold h-8',
-              actionProps.variant === 'default'
-                ? 'bg-[var(--color-accent)] text-[var(--color-accent-fg,white)] shadow-sm'
-                : 'border border-input bg-background text-foreground shadow-xs',
-              actionProps.disabled && 'pointer-events-none opacity-50',
+              "inline-flex min-w-[120px] items-center justify-center rounded-lg px-3 text-sm font-semibold h-8",
+              actionProps.variant === "default"
+                ? "bg-[var(--color-accent)] text-[var(--color-accent-fg,white)] shadow-sm"
+                : "border border-input bg-background text-foreground shadow-xs",
+              actionProps.disabled && "pointer-events-none opacity-50",
             )}
           >
             {weeklyCooldown ? weeklyCooldownButtonLabel() : ctaForRow(ch)}
@@ -5150,7 +5170,7 @@ export default function OpenClawWorkspace() {
           setCollapsed(next);
           localStorage.setItem("nexu_sidebar_collapsed", String(next));
         }}
-        className="absolute top-2 left-[88px] z-50 p-1.5 rounded-md text-text-tertiary hover:text-text-primary hover:bg-surface-2 transition-colors"
+        className="absolute top-2 left-[88px] z-50 rounded-md p-1.5 text-text-tertiary transition-colors hover:bg-black/5 hover:text-text-primary"
         style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         title={collapsed ? t("ws.sidebar.expand") : t("ws.sidebar.collapse")}
       >
@@ -5159,13 +5179,12 @@ export default function OpenClawWorkspace() {
 
       {/* Sidebar — frosted glass + fully hidden when collapsed */}
       <div
-        className={`flex flex-col shrink-0 overflow-hidden ${collapsed ? "w-0" : ""}`}
+        className={`sidebar-vibrancy flex shrink-0 flex-col overflow-hidden ${collapsed ? "w-0" : ""}`}
         style={
           {
             ...(!collapsed ? { width: sidebarWidth } : {}),
             transition: isResizing.current ? "none" : "width 200ms",
             WebkitAppRegion: "drag",
-            background: "transparent",
           } as React.CSSProperties
         }
       >
@@ -5200,7 +5219,7 @@ export default function OpenClawWorkspace() {
                 <button
                   key={item.id}
                   onClick={() => setView({ type: item.id } as View)}
-                  className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-2 ${
+                  className={`flex w-full items-center gap-2.5 whitespace-nowrap rounded-[var(--radius-6)] px-2.5 py-[7px] text-[13px] transition-colors ${
                     active ? "nav-item-active" : "nav-item"
                   }`}
                 >
@@ -5242,7 +5261,7 @@ export default function OpenClawWorkspace() {
                   <button
                     key={ch.id}
                     onClick={() => setView({ type: "conversations", channelId: ch.id })}
-                    className={`flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer px-3 py-1.5 ${
+                    className={`flex w-full items-center gap-2.5 rounded-[var(--radius-6)] px-2.5 py-[7px] text-[13px] transition-colors ${
                       active ? "nav-item-active" : "nav-item"
                     }`}
                   >
@@ -5306,7 +5325,7 @@ export default function OpenClawWorkspace() {
 
         {/* Sidebar footer — help · GitHub */}
         <div
-          className="shrink-0 border-t border-border/60 pt-1.5 pb-2 px-2 flex items-center gap-0.5"
+          className="flex shrink-0 items-center gap-0.5 px-2 pb-2 pt-1.5"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
           <div className="flex-1" />
@@ -5319,14 +5338,14 @@ export default function OpenClawWorkspace() {
                       href="https://docs.nexu.ai"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-all"
+                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-[12px] font-medium text-text-secondary transition-all hover:bg-black/5 hover:text-text-primary"
                     >
                       <BookOpen size={14} />
                       {t("ws.help.documentation")}
                     </a>
                     <a
                       href="mailto:hi@nexu.ai"
-                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-all"
+                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-[12px] font-medium text-text-secondary transition-all hover:bg-black/5 hover:text-text-primary"
                     >
                       <Mail size={14} />
                       {t("ws.help.contactUs")}
@@ -5347,7 +5366,7 @@ export default function OpenClawWorkspace() {
                           }
                         }, 1500);
                       }}
-                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-all"
+                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-[12px] font-medium text-text-secondary transition-all hover:bg-black/5 hover:text-text-primary"
                     >
                       <Loader2 size={14} />
                       Check for Updates…
@@ -5378,10 +5397,10 @@ export default function OpenClawWorkspace() {
                             setLocale(opt.value);
                             setShowHelpMenu(false);
                           }}
-                          className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-[12px] font-medium transition-all ${
+                          className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[12px] font-medium transition-all ${
                             locale === opt.value
-                              ? "text-text-primary bg-surface-2"
-                              : "text-text-secondary hover:text-text-primary hover:bg-surface-2"
+                              ? "bg-black/5 text-text-primary"
+                              : "text-text-secondary hover:bg-black/5 hover:text-text-primary"
                           }`}
                         >
                           <Globe size={14} className="shrink-0 opacity-60" />
