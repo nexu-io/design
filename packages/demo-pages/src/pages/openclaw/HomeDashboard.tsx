@@ -1,4 +1,17 @@
-import { Alert, AlertDescription, Button, cn } from "@nexu-design/ui-web";
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Input,
+  cn,
+} from "@nexu-design/ui-web";
 import {
   ArrowRight,
   ArrowUp,
@@ -7,9 +20,8 @@ import {
   Check,
   ChevronDown,
   Cpu,
-  Eye,
-  EyeOff,
-  FileText,
+  KeyRound,
+  MessageCircle,
   Search,
   Settings,
   Star,
@@ -42,7 +54,39 @@ import { CreditIcon, ProviderLogo, getModelIconProvider } from "./iconHelpers";
 const SEEDANCE_COUNTDOWN_CYCLE_MS = 2 * 24 * 60 * 60 * 1000;
 const SEEDANCE_COUNTDOWN_LOOP_END_MS = Date.now() + SEEDANCE_COUNTDOWN_CYCLE_MS - 1000;
 
-function getSeedanceCountdown(now: number) {
+const RECENT_ACTIVITY_CHANNEL_LABELS: Record<string, string> = {
+  feishu: '飞书',
+  dingtalk: '钉钉',
+  wecom: '企微',
+  qqbot: 'QQ',
+  slack: 'Slack',
+  discord: 'Discord',
+  telegram: 'Telegram',
+  whatsapp: 'WhatsApp',
+  wechat: 'WeChat',
+  web: 'Web',
+}
+
+function formatSeedanceCompactLabel(
+  days: number,
+  hours: number,
+  minutes: number,
+  seconds: number,
+  locale: "en" | "zh",
+) {
+  const paddedDays = String(days).padStart(2, "0");
+  const paddedHours = String(hours).padStart(2, "0");
+  const paddedMinutes = String(minutes).padStart(2, "0");
+  const paddedSeconds = String(seconds).padStart(2, "0");
+
+  if (locale === "zh") {
+    return `${paddedDays}天 ${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+  }
+
+  return `${paddedDays}d ${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+}
+
+function getSeedanceCountdown(now: number, locale: "en" | "zh") {
   const cycleRemainingMs =
     (((SEEDANCE_COUNTDOWN_LOOP_END_MS - now) % SEEDANCE_COUNTDOWN_CYCLE_MS) +
       SEEDANCE_COUNTDOWN_CYCLE_MS) %
@@ -60,12 +104,20 @@ function getSeedanceCountdown(now: number) {
     hours,
     minutes,
     seconds,
-    compactLabel: `${String(days).padStart(2, "0")}天 ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
+    compactLabel: formatSeedanceCompactLabel(days, hours, minutes, seconds, locale),
   };
 }
 
-function SeedanceCountdownBlocks({ now, compact = false }: { now: number; compact?: boolean }) {
-  const countdown = getSeedanceCountdown(now);
+function SeedanceCountdownBlocks({
+  now,
+  locale,
+  compact = false,
+}: {
+  now: number;
+  locale: "en" | "zh";
+  compact?: boolean;
+}) {
+  const countdown = getSeedanceCountdown(now, locale);
   if (!compact) return null;
   return (
     <div
@@ -108,7 +160,7 @@ export function HomeDashboard({
   onRequestSeedanceModal,
   githubUrl,
 }: HomeDashboardProps) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   const budget = useBudget(budgetStatus);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoHover, setVideoHover] = useState(false);
@@ -134,7 +186,6 @@ export function HomeDashboard({
   const [seedanceNow, setSeedanceNow] = useState(Date.now());
   const [configChannel, setConfigChannel] = useState<string | null>(null);
   const [configValues, setConfigValues] = useState<Record<string, string>>({});
-  const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
   const [selectedModelId, setSelectedModelId] = useState("nexu-claude-opus-4-6");
   const [showModelDropdown, setShowModelDropdown] = useState(false);
   const [modelSearch, setModelSearch] = useState("");
@@ -240,12 +291,12 @@ export function HomeDashboard({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-[13px] font-semibold text-text-primary">
-              Seedance 2.0 体验 Key
+              {t("ws.home.seedanceBannerTitle")}
             </span>
-            <SeedanceCountdownBlocks now={seedanceNow} compact />
+            <SeedanceCountdownBlocks now={seedanceNow} locale={locale} compact />
           </div>
           <p className="mt-1 text-[12px] text-text-secondary leading-relaxed">
-            nexu 已支持 Seedance 2.0。Star 后加入飞书群并填写问卷，我们会联系并发送 Key。
+            {t("ws.home.seedanceBannerSubtitle")}
           </p>
         </div>
         <ArrowRight
@@ -255,7 +306,7 @@ export function HomeDashboard({
       </div>
       <button
         type="button"
-        aria-label="关闭活动横幅"
+        aria-label={t("ws.home.seedanceBannerDismiss")}
         onClick={(e) => {
           e.stopPropagation();
           dismissSeedanceBanner();
@@ -289,7 +340,6 @@ export function HomeDashboard({
     persistChannels(next, channelId);
     setConfigChannel(null);
     setConfigValues({});
-    setShowSecrets({});
     // Show GitHub Star prompt whenever a channel is connected and star not yet claimed
     if (!budget.starClaimed) {
       onRequestStarOnboarding();
@@ -299,13 +349,11 @@ export function HomeDashboard({
   const handleOpenConfig = (channelId: string) => {
     setConfigChannel(channelId);
     setConfigValues({});
-    setShowSecrets({});
   };
 
   const handleCloseConfig = () => {
     setConfigChannel(null);
     setConfigValues({});
-    setShowSecrets({});
   };
 
   useEffect(() => {
@@ -785,11 +833,11 @@ export function HomeDashboard({
         </div>
 
         {/* ═══ Recent Activity ═══ */}
-        <div className="card card-static">
-          <div className="px-5 pt-4 pb-3">
+        <div className="card card-static p-5">
+          <div className="mb-4 flex items-center justify-between">
             <h2 className="text-[14px] font-semibold text-text-primary">Recent Activity</h2>
           </div>
-          <div className="px-5 pb-5 space-y-4">
+          <div className="space-y-5">
             {MOCK_CHANNELS.slice(0, 3).map((ch) => {
               const ChannelIcon =
                 (
@@ -806,20 +854,30 @@ export function HomeDashboard({
                   } as Record<string, typeof SlackIconSetup>
                 )[ch.platform] || SlackIconSetup;
               return (
-                <div key={ch.id} className="flex items-start gap-3">
-                  <span className="w-2 h-2 rounded-full bg-[var(--color-success)] shrink-0 mt-1.5" />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-[13px] font-medium text-text-primary block truncate">
-                      {ch.name}
-                    </span>
-                    <div className="flex items-center gap-2 mt-1">
-                      {ch.platform && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[10px] font-medium text-text-secondary">
-                          <ChannelIcon size={10} />
-                          {ch.platform}
-                        </span>
+                <div
+                  key={ch.id}
+                  className="group -mx-2 rounded-xl px-2 py-2 transition-colors hover:bg-surface-1"
+                >
+                  <div className="flex items-start gap-3">
+                    <div
+                      className={cn(
+                        'mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full',
+                        ch.status === 'active' ? 'bg-[var(--color-success)]' : 'bg-surface-4'
                       )}
-                      <span className="text-[11px] text-text-muted">Active {ch.lastMessage}</span>
+                    />
+                    <div className="min-w-0 flex-1">
+                      <span className="block truncate text-[13px] leading-relaxed text-text-primary transition-colors group-hover:text-accent">
+                        {ch.name}
+                      </span>
+                      <div className="mt-1.5 flex items-center gap-2">
+                        {ch.platform && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[10px] text-text-muted">
+                            <ChannelIcon size={12} />
+                            {RECENT_ACTIVITY_CHANNEL_LABELS[ch.platform] ?? ch.platform}
+                          </span>
+                        )}
+                        <span className="text-[10px] text-text-muted">Active {ch.lastMessage}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -861,92 +919,128 @@ export function HomeDashboard({
         (() => {
           const ch = ONBOARDING_CHANNELS.find((c) => c.id === configChannel)!;
           const fields = CHANNEL_CONFIG_FIELDS[configChannel] || [];
-          const Icon = ch.icon;
           const allFilled = fields.every((f) => (configValues[f.id] || "").trim().length > 0);
+          const isTelegramModal = configChannel === "telegram";
+          const botTokenField = fields.find((field) => field.id === "botToken");
           return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center">
-              <div
-                className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-                onClick={handleCloseConfig}
-              />
-              <div className="relative w-full max-w-md mx-4 rounded-2xl border border-border bg-surface-1 shadow-2xl">
-                <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center border border-border bg-surface-1">
-                      <Icon size={18} />
-                    </div>
-                    <div>
-                      <h3 className="text-[14px] font-semibold text-text-primary">
-                        {t("ws.common.connect")} {ch.name}
-                      </h3>
-                      <p className="text-[11px] text-text-muted">
-                        {t("ws.home.configureCredentials")}
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleCloseConfig}
-                    className="p-1.5 rounded-lg hover:bg-surface-2 text-text-muted hover:text-text-secondary transition-colors"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-                <div className="px-6 py-5 space-y-4">
-                  {fields.map((field) => (
-                    <div key={field.id}>
-                      <label className="block text-[12px] font-medium text-text-primary mb-1.5">
-                        {field.label}
-                      </label>
-                      <div className="relative">
-                        <input
-                          type={showSecrets[field.id] ? "text" : "password"}
-                          value={configValues[field.id] || ""}
-                          onChange={(e) =>
-                            setConfigValues((prev) => ({ ...prev, [field.id]: e.target.value }))
-                          }
-                          placeholder={field.placeholder}
-                          className="w-full px-3 py-2 pr-9 rounded-lg border border-border bg-surface-0 text-[13px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30 transition-colors font-mono"
-                        />
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setShowSecrets((prev) => ({ ...prev, [field.id]: !prev[field.id] }))
-                          }
-                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary transition-colors"
-                        >
-                          {showSecrets[field.id] ? <EyeOff size={14} /> : <Eye size={14} />}
-                        </button>
+            <Dialog open onOpenChange={(open) => !open && handleCloseConfig()}>
+              <DialogContent size="md" className="max-w-[560px]">
+                <DialogHeader>
+                  <DialogTitle className="text-[14px] font-semibold text-text-primary">
+                    {t("ws.common.connect")} {ch.name}
+                  </DialogTitle>
+                  <DialogDescription className="text-[12px] text-text-muted">
+                    {isTelegramModal
+                      ? t("ws.home.telegramSetupDesc")
+                      : t("ws.home.configureCredentials")}
+                  </DialogDescription>
+                </DialogHeader>
+
+                {isTelegramModal && botTokenField ? (
+                  <DialogBody className="space-y-4 py-2">
+                    <div className="rounded-xl border border-border bg-surface-0 p-4">
+                      <div className="mb-4 flex items-start gap-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sky-500/10 text-sky-500">
+                          <MessageCircle size={18} />
+                        </div>
+                        <div>
+                          <h3 className="text-[14px] font-semibold text-text-primary">
+                            {t("ws.common.connect")} {ch.name}
+                          </h3>
+                        </div>
                       </div>
-                      <p className="text-[11px] text-text-muted mt-1">{field.helpText}</p>
+
+                      <div className="space-y-4">
+                        <div className="rounded-xl border border-border bg-surface-1 p-4">
+                          <div className="mb-2 text-[12px] font-medium text-text-primary">
+                            {t("ws.home.telegramQuickSetup")}
+                          </div>
+                          <ol className="list-decimal space-y-1 pl-4 text-[12px] text-text-muted">
+                            <li>{t("ws.home.telegramStep1")}</li>
+                            <li>{t("ws.home.telegramStep2")}</li>
+                            <li>{t("ws.home.telegramStep3")}</li>
+                            <li>{t("ws.home.telegramStep4")}</li>
+                          </ol>
+                        </div>
+
+                        <div>
+                          <label className="mb-2 block text-[12px] font-medium text-text-primary">
+                            {botTokenField.label}
+                          </label>
+                          <Input
+                            type="password"
+                            value={configValues[botTokenField.id] || ""}
+                            onChange={(e) =>
+                              setConfigValues((prev) => ({
+                                ...prev,
+                                [botTokenField.id]: e.target.value,
+                              }))
+                            }
+                            placeholder="1234567890:AA..."
+                            autoComplete="off"
+                            spellCheck={false}
+                            leadingIcon={<KeyRound size={14} />}
+                            inputClassName="font-mono text-[13px]"
+                          />
+                        </div>
+
+                        <Button
+                          type="button"
+                          onClick={() => handleConnectChannel(configChannel)}
+                          disabled={!allFilled}
+                          leadingIcon={<MessageCircle size={14} />}
+                        >
+                          {t("ws.common.connect")} {ch.name}
+                        </Button>
+                      </div>
                     </div>
-                  ))}
-                  <a
-                    href={ch.docUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-link mt-1"
-                  >
-                    <FileText size={13} />
-                    {t("ws.home.viewSetupGuide").replace("{name}", ch.name)}
-                  </a>
-                </div>
-                <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-border">
-                  <button
-                    onClick={handleCloseConfig}
-                    className="px-4 py-2 rounded-lg text-[13px] font-medium text-text-secondary hover:bg-surface-2 transition-colors"
-                  >
-                    {t("ws.common.cancel")}
-                  </button>
-                  <button
-                    onClick={() => handleConnectChannel(configChannel)}
-                    disabled={!allFilled}
-                    className="px-4 py-2 rounded-lg text-[13px] font-medium bg-accent text-accent-fg hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  >
-                    {t("ws.common.connect")}
-                  </button>
-                </div>
-              </div>
-            </div>
+                  </DialogBody>
+                ) : (
+                  <>
+                    <DialogBody className="space-y-4 py-2">
+                      {fields.map((field) => (
+                        <div key={field.id}>
+                          <label className="mb-1.5 block text-[12px] font-medium text-text-primary">
+                            {field.label}
+                          </label>
+                          <Input
+                            type="password"
+                            value={configValues[field.id] || ""}
+                            onChange={(e) =>
+                              setConfigValues((prev) => ({
+                                ...prev,
+                                [field.id]: e.target.value,
+                              }))
+                            }
+                            placeholder={field.placeholder}
+                            autoComplete="off"
+                            spellCheck={false}
+                            inputClassName="font-mono text-[13px]"
+                          />
+                          <p className="mt-1 text-[11px] text-text-muted">{field.helpText}</p>
+                        </div>
+                      ))}
+                      <a
+                        href={ch.docUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-link mt-1"
+                      >
+                        {t("ws.home.viewSetupGuide").replace("{name}", ch.name)}
+                      </a>
+                    </DialogBody>
+                    <DialogFooter>
+                      <Button type="button" variant="outline" onClick={handleCloseConfig}>
+                        {t("ws.common.cancel")}
+                      </Button>
+                      <Button type="button" onClick={() => handleConnectChannel(configChannel)} disabled={!allFilled}>
+                        {t("ws.common.connect")}
+                      </Button>
+                    </DialogFooter>
+                  </>
+                )}
+              </DialogContent>
+            </Dialog>
           );
         })()}
     </div>

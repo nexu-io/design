@@ -1,6 +1,7 @@
 import { ArrowUpRight, Check, Clock, Sparkles, Star, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { useLocale } from "../../hooks/useLocale";
 import { openExternal } from "../../utils/open-external";
 
 type SeedanceStep = "star" | "feishu";
@@ -11,7 +12,26 @@ const SEEDANCE_TUTORIAL_URL = "https://powerformer.feishu.cn/wiki/OFxFw2MpyiFWKp
 const SEEDANCE_COUNTDOWN_CYCLE_MS = 2 * 24 * 60 * 60 * 1000;
 const SEEDANCE_COUNTDOWN_LOOP_END_MS = Date.now() + SEEDANCE_COUNTDOWN_CYCLE_MS - 1000;
 
-function getSeedanceCountdown(now: number) {
+function formatSeedanceCompactLabel(
+  days: number,
+  hours: number,
+  minutes: number,
+  seconds: number,
+  locale: "en" | "zh",
+) {
+  const paddedDays = String(days).padStart(2, "0");
+  const paddedHours = String(hours).padStart(2, "0");
+  const paddedMinutes = String(minutes).padStart(2, "0");
+  const paddedSeconds = String(seconds).padStart(2, "0");
+
+  if (locale === "zh") {
+    return `${paddedDays}天 ${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+  }
+
+  return `${paddedDays}d ${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+}
+
+function getSeedanceCountdown(now: number, locale: "en" | "zh") {
   const cycleRemainingMs =
     (((SEEDANCE_COUNTDOWN_LOOP_END_MS - now) % SEEDANCE_COUNTDOWN_CYCLE_MS) +
       SEEDANCE_COUNTDOWN_CYCLE_MS) %
@@ -29,12 +49,20 @@ function getSeedanceCountdown(now: number) {
     hours,
     minutes,
     seconds,
-    compactLabel: `${String(days).padStart(2, "0")}天 ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
+    compactLabel: formatSeedanceCompactLabel(days, hours, minutes, seconds, locale),
   };
 }
 
-function SeedanceCountdownBlocks({ now, compact = false }: { now: number; compact?: boolean }) {
-  const countdown = getSeedanceCountdown(now);
+function SeedanceCountdownBlocks({
+  now,
+  locale,
+  compact = false,
+}: {
+  now: number;
+  locale: "en" | "zh";
+  compact?: boolean;
+}) {
+  const countdown = getSeedanceCountdown(now, locale);
 
   if (compact) {
     return (
@@ -59,6 +87,7 @@ function SeedanceCountdownBlocks({ now, compact = false }: { now: number; compac
 }
 
 export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
+  const { locale, t } = useLocale();
   const [step, setStep] = useState<SeedanceStep>("star");
   const [starred, setStarred] = useState(false);
   const [countdownNow, setCountdownNow] = useState(Date.now());
@@ -70,8 +99,8 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
 
   const stepDots: SeedanceStep[] = ["star", "feishu"];
   const stepMeta: Record<SeedanceStep, string> = {
-    star: "第一步：GitHub Star 并截图",
-    feishu: "第二步：加入飞书群并填写问卷",
+    star: t("ws.home.seedanceModalStepStar"),
+    feishu: t("ws.home.seedanceModalStepFeishu"),
   };
 
   useEffect(() => {
@@ -89,6 +118,7 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
       >
         <button
           onClick={onClose}
+          aria-label={t("ws.home.closeDialog")}
           className="absolute right-3.5 top-3.5 z-20 flex h-6 w-6 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-white/70 hover:text-text-primary"
         >
           <X size={13} />
@@ -113,13 +143,13 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
             <div className="flex flex-wrap items-center gap-2">
               <div className="inline-flex items-center gap-1.5 rounded-full border border-white/60 bg-white/75 px-2.5 py-1 text-[10px] font-semibold leading-none text-[var(--color-warning)] shadow-sm">
                 <Sparkles size={10} />
-                限时体验
+                {t("ws.home.seedanceModalBadge")}
               </div>
-              <SeedanceCountdownBlocks now={countdownNow} compact />
+              <SeedanceCountdownBlocks now={countdownNow} locale={locale} compact />
             </div>
             <div className="mt-3">
               <h2 className="text-[18px] font-semibold leading-tight text-text-primary">
-                领取 Seedance 2.0 体验 Key
+                {t("ws.home.seedanceModalTitle")}
               </h2>
             </div>
           </div>
@@ -168,7 +198,7 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
                   </div>
                   <div className="min-w-0">
                     <div className="text-[11px] leading-relaxed text-text-muted">
-                      在 GitHub 为 nexu star；并将点完后的仓库页面进行截图。
+                      {t("ws.home.seedanceModalStarHint")}
                     </div>
                   </div>
                 </div>
@@ -186,7 +216,7 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
                 ) : (
                   <Star size={13} className="fill-amber-400 text-amber-400" />
                 )}
-                {starred ? "已点 Star" : "去 GitHub Star"}
+                {starred ? t("ws.home.seedanceModalStarred") : t("ws.home.seedanceModalStarCta")}
               </button>
               <button
                 onClick={() => setStep("feishu")}
@@ -197,7 +227,7 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
                     : "h-[38px] cursor-not-allowed border border-border text-text-secondary hover:bg-surface-2 disabled:opacity-30"
                 }`}
               >
-                我已经截图，去进群填问卷
+                {t("ws.home.seedanceModalContinue")}
               </button>
             </>
           )}
@@ -205,15 +235,14 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
           {step === "feishu" && (
             <>
               <p className="mb-4 text-[12px] leading-relaxed text-text-secondary">
-                加入飞书群并填写问卷后，我们会联系并发送 Key。拿到 Key 后，将其输入到 nexu Bot
-                即可开始体验。
+                {t("ws.home.seedanceModalFeishuHint")}
               </p>
               <button
                 onClick={() => openExternal(SEEDANCE_TUTORIAL_URL)}
                 className="mb-3 inline-flex w-full items-center justify-center gap-1.5 text-[12px] font-medium text-[var(--color-brand-primary)] hover:underline"
               >
                 <ArrowUpRight size={12} />
-                查看教程：如何在 nexu Bot 中体验 Seedance 2.0
+                {t("ws.home.seedanceModalTutorial")}
               </button>
 
               <button
@@ -221,13 +250,13 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
                 className="mb-2.5 flex h-[40px] w-full items-center justify-center gap-2 rounded-[10px] bg-[var(--color-brand-primary)] text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
               >
                 <ArrowUpRight size={14} className="shrink-0" />
-                点击链接加入飞书群
+                {t("ws.home.seedanceModalFeishuCta")}
               </button>
               <button
                 onClick={onClose}
                 className="h-[36px] w-full rounded-[10px] text-[12px] text-text-muted transition-colors hover:bg-surface-2 hover:text-text-secondary"
               >
-                好的，已了解
+                {t("ws.home.seedanceModalDone")}
               </button>
             </>
           )}
