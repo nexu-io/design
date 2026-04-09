@@ -14,7 +14,7 @@ import WhyWeBuiltPage from "../../pages/WhyWeBuiltPage";
 export function DesignSystemRouteElements() {
   return (
     <>
-      <Route path="/" element={<Navigate to="/overview" replace />} />
+      <Route path="/" element={<Navigate to="/openclaw/workspace" replace />} />
       <Route path="/why" element={<WhyWeBuiltPage />} />
       <Route path="/bp" element={<BPPage />} />
       <Route path="/overview" element={<OverviewPage />} />

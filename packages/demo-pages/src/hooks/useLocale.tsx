@@ -251,6 +251,7 @@ const en: Record<string, string> = {
 
   // Workspace — Nav & Sidebar
   "ws.nav.home": "Home",
+  "ws.nav.deployments": "Deployments",
   "ws.nav.rewards": "Rewards",
   "ws.nav.skills": "Skills",
   "ws.nav.settings": "Settings",
@@ -590,6 +591,7 @@ const zh: Record<string, string> = {
 
   // Workspace — Nav & Sidebar
   "ws.nav.home": "首页",
+  "ws.nav.deployments": "Deployments",
   "ws.nav.rewards": "奖励",
   "ws.nav.skills": "Skills",
   "ws.nav.settings": "设置",

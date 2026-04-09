@@ -3557,11 +3557,11 @@ function WorkspaceLocaleSelectItem({
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       )}
     >
-      <SelectPrimitive.ItemText asChild>
-        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <SelectPrimitive.ItemText>
+        <span className="flex min-w-0 flex-1 flex-col gap-0.5">
           <span className="text-[13px] font-normal leading-snug">{nativeLabel}</span>
           <span className="text-[11px] leading-snug text-text-tertiary">{englishLabel}</span>
-        </div>
+        </span>
       </SelectPrimitive.ItemText>
       <span className="pointer-events-none absolute right-2 top-1/2 flex size-4 -translate-y-1/2 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
@@ -4519,6 +4519,7 @@ function RewardsCenter({
     const isDaily = ch.repeatable === "daily";
     const done = isDaily ? budget.dailyCheckedInToday : budget.claimedChannels.has(ch.id);
     const weeklyCooldown = ch.repeatable === "weekly" && done;
+    const actionProps = buttonPropsForRow(ch);
 
     return (
       <InteractiveRow
@@ -4578,17 +4579,17 @@ function RewardsCenter({
               {dailyResetCountdown}
             </span>
           ) : null}
-          <Button
-            size="sm"
-            className="min-w-[120px]"
-            {...buttonPropsForRow(ch)}
-            onClick={(e) => {
-              e.stopPropagation();
-              onRowAction(ch);
-            }}
+          <span
+            className={cn(
+              'inline-flex min-w-[120px] items-center justify-center rounded-lg px-3 text-sm font-semibold h-8',
+              actionProps.variant === 'default'
+                ? 'bg-[var(--color-accent)] text-[var(--color-accent-fg,white)] shadow-sm'
+                : 'border border-input bg-background text-foreground shadow-xs',
+              actionProps.disabled && 'pointer-events-none opacity-50',
+            )}
           >
             {weeklyCooldown ? weeklyCooldownButtonLabel() : ctaForRow(ch)}
-          </Button>
+          </span>
         </InteractiveRowTrailing>
       </InteractiveRow>
     );
@@ -5174,6 +5175,9 @@ export default function OpenClawWorkspace() {
                     </span>
                     <span className={`truncate text-[12px] ${active ? "" : "text-text-primary"}`}>
                       {ch.name}
+                    </span>
+                    <span className="ml-auto text-[10px] font-normal tabular-nums text-text-tertiary">
+                      {ch.messageCount}
                     </span>
                   </button>
                 );
@@ -5791,13 +5795,9 @@ export default function OpenClawWorkspace() {
                       </InteractiveRow>
 
                       <Tooltip>
-                        <TooltipTrigger asChild>
-                          <InteractiveRow
-                            tone="subtle"
-                            type="button"
-                            className="!rounded-lg !gap-2 !px-0 !py-0 !border-0 items-center cursor-default"
-                          >
-                            <InteractiveRowContent>
+                        <TooltipTrigger className="w-full">
+                          <div className="flex w-full items-center gap-2 rounded-lg px-0 py-0 text-left">
+                            <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-1 cursor-help">
                                 <span className="text-[12px] text-[var(--color-text-muted)]">
                                   Plan credits
@@ -5807,16 +5807,16 @@ export default function OpenClawWorkspace() {
                                   className="text-[var(--color-text-muted)] shrink-0"
                                 />
                               </div>
-                            </InteractiveRowContent>
-                            <InteractiveRowTrailing>
+                            </div>
+                            <div className="shrink-0">
                               <span className="text-[12px] text-[var(--color-text-secondary)] tabular-nums">
                                 {baseCredits}
                                 <span className="text-[var(--color-text-muted)]">
                                   /{Math.round(budget.total)}
                                 </span>
                               </span>
-                            </InteractiveRowTrailing>
-                          </InteractiveRow>
+                            </div>
+                          </div>
                         </TooltipTrigger>
                         <TooltipContent
                           side="bottom"
@@ -5829,13 +5829,9 @@ export default function OpenClawWorkspace() {
                       </Tooltip>
 
                       <Tooltip>
-                        <TooltipTrigger asChild>
-                          <InteractiveRow
-                            tone="subtle"
-                            type="button"
-                            className="!rounded-lg !gap-2 !px-0 !py-0 !border-0 items-center cursor-default"
-                          >
-                            <InteractiveRowContent>
+                        <TooltipTrigger className="w-full">
+                          <div className="flex w-full items-center gap-2 rounded-lg px-0 py-0 text-left">
+                            <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-1 cursor-help">
                                 <span className="text-[12px] text-[var(--color-text-muted)]">
                                   Bonus credits
@@ -5845,13 +5841,13 @@ export default function OpenClawWorkspace() {
                                   className="text-[var(--color-text-muted)] shrink-0"
                                 />
                               </div>
-                            </InteractiveRowContent>
-                            <InteractiveRowTrailing>
+                            </div>
+                            <div className="shrink-0">
                               <span className="text-[12px] text-[var(--color-text-secondary)] tabular-nums">
                                 {bonusCredits}
                               </span>
-                            </InteractiveRowTrailing>
-                          </InteractiveRow>
+                            </div>
+                          </div>
                         </TooltipTrigger>
                         <TooltipContent
                           side="bottom"
@@ -5866,13 +5862,9 @@ export default function OpenClawWorkspace() {
 
                       {packCredits > 0 && (
                         <Tooltip>
-                          <TooltipTrigger asChild>
-                            <InteractiveRow
-                              tone="subtle"
-                              type="button"
-                              className="!rounded-lg !gap-2 !px-0 !py-0 !border-0 items-center cursor-default"
-                            >
-                              <InteractiveRowContent>
+                          <TooltipTrigger className="w-full">
+                            <div className="flex w-full items-center gap-2 rounded-lg px-0 py-0 text-left">
+                              <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-1 cursor-help">
                                   <span className="text-[12px] text-[var(--color-text-muted)]">
                                     Credit pack balance
@@ -5882,13 +5874,13 @@ export default function OpenClawWorkspace() {
                                     className="text-[var(--color-text-muted)] shrink-0"
                                   />
                                 </div>
-                              </InteractiveRowContent>
-                              <InteractiveRowTrailing>
+                              </div>
+                              <div className="shrink-0">
                                 <span className="text-[12px] text-[var(--color-text-secondary)] tabular-nums">
                                   {packCredits.toLocaleString()}
                                 </span>
-                              </InteractiveRowTrailing>
-                            </InteractiveRow>
+                              </div>
+                            </div>
                           </TooltipTrigger>
                           <TooltipContent
                             side="bottom"

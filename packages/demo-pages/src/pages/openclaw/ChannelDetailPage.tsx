@@ -1,6 +1,6 @@
 import { Badge, Button, DiscordIcon, FeishuIcon, SlackIcon } from "@nexu-design/ui-web";
 import { ArrowUpRight, FolderOpen, Shield } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   type BotMessage,
   type Platform,
@@ -65,6 +65,7 @@ function NexuThinking() {
 
 function MessageBubble({ msg }: { msg: BotMessage }) {
   const isBot = msg.role === "bot";
+  const navigate = useNavigate();
   return (
     <div className={`flex gap-3 ${isBot ? "" : "flex-row-reverse"}`}>
       <img
@@ -102,11 +103,15 @@ function MessageBubble({ msg }: { msg: BotMessage }) {
                 nexu needs permission to access your {msg.oauthPrompt.toolName} account to complete
                 this task.
               </p>
-              <Button asChild className="w-full" size="sm">
-                <Link to={`/openclaw/oauth/${msg.oauthPrompt.toolId}`}>
+              <Button
+                className="w-full"
+                size="sm"
+                onClick={() => navigate(`/openclaw/oauth/${msg.oauthPrompt?.toolId}`)}
+              >
+                <span className="inline-flex items-center gap-1.5">
                   <ArrowUpRight size={12} />
-                  Connect {msg.oauthPrompt.toolName}
-                </Link>
+                  <span>Connect {msg.oauthPrompt.toolName}</span>
+                </span>
               </Button>
             </div>
           )}

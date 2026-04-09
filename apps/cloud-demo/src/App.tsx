@@ -40,8 +40,8 @@ export default function App() {
   if (isFullScreenPath(location.pathname)) {
     return (
       <Routes>
-        <CloudFullScreenRouteElements />
-        <DocsRouteElements />
+        {CloudFullScreenRouteElements()}
+        {DocsRouteElements()}
         <Route path="*" element={<Navigate to="/openclaw/welcome" replace />} />
       </Routes>
     );
@@ -49,7 +49,7 @@ export default function App() {
 
   return (
     <Routes>
-      <CloudShellRouteElements />
+      {CloudShellRouteElements()}
       <Route path="*" element={<Navigate to="/openclaw" replace />} />
     </Routes>
   );
