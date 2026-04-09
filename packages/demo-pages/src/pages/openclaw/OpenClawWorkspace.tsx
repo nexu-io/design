@@ -1,12 +1,4 @@
-import {
-  ChevronRight,
-  Gift,
-  Home,
-  Settings,
-  Sparkles,
-  X,
-  Zap,
-} from "lucide-react";
+import { ChevronRight, Gift, Home, Settings, Sparkles, X, Zap } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { REWARD_CHANNELS, useBudget } from "../../hooks/useBudget";
@@ -16,28 +8,22 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import { openExternal } from "../../utils/open-external";
 import { ConversationsView } from "./ConversationsView";
 import { DeploymentsView } from "./DeploymentsView";
+import { HomeDashboard } from "./HomeDashboard";
 import { OpenClawSidebarShell } from "./OpenClawSidebarShell";
-import { SchedulePanel } from "./SchedulePanel";
 import { RewardConfirmModal } from "./RewardConfirmModal";
 import { RewardMaterialModal } from "./RewardMaterialModal";
+import { RewardsCenter } from "./RewardsCenter";
+import { SchedulePanel } from "./SchedulePanel";
 import { SeedancePromoModal } from "./SeedancePromoModal";
-import { SKILL_CATEGORIES } from "./skillData";
+import { SettingsView } from "./SettingsView";
 import { SkillsPanel } from "./SkillsPanel";
 import { StarModal } from "./StarModal";
-import { HomeDashboard } from "./HomeDashboard";
-import { RewardsCenter } from "./RewardsCenter";
-import { SettingsView } from "./SettingsView";
 import { WorkspaceTopRightControls } from "./WorkspaceTopRightControls";
-import {
-  getInitialWorkspaceView,
-  type RewardType,
-  type View,
-} from "./workspaceTypes";
 import { WorkspaceUtilityOverlays } from "./WorkspaceUtilityOverlays";
+import { SKILL_CATEGORIES } from "./skillData";
+import { type RewardType, type View, getInitialWorkspaceView } from "./workspaceTypes";
 
 const GITHUB_URL = "https://github.com/nexu-io/nexu";
-
-
 
 /* ------------------------------------------------------------------ */
 /*  Home Dashboard                                                     */

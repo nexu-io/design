@@ -1,6 +1,33 @@
-import { Button, GitHubIcon, Input, PageHeader, SectionHeader, Select, SelectContent, SelectTrigger, SelectValue, Switch, cn } from "@nexu-design/ui-web";
+import {
+  Button,
+  GitHubIcon,
+  Input,
+  PageHeader,
+  SectionHeader,
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+  Switch,
+  cn,
+} from "@nexu-design/ui-web";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { AlertCircle, ArrowUpRight, BookOpen, Check, ChevronDown, Globe, Info, Mail, Monitor, RefreshCw, ScrollText, Shield, Star, User } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowUpRight,
+  BookOpen,
+  Check,
+  ChevronDown,
+  Globe,
+  Info,
+  Mail,
+  Monitor,
+  RefreshCw,
+  ScrollText,
+  Shield,
+  Star,
+  User,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { type Locale, useLocale } from "../../hooks/useLocale";
 import { openExternal } from "../../utils/open-external";
@@ -45,34 +72,37 @@ function WorkspaceLocaleSelectItem({
   );
 }
 
-type SettingsTab = 'general' | 'providers'
+type SettingsTab = "general" | "providers";
 
 type WorkspaceView =
-  | { type: 'home' }
-  | { type: 'conversations'; channelId?: string }
-  | { type: 'deployments' }
-  | { type: 'skills' }
-  | { type: 'schedule' }
-  | { type: 'rewards' }
-  | { type: 'settings'; tab?: SettingsTab; providerId?: ModelProvider }
+  | { type: "home" }
+  | { type: "conversations"; channelId?: string }
+  | { type: "deployments" }
+  | { type: "skills" }
+  | { type: "schedule" }
+  | { type: "rewards" }
+  | { type: "settings"; tab?: SettingsTab; providerId?: ModelProvider };
 
 type SettingsViewProps = {
-  initialTab?: SettingsTab
-  initialProviderId?: ModelProvider
-  signedIn?: boolean
-  accountEmail?: string
-  onSignOut?: () => void
-  onNavigate?: (view: WorkspaceView) => void
-  demoPlan?: 'free' | 'plus' | 'pro'
-  demoBudgetStatus?: 'healthy' | 'warning' | 'depleted'
-  githubUrl: string
-}
+  initialTab?: SettingsTab;
+  initialProviderId?: ModelProvider;
+  signedIn?: boolean;
+  accountEmail?: string;
+  onSignOut?: () => void;
+  onNavigate?: (view: WorkspaceView) => void;
+  demoPlan?: "free" | "plus" | "pro";
+  demoBudgetStatus?: "healthy" | "warning" | "depleted";
+  githubUrl: string;
+};
 
 function initialsFromEmail(email: string): string {
   if (!email.trim()) return "?";
   const local = email.split("@")[0]?.trim() ?? "";
   if (!local) return "?";
-  const parts = local.replace(/[._-]+/g, " ").split(" ").filter(Boolean);
+  const parts = local
+    .replace(/[._-]+/g, " ")
+    .split(" ")
+    .filter(Boolean);
   if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase().slice(0, 2);
   return local.slice(0, 2).toUpperCase();
 }
@@ -84,8 +114,8 @@ export function SettingsView({
   accountEmail = "",
   onSignOut,
   onNavigate: _onNavigate,
-  demoPlan: _demoPlan = 'pro',
-  demoBudgetStatus: _demoBudgetStatus = 'healthy',
+  demoPlan: _demoPlan = "pro",
+  demoBudgetStatus: _demoBudgetStatus = "healthy",
   githubUrl,
 }: SettingsViewProps) {
   const { t, locale, setLocale } = useLocale();

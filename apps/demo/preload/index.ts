@@ -1,7 +1,7 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer } from "electron";
 
-contextBridge.exposeInMainWorld('electronAPI', {
+contextBridge.exposeInMainWorld("electronAPI", {
   openExternal(url: string) {
-    return ipcRenderer.invoke('external:open', url)
+    return ipcRenderer.invoke("external:open", url);
   },
-})
+});

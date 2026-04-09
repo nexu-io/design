@@ -64,9 +64,9 @@ function saveComments(comments: Comment[]) {
 
 function loadAuthorName() {
   try {
-    return localStorage.getItem('nexu_comment_author') || '';
+    return localStorage.getItem("nexu_comment_author") || "";
   } catch {
-    return '';
+    return "";
   }
 }
 

@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, Button, cn } from '@nexu-design/ui-web'
+import { Alert, AlertDescription, Button, cn } from "@nexu-design/ui-web";
 import {
   ArrowRight,
   ArrowUp,
@@ -15,12 +15,11 @@ import {
   Star,
   X,
   Zap,
-} from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import { useLocale } from '../../hooks/useLocale'
-import { openExternal } from '../../utils/open-external'
-import { MOCK_CHANNELS, getProviderDetails } from './data'
-import { CreditIcon, ProviderLogo, getModelIconProvider } from './iconHelpers'
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useBudget } from "../../hooks/useBudget";
+import { useLocale } from "../../hooks/useLocale";
+import { openExternal } from "../../utils/open-external";
 import {
   CHANNELS_CONNECTED_KEY,
   CHANNEL_ACTIVE_KEY,
@@ -36,8 +35,9 @@ import {
   WeChatIconSetup,
   WeComIconSetup,
   WhatsAppIconSetup,
-} from './channelSetup'
-import { useBudget } from '../../hooks/useBudget'
+} from "./channelSetup";
+import { MOCK_CHANNELS, getProviderDetails } from "./data";
+import { CreditIcon, ProviderLogo, getModelIconProvider } from "./iconHelpers";
 
 const SEEDANCE_COUNTDOWN_CYCLE_MS = 2 * 24 * 60 * 60 * 1000;
 const SEEDANCE_COUNTDOWN_LOOP_END_MS = Date.now() + SEEDANCE_COUNTDOWN_CYCLE_MS - 1000;
@@ -47,7 +47,8 @@ function getSeedanceCountdown(now: number) {
     (((SEEDANCE_COUNTDOWN_LOOP_END_MS - now) % SEEDANCE_COUNTDOWN_CYCLE_MS) +
       SEEDANCE_COUNTDOWN_CYCLE_MS) %
     SEEDANCE_COUNTDOWN_CYCLE_MS;
-  const remainingMs = cycleRemainingMs === 0 ? SEEDANCE_COUNTDOWN_CYCLE_MS - 1000 : cycleRemainingMs;
+  const remainingMs =
+    cycleRemainingMs === 0 ? SEEDANCE_COUNTDOWN_CYCLE_MS - 1000 : cycleRemainingMs;
   const totalSeconds = Math.floor(remainingMs / 1000);
   const days = Math.floor(totalSeconds / 86400);
   const hours = Math.floor((totalSeconds % 86400) / 3600);
@@ -59,13 +60,13 @@ function getSeedanceCountdown(now: number) {
     hours,
     minutes,
     seconds,
-    compactLabel: `${String(days).padStart(2, "0")}天 ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+    compactLabel: `${String(days).padStart(2, "0")}天 ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
   };
 }
 
 function SeedanceCountdownBlocks({ now, compact = false }: { now: number; compact?: boolean }) {
   const countdown = getSeedanceCountdown(now);
-  if (!compact) return null
+  if (!compact) return null;
   return (
     <div
       className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none shadow-sm tabular-nums"
@@ -73,9 +74,8 @@ function SeedanceCountdownBlocks({ now, compact = false }: { now: number; compac
         color: "white",
         background:
           "linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 82%, white), color-mix(in srgb, var(--color-danger) 78%, var(--color-warning) 22%))",
-        borderColor:
-          "color-mix(in srgb, var(--color-danger) 56%, var(--color-warning) 32%, white)",
-        boxShadow: "var(--shadow-focus)"
+        borderColor: "color-mix(in srgb, var(--color-danger) 56%, var(--color-warning) 32%, white)",
+        boxShadow: "var(--shadow-focus)",
       }}
     >
       <span>{countdown.compactLabel}</span>
@@ -83,19 +83,19 @@ function SeedanceCountdownBlocks({ now, compact = false }: { now: number; compac
   );
 }
 
-type HomeView = { type: 'settings'; tab?: 'general' | 'providers' }
+type HomeView = { type: "settings"; tab?: "general" | "providers" };
 
 type HomeDashboardProps = {
-  onNavigate: (view: HomeView) => void
-  showTyping?: boolean
-  onTypingComplete?: () => void
-  stars?: number | null
-  budgetStatus?: 'healthy' | 'warning' | 'depleted'
-  demoPlan?: 'free' | 'plus' | 'pro'
-  onRequestStarOnboarding: () => void
-  onRequestSeedanceModal: () => void
-  githubUrl: string
-}
+  onNavigate: (view: HomeView) => void;
+  showTyping?: boolean;
+  onTypingComplete?: () => void;
+  stars?: number | null;
+  budgetStatus?: "healthy" | "warning" | "depleted";
+  demoPlan?: "free" | "plus" | "pro";
+  onRequestStarOnboarding: () => void;
+  onRequestSeedanceModal: () => void;
+  githubUrl: string;
+};
 
 export function HomeDashboard({
   onNavigate,
@@ -701,11 +701,7 @@ export function HomeDashboard({
               <div className="space-y-3">
                 {/* Connected channels — click to switch active */}
                 {connectedChannels.length > 0 && (
-                  <div
-                    role="group"
-                    aria-label="Connected channels"
-                    className="space-y-1.5"
-                  >
+                  <div role="group" aria-label="Connected channels" className="space-y-1.5">
                     {connectedChannels.map((ch) => {
                       const Icon = ch.icon;
                       return (
@@ -759,26 +755,26 @@ export function HomeDashboard({
                   <div role="group" aria-label="Available channels" className="space-y-2">
                     <div className="grid grid-cols-2 gap-2">
                       {ONBOARDING_CHANNELS.filter((ch) => !connectedIds.has(ch.id)).map((ch) => {
-                      const Icon = ch.icon;
-                      return (
-                        <button
-                          key={ch.id}
-                          onClick={() => handleOpenConfig(ch.id)}
-                          aria-label={`Connect ${ch.name}`}
-                          className="group flex h-full items-center gap-2.5 rounded-lg border border-dashed border-border bg-surface-0 px-3 py-2 text-left transition-all hover:border-solid hover:border-border-hover hover:bg-surface-1"
-                        >
-                          <div className="w-6 h-6 rounded-md flex items-center justify-center bg-surface-1 shrink-0">
-                            <Icon size={16} />
-                          </div>
-                          <span className="text-[12px] font-medium text-text-muted group-hover:text-text-secondary flex-1 truncate">
-                            {ch.name}
-                          </span>
-                          <Cable
-                            size={12}
-                            className="text-text-muted group-hover:text-text-primary transition-colors shrink-0"
-                          />
-                        </button>
-                      );
+                        const Icon = ch.icon;
+                        return (
+                          <button
+                            key={ch.id}
+                            onClick={() => handleOpenConfig(ch.id)}
+                            aria-label={`Connect ${ch.name}`}
+                            className="group flex h-full items-center gap-2.5 rounded-lg border border-dashed border-border bg-surface-0 px-3 py-2 text-left transition-all hover:border-solid hover:border-border-hover hover:bg-surface-1"
+                          >
+                            <div className="w-6 h-6 rounded-md flex items-center justify-center bg-surface-1 shrink-0">
+                              <Icon size={16} />
+                            </div>
+                            <span className="text-[12px] font-medium text-text-muted group-hover:text-text-secondary flex-1 truncate">
+                              {ch.name}
+                            </span>
+                            <Cable
+                              size={12}
+                              className="text-text-muted group-hover:text-text-primary transition-colors shrink-0"
+                            />
+                          </button>
+                        );
                       })}
                     </div>
                   </div>

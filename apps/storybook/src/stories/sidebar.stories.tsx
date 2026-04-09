@@ -69,7 +69,7 @@ export const Default: Story = {
   render: () => (
     <div className="h-[560px] w-[220px] overflow-hidden rounded-xl border border-border">
       <Sidebar className="h-full">
-        <SidebarHeader className="flex items-center justify-between gap-2.5 border-b border-border px-4 py-3">
+        <SidebarHeader className="flex items-center justify-between gap-2.5 border-b border-border px-4 py-4">
           <NexuLogoIcon size={28} />
           <div className="min-w-0 flex-1">
             <div className="text-lg font-semibold text-text-primary">Nexu</div>
@@ -84,7 +84,7 @@ export const Default: Story = {
         </SidebarHeader>
 
         <SidebarContent className="flex-1 overflow-y-auto">
-          <div className="px-2 pb-1 pt-3">
+          <div className="px-2 pb-1 pt-4">
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
@@ -110,8 +110,8 @@ export const Default: Story = {
             </NavigationMenu>
           </div>
 
-          <div className="px-2 pt-6">
-            <NavigationMenuLabel className="pb-1.5">Conversations</NavigationMenuLabel>
+          <div className="px-2 pt-8">
+            <NavigationMenuLabel className="mb-1.5">Conversations</NavigationMenuLabel>
             <div className="space-y-0.5">
               {sessions.map((s) => (
                 <button
@@ -123,7 +123,7 @@ export const Default: Story = {
                       : "text-text-secondary hover:bg-surface-2 hover:text-text-primary"
                   }`}
                 >
-                  <span className="flex size-5 shrink-0 items-center justify-center">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl border border-border bg-surface-1 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
                     <PlatformLogo platform={s.platform} size={14} />
                   </span>
                   <div className="min-w-0 flex-1">

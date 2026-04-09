@@ -12,7 +12,6 @@ import type React from "react";
 
 import { ArrowLeft, Settings } from "lucide-react";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
-import type { View } from "./workspaceTypes";
 import {
   DingTalkIconSetup,
   DiscordIconSetup,
@@ -25,6 +24,7 @@ import {
   WhatsAppIconSetup,
 } from "./channelSetup";
 import { MOCK_CHANNELS } from "./data";
+import type { View } from "./workspaceTypes";
 
 type NavItem = {
   id: View["type"];
@@ -110,10 +110,10 @@ export function OpenClawSidebarShell({
           } as React.CSSProperties
         }
       >
-        <div className="h-14 shrink-0" />
+        <div className="h-16 shrink-0" />
 
         <div
-          className="px-3 pb-2 flex items-center justify-between"
+          className="flex items-center justify-between px-3 pb-3"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
           <img src="/brand/logo-black-1.svg" alt="nexu" className="h-6 object-contain" />
@@ -131,7 +131,7 @@ export function OpenClawSidebarShell({
           className="flex-1 overflow-y-auto"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
-          <div className="px-2 pb-1 pt-3">
+          <div className="px-2 pb-1 pt-4">
             {navItems.map((item) => {
               const active = view.type === item.id;
               return (
@@ -152,8 +152,8 @@ export function OpenClawSidebarShell({
             })}
           </div>
 
-          <div className="px-2 pt-6">
-            <div className="sidebar-section-label">{t("ws.nav.conversations")}</div>
+          <div className="px-2 pt-8">
+            <div className="sidebar-section-label mb-1.5">{t("ws.nav.conversations")}</div>
             <div className="space-y-0.5">
               {MOCK_CHANNELS.map((ch) => {
                 const active = view.type === "conversations" && view.channelId === ch.id;
@@ -175,17 +175,25 @@ export function OpenClawSidebarShell({
                   <button
                     key={ch.id}
                     onClick={() => setView({ type: "conversations", channelId: ch.id })}
-                    className={`nav-item flex w-full items-center gap-2.5 rounded-[var(--radius-6)] px-2.5 py-[7px] text-[13px] transition-colors ${active ? "nav-item-active" : ""}`}
+                    className={`nav-item flex w-full items-center gap-2.5 rounded-[10px] px-3 py-2 text-left transition-colors ${active ? "nav-item-active" : ""}`}
                   >
-                    <span className="shrink-0 w-4 h-4 flex items-center justify-center">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl border border-border bg-surface-1 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
                       <ChannelIcon size={14} />
                     </span>
-                    <span className={`truncate text-[12px] ${active ? "" : "text-text-primary"}`}>
-                      {ch.name}
-                    </span>
-                    <span className="ml-auto text-[10px] font-normal tabular-nums text-text-tertiary">
-                      {ch.messageCount}
-                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex min-w-0 items-center gap-2">
+                        <div
+                          className={`truncate whitespace-nowrap text-[12px] font-medium ${active ? "" : "text-text-primary"}`}
+                        >
+                          {ch.name}
+                        </div>
+                      </div>
+                      <div className="mt-0.5 flex items-center gap-1.5 truncate whitespace-nowrap text-[10px] text-text-muted">
+                        <span>{ch.platform.charAt(0).toUpperCase() + ch.platform.slice(1)}</span>
+                        <span className="text-border">·</span>
+                        <span>{ch.messageCount} msgs</span>
+                      </div>
+                    </div>
                   </button>
                 );
               })}
@@ -194,7 +202,7 @@ export function OpenClawSidebarShell({
         </div>
 
         {nexuLoggedIn && budgetClaimedCount < budgetChannelCount && (
-          <div className="px-3 mb-2" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
+            <div className="mb-3 px-3" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
             <button
               type="button"
               onClick={() => setView({ type: "rewards" })}
@@ -208,7 +216,7 @@ export function OpenClawSidebarShell({
         )}
 
         <div
-          className="flex shrink-0 items-center justify-between gap-1 px-3 pb-1.5"
+          className="flex shrink-0 items-center justify-between gap-1 px-3 pb-2.5"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
           <div className="flex items-center gap-1">

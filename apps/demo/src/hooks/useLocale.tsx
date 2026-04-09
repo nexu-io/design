@@ -1,1 +1,1 @@
-export { LocaleProvider, useLocale, type Locale } from '@nexu-design/demo-pages'
+export { LocaleProvider, useLocale, type Locale } from "@nexu-design/demo-pages";

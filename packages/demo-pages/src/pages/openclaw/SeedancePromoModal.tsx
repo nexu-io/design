@@ -1,14 +1,13 @@
-import { ArrowUpRight, Check, Clock, Sparkles, Star, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ArrowUpRight, Check, Clock, Sparkles, Star, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { openExternal } from '../../utils/open-external';
+import { openExternal } from "../../utils/open-external";
 
-type SeedanceStep = 'star' | 'feishu';
+type SeedanceStep = "star" | "feishu";
 
 const FEISHU_GROUP_URL =
-  'https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=98drf9e0-928f-4706-b0af-e515abfb12c0';
-const SEEDANCE_TUTORIAL_URL =
-  'https://powerformer.feishu.cn/wiki/OFxFw2MpyiFWKpk9n2Dc7joEngc';
+  "https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=98drf9e0-928f-4706-b0af-e515abfb12c0";
+const SEEDANCE_TUTORIAL_URL = "https://powerformer.feishu.cn/wiki/OFxFw2MpyiFWKpk9n2Dc7joEngc";
 const SEEDANCE_COUNTDOWN_CYCLE_MS = 2 * 24 * 60 * 60 * 1000;
 const SEEDANCE_COUNTDOWN_LOOP_END_MS = Date.now() + SEEDANCE_COUNTDOWN_CYCLE_MS - 1000;
 
@@ -30,7 +29,7 @@ function getSeedanceCountdown(now: number) {
     hours,
     minutes,
     seconds,
-    compactLabel: `${String(days).padStart(2, '0')}天 ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`,
+    compactLabel: `${String(days).padStart(2, "0")}天 ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
   };
 }
 
@@ -42,12 +41,12 @@ function SeedanceCountdownBlocks({ now, compact = false }: { now: number; compac
       <div
         className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none shadow-sm tabular-nums"
         style={{
-          color: 'white',
+          color: "white",
           background:
-            'linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 82%, white), color-mix(in srgb, var(--color-danger) 78%, var(--color-warning) 22%))',
+            "linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 82%, white), color-mix(in srgb, var(--color-danger) 78%, var(--color-warning) 22%))",
           borderColor:
-            'color-mix(in srgb, var(--color-danger) 56%, var(--color-warning) 32%, white)',
-          boxShadow: 'var(--shadow-focus)',
+            "color-mix(in srgb, var(--color-danger) 56%, var(--color-warning) 32%, white)",
+          boxShadow: "var(--shadow-focus)",
         }}
       >
         <Clock size={10} className="shrink-0" />
@@ -60,19 +59,19 @@ function SeedanceCountdownBlocks({ now, compact = false }: { now: number; compac
 }
 
 export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
-  const [step, setStep] = useState<SeedanceStep>('star');
+  const [step, setStep] = useState<SeedanceStep>("star");
   const [starred, setStarred] = useState(false);
   const [countdownNow, setCountdownNow] = useState(Date.now());
 
   const handleStar = () => {
-    openExternal('https://github.com/refly-ai/nexu');
+    openExternal("https://github.com/refly-ai/nexu");
     setStarred(true);
   };
 
-  const stepDots: SeedanceStep[] = ['star', 'feishu'];
+  const stepDots: SeedanceStep[] = ["star", "feishu"];
   const stepMeta: Record<SeedanceStep, string> = {
-    star: '第一步：GitHub Star 并截图',
-    feishu: '第二步：加入飞书群并填写问卷',
+    star: "第一步：GitHub Star 并截图",
+    feishu: "第二步：加入飞书群并填写问卷",
   };
 
   useEffect(() => {
@@ -85,7 +84,7 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
       <div className="absolute inset-0 bg-black/50 backdrop-blur-[4px]" onClick={onClose} />
       <div
         className="relative mx-4 w-full max-w-[348px] overflow-hidden rounded-2xl border border-border bg-surface-1 shadow-[0_24px_64px_rgba(0,0,0,0.24),0_0_0_1px_rgba(0,0,0,0.06)]"
-        style={{ animation: 'scaleIn 220ms cubic-bezier(0.16,1,0.3,1)' }}
+        style={{ animation: "scaleIn 220ms cubic-bezier(0.16,1,0.3,1)" }}
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -99,15 +98,15 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
           className="relative border-b"
           style={{
             background:
-              'linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 16%, white), color-mix(in srgb, var(--color-brand-primary) 8%, white))',
-            borderColor: 'color-mix(in srgb, var(--color-warning) 18%, white)',
+              "linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 16%, white), color-mix(in srgb, var(--color-brand-primary) 8%, white))",
+            borderColor: "color-mix(in srgb, var(--color-warning) 18%, white)",
           }}
         >
           <div
             className="absolute inset-0 opacity-60"
             style={{
               background:
-                'radial-gradient(circle at top right, color-mix(in srgb, var(--color-brand-primary) 12%, transparent), transparent 45%)',
+                "radial-gradient(circle at top right, color-mix(in srgb, var(--color-brand-primary) 12%, transparent), transparent 45%)",
             }}
           />
           <div className="relative px-5 pb-4 pt-5">
@@ -135,34 +134,37 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
                   key={s}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
                     s === step
-                      ? 'w-5 bg-[var(--color-brand-primary)]'
+                      ? "w-5 bg-[var(--color-brand-primary)]"
                       : stepDots.indexOf(s) < stepDots.indexOf(step)
-                        ? 'w-2 bg-[var(--color-brand-primary)]/40'
-                        : 'w-2 bg-border'
+                        ? "w-2 bg-[var(--color-brand-primary)]/40"
+                        : "w-2 bg-border"
                   }`}
                 />
               ))}
             </div>
           </div>
 
-          {step === 'star' && (
+          {step === "star" && (
             <>
               <div
                 className="mb-4 rounded-[12px] border px-4 py-3"
                 style={{
-                  background: 'color-mix(in srgb, var(--color-warning) 7%, white)',
-                  borderColor: 'color-mix(in srgb, var(--color-warning) 16%, white)',
+                  background: "color-mix(in srgb, var(--color-warning) 7%, white)",
+                  borderColor: "color-mix(in srgb, var(--color-warning) 16%, white)",
                 }}
               >
                 <div className="flex items-start gap-3">
                   <div
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px] border"
                     style={{
-                      background: 'color-mix(in srgb, var(--color-warning) 12%, white)',
-                      borderColor: 'color-mix(in srgb, var(--color-warning) 18%, white)',
+                      background: "color-mix(in srgb, var(--color-warning) 12%, white)",
+                      borderColor: "color-mix(in srgb, var(--color-warning) 18%, white)",
                     }}
                   >
-                    <Star size={18} className="fill-[var(--color-warning)] text-[var(--color-warning)]" />
+                    <Star
+                      size={18}
+                      className="fill-[var(--color-warning)] text-[var(--color-warning)]"
+                    />
                   </div>
                   <div className="min-w-0">
                     <div className="text-[11px] leading-relaxed text-text-muted">
@@ -175,8 +177,8 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
                 onClick={handleStar}
                 className={`mb-2.5 flex h-[40px] w-full items-center justify-center gap-2 rounded-[10px] text-[13px] font-semibold transition-colors ${
                   starred
-                    ? 'border border-border bg-surface-1 text-text-secondary hover:bg-surface-2'
-                    : 'bg-[#24292f] text-white hover:bg-[#1c2026]'
+                    ? "border border-border bg-surface-1 text-text-secondary hover:bg-surface-2"
+                    : "bg-[#24292f] text-white hover:bg-[#1c2026]"
                 }`}
               >
                 {starred ? (
@@ -184,15 +186,15 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
                 ) : (
                   <Star size={13} className="fill-amber-400 text-amber-400" />
                 )}
-                {starred ? '已点 Star' : '去 GitHub Star'}
+                {starred ? "已点 Star" : "去 GitHub Star"}
               </button>
               <button
-                onClick={() => setStep('feishu')}
+                onClick={() => setStep("feishu")}
                 disabled={!starred}
                 className={`w-full rounded-[10px] text-[12px] font-medium transition-colors ${
                   starred
-                    ? 'h-[40px] bg-[#24292f] text-white hover:bg-[#1c2026]'
-                    : 'h-[38px] cursor-not-allowed border border-border text-text-secondary hover:bg-surface-2 disabled:opacity-30'
+                    ? "h-[40px] bg-[#24292f] text-white hover:bg-[#1c2026]"
+                    : "h-[38px] cursor-not-allowed border border-border text-text-secondary hover:bg-surface-2 disabled:opacity-30"
                 }`}
               >
                 我已经截图，去进群填问卷
@@ -200,7 +202,7 @@ export function SeedancePromoModal({ onClose }: { onClose: () => void }) {
             </>
           )}
 
-          {step === 'feishu' && (
+          {step === "feishu" && (
             <>
               <p className="mb-4 text-[12px] leading-relaxed text-text-secondary">
                 加入飞书群并填写问卷后，我们会联系并发送 Key。拿到 Key 后，将其输入到 nexu Bot

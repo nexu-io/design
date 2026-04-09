@@ -167,9 +167,9 @@ export const ONBOARDING_CHANNELS = [
   },
 ];
 
-export const CHANNELS_CONNECTED_KEY = 'nexu_channels_connected';
-export const CHANNEL_ACTIVE_KEY = 'nexu_channel_active';
-export const SEEDANCE_BANNER_DISMISSED_KEY = 'nexu_seedance_banner_dismissed';
+export const CHANNELS_CONNECTED_KEY = "nexu_channels_connected";
+export const CHANNEL_ACTIVE_KEY = "nexu_channel_active";
+export const SEEDANCE_BANNER_DISMISSED_KEY = "nexu_seedance_banner_dismissed";
 
 export const CHANNEL_CONFIG_FIELDS: Record<
   string,

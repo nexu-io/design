@@ -1,5 +1,5 @@
-import { AlertCircle, Check, Loader2, RefreshCw, Star } from 'lucide-react';
-import { useState } from 'react';
+import { AlertCircle, Check, Loader2, RefreshCw, Star } from "lucide-react";
+import { useState } from "react";
 
 export function StarModal({
   step,
@@ -7,25 +7,25 @@ export function StarModal({
   onConfirm,
   onSkip,
 }: {
-  step: 'prompt' | 'confirm';
+  step: "prompt" | "confirm";
   onStar: () => void;
   onConfirm: () => void;
   onSkip: () => void;
 }) {
   const [verifying, setVerifying] = useState(false);
-  const [verifyResult, setVerifyResult] = useState<'idle' | 'success' | 'fail'>('idle');
+  const [verifyResult, setVerifyResult] = useState<"idle" | "success" | "fail">("idle");
 
   const handleVerify = () => {
     setVerifying(true);
-    setVerifyResult('idle');
+    setVerifyResult("idle");
     setTimeout(() => {
       const passed = Math.random() < 0.7;
       setVerifying(false);
       if (passed) {
-        setVerifyResult('success');
+        setVerifyResult("success");
         onConfirm();
       } else {
-        setVerifyResult('fail');
+        setVerifyResult("fail");
       }
     }, 1800);
   };
@@ -38,11 +38,11 @@ export function StarModal({
       />
       <div
         className="relative mx-4 w-full max-w-[360px] overflow-hidden rounded-2xl border border-border bg-surface-1 shadow-[0_24px_64px_rgba(0,0,0,0.22),0_0_0_1px_rgba(0,0,0,0.06)]"
-        style={{ animation: 'scaleIn 220ms cubic-bezier(0.16,1,0.3,1)' }}
+        style={{ animation: "scaleIn 220ms cubic-bezier(0.16,1,0.3,1)" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="px-6 pb-5 pt-6">
-          {step === 'prompt' ? (
+          {step === "prompt" ? (
             <>
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-[14px] border border-amber-200/60 bg-amber-50">
                 <Star size={24} className="fill-amber-400 text-amber-500" />
@@ -92,7 +92,7 @@ export function StarModal({
                     正在检查你的 GitHub Star 状态，请稍候
                   </p>
                 </>
-              ) : verifyResult === 'fail' ? (
+              ) : verifyResult === "fail" ? (
                 <>
                   <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-[14px] border border-[var(--color-danger)]/20 bg-[var(--color-danger)]/10">
                     <AlertCircle size={24} className="text-[var(--color-danger)]" />
@@ -131,7 +131,7 @@ export function StarModal({
                     已经 Star 了吗？
                   </h2>
                   <p className="mb-4 text-center text-[12px] leading-relaxed text-text-secondary">
-                    确认后我们将为你发放{' '}
+                    确认后我们将为你发放{" "}
                     <span className="font-semibold text-[var(--color-success)]">+300 积分</span>
                   </p>
                   <div className="flex items-center gap-2.5">

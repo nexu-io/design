@@ -1,7 +1,4 @@
-import {
-  CloudFullScreenRouteElements,
-  CloudShellRouteElements,
-} from "@nexu-design/demo-pages";
+import { CloudFullScreenRouteElements, CloudShellRouteElements } from "@nexu-design/demo-pages";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 const fullScreenExactPaths = new Set([

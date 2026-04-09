@@ -1,7 +1,24 @@
-import { Card, InteractiveRow, InteractiveRowContent, InteractiveRowLeading, InteractiveRowTrailing, PageHeader, SectionHeader, TextLink, ToggleGroup, ToggleGroupItem, cn } from "@nexu-design/ui-web";
+import {
+  Card,
+  InteractiveRow,
+  InteractiveRowContent,
+  InteractiveRowLeading,
+  InteractiveRowTrailing,
+  PageHeader,
+  SectionHeader,
+  TextLink,
+  ToggleGroup,
+  ToggleGroupItem,
+  cn,
+} from "@nexu-design/ui-web";
 import { ArrowUpRight, Check, Gift } from "lucide-react";
 import { useEffect, useState } from "react";
-import { REWARD_CHANNELS, type RewardChannel, type RewardGroup, useBudget } from "../../hooks/useBudget";
+import {
+  REWARD_CHANNELS,
+  type RewardChannel,
+  type RewardGroup,
+  useBudget,
+} from "../../hooks/useBudget";
 import { openExternal } from "../../utils/open-external";
 import { ChannelIcon, CreditIcon } from "./iconHelpers";
 
@@ -20,11 +37,15 @@ function formatCreditsPlain(n: number): string {
 }
 
 function rewardsCreditsPlusLabel(n: number, t: (key: string) => string): string {
-  return n === 1 ? t("rewards.creditsPlusOne") : t("rewards.creditsPlusMany").replace("{n}", formatCreditsPlain(n));
+  return n === 1
+    ? t("rewards.creditsPlusOne")
+    : t("rewards.creditsPlusMany").replace("{n}", formatCreditsPlain(n));
 }
 
 function rewardsCreditsValueLabel(n: number, t: (key: string) => string): string {
-  return n === 1 ? t("rewards.creditsValueOne") : t("rewards.creditsValueMany").replace("{n}", formatCreditsPlain(n));
+  return n === 1
+    ? t("rewards.creditsValueOne")
+    : t("rewards.creditsValueMany").replace("{n}", formatCreditsPlain(n));
 }
 
 function formatCountdownToLocalMidnight(): string {
@@ -47,7 +68,10 @@ function useNextLocalMidnightCountdown(): string {
   return label;
 }
 
-function sortChannelsForRewards(channels: RewardChannel[], budget: ReturnType<typeof useBudget>): RewardChannel[] {
+function sortChannelsForRewards(
+  channels: RewardChannel[],
+  budget: ReturnType<typeof useBudget>,
+): RewardChannel[] {
   const isDone = (ch: RewardChannel) =>
     ch.repeatable === "daily" ? budget.dailyCheckedInToday : budget.claimedChannels.has(ch.id);
   const rank = (ch: RewardChannel): number => {
@@ -56,12 +80,15 @@ function sortChannelsForRewards(channels: RewardChannel[], budget: ReturnType<ty
     if (ch.repeatable === "weekly") return 1;
     return 2;
   };
-  return channels.map((ch, order) => ({ ch, order })).sort((a, b) => {
-    const ra = rank(a.ch);
-    const rb = rank(b.ch);
-    if (ra !== rb) return ra - rb;
-    return a.order - b.order;
-  }).map(({ ch }) => ch);
+  return channels
+    .map((ch, order) => ({ ch, order }))
+    .sort((a, b) => {
+      const ra = rank(a.ch);
+      const rb = rank(b.ch);
+      if (ra !== rb) return ra - rb;
+      return a.order - b.order;
+    })
+    .map(({ ch }) => ch);
 }
 
 export function RewardsCenter({

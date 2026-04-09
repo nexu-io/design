@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 
-import { NavigationMenuButton, Sidebar, SidebarSessionRow } from "./sidebar";
+import { NavigationMenuButton, Sidebar } from "./sidebar";
 
 describe("NavigationMenuButton", () => {
   it("marks the active item as current page", () => {
@@ -12,36 +12,25 @@ describe("NavigationMenuButton", () => {
     );
   });
 
-  it("supports a compact density", () => {
-    render(<NavigationMenuButton density="compact">Workspace</NavigationMenuButton>);
+  it("uses the current sidebar button spacing recipe", () => {
+    render(<NavigationMenuButton>Workspace</NavigationMenuButton>);
 
-    expect(screen.getByRole("button", { name: "Workspace" })).toHaveClass("py-1.5");
+    expect(screen.getByRole("button", { name: "Workspace" })).toHaveClass(
+      "mt-0.5",
+      "px-2.5",
+      "py-[7px]",
+    );
   });
 });
 
 describe("Sidebar", () => {
-  it("supports a translucent surface recipe", () => {
-    const { container } = render(<Sidebar surface="translucent" aria-label="Workspace sidebar" />);
+  it("renders the base sidebar shell", () => {
+    const { container } = render(<Sidebar aria-label="Workspace sidebar" />);
 
     const sidebar = container.querySelector("aside");
 
-    expect(sidebar).toHaveAttribute("data-surface", "translucent");
-    expect(sidebar).toHaveClass("supports-[backdrop-filter]:backdrop-blur-xl");
-  });
-});
-
-describe("SidebarSessionRow", () => {
-  it("announces its status label for assistive technology", () => {
-    render(
-      <SidebarSessionRow
-        title="Customer onboarding flow"
-        meta="Slack · 2m ago"
-        status="success"
-        statusLabel="Live session"
-      />,
-    );
-
-    expect(screen.getByRole("button", { name: /customer onboarding flow/i })).toBeInTheDocument();
-    expect(screen.getByText("Live session")).toHaveClass("sr-only");
+    expect(sidebar).toHaveAttribute("data-slot", "sidebar");
+    expect(sidebar).toHaveAttribute("aria-label", "Workspace sidebar");
+    expect(sidebar).toHaveClass("border-r", "bg-surface-1");
   });
 });

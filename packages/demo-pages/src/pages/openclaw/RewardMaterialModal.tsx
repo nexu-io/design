@@ -1,7 +1,7 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import { AlertCircle, CheckCircle2, Download, X } from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { AnimatePresence, motion } from "framer-motion";
+import { AlertCircle, CheckCircle2, Download, X } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 import {
   Alert,
@@ -11,17 +11,17 @@ import {
   ToggleGroup,
   ToggleGroupItem,
   cn,
-} from '@nexu-design/ui-web';
+} from "@nexu-design/ui-web";
 
-import type { RewardChannel } from '../../hooks/useBudget';
-import { openExternal } from '../../utils/open-external';
+import type { RewardChannel } from "../../hooks/useBudget";
+import { openExternal } from "../../utils/open-external";
 
 const SHARE_MATERIAL_STAMP_OPTIONS = [
-  '/share-material/stamp-1.png',
-  '/share-material/stamp-2.png',
-  '/share-material/stamp-3.png',
-  '/share-material/stamp-4.png',
-  '/share-material/stamp-6.png',
+  "/share-material/stamp-1.png",
+  "/share-material/stamp-2.png",
+  "/share-material/stamp-3.png",
+  "/share-material/stamp-4.png",
+  "/share-material/stamp-6.png",
 ] as const;
 
 function formatRewardAmount(n: number): string {
@@ -36,34 +36,34 @@ function downloadShareCard() {
   const W = 1080;
   const H = 1080;
   const PAD = 80;
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = W;
   canvas.height = H;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext("2d")!;
 
   const grad = ctx.createLinearGradient(0, 0, W, H);
-  grad.addColorStop(0, '#f8fafc');
-  grad.addColorStop(1, '#e2e8f0');
+  grad.addColorStop(0, "#f8fafc");
+  grad.addColorStop(1, "#e2e8f0");
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
-  ctx.fillStyle = '#0f172a';
-  ctx.font = 'bold 64px system-ui, -apple-system, sans-serif';
-  ctx.fillText('nexu', PAD, 160);
+  ctx.fillStyle = "#0f172a";
+  ctx.font = "bold 64px system-ui, -apple-system, sans-serif";
+  ctx.fillText("nexu", PAD, 160);
 
-  ctx.fillStyle = '#475569';
-  ctx.font = '32px system-ui, -apple-system, sans-serif';
-  const tagline = 'The simplest open-source openclaw desktop app';
+  ctx.fillStyle = "#475569";
+  ctx.font = "32px system-ui, -apple-system, sans-serif";
+  const tagline = "The simplest open-source openclaw desktop app";
   ctx.fillText(tagline, PAD, 220);
 
-  ctx.fillStyle = '#64748b';
-  ctx.font = '28px system-ui, -apple-system, sans-serif';
+  ctx.fillStyle = "#64748b";
+  ctx.font = "28px system-ui, -apple-system, sans-serif";
   const lines = [
-    'Bridge your Agent to WeChat, Feishu,',
-    'Slack & Discord in one click.',
-    '',
-    'Works with Claude Code, Codex & any LLM.',
-    'BYOK, OAuth, local-first.',
+    "Bridge your Agent to WeChat, Feishu,",
+    "Slack & Discord in one click.",
+    "",
+    "Works with Claude Code, Codex & any LLM.",
+    "BYOK, OAuth, local-first.",
   ];
   let y = 320;
   for (const line of lines) {
@@ -71,34 +71,34 @@ function downloadShareCard() {
     y += 42;
   }
 
-  ctx.fillStyle = '#0f172a';
-  ctx.font = 'bold 28px system-ui, -apple-system, sans-serif';
-  ctx.fillText('github.com/refly-ai/nexu', PAD, H - 120);
+  ctx.fillStyle = "#0f172a";
+  ctx.font = "bold 28px system-ui, -apple-system, sans-serif";
+  ctx.fillText("github.com/refly-ai/nexu", PAD, H - 120);
 
-  ctx.fillStyle = '#94a3b8';
-  ctx.font = '24px system-ui, -apple-system, sans-serif';
-  ctx.fillText('Star ⭐ & try it free', PAD, H - 76);
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "24px system-ui, -apple-system, sans-serif";
+  ctx.fillText("Star ⭐ & try it free", PAD, H - 76);
 
   canvas.toBlob((blob) => {
     if (!blob) return;
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'nexu-share.png';
+    a.download = "nexu-share.png";
     a.click();
     URL.revokeObjectURL(url);
-  }, 'image/png');
+  }, "image/png");
 }
 
 function getRewardMaterialLaunchUrl(channelId: string): string | null {
   switch (channelId) {
-    case 'xiaohongshu':
-      return 'https://www.xiaohongshu.com/explore';
-    case 'jike':
-      return 'https://web.okjike.com';
-    case 'feishu':
-      return 'https://www.feishu.cn';
-    case 'wechat':
+    case "xiaohongshu":
+      return "https://www.xiaohongshu.com/explore";
+    case "jike":
+      return "https://web.okjike.com";
+    case "feishu":
+      return "https://www.feishu.cn";
+    case "wechat":
       return null;
     default:
       return null;
@@ -129,14 +129,14 @@ export function RewardMaterialModal({
     setActionError(null);
     try {
       downloadShareCard();
-      await navigator.clipboard.writeText(t('rewards.shareBioClip'));
+      await navigator.clipboard.writeText(t("rewards.shareBioClip"));
       onClaim();
       const place = t(`reward.${channel.id}.toastPlace`);
-      toast.success(t('rewards.material.toastPublish').replace('{place}', place));
+      toast.success(t("rewards.material.toastPublish").replace("{place}", place));
       setCompleted(true);
       if (launchUrl) void openExternal(launchUrl);
     } catch {
-      setActionError(t('rewards.material.actionError'));
+      setActionError(t("rewards.material.actionError"));
     } finally {
       setBusy(false);
     }
@@ -167,31 +167,31 @@ export function RewardMaterialModal({
         <div className="flex flex-col gap-4 px-6 pb-4 pt-4 sm:flex-row sm:items-stretch sm:gap-5">
           <div className="flex min-w-0 flex-col gap-1 sm:min-w-12 sm:w-12 sm:self-stretch">
             <p className="text-[11px] font-medium uppercase tracking-wide text-text-tertiary">
-              {t('rewards.material.styleLabel')}
+              {t("rewards.material.styleLabel")}
             </p>
             <ToggleGroup
               type="single"
               value={String(stampIndex)}
               onValueChange={(v) => {
-                if (v !== '') setStampIndex(Number(v));
+                if (v !== "") setStampIndex(Number(v));
               }}
               className="flex flex-row gap-1.5 overflow-x-auto pb-0.5 !border-0 !bg-transparent !p-0 shadow-none [-webkit-overflow-scrolling:touch] sm:flex-col sm:gap-1.5 sm:overflow-visible sm:pb-0"
-              aria-label={t('rewards.material.stylePickerAria')}
+              aria-label={t("rewards.material.stylePickerAria")}
             >
               {SHARE_MATERIAL_STAMP_OPTIONS.map((src, i) => (
                 <ToggleGroupItem
                   key={src}
                   value={String(i)}
-                  aria-label={t('rewards.material.styleOptionAria')
-                    .replace('{n}', String(i + 1))
-                    .replace('{total}', String(SHARE_MATERIAL_STAMP_OPTIONS.length))}
+                  aria-label={t("rewards.material.styleOptionAria")
+                    .replace("{n}", String(i + 1))
+                    .replace("{total}", String(SHARE_MATERIAL_STAMP_OPTIONS.length))}
                   className={cn(
-                    'relative size-12 shrink-0 overflow-hidden !rounded-[8px] border-2 border-border !px-0 !py-0 !shadow-none',
-                    'bg-white !shadow-[var(--shadow-rest)] hover:!bg-white hover:text-inherit',
-                    'data-[state=on]:border-[var(--color-brand-primary)] data-[state=on]:!bg-white data-[state=on]:!shadow-md',
-                    'data-[state=on]:ring-2 data-[state=on]:ring-[var(--color-brand-primary)]/25',
-                    'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                    'sm:h-auto sm:w-full sm:aspect-square sm:flex-none sm:shrink-0',
+                    "relative size-12 shrink-0 overflow-hidden !rounded-[8px] border-2 border-border !px-0 !py-0 !shadow-none",
+                    "bg-white !shadow-[var(--shadow-rest)] hover:!bg-white hover:text-inherit",
+                    "data-[state=on]:border-[var(--color-brand-primary)] data-[state=on]:!bg-white data-[state=on]:!shadow-md",
+                    "data-[state=on]:ring-2 data-[state=on]:ring-[var(--color-brand-primary)]/25",
+                    "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                    "sm:h-auto sm:w-full sm:aspect-square sm:flex-none sm:shrink-0",
                   )}
                 >
                   <img
@@ -225,7 +225,7 @@ export function RewardMaterialModal({
                   key="done"
                   initial={{ opacity: 0, y: 10, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+                  transition={{ type: "spring", stiffness: 380, damping: 28 }}
                   className="flex h-full min-h-0 flex-col"
                 >
                   <div className="min-h-0 flex-1 overflow-y-auto">
@@ -241,17 +241,17 @@ export function RewardMaterialModal({
                         />
                         <span className="inline-flex min-w-0 shrink-0 items-baseline gap-1">
                           <span className="text-[18px] font-bold leading-none tabular-nums text-[var(--color-brand-primary)]">
-                            {channel.reward === 1 ? '+1' : `+${formatCreditsPlain(channel.reward)}`}
+                            {channel.reward === 1 ? "+1" : `+${formatCreditsPlain(channel.reward)}`}
                           </span>
                           <span className="text-sm font-semibold leading-none text-[var(--color-brand-primary)]">
                             {channel.reward === 1
-                              ? t('rewards.material.successCreditsWordOne')
-                              : t('rewards.material.successCreditsWordMany')}
+                              ? t("rewards.material.successCreditsWordOne")
+                              : t("rewards.material.successCreditsWordMany")}
                           </span>
                         </span>
                       </div>
                       <AlertDescription className="mb-0 text-[13px] leading-relaxed">
-                        {t('rewards.material.successPublishHint')}
+                        {t("rewards.material.successPublishHint")}
                       </AlertDescription>
                     </Alert>
                   </div>
@@ -261,20 +261,20 @@ export function RewardMaterialModal({
                   key="todo"
                   initial={{ opacity: 0, y: 10, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+                  transition={{ type: "spring", stiffness: 380, damping: 28 }}
                   className="flex h-full min-h-0 flex-col"
                 >
                   <div className="mb-2 text-[13px] font-semibold text-text-primary">
-                    {t('rewards.material.todoTitle')}
+                    {t("rewards.material.todoTitle")}
                   </div>
                   <div className="min-h-0 flex-1 overflow-hidden">
                     <ScrollArea className="h-full pr-2">
                       <ol className="space-y-2 pb-1">
                         {[
-                          t('rewards.material.todo1'),
-                          t('rewards.material.todo2'),
-                          t('rewards.material.todo3').replace(
-                            '{credits}',
+                          t("rewards.material.todo1"),
+                          t("rewards.material.todo2"),
+                          t("rewards.material.todo3").replace(
+                            "{credits}",
                             formatCreditsPlain(channel.reward),
                           ),
                         ].map((body, i) => (
@@ -299,7 +299,7 @@ export function RewardMaterialModal({
                       leadingIcon={<Download size={16} />}
                       onClick={() => void handleSaveCopyAll()}
                     >
-                      {t('rewards.material.downloadAndPost')}
+                      {t("rewards.material.downloadAndPost")}
                     </Button>
                     {actionError ? (
                       <Alert variant="destructive" className="px-3 py-2 text-sm">

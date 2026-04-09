@@ -1,4 +1,4 @@
-import { Gift } from 'lucide-react';
+import { Gift } from "lucide-react";
 
 export function ProviderLogo({ provider, size = 16 }: { provider: string; size?: number }) {
   const s = { width: size, height: size };

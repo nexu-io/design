@@ -1,7 +1,7 @@
-import { CloudFullScreenRouteElements } from '@nexu-design/demo-pages';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { CloudFullScreenRouteElements } from "@nexu-design/demo-pages";
+import { Navigate, Route, Routes } from "react-router-dom";
 
-import { CommentSystem } from '../components/CommentSystem';
+import { CommentSystem } from "../components/CommentSystem";
 
 export function FullScreenApp() {
   return (

@@ -1,37 +1,37 @@
-import { LocaleProvider, configureOpenExternal } from '@nexu-design/demo-pages'
-import { Toaster, TooltipProvider } from '@nexu-design/ui-web'
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter, HashRouter } from 'react-router-dom'
-import './index.css'
-import App from './App'
+import { LocaleProvider, configureOpenExternal } from "@nexu-design/demo-pages";
+import { Toaster, TooltipProvider } from "@nexu-design/ui-web";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, HashRouter } from "react-router-dom";
+import "./index.css";
+import App from "./App";
 
 configureOpenExternal(async (url) => {
   try {
     if (window.electronAPI?.openExternal) {
-      await window.electronAPI.openExternal(url)
-      return
+      await window.electronAPI.openExternal(url);
+      return;
     }
   } catch {
     // Fall through to the browser fallback.
   }
 
-  window.open(url, '_blank', 'noopener,noreferrer')
-})
+  window.open(url, "_blank", "noopener,noreferrer");
+});
 
 function shouldUseHashRouter() {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
 
-  return !['http:', 'https:'].includes(window.location.protocol);
+  return !["http:", "https:"].includes(window.location.protocol);
 }
 
-const root = document.getElementById('root')
+const root = document.getElementById("root");
 
 if (!root) {
-  throw new Error('Root element #root not found')
+  throw new Error("Root element #root not found");
 }
 
-const Router = shouldUseHashRouter() ? HashRouter : BrowserRouter
+const Router = shouldUseHashRouter() ? HashRouter : BrowserRouter;
 
 createRoot(root).render(
   <StrictMode>
@@ -43,5 +43,5 @@ createRoot(root).render(
         </TooltipProvider>
       </LocaleProvider>
     </Router>
-  </StrictMode>
-)
+  </StrictMode>,
+);
