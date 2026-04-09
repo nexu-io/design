@@ -26,7 +26,7 @@ function createMainWindow() {
           vibrancy: "sidebar" as const,
           visualEffectState: "followWindow" as const,
           titleBarStyle: "hiddenInset" as const,
-          trafficLightPosition: { x: 16, y: 16 },
+          trafficLightPosition: { x: 18, y: 18 },
         }
       : {}),
     webPreferences: {

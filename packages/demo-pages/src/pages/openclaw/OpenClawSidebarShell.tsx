@@ -87,18 +87,20 @@ export function OpenClawSidebarShell({
 }: Props) {
   return (
     <>
-      <button
-        onClick={() => {
-          const next = !collapsed;
-          setCollapsed(next);
-          localStorage.setItem("nexu_sidebar_collapsed", String(next));
-        }}
-        className="absolute top-2 left-[88px] z-50 rounded-md p-1.5 text-text-tertiary transition-colors hover:bg-black/5 hover:text-text-primary"
-        style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
-        title={collapsed ? t("ws.sidebar.expand") : t("ws.sidebar.collapse")}
-      >
-        {collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
-      </button>
+      {collapsed && (
+        <button
+          onClick={() => {
+            const next = !collapsed;
+            setCollapsed(next);
+            localStorage.setItem("nexu_sidebar_collapsed", String(next));
+          }}
+          className="fixed z-50 hidden h-8 w-8 items-center justify-center rounded-lg text-text-tertiary transition-colors hover:bg-black/5 hover:text-text-primary md:flex"
+          style={{ top: 58, left: sidebarWidth - 48, WebkitAppRegion: "no-drag" } as React.CSSProperties}
+          title={t("ws.sidebar.expand")}
+        >
+          <PanelLeftOpen size={16} />
+        </button>
+      )}
 
       <div
         className={`flex shrink-0 flex-col overflow-hidden ${collapsed ? "w-0" : ""}`}
@@ -111,21 +113,34 @@ export function OpenClawSidebarShell({
           } as React.CSSProperties
         }
       >
-        <div className="h-8 shrink-0" />
+        <div className="h-[54px] shrink-0" />
 
         <div
-          className="px-3 pb-1 flex items-center justify-between"
+          className="flex shrink-0 items-center justify-between px-3 pb-0"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
           <img src="/brand/logo-black-1.svg" alt="nexu" className="h-6 object-contain" />
-          {hasUpdate && updateDismissed && (
+          <div className="flex items-center gap-2">
+            {hasUpdate && updateDismissed && (
+              <button
+                onClick={onReopenUpdate}
+                className="rounded-full bg-[var(--color-brand-primary)] px-2 py-1 text-[12px] font-semibold leading-none text-white transition-opacity hover:opacity-85"
+              >
+                {t("ws.sidebar.update")}
+              </button>
+            )}
             <button
-              onClick={onReopenUpdate}
-              className="rounded-full px-2 py-1 text-[12px] leading-none font-semibold bg-[var(--color-brand-primary)] text-white hover:opacity-85 transition-opacity"
+              onClick={() => {
+                const next = !collapsed;
+                setCollapsed(next);
+                localStorage.setItem("nexu_sidebar_collapsed", String(next));
+              }}
+              className="shrink-0 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface-3 hover:text-text-primary"
+              title={t("ws.sidebar.collapse")}
             >
-              {t("ws.sidebar.update")}
+              <PanelLeftClose size={14} />
             </button>
-          )}
+          </div>
         </div>
 
         <div
