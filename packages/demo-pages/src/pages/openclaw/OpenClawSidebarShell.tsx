@@ -56,7 +56,6 @@ type Props = {
   stars?: number;
   githubUrl: string;
   navItems: NavItem[];
-  onResizeStart: (e: React.MouseEvent) => void;
 };
 
 export function OpenClawSidebarShell({
@@ -83,7 +82,6 @@ export function OpenClawSidebarShell({
   stars,
   githubUrl,
   navItems,
-  onResizeStart,
 }: Props) {
   return (
     <>
@@ -240,7 +238,7 @@ export function OpenClawSidebarShell({
           <div className="flex items-center gap-1">
             <div className="relative shrink-0" ref={helpRef}>
               {showHelpMenu && (
-                <div className="absolute z-20 bottom-full left-1/2 -translate-x-1/2 mb-2 w-[200px]">
+                <div className="absolute bottom-full left-0 z-20 mb-2 w-44">
                   <div className="rounded-xl border bg-surface-1 border-border shadow-xl shadow-black/10 overflow-hidden">
                     <div className="p-1.5">
                       <a

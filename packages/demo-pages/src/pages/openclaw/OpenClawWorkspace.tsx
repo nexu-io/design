@@ -330,7 +330,6 @@ export default function OpenClawWorkspace() {
         stars={stars ?? undefined}
         githubUrl={GITHUB_URL}
         navItems={NAV_ITEMS}
-        onResizeStart={handleResizeStart}
       />
 
       {/* Resize handle */}
