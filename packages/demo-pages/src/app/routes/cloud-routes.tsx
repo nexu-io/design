@@ -1,6 +1,7 @@
 import { Navigate, Route } from "react-router-dom";
 
 import GrowthLanding from "../../pages/GrowthLanding";
+import GrowthOpsDashboard from "../../pages/GrowthOpsDashboard";
 import AuthPage from "../../pages/openclaw/AuthPage";
 import AuthShell from "../../pages/openclaw/AuthShell";
 import ChannelsPage from "../../pages/openclaw/ChannelsPage";
@@ -50,6 +51,7 @@ export function CloudFullScreenRouteElements() {
       <Route path="/openclaw/growth-demo" element={<GroupGrowthDemo />} />
       <Route path="/openclaw/growth-demo/new" element={<GroupGrowthDemo />} />
       <Route path="/openclaw/growth-demo/existing" element={<GroupGrowthDemo />} />
+      <Route path="/openclaw/growth-ops-dashboard" element={<GrowthOpsDashboard />} />
       <Route path="/openclaw/changelog" element={<Navigate to="/docs/get-started" replace />} />
       <Route path="/openclaw/changelog/*" element={<Navigate to="/docs/get-started" replace />} />
     </>

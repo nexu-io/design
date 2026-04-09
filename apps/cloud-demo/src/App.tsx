@@ -30,6 +30,7 @@ function isFullScreenPath(pathname: string) {
     pathname.startsWith("/openclaw/changelog/") ||
     pathname.startsWith("/openclaw/skill/") ||
     pathname.startsWith("/openclaw/growth-demo") ||
+    pathname.startsWith("/openclaw/growth-ops-dashboard") ||
     fullScreenPrefixes.some((prefix) => pathname.startsWith(prefix))
   );
 }
@@ -40,8 +41,8 @@ export default function App() {
   if (isFullScreenPath(location.pathname)) {
     return (
       <Routes>
-        <CloudFullScreenRouteElements />
-        <DocsRouteElements />
+        {CloudFullScreenRouteElements()}
+        {DocsRouteElements()}
         <Route path="*" element={<Navigate to="/openclaw/welcome" replace />} />
       </Routes>
     );
@@ -49,7 +50,7 @@ export default function App() {
 
   return (
     <Routes>
-      <CloudShellRouteElements />
+      {CloudShellRouteElements()}
       <Route path="*" element={<Navigate to="/openclaw" replace />} />
     </Routes>
   );

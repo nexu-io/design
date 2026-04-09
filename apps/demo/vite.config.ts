@@ -13,7 +13,7 @@ function nexuDemoEntryHint(): Plugin {
         const addr = server.httpServer?.address();
         const port = typeof addr === "object" && addr !== null && "port" in addr ? addr.port : 5175;
         console.log(
-          `\n  \x1b[96mNexu Digital — open in browser\x1b[0m\n    http://127.0.0.1:${port}/nexu/welcome\n    http://127.0.0.1:${port}/nexu\n  (If startup fails with “port in use”, close other Vite/Storybook on 5175 or run: lsof -i :5175)\n`,
+          `\n  \x1b[96mNexu Digital — open in browser\x1b[0m\n    http://127.0.0.1:${port}/openclaw/welcome\n    http://127.0.0.1:${port}/openclaw/workspace\n  (If startup fails with “port in use”, close other Vite/Storybook on 5175 or run: lsof -i :5175)\n`,
         );
       });
     },

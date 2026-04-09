@@ -5,7 +5,7 @@
   "identifier": "dev.nexu.app",
   "build": {
     "frontendDist": "../dist",
-    "devUrl": "http://localhost:5175",
+    "devUrl": "http://localhost:5175/openclaw/welcome",
     "beforeDevCommand": "pnpm run dev:web",
     "beforeBuildCommand": "tsc -b && vite build"
   },
