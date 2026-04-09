@@ -7,7 +7,7 @@ export function FullScreenApp() {
   return (
     <>
       <Routes>
-        <DocsRouteElements />
+        {DocsRouteElements()}
       </Routes>
       <CommentSystem />
     </>

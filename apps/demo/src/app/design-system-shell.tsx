@@ -163,8 +163,8 @@ export function DesignSystemShell() {
 
         <main className="overflow-y-auto flex-1 min-h-0">
           <Routes>
-            <DesignSystemRouteElements />
-            <ProductRouteElements />
+            {DesignSystemRouteElements()}
+            {ProductRouteElements()}
             <Route path="/openclaw/*" element={<CloudDemoRedirect />} />
             <Route path="*" element={<Navigate to="/overview" replace />} />
           </Routes>
