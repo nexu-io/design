@@ -85,6 +85,22 @@ const themeMappings = [
   ["--shadow-card", "--shadow-card"],
   ["--shadow-dropdown", "--shadow-dropdown"],
   ["--shadow-focus", "--shadow-focus"],
+  ["--shadow-refine", "--shadow-refine"],
+  ["--shadow-elevated", "--shadow-elevated"],
+  ["--shadow-overlay", "--shadow-overlay"],
+  ["--text-size-2xs", "--text-2xs"],
+  ["--text-size-xs", "--text-xs"],
+  ["--text-size-sm", "--text-sm"],
+  ["--text-size-base", "--text-base"],
+  ["--text-size-lg", "--text-lg"],
+  ["--text-size-xl", "--text-xl"],
+  ["--text-size-2xl", "--text-2xl"],
+  ["--text-size-3xl", "--text-3xl"],
+  ["--text-size-4xl", "--text-4xl"],
+  ["--text-weight-normal", "--font-weight-normal"],
+  ["--text-weight-medium", "--font-weight-medium"],
+  ["--text-weight-semibold", "--font-weight-semibold"],
+  ["--text-weight-bold", "--font-weight-bold"],
 ];
 
 const generated = `${banner()}${renderFontFaces()}
@@ -93,7 +109,7 @@ ${renderBlock(":root", tokenSource.themes.light)}
 
 ${renderBlock(".dark", tokenSource.themes.dark)}
 
-${renderThemeMappings(themeMappings)}
+${renderThemeMappings(themeMappings, tokenSource.metadata.fontSizes)}
 
 @layer base {
   * {
@@ -142,7 +158,7 @@ function renderBlock(selector, variables) {
   return `${selector} {\n${lines.join("\n")}\n}`;
 }
 
-function renderThemeMappings(mappings) {
+function renderThemeMappings(mappings, fontSizes = []) {
   const lines = mappings.map(([sourceVar, themeVar, mode]) => {
     if (mode === "direct") {
       return `  ${themeVar}: var(${sourceVar});`;
@@ -150,6 +166,11 @@ function renderThemeMappings(mappings) {
     const isColor = themeVar.startsWith("--color-");
     return `  ${themeVar}: ${isColor ? `hsl(var(${sourceVar}))` : `var(${sourceVar})`};`;
   });
+
+  for (const fontSize of fontSizes) {
+    if (!fontSize.cssVar || !fontSize.utility || fontSize.lineHeight == null) continue;
+    lines.push(`  --${fontSize.utility}--line-height: ${fontSize.lineHeight};`);
+  }
 
   return `@theme inline {\n${lines.join("\n")}\n}`;
 }

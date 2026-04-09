@@ -196,6 +196,27 @@
         "category": "shadow",
         "value": "var(--shadow-focus)",
         "description": "Focus ring — brand-tinted outline for accessibility."
+      },
+      {
+        "name": "Shadow Refine",
+        "cssVar": "--shadow-refine",
+        "category": "shadow",
+        "value": "var(--shadow-refine)",
+        "description": "Interactive hover lift for refined card states."
+      },
+      {
+        "name": "Shadow Elevated",
+        "cssVar": "--shadow-elevated",
+        "category": "shadow",
+        "value": "var(--shadow-elevated)",
+        "description": "Large elevated panels and prominent floating surfaces."
+      },
+      {
+        "name": "Shadow Overlay",
+        "cssVar": "--shadow-overlay",
+        "category": "shadow",
+        "value": "var(--shadow-overlay)",
+        "description": "Overlay and popover depth for detached layers."
       }
     ],
     "motion": [
@@ -452,6 +473,14 @@
         "utility": "font-medium",
         "value": 500,
         "description": "Labels, nav items, form controls."
+      },
+      {
+        "name": "Semibold",
+        "cssVar": "--text-weight-semibold",
+        "category": "fontWeight",
+        "utility": "font-semibold",
+        "value": 600,
+        "description": "Section titles, emphasized labels, key controls."
       },
       {
         "name": "Bold",
@@ -739,6 +768,9 @@
       "--shadow-card": "0 4px 8px 0 rgba(0, 0, 0, 0.08)",
       "--shadow-dropdown": "0 8px 24px rgba(0, 0, 0, 0.08)",
       "--shadow-focus": "0 0 0 2px rgba(61, 185, 206, 0.25)",
+      "--shadow-refine": "0 10px 20px -5px rgba(0, 0, 0, 0.06)",
+      "--shadow-elevated": "0 18px 60px rgba(0, 0, 0, 0.08)",
+      "--shadow-overlay": "0 18px 38px rgba(0, 0, 0, 0.1)",
       "--spacing": "0.25rem",
       "--duration-fast": "120ms",
       "--duration-normal": "200ms",
@@ -842,6 +874,9 @@
       "--shadow-card": "0 4px 8px 0 rgba(0, 0, 0, 0.14)",
       "--shadow-dropdown": "0 8px 24px rgba(0, 0, 0, 0.18)",
       "--shadow-focus": "0 0 0 2px rgba(61, 185, 206, 0.35)",
+      "--shadow-refine": "0 10px 20px -5px rgba(0, 0, 0, 0.1)",
+      "--shadow-elevated": "0 18px 60px rgba(0, 0, 0, 0.14)",
+      "--shadow-overlay": "0 18px 38px rgba(0, 0, 0, 0.18)",
       "--spacing": "0.25rem",
       "--duration-fast": "120ms",
       "--duration-normal": "200ms",

@@ -52,6 +52,9 @@
   --shadow-card: 0 4px 8px 0 rgba(0, 0, 0, 0.08);
   --shadow-dropdown: 0 8px 24px rgba(0, 0, 0, 0.08);
   --shadow-focus: 0 0 0 2px rgba(61, 185, 206, 0.25);
+  --shadow-refine: 0 10px 20px -5px rgba(0, 0, 0, 0.06);
+  --shadow-elevated: 0 18px 60px rgba(0, 0, 0, 0.08);
+  --shadow-overlay: 0 18px 38px rgba(0, 0, 0, 0.1);
   --spacing: 0.25rem;
   --duration-fast: 120ms;
   --duration-normal: 200ms;
@@ -156,6 +159,9 @@
   --shadow-card: 0 4px 8px 0 rgba(0, 0, 0, 0.14);
   --shadow-dropdown: 0 8px 24px rgba(0, 0, 0, 0.18);
   --shadow-focus: 0 0 0 2px rgba(61, 185, 206, 0.35);
+  --shadow-refine: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+  --shadow-elevated: 0 18px 60px rgba(0, 0, 0, 0.14);
+  --shadow-overlay: 0 18px 38px rgba(0, 0, 0, 0.18);
   --spacing: 0.25rem;
   --duration-fast: 120ms;
   --duration-normal: 200ms;
@@ -295,6 +301,31 @@
   --shadow-card: var(--shadow-card);
   --shadow-dropdown: var(--shadow-dropdown);
   --shadow-focus: var(--shadow-focus);
+  --shadow-refine: var(--shadow-refine);
+  --shadow-elevated: var(--shadow-elevated);
+  --shadow-overlay: var(--shadow-overlay);
+  --text-2xs: var(--text-size-2xs);
+  --text-xs: var(--text-size-xs);
+  --text-sm: var(--text-size-sm);
+  --text-base: var(--text-size-base);
+  --text-lg: var(--text-size-lg);
+  --text-xl: var(--text-size-xl);
+  --text-2xl: var(--text-size-2xl);
+  --text-3xl: var(--text-size-3xl);
+  --text-4xl: var(--text-size-4xl);
+  --font-weight-normal: var(--text-weight-normal);
+  --font-weight-medium: var(--text-weight-medium);
+  --font-weight-semibold: var(--text-weight-semibold);
+  --font-weight-bold: var(--text-weight-bold);
+  --text-2xs--line-height: 1.2;
+  --text-xs--line-height: 1.45;
+  --text-sm--line-height: 1.5;
+  --text-base--line-height: 1.5;
+  --text-lg--line-height: 1.5;
+  --text-xl--line-height: 1.4;
+  --text-2xl--line-height: 1.3;
+  --text-3xl--line-height: 1.2;
+  --text-4xl--line-height: 1.1;
 }
 
 @layer base {

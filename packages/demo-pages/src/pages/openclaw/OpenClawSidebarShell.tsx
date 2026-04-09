@@ -110,10 +110,10 @@ export function OpenClawSidebarShell({
           } as React.CSSProperties
         }
       >
-        <div className="h-16 shrink-0" />
+        <div className="h-8 shrink-0" />
 
         <div
-          className="flex items-center justify-between px-3 pb-3"
+          className="px-3 pb-1 flex items-center justify-between"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
           <img src="/brand/logo-black-1.svg" alt="nexu" className="h-6 object-contain" />
@@ -131,14 +131,14 @@ export function OpenClawSidebarShell({
           className="flex-1 overflow-y-auto"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
-          <div className="px-2 pb-1 pt-4">
+          <div className="px-2 pt-3 pb-1">
             {navItems.map((item) => {
               const active = view.type === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => setView({ type: item.id } as View)}
-                  className={`nav-item mt-0.5 flex w-full items-center gap-2.5 whitespace-nowrap rounded-[var(--radius-6)] px-3 py-2 text-[13px] transition-colors ${active ? "nav-item-active" : ""}`}
+                  className={`nav-item flex items-center gap-2.5 w-full rounded-[var(--radius-6)] text-[13px] transition-colors cursor-pointer mt-0.5 px-3 py-2 whitespace-nowrap ${active ? "nav-item-active" : ""}`}
                 >
                   <item.icon size={16} />
                   {t(item.labelKey)}
@@ -152,8 +152,10 @@ export function OpenClawSidebarShell({
             })}
           </div>
 
-          <div className="px-2 pt-8">
-            <div className="sidebar-section-label mb-1.5">{t("ws.nav.conversations")}</div>
+          <div className="px-2 pt-6">
+            <div className="sidebar-section-label whitespace-nowrap">
+              {t("ws.nav.conversations")}
+            </div>
             <div className="space-y-0.5">
               {MOCK_CHANNELS.map((ch) => {
                 const active = view.type === "conversations" && view.channelId === ch.id;
@@ -175,7 +177,7 @@ export function OpenClawSidebarShell({
                   <button
                     key={ch.id}
                     onClick={() => setView({ type: "conversations", channelId: ch.id })}
-                    className={`nav-item flex w-full items-center gap-2.5 rounded-[10px] px-3 py-2 text-left transition-colors ${active ? "nav-item-active" : ""}`}
+                    className={`group flex items-center gap-2.5 w-full rounded-[10px] transition-colors cursor-pointer px-3 py-2 text-left ${active ? "nav-item-active" : ""}`}
                   >
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl border border-border bg-surface-1 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
                       <ChannelIcon size={14} />
@@ -202,7 +204,7 @@ export function OpenClawSidebarShell({
         </div>
 
         {nexuLoggedIn && budgetClaimedCount < budgetChannelCount && (
-            <div className="mb-3 px-3" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
+          <div className="px-3 mb-2" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
             <button
               type="button"
               onClick={() => setView({ type: "rewards" })}
@@ -216,7 +218,7 @@ export function OpenClawSidebarShell({
         )}
 
         <div
-          className="flex shrink-0 items-center justify-between gap-1 px-3 pb-2.5"
+          className="flex shrink-0 items-center justify-between gap-1 px-3 pb-1.5"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
           <div className="flex items-center gap-1">
