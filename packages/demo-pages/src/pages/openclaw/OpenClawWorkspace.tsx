@@ -302,7 +302,10 @@ export default function OpenClawWorkspace() {
   };
 
   return (
-    <div className="relative flex flex-row h-full">
+    <div
+      className="relative flex h-full flex-row overflow-hidden"
+      style={{ background: 'rgba(255, 255, 255, 0.08)' }}
+    >
       <OpenClawSidebarShell
         t={t}
         collapsed={collapsed}
@@ -330,11 +333,23 @@ export default function OpenClawWorkspace() {
         onResizeStart={handleResizeStart}
       />
 
+      {/* Resize handle */}
+      {!collapsed && (
+        <div
+          onMouseDown={handleResizeStart}
+          className="hidden md:block w-px shrink-0 cursor-col-resize group relative z-10"
+          style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
+        >
+          <div className="absolute inset-y-0 -left-1.5 -right-1.5" />
+        </div>
+      )}
+
       {/* Main content */}
-      <main className="relative flex-1 overflow-hidden min-h-0 bg-surface-1 rounded-l-[12px] pt-20 flex flex-col">
-        {/* Update banner — floating bottom-right of canvas */}
-        {hasUpdate && !updateDismissed && (
-          <div className="absolute bottom-4 right-4 z-30 w-[280px] px-3 py-2.5 rounded-[10px] border border-border bg-surface-0/90 backdrop-blur-md shadow-[var(--shadow-dropdown)] animate-float">
+      <div className="relative flex-1 min-w-0">
+        <main className="relative flex h-full min-w-0 flex-col bg-surface-1 rounded-l-[12px] overflow-hidden pt-20">
+          {/* Update banner — floating bottom-right of canvas */}
+          {hasUpdate && !updateDismissed && (
+            <div className="absolute bottom-4 right-4 z-30 w-[280px] px-3 py-2.5 rounded-[10px] border border-border bg-surface-0/90 backdrop-blur-md shadow-[var(--shadow-dropdown)] animate-float">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2 shrink-0">
@@ -450,10 +465,10 @@ export default function OpenClawWorkspace() {
                 </button>
               </div>
             )}
-          </div>
-        )}
-        {budget.status === "depleted" && view.type === "conversations" ? (
-          <div className="relative z-0 flex-1 flex items-center justify-center min-h-0">
+            </div>
+          )}
+          {budget.status === "depleted" && view.type === "conversations" ? (
+            <div className="relative z-0 flex-1 flex items-center justify-center min-h-0">
             <div className="flex flex-col items-center text-center max-w-[360px]">
               <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-6">
                 <Zap size={28} className="text-neutral-400" />
@@ -497,9 +512,9 @@ export default function OpenClawWorkspace() {
                 </button>
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="relative z-0 flex-1 flex flex-col overflow-hidden min-h-0">
+            </div>
+          ) : (
+            <div className="relative z-0 flex-1 flex flex-col overflow-hidden min-h-0">
             {view.type === "home" && (
               <HomeDashboard
                 onNavigate={setView}
@@ -543,9 +558,10 @@ export default function OpenClawWorkspace() {
                 githubUrl={GITHUB_URL}
               />
             )}
-          </div>
-        )}
-      </main>
+            </div>
+          )}
+        </main>
+      </div>
 
       <WorkspaceTopRightControls
         nexuLoggedIn={nexuLoggedIn}

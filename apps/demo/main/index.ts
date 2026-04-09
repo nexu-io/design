@@ -1,9 +1,11 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { BrowserWindow, app, ipcMain, shell } from "electron";
+import { BrowserWindow, app, ipcMain, nativeTheme, shell } from "electron";
 import type { IpcMainInvokeEvent } from "electron";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+nativeTheme.themeSource = "light";
 const devServerUrl = process.env.VITE_DEV_SERVER_URL;
 
 function createMainWindow() {

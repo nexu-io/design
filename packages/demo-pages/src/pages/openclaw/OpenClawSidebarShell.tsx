@@ -101,12 +101,13 @@ export function OpenClawSidebarShell({
       </button>
 
       <div
-        className={`sidebar-vibrancy flex shrink-0 flex-col overflow-hidden ${collapsed ? "w-0" : ""}`}
+        className={`flex shrink-0 flex-col overflow-hidden ${collapsed ? "w-0" : ""}`}
         style={
           {
             ...(!collapsed ? { width: sidebarWidth } : {}),
             transition: isResizing ? "none" : "width 200ms",
             WebkitAppRegion: "drag",
+            background: 'rgba(255, 255, 255, 0.08)',
           } as React.CSSProperties
         }
       >
@@ -321,16 +322,6 @@ export function OpenClawSidebarShell({
           <Settings size={16} />
         </button>
       </div>
-
-      {!collapsed && (
-        <div
-          onMouseDown={onResizeStart}
-          className="w-[3px] shrink-0 cursor-col-resize group relative z-10"
-          style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
-        >
-          <div className="absolute inset-y-0 -left-[2px] -right-[2px]" />
-        </div>
-      )}
     </>
   );
 }
