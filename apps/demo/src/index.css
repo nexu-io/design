@@ -648,9 +648,11 @@ body,
   align-items: center;
   gap: 10px;
   width: 100%;
+  min-height: 30px;
   padding: 7px 10px;
   border-radius: var(--radius-6);
   font-size: 13px;
+  line-height: 1.2;
   font-weight: 500;
   color: var(--color-text-secondary);
   background: transparent;

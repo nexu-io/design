@@ -5219,8 +5219,8 @@ export default function OpenClawWorkspace() {
                 <button
                   key={item.id}
                   onClick={() => setView({ type: item.id } as View)}
-                  className={`flex w-full items-center gap-2.5 whitespace-nowrap rounded-[var(--radius-6)] px-2.5 py-[7px] text-[13px] transition-colors ${
-                    active ? "nav-item-active" : "nav-item"
+                  className={`nav-item flex w-full items-center gap-2.5 whitespace-nowrap rounded-[var(--radius-6)] px-2.5 py-[7px] text-[13px] transition-colors ${
+                    active ? "nav-item-active" : ""
                   }`}
                 >
                   <item.icon size={16} />
@@ -5261,8 +5261,8 @@ export default function OpenClawWorkspace() {
                   <button
                     key={ch.id}
                     onClick={() => setView({ type: "conversations", channelId: ch.id })}
-                    className={`flex w-full items-center gap-2.5 rounded-[var(--radius-6)] px-2.5 py-[7px] text-[13px] transition-colors ${
-                      active ? "nav-item-active" : "nav-item"
+                    className={`nav-item flex w-full items-center gap-2.5 rounded-[var(--radius-6)] px-2.5 py-[7px] text-[13px] transition-colors ${
+                      active ? "nav-item-active" : ""
                     }`}
                   >
                     <span className="shrink-0 w-4 h-4 flex items-center justify-center">
