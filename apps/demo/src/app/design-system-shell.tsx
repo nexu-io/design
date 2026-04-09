@@ -1,5 +1,4 @@
 import {
-  Brain,
   Clock,
   Component,
   Layout,
@@ -28,7 +27,6 @@ import { ProductRouteElements } from "./routes/product-routes";
 const DESIGN_NAV = [
   { to: "/why", label: "Why We Build nexu", icon: Lightbulb },
   { to: "/bp", label: "BP PPT", icon: Presentation },
-  { to: "/overview", label: "Overview", icon: Brain },
   { to: "/colors", label: "Colors", icon: Palette },
   { to: "/typography", label: "Typography", icon: Type },
   { to: "/components", label: "Components", icon: Component },
