@@ -2507,7 +2507,6 @@ function HomeDashboard({
   const [modelSearch, setModelSearch] = useState("");
   const [expandedProviders, setExpandedProviders] = useState<Set<string>>(new Set());
   const modelDropdownRef = useRef<HTMLDivElement>(null);
-  const hasChannel = connectedIds.size > 0;
   const connectedChannels = ONBOARDING_CHANNELS.filter((c) => connectedIds.has(c.id));
   const providerDetails = getProviderDetails();
   const enabledProviders = providerDetails.filter((p) => p.enabled);
@@ -2687,7 +2686,7 @@ function HomeDashboard({
     };
     v.addEventListener("ended", onEnded);
     return () => v.removeEventListener("ended", onEnded);
-  }, [hasChannel]);
+  }, []);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -2700,194 +2699,6 @@ function HomeDashboard({
       v.loop = false;
     }
   }, [videoHover]);
-
-  /* ── Scene A: First-run — Top (Hero) + Middle (Channels) only ── */
-  if (!hasChannel) {
-    return (
-      <div className="h-full overflow-y-auto">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
-          {/* ═══ TOP: Hero — Bot idle, waiting to be activated ═══ */}
-          <div className="flex flex-col items-center text-center">
-            <div
-              className="relative w-24 h-24 mb-1 cursor-default"
-              onMouseEnter={() => setVideoHover(true)}
-              onMouseLeave={() => setVideoHover(false)}
-            >
-              <video
-                ref={videoRef}
-                src="/nexu-alpha.mp4"
-                poster="/nexu-alpha-poster.jpg"
-                preload="auto"
-                autoPlay
-                muted
-                playsInline
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <h2 className="font-script text-[26px] font-normal tracking-tight text-text-primary mb-1.5">
-              nexu alpha
-            </h2>
-            <div className="flex items-center gap-3 text-[11px] text-text-muted">
-              <span className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-[var(--color-warning)]/10 text-[var(--color-warning)] leading-none">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-warning)] animate-pulse shrink-0" />
-                {t("ws.home.idle")}
-              </span>
-              <span>{t("ws.home.waitingForActivation")}</span>
-            </div>
-
-            {/* Speech bubble — minimal pill */}
-            <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-1 border border-border/60 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand-primary)] animate-pulse shrink-0" />
-              <span className="text-[12px] text-text-secondary">
-                {t("ws.home.connectToActivate")}
-              </span>
-            </div>
-          </div>
-
-          {/* ═══ MIDDLE: Channels — default open, Feishu highlighted ═══ */}
-          <div className="card overflow-visible">
-            <div className="px-5 pt-4 pb-3">
-              <span className="text-[12px] font-medium text-text-primary">
-                {t("ws.home.chooseChannel")}
-              </span>
-            </div>
-            <div className="px-5 pb-5">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                {ONBOARDING_CHANNELS.map((ch) => {
-                  const Icon = ch.icon;
-                  return (
-                    <button
-                      key={ch.id}
-                      onClick={() => handleOpenConfig(ch.id)}
-                      className={`group relative rounded-xl border px-3 py-3 text-left transition-all cursor-pointer active:scale-[0.98] border-border bg-surface-0 hover:border-border-hover hover:bg-surface-1 ${
-                        ch.recommended ? "animate-breathe" : ""
-                      }`}
-                    >
-                      <div className="flex items-start gap-2.5">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center border border-border bg-surface-1 shrink-0">
-                          <Icon size={16} />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="text-[13px] font-medium text-text-primary">{ch.name}</div>
-                          <div className="mt-0.5 text-[11px] text-text-muted">
-                            {t("ws.home.addNexuBot")}
-                          </div>
-                        </div>
-                        <ArrowRight
-                          size={13}
-                          className="text-text-muted group-hover:text-text-secondary transition-colors shrink-0 mt-0.5"
-                        />
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {seedanceBanner}
-        </div>
-
-        {/* Channel config modal */}
-        {configChannel &&
-          (() => {
-            const ch = ONBOARDING_CHANNELS.find((c) => c.id === configChannel)!;
-            const fields = CHANNEL_CONFIG_FIELDS[configChannel] || [];
-            const Icon = ch.icon;
-            const allFilled = fields.every((f) => (configValues[f.id] || "").trim().length > 0);
-            return (
-              <div className="fixed inset-0 z-50 flex items-center justify-center">
-                <div
-                  className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-                  onClick={handleCloseConfig}
-                />
-                <div className="relative w-full max-w-md mx-4 rounded-2xl border border-border bg-surface-1 shadow-2xl">
-                  {/* Header */}
-                  <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center border border-border bg-surface-1">
-                        <Icon size={18} />
-                      </div>
-                      <div>
-                        <h3 className="text-[14px] font-semibold text-text-primary">
-                          {t("ws.common.connect")} {ch.name}
-                        </h3>
-                        <p className="text-[11px] text-text-muted">
-                          {t("ws.home.configureCredentials")}
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={handleCloseConfig}
-                      className="p-1.5 rounded-lg hover:bg-surface-2 text-text-muted hover:text-text-secondary transition-colors"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                  {/* Fields */}
-                  <div className="px-6 py-5 space-y-4">
-                    {fields.map((field) => (
-                      <div key={field.id}>
-                        <label className="block text-[12px] font-medium text-text-primary mb-1.5">
-                          {field.label}
-                        </label>
-                        <div className="relative">
-                          <input
-                            type={showSecrets[field.id] ? "text" : "password"}
-                            value={configValues[field.id] || ""}
-                            onChange={(e) =>
-                              setConfigValues((prev) => ({ ...prev, [field.id]: e.target.value }))
-                            }
-                            placeholder={field.placeholder}
-                            className="w-full px-3 py-2 pr-9 rounded-lg border border-border bg-surface-0 text-[13px] text-text-primary placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)]/20 focus:border-[var(--color-brand-primary)]/30 transition-colors font-mono"
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setShowSecrets((prev) => ({ ...prev, [field.id]: !prev[field.id] }))
-                            }
-                            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary transition-colors"
-                          >
-                            {showSecrets[field.id] ? <EyeOff size={14} /> : <Eye size={14} />}
-                          </button>
-                        </div>
-                        <p className="text-[11px] text-text-muted mt-1">{field.helpText}</p>
-                      </div>
-                    ))}
-                    {/* Doc link */}
-                    <a
-                      href={ch.docUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-link mt-1"
-                    >
-                      <FileText size={13} />
-                      {t("ws.home.viewSetupGuide").replace("{name}", ch.name)}
-                    </a>
-                  </div>
-                  {/* Footer */}
-                  <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-border">
-                    <button
-                      onClick={handleCloseConfig}
-                      className="px-4 py-2 rounded-lg text-[13px] font-medium text-text-secondary hover:bg-surface-2 transition-colors"
-                    >
-                      {t("ws.common.cancel")}
-                    </button>
-                    <button
-                      onClick={() => handleConnectChannel(configChannel)}
-                      disabled={!allFilled}
-                      className="px-4 py-2 rounded-lg text-[13px] font-medium bg-accent text-accent-fg hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                    >
-                      {t("ws.common.connect")}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-      </div>
-    );
-  }
 
   /* ── Scene C: Operational — compact hero, efficiency-first ── */
   return (
