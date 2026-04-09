@@ -7,9 +7,6 @@
    ═══════════════════════════════════════════════════════════════════ */
 
 @theme {
-  /* ── Typography (demo-only) ── */
-  --font-script: "Caveat", cursive;
-
   /* ── Neutral palette (demo-only, not in token package) ── */
   --color-neutral-0: #ffffff;
   --color-neutral-50: #f9f9f9;
@@ -644,6 +641,48 @@ body,
   color: var(--color-text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 30px;
+  padding: 7px 10px;
+  border-radius: var(--radius-6);
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background: transparent;
+  transition: background 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+  border: none;
+  text-align: left;
+}
+
+.nav-item:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--color-text-primary);
+}
+
+.nav-item-active {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.sidebar-vibrancy {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+@supports not (backdrop-filter: blur(20px)) {
+  .sidebar-vibrancy {
+    background: var(--color-surface-1);
+  }
 }
 /* ── Sidebar Bottom Bar — Design Spec (implement with Tailwind) ──
  *  container : px-3 py-2, no border-top

@@ -77,7 +77,7 @@ export default function ProductDemoPage() {
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
-      if (event.key === "Escape") navigate("/why");
+      if (event.key === "Escape") navigate("/openclaw/workspace");
     };
 
     window.addEventListener("keydown", handler);
@@ -112,9 +112,9 @@ export default function ProductDemoPage() {
         <header className="flex h-9 shrink-0 items-center gap-3 border-b border-border bg-surface-0/90 px-4 backdrop-blur-md">
           <button
             type="button"
-            onClick={() => navigate("/why")}
+            onClick={() => navigate("/openclaw/workspace")}
             className="rounded-lg p-1 text-text-muted transition-colors hover:bg-surface-3"
-            title="返回 Design System (Esc)"
+            title="返回 Workspace (Esc)"
           >
             <X size={14} />
           </button>

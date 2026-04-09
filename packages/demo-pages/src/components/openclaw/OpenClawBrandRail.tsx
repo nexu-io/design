@@ -73,7 +73,7 @@ export default function OpenClawBrandRail({
             href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-3 rounded-[var(--radius-24)] border border-dark-border bg-dark-surface/92 px-5 py-4 text-[13px] font-medium text-white/82 shadow-dropdown-dark transition-all hover:border-white/12 hover:bg-dark-surface-hover hover:text-white"
+            className="group inline-flex items-center gap-3 rounded-[var(--radius-24)] border border-dark-border bg-dark-surface/92 px-5 py-4 text-[13px] font-medium text-white/82 shadow-dropdown-dark transition-all hover:border-white/12 hover:bg-white/[0.06] hover:text-white"
           >
             <div className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-16)] border border-white/6 bg-white/[0.05] text-white">
               <GitHubIcon size={18} />

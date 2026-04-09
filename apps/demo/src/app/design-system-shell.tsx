@@ -1,42 +1,19 @@
 import {
-  Brain,
   Clock,
-  Component,
-  Layout,
-  Lightbulb,
-  MessageSquare,
   Monitor,
-  Palette,
   PanelLeft,
   PanelLeftClose,
   Play,
-  Presentation,
   Route as RouteIcon,
   Sparkles,
-  Type,
   Users,
   Wrench,
-  Zap,
 } from "lucide-react";
 import { useState } from "react";
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 
 import { CommentSystem } from "../components/CommentSystem";
-import { DesignSystemRouteElements } from "./routes/design-system-routes";
 import { ProductRouteElements } from "./routes/product-routes";
-
-const DESIGN_NAV = [
-  { to: "/why", label: "Why We Build nexu", icon: Lightbulb },
-  { to: "/bp", label: "BP PPT", icon: Presentation },
-  { to: "/overview", label: "Overview", icon: Brain },
-  { to: "/colors", label: "Colors", icon: Palette },
-  { to: "/typography", label: "Typography", icon: Type },
-  { to: "/components", label: "Components", icon: Component },
-  { to: "/motion", label: "Motion", icon: Zap },
-  { to: "/avatar", label: "Avatar", icon: Users },
-  { to: "/copy", label: "Copy System", icon: MessageSquare },
-  { to: "/landing", label: "Landing Page", icon: Layout },
-];
 
 const PRODUCT_NAV = [
   { to: "/demo", label: "Product Demo", icon: Play },
@@ -54,7 +31,7 @@ function NavSection({
   collapsed,
 }: {
   title: string;
-  items: typeof DESIGN_NAV;
+  items: typeof PRODUCT_NAV;
   collapsed: boolean;
 }) {
   return (
@@ -89,24 +66,6 @@ function NavSection({
   );
 }
 
-function resolveCloudDemoUrl(pathname: string, search: string) {
-  if (typeof window === "undefined") return `${pathname}${search}`;
-
-  if (window.location.hostname === "localhost" && window.location.port !== "5176") {
-    return `http://localhost:5176${pathname}${search}`;
-  }
-
-  return `${window.location.origin}${pathname}${search}`;
-}
-
-function CloudDemoRedirect() {
-  if (typeof window !== "undefined") {
-    window.location.replace(resolveCloudDemoUrl(window.location.pathname, window.location.search));
-  }
-
-  return null;
-}
-
 export function DesignSystemShell() {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -126,7 +85,7 @@ export function DesignSystemShell() {
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-text-primary">nexu</div>
-                  <div className="text-[11px] text-text-tertiary">Design System</div>
+                  <div className="text-[11px] text-text-tertiary">Product Demo</div>
                 </div>
               </div>
               <button
@@ -141,7 +100,6 @@ export function DesignSystemShell() {
           )}
 
           <div className={`flex-1 ${collapsed ? "p-1.5" : "p-3"} space-y-4 overflow-y-auto`}>
-            <NavSection title="Design System" items={DESIGN_NAV} collapsed={collapsed} />
             <NavSection title="Product Pages" items={PRODUCT_NAV} collapsed={collapsed} />
           </div>
 
@@ -156,17 +114,16 @@ export function DesignSystemShell() {
                 <PanelLeft size={14} className="text-accent-fg" />
               </button>
             ) : (
-              <div className="text-[11px] text-text-muted">v1.0 — nexu Design System</div>
+              <div className="text-[11px] text-text-muted">v1.0 — nexu Product Demo</div>
             )}
           </div>
         </nav>
 
         <main className="overflow-y-auto flex-1 min-h-0">
           <Routes>
-            <DesignSystemRouteElements />
-            <ProductRouteElements />
-            <Route path="/openclaw/*" element={<CloudDemoRedirect />} />
-            <Route path="*" element={<Navigate to="/overview" replace />} />
+            {ProductRouteElements()}
+            <Route path="/openclaw/*" element={<Navigate to="/openclaw/workspace" replace />} />
+            <Route path="*" element={<Navigate to="/openclaw/workspace" replace />} />
           </Routes>
         </main>
       </div>

@@ -1,6 +1,6 @@
 # Nexu Demo
 
-Nexu Tauri Demo — React + Tailwind 4 + Tauri 2。
+Nexu Electron Demo — React + Tailwind 4 + Electron。
 
 ## 三层架构
 
@@ -14,9 +14,9 @@ Nexu Tauri Demo — React + Tailwind 4 + Tauri 2。
 
 ```bash
 pnpm install
-pnpm dev:demo        # 启动 Tauri demo
+pnpm dev:demo        # 启动 Electron demo
 pnpm dev:demo:web    # 仅启动 web 调试页
-pnpm build:tauri     # 构建 Tauri 应用
+pnpm build:electron  # 打包 Electron 应用
 ```
 
 如果你当前就在 `apps/demo` 目录，也可以直接使用：
@@ -24,10 +24,8 @@ pnpm build:tauri     # 构建 Tauri 应用
 ```bash
 pnpm dev
 pnpm dev:web
-pnpm tauri:build
+pnpm dist
 ```
-
-Rust toolchain 由 `src-tauri/rust-toolchain.toml` 固定，不依赖全局默认版本。
 
 ## 如何使用设计系统
 
@@ -87,6 +85,7 @@ src/
 - React 19 + TypeScript
 - Tailwind CSS 4
 - Vite 7
+- Electron
 - shadcn/ui
 - Framer Motion
 - Lucide Icons

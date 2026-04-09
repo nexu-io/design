@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["react", "react-dom", "vite/client"],
+    "types": ["react", "react-dom"],
     "baseUrl": ".",
     "paths": {
       "@nexu-design/ui-web": ["../ui-web/src/index.ts"],

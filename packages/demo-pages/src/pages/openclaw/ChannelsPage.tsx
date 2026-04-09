@@ -5,6 +5,7 @@ import {
   Button,
   Input,
   Label,
+  PageHeader,
   Table,
   TableBody,
   TableCell,
@@ -15,12 +16,12 @@ import {
 import {
   AlertCircle,
   ArrowLeft,
+  ArrowUpRight,
   BookOpen,
   Check,
   CheckCircle2,
   ChevronRight,
   Copy,
-  ExternalLink,
   Key,
   Lock,
   RotateCcw,
@@ -383,7 +384,7 @@ function SlackOAuthView() {
               </div>
               <Button variant="outline" size="sm" asChild className="rounded-full">
                 <a href="https://api.slack.com/apps" target="_blank" rel="noreferrer">
-                  <ExternalLink size={12} />
+                  <ArrowUpRight size={12} className="shrink-0" />
                   Open Slack API Dashboard
                 </a>
               </Button>
@@ -853,21 +854,18 @@ export default function ChannelsPage() {
       }}
     >
       <div className="max-w-4xl mx-auto px-8 py-8">
-        <div className="flex items-center gap-3">
-          {currentConfig.configured && forceGuide && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setForceGuide(false)}
-              className="size-8"
-            >
-              <ArrowLeft size={16} />
-            </Button>
-          )}
-          <h1 className="heading-page">Slack configuration</h1>
-        </div>
-
-        <p className="heading-page-desc mb-6">Manage nexu connection to your Slack workspace</p>
+        <PageHeader
+          density="shell"
+          title="Slack configuration"
+          description="Manage nexu connection to your Slack workspace"
+          actions={
+            currentConfig.configured && forceGuide ? (
+              <Button variant="ghost" size="icon" onClick={() => setForceGuide(false)}>
+                <ArrowLeft size={16} />
+              </Button>
+            ) : undefined
+          }
+        />
 
         {showGuide ? (
           <SlackOAuthView />

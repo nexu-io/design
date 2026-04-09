@@ -1,9 +1,9 @@
 import {
+  ArrowUpRight,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   CreditCard,
-  ExternalLink,
   Info,
   Package,
   RefreshCw,
@@ -167,7 +167,7 @@ export default function UsagePage() {
                 <button
                   type="button"
                   onClick={() => navigate("/openclaw/pricing")}
-                  className="px-3.5 py-1.5 rounded-full bg-text-primary text-white text-[11px] font-semibold leading-none hover:opacity-85 transition-opacity"
+                  className="px-3.5 py-1.5 rounded-full bg-text-primary text-white text-[12px] font-semibold leading-none hover:opacity-85 transition-opacity"
                 >
                   {plan.upgradeLabel}
                 </button>
@@ -387,7 +387,7 @@ export default function UsagePage() {
                           onClick={() =>
                             window.open("https://billing.stripe.com/p/login/nexu", "_blank")
                           }
-                          className="text-[11px] text-[var(--color-brand-primary)] font-medium hover:opacity-80 transition-opacity"
+                          className="text-[12px] text-[var(--color-brand-primary)] font-medium hover:opacity-80 transition-opacity"
                         >
                           更换
                         </button>
@@ -403,7 +403,7 @@ export default function UsagePage() {
                       >
                         <CreditCard size={12} />
                         绑定支付方式
-                        <ExternalLink size={10} className="opacity-60" />
+                        <ArrowUpRight size={12} className="shrink-0 opacity-60" />
                       </button>
                     )}
                   </div>

@@ -50,7 +50,7 @@ export function NavigationMenuLabel({ className, ...props }: React.HTMLAttribute
     <div
       data-slot="navigation-menu-label"
       className={cn(
-        "px-3 pb-2 text-2xs font-medium uppercase tracking-wider text-text-muted",
+        "mb-1 px-2.5 text-[10px] font-medium uppercase tracking-[0.08em] text-text-tertiary",
         className,
       )}
       {...props}
@@ -74,7 +74,7 @@ export const NavigationMenuButton = React.forwardRef<HTMLButtonElement, Navigati
         data-active={active ? "true" : "false"}
         aria-current={active ? "page" : undefined}
         className={cn(
-          "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-base font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "mt-0.5 flex w-full items-center gap-2.5 rounded-[var(--radius-6)] px-2.5 py-[7px] text-left text-base font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
           active
             ? "bg-surface-2 text-text-primary"
             : "text-text-secondary hover:bg-surface-2 hover:text-text-primary",

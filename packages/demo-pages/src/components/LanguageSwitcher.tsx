@@ -46,10 +46,10 @@ export default function LanguageSwitcher({ variant = "light", size = "sm" }: Pro
   const colors = {
     light: {
       trigger:
-        "border border-dark-border bg-dark-surface/92 text-white shadow-dropdown-dark backdrop-blur-md hover:bg-dark-surface-hover",
+        "border border-dark-border bg-dark-surface/92 text-white shadow-dropdown-dark backdrop-blur-md hover:bg-white/[0.06]",
       triggerOpen: "ring-2 ring-brand-primary ring-offset-0",
       menu: "border border-dark-border bg-dark-surface/96 shadow-overlay backdrop-blur-xl",
-      option: "text-white/62 hover:bg-white/[0.04] hover:text-white",
+      option: "text-white/62 hover:bg-white/[0.06] hover:text-white",
       optionActive: "bg-white text-text-primary",
     },
     dark: {
@@ -57,7 +57,7 @@ export default function LanguageSwitcher({ variant = "light", size = "sm" }: Pro
         "border border-border bg-white/92 text-text-primary shadow-dropdown backdrop-blur-md hover:bg-white",
       triggerOpen: "ring-1 ring-black/10 ring-offset-0",
       menu: "border border-border bg-white/96 shadow-overlay backdrop-blur-xl",
-      option: "text-text-secondary hover:bg-black/[0.04] hover:text-text-primary",
+      option: "text-text-secondary hover:bg-surface-2 hover:text-text-primary",
       optionActive: "bg-accent text-accent-fg",
     },
     muted: {

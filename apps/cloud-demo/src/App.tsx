@@ -1,11 +1,5 @@
-import {
-  CloudFullScreenRouteElements,
-  CloudShellRouteElements,
-  DocsRouteElements,
-} from "@nexu-design/demo-pages";
+import { CloudFullScreenRouteElements, CloudShellRouteElements } from "@nexu-design/demo-pages";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-
-const fullScreenPrefixes = ["/docs/"];
 
 const fullScreenExactPaths = new Set([
   "/openclaw/workspace",
@@ -29,8 +23,7 @@ function isFullScreenPath(pathname: string) {
     pathname.startsWith("/openclaw/auth") ||
     pathname.startsWith("/openclaw/changelog/") ||
     pathname.startsWith("/openclaw/skill/") ||
-    pathname.startsWith("/openclaw/growth-demo") ||
-    fullScreenPrefixes.some((prefix) => pathname.startsWith(prefix))
+    pathname.startsWith("/openclaw/growth-demo")
   );
 }
 
@@ -40,8 +33,7 @@ export default function App() {
   if (isFullScreenPath(location.pathname)) {
     return (
       <Routes>
-        <CloudFullScreenRouteElements />
-        <DocsRouteElements />
+        {CloudFullScreenRouteElements()}
         <Route path="*" element={<Navigate to="/openclaw/welcome" replace />} />
       </Routes>
     );
@@ -49,7 +41,7 @@ export default function App() {
 
   return (
     <Routes>
-      <CloudShellRouteElements />
+      {CloudShellRouteElements()}
       <Route path="*" element={<Navigate to="/openclaw" replace />} />
     </Routes>
   );

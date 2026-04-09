@@ -15,7 +15,6 @@ import {
   Check,
   ChevronDown,
   ChevronRight,
-  ExternalLink,
   Hash,
   Home,
   Italic,
@@ -1506,10 +1505,7 @@ function WorkspaceStep({ onChatInSlack }: { onChatInSlack: () => void }) {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h2
-                className="absolute right-40 sm:right-56 top-[55%] -translate-y-1/2 text-[40px] sm:text-[52px] font-normal tracking-tight text-text-primary"
-                style={{ fontFamily: "var(--font-script)" }}
-              >
+              <h2 className="font-script absolute right-40 sm:right-56 top-[55%] -translate-y-1/2 text-[40px] sm:text-[52px] font-normal tracking-tight text-text-primary">
                 nexu Alpha
               </h2>
             </div>
@@ -1947,7 +1943,7 @@ function SlackIntroStep({ onNeedAuth }: { onNeedAuth: () => void }) {
                           onClick={onNeedAuth}
                           className="w-full bg-[#007a5a] hover:bg-[#148567] text-white text-[13px] font-[700] rounded-md"
                         >
-                          <ExternalLink size={13} />
+                          <ArrowUpRight size={14} className="shrink-0" />
                           Connect Google Account
                         </Button>
                       </div>
@@ -2276,7 +2272,7 @@ export default function GroupGrowthDemo() {
               onClick={() => {
                 if (i <= currentIdx) setStep(s.id);
               }}
-              className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] sm:text-[12px] transition-colors shrink-0 ${
+              className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[12px] transition-colors shrink-0 ${
                 s.id === step
                   ? "bg-accent/10 text-accent font-medium"
                   : i < currentIdx
@@ -2285,7 +2281,7 @@ export default function GroupGrowthDemo() {
               }`}
             >
               <span
-                className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                className={`w-5 h-5 rounded-full flex items-center justify-center text-[12px] font-bold ${
                   i < currentIdx
                     ? "bg-success/10 text-success"
                     : s.id === step

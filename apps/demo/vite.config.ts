@@ -2,7 +2,20 @@ import { copyFileSync, existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { type Plugin, defineConfig } from "vite";
+import { type Plugin, type PluginOption, defineConfig } from "vite";
+import electron from "vite-plugin-electron";
+import renderer from "vite-plugin-electron-renderer";
+
+const disableImplicitElectronStartup =
+  process.env.NEXU_DESKTOP_DISABLE_VITE_ELECTRON_STARTUP === "1";
+
+type ElectronStartupOptions = {
+  startup: () => void;
+};
+
+type ElectronReloadOptions = {
+  reload: () => void;
+};
 
 /** Prints Nexu Digital URLs; avoids guessing port when multiple Vite instances run. */
 function nexuDemoEntryHint(): Plugin {
@@ -36,7 +49,55 @@ function copyChangelog() {
 }
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), copyChangelog(), nexuDemoEntryHint()],
+  base: "./",
+  plugins: [
+    react(),
+    tailwindcss(),
+    electron([
+      {
+        entry: "main/bootstrap.ts",
+        onstart(options: ElectronStartupOptions) {
+          if (disableImplicitElectronStartup) {
+            return;
+          }
+
+          options.startup();
+        },
+        vite: {
+          build: {
+            target: "node20",
+            outDir: "dist-electron/main",
+            sourcemap: true,
+            rollupOptions: {
+              external: ["electron"],
+            },
+          },
+        },
+      },
+      {
+        entry: "preload/index.ts",
+        onstart(options: ElectronReloadOptions) {
+          options.reload();
+        },
+        vite: {
+          build: {
+            target: "node20",
+            outDir: "dist-electron/preload",
+            sourcemap: true,
+            rollupOptions: {
+              external: ["electron"],
+              output: {
+                format: "cjs",
+              },
+            },
+          },
+        },
+      },
+    ]) as PluginOption,
+    renderer() as PluginOption,
+    copyChangelog(),
+    nexuDemoEntryHint(),
+  ],
   resolve: {
     alias: {
       "@": resolve(__dirname, "./src"),
@@ -51,7 +112,12 @@ export default defineConfig({
     port: 5175,
     /** Expose LAN URL; use 127.0.0.1 in browser if localhost misbehaves */
     host: true,
-    /** Must stay on 5175: matches Tauri devUrl; silent port drift caused “wrong port / can’t open” */
+    /** Must stay on 5175 so the desktop shell loads the expected dev server. */
     strictPort: true,
+  },
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
+    sourcemap: true,
   },
 });

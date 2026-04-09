@@ -14,7 +14,7 @@ const textLinkVariants = cva(
           "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] hover:underline",
       },
       size: {
-        xs: "text-xs",
+        xs: "text-sm",
         sm: "text-sm",
         default: "text-base",
         lg: "text-lg",

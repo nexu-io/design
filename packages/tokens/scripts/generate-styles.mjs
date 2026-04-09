@@ -68,6 +68,7 @@ const themeMappings = [
   ["--font-sans", "--font-sans"],
   ["--font-mono", "--font-mono"],
   ["--font-heading", "--font-heading"],
+  ["--font-script", "--font-script"],
   ["--spacing", "--spacing"],
   ["--radius-sm", "--radius-sm"],
   ["--radius-md", "--radius-md"],
@@ -84,13 +85,31 @@ const themeMappings = [
   ["--shadow-card", "--shadow-card"],
   ["--shadow-dropdown", "--shadow-dropdown"],
   ["--shadow-focus", "--shadow-focus"],
+  ["--shadow-refine", "--shadow-refine"],
+  ["--shadow-elevated", "--shadow-elevated"],
+  ["--shadow-overlay", "--shadow-overlay"],
+  ["--text-size-2xs", "--text-2xs"],
+  ["--text-size-xs", "--text-xs"],
+  ["--text-size-sm", "--text-sm"],
+  ["--text-size-base", "--text-base"],
+  ["--text-size-lg", "--text-lg"],
+  ["--text-size-xl", "--text-xl"],
+  ["--text-size-2xl", "--text-2xl"],
+  ["--text-size-3xl", "--text-3xl"],
+  ["--text-size-4xl", "--text-4xl"],
+  ["--text-weight-normal", "--font-weight-normal"],
+  ["--text-weight-medium", "--font-weight-medium"],
+  ["--text-weight-semibold", "--font-weight-semibold"],
+  ["--text-weight-bold", "--font-weight-bold"],
 ];
 
-const generated = `${banner()}${renderBlock(":root", tokenSource.themes.light)}
+const generated = `${banner()}${renderFontFaces()}
+
+${renderBlock(":root", tokenSource.themes.light)}
 
 ${renderBlock(".dark", tokenSource.themes.dark)}
 
-${renderThemeMappings(themeMappings)}
+${renderThemeMappings(themeMappings, tokenSource.metadata.fontSizes)}
 
 @layer base {
   * {
@@ -108,6 +127,12 @@ ${renderThemeMappings(themeMappings)}
     font-family: var(--font-sans, Inter, ui-sans-serif, system-ui, sans-serif);
   }
 }
+
+@layer utilities {
+  .font-script {
+    font-family: var(--font-script, cursive);
+  }
+}
 `;
 
 mkdirSync(dirname(outputPath), { recursive: true });
@@ -117,13 +142,23 @@ function banner() {
   return "/* This file is generated from src/token-source.json. Do not edit by hand. */\n\n";
 }
 
+function renderFontFaces() {
+  return `@font-face {
+  font-family: "Caveat";
+  src: local("Caveat"), url("./fonts/Caveat-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}`;
+}
+
 function renderBlock(selector, variables) {
   const lines = Object.entries(variables).map(([name, value]) => `  ${name}: ${value};`);
 
   return `${selector} {\n${lines.join("\n")}\n}`;
 }
 
-function renderThemeMappings(mappings) {
+function renderThemeMappings(mappings, fontSizes = []) {
   const lines = mappings.map(([sourceVar, themeVar, mode]) => {
     if (mode === "direct") {
       return `  ${themeVar}: var(${sourceVar});`;
@@ -131,6 +166,11 @@ function renderThemeMappings(mappings) {
     const isColor = themeVar.startsWith("--color-");
     return `  ${themeVar}: ${isColor ? `hsl(var(${sourceVar}))` : `var(${sourceVar})`};`;
   });
+
+  for (const fontSize of fontSizes) {
+    if (!fontSize.cssVar || !fontSize.utility || fontSize.lineHeight == null) continue;
+    lines.push(`  --${fontSize.utility}--line-height: ${fontSize.lineHeight};`);
+  }
 
   return `@theme inline {\n${lines.join("\n")}\n}`;
 }

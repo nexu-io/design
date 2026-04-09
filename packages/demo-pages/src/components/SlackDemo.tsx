@@ -11,7 +11,9 @@ interface SlackMessage {
   attachments?: { name: string; icon: typeof FileText; color: string }[] | null;
   result?: {
     borderColor: string;
+    icon?: string;
     title: string;
+    statusDotColor?: string;
     items: string[];
     link?: string;
   };
@@ -49,7 +51,8 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
         time: "2:31 PM",
         result: {
           borderColor: "border-l-[#2eb67d]",
-          title: "✅ Code complete",
+          icon: "✅",
+          title: "Code complete",
           items: [
             "React flip-card game · 48 word cards · audio pronunciation",
             "Difficulty levels (easy/medium/hard) · scoring & progress tracking",
@@ -68,7 +71,9 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
         time: "2:35 PM",
         result: {
           borderColor: "border-l-[#1264a3]",
-          title: "🌐 Live · english-cards.nexu.dev",
+          icon: "🌐",
+          title: "english-cards.nexu.dev",
+          statusDotColor: "bg-[#2eb67d]",
           items: ["Works on mobile & desktop · no install needed · offline support"],
           link: "Open game →",
         },
@@ -93,7 +98,8 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
         time: "10:15 AM",
         result: {
           borderColor: "border-l-[#2eb67d]",
-          title: "📊 Analysis complete",
+          icon: "📊",
+          title: "Analysis complete",
           items: [
             "Top 3 categories: Smart Home (+142%), Pet Supplies (+98%), Health Food (+76%)",
             "Generated visual report · trend charts + category comparison + forecasts",
@@ -113,7 +119,8 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
         time: "10:21 AM",
         result: {
           borderColor: "border-l-[#1264a3]",
-          title: "📋 Competitor Pricing Report",
+          icon: "📋",
+          title: "Competitor Pricing Report",
           items: ["Covers 8 competitors · 42 SKUs · price trends & recommended pricing range"],
           link: "View report →",
         },
@@ -138,7 +145,8 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
         time: "4:01 PM",
         result: {
           borderColor: "border-l-[#2eb67d]",
-          title: "✍️ Blog post ready",
+          icon: "✍️",
+          title: "Blog post ready",
           items: [
             'Title: "nexu v0.4 — Your Lobster Just Got Smarter" · 1,200 words',
             "Generated cover image + SEO summary + Twitter Thread version",
@@ -158,7 +166,8 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
         time: "4:11 PM",
         result: {
           borderColor: "border-l-[#1264a3]",
-          title: "📧 Investor Update ready",
+          icon: "📧",
+          title: "Investor Update ready",
           items: ["Key metrics, product progress, next week's plan · formatted as email"],
           link: "Preview email →",
         },
@@ -224,7 +233,16 @@ function SlackMsgRow({ msg }: { msg: SlackMessage }) {
             className={`mt-2 border-l-[3px] ${msg.result.borderColor} rounded-r bg-[#f8f8f8] border border-[#e0e0e0] border-l-0`}
           >
             <div className="px-3 py-2">
-              <div className="text-[13px] font-bold text-[#1d1c1d] mb-0.5">{msg.result.title}</div>
+              <div className="flex items-center gap-2 text-[13px] font-bold text-[#1d1c1d] mb-0.5">
+                {msg.result.icon ? <span aria-hidden="true">{msg.result.icon}</span> : null}
+                {msg.result.statusDotColor ? (
+                  <span
+                    aria-hidden="true"
+                    className={`w-2 h-2 rounded-full shrink-0 ${msg.result.statusDotColor}`}
+                  />
+                ) : null}
+                <span>{msg.result.title}</span>
+              </div>
               {msg.result.items.map((item) => (
                 <div key={item} className="text-[13px] text-[#616061] leading-relaxed">
                   {item}

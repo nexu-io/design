@@ -62,6 +62,14 @@ function saveComments(comments: Comment[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
 }
 
+function loadAuthorName() {
+  try {
+    return localStorage.getItem("nexu_comment_author") || "";
+  } catch {
+    return "";
+  }
+}
+
 function Avatar({ name, size = 28 }: { name: string; size?: number }) {
   const color = getAuthorColor(name);
   return (
@@ -311,9 +319,7 @@ export function CommentSystem() {
     y: number;
   } | null>(null);
   const [newCommentText, setNewCommentText] = useState("");
-  const [authorName, setAuthorName] = useState(
-    () => localStorage.getItem("nexu_comment_author") || "",
-  );
+  const [authorName, setAuthorName] = useState(loadAuthorName);
   const [showAuthorPrompt, setShowAuthorPrompt] = useState(false);
   const [filter, setFilter] = useState<"all" | "open" | "resolved">("all");
   const overlayRef = useRef<HTMLDivElement>(null);

@@ -22,6 +22,7 @@
 - [FormField](#formfield)
 - [Tabs](#tabs)
 - [TextLink](#textlink)
+- [UI Polish Conventions](#ui-polish-conventions)
 - [Tooltip](#tooltip)
 - [Popover](#popover)
 - [Separator](#separator)
@@ -375,6 +376,15 @@ Also inherits Card's `variant`, `padding`, `className`.
 | `title` | `ReactNode` | required | Main heading (renders `<h1>`) |
 | `description` | `ReactNode` | — | Subtitle text |
 | `actions` | `ReactNode` | — | Right-aligned action buttons |
+| `density` | `'default' \| 'shell'` | `'default'` | Spacing + typography contract for standard vs embedded shell headers |
+
+### Spacing contract
+
+- Prefer `PageHeader` over handwritten page-title spacing.
+- `ui-web` does not ship an official `.page-header` utility class; use the `PageHeader` component as the source of truth.
+- `default` density uses a roomier title block (`gap-3 pb-6`, `space-y-2`).
+- `shell` density uses tighter desktop-shell spacing (`gap-2 pb-4`, `space-y-1`).
+- Links inside descriptions should use `--color-link`; avoid ad-hoc blue utility classes.
 
 ### Examples
 
@@ -572,6 +582,12 @@ FormField
 | `size` | `'xs' \| 'sm' \| 'default' \| 'lg'` | `'sm'` | Text size |
 | `asChild` | `boolean` | `false` | Render as Radix Slot |
 
+### External-link standard
+
+- Use `ArrowUpRight` for external links.
+- Keep the icon inline with `gap-1.5` spacing.
+- Match icon size to text; for `size="sm"`, use 12px.
+
 ### Examples
 
 ```tsx
@@ -579,6 +595,99 @@ FormField
   View documentation <ArrowUpRight size={12} />
 </TextLink>
 ```
+
+---
+
+## UI Polish Conventions
+
+Shared guardrails for the most common polish regressions.
+
+### Link color + help links
+
+- Use `--color-link` for inline links and supporting help links.
+- Do not introduce raw blue utilities or hex values for product links.
+- For external destinations, use `ArrowUpRight` instead of `ExternalLink`.
+
+### Focus rings
+
+- Default interactive controls should use `focus-visible:ring-2 focus-visible:ring-ring`.
+- Add `focus-visible:ring-offset-2 focus-visible:ring-offset-background` on filled or elevated surfaces.
+- Reuse the shared focus token rather than creating per-component glow colors.
+
+### Interactive typography floor
+
+- Interactive text has a 12px minimum.
+- Do not use `text-[10px]` or `text-[11px]` on tabs, pills, segmented controls, or compact clickable labels.
+- Run `pnpm check:interactive-typography` when touching compact control styling.
+
+### Page header spacing
+
+- `PageHeader` is the preferred page-title abstraction.
+- Prefer its `density` prop over custom per-page title margins.
+
+### Serif heading boundary
+
+- Treat `var(--font-heading)` as a marketing / welcome accent, not the default product heading font.
+- Do not add serif styling to `PageHeader`, standard settings pages, dashboards, dialogs, or dense app sections.
+- `ui-web` keeps sans-serif as the default for reusable heading patterns; apply serif only at composition level for hero or brand-rail moments.
+
+### Provider settings composition
+
+- Build provider settings surfaces from existing primitives instead of a dedicated `ProviderSettingsCard` or `AuthSwitcher` export.
+- Recommended stack: `Card` + region `Tabs` + auth `ToggleGroup`/`RadioGroup` + `FormField` inputs + trailing save row.
+- Saved API keys should stay in the form as a masked read-only field with inline `Replace key` / `Edit`, not a detached success banner.
+- Clicking `Replace key` should reveal an editable empty input in the same field position; the card footer `Save` remains the primary confirmation action.
+- Save actions belong in a trailing footer row inside the same card or panel as the fields they submit.
+- Use `flex justify-end gap-2` for that row; secondary actions sit to the left of the primary `Save` button.
+- Keep exactly one visually primary CTA in the row, and use `loading` on `Save` while async submission is in flight.
+- Revisit a dedicated pattern only after multiple real surfaces repeat the same behavior contract around region switching, auth switching, saved-secret masking, and save semantics.
+
+### Helper and disclaimer copy endings
+
+- Use sentence case for helper text, disclaimers, descriptions, and alert body copy.
+- End full-sentence supporting copy with a period.
+- Keep compact meta fragments such as `Last saved 2 minutes ago` or `Global defaults apply across shared provider traffic` without terminal punctuation.
+- Keep labels, tabs, buttons, and badges punctuation-free unless the punctuation is part of the product name itself.
+
+### Status expression
+
+- Prefer `StatusDot` for lightweight live/presence state inside dense rows, sidebars, and session lists.
+- Prefer `Badge` when the state must stand on its own as a semantic chip or filterable label.
+- Do not pair a dot with a redundant `Live` / `Online` / `Connected` text pill that repeats the same meaning.
+- In compact rows, use one primary status affordance unless multiple indicators carry different information.
+- Recommended session/sidebar row: leading logo/icon + title + muted subtitle/meta + trailing `StatusDot`.
+- Keep the title line visually dominant and keep passive context on a single secondary line instead of introducing extra pills or helper icons.
+
+### Dense picker rows
+
+- For dense `Select` / `Combobox` menus, use a 16px visual slot for the leading provider logo or mark.
+- If the leading asset is a stroked icon rather than a real logo, keep it optically balanced inside that slot (for example, 14px inside a 16px carrier).
+- Keep interactive picker rows at a 36px minimum height (`h-9` baseline); do not compress below that for dense model/provider menus.
+- Prefer a single-line row anatomy: logo, label, optional single compact badge, trailing muted metadata.
+- If a picker needs larger artwork or two-line descriptions, promote it to a roomier custom menu pattern instead of squeezing it into the dense picker baseline.
+
+### Skills / marketplace card icons
+
+- Keep brand/logo mapping in the data layer, not inside `SkillMarketplaceCard`.
+- Prefer local SVG logos keyed by stable product ids for known integrations and marketplace entries.
+- Use semantic Lucide icons only as fallbacks for unknown, custom, or internal skills.
+- Keep the existing marketplace card slot sizing: 18px mark inside the 36px leading carrier.
+
+### Related docs and stories
+
+- Spec: `specs/ui-polish-conventions.md`
+- Tokens: `apps/storybook/src/stories/tokens.stories.tsx`
+- Buttons: `apps/storybook/src/stories/button.stories.tsx`
+- Provider settings hierarchy: `apps/storybook/src/stories/provider-settings.stories.tsx`
+- Status patterns: `apps/storybook/src/stories/status-dot.stories.tsx`, `apps/storybook/src/stories/interactive-row.stories.tsx`
+- Sidebar/session rows: `apps/storybook/src/stories/sidebar.stories.tsx`
+- Dense picker baseline: `apps/storybook/src/stories/model-picker.stories.tsx`
+- Skills / marketplace cards: `apps/storybook/src/stories/skill-marketplace-card.stories.tsx`
+- Tabs: `apps/storybook/src/stories/tabs.stories.tsx`
+- Toggle: `apps/storybook/src/stories/toggle.stories.tsx`
+- TextLink: `apps/storybook/src/stories/text-link.stories.tsx`
+- PageHeader: `apps/storybook/src/stories/page-header.stories.tsx`
+- Audit surface: `apps/storybook/src/stories/ui-polish-audit.stories.tsx`
 
 ---
 

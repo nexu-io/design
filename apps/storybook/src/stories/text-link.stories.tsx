@@ -32,6 +32,21 @@ export const WithIcon: Story = {
   ),
 };
 
+export const ExternalLinks: Story = {
+  render: () => (
+    <div className="flex flex-col gap-3">
+      <TextLink href="#" target="_blank" rel="noopener noreferrer">
+        Open documentation
+        <ArrowUpRight size={12} />
+      </TextLink>
+      <TextLink href="#" size="default" target="_blank" rel="noopener noreferrer">
+        Visit provider console
+        <ArrowUpRight size={14} />
+      </TextLink>
+    </div>
+  ),
+};
+
 export const Sizes: Story = {
   render: () => (
     <div className="flex flex-col gap-3">
