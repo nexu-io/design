@@ -2,6 +2,9 @@
   "name": "nexu-design",
   "private": true,
   "packageManager": "pnpm@10.16.1",
+  "pnpm": {
+    "onlyBuiltDependencies": ["electron", "electron-winstaller", "esbuild"]
+  },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@changesets/cli": "^2.30.0",
@@ -17,7 +20,7 @@
     "build:storybook": "pnpm --filter @nexu-design/storybook build-storybook",
     "build:demo": "pnpm --filter @nexu-design/demo build",
     "build:cloud-demo": "pnpm --filter @nexu-design/cloud-demo build",
-    "build:tauri": "pnpm --filter @nexu-design/demo tauri:build",
+    "build:electron": "pnpm --filter @nexu-design/demo dist",
     "build:packages": "pnpm --filter @nexu-design/tokens build && pnpm --filter @nexu-design/ui-web build",
     "changeset": "changeset",
     "format": "biome format --write .",
@@ -35,6 +38,6 @@
     "typecheck": "pnpm -r typecheck",
     "version:packages": "changeset version && pnpm install --lockfile-only",
     "lint": "pnpm -r lint",
-    "clean": "rm -rf node_modules apps/storybook/node_modules apps/demo/node_modules packages/ui-web/node_modules packages/tokens/node_modules apps/storybook/storybook-static apps/demo/dist"
+    "clean": "rm -rf node_modules apps/storybook/node_modules apps/demo/node_modules packages/ui-web/node_modules packages/tokens/node_modules apps/storybook/storybook-static apps/demo/dist apps/demo/dist-electron apps/demo/release"
   }
 }

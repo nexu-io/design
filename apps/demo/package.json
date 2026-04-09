@@ -3,23 +3,25 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "dist-electron/main/bootstrap.js",
   "scripts": {
-    "dev": "tauri dev",
-    "dev:web": "vite",
+    "dev": "vite",
+    "dev:web": "NEXU_DESKTOP_DISABLE_VITE_ELECTRON_STARTUP=1 vite",
     "build": "tsc -b && vite build",
+    "dist": "pnpm build && electron-builder",
+    "dist:mac": "pnpm build && electron-builder --mac",
+    "dist:win": "pnpm build && electron-builder --win",
     "typecheck": "tsc -b",
     "lint": "eslint .",
     "preview": "vite preview",
     "check:parity": "node scripts/check-pixel-parity.mjs",
-    "check:parity:all": "node scripts/check-pixel-parity.mjs --page workspace && node scripts/check-pixel-parity.mjs --page skills && node scripts/check-pixel-parity.mjs --page auth",
-    "tauri": "tauri",
-    "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "check:parity:all": "node scripts/check-pixel-parity.mjs --page workspace && node scripts/check-pixel-parity.mjs --page skills && node scripts/check-pixel-parity.mjs --page auth"
   },
   "dependencies": {
     "@nexu-design/demo-pages": "workspace:*",
     "@nexu-design/ui-web": "workspace:*",
-    "@tauri-apps/plugin-opener": "^2.5.3",
+    "@sentry/electron": "^7.10.0",
+    "electron-updater": "^6.3.9",
     "framer-motion": "^12.34.5",
     "lucide-react": "^0.575.0",
     "react": "^19.2.0",
@@ -29,9 +31,9 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
+    "@electron/notarize": "^3.1.0",
     "@eslint/js": "^9.39.1",
     "@tailwindcss/vite": "^4.2.0",
-    "@tauri-apps/cli": "^2.10.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
@@ -40,6 +42,8 @@
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
+    "electron": "^37.2.5",
+    "electron-builder": "^26.0.12",
     "globals": "^16.5.0",
     "jsdom": "^28.1.0",
     "playwright": "^1.58.2",
@@ -48,6 +52,37 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
     "vite": "^7.3.1",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-electron-renderer": "^0.14.6",
     "vitest": "^4.0.18"
+  },
+  "build": {
+    "appId": "io.nexu.design.demo",
+    "productName": "Nexu Demo",
+    "directories": {
+      "output": "release"
+    },
+    "files": ["dist/**/*", "dist-electron/**/*", "package.json"],
+    "mac": {
+      "icon": "src-tauri/icons/icon.icns",
+      "target": ["dmg", "zip"],
+      "artifactName": "nexu-demo-${version}-${arch}.${ext}"
+    },
+    "win": {
+      "icon": "src-tauri/icons/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "nexu-demo-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": false
+    }
   }
 }
