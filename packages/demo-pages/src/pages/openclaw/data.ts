@@ -113,6 +113,7 @@ export interface ProviderModel {
   releasedAt: string;
   inputPrice: string;
   outputPrice: string;
+  tier?: "plus" | "pro";
 }
 
 function createProviderModel(
@@ -157,6 +158,7 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
         releasedAt: "2026-02-17",
         inputPrice: "$3.00/M",
         outputPrice: "$15.00/M",
+        tier: "plus",
       },
       {
         id: "nexu-claude-opus-4-6",
@@ -166,6 +168,7 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
         releasedAt: "2026-02-05",
         inputPrice: "$5.00/M",
         outputPrice: "$25.00/M",
+        tier: "pro",
       },
       {
         id: "nexu-claude-haiku-4-5",

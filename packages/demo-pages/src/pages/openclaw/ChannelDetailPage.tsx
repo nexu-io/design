@@ -172,7 +172,7 @@ export default function ChannelDetailPage({ channelId }: { channelId: string }) 
   return (
     <div className="flex flex-col h-full w-full">
       {/* Header */}
-      <div className="shrink-0 border-b border-border px-6 py-4">
+      <div className="shrink-0 border-b border-border px-6 py-3">
         <div className="flex items-center justify-between">
           <div className="flex gap-3 items-center">
             <div>

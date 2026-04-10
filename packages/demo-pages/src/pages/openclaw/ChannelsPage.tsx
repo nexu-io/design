@@ -858,7 +858,7 @@ export default function ChannelsPage() {
         if (el && !entered) requestAnimationFrame(() => setEntered(true));
       }}
     >
-      <div className="max-w-4xl mx-auto px-8 py-8">
+      <div className="max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
         <PageHeader
           density="shell"
           title="Slack configuration"

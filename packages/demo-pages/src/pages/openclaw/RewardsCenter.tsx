@@ -301,8 +301,8 @@ export function RewardsCenter({
     ));
 
   return (
-    <div className="flex-1 overflow-y-auto py-6 px-4 sm:px-5 md:px-6">
-      <div className="w-full max-w-[840px] mx-auto">
+    <div className="h-full overflow-y-auto">
+      <div className="max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
         <PageHeader
           density="shell"
           title={t("rewards.title")}

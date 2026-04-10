@@ -5,6 +5,7 @@ import {
   Badge,
   Button,
   Input,
+  PageHeader,
   Tabs,
   TabsList,
   TabsTrigger,
@@ -15,7 +16,7 @@ import {
 import { useLocale } from "../../hooks/useLocale";
 import { GitHubStarButton } from "./GitHubStarButton";
 import { ImportSkillModal } from "./ImportSkillModal";
-import { SKILL_CATEGORIES, TOOL_TAG_LABELS, type SkillDef, type ToolTag } from "./skillData";
+import { SKILL_CATEGORIES, type SkillDef, TOOL_TAG_LABELS, type ToolTag } from "./skillData";
 
 type SkillTagFilter = "all" | ToolTag;
 type SkillTopTab = "explore" | "yours";
@@ -90,10 +91,10 @@ export function SkillsPanel({
     })),
     ...SKILL_CATEGORIES.flatMap((cat) => cat.skills.map((skill) => ({ skill, category: cat }))),
   ];
-  const yourSkills = allSkills.filter((s) => s.skill.source === "custom");
+  const yourSkills = allSkills;
   const exploreSkills = allSkills.filter((s) => s.skill.source === "official");
-  const yourBuiltInSkills = yourSkills.filter((s) => s.skill.source === "official");
-  const yourCustomSkills = yourSkills.filter((s) => s.skill.source === "custom");
+  const yourBuiltInSkills = allSkills.filter((s) => s.skill.source === "official");
+  const yourCustomSkills = allSkills.filter((s) => s.skill.source === "custom");
 
   const base =
     topTab === "yours"
@@ -138,7 +139,10 @@ export function SkillsPanel({
   const handleImportSkill = async (file: File) => {
     await new Promise((resolve) => window.setTimeout(resolve, 800));
 
-    const nextSkill = createImportedSkill(file.name, allSkills.map(({ skill }) => skill));
+    const nextSkill = createImportedSkill(
+      file.name,
+      allSkills.map(({ skill }) => skill),
+    );
 
     setImportedSkills((current) => [nextSkill, ...current]);
     setTopTab("yours");
@@ -147,27 +151,27 @@ export function SkillsPanel({
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
-        <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="min-w-0">
-            <h1 className="text-2xl font-bold text-text-heading">{t("ws.skills.title")}</h1>
-            <p className="mt-1 text-xs text-text-tertiary">{t("ws.skills.subtitle")}</p>
-          </div>
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
-            <GitHubStarButton href={githubUrl} label="Star on GitHub" stars={stars} />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search"
-              leadingIcon={<Search size={14} />}
-              size="sm"
-              className="w-full bg-surface-0 sm:w-72"
-            />
-            <Button type="button" size="sm" onClick={() => setImportModalOpen(true)}>
-              <Download size={14} />
-              Import
-            </Button>
-          </div>
+      <div className="max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
+        <PageHeader
+          density="shell"
+          title={t("ws.skills.title")}
+          description={t("ws.skills.subtitle")}
+          actions={<GitHubStarButton href={githubUrl} label="Star on GitHub" stars={stars} />}
+        />
+
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search"
+            leadingIcon={<Search size={14} />}
+            size="sm"
+            className="w-full bg-surface-0 sm:w-72"
+          />
+          <Button type="button" size="sm" onClick={() => setImportModalOpen(true)}>
+            <Download size={14} />
+            Import
+          </Button>
         </div>
 
         <div className="mb-6 flex items-center gap-4">
@@ -252,8 +256,8 @@ export function SkillsPanel({
                   size="sm"
                   className="text-[12px]"
                 >
-                    <span>{tab.label}</span>
-                    <span className="ml-1 tabular-nums text-[10px] opacity-70">{tab.count}</span>
+                  <span>{tab.label}</span>
+                  <span className="ml-1 tabular-nums text-[10px] opacity-70">{tab.count}</span>
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
@@ -269,7 +273,7 @@ export function SkillsPanel({
           {filtered.map(({ skill }) => {
             const Icon = skill.icon;
             const isCustom = skill.source === "custom";
-            const actionLabel = topTab === 'yours' ? 'Uninstall' : 'Install';
+            const actionLabel = topTab === "yours" ? "Uninstall" : "Install";
 
             return (
               <div

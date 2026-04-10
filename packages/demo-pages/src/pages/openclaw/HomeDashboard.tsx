@@ -34,6 +34,7 @@ import { useEffect, useRef, useState } from "react";
 import { useBudget } from "../../hooks/useBudget";
 import { useLocale } from "../../hooks/useLocale";
 import { openExternal } from "../../utils/open-external";
+import { GitHubStarButton } from "./GitHubStarButton";
 import {
   CHANNELS_CONNECTED_KEY,
   CHANNEL_ACTIVE_KEY,
@@ -51,8 +52,13 @@ import {
   WhatsAppIconSetup,
 } from "./channelSetup";
 import { MOCK_CHANNELS, getProviderDetails } from "./data";
-import { GitHubStarButton } from "./GitHubStarButton";
-import { CreditIcon, ProviderLogo, getModelIconProvider } from "./iconHelpers";
+import {
+  CreditIcon,
+  ProviderLogo,
+  TierPlusBadge,
+  TierProBadge,
+  getModelIconProvider,
+} from "./iconHelpers";
 
 const SEEDANCE_COUNTDOWN_CYCLE_MS = 2 * 24 * 60 * 60 * 1000;
 const SEEDANCE_COUNTDOWN_LOOP_END_MS = Date.now() + SEEDANCE_COUNTDOWN_CYCLE_MS - 1000;

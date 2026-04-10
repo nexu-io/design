@@ -108,15 +108,15 @@ export function OpenClawSidebarShell({
           }}
           className={`fixed z-50 hidden h-8 w-8 items-center justify-center rounded-lg transition-colors md:flex ${
             isMacOS
-              ? 'text-text-muted hover:text-text-primary'
-              : 'text-text-tertiary hover:bg-black/5 hover:text-text-primary'
+              ? "text-text-muted hover:text-text-primary"
+              : "text-text-tertiary hover:bg-black/5 hover:text-text-primary"
           }`}
           style={
             {
               top: isMacOS ? MAC_COLLAPSE_BUTTON_TOP : WINDOWS_COLLAPSE_BUTTON_TOP,
               left: isMacOS ? MAC_COLLAPSE_BUTTON_LEFT : WINDOWS_COLLAPSE_BUTTON_LEFT,
-              transform: isMacOS ? 'translateZ(0)' : undefined,
-              backfaceVisibility: isMacOS ? 'hidden' : undefined,
+              transform: isMacOS ? "translateZ(0)" : undefined,
+              backfaceVisibility: isMacOS ? "hidden" : undefined,
               WebkitAppRegion: "no-drag",
             } as React.CSSProperties
           }
@@ -180,9 +180,9 @@ export function OpenClawSidebarShell({
                   {
                     top: MAC_COLLAPSE_BUTTON_TOP,
                     left: MAC_COLLAPSE_BUTTON_LEFT,
-                    transform: 'translateZ(0)',
-                    backfaceVisibility: 'hidden',
-                    WebkitAppRegion: 'no-drag',
+                    transform: "translateZ(0)",
+                    backfaceVisibility: "hidden",
+                    WebkitAppRegion: "no-drag",
                   } as React.CSSProperties
                 }
                 title={t("ws.sidebar.collapse")}
@@ -367,7 +367,6 @@ export function OpenClawSidebarShell({
             <span>{locale === "en" ? "EN" : "中文"}</span>
           </button>
         </div>
-
       </Sidebar>
 
       <div className="hidden">

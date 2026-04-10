@@ -273,6 +273,8 @@ const en: Record<string, string> = {
   "ws.update.checking": "Checking for updates\u2026",
   "ws.update.upToDate": "You\u2019re up to date!",
   "ws.update.upToDateSub": "nexu {{version}} is the latest version.",
+  "ws.update.readyToInstall": "v{{version}} downloaded, ready to install",
+  "ws.update.installRestart": "Install",
 
   // Workspace — Help menu
   "ws.help.documentation": "Documentation",
@@ -690,6 +692,8 @@ const zh: Record<string, string> = {
   "ws.update.checking": "正在检查更新\u2026",
   "ws.update.upToDate": "已是最新版本！",
   "ws.update.upToDateSub": "nexu {{version}} 是最新版本。",
+  "ws.update.readyToInstall": "v{{version}} 已下载，可直接安装",
+  "ws.update.installRestart": "安装",
 
   // Workspace — Help menu
   "ws.help.documentation": "文档",
