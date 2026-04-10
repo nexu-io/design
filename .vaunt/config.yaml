@@ -1,0 +1,140 @@
+version: 0.0.1
+
+actions:
+  - action:
+      type: point
+      name: commit_points
+      triggers:
+        - trigger:
+            actor: author
+            action: commit
+            condition: count() >= 1
+            value: 2
+  - action:
+      type: point
+      name: pr_points
+      triggers:
+        - trigger:
+            actor: author
+            action: pull_request
+            condition: merged = true
+            value: 10
+  - action:
+      type: point
+      name: review_points
+      triggers:
+        - trigger:
+            actor: reviewers
+            action: pull_request
+            condition: merged = true
+            value: 5
+  - action:
+      type: point
+      name: bug_points
+      triggers:
+        - trigger:
+            actor: author
+            action: issue
+            condition: labels in ['bug'] & closed = true & reason = COMPLETED
+            value: 8
+
+achievements:
+  - achievement:
+      name: Nexu Star
+      icon: https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/1f31f.png
+      description: Thanks for starring the Nexu Design System!
+      triggers:
+        - trigger:
+            actor: author
+            action: star
+            condition: starred = true
+
+  - achievement:
+      name: First Pixel
+      icon: https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/1f3af.png
+      description: Your first commit to the design system.
+      triggers:
+        - trigger:
+            actor: author
+            action: commit
+            condition: count() >= 1
+
+  - achievement:
+      name: Pixel Perfect
+      icon: https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/1f48e.png
+      description: 10+ commits — you're shaping the system!
+      triggers:
+        - trigger:
+            actor: author
+            action: commit
+            condition: count() >= 10
+
+  - achievement:
+      name: Component Crafter
+      icon: https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/1f9e9.png
+      description: First merged PR — welcome to the team!
+      triggers:
+        - trigger:
+            actor: author
+            action: pull_request
+            condition: merged = true
+
+  - achievement:
+      name: Design Architect
+      icon: https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/1f4d0.png
+      description: 5+ merged PRs — a pillar of the design system.
+      triggers:
+        - trigger:
+            actor: author
+            action: pull_request
+            condition: count(merged = true) >= 5
+
+  - achievement:
+      name: Design Reviewer
+      icon: https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/1f50d.png
+      description: Reviewed a PR — quality guardian!
+      triggers:
+        - trigger:
+            actor: reviewers
+            action: pull_request
+            condition: merged = true
+
+  - achievement:
+      name: Bug Hunter
+      icon: https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/1f41b.png
+      description: Found and reported a bug — nice catch!
+      triggers:
+        - trigger:
+            actor: author
+            action: issue
+            condition: labels in ['bug']
+
+  - achievement:
+      name: Bug Squasher
+      icon: https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/1f528.png
+      description: Resolved a bug — the system is stronger now.
+      triggers:
+        - trigger:
+            actor: author
+            action: issue
+            condition: labels in ['bug'] & closed = true & reason = COMPLETED
+
+  - achievement:
+      name: Visionary
+      icon: https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/1f4a1.png
+      description: Proposed a feature or enhancement — big ideas!
+      triggers:
+        - trigger:
+            actor: author
+            action: issue
+            condition: labels in ['enhancement']
+
+  - achievement:
+      name: Community Voice
+      icon: https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/1f4ac.png
+      description: Started a discussion — your voice matters!
+      triggers:
+        - trigger:
+            actor: author
+            action: discussion
+            condition: count() >= 1
