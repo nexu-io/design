@@ -1,4 +1,3 @@
-import type { ReactElement } from "react";
 import { Navigate, Route } from "react-router-dom";
 
 import GrowthLanding from "../../pages/GrowthLanding";
@@ -18,16 +17,11 @@ import SkillDetailPage from "../../pages/openclaw/SkillDetailPage";
 import TermsOfServicePage from "../../pages/openclaw/TermsOfServicePage";
 import UsagePage from "../../pages/openclaw/UsagePage";
 import WhatsAppQRPage from "../../pages/openclaw/WhatsAppQRPage";
-import { OpenClawDemoStateProvider } from "../../pages/openclaw/demo-state";
-
-function withOpenClawDemoState(element: ReactElement) {
-  return <OpenClawDemoStateProvider>{element}</OpenClawDemoStateProvider>;
-}
 
 export function CloudShellRouteElements() {
   return (
     <>
-      <Route path="/openclaw" element={withOpenClawDemoState(<OpenClawLanding />)} />
+      <Route path="/openclaw" element={<OpenClawLanding />} />
       <Route path="/growth-landing" element={<GrowthLanding />} />
     </>
   );
@@ -36,30 +30,24 @@ export function CloudShellRouteElements() {
 export function CloudFullScreenRouteElements() {
   return (
     <>
-      <Route path="/openclaw/workspace" element={withOpenClawDemoState(<OpenClawWorkspace />)} />
+      <Route path="/openclaw/workspace" element={<OpenClawWorkspace />} />
       <Route element={<AuthShell />}>
-        <Route path="/openclaw/welcome" element={withOpenClawDemoState(<ClientWelcomePage />)} />
-        <Route path="/openclaw/auth" element={withOpenClawDemoState(<AuthPage />)} />
+        <Route path="/openclaw/welcome" element={<ClientWelcomePage />} />
+        <Route path="/openclaw/auth" element={<AuthPage />} />
       </Route>
-      <Route path="/openclaw/invite" element={withOpenClawDemoState(<InvitePage />)} />
-      <Route path="/openclaw/onboarding" element={withOpenClawDemoState(<OnboardingPage />)} />
-      <Route path="/openclaw/whatsapp-qr" element={withOpenClawDemoState(<WhatsAppQRPage />)} />
-      <Route path="/openclaw/privacy" element={withOpenClawDemoState(<PrivacyPolicyPage />)} />
-      <Route path="/openclaw/terms" element={withOpenClawDemoState(<TermsOfServicePage />)} />
-      <Route path="/openclaw/channels" element={withOpenClawDemoState(<ChannelsPage />)} />
-      <Route path="/openclaw/skill/:id" element={withOpenClawDemoState(<SkillDetailPage />)} />
-      <Route path="/openclaw/pricing" element={withOpenClawDemoState(<NexuPricingPage />)} />
-      <Route path="/openclaw/usage" element={withOpenClawDemoState(<UsagePage />)} />
-      <Route path="/openclaw/rewards" element={withOpenClawDemoState(<RewardsPage />)} />
-      <Route path="/openclaw/growth-demo" element={withOpenClawDemoState(<GroupGrowthDemo />)} />
-      <Route
-        path="/openclaw/growth-demo/new"
-        element={withOpenClawDemoState(<GroupGrowthDemo />)}
-      />
-      <Route
-        path="/openclaw/growth-demo/existing"
-        element={withOpenClawDemoState(<GroupGrowthDemo />)}
-      />
+      <Route path="/openclaw/invite" element={<InvitePage />} />
+      <Route path="/openclaw/onboarding" element={<OnboardingPage />} />
+      <Route path="/openclaw/whatsapp-qr" element={<WhatsAppQRPage />} />
+      <Route path="/openclaw/privacy" element={<PrivacyPolicyPage />} />
+      <Route path="/openclaw/terms" element={<TermsOfServicePage />} />
+      <Route path="/openclaw/channels" element={<ChannelsPage />} />
+      <Route path="/openclaw/skill/:id" element={<SkillDetailPage />} />
+      <Route path="/openclaw/pricing" element={<NexuPricingPage />} />
+      <Route path="/openclaw/usage" element={<UsagePage />} />
+      <Route path="/openclaw/rewards" element={<RewardsPage />} />
+      <Route path="/openclaw/growth-demo" element={<GroupGrowthDemo />} />
+      <Route path="/openclaw/growth-demo/new" element={<GroupGrowthDemo />} />
+      <Route path="/openclaw/growth-demo/existing" element={<GroupGrowthDemo />} />
       <Route path="/openclaw/changelog" element={<Navigate to="/openclaw/workspace" replace />} />
       <Route path="/openclaw/changelog/*" element={<Navigate to="/openclaw/workspace" replace />} />
     </>

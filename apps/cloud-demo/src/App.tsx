@@ -1,4 +1,8 @@
-import { CloudFullScreenRouteElements, CloudShellRouteElements } from "@nexu-design/demo-pages";
+import {
+  CloudFullScreenRouteElements,
+  CloudShellRouteElements,
+  OpenClawDemoStateProvider,
+} from "@nexu-design/demo-pages";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 const fullScreenExactPaths = new Set([
@@ -31,17 +35,21 @@ export default function App() {
 
   if (isFullScreenPath(location.pathname)) {
     return (
-      <Routes>
-        {CloudFullScreenRouteElements()}
-        <Route path="*" element={<Navigate to="/openclaw/welcome" replace />} />
-      </Routes>
+      <OpenClawDemoStateProvider>
+        <Routes>
+          {CloudFullScreenRouteElements()}
+          <Route path="*" element={<Navigate to="/openclaw/welcome" replace />} />
+        </Routes>
+      </OpenClawDemoStateProvider>
     );
   }
 
   return (
-    <Routes>
-      {CloudShellRouteElements()}
-      <Route path="*" element={<Navigate to="/openclaw" replace />} />
-    </Routes>
+    <OpenClawDemoStateProvider>
+      <Routes>
+        {CloudShellRouteElements()}
+        <Route path="*" element={<Navigate to="/openclaw" replace />} />
+      </Routes>
+    </OpenClawDemoStateProvider>
   );
 }

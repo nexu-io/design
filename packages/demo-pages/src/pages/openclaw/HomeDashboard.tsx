@@ -387,7 +387,7 @@ export function HomeDashboard({
   /* ── Scene C: Operational — compact hero, efficiency-first ── */
   return (
     <div className="h-full overflow-y-auto">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+      <div className="max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8 space-y-6">
         {/* ═══ TOP: Compact Hero — Bot + CTA ═══ */}
         <div className="flex items-center gap-4">
           <div
