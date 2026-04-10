@@ -186,7 +186,7 @@ const REWARD_SPLITS: Record<"signedOut" | "signedIn", RewardItem[]> = {
   ],
 };
 
-const PLAN_SWITCH_OPTIONS: BillingPlanId[] = ["free", "plus", "pro", "ultimate"];
+const PLAN_SWITCH_OPTIONS: BillingPlanId[] = ["free", "plus", "pro"];
 const QUOTA_OPTIONS: UsageQuotaState[] = ["healthy", "warning", "depleted"];
 
 function getPlan(planId: BillingPlanId) {
@@ -196,7 +196,6 @@ function getPlan(planId: BillingPlanId) {
 function getUpgradeTarget(planId: BillingPlanId) {
   if (planId === "free") return getPlan("plus");
   if (planId === "plus") return getPlan("pro");
-  if (planId === "pro") return getPlan("ultimate");
   return null;
 }
 

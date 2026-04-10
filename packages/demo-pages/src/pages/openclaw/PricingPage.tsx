@@ -10,6 +10,7 @@ import { Crown, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
+import { useOpenClawDemoState } from "./demo-state";
 import {
   type BillingPlanId,
   PlanComparisonGrid,
@@ -26,11 +27,11 @@ export default function PricingPage({ initialTab = "usage" }: PricingPageProps) 
   usePageTitle("Pricing & Usage");
   const location = useLocation();
   const navigate = useNavigate();
+  const { loggedIn, setLoggedIn, plan, setPlan } = useOpenClawDemoState();
 
   const [activeTab, setActiveTab] = useState<"usage" | "plans">(initialTab);
-  const [activePlan, setActivePlan] = useState<BillingPlanId>("plus");
   const [usageState, setUsageState] = useState<UsageQuotaState>("warning");
-  const [isSignedIn, setIsSignedIn] = useState(true);
+  const activePlan: BillingPlanId = plan;
 
   useEffect(() => {
     const tab = new URLSearchParams(location.search).get("tab");
@@ -57,10 +58,14 @@ export default function PricingPage({ initialTab = "usage" }: PricingPageProps) 
       />
 
       <PricingDemoControls
-        isSignedIn={isSignedIn}
-        onSignedInChange={setIsSignedIn}
+        isSignedIn={loggedIn}
+        onSignedInChange={setLoggedIn}
         planId={activePlan}
-        onPlanChange={setActivePlan}
+        onPlanChange={(value) => {
+          if (value === "free" || value === "plus" || value === "pro") {
+            setPlan(value);
+          }
+        }}
         usageState={usageState}
         onUsageStateChange={setUsageState}
       />
@@ -83,7 +88,7 @@ export default function PricingPage({ initialTab = "usage" }: PricingPageProps) 
             <UsageSummaryPanel
               planId={activePlan}
               usageState={usageState}
-              isSignedIn={isSignedIn}
+              isSignedIn={loggedIn}
               onViewPlans={() => setActiveTab("plans")}
               onOpenRewards={() => navigate("/openclaw/rewards")}
             />

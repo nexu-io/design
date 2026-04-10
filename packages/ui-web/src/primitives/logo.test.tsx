@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 
 import { expectNoA11yViolations } from "../test/a11y";
-import { BrandLogo, PlatformLogo, ProviderLogo } from "./logo";
+import { BrandLogo, ModelLogo, PlatformLogo, ProviderLogo } from "./logo";
 
 describe("logo primitives", () => {
   it("renders provider, platform, and brand logos with accessible titles", () => {
@@ -24,6 +24,45 @@ describe("logo primitives", () => {
     render(<ProviderLogo provider="custom" title="Custom provider" />);
 
     expect(screen.getByRole("img", { name: "Custom provider" })).toBeInTheDocument();
+  });
+
+  it("resolves canonical provider aliases", () => {
+    render(
+      <>
+        <ProviderLogo provider="google" />
+        <ProviderLogo provider="qwen" />
+        <ProviderLogo provider="xiaomi" />
+      </>,
+    );
+
+    expect(screen.getByAltText("aistudio")).toBeInTheDocument();
+    expect(screen.getByAltText("alibabacloud")).toBeInTheDocument();
+    expect(screen.getByAltText("xiaomimimo")).toBeInTheDocument();
+  });
+
+  it("resolves model logos from model id patterns", () => {
+    render(
+      <>
+        <ModelLogo model="openai/gpt-4o" />
+        <ModelLogo model="claude-code" />
+        <ModelLogo model="qianfan/ernie" />
+      </>,
+    );
+
+    expect(screen.getByAltText("openai")).toBeInTheDocument();
+    expect(screen.getByAltText("claudecode")).toBeInTheDocument();
+    expect(screen.getByAltText("baiducloud")).toBeInTheDocument();
+  });
+
+  it("falls back model logo to provider then monogram", () => {
+    const { rerender } = render(
+      <ModelLogo model="custom-model" provider="openai" title="fallback" />,
+    );
+
+    expect(screen.getByRole("img", { name: "fallback" })).toBeInTheDocument();
+
+    rerender(<ModelLogo model="custom-model" title="custom-model" />);
+    expect(screen.getByRole("img", { name: "custom-model" })).toBeInTheDocument();
   });
 
   it("has no accessibility violations", async () => {

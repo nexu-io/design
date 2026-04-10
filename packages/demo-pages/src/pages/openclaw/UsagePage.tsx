@@ -9,8 +9,9 @@ import {
   RefreshCw,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { getCreditPackInfo, useOpenClawDemoState } from "./demo-state";
 
 /* ── Mock data (mirrors useBudget values) ── */
 
@@ -104,20 +105,15 @@ function formatDate(iso: string) {
 export default function UsagePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const planFromQuery = searchParams.get("plan") as PlanKey | null;
-  const planKey: PlanKey =
-    planFromQuery === "free" || planFromQuery === "plus" || planFromQuery === "pro"
-      ? planFromQuery
-      : "pro";
+  const {
+    plan: sharedPlan,
+    setPlan,
+    creditPack: sharedCreditPack,
+    setCreditPack,
+  } = useOpenClawDemoState();
+  const planKey: PlanKey = sharedPlan;
   const plan = PLAN_META[planKey];
-  const packParam = searchParams.get("pack");
-  const PACK_REMAINING: Record<string, { label: string; remaining: number }> = {
-    "2000": { label: "2,000 积分包", remaining: 1620 },
-    "5200": { label: "5,200 积分包", remaining: 3840 },
-    "11000": { label: "11,000 积分包", remaining: 8200 },
-    "55000": { label: "55,000 积分包", remaining: 41500 },
-  };
-  const activePack = packParam && PACK_REMAINING[packParam] ? PACK_REMAINING[packParam] : null;
+  const activePack = sharedCreditPack === "none" ? null : getCreditPackInfo(sharedCreditPack);
   const totalRemaining = plan.baseRemaining + plan.bonusRemaining + (activePack?.remaining ?? 0);
   const showCreditPackBlock = planKey === "plus" || planKey === "pro";
   const [showPlanTip, setShowPlanTip] = useState(false);
@@ -135,6 +131,24 @@ export default function UsagePage() {
   const mockCard = { brand: "Visa", last4: "4242" };
   const totalPages = Math.ceil(USAGE_LOG.length / PAGE_SIZE);
   const pageData = USAGE_LOG.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
+  useEffect(() => {
+    const queryPlan = searchParams.get("plan");
+    if (queryPlan === "free" || queryPlan === "plus" || queryPlan === "pro") {
+      setPlan(queryPlan);
+    }
+
+    const queryPack = searchParams.get("pack");
+    if (
+      queryPack === "none" ||
+      queryPack === "2000" ||
+      queryPack === "5200" ||
+      queryPack === "11000" ||
+      queryPack === "55000"
+    ) {
+      setCreditPack(queryPack);
+    }
+  }, [searchParams, setPlan, setCreditPack]);
 
   return (
     <div

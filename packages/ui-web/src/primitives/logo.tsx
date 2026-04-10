@@ -1,6 +1,10 @@
 import type * as React from "react";
 
 import { cn } from "../lib/cn";
+import {
+  CANONICAL_MODEL_ICON_DATA_URIS,
+  CANONICAL_PROVIDER_ICON_DATA_URIS,
+} from "./logo-icon-data";
 
 export type ProviderName =
   | "nexu"
@@ -21,6 +25,8 @@ export type ProviderName =
 export type PlatformName = "slack" | "feishu" | "discord" | "telegram" | "wechat" | "whatsapp";
 
 export type BrandName = "nexu" | "github";
+
+export type ModelName = string;
 
 export interface LogoProps extends React.HTMLAttributes<HTMLSpanElement> {
   size?: number;
@@ -99,6 +105,121 @@ function MonogramLogo({
       </text>
     </SvgLogo>
   );
+}
+
+function ImageLogo({
+  src,
+  alt,
+  size,
+  className,
+  title,
+  ...props
+}: LogoProps & { src: string; alt: string }) {
+  return (
+    <LogoFrame size={size} className={className} title={title} {...props}>
+      <img src={src} alt={title ?? alt} width={size} height={size} className="size-full" />
+    </LogoFrame>
+  );
+}
+
+const PROVIDER_ICON_ALIASES: Record<string, string> = {
+  anthropic: "anthropic",
+  "amazon-bedrock": "bedrock",
+  aws: "aws",
+  baidu: "baidu",
+  baiducloud: "baiducloud",
+  deepseek: "deepseek",
+  glm: "zhipu",
+  google: "aistudio",
+  huggingface: "huggingface",
+  kimi: "moonshot",
+  minimax: "minimax",
+  mistral: "mistral",
+  moonshot: "moonshot",
+  nexu: "nexu",
+  ollama: "ollama",
+  openai: "openai",
+  openrouter: "openrouter",
+  nvidia: "nvidia",
+  ppio: "ppio",
+  qianfan: "baiducloud",
+  qwen: "alibabacloud",
+  siliconflow: "siliconcloud",
+  stepfun: "stepfun",
+  together: "together",
+  togetherai: "together",
+  vllm: "vllm",
+  volcengine: "volcengine",
+  xai: "xai",
+  xiaoxiang: "xiaomimimo",
+  xiaomi: "xiaomimimo",
+  zai: "zhipu",
+};
+
+function normalizeProviderIconKey(provider: string): string | null {
+  const normalized = provider.trim().toLowerCase();
+
+  if (!normalized) {
+    return null;
+  }
+
+  return PROVIDER_ICON_ALIASES[normalized] ?? normalized;
+}
+
+function getDisplayModelId(model: string): string {
+  const normalized = model.trim();
+
+  if (!normalized || !normalized.includes("/")) {
+    return normalized;
+  }
+
+  return normalized.slice(normalized.lastIndexOf("/") + 1);
+}
+
+function resolveModelIconKey(model: string, provider?: string): string | null {
+  const normalizedModel = model.trim().toLowerCase();
+  const displayModelId = getDisplayModelId(model).toLowerCase();
+  const normalizedProvider = provider?.trim().toLowerCase() ?? "";
+  const lookupText = [normalizedModel, displayModelId, normalizedProvider]
+    .filter(Boolean)
+    .join(" ");
+
+  if (!lookupText) {
+    return null;
+  }
+
+  const rules: Array<{ key: string; patterns: string[] }> = [
+    { key: "claudecode", patterns: ["claude-code", "claudecode"] },
+    { key: "claude", patterns: ["claude"] },
+    { key: "gemini", patterns: ["gemini"] },
+    { key: "qwen", patterns: ["qwen", "tongyi"] },
+    { key: "kimi", patterns: ["kimi"] },
+    { key: "deepseek", patterns: ["deepseek"] },
+    { key: "doubao", patterns: ["doubao"] },
+    { key: "glmv", patterns: ["glmv"] },
+    { key: "chatglm", patterns: ["chatglm", "glm-4", "glm4", "glm"] },
+    { key: "grok", patterns: ["grok"] },
+    { key: "baichuan", patterns: ["baichuan"] },
+    { key: "mistral", patterns: ["mistral", "mixtral"] },
+    { key: "minimax", patterns: ["minimax", "abab"] },
+    { key: "openai", patterns: ["openai", "gpt", "o1", "o3", "o4"] },
+    { key: "ollama", patterns: ["ollama"] },
+    { key: "moonshot", patterns: ["moonshot"] },
+    { key: "zhipu", patterns: ["zhipu", "bigmodel"] },
+    { key: "volcengine", patterns: ["volcengine"] },
+    { key: "alibabacloud", patterns: ["alibabacloud"] },
+    { key: "alibaba", patterns: ["alibaba"] },
+    { key: "baiducloud", patterns: ["baiducloud", "qianfan"] },
+    { key: "xai", patterns: ["xai"] },
+  ];
+
+  for (const rule of rules) {
+    if (rule.patterns.some((pattern) => lookupText.includes(pattern))) {
+      return rule.key;
+    }
+  }
+
+  return null;
 }
 
 export function AnthropicIcon(props: LogoProps) {
@@ -297,45 +418,58 @@ export function ProviderLogo({
   provider,
   ...props
 }: LogoProps & { provider: ProviderName | string }) {
-  switch (provider) {
-    case "nexu":
-      return <NexuLogoIcon {...props} />;
-    case "anthropic":
-      return <AnthropicIcon {...props} />;
-    case "openai":
-      return <OpenAIIcon {...props} />;
-    case "google":
-      return <GoogleIcon {...props} />;
-    case "xai":
-      return <XAIIcon {...props} />;
-    case "kimi":
-      return <MonogramLogo label="K" background="#111827" {...props} />;
-    case "glm":
-      return <MonogramLogo label="GL" background="#2563EB" {...props} />;
-    case "minimax":
-      return <MonogramLogo label="MM" background="#0F172A" {...props} />;
-    case "openrouter":
-      return <MonogramLogo label="OR" background="#0F766E" {...props} />;
-    case "siliconflow":
-      return <MonogramLogo label="SF" background="#4338CA" {...props} />;
-    case "ppio":
-      return <MonogramLogo label="PP" background="#EA580C" {...props} />;
-    case "xiaoxiang":
-      return <MonogramLogo label="XM" background="#10B981" {...props} />;
-    case "deepseek":
-      return <MonogramLogo label="DS" background="#7C3AED" {...props} />;
-    case "qwen":
-      return <MonogramLogo label="QW" background="#2563EB" {...props} />;
-    default:
-      return (
-        <MonogramLogo
-          label={(provider[0] ?? "?").toUpperCase()}
-          background="var(--color-surface-3, #E5E7EB)"
-          foreground="var(--color-text-muted, #6B7280)"
-          {...props}
-        />
-      );
+  const normalizedProvider = provider.trim().toLowerCase();
+
+  if (normalizedProvider === "nexu") {
+    return <NexuLogoIcon {...props} />;
   }
+
+  const iconKey = normalizeProviderIconKey(provider);
+  const src = iconKey
+    ? CANONICAL_PROVIDER_ICON_DATA_URIS[iconKey as keyof typeof CANONICAL_PROVIDER_ICON_DATA_URIS]
+    : null;
+
+  if (src) {
+    return <ImageLogo src={src} alt={iconKey ?? provider} {...props} />;
+  }
+
+  return (
+    <MonogramLogo
+      label={(provider[0] ?? "?").toUpperCase()}
+      background="var(--color-surface-3, #E5E7EB)"
+      foreground="var(--color-text-muted, #6B7280)"
+      {...props}
+    />
+  );
+}
+
+export function ModelLogo({
+  model,
+  provider,
+  ...props
+}: LogoProps & { model: ModelName; provider?: ProviderName | string }) {
+  const displayModelId = getDisplayModelId(model);
+  const iconKey = resolveModelIconKey(model, provider);
+  const src = iconKey
+    ? CANONICAL_MODEL_ICON_DATA_URIS[iconKey as keyof typeof CANONICAL_MODEL_ICON_DATA_URIS]
+    : null;
+
+  if (src) {
+    return <ImageLogo src={src} alt={iconKey ?? displayModelId} {...props} />;
+  }
+
+  if (provider) {
+    return <ProviderLogo provider={provider} {...props} />;
+  }
+
+  return (
+    <MonogramLogo
+      label={(displayModelId[0] ?? "?").toUpperCase()}
+      background="var(--color-surface-3, #E5E7EB)"
+      foreground="var(--color-text-muted, #6B7280)"
+      {...props}
+    />
+  );
 }
 
 export function PlatformLogo({ platform, ...props }: LogoProps & { platform: PlatformName }) {

@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useOpenClawDemoState } from "./demo-state";
 import { type RewardTaskState, useBudget } from "../../hooks/useBudget";
 import { usePageTitle } from "../../hooks/usePageTitle";
 
@@ -95,6 +96,7 @@ export default function RewardsPage() {
   usePageTitle("Rewards");
 
   const budget = useBudget();
+  const { loggedIn, setLoggedIn } = useOpenClawDemoState();
   const [materialTaskId, setMaterialTaskId] = useState<string | null>(null);
   const [confirmTaskId, setConfirmTaskId] = useState<string | null>(null);
   const [captionCopiedFor, setCaptionCopiedFor] = useState<string | null>(null);
@@ -138,15 +140,15 @@ export default function RewardsPage() {
           <div className="flex flex-wrap items-center gap-2">
             <Button
               size="sm"
-              variant={budget.isSignedIn ? "default" : "outline"}
-              onClick={() => budget.setIsSignedIn(true)}
+              variant={loggedIn ? "default" : "outline"}
+              onClick={() => setLoggedIn(true)}
             >
               Signed in
             </Button>
             <Button
               size="sm"
-              variant={!budget.isSignedIn ? "default" : "outline"}
-              onClick={() => budget.setIsSignedIn(false)}
+              variant={!loggedIn ? "default" : "outline"}
+              onClick={() => setLoggedIn(false)}
             >
               Signed out
             </Button>

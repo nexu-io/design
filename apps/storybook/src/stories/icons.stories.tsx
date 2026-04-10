@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
 
-import { BrandLogo, PlatformLogo, ProviderLogo } from "@nexu-design/ui-web";
+import { BrandLogo, ModelLogo, PlatformLogo, ProviderLogo } from "@nexu-design/ui-web";
 
 const meta = {
   title: "Primitives/Icons",
@@ -12,16 +12,59 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const providerIds = [
-  "nexu",
   "anthropic",
-  "openai",
-  "google",
-  "xai",
-  "kimi",
+  "amazon-bedrock",
+  "aws",
+  "baidu",
+  "baiducloud",
+  "deepseek",
   "glm",
+  "google",
+  "huggingface",
+  "kimi",
   "minimax",
+  "mistral",
+  "moonshot",
+  "ollama",
+  "openai",
   "openrouter",
+  "nvidia",
+  "ppio",
+  "qianfan",
+  "qwen",
   "siliconflow",
+  "stepfun",
+  "togetherai",
+  "vllm",
+  "volcengine",
+  "xai",
+  "xiaomi",
+  "zai",
+] as const;
+
+const modelIds = [
+  "claude-3-7-sonnet",
+  "claude-code",
+  "gemini-2.5-pro",
+  "qwen-max",
+  "kimi-k2",
+  "deepseek-chat",
+  "doubao-seed",
+  "glmv-4.5",
+  "chatglm-4",
+  "grok-4",
+  "baichuan-4",
+  "mixtral-8x7b",
+  "abab6",
+  "gpt-4o",
+  "ollama/llama3.2",
+  "moonshot-v1",
+  "zhipu/glm-4.5",
+  "volcengine/doubao-pro",
+  "alibabacloud/qwen-plus",
+  "alibaba/qwen3",
+  "qianfan/ernie",
+  "xai/grok-3",
 ] as const;
 
 const platformIds = ["slack", "feishu", "discord", "telegram", "wechat"] as const;
@@ -62,6 +105,14 @@ export const Gallery: Story = {
         {providerIds.map((provider) => (
           <IconCard key={provider} label={provider}>
             <ProviderLogo provider={provider} size={22} title={provider} />
+          </IconCard>
+        ))}
+      </IconGrid>
+
+      <IconGrid title="Models">
+        {modelIds.map((model) => (
+          <IconCard key={model} label={model}>
+            <ModelLogo model={model} size={22} title={model} />
           </IconCard>
         ))}
       </IconGrid>

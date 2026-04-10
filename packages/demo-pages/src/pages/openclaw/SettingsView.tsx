@@ -2,8 +2,9 @@ import {
   Button,
   GitHubIcon,
   Input,
+  ModelLogo,
   PageHeader,
-  SectionHeader,
+  ProviderLogo,
   Select,
   SelectContent,
   SelectTrigger,
@@ -22,7 +23,6 @@ import {
   ArrowUpRight,
   BookOpen,
   Check,
-  ChevronDown,
   Globe,
   Info,
   Mail,
@@ -32,12 +32,11 @@ import {
   Shield,
   User,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { type Locale, useLocale } from "../../hooks/useLocale";
 import { openExternal } from "../../utils/open-external";
 import { type ModelProvider, getProviderDetails } from "./data";
 import { GitHubStarButton } from "./GitHubStarButton";
-import { ProviderLogo } from "./iconHelpers";
 
 const WORKSPACE_LOCALE_OPTIONS: { value: Locale; nativeLabel: string; englishLabel: string }[] = [
   { value: "en", nativeLabel: "English", englishLabel: "English" },
@@ -176,18 +175,11 @@ export function SettingsView({
     }
   }, []);
   const providers = getProviderDetails();
-  const [configuredProviders, setConfiguredProviders] = useState<Set<string>>(
-    () => new Set(["nexu"]),
-  );
-  const availableModels = providers
-    .filter((p) => p.id === "nexu" || configuredProviders.has(p.id))
-    .flatMap((p) => p.models.map((m) => ({ ...m, providerName: p.name, providerId: p.id })));
   const [activeProviderId, setActiveProviderId] = useState<ModelProvider>(initialProviderId);
   const [selectedModelId, setSelectedModelId] = useState<string | null>(() => {
     const nexu = providers.find((p) => p.id === "nexu");
     return nexu?.models[0]?.id ?? null;
   });
-  const [showModelDropdown, setShowModelDropdown] = useState(false);
   const [formValues, setFormValues] = useState<
     Record<string, { apiKey: string; proxyUrl: string }>
   >({});
@@ -200,23 +192,7 @@ export function SettingsView({
   const [checkStates, setCheckStates] = useState<
     Record<string, "idle" | "checking" | "success" | "error">
   >({});
-  const modelDropdownRef = useRef<HTMLDivElement>(null);
-
   const activeProvider = providers.find((p) => p.id === activeProviderId) ?? providers[0];
-  const selectedModel = selectedModelId
-    ? (availableModels.find((m) => m.id === selectedModelId) ?? null)
-    : null;
-
-  useEffect(() => {
-    if (!showModelDropdown) return;
-    const handler = (e: MouseEvent) => {
-      if (modelDropdownRef.current && !modelDropdownRef.current.contains(e.target as Node)) {
-        setShowModelDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [showModelDropdown]);
 
   const getFormValues = (providerId: string) => {
     const p = providers.find((x) => x.id === providerId);
@@ -251,7 +227,6 @@ export function SettingsView({
       if (verifyOk) {
         setSaveStates((prev) => ({ ...prev, [providerId]: "saved" }));
         setSavedValues((prev) => ({ ...prev, [providerId]: { ...curr } }));
-        setConfiguredProviders((prev) => new Set([...prev, providerId]));
         const p = providers.find((x) => x.id === providerId);
         if (p?.models[0]) setSelectedModelId(p.models[0].id);
         setShowSavedBannerFor(providerId);
@@ -596,295 +571,204 @@ export function SettingsView({
 
           {/* ── Providers Tab ── */}
           <TabsContent value="providers" className="mt-0">
-            {/* Nexu Bot model selector */}
-            <div className="relative mb-8" ref={modelDropdownRef}>
-              <div className="rounded-xl border border-border bg-surface-1 px-4 py-3.5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center shrink-0">
-                      <img src="/brand/nexu logo-black1.svg" alt="nexu" className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-[13px] font-semibold text-text-primary">
-                        {t("ws.settings.nexuBotModel")}
-                      </div>
-                      <div className="text-[11px] text-text-tertiary">
-                        {t("ws.settings.nexuBotModelDesc")}
-                      </div>
-                    </div>
+            <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-[0_1px_2px_rgba(15,23,42,0.03)]">
+              <div className="flex min-h-[600px]">
+                <section className="flex w-[240px] shrink-0 flex-col border-r border-border-subtle bg-[#fcfcfb]">
+                  <div className="px-4 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-tertiary">
+                    {t("ws.settings.tab.providers")}
                   </div>
-                  <button
-                    onClick={() => setShowModelDropdown((v) => !v)}
-                    className="inline-flex min-h-9 items-center gap-2 px-3 py-2 rounded-lg border border-border bg-surface-0 text-base font-medium text-text-primary transition-all hover:border-border-hover hover:bg-surface-2"
-                  >
-                    {selectedModel ? (
-                      <>
-                        <span className="w-4 h-4 shrink-0 flex items-center justify-center">
-                          <ProviderLogo provider={selectedModel.providerId} size={14} />
-                        </span>
-                        {selectedModel.name}
-                      </>
-                    ) : (
-                      <span className="text-text-muted">{t("ws.settings.select")}</span>
-                    )}
-                    <ChevronDown size={14} className="text-text-muted" />
-                  </button>
-                </div>
-              </div>
-
-              {showModelDropdown && (
-                <div className="absolute top-full left-0 right-0 z-20 mt-1 rounded-xl border border-border bg-surface-0 shadow-lg overflow-hidden max-h-[320px] overflow-y-auto">
-                  {providers
-                    .filter((p) => p.id === "nexu" || configuredProviders.has(p.id))
-                    .map((p) => (
-                      <div key={p.id}>
-                        <div className="sticky top-0 bg-surface-0 px-3 pt-2.5 pb-1 text-sm font-semibold uppercase tracking-wider text-text-tertiary">
-                          {p.name}
-                        </div>
-                        {p.models.map((m) => {
-                          const isSelected = m.id === selectedModelId;
-                          return (
-                            <button
-                              key={m.id}
-                              onClick={() => {
-                                setSelectedModelId(m.id);
-                                setShowModelDropdown(false);
-                              }}
-                              className={`flex min-h-9 w-full items-center gap-2.5 px-3 py-2 text-left transition-colors ${isSelected ? "bg-accent/5" : "hover:bg-surface-2"}`}
-                            >
-                              <span className="flex size-4 shrink-0 items-center justify-center">
-                                <ProviderLogo provider={p.id} size={14} />
-                              </span>
-                              <span
-                                className={`min-w-0 flex-1 truncate text-base ${isSelected ? "font-semibold text-accent" : "font-medium text-text-primary"}`}
-                              >
-                                {m.name}
-                              </span>
-                              {isSelected && <Check size={14} className="text-accent shrink-0" />}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    ))}
-                </div>
-              )}
-            </div>
-
-            <div
-              className="flex gap-0 rounded-xl border border-border bg-surface-1 overflow-hidden"
-              style={{ minHeight: 520 }}
-            >
-              {/* Left: Provider list — flat, no enabled/disabled split */}
-              <div className="w-56 shrink-0 bg-surface-0 overflow-y-auto">
-                <div className="p-2 space-y-0.5">
-                  {providers.map((p) => {
-                    const active = p.id === activeProviderId;
-                    return (
-                      <button
-                        key={p.id}
-                        onClick={() => setActiveProviderId(p.id)}
-                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors ${
-                          active ? "bg-surface-3" : "hover:bg-surface-2"
-                        }`}
-                      >
-                        <span className="w-5 h-5 shrink-0 flex items-center justify-center">
-                          <ProviderLogo provider={p.id} size={16} />
-                        </span>
-                        <span
-                          className={`flex-1 text-[12px] font-medium truncate ${active ? "text-accent" : "text-text-primary"}`}
+                  <div className="flex-1 space-y-0.5 overflow-y-auto px-2 pb-3">
+                    {providers.map((p) => {
+                      const active = p.id === activeProviderId;
+                      return (
+                        <button
+                          type="button"
+                          key={p.id}
+                          onClick={() => setActiveProviderId(p.id)}
+                          className={cn(
+                            "flex w-full items-center gap-2 rounded-xl px-3 py-1.5 text-left transition-colors",
+                            active ? "bg-surface-2" : "hover:bg-surface-1",
+                          )}
                         >
-                          {p.name}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+                          <span className="flex size-6 shrink-0 items-center justify-center rounded-md border border-border-subtle bg-white">
+                            <ProviderLogo provider={p.id} size={14} title={p.name} />
+                          </span>
+                          <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-text-primary">
+                            {p.name}
+                          </span>
+                          <span className="text-[11px] text-text-tertiary">{p.models.length}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
 
-              {/* Right: Provider detail */}
-              <div className="flex-1 overflow-y-auto p-5">
-                {/* Header — no enable/disable switch */}
-                <SectionHeader
-                  className="mb-5 items-start"
-                  title={
+                <section className="min-w-0 flex-1 bg-white px-6 pb-6 pt-5">
+                  <div className="flex items-start justify-between gap-4">
                     <div className="flex min-w-0 items-center gap-3">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-2">
-                        <ProviderLogo provider={activeProvider.id} size={20} />
+                      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface-1 text-text-primary">
+                        <ProviderLogo provider={activeProvider.id} size={20} title={activeProvider.name} />
                       </span>
                       <div className="min-w-0">
-                        <div className="text-[14px] font-semibold text-text-primary">
+                        <div className="truncate text-[16px] font-semibold text-text-primary">
                           {activeProvider.name}
                         </div>
-                        <div className="text-[11px] text-text-tertiary">
+                        <div className="mt-0.5 truncate text-[12px] text-text-secondary">
                           {activeProvider.description}
                         </div>
                       </div>
                     </div>
-                  }
-                  action={
-                    activeProvider.apiDocsUrl ? (
+
+                    {activeProvider.apiDocsUrl && !(activeProvider.id === "nexu" && !signedIn) ? (
                       <TextLink
                         href={activeProvider.apiDocsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         size="sm"
                         showArrowUpRight
-                        className="text-[12px] leading-none text-[var(--color-link)]"
                       >
                         {t("ws.settings.getApiKey")}
                       </TextLink>
-                    ) : undefined
-                  }
-                />
-
-                {/* Nexu login card */}
-                {activeProvider.id === "nexu" && (
-                  <div className="rounded-xl border border-[var(--color-brand-primary)]/25 bg-[var(--color-brand-subtle)] px-4 py-4 mb-6">
-                    <div className="text-[13px] font-semibold text-[var(--color-brand-primary)]">
-                      {t("ws.settings.signInTitle")}
-                    </div>
-                    <div className="text-[12px] leading-[1.7] text-text-secondary mt-1.5">
-                      {t("ws.settings.signInDesc")}
-                    </div>
-                    <Button
-                      type="button"
-                      variant="primary"
-                      size="sm"
-                      onClick={() =>
-                        openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)
-                      }
-                      className="mt-4"
-                      trailingIcon={<ArrowUpRight size={14} />}
-                    >
-                      {t("ws.settings.signInBtn")}
-                    </Button>
+                    ) : null}
                   </div>
-                )}
 
-                {/* API Key + Proxy URL + Save (hidden for nexu) */}
-                {activeProvider.id !== "nexu" && (
-                  <div className="space-y-4 mb-6">
-                    <div className="text-[10px] uppercase tracking-wider text-text-muted mb-3">
-                      {t("ws.settings.apiKeySteps")}
-                    </div>
-                    <div>
-                      <label className="block text-[13px] font-semibold text-text-primary mb-3">
-                        {t("ws.settings.apiKey")}
-                      </label>
-                      <Input
-                        type="password"
-                        placeholder={activeProvider.apiKeyPlaceholder}
-                        value={getFormValues(activeProvider.id).apiKey}
-                        onChange={(e) => setFormField(activeProvider.id, "apiKey", e.target.value)}
-                        className="w-full text-[12px]"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[13px] font-semibold text-text-primary mb-3">
-                        {t("ws.settings.apiProxyUrl")}
-                      </label>
-                      <Input
-                        type="text"
-                        value={getFormValues(activeProvider.id).proxyUrl}
-                        onChange={(e) =>
-                          setFormField(activeProvider.id, "proxyUrl", e.target.value)
-                        }
-                        className="w-full text-[12px]"
-                      />
-                    </div>
-                    <div className="flex items-center justify-end gap-3 flex-wrap">
-                      <button
-                        type="button"
-                        onClick={() => handleCheck(activeProvider.id)}
-                        disabled={checkState === "checking" || saveState === "saving"}
-                        className="text-[12px] text-text-muted hover:text-text-secondary disabled:opacity-50"
-                      >
-                        {checkState === "checking" && t("ws.settings.testing")}
-                        {checkState === "success" && t("ws.settings.connectedStatus")}
-                        {checkState === "error" && t("ws.settings.retryTest")}
-                        {checkState === "idle" && t("ws.settings.testConnection")}
-                      </button>
+                  {activeProvider.id === "nexu" && !signedIn ? (
+                    <div className="my-4 rounded-xl border border-[#aee8f7] bg-[#eefafe] px-5 py-4">
+                      <div className="text-[14px] font-semibold leading-snug text-[#2bb5da]">
+                        {t("ws.settings.signInTitle")}
+                      </div>
+                      <div className="mt-1.5 text-[12px] leading-relaxed text-text-secondary">
+                        {t("ws.settings.signInDesc")}
+                      </div>
                       <Button
-                        onClick={() => handleSave(activeProvider.id)}
-                        disabled={showSaved}
-                        loading={saveState === "saving"}
-                        size="sm"
-                        className={cn(
-                          "w-[120px] shrink-0",
-                          showSaved &&
-                            "border border-[var(--color-success)]/20 bg-[var(--color-success)]/10 text-[var(--color-success)] hover:bg-[var(--color-success)]/10",
-                        )}
+                        type="button"
+                        size="default"
+                        className="mt-3.5"
+                        onClick={() => openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)}
+                        trailingIcon={<ArrowUpRight size={14} />}
                       >
-                        {showSaved ? t("ws.common.saved") : t("ws.common.save")}
+                        {t("ws.settings.signInBtn")}
                       </Button>
                     </div>
-                  </div>
-                )}
+                  ) : null}
 
-                {/* Model list — flat, no switches */}
-                <div>
-                  {showSaved && showSavedBannerFor === activeProvider.id && (
-                    <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-[var(--color-success)]/8 text-[11px] text-[var(--color-success)]">
-                      <Check size={12} className="shrink-0" />
-                      {t("ws.settings.savedSelectModel")}
-                    </div>
-                  )}
-                  {saveError && (
-                    <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-[var(--color-error)]/8 text-[11px] text-[var(--color-error)]">
-                      <AlertCircle size={12} className="shrink-0" />
-                      <span>{t("ws.settings.connectionFailed")}</span>
-                    </div>
-                  )}
-                  <SectionHeader
-                    className="mb-3"
-                    title={
-                      <div className="text-[13px] font-semibold text-text-primary">
-                        {t("ws.settings.model")}{" "}
-                        <span className="font-normal text-text-tertiary">
-                          {activeProvider.models.length}
-                        </span>
+                  {activeProvider.id !== "nexu" && (
+                    <div className="my-4 space-y-3 rounded-xl border border-border-subtle bg-surface-0 p-3">
+                      <div>
+                        <label className="mb-1 block text-[12px] font-semibold text-text-primary">
+                          {t("ws.settings.apiKey")}
+                        </label>
+                        <Input
+                          type="password"
+                          placeholder={activeProvider.apiKeyPlaceholder}
+                          value={getFormValues(activeProvider.id).apiKey}
+                          onChange={(e) => setFormField(activeProvider.id, "apiKey", e.target.value)}
+                          className="w-full text-[12px]"
+                        />
                       </div>
-                    }
-                  />
-                  <div className="space-y-1.5">
-                    {activeProvider.models.map((model) => {
-                      const isActive = model.id === selectedModelId;
-                      return (
+                      <div>
+                        <label className="mb-1 block text-[12px] font-semibold text-text-primary">
+                          {t("ws.settings.apiProxyUrl")}
+                        </label>
+                        <Input
+                          type="text"
+                          value={getFormValues(activeProvider.id).proxyUrl}
+                          onChange={(e) => setFormField(activeProvider.id, "proxyUrl", e.target.value)}
+                          className="w-full text-[12px]"
+                        />
+                      </div>
+                      <div className="flex items-center justify-end gap-2">
                         <button
-                          key={model.id}
-                          onClick={() => setSelectedModelId(model.id)}
-                          className={`w-full min-h-9 flex items-center justify-between gap-3 rounded-lg border-none px-3 py-2.5 text-left transition-all ${
-                            isActive
-                              ? "ring-1 ring-[var(--color-brand-primary)]/50 bg-[var(--color-brand-subtle)]"
-                              : "bg-surface-2 hover:bg-surface-3"
-                          }`}
+                          type="button"
+                          onClick={() => handleCheck(activeProvider.id)}
+                          disabled={checkState === "checking" || saveState === "saving"}
+                          className="text-[12px] text-text-muted hover:text-text-secondary disabled:opacity-50"
                         >
-                          <div className="flex min-w-0 flex-1 items-center gap-2.5">
-                            <span className="flex size-4 shrink-0 items-center justify-center rounded-md">
-                              <ProviderLogo provider={activeProvider.id} size={14} />
-                            </span>
-                            <div
-                              className={`truncate text-base ${isActive ? "font-semibold text-text-primary" : "font-medium text-text-secondary"}`}
-                            >
-                              {model.name}
-                            </div>
-                          </div>
-                          <div className="flex shrink-0 items-center gap-2">
-                            <span className="text-sm text-text-tertiary tabular-nums">
-                              {model.contextWindow}
-                            </span>
-                            {isActive && (
-                              <Check
-                                size={14}
-                                className="shrink-0 text-[var(--color-brand-primary)]"
-                              />
-                            )}
-                          </div>
+                          {checkState === "checking" && t("ws.settings.testing")}
+                          {checkState === "success" && t("ws.settings.connectedStatus")}
+                          {checkState === "error" && t("ws.settings.retryTest")}
+                          {checkState === "idle" && t("ws.settings.testConnection")}
                         </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                        <Button
+                          onClick={() => handleSave(activeProvider.id)}
+                          disabled={showSaved}
+                          loading={saveState === "saving"}
+                          size="sm"
+                          className={cn(
+                            "w-[120px] shrink-0",
+                            showSaved &&
+                              "border border-[var(--color-success)]/20 bg-[var(--color-success)]/10 text-[var(--color-success)] hover:bg-[var(--color-success)]/10",
+                          )}
+                        >
+                          {showSaved ? t("ws.common.saved") : t("ws.common.save")}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {!(activeProvider.id === "nexu" && !signedIn) ? (
+                    <>
+                      <div className="my-4 border-t border-border-subtle" />
+
+                      {showSaved && showSavedBannerFor === activeProvider.id ? (
+                        <div className="mb-3 flex items-center gap-2 rounded-lg bg-[var(--color-success)]/8 px-3 py-2 text-[11px] text-[var(--color-success)]">
+                          <Check size={12} className="shrink-0" />
+                          {t("ws.settings.savedSelectModel")}
+                        </div>
+                      ) : null}
+                      {saveError ? (
+                        <div className="mb-3 flex items-center gap-2 rounded-lg bg-[var(--color-error)]/8 px-3 py-2 text-[11px] text-[var(--color-error)]">
+                          <AlertCircle size={12} className="shrink-0" />
+                          <span>{t("ws.settings.connectionFailed")}</span>
+                        </div>
+                      ) : null}
+
+                      <div className="mb-3 flex items-center justify-between gap-4">
+                        <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-tertiary">
+                          {t("ws.settings.model")} ({activeProvider.models.length})
+                        </div>
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-2 text-[12px] font-medium text-text-secondary transition-colors hover:text-text-primary"
+                        >
+                          <RefreshCw size={14} />
+                          <span>{t("ws.settings.testConnection")}</span>
+                        </button>
+                      </div>
+
+                      <div className="space-y-0.5">
+                        {activeProvider.models.map((model) => {
+                          const isActive = model.id === selectedModelId;
+                          return (
+                            <button
+                              type="button"
+                              key={model.id}
+                              onClick={() => setSelectedModelId(model.id)}
+                              className={cn(
+                                "flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors",
+                                isActive ? "bg-surface-2" : "hover:bg-surface-1",
+                              )}
+                            >
+                              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-white">
+                                <ModelLogo
+                                  model={model.id}
+                                  provider={activeProvider.id}
+                                  size={16}
+                                  title={model.name}
+                                />
+                              </span>
+                              <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-text-primary">
+                                {model.name}
+                              </span>
+                              <span className="text-[11px] text-text-tertiary">{model.contextWindow}</span>
+                              {isActive ? <Check size={14} className="shrink-0 text-accent" /> : null}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </>
+                  ) : null}
+                </section>
               </div>
             </div>
           </TabsContent>

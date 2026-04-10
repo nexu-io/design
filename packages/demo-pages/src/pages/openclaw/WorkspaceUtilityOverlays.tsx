@@ -1,6 +1,4 @@
 import { AlertCircle, CheckCircle, Settings, X } from "lucide-react";
-import type React from "react";
-
 import { SEEDANCE_BANNER_DISMISSED_KEY } from "./channelSetup";
 
 type Props = {
@@ -12,7 +10,7 @@ type Props = {
   showDemoPanel: boolean;
   setShowDemoPanel: (v: boolean) => void;
   demoLoggedIn: boolean;
-  setDemoLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setDemoLoggedIn: (v: boolean) => void;
   demoPlan: "free" | "plus" | "pro";
   setDemoPlan: (v: "free" | "plus" | "pro") => void;
   demoBudgetStatus: "healthy" | "warning" | "depleted";
@@ -134,7 +132,7 @@ export function WorkspaceUtilityOverlays({
               <div className="flex items-center justify-between">
                 <span className="text-[12px] text-text-secondary">登录状态</span>
                 <button
-                  onClick={() => setDemoLoggedIn((v) => !v)}
+                  onClick={() => setDemoLoggedIn(!demoLoggedIn)}
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${demoLoggedIn ? "bg-[var(--color-brand-primary)]" : "bg-border"}`}
                 >
                   <span
