@@ -465,7 +465,8 @@ Use this section when consuming `@nexu-design/ui-web` components. For exhaustive
 ### Tabs
 - **Variants (TabsList / TabsTrigger):** `default`, `compact`
 - **Composition:** `Tabs > TabsList > TabsTrigger` + `TabsContent`
-- **Active tab must have heavier font weight**: the selected/active `TabsTrigger` uses `font-semibold` to clearly distinguish it from inactive triggers (`font-medium`). This applies to the `default` variant out of the box. When creating custom tab-like navigation, always increase font weight on the active item for visual clarity.
+- **All triggers use `font-semibold`** by default (both active and inactive) to prevent width shift on selection. The active tab is distinguished by `bg-white` fill against the `bg-surface-2` list background.
+- **Page-level tabs must include icons**: when a tab controls a large content area (most or all of the page changes on switch — e.g. Settings "General" / "AI Model Providers", Skills "Yours" / "Explore"), each `TabsTrigger` must include a leading icon (`size={14}`) to reinforce the category at a glance. Use the built-in `gap-1.5` on the trigger to space icon and label. Reserve text-only tabs for lightweight, in-section switching where icons would add visual noise.
 
 ### TextLink
 - **Variants:** `default`, `muted`

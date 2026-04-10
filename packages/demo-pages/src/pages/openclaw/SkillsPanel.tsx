@@ -1,7 +1,7 @@
-import { ArrowRight, Compass, Search, Settings2 } from "lucide-react";
+import { ArrowRight, Compass, Heart, Search } from "lucide-react";
 import { useState } from "react";
 
-import { Badge, Input, PageHeader, ToggleGroup, ToggleGroupItem } from "@nexu-design/ui-web";
+import { Badge, Input, PageHeader, Tabs, TabsList, TabsTrigger, ToggleGroup, ToggleGroupItem } from "@nexu-design/ui-web";
 
 import { useLocale } from "../../hooks/useLocale";
 import { SKILL_CATEGORIES, TOOL_TAG_LABELS, type ToolTag } from "./skillData";
@@ -53,36 +53,34 @@ export function SkillsPanel() {
           description={t("ws.skills.subtitle")}
         />
 
-        <div className="flex items-center gap-4 mb-5">
-          <ToggleGroup
-            type="single"
+        <div className="flex items-center gap-4 mb-6">
+          <Tabs
             value={topTab}
             onValueChange={(value: string) => {
-              if (!value) return;
               setTopTab(value as SkillTopTab);
               setTagFilter("all");
             }}
-            variant="default"
-            aria-label="Skills source"
           >
-            {[
-              { id: "yours" as SkillTopTab, label: "Yours", icon: Settings2 },
-              { id: "explore" as SkillTopTab, label: "Explore", icon: Compass },
-            ].map((tab) => {
-              const TabIcon = tab.icon;
-              return (
-                <ToggleGroupItem key={tab.id} value={tab.id} className="gap-1.5 text-[13px]">
-                  <TabIcon size={14} />
-                  {tab.label}
-                  {tab.id === "yours" && yourSkills.length > 0 && (
-                    <span className="tabular-nums text-[11px] text-text-tertiary data-[state=on]:text-text-secondary">
-                      {yourSkills.length}
-                    </span>
-                  )}
-                </ToggleGroupItem>
-              );
-            })}
-          </ToggleGroup>
+            <TabsList>
+              {[
+                { id: "yours" as SkillTopTab, label: "Yours", icon: Heart },
+                { id: "explore" as SkillTopTab, label: "Explore", icon: Compass },
+              ].map((tab) => {
+                const TabIcon = tab.icon;
+                return (
+                  <TabsTrigger key={tab.id} value={tab.id}>
+                    <TabIcon size={14} />
+                    {tab.label}
+                    {tab.id === "yours" && yourSkills.length > 0 && (
+                      <span className="tabular-nums text-[11px] text-text-tertiary">
+                        {yourSkills.length}
+                      </span>
+                    )}
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+          </Tabs>
 
           <div className="ml-auto relative" style={{ width: 220 }}>
             <Search

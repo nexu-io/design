@@ -22,6 +22,7 @@ import {
   BookOpen,
   Check,
   ChevronDown,
+  Cpu,
   Globe,
   Info,
   Loader2,
@@ -29,6 +30,7 @@ import {
   Monitor,
   RefreshCw,
   ScrollText,
+  Settings,
   Shield,
   Star,
   User,
@@ -335,9 +337,11 @@ export function SettingsView({
         >
           <TabsList className="mb-6">
             <TabsTrigger value="general">
+              <Settings size={14} />
               {t("ws.settings.tab.general")}
             </TabsTrigger>
             <TabsTrigger value="providers">
+              <Cpu size={14} />
               {t("ws.settings.tab.providers")}
             </TabsTrigger>
           </TabsList>
@@ -592,7 +596,7 @@ export function SettingsView({
                 </h3>
               </div>
               <div>
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-3 mb-4 -mx-2 px-2">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center shrink-0">
                     <img src="/brand/nexu logo-black1.svg" alt="nexu" className="w-6 h-6" />
                   </div>
