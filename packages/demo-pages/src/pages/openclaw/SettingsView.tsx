@@ -25,13 +25,13 @@ import {
   RefreshCw,
   ScrollText,
   Shield,
-  Star,
   User,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { type Locale, useLocale } from "../../hooks/useLocale";
 import { openExternal } from "../../utils/open-external";
 import { type ModelProvider, getProviderDetails } from "./data";
+import { GitHubStarButton } from "./GitHubStarButton";
 import { ProviderLogo } from "./iconHelpers";
 
 const WORKSPACE_LOCALE_OPTIONS: { value: Locale; nativeLabel: string; englishLabel: string }[] = [
@@ -283,19 +283,7 @@ export function SettingsView({
           title={t("ws.settings.title")}
           description={t("ws.settings.subtitle")}
           actions={
-            <a
-              href={githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link-github-star group"
-            >
-              <Star
-                size={13}
-                className="text-amber-500 group-hover:fill-amber-500 transition-colors shrink-0"
-              />
-              {t("ws.common.starOnGitHub")}
-              <ArrowUpRight size={11} className="shrink-0 translate-y-px" />
-            </a>
+            <GitHubStarButton href={githubUrl} label={t("ws.common.starOnGitHub")} />
           }
         />
 
