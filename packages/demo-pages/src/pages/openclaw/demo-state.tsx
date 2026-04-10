@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 export type DemoPlan = "free" | "plus" | "pro";
 export type DemoBudgetStatus = "healthy" | "warning" | "depleted";
@@ -76,6 +76,22 @@ const OpenClawDemoStateContext = createContext<DemoState | null>(null);
 export function OpenClawDemoStateProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<StoredDemoState>(readStoredState);
 
+  const setLoggedIn = useCallback((value: boolean) => {
+    setState((prev) => ({ ...prev, loggedIn: value }));
+  }, []);
+
+  const setPlan = useCallback((value: DemoPlan) => {
+    setState((prev) => ({ ...prev, plan: value }));
+  }, []);
+
+  const setBudgetStatus = useCallback((value: DemoBudgetStatus) => {
+    setState((prev) => ({ ...prev, budgetStatus: value }));
+  }, []);
+
+  const setCreditPack = useCallback((value: DemoCreditPack) => {
+    setState((prev) => ({ ...prev, creditPack: value }));
+  }, []);
+
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -87,15 +103,15 @@ export function OpenClawDemoStateProvider({ children }: { children: React.ReactN
   const value = useMemo<DemoState>(
     () => ({
       loggedIn: state.loggedIn,
-      setLoggedIn: (value) => setState((prev) => ({ ...prev, loggedIn: value })),
+      setLoggedIn,
       plan: state.plan,
-      setPlan: (value) => setState((prev) => ({ ...prev, plan: value })),
+      setPlan,
       budgetStatus: state.budgetStatus,
-      setBudgetStatus: (value) => setState((prev) => ({ ...prev, budgetStatus: value })),
+      setBudgetStatus,
       creditPack: state.creditPack,
-      setCreditPack: (value) => setState((prev) => ({ ...prev, creditPack: value })),
+      setCreditPack,
     }),
-    [state],
+    [state, setBudgetStatus, setCreditPack, setLoggedIn, setPlan],
   );
 
   return (

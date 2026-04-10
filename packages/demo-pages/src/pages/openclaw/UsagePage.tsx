@@ -9,7 +9,7 @@ import {
   RefreshCw,
   Zap,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getCreditPackInfo, useOpenClawDemoState } from "./demo-state";
 
@@ -131,11 +131,7 @@ export default function UsagePage() {
   const mockCard = { brand: "Visa", last4: "4242" };
   const totalPages = Math.ceil(USAGE_LOG.length / PAGE_SIZE);
   const pageData = USAGE_LOG.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-  const syncedFromQueryRef = useRef(false);
-
   useEffect(() => {
-    if (syncedFromQueryRef.current) return;
-
     const queryPlan = searchParams.get("plan");
     if (queryPlan === "free" || queryPlan === "plus" || queryPlan === "pro") {
       if (queryPlan !== sharedPlan) {
@@ -155,8 +151,6 @@ export default function UsagePage() {
         setCreditPack(queryPack);
       }
     }
-
-    syncedFromQueryRef.current = true;
   }, [searchParams, setPlan, setCreditPack, sharedPlan, sharedCreditPack]);
 
   return (
