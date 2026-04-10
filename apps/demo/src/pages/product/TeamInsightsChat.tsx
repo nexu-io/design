@@ -1,3 +1,4 @@
+import { Badge, Button, ConversationMessage, Progress, Textarea } from "@nexu-design/ui-web";
 import {
   BarChart3,
   ChevronDown,
@@ -36,17 +37,16 @@ function InlineChart({
           {chart.data.map((d) => (
             <div key={d.label} className="flex items-center gap-2">
               <span className="text-[10px] text-text-primary w-8 shrink-0">{d.label}</span>
-              <div className="flex-1 h-[14px] bg-surface-3 rounded overflow-hidden">
-                <div
-                  className={`h-full rounded ${
-                    d.color || "bg-clone"
-                  } transition-all flex items-center justify-end pr-1`}
-                  style={{ width: `${(d.value / max) * 100}%` }}
-                >
+              <div className="flex-1">
+                <Progress
+                  value={(d.value / max) * 100}
+                  size="md"
+                  className="h-[14px]"
+                  indicatorClassName={`${d.color || "bg-clone"} flex items-center justify-end pr-1`}
+                />
                   {d.value > 15 && (
                     <span className="text-[8px] font-bold text-white/90">{d.value}%</span>
                   )}
-                </div>
               </div>
               {d.value <= 15 && (
                 <span className="text-[9px] text-text-muted tabular-nums">{d.value}%</span>
@@ -108,20 +108,19 @@ function ChatMessage({ msg }: { msg: InsightMessage }) {
   const isAgent = msg.from === "agent";
 
   return (
-    <div className={`flex gap-2.5 ${isAgent ? "" : "flex-row-reverse"}`}>
-      {isAgent && (
-        <div className="w-7 h-7 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
-          <Sparkles size={12} className="text-accent" />
-        </div>
-      )}
-      <div className={`max-w-[85%] ${isAgent ? "" : "ml-auto"}`}>
-        <div
-          className={`rounded-xl px-3.5 py-2.5 text-[12px] leading-relaxed ${
-            isAgent
-              ? "bg-surface-1 border border-border text-text-primary rounded-bl-sm"
-              : "bg-accent text-accent-fg rounded-br-sm"
-          }`}
-        >
+    <div className={isAgent ? undefined : 'ml-auto'}>
+      <ConversationMessage
+        variant={isAgent ? 'assistant' : 'user'}
+        avatar={
+          isAgent ? (
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent/10">
+              <Sparkles size={12} className="text-accent" />
+            </div>
+          ) : undefined
+        }
+        bubbleClassName={isAgent ? 'bg-surface-1 text-[12px]' : 'bg-accent text-accent-fg text-[12px]'}
+        meta={msg.time}
+      >
           <div className="whitespace-pre-line">
             {msg.content.split(/(\*\*[^*]+\*\*)/g).map((part) => {
               if (part.startsWith("**") && part.endsWith("**")) {
@@ -135,31 +134,27 @@ function ChatMessage({ msg }: { msg: InsightMessage }) {
             })}
           </div>
           {msg.chart && <InlineChart chart={msg.chart} />}
-        </div>
+      </ConversationMessage>
 
-        {/* References */}
-        {msg.references && msg.references.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-1.5">
+      {msg.references && msg.references.length > 0 && (
+        <div className={`mt-1.5 flex flex-wrap gap-1 ${isAgent ? 'ml-9' : 'justify-end'}`}>
             {msg.references.map((ref) => {
               const st = REF_TYPE_STYLES[ref.type];
               return (
-                <button
+                <Badge
                   key={ref.id}
-                  type="button"
-                  className={`inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full font-medium ${st.color} hover:opacity-80 transition-opacity`}
+                  variant="outline"
+                  size="xs"
+                  className={`${st.color} cursor-default`}
                 >
                   <st.icon size={8} />
                   {ref.label}
                   <Link2 size={7} />
-                </button>
+                </Badge>
               );
             })}
-          </div>
-        )}
-        <div className={`text-[9px] text-text-muted mt-0.5 ${isAgent ? "" : "text-right"}`}>
-          {msg.time}
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -240,9 +235,9 @@ export default function TeamInsightsChat() {
       >
         <Sparkles size={14} className="text-accent" />
         <span className="text-[12px] font-medium text-text-primary">Team Insights</span>
-        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-medium">
-          Scoped Session
-        </span>
+          <Badge variant="accent" size="xs">
+            Scoped Session
+          </Badge>
         <span className="text-[10px] text-text-muted">— 限定团队分析 Skills</span>
         <div className="ml-auto flex items-center gap-2">
           {!isOpen && <span className="text-[10px] text-text-muted">点击展开对话...</span>}
@@ -295,23 +290,25 @@ export default function TeamInsightsChat() {
           <div className="px-4 py-2 border-t border-border/50 flex items-center gap-1.5 overflow-x-auto shrink-0">
             <span className="text-[9px] text-text-muted shrink-0">快捷：</span>
             {INSIGHT_SUGGESTIONS.slice(0, 4).map((s) => (
-              <button
-                type="button"
+              <Button
                 key={s}
+                type="button"
+                variant="outline"
+                size="xs"
                 onClick={() => {
                   setInput(s);
                 }}
-                className="text-[10px] px-2 py-1 bg-surface-2 text-text-secondary rounded-md hover:bg-surface-3 hover:text-text-primary transition-colors whitespace-nowrap shrink-0"
+                className="h-6 whitespace-nowrap"
               >
                 {s}
-              </button>
+              </Button>
             ))}
           </div>
 
           {/* Input */}
           <div className="px-4 py-2.5 border-t border-border shrink-0">
-            <div className="flex items-end gap-2 bg-surface-1 border border-border rounded-xl px-3 py-2">
-              <textarea
+            <div className="flex items-end gap-2 rounded-xl border border-border bg-surface-1 px-3 py-2">
+              <Textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
@@ -322,15 +319,15 @@ export default function TeamInsightsChat() {
                 }}
                 placeholder="分析 Sprint 风险、查询 OKR 进展、对比成员负载..."
                 rows={1}
-                className="flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed"
+                className="min-h-0 flex-1 resize-none border-0 bg-transparent px-0 py-0 text-[12px] shadow-none focus-visible:ring-0"
               />
-              <button
+              <Button
                 type="button"
+                size="icon-sm"
                 onClick={handleSend}
-                className="p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors"
               >
                 <Send size={12} />
-              </button>
+              </Button>
             </div>
           </div>
         </div>

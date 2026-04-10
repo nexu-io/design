@@ -1,9 +1,18 @@
 import {
+  Badge,
+  Button,
+  ConversationMessage,
+  Progress,
+  Stepper,
+  StepperItem,
+  StepperSeparator,
+  Textarea,
+} from "@nexu-design/ui-web";
+import {
   ArrowRight,
   Brain,
   Check,
   CheckCircle,
-  ChevronRight,
   Database,
   Globe,
   Link2,
@@ -199,25 +208,15 @@ const SKILL_OPTIONS: SkillOption[] = [
 
 function StepIndicator({ steps }: { steps: OnboardingStep[] }) {
   return (
-    <div className="flex items-center gap-1 overflow-x-auto">
-      {steps.map((step, i) => (
-        <div key={step.id} className="flex items-center gap-1 shrink-0">
-          <div
-            className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] transition-colors ${
-              step.status === "done"
-                ? "bg-success-subtle text-success"
-                : step.status === "active"
-                  ? "bg-accent text-accent-fg font-medium"
-                  : "bg-surface-3 text-text-muted"
-            }`}
-          >
-            {step.status === "done" ? <Check size={10} /> : <step.icon size={10} />}
-            {step.label}
-          </div>
-          {i < steps.length - 1 && <ChevronRight size={10} className="text-text-muted shrink-0" />}
-        </div>
-      ))}
-    </div>
+    <Stepper className="gap-2 overflow-x-auto">
+      {steps.flatMap((step, i) => {
+        const status = step.status === 'done' ? 'completed' : step.status === 'active' ? 'current' : 'pending';
+        return [
+          <StepperItem key={step.id} status={status} icon={<step.icon size={10} />} label={step.label} className="min-w-[88px]" />,
+          i < steps.length - 1 ? <StepperSeparator key={`${step.id}-sep`} active={step.status === 'done'} /> : null,
+        ]
+      })}
+    </Stepper>
   );
 }
 
@@ -373,24 +372,21 @@ function TeamSetupWidget() {
               {m.status === "joined" ? (
                 <CheckCircle size={12} className="text-success" />
               ) : m.status === "invited" ? (
-                <span className="text-[9px] px-1.5 py-0.5 bg-info-subtle text-info rounded-full">
+                <Badge variant="outline" size="xs" className="bg-info-subtle text-info">
                   已邀请
-                </span>
+                </Badge>
               ) : (
-                <span className="text-[9px] px-1.5 py-0.5 bg-surface-3 text-text-muted rounded-full">
+                <Badge variant="outline" size="xs">
                   待邀请
-                </span>
+                </Badge>
               )}
             </div>
           ))}
         </div>
-        <button
-          type="button"
-          className="mt-2.5 w-full flex items-center justify-center gap-1.5 py-2 bg-accent/10 text-accent rounded-lg text-[11px] font-medium hover:bg-accent/15 transition-colors"
-        >
+        <Button type="button" variant="soft" size="sm" className="mt-2.5 w-full gap-1.5">
           <UserPlus size={12} />
           通过飞书/Slack 邀请更多成员
-        </button>
+        </Button>
       </div>
       <div className="p-3 bg-clone/5 border border-clone/10 rounded-xl">
         <div className="text-[12px] font-medium text-text-primary mb-1.5">🤖 团队分身网络</div>
@@ -434,9 +430,7 @@ function ProgressWidget() {
         <span className="text-[12px] font-medium text-text-primary">初始化进度</span>
         <span className="text-[11px] text-clone font-medium tabular-nums">{pct}%</span>
       </div>
-      <div className="h-1.5 bg-surface-3 rounded-full overflow-hidden mb-3">
-        <div className="h-full bg-clone rounded-full transition-all" style={{ width: `${pct}%` }} />
-      </div>
+      <Progress value={pct} variant="accent" size="sm" className="mb-3" />
       <div className="space-y-1.5">
         {items.map((item) => (
           <div key={item.label} className="flex items-center gap-2 text-[11px]">
@@ -486,9 +480,9 @@ export default function OnboardingChat({ onClose }: { onClose: () => void }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <span className="text-[13px] font-semibold text-text-primary">分身初始化</span>
-              <span className="text-[10px] px-1.5 py-0.5 bg-clone/10 text-clone rounded-full font-medium">
+              <Badge variant="accent" size="xs">
                 常驻对话
-              </span>
+              </Badge>
             </div>
             <div className="text-[11px] text-text-muted">随时回来继续聊 · 越聊越懂你</div>
           </div>
@@ -518,25 +512,24 @@ export default function OnboardingChat({ onClose }: { onClose: () => void }) {
                 </div>
               ) : msg.from === "user" ? (
                 <div className="flex justify-end">
-                  <div className="max-w-[80%] bg-accent text-accent-fg rounded-xl rounded-br-sm px-3.5 py-2.5 text-[12px] leading-relaxed whitespace-pre-line">
+                  <ConversationMessage variant="user" bubbleClassName="bg-accent text-accent-fg text-[12px]">
                     {msg.content}
-                  </div>
+                  </ConversationMessage>
                 </div>
               ) : (
-                <div className="flex gap-2.5">
-                  <div className="w-6 h-6 rounded-full bg-clone/15 flex items-center justify-center text-[11px] shrink-0 mt-0.5">
-                    😊
-                  </div>
-                  <div className="max-w-[85%]">
-                    <div className="bg-surface-1 border border-border rounded-xl rounded-bl-sm px-3.5 py-2.5 text-[12px] text-text-primary leading-relaxed whitespace-pre-line">
+                <div className="max-w-[85%]">
+                    <ConversationMessage
+                      variant="assistant"
+                      avatar={<div className="flex h-6 w-6 items-center justify-center rounded-full bg-clone/15 text-[11px]">😊</div>}
+                      bubbleClassName="bg-surface-1 text-[12px]"
+                    >
                       {msg.content}
-                    </div>
+                    </ConversationMessage>
                     {msg.widget === "integrations" && <IntegrationsWidget />}
                     {msg.widget === "skills" && <SkillsWidget />}
                     {msg.widget === "upload" && <UploadWidget />}
                     {msg.widget === "progress" && <ProgressWidget />}
                     {msg.widget === "team" && <TeamSetupWidget />}
-                  </div>
                 </div>
               )}
             </div>
@@ -567,35 +560,27 @@ export default function OnboardingChat({ onClose }: { onClose: () => void }) {
         {/* Input area */}
         <div className="border-t border-border p-3 shrink-0">
           <div className="flex items-end gap-2 bg-surface-1 border border-border rounded-xl px-3.5 py-2.5">
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
+              <Textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   handleSend();
                 }
-              }}
-              placeholder="跟分身聊聊你是谁、你做什么、你的工作习惯..."
-              rows={2}
-              className="flex-1 bg-transparent text-[13px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed"
-            />
-            <div className="flex items-center gap-1.5 shrink-0">
-              <button
-                type="button"
-                className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted transition-colors"
-                title="上传文件"
-              >
-                <Upload size={14} />
-              </button>
-              <button
-                type="button"
-                onClick={handleSend}
-                className="p-2 bg-accent text-accent-fg rounded-lg hover:bg-accent-hover transition-colors"
-              >
-                <Send size={14} />
-              </button>
-            </div>
+                }}
+                placeholder="跟分身聊聊你是谁、你做什么、你的工作习惯..."
+                rows={2}
+                className="min-h-0 flex-1 resize-none border-0 bg-transparent px-0 py-0 text-[13px] shadow-none focus-visible:ring-0"
+              />
+              <div className="flex items-center gap-1.5 shrink-0">
+                <Button type="button" variant="ghost" size="icon-sm" title="上传文件">
+                  <Upload size={14} />
+                </Button>
+                <Button type="button" onClick={handleSend} size="icon-sm">
+                  <Send size={14} />
+                </Button>
+              </div>
           </div>
           <div className="flex items-center justify-between mt-2 px-1">
             <div className="flex items-center gap-2 text-[10px] text-text-muted">

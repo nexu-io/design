@@ -1,4 +1,15 @@
 import {
+  Button,
+  NavItem,
+  NavigationMenu,
+  NavigationMenuLabel,
+  NavigationMenuList,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+} from "@nexu-design/ui-web";
+import {
   Clock,
   Monitor,
   PanelLeft,
@@ -10,7 +21,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { useState } from "react";
-import { NavLink, Navigate, Route, Routes } from "react-router-dom";
+import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import { CommentSystem } from "../components/CommentSystem";
 import { ProductRouteElements } from "./routes/product-routes";
@@ -34,35 +45,31 @@ function NavSection({
   items: typeof PRODUCT_NAV;
   collapsed: boolean;
 }) {
+  const location = useLocation();
+
   return (
-    <div>
+    <NavigationMenu>
       {!collapsed && (
-        <div className="px-3 mb-1 text-[10px] font-medium text-text-muted uppercase tracking-wider">
-          {title}
-        </div>
+        <NavigationMenuLabel className="px-3">{title}</NavigationMenuLabel>
       )}
-      <div className="space-y-0.5">
+      <NavigationMenuList>
         {items.map(({ to, label, icon: Icon }) => (
-          <NavLink
+          <NavItem
             key={to}
-            to={to}
+            asChild
+            tone="accent"
+            selected={location.pathname === to}
+            className={collapsed ? "justify-center px-0" : undefined}
             title={collapsed ? label : undefined}
-            className={({ isActive }) =>
-              `flex items-center gap-2.5 rounded-md text-[13px] transition-colors ${
-                collapsed ? "justify-center px-0 py-2" : "px-3 py-2"
-              } ${
-                isActive
-                  ? "bg-clone-subtle text-clone font-medium"
-                  : "text-text-secondary hover:text-text-primary hover:bg-surface-3"
-              }`
-            }
           >
-            <Icon size={16} />
-            {!collapsed && label}
-          </NavLink>
+            <NavLink to={to}>
+              <Icon size={16} />
+              {!collapsed && label}
+            </NavLink>
+          </NavItem>
         ))}
-      </div>
-    </div>
+      </NavigationMenuList>
+    </NavigationMenu>
   );
 }
 
@@ -72,13 +79,13 @@ export function DesignSystemShell() {
   return (
     <>
       <div className="flex h-full">
-        <nav
+        <Sidebar
           className={`${
             collapsed ? "w-14" : "w-56"
-          } shrink-0 border-r border-border bg-surface-0 flex flex-col transition-all duration-200`}
+          } shrink-0 bg-surface-0 transition-all duration-200`}
         >
           {!collapsed && (
-            <div className="flex justify-between items-center p-5 border-b border-border">
+            <SidebarHeader className="flex justify-between items-center border-b border-border p-5">
               <div className="flex gap-2 items-center">
                 <div className="flex justify-center items-center w-7 h-7 rounded-lg bg-accent">
                   <span className="text-xs font-bold text-accent-fg">N</span>
@@ -88,36 +95,37 @@ export function DesignSystemShell() {
                   <div className="text-[11px] text-text-tertiary">Product Demo</div>
                 </div>
               </div>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="icon-sm"
                 onClick={() => setCollapsed(true)}
-                className="p-1 rounded transition-colors text-text-muted hover:text-text-secondary"
                 title="收起侧边栏"
               >
                 <PanelLeftClose size={14} />
-              </button>
-            </div>
+              </Button>
+            </SidebarHeader>
           )}
 
-          <div className={`flex-1 ${collapsed ? "p-1.5" : "p-3"} space-y-4 overflow-y-auto`}>
+          <SidebarContent className={`${collapsed ? "p-1.5" : "p-3"} space-y-4 overflow-y-auto`}>
             <NavSection title="Product Pages" items={PRODUCT_NAV} collapsed={collapsed} />
-          </div>
+          </SidebarContent>
 
-          <div className="p-4 border-t border-border">
+          <SidebarFooter className="border-t border-border p-4">
             {collapsed ? (
-              <button
-                type="button"
+              <Button
+                variant="default"
+                size="icon-sm"
                 onClick={() => setCollapsed(false)}
-                className="flex justify-center items-center mx-auto w-7 h-7 rounded-lg transition-colors bg-accent hover:bg-accent-hover"
+                className="mx-auto"
                 title="展开侧边栏"
               >
-                <PanelLeft size={14} className="text-accent-fg" />
-              </button>
+                <PanelLeft size={14} />
+              </Button>
             ) : (
               <div className="text-[11px] text-text-muted">v1.0 — nexu Product Demo</div>
             )}
-          </div>
-        </nav>
+          </SidebarFooter>
+        </Sidebar>
 
         <main className="overflow-y-auto flex-1 min-h-0">
           <Routes>

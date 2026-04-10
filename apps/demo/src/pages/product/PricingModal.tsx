@@ -1,5 +1,14 @@
-import { Button, PricingCard } from "@nexu-design/ui-web";
-import { Crown, Sparkles, Users, X } from "lucide-react";
+import {
+  Button,
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  PricingCard,
+} from "@nexu-design/ui-web";
+import { Crown, Sparkles, Users } from "lucide-react";
 
 const PLANS = [
   {
@@ -50,71 +59,58 @@ const PLANS = [
 ];
 
 export default function PricingModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
-      <button
-        type="button"
-        aria-label="关闭价格弹窗"
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div className="relative bg-surface-0 border border-border rounded-2xl shadow-2xl w-[720px] max-h-[85vh] overflow-y-auto animate-scale-in">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-          <div>
-            <h2 className="text-[16px] font-bold text-text-primary">解锁你的超能力</h2>
-            <p className="text-[12px] text-text-muted mt-0.5">选择适合你的方案</p>
+    <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
+      <DialogContent size="xl" className="max-h-[85vh] overflow-y-auto p-0">
+        <DialogHeader className="border-b border-border px-6 py-4 pr-12">
+          <DialogTitle className="text-[16px] font-bold text-text-primary">解锁你的超能力</DialogTitle>
+          <DialogDescription className="mt-0.5 text-[12px] text-text-muted">
+            选择适合你的方案
+          </DialogDescription>
+        </DialogHeader>
+
+        <DialogBody className="space-y-0">
+          <div className="grid grid-cols-3 gap-3 p-6">
+            {PLANS.map((plan) => (
+              <PricingCard
+                key={plan.name}
+                size="compact"
+                name={plan.name}
+                price={plan.price}
+                description={plan.desc}
+                icon={plan.icon}
+                iconClassName={plan.color}
+                badge={plan.badge}
+                featured={Boolean(plan.badge)}
+                features={plan.features}
+                footer={
+                  <Button
+                    className={`w-full text-[12px] ${plan.ctaStyle}`}
+                    disabled={plan.cta === "当前方案"}
+                  >
+                    {plan.cta}
+                  </Button>
+                }
+              />
+            ))}
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted transition-colors"
-          >
-            <X size={16} />
-          </button>
-        </div>
 
-        <div className="grid grid-cols-3 gap-3 p-6">
-          {PLANS.map((plan) => (
-            <PricingCard
-              key={plan.name}
-              size="compact"
-              name={plan.name}
-              price={plan.price}
-              description={plan.desc}
-              icon={plan.icon}
-              iconClassName={plan.color}
-              badge={plan.badge}
-              featured={Boolean(plan.badge)}
-              features={plan.features}
-              footer={
-                <Button
-                  className={`w-full text-[12px] ${plan.ctaStyle}`}
-                  disabled={plan.cta === "当前方案"}
-                >
-                  {plan.cta}
-                </Button>
-              }
-            />
-          ))}
-        </div>
-
-        <div className="px-6 pb-5">
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-accent/10 to-clone/10 border border-accent/20">
-            <span className="text-[18px]">🎁</span>
-            <div className="flex-1">
-              <div className="text-[12px] font-medium text-text-primary">
-                邀请 3 位同事，免费获得 Pro 30 天
+          <div className="px-6 pb-5">
+            <div className="flex items-center gap-3 rounded-lg border border-accent/20 bg-gradient-to-r from-accent/10 to-clone/10 p-3">
+              <span className="text-[18px]">🎁</span>
+              <div className="flex-1">
+                <div className="text-[12px] font-medium text-text-primary">
+                  邀请 3 位同事，免费获得 Pro 30 天
+                </div>
+                <div className="text-[10px] text-text-muted">
+                  每成功邀请 1 位，双方各获 10 天 Pro 体验
+                </div>
               </div>
-              <div className="text-[10px] text-text-muted">
-                每成功邀请 1 位，双方各获 10 天 Pro 体验
-              </div>
+              <Button size="xs">生成邀请链接</Button>
             </div>
-            <Button size="xs">生成邀请链接</Button>
           </div>
-        </div>
-      </div>
-    </div>
+        </DialogBody>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -1,8 +1,7 @@
-import { Button } from "@nexu-design/ui-web";
+import { Button, Stepper, StepperItem, StepperSeparator } from "@nexu-design/ui-web";
 import {
   ArrowLeft,
   ArrowRight,
-  Check,
   Crown,
   Eye,
   Globe,
@@ -90,58 +89,32 @@ export default function JourneyPage() {
     <div className="fixed inset-0 z-50 bg-surface-0 flex flex-col">
       {/* Top bar */}
       <header className="h-12 border-b border-border bg-surface-0/90 backdrop-blur-md flex items-center px-4 gap-4 shrink-0">
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="icon-sm"
           onClick={() => navigate("/overview")}
-          className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted transition-colors"
           title="返回"
         >
           <X size={16} />
-        </button>
+        </Button>
 
-        <div className="flex-1 flex items-center justify-center gap-1">
+        <Stepper className="flex-1 items-start justify-center gap-2 overflow-x-auto px-2">
           {STEPS.map((step, i) => {
-            const isDone = i < currentStep;
-            const isActive = i === currentStep;
-            return (
-              <button
-                type="button"
+            const status = i < currentStep ? 'completed' : i === currentStep ? 'current' : 'pending';
+
+            return [
+              <StepperItem
                 key={step.id}
-                onClick={() => goTo(i, i > currentStep ? "next" : "prev")}
-                className="flex items-center gap-1 group"
-                title={step.label}
-              >
-                <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-all ${
-                    isDone
-                      ? "bg-success text-white"
-                      : isActive
-                        ? "bg-accent text-accent-fg ring-2 ring-accent/20"
-                        : "bg-surface-3 text-text-muted group-hover:bg-surface-4"
-                  }`}
-                >
-                  {isDone ? <Check size={12} /> : i + 1}
-                </div>
-                <span
-                  className={`text-[11px] hidden lg:inline transition-colors ${
-                    isActive
-                      ? "text-text-primary font-medium"
-                      : "text-text-muted group-hover:text-text-secondary"
-                  }`}
-                >
-                  {step.label}
-                </span>
-                {i < STEPS.length - 1 && (
-                  <div
-                    className={`w-6 h-px mx-0.5 transition-colors ${
-                      isDone ? "bg-success" : "bg-border"
-                    }`}
-                  />
-                )}
-              </button>
-            );
+                status={status}
+                step={i + 1}
+                label={<button type="button" onClick={() => goTo(i, i > currentStep ? 'next' : 'prev')}>{step.label}</button>}
+                className="min-w-[84px]"
+              />,
+              i < STEPS.length - 1 ? <StepperSeparator key={`${step.id}-sep`} active={i < currentStep} /> : null,
+            ];
           })}
-        </div>
+        </Stepper>
 
         <div className="text-[11px] text-text-muted tabular-nums">
           {currentStep + 1} / {STEPS.length}

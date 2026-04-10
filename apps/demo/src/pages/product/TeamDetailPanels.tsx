@@ -1,6 +1,13 @@
 import {
+  Badge,
   Button,
+  DetailPanel,
+  DetailPanelCloseButton,
+  DetailPanelContent,
+  DetailPanelHeader,
+  DetailPanelTitle,
   FollowUpInput,
+  PanelFooter,
   PanelFooterActions,
   TagGroup,
   TagGroupItem,
@@ -20,7 +27,6 @@ import {
   X,
 } from "lucide-react";
 import type * as React from "react";
-import InspectorPanel from "./InspectorPanel";
 import {
   type ALIGNMENT_HISTORY,
   type ActivityItem,
@@ -60,35 +66,30 @@ function PanelShell({
   footer?: React.ReactNode;
 }) {
   return (
-    <InspectorPanel
-      width={400}
-      title={title}
-      onClose={onClose}
-      className="animate-slide-in-right"
-      contentClassName="overflow-y-auto"
-      footer={footer}
-      footerClassName="px-3 py-3"
-      closeButtonProps={{
-        srLabel: "关闭详情",
-        className: "text-text-muted hover:bg-surface-3",
-      }}
-      leading={
+    <DetailPanel width={400} className="animate-slide-in-right border-l border-border">
+      <DetailPanelHeader>
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-clone/10">
           <Icon size={14} className="text-clone" />
         </div>
-      }
-      badges={
-        badge ? (
-          <span
-            className={`rounded px-1.5 py-0.5 text-[9px] font-medium ${badgeColor || "bg-clone/10 text-clone"}`}
-          >
+        <div className="min-w-0 flex-1">
+          <DetailPanelTitle className="text-[13px]">{title}</DetailPanelTitle>
+        </div>
+        {badge ? (
+          <Badge size="xs" radius="md" className={badgeColor || "bg-clone/10 text-clone"}>
             {badge}
-          </span>
-        ) : undefined
-      }
-    >
-      {children}
-    </InspectorPanel>
+          </Badge>
+        ) : null}
+        <DetailPanelCloseButton onClick={onClose} srLabel="关闭详情" />
+      </DetailPanelHeader>
+
+      <DetailPanelContent className="overflow-y-auto">{children}</DetailPanelContent>
+
+      {footer ? (
+        <PanelFooter align="start" className="px-3 py-3">
+          {footer}
+        </PanelFooter>
+      ) : null}
+    </DetailPanel>
   );
 }
 

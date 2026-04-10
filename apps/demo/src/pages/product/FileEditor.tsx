@@ -1,3 +1,4 @@
+import { Badge, Button, Textarea } from "@nexu-design/ui-web";
 import {
   Bot,
   Check,
@@ -192,13 +193,13 @@ export default function FileEditor({
         {binary ? (
           <BinaryPlaceholder icon={binary.icon} label={binary.label} />
         ) : mode === "edit" ? (
-          <textarea
-            ref={textareaRef}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            className="w-full h-full p-4 bg-transparent text-[12px] leading-relaxed text-text-primary font-mono resize-none focus:outline-none"
-            spellCheck={false}
-          />
+            <Textarea
+              ref={textareaRef}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              className="h-full w-full resize-none border-0 bg-transparent p-4 font-mono text-[12px] leading-relaxed shadow-none focus-visible:ring-0"
+              spellCheck={false}
+            />
         ) : isMarkdown ? (
           <div className="p-4 markdown-preview">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
@@ -226,21 +227,13 @@ export default function FileEditor({
         </div>
         {mode === "edit" && (
           <div className="flex items-center gap-1.5">
-            <button
-              onClick={handleCancel}
-              type="button"
-              className="px-2 py-1 text-[10px] text-text-muted hover:text-text-secondary rounded transition-colors"
-            >
+            <Button onClick={handleCancel} type="button" variant="ghost" size="xs">
               Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              type="button"
-              className="flex items-center gap-1 px-2.5 py-1 text-[10px] bg-accent text-accent-fg rounded-md hover:bg-accent-hover transition-colors"
-            >
+            </Button>
+            <Button onClick={handleSave} type="button" size="xs" className="gap-1">
               <Save size={10} />
               Save
-            </button>
+            </Button>
           </div>
         )}
       </div>
@@ -289,39 +282,27 @@ function CompactEditor({
             {editedBy === "agent" ? "Agent" : "You"} · {editedAt}
           </span>
           {saved && (
-            <span className="flex items-center gap-0.5 text-success">
+            <Badge variant="success" size="xs" className="gap-0.5">
               <Check size={9} /> Saved
-            </span>
+            </Badge>
           )}
         </div>
         <div className="flex gap-1 items-center">
           {isEditable && mode === "preview" && (
-            <button
-              onClick={() => setMode("edit")}
-              type="button"
-              className="flex items-center gap-1 px-1.5 py-0.5 text-[9px] text-text-muted hover:text-text-primary bg-surface-3 rounded transition-colors"
-            >
+            <Button onClick={() => setMode("edit")} type="button" variant="outline" size="xs" className="gap-1">
               <Pencil size={9} />
               Edit
-            </button>
+            </Button>
           )}
           {mode === "edit" && (
             <>
-              <button
-                onClick={onCancel}
-                type="button"
-                className="px-1.5 py-0.5 text-[9px] text-text-muted hover:text-text-secondary rounded transition-colors"
-              >
+              <Button onClick={onCancel} type="button" variant="ghost" size="xs">
                 Cancel
-              </button>
-              <button
-                onClick={onSave}
-                type="button"
-                className="flex items-center gap-0.5 px-1.5 py-0.5 text-[9px] bg-accent text-accent-fg rounded hover:bg-accent-hover transition-colors"
-              >
+              </Button>
+              <Button onClick={onSave} type="button" size="xs" className="gap-0.5">
                 <Save size={9} />
                 Save
-              </button>
+              </Button>
             </>
           )}
         </div>
@@ -332,11 +313,11 @@ function CompactEditor({
         {binary ? (
           <BinaryPlaceholder icon={binary.icon} label={binary.label} />
         ) : mode === "edit" ? (
-          <textarea
+          <Textarea
             ref={textareaRef}
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            className="w-full h-full p-3 bg-transparent text-[11px] leading-relaxed text-text-primary font-mono resize-none focus:outline-none"
+            className="h-full w-full resize-none border-0 bg-transparent p-3 font-mono text-[11px] leading-relaxed shadow-none focus-visible:ring-0"
             spellCheck={false}
           />
         ) : isMarkdown ? (
