@@ -463,7 +463,7 @@ Use this section when consuming `@nexu-design/ui-web` components. For exhaustive
   ```
 
 ### Tabs
-- **Variants (TabsList / TabsTrigger):** `default`, `pill`, `underline`
+- **Variants (TabsList / TabsTrigger):** `default`, `compact`
 - **Composition:** `Tabs > TabsList > TabsTrigger` + `TabsContent`
 - **Active tab must have heavier font weight**: the selected/active `TabsTrigger` uses `font-semibold` to clearly distinguish it from inactive triggers (`font-medium`). This applies to the `default` variant out of the box. When creating custom tab-like navigation, always increase font weight on the active item for visual clarity.
 

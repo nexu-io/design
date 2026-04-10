@@ -19,16 +19,6 @@ export default meta;
 
 type Story = StoryObj;
 
-export const TwoOptions: Story = {
-  name: "2 options",
-  render: () => (
-    <ToggleGroup type="single" defaultValue="web" variant="pill" aria-label="Share destination">
-      <ToggleGroupItem value="web">Share on Web</ToggleGroupItem>
-      <ToggleGroupItem value="mobile">Share on Mobile</ToggleGroupItem>
-    </ToggleGroup>
-  ),
-};
-
 export const ThreeOptions: Story = {
   name: "3 options with counts",
   render: () => (
@@ -66,30 +56,3 @@ export const FourOptions: Story = {
   ),
 };
 
-export const DefaultVariant: Story = {
-  name: "Default variant",
-  render: () => (
-    <ToggleGroup type="single" defaultValue="yours" variant="default" aria-label="View">
-      <ToggleGroupItem value="yours">Yours</ToggleGroupItem>
-      <ToggleGroupItem value="explore">Explore</ToggleGroupItem>
-      <ToggleGroupItem value="trending">Trending</ToggleGroupItem>
-    </ToggleGroup>
-  ),
-};
-
-export const Compact: Story = {
-  name: "Compact variant",
-  render: () => (
-    <ToggleGroup type="single" defaultValue="list" variant="compact" aria-label="View mode">
-      <ToggleGroupItem value="grid" variant="compact">
-        Grid
-      </ToggleGroupItem>
-      <ToggleGroupItem value="list" variant="compact">
-        List
-      </ToggleGroupItem>
-      <ToggleGroupItem value="board" variant="compact">
-        Board
-      </ToggleGroupItem>
-    </ToggleGroup>
-  ),
-};

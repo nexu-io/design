@@ -462,6 +462,7 @@ export function SettingsView({
                     </div>
                   </div>
                   <Switch
+                    size="sm"
                     checked={launchAtLogin}
                     onCheckedChange={setLaunchAtLoginPersist}
                     className="shrink-0 mt-0.5"
@@ -477,6 +478,7 @@ export function SettingsView({
                     </div>
                   </div>
                   <Switch
+                    size="sm"
                     checked={showInDock}
                     onCheckedChange={setShowInDockPersist}
                     className="shrink-0 mt-0.5"
@@ -504,6 +506,7 @@ export function SettingsView({
                     </div>
                   </div>
                   <Switch
+                    size="sm"
                     checked={analytics}
                     onCheckedChange={setAnalyticsPersist}
                     className="shrink-0 mt-0.5"
@@ -519,6 +522,7 @@ export function SettingsView({
                     </div>
                   </div>
                   <Switch
+                    size="sm"
                     checked={crashReports}
                     onCheckedChange={setCrashReports}
                     className="shrink-0 mt-0.5"

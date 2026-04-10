@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Cpu, MessageCircle, Zap } from "lucide-react";
 
 import { Card, CardContent, Tabs, TabsContent, TabsList, TabsTrigger } from "@nexu-design/ui-web";
 
@@ -95,28 +96,42 @@ export const WithCount: Story = {
   ),
 };
 
-export const Pill: Story = {
+
+export const WithIcons: Story = {
   render: () => (
-    <Tabs defaultValue="yours" className="w-[420px]">
-      <TabsList variant="pill">
-        <TabsTrigger value="yours" variant="pill">
-          Yours
+    <Tabs defaultValue="models" className="w-[420px]">
+      <TabsList>
+        <TabsTrigger value="models">
+          <Cpu size={14} />
+          Models
         </TabsTrigger>
-        <TabsTrigger value="explore" variant="pill">
-          Explore
+        <TabsTrigger value="channels">
+          <MessageCircle size={14} />
+          Channels
+        </TabsTrigger>
+        <TabsTrigger value="skills">
+          <Zap size={14} />
+          Skills
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="yours">
+      <TabsContent value="models">
         <Card>
           <CardContent className="mt-0 text-base text-muted-foreground">
-            Your installed skills and automations.
+            Manage model providers and priorities.
           </CardContent>
         </Card>
       </TabsContent>
-      <TabsContent value="explore">
+      <TabsContent value="channels">
         <Card>
           <CardContent className="mt-0 text-base text-muted-foreground">
-            Browse community skills.
+            Connect Slack, Feishu, WeChat and more.
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="skills">
+        <Card>
+          <CardContent className="mt-0 text-base text-muted-foreground">
+            Install and organize agent skills.
           </CardContent>
         </Card>
       </TabsContent>
@@ -158,41 +173,3 @@ export const Compact: Story = {
   ),
 };
 
-export const Underline: Story = {
-  render: () => (
-    <Tabs defaultValue="general" className="w-[420px]">
-      <TabsList variant="underline">
-        <TabsTrigger value="general" variant="underline">
-          General
-        </TabsTrigger>
-        <TabsTrigger value="security" variant="underline">
-          Security
-        </TabsTrigger>
-        <TabsTrigger value="billing" variant="underline">
-          Billing
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value="general">
-        <Card>
-          <CardContent className="mt-0 text-base text-muted-foreground">
-            General account settings.
-          </CardContent>
-        </Card>
-      </TabsContent>
-      <TabsContent value="security">
-        <Card>
-          <CardContent className="mt-0 text-base text-muted-foreground">
-            Two-factor auth and session management.
-          </CardContent>
-        </Card>
-      </TabsContent>
-      <TabsContent value="billing">
-        <Card>
-          <CardContent className="mt-0 text-base text-muted-foreground">
-            Plan, invoices, and payment methods.
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </Tabs>
-  ),
-};
