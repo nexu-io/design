@@ -1,6 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ArrowUpRight } from "lucide-react";
-
 import {
   Button,
   Card,
@@ -64,13 +62,17 @@ export const Overview: Story = {
             <CardTitle>Link + external-link icon</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-text-secondary">
-            <TextLink href="#" target="_blank" rel="noopener noreferrer">
+            <TextLink href="#" target="_blank" rel="noopener noreferrer" showArrowUpRight>
               View API docs
-              <ArrowUpRight size={12} />
             </TextLink>
-            <TextLink href="#" variant="muted" target="_blank" rel="noopener noreferrer">
+            <TextLink
+              href="#"
+              variant="muted"
+              target="_blank"
+              rel="noopener noreferrer"
+              showArrowUpRight
+            >
               Open community guide
-              <ArrowUpRight size={12} />
             </TextLink>
           </CardContent>
         </Card>

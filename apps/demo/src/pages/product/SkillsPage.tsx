@@ -73,6 +73,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { ImportSkillModal } from "./import-skill-modal";
 import { useProductLayout } from "./ProductLayoutContext";
 
 type TabId = "installed" | "featured" | "explore";
@@ -87,6 +88,45 @@ interface Skill {
   certified: boolean;
   installed: boolean;
   category: string;
+}
+
+function buildImportedSkillName(fileName: string, existingNames: string[]) {
+  const baseName = fileName.replace(/\.zip$/i, "").trim() || "Imported Skill";
+  const normalizedBase = baseName
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(" ");
+
+  if (!existingNames.includes(normalizedBase)) {
+    return normalizedBase;
+  }
+
+  let suffix = 2;
+  let nextName = `${normalizedBase} ${suffix}`;
+
+  while (existingNames.includes(nextName)) {
+    suffix += 1;
+    nextName = `${normalizedBase} ${suffix}`;
+  }
+
+  return nextName;
+}
+
+function createImportedSkill(fileName: string, existingSkills: Skill[]): Skill {
+  return {
+    name: buildImportedSkillName(
+      fileName,
+      existingSkills.map((skill) => skill.name),
+    ),
+    desc: "Imported from a local ZIP package.",
+    icon: FileText,
+    author: "local workspace",
+    installs: "—",
+    certified: false,
+    installed: true,
+    category: "custom",
+  };
 }
 
 const INSTALLED_SKILLS: Skill[] = [
@@ -893,7 +933,13 @@ function SkillRow({ skill, onSelect }: { skill: Skill; onSelect: (s: Skill) => v
   );
 }
 
-function InstalledTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) {
+function InstalledTab({
+  installedSkills,
+  onSelectSkill,
+}: {
+  installedSkills: Skill[];
+  onSelectSkill: (s: Skill) => void;
+}) {
   const [chatModal, setChatModal] = useState(false);
   const [workflowModal, setWorkflowModal] = useState(false);
 
@@ -931,7 +977,7 @@ function InstalledTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) 
       </div>
 
       <div className="space-y-0.5">
-        {INSTALLED_SKILLS.map((s) => (
+        {installedSkills.map((s) => (
           <SkillRow key={s.name} skill={s} onSelect={onSelectSkill} />
         ))}
       </div>
@@ -1030,9 +1076,9 @@ function ExploreTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) {
 }
 
 const TABS_CONFIG = [
-  { id: "installed" as const, label: "Installed", icon: Wrench, count: INSTALLED_SKILLS.length },
-  { id: "featured" as const, label: "Featured", icon: Star, count: null },
-  { id: "explore" as const, label: "Explore", icon: Sparkles, count: RECOMMENDED_SKILLS.length },
+  { id: "installed" as const, label: "Installed", icon: Wrench },
+  { id: "featured" as const, label: "Featured", icon: Star },
+  { id: "explore" as const, label: "Explore", icon: Sparkles },
 ];
 
 const EXPLORE_CATEGORIES: ExploreCategory[] = [
@@ -1051,12 +1097,30 @@ function isTabId(value: string): value is TabId {
 export default function SkillsPage() {
   const [activeTab, setActiveTab] = useState<TabId>("installed");
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const [importModalOpen, setImportModalOpen] = useState(false);
+  const [importedSkills, setImportedSkills] = useState<Skill[]>([]);
   const { expandFileTree } = useProductLayout();
   const navigate = useNavigate();
-  const quickFindSkills = [...INSTALLED_SKILLS, ...RECOMMENDED_SKILLS].filter(
+  const installedSkills = [...importedSkills, ...INSTALLED_SKILLS];
+  const tabCounts: Record<TabId, number | null> = {
+    installed: installedSkills.length,
+    featured: null,
+    explore: RECOMMENDED_SKILLS.length,
+  };
+  const quickFindSkills = [...installedSkills, ...RECOMMENDED_SKILLS].filter(
     (skill, index, skills) =>
       skills.findIndex((candidate) => candidate.name === skill.name) === index,
   );
+
+  const handleImportSkill = async (file: File) => {
+    await new Promise((resolve) => window.setTimeout(resolve, 800));
+
+    const nextSkill = createImportedSkill(file.name, installedSkills);
+
+    setImportedSkills((current) => [nextSkill, ...current]);
+    setActiveTab("installed");
+    setSelectedSkill(nextSkill);
+  };
 
   return (
     <div className="h-full overflow-y-auto">
@@ -1079,10 +1143,20 @@ export default function SkillsPage() {
             </>
           }
           actions={
-            <Button type="button" onClick={() => navigate("/app/sessions")}>
-              <Plus size={14} />
-              New skill
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setImportModalOpen(true)}
+              >
+                <Download size={14} />
+                Import skill
+              </Button>
+              <Button type="button" onClick={() => navigate("/app/sessions")}>
+                <Plus size={14} />
+                New skill
+              </Button>
+            </div>
           }
         />
 
@@ -1095,15 +1169,15 @@ export default function SkillsPage() {
           }}
         >
           <div className="flex items-center justify-between mb-6 gap-4">
-            <TabsList variant="underline" className="w-auto">
-              {TABS_CONFIG.map((t) => (
-                <TabsTrigger key={t.id} value={t.id} variant="underline" className="px-0 pr-4">
-                  {t.label}
-                  {t.count != null && (
-                    <span className="text-[11px] text-text-muted ml-1.5">{t.count}</span>
-                  )}
-                </TabsTrigger>
-              ))}
+              <TabsList variant="underline" className="w-auto">
+                {TABS_CONFIG.map((t) => (
+                  <TabsTrigger key={t.id} value={t.id} variant="underline" className="px-0 pr-4">
+                    {t.label}
+                    {tabCounts[t.id] != null && (
+                      <span className="text-[11px] text-text-muted ml-1.5">{tabCounts[t.id]}</span>
+                    )}
+                  </TabsTrigger>
+                ))}
             </TabsList>
             <div className="flex items-center gap-2">
               <Button
@@ -1158,7 +1232,7 @@ export default function SkillsPage() {
           </div>
 
           <TabsContent value="installed">
-            <InstalledTab onSelectSkill={setSelectedSkill} />
+            <InstalledTab installedSkills={installedSkills} onSelectSkill={setSelectedSkill} />
           </TabsContent>
           <TabsContent value="featured">
             <FeaturedTab onSelectSkill={setSelectedSkill} />
@@ -1172,6 +1246,11 @@ export default function SkillsPage() {
       {selectedSkill && (
         <SkillDetailPanel skill={selectedSkill} onClose={() => setSelectedSkill(null)} />
       )}
+      <ImportSkillModal
+        open={importModalOpen}
+        onClose={() => setImportModalOpen(false)}
+        onImport={handleImportSkill}
+      />
     </div>
   );
 }

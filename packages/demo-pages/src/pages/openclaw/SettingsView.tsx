@@ -9,6 +9,11 @@ import {
   SelectTrigger,
   SelectValue,
   Switch,
+  TextLink,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
   cn,
 } from "@nexu-design/ui-web";
 import * as SelectPrimitive from "@radix-ui/react-select";
@@ -287,32 +292,28 @@ export function SettingsView({
           }
         />
 
-        {/* Tab switcher */}
-        <div className="flex items-center gap-0 mb-6 border-b border-border">
-          {[
-            { id: "general" as SettingsTab, labelKey: "ws.settings.tab.general" },
-            { id: "providers" as SettingsTab, labelKey: "ws.settings.tab.providers" },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setSettingsTab(tab.id)}
-              className={`relative px-4 py-2.5 text-[13px] font-medium transition-colors ${
-                settingsTab === tab.id
-                  ? "text-text-primary"
-                  : "text-text-muted hover:text-text-secondary"
-              }`}
-            >
-              {t(tab.labelKey)}
-              {settingsTab === tab.id && (
-                <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-accent rounded-full" />
-              )}
-            </button>
-          ))}
-        </div>
+        <Tabs
+          value={settingsTab}
+          onValueChange={(value) => setSettingsTab(value as SettingsTab)}
+          className="w-full"
+        >
+          <TabsList className="mb-6 w-auto">
+            {[
+              { id: "general" as SettingsTab, labelKey: "ws.settings.tab.general" },
+              { id: "providers" as SettingsTab, labelKey: "ws.settings.tab.providers" },
+            ].map((tab) => (
+                <TabsTrigger
+                  key={tab.id}
+                  value={tab.id}
+                  className="text-[13px]"
+                >
+                  {t(tab.labelKey)}
+                </TabsTrigger>
+            ))}
+          </TabsList>
 
-        {/* ── General Tab ── */}
-        {settingsTab === "general" && (
-          <div className="space-y-6">
+          {/* ── General Tab ── */}
+          <TabsContent value="general" className="space-y-6 mt-0">
             {/* Account */}
             <div className="rounded-xl border border-border bg-surface-1 overflow-hidden">
               <div className="px-5 py-4 border-b border-border">
@@ -363,16 +364,17 @@ export function SettingsView({
                         {t("ws.settings.account.signInDesc")}
                       </div>
                     </div>
-                    <button
+                    <Button
                       type="button"
+                      variant="primary"
+                      size="sm"
                       onClick={() =>
                         openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)
                       }
-                      className="inline-flex shrink-0 items-center gap-1.5 rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium bg-accent text-accent-fg hover:bg-accent-hover transition-colors"
+                      trailingIcon={<ArrowUpRight size={14} />}
                     >
                       {t("ws.settings.account.signIn")}
-                      <ArrowUpRight size={11} />
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>
@@ -590,12 +592,10 @@ export function SettingsView({
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          </TabsContent>
 
-        {/* ── Providers Tab ── */}
-        {settingsTab === "providers" && (
-          <>
+          {/* ── Providers Tab ── */}
+          <TabsContent value="providers" className="mt-0">
             {/* Nexu Bot model selector */}
             <div className="relative mb-8" ref={modelDropdownRef}>
               <div className="rounded-xl border border-border bg-surface-1 px-4 py-3.5">
@@ -723,15 +723,16 @@ export function SettingsView({
                   }
                   action={
                     activeProvider.apiDocsUrl ? (
-                      <a
+                      <TextLink
                         href={activeProvider.apiDocsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-[12px] leading-none text-[var(--color-link)] no-underline hover:no-underline"
+                        size="sm"
+                        showArrowUpRight
+                        className="text-[12px] leading-none text-[var(--color-link)]"
                       >
                         {t("ws.settings.getApiKey")}
-                        <ArrowUpRight size={12} className="shrink-0" />
-                      </a>
+                      </TextLink>
                     ) : undefined
                   }
                 />
@@ -745,15 +746,18 @@ export function SettingsView({
                     <div className="text-[12px] leading-[1.7] text-text-secondary mt-1.5">
                       {t("ws.settings.signInDesc")}
                     </div>
-                    <button
+                    <Button
+                      type="button"
+                      variant="primary"
+                      size="sm"
                       onClick={() =>
                         openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)
                       }
-                      className="mt-4 inline-flex items-center gap-2 rounded-lg bg-accent px-3.5 py-2 text-[12px] font-medium text-accent-fg transition-colors hover:bg-accent/90 cursor-pointer"
+                      className="mt-4"
+                      trailingIcon={<ArrowUpRight size={14} />}
                     >
                       {t("ws.settings.signInBtn")}
-                      <ArrowUpRight size={12} />
-                    </button>
+                    </Button>
                   </div>
                 )}
 
@@ -883,8 +887,8 @@ export function SettingsView({
                 </div>
               </div>
             </div>
-          </>
-        )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

@@ -10,7 +10,6 @@ const fullScreenExactPaths = new Set([
   "/openclaw/privacy",
   "/openclaw/terms",
   "/openclaw/channels",
-  "/openclaw/skills",
   "/openclaw/pricing",
   "/openclaw/usage",
   "/openclaw/rewards",

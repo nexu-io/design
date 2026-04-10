@@ -128,10 +128,10 @@ function MessageBubble({ msg }: { msg: BotMessage }) {
               target="_blank"
               rel="noreferrer"
               size="sm"
+              showArrowUpRight
               className="text-[12px] leading-none text-[var(--color-link)]"
             >
               <span className="min-w-0">{msg.deployment.title}</span>
-              <ArrowUpRight size={12} className="shrink-0 translate-y-px" aria-hidden />
             </TextLink>
           )}
           {msg.contentArtifact && (
@@ -140,10 +140,10 @@ function MessageBubble({ msg }: { msg: BotMessage }) {
               target="_blank"
               rel="noreferrer"
               size="sm"
+              showArrowUpRight
               className="text-[12px] leading-none text-[var(--color-link)]"
             >
               <span className="min-w-0">{msg.contentArtifact.title}</span>
-              <ArrowUpRight size={12} className="shrink-0 translate-y-px" aria-hidden />
             </TextLink>
           )}
         </div>

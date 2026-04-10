@@ -1006,10 +1006,10 @@ export function HomeDashboard({
                         target="_blank"
                         rel="noopener noreferrer"
                         size="sm"
+                        showArrowUpRight
                         className="mt-1 w-fit items-center gap-1 text-[12px] leading-none text-[var(--color-link)]"
                       >
                         {t("ws.home.viewSetupGuide").replace("{name}", ch.name)}
-                        <ArrowUpRight size={12} className="shrink-0" aria-hidden />
                       </TextLink>
                     </DialogBody>
                     <DialogFooter>

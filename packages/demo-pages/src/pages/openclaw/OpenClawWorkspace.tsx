@@ -534,7 +534,14 @@ export default function OpenClawWorkspace() {
                 <ConversationsView initialChannelId={view.channelId} />
               )}
               {view.type === "deployments" && <DeploymentsView />}
-              {view.type === "skills" && <SkillsPanel />}
+              {view.type === "skills" && (
+                <SkillsPanel
+                  githubUrl={GITHUB_URL}
+                  stars={stars ?? undefined}
+                  initialTab={view.tab}
+                  initialTag={view.tag}
+                />
+              )}
               {view.type === "schedule" && <SchedulePanel />}
               {view.type === "rewards" && (
                 <RewardsCenter

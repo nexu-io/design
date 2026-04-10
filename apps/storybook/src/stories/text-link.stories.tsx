@@ -1,6 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ArrowUpRight } from "lucide-react";
-
 import { TextLink } from "@nexu-design/ui-web";
 
 const meta = {
@@ -25,9 +23,8 @@ export const Variants: Story = {
 
 export const WithIcon: Story = {
   render: () => (
-    <TextLink href="#" target="_blank" rel="noopener noreferrer">
+    <TextLink href="#" target="_blank" rel="noopener noreferrer" showArrowUpRight>
       Open in browser
-      <ArrowUpRight className="size-3" />
     </TextLink>
   ),
 };
@@ -35,13 +32,17 @@ export const WithIcon: Story = {
 export const ExternalLinks: Story = {
   render: () => (
     <div className="flex flex-col gap-3">
-      <TextLink href="#" target="_blank" rel="noopener noreferrer">
+      <TextLink href="#" target="_blank" rel="noopener noreferrer" showArrowUpRight>
         Open documentation
-        <ArrowUpRight size={12} />
       </TextLink>
-      <TextLink href="#" size="default" target="_blank" rel="noopener noreferrer">
+      <TextLink
+        href="#"
+        size="default"
+        target="_blank"
+        rel="noopener noreferrer"
+        showArrowUpRight
+      >
         Visit provider console
-        <ArrowUpRight size={14} />
       </TextLink>
     </div>
   ),

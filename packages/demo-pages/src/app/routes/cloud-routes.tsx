@@ -10,7 +10,6 @@ import InvitePage from "../../pages/openclaw/InvitePage";
 import NexuPricingPage from "../../pages/openclaw/NexuPricingPage";
 import OnboardingPage from "../../pages/openclaw/OnboardingPage";
 import OpenClawLanding from "../../pages/openclaw/OpenClawLanding";
-import OpenClawSkillsPage from "../../pages/openclaw/OpenClawSkillsPage";
 import OpenClawWorkspace from "../../pages/openclaw/OpenClawWorkspace";
 import PrivacyPolicyPage from "../../pages/openclaw/PrivacyPolicyPage";
 import RewardsPage from "../../pages/openclaw/RewardsPage";
@@ -42,7 +41,6 @@ export function CloudFullScreenRouteElements() {
       <Route path="/openclaw/privacy" element={<PrivacyPolicyPage />} />
       <Route path="/openclaw/terms" element={<TermsOfServicePage />} />
       <Route path="/openclaw/channels" element={<ChannelsPage />} />
-      <Route path="/openclaw/skills" element={<OpenClawSkillsPage />} />
       <Route path="/openclaw/skill/:id" element={<SkillDetailPage />} />
       <Route path="/openclaw/pricing" element={<NexuPricingPage />} />
       <Route path="/openclaw/usage" element={<UsagePage />} />
