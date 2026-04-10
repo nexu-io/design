@@ -9,6 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
   Switch,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
   cn,
 } from "@nexu-design/ui-web";
 import * as SelectPrimitive from "@radix-ui/react-select";
@@ -277,7 +281,7 @@ export function SettingsView({
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
+      <div className="max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
         <PageHeader
           density="shell"
           title={t("ws.settings.title")}
@@ -299,32 +303,22 @@ export function SettingsView({
           }
         />
 
-        {/* Tab switcher */}
-        <div className="flex items-center gap-0 mb-6 border-b border-border">
-          {[
-            { id: "general" as SettingsTab, labelKey: "ws.settings.tab.general" },
-            { id: "providers" as SettingsTab, labelKey: "ws.settings.tab.providers" },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setSettingsTab(tab.id)}
-              className={`relative px-4 py-2.5 text-[13px] font-medium transition-colors ${
-                settingsTab === tab.id
-                  ? "text-text-primary"
-                  : "text-text-muted hover:text-text-secondary"
-              }`}
-            >
-              {t(tab.labelKey)}
-              {settingsTab === tab.id && (
-                <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-accent rounded-full" />
-              )}
-            </button>
-          ))}
-        </div>
+        <Tabs
+          value={settingsTab}
+          onValueChange={(v) => setSettingsTab(v as SettingsTab)}
+        >
+          <TabsList className="mb-6">
+            <TabsTrigger value="general">
+              {t("ws.settings.tab.general")}
+            </TabsTrigger>
+            <TabsTrigger value="providers">
+              {t("ws.settings.tab.providers")}
+            </TabsTrigger>
+          </TabsList>
 
-        {/* ── General Tab ── */}
-        {settingsTab === "general" && (
-          <div className="space-y-6">
+          {/* ── General Tab ── */}
+          <TabsContent value="general" className="mt-0">
+            <div className="space-y-6">
             {/* Account */}
             <div className="rounded-xl border border-border bg-surface-1 overflow-hidden">
               <div className="px-5 py-4 border-b border-border">
@@ -401,7 +395,7 @@ export function SettingsView({
                 </div>
               </div>
               <div className="px-5 py-4">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+                <div className="flex items-center justify-between gap-4">
                   <div className="min-w-0 flex-1">
                     <div className="text-[12px] font-medium text-text-primary">
                       {t("ws.settings.appearance.language")}
@@ -412,7 +406,7 @@ export function SettingsView({
                   </div>
                   <Select value={locale} onValueChange={(v) => setLocale(v as Locale)}>
                     <SelectTrigger
-                      className="h-auto min-h-9 w-full min-w-0 shrink-0 py-2 sm:w-[220px]"
+                      className="h-auto min-h-9 w-[220px] shrink-0 py-2"
                       aria-label={t("ws.settings.appearance.language")}
                     >
                       <SelectValue>
@@ -489,9 +483,9 @@ export function SettingsView({
                   </h3>
                 </div>
               </div>
-              <div className="px-5 py-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
+              <div className="px-5 py-4 divide-y divide-border">
+                <div className="flex items-start justify-between gap-4 pb-4">
+                  <div className="min-w-0 flex-1">
                     <div className="text-[12px] font-medium text-text-primary">
                       {t("ws.settings.data.analytics")}
                     </div>
@@ -499,10 +493,14 @@ export function SettingsView({
                       {t("ws.settings.data.analyticsDesc")}
                     </div>
                   </div>
-                  <Switch checked={analytics} onCheckedChange={setAnalyticsPersist} />
+                  <Switch
+                    checked={analytics}
+                    onCheckedChange={setAnalyticsPersist}
+                    className="shrink-0 mt-0.5"
+                  />
                 </div>
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex items-start justify-between gap-4 pt-4">
+                  <div className="min-w-0 flex-1">
                     <div className="text-[12px] font-medium text-text-primary">
                       {t("ws.settings.data.crashReports")}
                     </div>
@@ -510,7 +508,11 @@ export function SettingsView({
                       {t("ws.settings.data.crashReportsDesc")}
                     </div>
                   </div>
-                  <Switch checked={crashReports} onCheckedChange={setCrashReports} />
+                  <Switch
+                    checked={crashReports}
+                    onCheckedChange={setCrashReports}
+                    className="shrink-0 mt-0.5"
+                  />
                 </div>
               </div>
             </div>
@@ -525,9 +527,9 @@ export function SettingsView({
                   </h3>
                 </div>
               </div>
-              <div className="px-5 py-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
+              <div className="px-5 py-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="min-w-0 flex-1">
                     <div className="text-[12px] font-medium text-text-primary">
                       {t("ws.settings.updates.version")}
                     </div>
@@ -535,7 +537,7 @@ export function SettingsView({
                       {t("ws.settings.about.versionNumber")}
                     </div>
                   </div>
-                  <button className="rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium border border-border bg-surface-0 text-text-secondary hover:bg-surface-2 hover:text-text-primary transition-colors">
+                  <button className="shrink-0 rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium border border-border bg-surface-0 text-text-secondary hover:bg-surface-2 hover:text-text-primary transition-colors">
                     {t("ws.settings.updates.checkNow")}
                   </button>
                 </div>
@@ -600,12 +602,11 @@ export function SettingsView({
                 </div>
               </div>
             </div>
-          </div>
-        )}
+            </div>
+          </TabsContent>
 
-        {/* ── Providers Tab ── */}
-        {settingsTab === "providers" && (
-          <>
+          {/* ── Providers Tab ── */}
+          <TabsContent value="providers" className="mt-0">
             {/* Nexu Bot model selector */}
             <div className="relative mb-8" ref={modelDropdownRef}>
               <div className="rounded-xl border border-border bg-surface-1 px-4 py-3.5">
@@ -893,8 +894,8 @@ export function SettingsView({
                 </div>
               </div>
             </div>
-          </>
-        )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

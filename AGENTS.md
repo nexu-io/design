@@ -195,6 +195,8 @@
 - Apply the same principle to inline icons in labels, badges, and navigation items.
 
 ### Layout conventions
+- **Workspace content-panel layout**: every page rendered inside the OpenClaw workspace sidebar (Settings, Skills, Home, Deployments, Schedule, Rewards, Channels…) must use a consistent inner content wrapper: outer `h-full overflow-y-auto`, inner `max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8`. Do not use `max-w-3xl`, `max-w-4xl`, or other ad-hoc values — all panels share the same max-width, horizontal padding, and top spacing so margins stay consistent across pages.
+- **Settings row pattern**: within settings/preference pages, each setting item is a single horizontal row — `[title + description]` left-aligned, `[control (Switch / Select / Button)]` right-aligned — using `flex items-start justify-between gap-4`. Multiple rows within a section use `divide-y divide-border` for separation.
 - Action buttons (Save, Confirm, Submit) default to the **right** side of their container.
 - In horizontal form rows the confirm button sits at the trailing (right) edge; in vertical stacks it right-aligns via `flex justify-end` or `ml-auto`.
 - Cancel / secondary actions appear to the **left** of the primary confirm button.
