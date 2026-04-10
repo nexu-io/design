@@ -151,7 +151,7 @@ export function SkillsPanel({
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
         <PageHeader
           density="shell"
           title={t("ws.skills.title")}
@@ -159,22 +159,7 @@ export function SkillsPanel({
           actions={<GitHubStarButton href={githubUrl} label="Star on GitHub" stars={stars} />}
         />
 
-        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search"
-            leadingIcon={<Search size={14} />}
-            size="sm"
-            className="w-full bg-surface-0 sm:w-72"
-          />
-          <Button type="button" size="sm" onClick={() => setImportModalOpen(true)}>
-            <Download size={14} />
-            Import
-          </Button>
-        </div>
-
-        <div className="mb-6 flex items-center gap-4">
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Tabs
             value={topTab}
             onValueChange={(value: string) => {
@@ -206,6 +191,21 @@ export function SkillsPanel({
               })}
             </TabsList>
           </Tabs>
+
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search"
+              leadingIcon={<Search size={14} />}
+              size="sm"
+              className="w-full bg-surface-0 sm:w-72"
+            />
+            <Button type="button" size="sm" onClick={() => setImportModalOpen(true)}>
+              <Download size={14} />
+              Import
+            </Button>
+          </div>
         </div>
 
         {topTab === "yours" && (
@@ -266,10 +266,7 @@ export function SkillsPanel({
 
         <div className="mb-4 text-xs text-text-tertiary">{infoText}</div>
 
-        <div
-          className="grid gap-3"
-          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}
-        >
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map(({ skill }) => {
             const Icon = skill.icon;
             const isCustom = skill.source === "custom";
