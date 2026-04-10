@@ -94,6 +94,7 @@
   - `pnpm --filter @nexu-design/ui-web exec vitest src/primitives/button.test.tsx`
 
 ## Recommended validation before finishing changes
+- **Before every commit** (mandatory): run `pnpm format` to auto-fix formatting, then `pnpm format:check` to verify. CI will reject unformatted code. Do this even for small changes — Biome formatting rules are strict and line-length violations are the most common CI failure.
 - For code changes in `ui-web`: run
   - `pnpm --filter @nexu-design/ui-web typecheck`
   - `pnpm --filter @nexu-design/ui-web test`
