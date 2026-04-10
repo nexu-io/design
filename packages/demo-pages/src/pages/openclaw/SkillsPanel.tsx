@@ -19,6 +19,7 @@ import { SKILL_CATEGORIES, TOOL_TAG_LABELS, type SkillDef, type ToolTag } from "
 
 type SkillTagFilter = "all" | ToolTag;
 type SkillTopTab = "explore" | "yours";
+type YoursFilter = "all" | "builtin" | "custom";
 
 function buildImportedSkillName(fileName: string, existingNames: string[]) {
   const baseName = fileName.replace(/\.zip$/i, "").trim() || "Imported Skill";
@@ -73,6 +74,7 @@ export function SkillsPanel({
   const [query, setQuery] = useState("");
   const [topTab, setTopTab] = useState<SkillTopTab>(initialTag ? "explore" : initialTab);
   const [tagFilter, setTagFilter] = useState<SkillTagFilter>(initialTag ?? "all");
+  const [yoursFilter, setYoursFilter] = useState<YoursFilter>("all");
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [importedSkills, setImportedSkills] = useState<SkillDef[]>([]);
 
@@ -90,8 +92,17 @@ export function SkillsPanel({
   ];
   const yourSkills = allSkills.filter((s) => s.skill.source === "custom");
   const exploreSkills = allSkills.filter((s) => s.skill.source === "official");
+  const yourBuiltInSkills = yourSkills.filter((s) => s.skill.source === "official");
+  const yourCustomSkills = yourSkills.filter((s) => s.skill.source === "custom");
 
-  const base = topTab === "yours" ? yourSkills : exploreSkills;
+  const base =
+    topTab === "yours"
+      ? yoursFilter === "builtin"
+        ? yourBuiltInSkills
+        : yoursFilter === "custom"
+          ? yourCustomSkills
+          : yourSkills
+      : exploreSkills;
   let filtered = base;
   if (topTab === "explore" && tagFilter !== "all") {
     filtered = filtered.filter((item) => item.skill.tag === tagFilter);
@@ -111,6 +122,11 @@ export function SkillsPanel({
       label,
       count: exploreSkills.filter((s) => s.skill.tag === id).length,
     })),
+  ];
+  const yoursTabs: { id: YoursFilter; label: string; count: number }[] = [
+    { id: "all", label: "All", count: yourSkills.length },
+    { id: "builtin", label: "Built-in", count: yourBuiltInSkills.length },
+    { id: "custom", label: "Custom", count: yourCustomSkills.length },
   ];
 
   const { t } = useLocale();
@@ -161,6 +177,7 @@ export function SkillsPanel({
               if (!value) return;
               setTopTab(value as SkillTopTab);
               setTagFilter("all");
+              setYoursFilter("all");
             }}
             className="w-auto"
           >
@@ -187,8 +204,36 @@ export function SkillsPanel({
           </Tabs>
         </div>
 
+        {topTab === "yours" && (
+          <div className="mb-3 -mt-2 overflow-x-auto pb-0.5">
+            <ToggleGroup
+              type="single"
+              value={yoursFilter}
+              onValueChange={(value: string) => {
+                if (value) setYoursFilter(value as YoursFilter);
+              }}
+              variant="outline"
+              aria-label="Your skills filter"
+              className="min-w-max"
+            >
+              {yoursTabs.map((tab) => (
+                <ToggleGroupItem
+                  key={tab.id}
+                  value={tab.id}
+                  variant="outline"
+                  size="sm"
+                  className="text-[12px]"
+                >
+                  <span>{tab.label}</span>
+                  <span className="ml-1 tabular-nums text-[10px] opacity-70">{tab.count}</span>
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
+        )}
+
         {topTab === "explore" && (
-          <div className="mb-3 overflow-x-auto pb-0.5">
+          <div className="mb-3 -mt-2 overflow-x-auto pb-0.5">
             <ToggleGroup
               type="single"
               value={tagFilter}
