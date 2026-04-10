@@ -48,7 +48,10 @@ export interface TextLinkProps
  * <TextLink href="/docs">Read the docs</TextLink>
  */
 export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
-  ({ className, variant, size, asChild = false, showArrowUpRight = false, children, ...props }, ref) => {
+  (
+    { className, variant, size, asChild = false, showArrowUpRight = false, children, ...props },
+    ref,
+  ) => {
     const Comp = asChild ? Slot : "a";
 
     if (asChild) {

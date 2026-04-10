@@ -276,11 +276,7 @@ export default function StepSession() {
                 size={12}
                 className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted"
               />
-              <Input
-                placeholder="搜索对话..."
-                size="sm"
-                className="pl-7"
-              />
+              <Input placeholder="搜索对话..." size="sm" className="pl-7" />
             </div>
             <button
               type="button"
@@ -393,13 +389,19 @@ export default function StepSession() {
                     )}
                     {msg.content && (
                       <ConversationMessage
-                        variant={msg.from === 'user' ? 'user' : 'assistant'}
+                        variant={msg.from === "user" ? "user" : "assistant"}
                         avatar={
-                          msg.from === 'clone' ? (
-                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-clone/15 text-[10px]">😊</div>
+                          msg.from === "clone" ? (
+                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-clone/15 text-[10px]">
+                              😊
+                            </div>
                           ) : undefined
                         }
-                        bubbleClassName={msg.from === 'user' ? 'bg-accent text-accent-fg text-[11px]' : 'bg-surface-2 text-[11px]'}
+                        bubbleClassName={
+                          msg.from === "user"
+                            ? "bg-accent text-accent-fg text-[11px]"
+                            : "bg-surface-2 text-[11px]"
+                        }
                       >
                         {msg.content}
                       </ConversationMessage>

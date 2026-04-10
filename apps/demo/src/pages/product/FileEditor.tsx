@@ -193,13 +193,13 @@ export default function FileEditor({
         {binary ? (
           <BinaryPlaceholder icon={binary.icon} label={binary.label} />
         ) : mode === "edit" ? (
-            <Textarea
-              ref={textareaRef}
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              className="h-full w-full resize-none border-0 bg-transparent p-4 font-mono text-[12px] leading-relaxed shadow-none focus-visible:ring-0"
-              spellCheck={false}
-            />
+          <Textarea
+            ref={textareaRef}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            className="h-full w-full resize-none border-0 bg-transparent p-4 font-mono text-[12px] leading-relaxed shadow-none focus-visible:ring-0"
+            spellCheck={false}
+          />
         ) : isMarkdown ? (
           <div className="p-4 markdown-preview">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
@@ -289,7 +289,13 @@ function CompactEditor({
         </div>
         <div className="flex gap-1 items-center">
           {isEditable && mode === "preview" && (
-            <Button onClick={() => setMode("edit")} type="button" variant="outline" size="xs" className="gap-1">
+            <Button
+              onClick={() => setMode("edit")}
+              type="button"
+              variant="outline"
+              size="xs"
+              className="gap-1"
+            >
               <Pencil size={9} />
               Edit
             </Button>

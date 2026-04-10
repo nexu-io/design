@@ -101,17 +101,24 @@ export default function JourneyPage() {
 
         <Stepper className="flex-1 items-start justify-center gap-2 overflow-x-auto px-2">
           {STEPS.map((step, i) => {
-            const status = i < currentStep ? 'completed' : i === currentStep ? 'current' : 'pending';
+            const status =
+              i < currentStep ? "completed" : i === currentStep ? "current" : "pending";
 
             return [
               <StepperItem
                 key={step.id}
                 status={status}
                 step={i + 1}
-                label={<button type="button" onClick={() => goTo(i, i > currentStep ? 'next' : 'prev')}>{step.label}</button>}
+                label={
+                  <button type="button" onClick={() => goTo(i, i > currentStep ? "next" : "prev")}>
+                    {step.label}
+                  </button>
+                }
                 className="min-w-[84px]"
               />,
-              i < STEPS.length - 1 ? <StepperSeparator key={`${step.id}-sep`} active={i < currentStep} /> : null,
+              i < STEPS.length - 1 ? (
+                <StepperSeparator key={`${step.id}-sep`} active={i < currentStep} />
+              ) : null,
             ];
           })}
         </Stepper>

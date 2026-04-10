@@ -375,8 +375,8 @@ export default function OpenClawLanding() {
               size="lg"
               onClick={() => openExternal(SLACK_EXPERIENCE_GROUP_URL)}
             >
-                <SlackIcon size={16} />
-                Join Slack Group
+              <SlackIcon size={16} />
+              Join Slack Group
             </Button>
           </div>
           <div className="flex items-center justify-center text-[13px] text-text-muted">

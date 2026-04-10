@@ -451,9 +451,7 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     enabled: false,
     apiKeyPlaceholder: "Not required",
     proxyUrl: "http://localhost:11434/v1",
-    models: [
-      createProviderModel("qwen3-32b", "Qwen3 32B", "128K", "2026-02-10", "Local", "Local"),
-    ],
+    models: [createProviderModel("qwen3-32b", "Qwen3 32B", "128K", "2026-02-10", "Local", "Local")],
   }),
   createProviderDetail({
     id: "nvidia",
@@ -482,9 +480,7 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     apiKeyPlaceholder: "step-...",
     proxyUrl: "https://api.stepfun.com/v1",
     apiDocsUrl: "https://platform.stepfun.com/",
-    models: [
-      createProviderModel("step-2", "Step 2", "256K", "2026-01-18", "¥4.00/M", "¥16.00/M"),
-    ],
+    models: [createProviderModel("step-2", "Step 2", "256K", "2026-01-18", "¥4.00/M", "¥16.00/M")],
   }),
   createProviderDetail({
     id: "amazon-bedrock",
@@ -514,7 +510,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     proxyUrl: "https://api.deepseek.com/v1",
     apiDocsUrl: "https://platform.deepseek.com/api_keys",
     models: [
-      createProviderModel("deepseek-v3-2", "DeepSeek V3.2", "128K", "2026-02-28", "$0.27/M", "$1.10/M"),
+      createProviderModel(
+        "deepseek-v3-2",
+        "DeepSeek V3.2",
+        "128K",
+        "2026-02-28",
+        "$0.27/M",
+        "$1.10/M",
+      ),
     ],
   }),
   createProviderDetail({
@@ -526,7 +529,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     proxyUrl: "https://api.mistral.ai/v1",
     apiDocsUrl: "https://console.mistral.ai/api-keys/",
     models: [
-      createProviderModel("mistral-large", "Mistral Large", "128K", "2026-01-28", "$2.00/M", "$6.00/M"),
+      createProviderModel(
+        "mistral-large",
+        "Mistral Large",
+        "128K",
+        "2026-01-28",
+        "$2.00/M",
+        "$6.00/M",
+      ),
     ],
   }),
   createProviderDetail({
@@ -588,7 +598,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     proxyUrl: "https://ark.cn-beijing.volces.com/api/v3",
     apiDocsUrl: "https://console.volcengine.com/ark",
     models: [
-      createProviderModel("doubao-pro-32k", "Doubao Pro 32K", "32K", "2026-01-22", "¥0.80/M", "¥2.00/M"),
+      createProviderModel(
+        "doubao-pro-32k",
+        "Doubao Pro 32K",
+        "32K",
+        "2026-01-22",
+        "¥0.80/M",
+        "¥2.00/M",
+      ),
     ],
   }),
   createProviderDetail({
@@ -600,7 +617,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     proxyUrl: "https://qianfan.baidubce.com/v2",
     apiDocsUrl: "https://console.bce.baidu.com/qianfan/",
     models: [
-      createProviderModel("ernie-4_0-turbo", "ERNIE 4.0 Turbo", "128K", "2026-01-30", "¥2.00/M", "¥8.00/M"),
+      createProviderModel(
+        "ernie-4_0-turbo",
+        "ERNIE 4.0 Turbo",
+        "128K",
+        "2026-01-30",
+        "¥2.00/M",
+        "¥8.00/M",
+      ),
     ],
   }),
   createProviderDetail({
@@ -611,7 +635,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     apiKeyPlaceholder: "Optional",
     proxyUrl: "http://localhost:8000/v1",
     models: [
-      createProviderModel("llama-3_1-8b", "Llama 3.1 8B", "128K", "2026-01-04", "Self-hosted", "Self-hosted"),
+      createProviderModel(
+        "llama-3_1-8b",
+        "Llama 3.1 8B",
+        "128K",
+        "2026-01-04",
+        "Self-hosted",
+        "Self-hosted",
+      ),
     ],
   }),
   createProviderDetail({
@@ -623,7 +654,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     proxyUrl: "https://ark.byteplus.com/api/v3",
     apiDocsUrl: "https://console.byteplus.com/modelark",
     models: [
-      createProviderModel("doubao-seed-1_6", "Doubao Seed 1.6", "128K", "2026-02-08", "$0.90/M", "$3.00/M"),
+      createProviderModel(
+        "doubao-seed-1_6",
+        "Doubao Seed 1.6",
+        "128K",
+        "2026-02-08",
+        "$0.90/M",
+        "$3.00/M",
+      ),
     ],
   }),
   createProviderDetail({
@@ -635,7 +673,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     proxyUrl: "https://api.venice.ai/api/v1",
     apiDocsUrl: "https://venice.ai/settings/api",
     models: [
-      createProviderModel("venice-uncensored", "Venice Uncensored", "32K", "2026-01-11", "$3.00/M", "$9.00/M"),
+      createProviderModel(
+        "venice-uncensored",
+        "Venice Uncensored",
+        "32K",
+        "2026-01-11",
+        "$3.00/M",
+        "$9.00/M",
+      ),
     ],
   }),
   createProviderDetail({
@@ -647,7 +692,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     proxyUrl: "https://api.githubcopilot.com",
     apiDocsUrl: "https://github.com/settings/copilot",
     models: [
-      createProviderModel("gpt-4_1-copilot", "GPT-4.1 via Copilot", "128K", "2026-02-02", "Included", "Included"),
+      createProviderModel(
+        "gpt-4_1-copilot",
+        "GPT-4.1 via Copilot",
+        "128K",
+        "2026-02-02",
+        "Included",
+        "Included",
+      ),
     ],
   }),
   createProviderDetail({
@@ -658,9 +710,7 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     apiKeyPlaceholder: "mimo-...",
     proxyUrl: "https://api.mimo.com/v1",
     apiDocsUrl: "https://platform.xiaomi.com/",
-    models: [
-      createProviderModel("mimo-7b", "MiMo 7B", "32K", "2026-01-16", "¥0.50/M", "¥1.50/M"),
-    ],
+    models: [createProviderModel("mimo-7b", "MiMo 7B", "32K", "2026-01-16", "¥0.50/M", "¥1.50/M")],
   }),
   createProviderDetail({
     id: "chutes",
@@ -671,7 +721,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     proxyUrl: "https://api.chutes.ai/v1",
     apiDocsUrl: "https://app.chutes.ai/settings/api-keys",
     models: [
-      createProviderModel("deepseek-r1-distill", "DeepSeek R1 Distill", "128K", "2026-01-03", "$0.60/M", "$2.40/M"),
+      createProviderModel(
+        "deepseek-r1-distill",
+        "DeepSeek R1 Distill",
+        "128K",
+        "2026-01-03",
+        "$0.60/M",
+        "$2.40/M",
+      ),
     ],
   }),
   createProviderDetail({
@@ -683,7 +740,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     proxyUrl: "https://api.moonshot.cn/v1",
     apiDocsUrl: "https://platform.moonshot.cn/console/api-keys",
     models: [
-      createProviderModel("moonshot-v1-128k", "Moonshot V1 128K", "128K", "2026-01-07", "¥12.00/M", "¥60.00/M"),
+      createProviderModel(
+        "moonshot-v1-128k",
+        "Moonshot V1 128K",
+        "128K",
+        "2026-01-07",
+        "¥12.00/M",
+        "¥60.00/M",
+      ),
     ],
   }),
   createProviderDetail({
@@ -695,7 +759,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     proxyUrl: "https://api.z.ai/v1",
     apiDocsUrl: "https://platform.z.ai/",
     models: [
-      createProviderModel("zai-thinking", "Z.ai Thinking", "128K", "2026-02-12", "$1.50/M", "$6.00/M"),
+      createProviderModel(
+        "zai-thinking",
+        "Z.ai Thinking",
+        "128K",
+        "2026-02-12",
+        "$1.50/M",
+        "$6.00/M",
+      ),
     ],
   }),
   createProviderDetail({
@@ -706,7 +777,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     apiKeyPlaceholder: "sk-...",
     proxyUrl: "https://your-openai-compatible-endpoint/v1",
     models: [
-      createProviderModel("custom-gpt", "Custom OpenAI Model", "128K", "2026-01-01", "Custom", "Custom"),
+      createProviderModel(
+        "custom-gpt",
+        "Custom OpenAI Model",
+        "128K",
+        "2026-01-01",
+        "Custom",
+        "Custom",
+      ),
     ],
   }),
   createProviderDetail({
@@ -717,7 +795,14 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
     apiKeyPlaceholder: "sk-ant-...",
     proxyUrl: "https://your-anthropic-compatible-endpoint",
     models: [
-      createProviderModel("custom-claude", "Custom Claude-compatible Model", "200K", "2026-01-01", "Custom", "Custom"),
+      createProviderModel(
+        "custom-claude",
+        "Custom Claude-compatible Model",
+        "200K",
+        "2026-01-01",
+        "Custom",
+        "Custom",
+      ),
     ],
   }),
   {

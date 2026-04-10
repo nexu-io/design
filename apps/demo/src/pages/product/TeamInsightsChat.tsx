@@ -44,9 +44,9 @@ function InlineChart({
                   className="h-[14px]"
                   indicatorClassName={`${d.color || "bg-clone"} flex items-center justify-end pr-1`}
                 />
-                  {d.value > 15 && (
-                    <span className="text-[8px] font-bold text-white/90">{d.value}%</span>
-                  )}
+                {d.value > 15 && (
+                  <span className="text-[8px] font-bold text-white/90">{d.value}%</span>
+                )}
               </div>
               {d.value <= 15 && (
                 <span className="text-[9px] text-text-muted tabular-nums">{d.value}%</span>
@@ -108,9 +108,9 @@ function ChatMessage({ msg }: { msg: InsightMessage }) {
   const isAgent = msg.from === "agent";
 
   return (
-    <div className={isAgent ? undefined : 'ml-auto'}>
+    <div className={isAgent ? undefined : "ml-auto"}>
       <ConversationMessage
-        variant={isAgent ? 'assistant' : 'user'}
+        variant={isAgent ? "assistant" : "user"}
         avatar={
           isAgent ? (
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent/10">
@@ -118,41 +118,43 @@ function ChatMessage({ msg }: { msg: InsightMessage }) {
             </div>
           ) : undefined
         }
-        bubbleClassName={isAgent ? 'bg-surface-1 text-[12px]' : 'bg-accent text-accent-fg text-[12px]'}
+        bubbleClassName={
+          isAgent ? "bg-surface-1 text-[12px]" : "bg-accent text-accent-fg text-[12px]"
+        }
         meta={msg.time}
       >
-          <div className="whitespace-pre-line">
-            {msg.content.split(/(\*\*[^*]+\*\*)/g).map((part) => {
-              if (part.startsWith("**") && part.endsWith("**")) {
-                return (
-                  <strong key={part} className="font-semibold">
-                    {part.slice(2, -2)}
-                  </strong>
-                );
-              }
-              return <span key={part}>{part}</span>;
-            })}
-          </div>
-          {msg.chart && <InlineChart chart={msg.chart} />}
+        <div className="whitespace-pre-line">
+          {msg.content.split(/(\*\*[^*]+\*\*)/g).map((part) => {
+            if (part.startsWith("**") && part.endsWith("**")) {
+              return (
+                <strong key={part} className="font-semibold">
+                  {part.slice(2, -2)}
+                </strong>
+              );
+            }
+            return <span key={part}>{part}</span>;
+          })}
+        </div>
+        {msg.chart && <InlineChart chart={msg.chart} />}
       </ConversationMessage>
 
       {msg.references && msg.references.length > 0 && (
-        <div className={`mt-1.5 flex flex-wrap gap-1 ${isAgent ? 'ml-9' : 'justify-end'}`}>
-            {msg.references.map((ref) => {
-              const st = REF_TYPE_STYLES[ref.type];
-              return (
-                <Badge
-                  key={ref.id}
-                  variant="outline"
-                  size="xs"
-                  className={`${st.color} cursor-default`}
-                >
-                  <st.icon size={8} />
-                  {ref.label}
-                  <Link2 size={7} />
-                </Badge>
-              );
-            })}
+        <div className={`mt-1.5 flex flex-wrap gap-1 ${isAgent ? "ml-9" : "justify-end"}`}>
+          {msg.references.map((ref) => {
+            const st = REF_TYPE_STYLES[ref.type];
+            return (
+              <Badge
+                key={ref.id}
+                variant="outline"
+                size="xs"
+                className={`${st.color} cursor-default`}
+              >
+                <st.icon size={8} />
+                {ref.label}
+                <Link2 size={7} />
+              </Badge>
+            );
+          })}
         </div>
       )}
     </div>
@@ -235,9 +237,9 @@ export default function TeamInsightsChat() {
       >
         <Sparkles size={14} className="text-accent" />
         <span className="text-[12px] font-medium text-text-primary">Team Insights</span>
-          <Badge variant="accent" size="xs">
-            Scoped Session
-          </Badge>
+        <Badge variant="accent" size="xs">
+          Scoped Session
+        </Badge>
         <span className="text-[10px] text-text-muted">— 限定团队分析 Skills</span>
         <div className="ml-auto flex items-center gap-2">
           {!isOpen && <span className="text-[10px] text-text-muted">点击展开对话...</span>}
@@ -321,11 +323,7 @@ export default function TeamInsightsChat() {
                 rows={1}
                 className="min-h-0 flex-1 resize-none border-0 bg-transparent px-0 py-0 text-[12px] shadow-none focus-visible:ring-0"
               />
-              <Button
-                type="button"
-                size="icon-sm"
-                onClick={handleSend}
-              >
+              <Button type="button" size="icon-sm" onClick={handleSend}>
                 <Send size={12} />
               </Button>
             </div>

@@ -72,11 +72,11 @@ const TABS = [
   { id: "members" as TabId, label: "成员", icon: Users },
 ];
 
-const STATUS_VARIANTS: Record<string, 'success' | 'warning' | 'neutral'> = {
-  online: 'success',
-  busy: 'warning',
-  away: 'neutral',
-  offline: 'neutral',
+const STATUS_VARIANTS: Record<string, "success" | "warning" | "neutral"> = {
+  online: "success",
+  busy: "warning",
+  away: "neutral",
+  offline: "neutral",
 };
 
 const URGENCY_STYLES: Record<string, { bg: string; text: string; label: string }> = {
@@ -94,11 +94,9 @@ function ProgressBar({
   value: number;
   className?: string;
 }) {
-  const variant = value >= 100 ? 'success' : value >= 50 ? 'accent' : 'warning';
+  const variant = value >= 100 ? "success" : value >= 50 ? "accent" : "warning";
 
-  return (
-    <Progress value={value} variant={variant} size="sm" className={className} />
-  );
+  return <Progress value={value} variant={variant} size="sm" className={className} />;
 }
 
 function CardWrapper({
@@ -114,7 +112,7 @@ function CardWrapper({
 }) {
   return (
     <Card
-      variant={onClick ? 'interactive' : 'static'}
+      variant={onClick ? "interactive" : "static"}
       padding="none"
       className={`relative overflow-hidden bg-surface-1 ${selected ? "ring-2 ring-accent/30 border-accent/40" : "border-border"} ${accent ? `border-l-2 ${accent}` : ""}`}
     >
@@ -150,7 +148,7 @@ function CardButton({
     <Button
       type="button"
       size="sm"
-      variant={styles[variant] as 'outline' | 'soft' | 'destructive'}
+      variant={styles[variant] as "outline" | "soft" | "destructive"}
       onClick={(e) => {
         e.stopPropagation();
         onClick?.(e);
@@ -298,7 +296,9 @@ function AlignmentRequestIMCard({
           </span>
         </div>
         <Badge
-          variant={card.urgency === 'high' ? 'danger' : card.urgency === 'medium' ? 'warning' : 'accent'}
+          variant={
+            card.urgency === "high" ? "danger" : card.urgency === "medium" ? "warning" : "accent"
+          }
           size="xs"
         >
           ⚡ {urgency.label}
@@ -535,24 +535,24 @@ function MemberCard({
       }`}
     >
       <div className="flex gap-3 items-start mb-3">
-          <div className="relative">
-            <div className="flex justify-center items-center w-10 h-10 text-lg rounded-full bg-surface-3">
-              {member.avatar}
-            </div>
-            <StatusDot
-              status={STATUS_VARIANTS[member.status]}
-              size="lg"
-              pulse={member.status === 'online'}
-              className="absolute -bottom-0.5 -right-0.5 border-2 border-surface-1"
-            />
+        <div className="relative">
+          <div className="flex justify-center items-center w-10 h-10 text-lg rounded-full bg-surface-3">
+            {member.avatar}
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex gap-2 items-center">
-              <span className="text-[13px] font-semibold text-text-primary">{member.name}</span>
-              <Badge variant="accent" size="xs" radius="md">
-                Lv.{member.level}
-              </Badge>
-            </div>
+          <StatusDot
+            status={STATUS_VARIANTS[member.status]}
+            size="lg"
+            pulse={member.status === "online"}
+            className="absolute -bottom-0.5 -right-0.5 border-2 border-surface-1"
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex gap-2 items-center">
+            <span className="text-[13px] font-semibold text-text-primary">{member.name}</span>
+            <Badge variant="accent" size="xs" radius="md">
+              Lv.{member.level}
+            </Badge>
+          </div>
           <div className="text-[11px] text-text-secondary">{member.role}</div>
         </div>
         <div className="text-[10px] text-text-muted">{member.channel}</div>
@@ -942,20 +942,20 @@ export default function TeamPage() {
             <tab.icon size={14} />
             {tab.label}
             {tab.id === "tasks" && (
-                <Badge variant="accent" size="xs" className="ml-0.5">
-                  {TASK_BOARD.filter((t) => t.status === "in_progress").length}
-                </Badge>
-              )}
-              {tab.id === "alignments" && (
-                <Badge variant="warning" size="xs" className="ml-0.5">
-                  1
-                </Badge>
-              )}
-              {tab.id === "okr" && atRiskOKR > 0 && (
-                <Badge variant="danger" size="xs" className="ml-0.5">
-                  {atRiskOKR}
-                </Badge>
-              )}
+              <Badge variant="accent" size="xs" className="ml-0.5">
+                {TASK_BOARD.filter((t) => t.status === "in_progress").length}
+              </Badge>
+            )}
+            {tab.id === "alignments" && (
+              <Badge variant="warning" size="xs" className="ml-0.5">
+                1
+              </Badge>
+            )}
+            {tab.id === "okr" && atRiskOKR > 0 && (
+              <Badge variant="danger" size="xs" className="ml-0.5">
+                {atRiskOKR}
+              </Badge>
+            )}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>

@@ -1,11 +1,4 @@
-import {
-  Badge,
-  Button,
-  DiscordIcon,
-  FeishuIcon,
-  SlackIcon,
-  TextLink,
-} from "@nexu-design/ui-web";
+import { Badge, Button, DiscordIcon, FeishuIcon, SlackIcon, TextLink } from "@nexu-design/ui-web";
 import { ArrowUpRight, FolderOpen, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {

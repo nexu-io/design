@@ -349,8 +349,7 @@ export default function PrivacyPolicyPage() {
           </ul>
           <p className="mt-4">
             For specific data residency requirements, contact us at{" "}
-            <TextLink href="mailto:privacy@refly.ai">privacy@refly.ai</TextLink>
-            .
+            <TextLink href="mailto:privacy@refly.ai">privacy@refly.ai</TextLink>.
           </p>
         </Section>
 
@@ -382,8 +381,7 @@ export default function PrivacyPolicyPage() {
           <p className="mt-4">
             You can delete specific memories, knowledge, or conversations from your Clone at any
             time. Request full account and data deletion via settings or by contacting{" "}
-            <TextLink href="mailto:privacy@refly.ai">privacy@refly.ai</TextLink>
-            .
+            <TextLink href="mailto:privacy@refly.ai">privacy@refly.ai</TextLink>.
           </p>
         </Section>
 
@@ -420,9 +418,8 @@ export default function PrivacyPolicyPage() {
             </li>
           </ul>
           <p className="mt-4">
-            Contact{" "}
-            <TextLink href="mailto:privacy@refly.ai">privacy@refly.ai</TextLink>{" "}
-            or use in-product settings to exercise your rights. We respond within 30 days.
+            Contact <TextLink href="mailto:privacy@refly.ai">privacy@refly.ai</TextLink> or use
+            in-product settings to exercise your rights. We respond within 30 days.
           </p>
         </Section>
 

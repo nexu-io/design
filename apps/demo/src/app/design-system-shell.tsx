@@ -10,7 +10,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-} from '@nexu-design/ui-web'
+} from "@nexu-design/ui-web";
 import {
   ChevronUp,
   CircleHelp,
@@ -24,36 +24,36 @@ import {
   Sparkles,
   Users,
   Wrench,
-} from 'lucide-react'
-import { useState } from 'react'
-import { NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+} from "lucide-react";
+import { useState } from "react";
+import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
-import { CommentSystem } from '../components/CommentSystem'
-import { ProductRouteElements } from './routes/product-routes'
+import { CommentSystem } from "../components/CommentSystem";
+import { ProductRouteElements } from "./routes/product-routes";
 
 const PRODUCT_NAV = [
-  { to: '/demo', label: 'Product Demo', icon: Play },
-  { to: '/journey', label: 'User Journey', icon: RouteIcon },
-  { to: '/app/sessions', label: 'Sessions', icon: Monitor },
-  { to: '/app/team', label: '团队协作', icon: Users },
-  { to: '/app/clone', label: '分身搭建', icon: Wrench },
-  { to: '/app/automation', label: 'Automation', icon: Clock },
-  { to: '/app/skills', label: 'Skills', icon: Sparkles },
-]
+  { to: "/demo", label: "Product Demo", icon: Play },
+  { to: "/journey", label: "User Journey", icon: RouteIcon },
+  { to: "/app/sessions", label: "Sessions", icon: Monitor },
+  { to: "/app/team", label: "团队协作", icon: Users },
+  { to: "/app/clone", label: "分身搭建", icon: Wrench },
+  { to: "/app/automation", label: "Automation", icon: Clock },
+  { to: "/app/skills", label: "Skills", icon: Sparkles },
+];
 
 function NavSection({
   title,
   items,
   collapsed,
 }: {
-  title: string
-  items: typeof PRODUCT_NAV
-  collapsed: boolean
+  title: string;
+  items: typeof PRODUCT_NAV;
+  collapsed: boolean;
 }) {
-  const location = useLocation()
+  const location = useLocation();
 
   const isSelected = (to: string) =>
-    location.pathname === to || location.pathname.startsWith(`${to}/`)
+    location.pathname === to || location.pathname.startsWith(`${to}/`);
 
   return (
     <NavigationMenu>
@@ -64,7 +64,7 @@ function NavSection({
             <NavigationMenuButton
               asChild
               active={isSelected(to)}
-              className={collapsed ? 'justify-center px-0' : undefined}
+              className={collapsed ? "justify-center px-0" : undefined}
               title={collapsed ? label : undefined}
             >
               <NavLink to={to}>
@@ -76,16 +76,18 @@ function NavSection({
         ))}
       </NavigationMenuList>
     </NavigationMenu>
-  )
+  );
 }
 
 export function DesignSystemShell() {
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <>
       <div className="flex h-full">
-        <Sidebar className={`${collapsed ? 'w-14' : 'w-[220px]'} shrink-0 transition-all duration-200`}>
+        <Sidebar
+          className={`${collapsed ? "w-14" : "w-[220px]"} shrink-0 transition-all duration-200`}
+        >
           {collapsed ? (
             <SidebarHeader className="flex h-[52px] items-center justify-center border-b border-border px-3 py-3">
               <NexuLogoIcon size={28} />
@@ -109,7 +111,7 @@ export function DesignSystemShell() {
           )}
 
           <SidebarContent className="flex-1 overflow-y-auto">
-            <div className={collapsed ? 'px-1.5 pb-1 pt-3' : 'px-2 pb-1 pt-3'}>
+            <div className={collapsed ? "px-1.5 pb-1 pt-3" : "px-2 pb-1 pt-3"}>
               <NavSection title="Product Pages" items={PRODUCT_NAV} collapsed={collapsed} />
             </div>
           </SidebarContent>
@@ -145,7 +147,11 @@ export function DesignSystemShell() {
             </div>
           )}
 
-          <SidebarFooter className={collapsed ? 'border-t border-border px-3 py-2' : 'border-t border-border px-2 py-2'}>
+          <SidebarFooter
+            className={
+              collapsed ? "border-t border-border px-3 py-2" : "border-t border-border px-2 py-2"
+            }
+          >
             {collapsed ? (
               <button
                 type="button"
@@ -183,5 +189,5 @@ export function DesignSystemShell() {
       </div>
       <CommentSystem />
     </>
-  )
+  );
 }

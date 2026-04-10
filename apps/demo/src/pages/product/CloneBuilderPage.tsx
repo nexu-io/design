@@ -855,20 +855,20 @@ function FeedDetailPanel({ item, onClose }: { item: FeedItem; onClose: () => voi
 
       {/* Follow-up input */}
       <div className="border-t border-border p-3 space-y-2 shrink-0">
-          <div className="flex items-end gap-2 bg-surface-1 border border-border rounded-xl px-3 py-2">
-            <Textarea
-              value={followUp}
-              onChange={(e) => setFollowUp(e.target.value)}
+        <div className="flex items-end gap-2 bg-surface-1 border border-border rounded-xl px-3 py-2">
+          <Textarea
+            value={followUp}
+            onChange={(e) => setFollowUp(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 handleFollowUp();
               }
-              }}
-              placeholder="追问、展开、提需求..."
-              rows={1}
-              className="min-h-0 flex-1 resize-none border-0 bg-transparent px-0 py-0 text-[12px] shadow-none focus-visible:ring-0"
-            />
+            }}
+            placeholder="追问、展开、提需求..."
+            rows={1}
+            className="min-h-0 flex-1 resize-none border-0 bg-transparent px-0 py-0 text-[12px] shadow-none focus-visible:ring-0"
+          />
           <Button
             type="button"
             size="inline"

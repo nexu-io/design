@@ -210,11 +210,20 @@ function StepIndicator({ steps }: { steps: OnboardingStep[] }) {
   return (
     <Stepper className="gap-2 overflow-x-auto">
       {steps.flatMap((step, i) => {
-        const status = step.status === 'done' ? 'completed' : step.status === 'active' ? 'current' : 'pending';
+        const status =
+          step.status === "done" ? "completed" : step.status === "active" ? "current" : "pending";
         return [
-          <StepperItem key={step.id} status={status} icon={<step.icon size={10} />} label={step.label} className="min-w-[88px]" />,
-          i < steps.length - 1 ? <StepperSeparator key={`${step.id}-sep`} active={step.status === 'done'} /> : null,
-        ]
+          <StepperItem
+            key={step.id}
+            status={status}
+            icon={<step.icon size={10} />}
+            label={step.label}
+            className="min-w-[88px]"
+          />,
+          i < steps.length - 1 ? (
+            <StepperSeparator key={`${step.id}-sep`} active={step.status === "done"} />
+          ) : null,
+        ];
       })}
     </Stepper>
   );
@@ -512,24 +521,31 @@ export default function OnboardingChat({ onClose }: { onClose: () => void }) {
                 </div>
               ) : msg.from === "user" ? (
                 <div className="flex justify-end">
-                  <ConversationMessage variant="user" bubbleClassName="bg-accent text-accent-fg text-[12px]">
+                  <ConversationMessage
+                    variant="user"
+                    bubbleClassName="bg-accent text-accent-fg text-[12px]"
+                  >
                     {msg.content}
                   </ConversationMessage>
                 </div>
               ) : (
                 <div className="max-w-[85%]">
-                    <ConversationMessage
-                      variant="assistant"
-                      avatar={<div className="flex h-6 w-6 items-center justify-center rounded-full bg-clone/15 text-[11px]">😊</div>}
-                      bubbleClassName="bg-surface-1 text-[12px]"
-                    >
-                      {msg.content}
-                    </ConversationMessage>
-                    {msg.widget === "integrations" && <IntegrationsWidget />}
-                    {msg.widget === "skills" && <SkillsWidget />}
-                    {msg.widget === "upload" && <UploadWidget />}
-                    {msg.widget === "progress" && <ProgressWidget />}
-                    {msg.widget === "team" && <TeamSetupWidget />}
+                  <ConversationMessage
+                    variant="assistant"
+                    avatar={
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-clone/15 text-[11px]">
+                        😊
+                      </div>
+                    }
+                    bubbleClassName="bg-surface-1 text-[12px]"
+                  >
+                    {msg.content}
+                  </ConversationMessage>
+                  {msg.widget === "integrations" && <IntegrationsWidget />}
+                  {msg.widget === "skills" && <SkillsWidget />}
+                  {msg.widget === "upload" && <UploadWidget />}
+                  {msg.widget === "progress" && <ProgressWidget />}
+                  {msg.widget === "team" && <TeamSetupWidget />}
                 </div>
               )}
             </div>
@@ -560,27 +576,27 @@ export default function OnboardingChat({ onClose }: { onClose: () => void }) {
         {/* Input area */}
         <div className="border-t border-border p-3 shrink-0">
           <div className="flex items-end gap-2 bg-surface-1 border border-border rounded-xl px-3.5 py-2.5">
-              <Textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
+            <Textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   handleSend();
                 }
-                }}
-                placeholder="跟分身聊聊你是谁、你做什么、你的工作习惯..."
-                rows={2}
-                className="min-h-0 flex-1 resize-none border-0 bg-transparent px-0 py-0 text-[13px] shadow-none focus-visible:ring-0"
-              />
-              <div className="flex items-center gap-1.5 shrink-0">
-                <Button type="button" variant="ghost" size="icon-sm" title="上传文件">
-                  <Upload size={14} />
-                </Button>
-                <Button type="button" onClick={handleSend} size="icon-sm">
-                  <Send size={14} />
-                </Button>
-              </div>
+              }}
+              placeholder="跟分身聊聊你是谁、你做什么、你的工作习惯..."
+              rows={2}
+              className="min-h-0 flex-1 resize-none border-0 bg-transparent px-0 py-0 text-[13px] shadow-none focus-visible:ring-0"
+            />
+            <div className="flex items-center gap-1.5 shrink-0">
+              <Button type="button" variant="ghost" size="icon-sm" title="上传文件">
+                <Upload size={14} />
+              </Button>
+              <Button type="button" onClick={handleSend} size="icon-sm">
+                <Send size={14} />
+              </Button>
+            </div>
           </div>
           <div className="flex items-center justify-between mt-2 px-1">
             <div className="flex items-center gap-2 text-[10px] text-text-muted">

@@ -52,7 +52,10 @@ export function CloudFullScreenRouteElements() {
       <Route path="/openclaw/usage" element={withOpenClawDemoState(<UsagePage />)} />
       <Route path="/openclaw/rewards" element={withOpenClawDemoState(<RewardsPage />)} />
       <Route path="/openclaw/growth-demo" element={withOpenClawDemoState(<GroupGrowthDemo />)} />
-      <Route path="/openclaw/growth-demo/new" element={withOpenClawDemoState(<GroupGrowthDemo />)} />
+      <Route
+        path="/openclaw/growth-demo/new"
+        element={withOpenClawDemoState(<GroupGrowthDemo />)}
+      />
       <Route
         path="/openclaw/growth-demo/existing"
         element={withOpenClawDemoState(<GroupGrowthDemo />)}

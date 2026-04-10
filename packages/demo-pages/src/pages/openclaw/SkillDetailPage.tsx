@@ -876,7 +876,11 @@ export default function SkillDetailPage() {
             >
               Explore other skills
             </h2>
-            <TextLink asChild size="sm" className="text-[12px] leading-none text-[var(--color-link)]">
+            <TextLink
+              asChild
+              size="sm"
+              className="text-[12px] leading-none text-[var(--color-link)]"
+            >
               <Link to="/openclaw/workspace?view=skills">
                 View all <ArrowRight size={12} className="shrink-0" aria-hidden />
               </Link>

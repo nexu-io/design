@@ -340,34 +340,34 @@ interface RunLog {
 
 interface ActivityLog {
   time: string;
-  type: 'schedule' | 'proactive'
-  name: string
-  status: RunLog['status']
-  detail: string
+  type: "schedule" | "proactive";
+  name: string;
+  status: RunLog["status"];
+  detail: string;
 }
 
 function getCardActionProps(action: () => void) {
   return {
-    role: 'button' as const,
+    role: "button" as const,
     tabIndex: 0,
     onClick: action,
     onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === 'Enter' || event.key === ' ') {
+      if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
         action();
       }
     },
-  }
+  };
 }
 
-function getLogStatusBadgeVariant(status: RunLog['status']) {
+function getLogStatusBadgeVariant(status: RunLog["status"]) {
   switch (status) {
-    case 'success':
-      return 'success'
-    case 'warning':
-      return 'warning'
+    case "success":
+      return "success";
+    case "warning":
+      return "warning";
     default:
-      return 'destructive'
+      return "destructive";
   }
 }
 
@@ -513,158 +513,153 @@ function AutomationDetailPanel({ item, onClose }: { item: AutomationDetail; onCl
 
   return (
     <DetailPanel width={400} className="animate-slide-in-right border-l border-border shadow-2xl">
-        <DetailPanelHeader>
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-clone/10">
-            <item.icon size={16} className="text-clone" />
+      <DetailPanelHeader>
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-clone/10">
+          <item.icon size={16} className="text-clone" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <DetailPanelTitle className="text-[13px]">{item.name}</DetailPanelTitle>
+          <div className="mt-1 flex flex-wrap items-center gap-1">
+            <Badge
+              variant={item.type === "schedule" ? "secondary" : "accent"}
+              size="xs"
+              radius="md"
+            >
+              {item.type === "schedule" ? "定时任务" : "主动规则"}
+            </Badge>
+            <Badge variant={item.enabled ? "success" : "outline"} size="xs" radius="md">
+              {item.enabled ? "运行中" : "已暂停"}
+            </Badge>
           </div>
-          <div className="min-w-0 flex-1">
-            <DetailPanelTitle className="text-[13px]">{item.name}</DetailPanelTitle>
-            <div className="mt-1 flex flex-wrap items-center gap-1">
-              <Badge
-                variant={item.type === "schedule" ? "secondary" : "accent"}
-                size="xs"
-                radius="md"
-              >
-                {item.type === "schedule" ? "定时任务" : "主动规则"}
-              </Badge>
-              <Badge
-                variant={item.enabled ? "success" : "outline"}
-                size="xs"
-                radius="md"
-              >
-                {item.enabled ? "运行中" : "已暂停"}
-              </Badge>
-            </div>
-          </div>
-          <DetailPanelCloseButton onClick={onClose} srLabel="关闭自动化详情" />
-        </DetailPanelHeader>
+        </div>
+        <DetailPanelCloseButton onClick={onClose} srLabel="关闭自动化详情" />
+      </DetailPanelHeader>
 
-        <DetailPanelContent className="p-0">
-          <ScrollArea className="h-full">
-            {/* Config info */}
-            <div className="shrink-0 border-b border-border px-4 py-3">
-              {task && (
-                <div className="space-y-2 text-[12px]">
-                  <div className="flex items-center gap-2">
-                    <Clock size={12} className="shrink-0 text-text-muted" />
-                    <span className="text-text-muted">频率</span>
-                    <Badge variant="secondary" size="xs" radius="md" className="ml-auto font-mono">
-                      {task.cron}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MessageSquare size={12} className="shrink-0 text-text-muted" />
-                    <span className="text-text-muted">推送到</span>
-                    <Badge variant="outline" size="xs" radius="md" className="ml-auto">
-                      {task.channel}
-                    </Badge>
-                  </div>
-                  <div className="mt-1 text-[11px] text-text-secondary">{task.desc}</div>
+      <DetailPanelContent className="p-0">
+        <ScrollArea className="h-full">
+          {/* Config info */}
+          <div className="shrink-0 border-b border-border px-4 py-3">
+            {task && (
+              <div className="space-y-2 text-[12px]">
+                <div className="flex items-center gap-2">
+                  <Clock size={12} className="shrink-0 text-text-muted" />
+                  <span className="text-text-muted">频率</span>
+                  <Badge variant="secondary" size="xs" radius="md" className="ml-auto font-mono">
+                    {task.cron}
+                  </Badge>
                 </div>
-              )}
-              {rule && (
-                <div className="space-y-2 text-[12px]">
-                  <div className="flex items-start gap-2">
-                    <Zap size={12} className="mt-0.5 shrink-0 text-text-muted" />
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <Badge variant="accent" size="xs" radius="md">
-                        触发
-                      </Badge>
-                      <span className="text-text-primary">{rule.trigger}</span>
-                    </div>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <MessageSquare size={12} className="shrink-0 text-text-muted" />
+                  <span className="text-text-muted">推送到</span>
+                  <Badge variant="outline" size="xs" radius="md" className="ml-auto">
+                    {task.channel}
+                  </Badge>
+                </div>
+                <div className="mt-1 text-[11px] text-text-secondary">{task.desc}</div>
+              </div>
+            )}
+            {rule && (
+              <div className="space-y-2 text-[12px]">
+                <div className="flex items-start gap-2">
+                  <Zap size={12} className="mt-0.5 shrink-0 text-text-muted" />
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <Badge variant="secondary" size="xs" radius="md">
-                      动作
+                    <Badge variant="accent" size="xs" radius="md">
+                      触发
                     </Badge>
-                    <span className="text-[11px] text-text-secondary">{rule.action}</span>
-                  </div>
-                  <div className="rounded-md bg-surface-3 px-2.5 py-1.5 text-[11px] italic text-text-tertiary">
-                    {rule.example}
+                    <span className="text-text-primary">{rule.trigger}</span>
                   </div>
                 </div>
-              )}
-            </div>
-
-            {/* Run history */}
-            <div>
-              <div className="px-4 pt-3 pb-1">
-                <div className="text-[10px] font-medium uppercase tracking-wider text-text-muted">
-                  运行记录
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <Badge variant="secondary" size="xs" radius="md">
+                    动作
+                  </Badge>
+                  <span className="text-[11px] text-text-secondary">{rule.action}</span>
+                </div>
+                <div className="rounded-md bg-surface-3 px-2.5 py-1.5 text-[11px] italic text-text-tertiary">
+                  {rule.example}
                 </div>
               </div>
-              {logs.length > 0 ? (
-                <div className="space-y-1.5 px-4 pb-3">
-                  {logs.map((log) => (
-                    <div
-                      key={`${log.time}-${log.summary}`}
-                      className="flex items-start gap-2.5 rounded-lg border border-border bg-surface-2 p-2.5"
-                    >
-                      <div className="mt-0.5 shrink-0">
-                        {log.status === 'success' ? (
-                          <CheckCircle size={13} className="text-success" />
-                        ) : log.status === 'warning' ? (
-                          <AlertCircle size={13} className="text-warning" />
-                        ) : (
-                          <AlertCircle size={13} className="text-error" />
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <Badge variant={getLogStatusBadgeVariant(log.status)} size="xs" radius="md">
-                            {log.status === 'success' ? '成功' : log.status === 'warning' ? '注意' : '失败'}
-                          </Badge>
-                          <div className="text-[10px] text-text-muted">{log.time}</div>
-                        </div>
-                        <div className="mt-1 text-[11px] text-text-primary">{log.summary}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="px-4 py-8 text-center text-[12px] text-text-muted">暂无运行记录</div>
-              )}
-            </div>
-          </ScrollArea>
-        </DetailPanelContent>
-
-        <PanelFooter align="start" className="flex-col items-stretch p-3">
-          <div className="space-y-2 w-full">
-            <FollowUpInput
-              value={followUp}
-              onValueChange={setFollowUp}
-              onSend={handleFollowUp}
-              placeholder="调整配置、查看详情、追问结果..."
-              sendLabel="发送自动化追问"
-            />
-            <PanelFooterActions className="w-full gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => navigate("/app/sessions")}
-                className="flex-1"
-              >
-                <ArrowUpRight size={14} className="shrink-0" />在 Session 中编辑
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="flex-1"
-              >
-                {item.enabled ? <Pause size={14} /> : <Play size={14} />}
-                {item.enabled ? "暂停" : "启动"}
-              </Button>
-            </PanelFooterActions>
+            )}
           </div>
-        </PanelFooter>
-      </DetailPanel>
+
+          {/* Run history */}
+          <div>
+            <div className="px-4 pt-3 pb-1">
+              <div className="text-[10px] font-medium uppercase tracking-wider text-text-muted">
+                运行记录
+              </div>
+            </div>
+            {logs.length > 0 ? (
+              <div className="space-y-1.5 px-4 pb-3">
+                {logs.map((log) => (
+                  <div
+                    key={`${log.time}-${log.summary}`}
+                    className="flex items-start gap-2.5 rounded-lg border border-border bg-surface-2 p-2.5"
+                  >
+                    <div className="mt-0.5 shrink-0">
+                      {log.status === "success" ? (
+                        <CheckCircle size={13} className="text-success" />
+                      ) : log.status === "warning" ? (
+                        <AlertCircle size={13} className="text-warning" />
+                      ) : (
+                        <AlertCircle size={13} className="text-error" />
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <Badge variant={getLogStatusBadgeVariant(log.status)} size="xs" radius="md">
+                          {log.status === "success"
+                            ? "成功"
+                            : log.status === "warning"
+                              ? "注意"
+                              : "失败"}
+                        </Badge>
+                        <div className="text-[10px] text-text-muted">{log.time}</div>
+                      </div>
+                      <div className="mt-1 text-[11px] text-text-primary">{log.summary}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="px-4 py-8 text-center text-[12px] text-text-muted">暂无运行记录</div>
+            )}
+          </div>
+        </ScrollArea>
+      </DetailPanelContent>
+
+      <PanelFooter align="start" className="flex-col items-stretch p-3">
+        <div className="space-y-2 w-full">
+          <FollowUpInput
+            value={followUp}
+            onValueChange={setFollowUp}
+            onSend={handleFollowUp}
+            placeholder="调整配置、查看详情、追问结果..."
+            sendLabel="发送自动化追问"
+          />
+          <PanelFooterActions className="w-full gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/app/sessions")}
+              className="flex-1"
+            >
+              <ArrowUpRight size={14} className="shrink-0" />在 Session 中编辑
+            </Button>
+            <Button type="button" variant="outline" size="sm" className="flex-1">
+              {item.enabled ? <Pause size={14} /> : <Play size={14} />}
+              {item.enabled ? "暂停" : "启动"}
+            </Button>
+          </PanelFooterActions>
+        </div>
+      </PanelFooter>
+    </DetailPanel>
   );
 }
 
 function SchedulesTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail) => void }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className="space-y-3">
@@ -680,7 +675,7 @@ function SchedulesTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
               key={t.name}
               interactive
               className="group h-full"
-              {...getCardActionProps(() => navigate('/app/sessions'))}
+              {...getCardActionProps(() => navigate("/app/sessions"))}
             >
               <EntityCardHeader className="px-3 pt-3 pb-0">
                 <EntityCardMedia className={`h-7 w-7 rounded-lg border-0 ${t.color.split(" ")[0]}`}>
@@ -714,22 +709,24 @@ function SchedulesTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
       {SCHEDULED_TASKS.map((task) => {
         const selectTask = () =>
           onSelectItem({
-            type: 'schedule',
+            type: "schedule",
             id: task.id,
             name: task.name,
             icon: task.icon,
             enabled: task.enabled,
-          })
+          });
 
         return (
           <EntityCard
             key={task.id}
             interactive
-            className={task.enabled ? undefined : 'opacity-60'}
+            className={task.enabled ? undefined : "opacity-60"}
             {...getCardActionProps(selectTask)}
           >
             <EntityCardHeader>
-              <EntityCardMedia className={task.enabled ? 'bg-clone/10 text-clone' : 'bg-surface-3 text-text-muted'}>
+              <EntityCardMedia
+                className={task.enabled ? "bg-clone/10 text-clone" : "bg-surface-3 text-text-muted"}
+              >
                 <task.icon size={16} />
               </EntityCardMedia>
               <div className="min-w-0 flex-1">
@@ -738,12 +735,8 @@ function SchedulesTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
                   <Badge variant="secondary" size="xs" radius="md" className="font-mono">
                     {task.cron}
                   </Badge>
-                  <Badge
-                    variant={task.enabled ? 'success' : 'outline'}
-                    size="xs"
-                    radius="md"
-                  >
-                    {task.enabled ? '运行中' : '已暂停'}
+                  <Badge variant={task.enabled ? "success" : "outline"} size="xs" radius="md">
+                    {task.enabled ? "运行中" : "已暂停"}
                   </Badge>
                 </div>
                 <EntityCardDescription className="mt-1 text-xs">{task.desc}</EntityCardDescription>
@@ -763,7 +756,7 @@ function SchedulesTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
               )}
             </EntityCardContent>
             <EntityCardFooter className="justify-end pt-0">
-              <Badge variant={task.enabled ? 'success' : 'outline'} size="xs" radius="md">
+              <Badge variant={task.enabled ? "success" : "outline"} size="xs" radius="md">
                 {task.enabled ? (
                   <span className="inline-flex items-center gap-1">
                     <Pause size={12} /> 暂停
@@ -781,7 +774,7 @@ function SchedulesTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
               </Badge>
             </EntityCardFooter>
           </EntityCard>
-        )
+        );
       })}
       <Button
         type="button"
@@ -810,32 +803,32 @@ function ProactiveTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
       {PROACTIVE_RULES.map((rule) => {
         const selectRule = () =>
           onSelectItem({
-            type: 'proactive',
+            type: "proactive",
             id: rule.id,
             name: rule.name,
             icon: Zap,
             enabled: rule.enabled,
-          })
+          });
 
         return (
           <EntityCard key={rule.id} interactive {...getCardActionProps(selectRule)}>
             <EntityCardHeader>
-              <EntityCardMedia className={rule.enabled ? 'bg-clone/10 text-clone' : 'bg-surface-3 text-text-muted'}>
+              <EntityCardMedia
+                className={rule.enabled ? "bg-clone/10 text-clone" : "bg-surface-3 text-text-muted"}
+              >
                 <Zap size={16} />
               </EntityCardMedia>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex min-w-0 flex-wrap items-center gap-2">
-                    <EntityCardTitle className="text-[13px] font-medium">{rule.name}</EntityCardTitle>
+                    <EntityCardTitle className="text-[13px] font-medium">
+                      {rule.name}
+                    </EntityCardTitle>
                     <Badge variant="accent" size="xs" radius="md">
                       主动规则
                     </Badge>
-                    <Badge
-                      variant={rule.enabled ? 'success' : 'outline'}
-                      size="xs"
-                      radius="md"
-                    >
-                      {rule.enabled ? '启用中' : '已关闭'}
+                    <Badge variant={rule.enabled ? "success" : "outline"} size="xs" radius="md">
+                      {rule.enabled ? "启用中" : "已关闭"}
                     </Badge>
                   </div>
                   {rule.enabled ? (
@@ -859,7 +852,7 @@ function ProactiveTab({ onSelectItem }: { onSelectItem: (item: AutomationDetail)
               </div>
             </EntityCardContent>
           </EntityCard>
-        )
+        );
       })}
     </div>
   );
@@ -881,24 +874,20 @@ function LogsTab() {
           className="flex items-center gap-3 px-3 py-2.5 bg-surface-2 border border-border rounded-lg text-[13px]"
         >
           <span className="w-12 text-text-muted font-mono text-xs">{log.time}</span>
-            <span className="w-14">
-              <Badge
-                variant={log.type === 'schedule' ? 'secondary' : 'accent'}
-                size="xs"
-                radius="md"
-              >
-                {log.type === 'schedule' ? '定时' : '主动'}
-              </Badge>
-            </span>
+          <span className="w-14">
+            <Badge variant={log.type === "schedule" ? "secondary" : "accent"} size="xs" radius="md">
+              {log.type === "schedule" ? "定时" : "主动"}
+            </Badge>
+          </span>
           <span className="flex-1 text-text-primary">{log.name}</span>
-            <span className="w-20">
-              <Badge variant={getLogStatusBadgeVariant(log.status)} size="xs" radius="md">
-                <span className="inline-flex items-center gap-1">
-                  {log.status === 'success' ? <CheckCircle size={12} /> : <AlertCircle size={12} />}
-                  {log.status === 'success' ? '成功' : log.status === 'warning' ? '注意' : '失败'}
-                </span>
-              </Badge>
-            </span>
+          <span className="w-20">
+            <Badge variant={getLogStatusBadgeVariant(log.status)} size="xs" radius="md">
+              <span className="inline-flex items-center gap-1">
+                {log.status === "success" ? <CheckCircle size={12} /> : <AlertCircle size={12} />}
+                {log.status === "success" ? "成功" : log.status === "warning" ? "注意" : "失败"}
+              </span>
+            </Badge>
+          </span>
           <span className="flex-1 text-text-secondary text-xs">{log.detail}</span>
         </div>
       ))}
@@ -1021,7 +1010,9 @@ export default function AutomationPage() {
         </ScrollArea>
       </div>
 
-      {selectedItem && <AutomationDetailPanel item={selectedItem} onClose={() => setSelectedItem(null)} />}
+      {selectedItem && (
+        <AutomationDetailPanel item={selectedItem} onClose={() => setSelectedItem(null)} />
+      )}
     </div>
   );
 }

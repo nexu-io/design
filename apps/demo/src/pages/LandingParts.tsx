@@ -19,7 +19,10 @@ export function ChatMsg({
   if (from === "user") {
     return (
       <div className="mb-2.5">
-        <ConversationMessage variant="user" bubbleClassName="bg-accent text-accent-fg px-3 py-2 text-[13px]">
+        <ConversationMessage
+          variant="user"
+          bubbleClassName="bg-accent text-accent-fg px-3 py-2 text-[13px]"
+        >
           {children}
         </ConversationMessage>
       </div>
@@ -35,7 +38,7 @@ export function ChatMsg({
           </div>
         }
         bubbleClassName="bg-surface-2 px-3 py-2 text-[13px]"
-        meta={name && from === 'other' ? name : undefined}
+        meta={name && from === "other" ? name : undefined}
       >
         {children}
       </ConversationMessage>

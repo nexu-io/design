@@ -63,7 +63,9 @@ export default function PricingModal({ open, onClose }: { open: boolean; onClose
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
       <DialogContent size="xl" className="max-h-[85vh] overflow-y-auto p-0">
         <DialogHeader className="border-b border-border px-6 py-4 pr-12">
-          <DialogTitle className="text-[16px] font-bold text-text-primary">解锁你的超能力</DialogTitle>
+          <DialogTitle className="text-[16px] font-bold text-text-primary">
+            解锁你的超能力
+          </DialogTitle>
           <DialogDescription className="mt-0.5 text-[12px] text-text-muted">
             选择适合你的方案
           </DialogDescription>

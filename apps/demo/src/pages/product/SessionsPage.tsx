@@ -295,8 +295,8 @@ function NewSessionView({
               <>
                 你的主线入口 — <span className="text-accent font-medium">对话即操控一切</span>
                 <br />
-                写文件、记笔记、问同事、设自动化、装技能、查 OKR — 这一个对话窗就是你的
-                agent computer。所有操作都沉淀在 <span className="text-text-secondary">分身的大脑</span>里
+                写文件、记笔记、问同事、设自动化、装技能、查 OKR — 这一个对话窗就是你的 agent
+                computer。所有操作都沉淀在 <span className="text-text-secondary">分身的大脑</span>里
               </>
             }
           />
@@ -328,7 +328,7 @@ function NewSessionView({
               <Button
                 type="button"
                 onClick={() => setShowSkills(!showSkills)}
-                variant={showSkills ? 'soft' : 'ghost'}
+                variant={showSkills ? "soft" : "ghost"}
                 size="xs"
               >
                 <Sparkles size={13} />
@@ -362,7 +362,13 @@ function NewSessionView({
               已激活的 Skills
             </div>
             {ACTIVE_SKILLS.map((s) => (
-              <Button key={s} type="button" variant="ghost" size="sm" className="w-full justify-start">
+              <Button
+                key={s}
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start"
+              >
                 {s}
               </Button>
             ))}
@@ -456,12 +462,7 @@ function NewSessionView({
                 color: "bg-violet-500/10 text-violet-400 border-violet-500/20",
               },
             ].map((s) => (
-              <Badge
-                key={s.label}
-                variant="outline"
-                size="xs"
-                className={`${s.color}`}
-              >
+              <Badge key={s.label} variant="outline" size="xs" className={`${s.color}`}>
                 {s.label}
                 <span className="text-text-muted">· {s.desc}</span>
               </Badge>
@@ -698,7 +699,7 @@ function ActiveChatView({
           <div className="flex items-center gap-1">
             <Button
               type="button"
-              variant={previewOpen ? 'secondary' : 'ghost'}
+              variant={previewOpen ? "secondary" : "ghost"}
               size="icon-sm"
               onClick={() => setPreviewOpen(!previewOpen)}
               title="文件预览"
@@ -714,47 +715,58 @@ function ActiveChatView({
         <ScrollArea className="flex-1">
           <div className="p-4 space-y-3">
             {messages.map((msg, i) => (
-              <div key={`${msg.from}-${msg.content || msg.tool?.name || i}`} className="space-y-1.5">
-                  {msg.attachments && msg.attachments.length > 0 && (
-                    <div className={`flex flex-wrap gap-1.5 ${msg.from === 'user' ? 'justify-end' : 'ml-8'}`}>
-                      {msg.attachments.map((att) => (
-                        <AttachmentChip
-                          key={att.name}
-                          attachment={att}
-                          variant={msg.from === "user" ? "dark" : "light"}
-                        />
-                      ))}
-                    </div>
-                  )}
-                  {msg.cards && msg.cards.length > 0 ? (
-                    <ChatCardGroup cards={msg.cards} onCardAction={handleCardAction} interactive />
-                  ) : msg.fileOps ? (
-                    <div className="space-y-1">
-                      {msg.fileOps.map((op) => (
-                        <FileOpBadge key={`${op.action}-${op.path}`} op={op} />
-                      ))}
-                    </div>
-                  ) : null}
-                  {msg.tool && !msg.cards && (
-                    <div className="flex items-center gap-2 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[12px]">
-                      <msg.tool.icon size={13} className="text-clone shrink-0" />
-                      <span className="text-text-secondary">{msg.tool.name}</span>
-                      <span className="text-[10px] text-success ml-auto">✓</span>
-                    </div>
-                  )}
-                  {msg.content && (
-                    <ConversationMessage
-                      variant={msg.from === 'user' ? 'user' : 'assistant'}
-                      avatar={
-                        msg.from === 'clone' ? (
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-clone/15 text-[11px]">😊</div>
-                        ) : undefined
-                      }
-                      bubbleClassName={msg.from === 'user' ? 'bg-accent text-accent-fg text-[12px]' : 'bg-surface-2 text-[12px]'}
-                    >
-                      {msg.content}
-                    </ConversationMessage>
-                  )}
+              <div
+                key={`${msg.from}-${msg.content || msg.tool?.name || i}`}
+                className="space-y-1.5"
+              >
+                {msg.attachments && msg.attachments.length > 0 && (
+                  <div
+                    className={`flex flex-wrap gap-1.5 ${msg.from === "user" ? "justify-end" : "ml-8"}`}
+                  >
+                    {msg.attachments.map((att) => (
+                      <AttachmentChip
+                        key={att.name}
+                        attachment={att}
+                        variant={msg.from === "user" ? "dark" : "light"}
+                      />
+                    ))}
+                  </div>
+                )}
+                {msg.cards && msg.cards.length > 0 ? (
+                  <ChatCardGroup cards={msg.cards} onCardAction={handleCardAction} interactive />
+                ) : msg.fileOps ? (
+                  <div className="space-y-1">
+                    {msg.fileOps.map((op) => (
+                      <FileOpBadge key={`${op.action}-${op.path}`} op={op} />
+                    ))}
+                  </div>
+                ) : null}
+                {msg.tool && !msg.cards && (
+                  <div className="flex items-center gap-2 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[12px]">
+                    <msg.tool.icon size={13} className="text-clone shrink-0" />
+                    <span className="text-text-secondary">{msg.tool.name}</span>
+                    <span className="text-[10px] text-success ml-auto">✓</span>
+                  </div>
+                )}
+                {msg.content && (
+                  <ConversationMessage
+                    variant={msg.from === "user" ? "user" : "assistant"}
+                    avatar={
+                      msg.from === "clone" ? (
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-clone/15 text-[11px]">
+                          😊
+                        </div>
+                      ) : undefined
+                    }
+                    bubbleClassName={
+                      msg.from === "user"
+                        ? "bg-accent text-accent-fg text-[12px]"
+                        : "bg-surface-2 text-[12px]"
+                    }
+                  >
+                    {msg.content}
+                  </ConversationMessage>
+                )}
               </div>
             ))}
           </div>
@@ -783,7 +795,12 @@ function ActiveChatView({
             </Button>
           </div>
           <div className="flex items-end gap-2 bg-surface-2 border border-border rounded-xl px-3 py-2">
-            <Button type="button" variant="ghost" size="icon-sm" title="上传文件 (图片/PDF/文档/表格/代码/音视频...)">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              title="上传文件 (图片/PDF/文档/表格/代码/音视频...)"
+            >
               <Paperclip size={14} />
             </Button>
             <Button type="button" variant="ghost" size="icon-sm">

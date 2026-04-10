@@ -572,13 +572,13 @@ export function CommentSystem() {
                   )}
                 </div>
                 <div className="flex items-center gap-1">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={startPinMode}
-                        title="Add comment"
-                      >
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={startPinMode}
+                    title="Add comment"
+                  >
                     <svg
                       width="16"
                       height="16"
@@ -591,16 +591,16 @@ export function CommentSystem() {
                     >
                       <path d="M8 3v10M3 8h10" />
                     </svg>
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => {
-                          setIsOpen(false);
-                          setActiveComment(null);
-                        }}
-                      >
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => {
+                      setIsOpen(false);
+                      setActiveComment(null);
+                    }}
+                  >
                     <svg
                       width="16"
                       height="16"
@@ -613,27 +613,27 @@ export function CommentSystem() {
                     >
                       <path d="M4 4l8 8M12 4l-8 8" />
                     </svg>
-                      </Button>
+                  </Button>
                 </div>
               </div>
 
               {/* Filter tabs */}
               <div className="px-4 py-2 border-b border-border flex gap-1">
                 {(["all", "open", "resolved"] as const).map((f) => (
-                    <Button
-                      type="button"
-                      variant={filter === f ? 'default' : 'ghost'}
-                      size="xs"
-                      key={f}
-                      onClick={() => setFilter(f)}
-                    >
-                      {f === "all"
-                        ? `All (${pageComments.length})`
-                        : f === "open"
-                          ? `Open (${openCount})`
-                          : `Resolved (${pageComments.length - openCount})`}
-                    </Button>
-                  ))}
+                  <Button
+                    type="button"
+                    variant={filter === f ? "default" : "ghost"}
+                    size="xs"
+                    key={f}
+                    onClick={() => setFilter(f)}
+                  >
+                    {f === "all"
+                      ? `All (${pageComments.length})`
+                      : f === "open"
+                        ? `Open (${openCount})`
+                        : `Resolved (${pageComments.length - openCount})`}
+                  </Button>
+                ))}
               </div>
 
               {/* Comment list */}

@@ -208,7 +208,11 @@ export default function NexuPricingPage() {
       return { label: "已包含", variant: "ghost" as const, disabled: true };
     }
 
-    return { label: `升级 ${planId === "plus" ? "Plus" : "Pro"}`, variant: "default" as const, disabled: false };
+    return {
+      label: `升级 ${planId === "plus" ? "Plus" : "Pro"}`,
+      variant: "default" as const,
+      disabled: false,
+    };
   }
 
   return (
