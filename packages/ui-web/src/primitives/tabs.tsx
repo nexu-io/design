@@ -29,12 +29,12 @@ const tabsTriggerVariants = cva(
     variants: {
       variant: {
         default:
-          "rounded-md px-3 py-1.5 data-[state=active]:bg-surface-0 data-[state=active]:text-foreground data-[state=active]:shadow-sm",
-        pill: "rounded-full px-4 py-1.5 text-base text-text-secondary hover:bg-transparent hover:text-text-primary data-[state=active]:bg-white data-[state=active]:text-text-primary data-[state=active]:shadow-[var(--shadow-rest)]",
+          "rounded-md px-3 py-1.5 data-[state=active]:bg-surface-0 data-[state=active]:text-foreground data-[state=active]:font-semibold data-[state=active]:shadow-sm",
+        pill: "rounded-full px-4 py-1.5 text-base text-text-secondary hover:bg-transparent hover:text-text-primary data-[state=active]:bg-white data-[state=active]:text-text-primary data-[state=active]:font-semibold data-[state=active]:shadow-[var(--shadow-rest)]",
         compact:
-          "h-6 min-h-6 rounded-[4px] border border-transparent bg-transparent px-2.5 py-0 text-sm font-medium leading-none text-text-secondary hover:bg-surface-1/70 hover:text-text-primary data-[state=active]:border-transparent data-[state=active]:bg-surface-0 data-[state=active]:text-text-primary data-[state=active]:shadow-sm",
+          "h-6 min-h-6 rounded-[4px] border border-transparent bg-transparent px-2.5 py-0 text-sm font-medium leading-none text-text-secondary hover:bg-surface-1/70 hover:text-text-primary data-[state=active]:border-transparent data-[state=active]:bg-surface-0 data-[state=active]:text-text-primary data-[state=active]:font-semibold data-[state=active]:shadow-sm",
         underline:
-          "rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:shadow-none",
+          "rounded-none border-b-2 border-transparent px-4 py-2 data-[state=active]:border-[var(--color-text-primary)] data-[state=active]:bg-transparent data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:font-semibold data-[state=active]:shadow-none",
       },
     },
     defaultVariants: {

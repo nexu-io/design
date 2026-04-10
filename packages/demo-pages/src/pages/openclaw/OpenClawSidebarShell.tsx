@@ -1,10 +1,10 @@
 import {
   CircleHelp,
   Globe,
-  Loader2,
   Mail,
   PanelLeftClose,
   PanelLeftOpen,
+  RefreshCw,
   ScrollText,
 } from "lucide-react";
 import { BookOpen } from "lucide-react";
@@ -247,14 +247,14 @@ export function OpenClawSidebarShell({
                         href="https://docs.nexu.ai"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-[12px] font-medium text-text-secondary transition-all hover:bg-black/5 hover:text-text-primary"
+                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-[12px] font-medium text-text-primary transition-all hover:bg-black/5"
                       >
                         <BookOpen size={14} />
                         {t("ws.help.documentation")}
                       </a>
                       <a
                         href="mailto:hi@nexu.ai"
-                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-[12px] font-medium text-text-secondary transition-all hover:bg-black/5 hover:text-text-primary"
+                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-[12px] font-medium text-text-primary transition-all hover:bg-black/5"
                       >
                         <Mail size={14} />
                         {t("ws.help.contactUs")}
@@ -264,16 +264,16 @@ export function OpenClawSidebarShell({
                       <button
                         type="button"
                         onClick={onCheckUpdates}
-                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-[12px] font-medium text-text-secondary transition-all hover:bg-black/5 hover:text-text-primary"
+                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-[12px] font-medium text-text-primary transition-all hover:bg-black/5"
                       >
-                        <Loader2 size={14} />
+                        <RefreshCw size={14} />
                         Check for Updates…
                       </button>
                       <a
                         href="https://nexu.ai/changelog"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-all"
+                        className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[12px] font-medium text-text-primary hover:bg-surface-2 transition-all"
                       >
                         <ScrollText size={14} />
                         {t("ws.help.changelog")}

@@ -196,6 +196,7 @@
 
 ### Layout conventions
 - **Workspace content-panel layout**: every page rendered inside the OpenClaw workspace sidebar (Settings, Skills, Home, Deployments, Schedule, Rewards, Channels…) must use a consistent inner content wrapper: outer `h-full overflow-y-auto`, inner `max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8`. Do not use `max-w-3xl`, `max-w-4xl`, or other ad-hoc values — all panels share the same max-width, horizontal padding, and top spacing so margins stay consistent across pages.
+- **Page header → content spacing**: `PageHeader` with `density="shell"` uses `pb-6` (24px) as bottom padding. This is the canonical gap between the title + subtitle block and whatever sits below it (tabs, content cards, etc.). All workspace panel pages must share this same spacing so the visual rhythm stays consistent. Do not override `pb-6` with ad-hoc margins or padding on the `PageHeader`; if a page needs tabs, place the `TabsList` directly after `PageHeader` — the header's built-in bottom padding provides the gap.
 - **Settings row pattern**: within settings/preference pages, each setting item is a single horizontal row — `[title + description]` left-aligned, `[control (Switch / Select / Button)]` right-aligned — using `flex items-start justify-between gap-4`. Multiple rows within a section use `divide-y divide-border` for separation.
 - Action buttons (Save, Confirm, Submit) default to the **right** side of their container.
 - In horizontal form rows the confirm button sits at the trailing (right) edge; in vertical stacks it right-aligns via `flex justify-end` or `ml-auto`.
@@ -214,6 +215,7 @@
   | Navigation-like text action | `link` | "Learn more", "View docs" |
 - A button group should have **at most one** `default`/`brand` button; others use `outline` or `ghost`.
 - Pair `loading` prop with async actions; never leave a button clickable while a request is in flight.
+- **Outline / bordered button text color**: inline bordered buttons (e.g. "Sign out", "Check for updates") in settings rows and cards must use `text-text-primary` (the deepest text color), not `text-text-secondary`. The border + background already convey "secondary weight"; dimming the label further makes it look disabled. Reserve `text-text-secondary` for ghost/link buttons where there is no visible border.
 
 ### Typography hierarchy
 - Use design tokens consistently to establish visual hierarchy:
@@ -417,7 +419,10 @@ Use this section when consuming `@nexu-design/ui-web` components. For exhaustive
 - **Example:** `<StatCard label="Credits" value="1,200" icon={Zap} tone="accent" variant="outlined" padding="sm" />`
 
 ### PageHeader
-- **Props:** `title` (required), `description`, `actions`
+- **Props:** `title` (required), `description`, `actions`, `density` (`"default"` | `"shell"`)
+- `density="shell"` — compact variant for embedded desktop/Electron panels: smaller title (20px bold), 12px tertiary description, `pb-6` (24px) bottom padding to content below.
+- `density="default"` — standard web page header: larger title (24px semibold), 14px description, `pb-6` bottom padding.
+- All workspace panel pages (Settings, Skills, Deployments, Schedule, Rewards, Channels…) use `density="shell"`.
 - Renders `<header>` with `<h1>`.
 
 ### Input
@@ -452,6 +457,7 @@ Use this section when consuming `@nexu-design/ui-web` components. For exhaustive
 ### Tabs
 - **Variants (TabsList / TabsTrigger):** `default`, `pill`, `underline`
 - **Composition:** `Tabs > TabsList > TabsTrigger` + `TabsContent`
+- **Active tab must have heavier font weight**: the selected/active `TabsTrigger` uses `font-semibold` to clearly distinguish it from inactive triggers (`font-medium`). This applies to the `default` variant out of the box. When creating custom tab-like navigation, always increase font weight on the active item for visual clarity.
 
 ### TextLink
 - **Variants:** `default`, `muted`

@@ -39,7 +39,7 @@ export function PageHeader({
     <header
       className={cn(
         "flex flex-col sm:flex-row sm:items-start sm:justify-between",
-        isShell ? "gap-2 pb-4" : "gap-3 pb-6",
+        isShell ? "gap-2 pb-6" : "gap-3 pb-6",
         className,
       )}
       {...props}

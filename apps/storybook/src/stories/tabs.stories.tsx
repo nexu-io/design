@@ -95,6 +95,35 @@ export const WithCount: Story = {
   ),
 };
 
+export const Pill: Story = {
+  render: () => (
+    <Tabs defaultValue="yours" className="w-[420px]">
+      <TabsList variant="pill">
+        <TabsTrigger value="yours" variant="pill">
+          Yours
+        </TabsTrigger>
+        <TabsTrigger value="explore" variant="pill">
+          Explore
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="yours">
+        <Card>
+          <CardContent className="mt-0 text-base text-muted-foreground">
+            Your installed skills and automations.
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="explore">
+        <Card>
+          <CardContent className="mt-0 text-base text-muted-foreground">
+            Browse community skills.
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
+  ),
+};
+
 export const Compact: Story = {
   render: () => (
     <div className="grid gap-3">
@@ -126,5 +155,44 @@ export const Compact: Story = {
         </TabsContent>
       </Tabs>
     </div>
+  ),
+};
+
+export const Underline: Story = {
+  render: () => (
+    <Tabs defaultValue="general" className="w-[420px]">
+      <TabsList variant="underline">
+        <TabsTrigger value="general" variant="underline">
+          General
+        </TabsTrigger>
+        <TabsTrigger value="security" variant="underline">
+          Security
+        </TabsTrigger>
+        <TabsTrigger value="billing" variant="underline">
+          Billing
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="general">
+        <Card>
+          <CardContent className="mt-0 text-base text-muted-foreground">
+            General account settings.
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="security">
+        <Card>
+          <CardContent className="mt-0 text-base text-muted-foreground">
+            Two-factor auth and session management.
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="billing">
+        <Card>
+          <CardContent className="mt-0 text-base text-muted-foreground">
+            Plan, invoices, and payment methods.
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
   ),
 };

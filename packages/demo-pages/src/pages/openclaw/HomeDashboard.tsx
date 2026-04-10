@@ -443,7 +443,7 @@ export function HomeDashboard({
                 <ArrowUpRight size={11} className="shrink-0 translate-y-px" />
               </a>
             </div>
-            <div className="flex items-center gap-2 mt-1.5">
+            <div className="flex items-center gap-4 mt-1.5">
               <div className="relative" ref={modelDropdownRef}>
                 <button
                   onClick={() => setShowModelDropdown(!showModelDropdown)}
@@ -593,14 +593,7 @@ export function HomeDashboard({
                     );
                   })()}
               </div>
-              <span
-                className="flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium"
-                title="Agent running"
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-success)]" />
-                Agent running
-              </span>
-              <div className="flex items-center gap-2 text-[11px] text-text-muted ml-3">
+              <div className="flex items-center gap-2 text-[11px] text-text-muted">
                 <span>{t("ws.home.messagesToday")}</span>
                 <span className="text-border">·</span>
                 <span>{t("ws.home.activeAgo")}</span>

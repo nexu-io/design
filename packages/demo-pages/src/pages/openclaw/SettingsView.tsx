@@ -24,6 +24,7 @@ import {
   ChevronDown,
   Globe,
   Info,
+  Loader2,
   Mail,
   Monitor,
   RefreshCw,
@@ -279,6 +280,31 @@ export function SettingsView({
   const providerDirty = activeProvider.id !== "nexu" && isDirty(activeProvider.id);
   const showSaved = saveState === "saved" && !providerDirty;
 
+  type UpdateCheckState = "idle" | "checking" | "up-to-date" | "available";
+  const [updateCheckState, setUpdateCheckState] = useState<UpdateCheckState>("idle");
+  const updateToastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const MOCK_NEW_VERSION = "0.2.0";
+
+  const handleCheckForUpdates = () => {
+    if (updateCheckState === "checking") return;
+    setUpdateCheckState("checking");
+    if (updateToastTimer.current) clearTimeout(updateToastTimer.current);
+
+    setTimeout(() => {
+      const hasNewUpdate = Math.random() > 0.5;
+      setUpdateCheckState(hasNewUpdate ? "available" : "up-to-date");
+
+      if (!hasNewUpdate) {
+        updateToastTimer.current = setTimeout(() => setUpdateCheckState("idle"), 4000);
+      }
+    }, 1800);
+  };
+
+  const handleInstallUpdate = () => {
+    setUpdateCheckState("checking");
+    setTimeout(() => setUpdateCheckState("idle"), 2000);
+  };
+
   return (
     <div className="h-full overflow-y-auto">
       <div className="max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
@@ -334,14 +360,14 @@ export function SettingsView({
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex min-w-0 flex-1 items-center gap-3">
                       <div
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] border border-border bg-white text-[11px] font-semibold text-text-primary"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[var(--color-accent)] text-[11px] font-semibold text-white"
                         aria-hidden
                       >
                         {initialsFromEmail(accountEmail)}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div
-                          className="text-[12px] font-medium text-text-primary truncate"
+                          className="text-[13px] font-medium text-text-primary truncate"
                           title={accountEmail || undefined}
                         >
                           {accountEmail || "—"}
@@ -354,7 +380,7 @@ export function SettingsView({
                     <button
                       type="button"
                       onClick={() => onSignOut?.()}
-                      className="rounded-[8px] border border-border bg-surface-0 px-[14px] py-[5px] text-[12px] font-medium text-text-secondary hover:bg-surface-2 hover:text-text-primary transition-colors shrink-0"
+                      className="rounded-[8px] border border-border bg-surface-0 px-[14px] py-[5px] text-[12px] font-medium text-text-primary hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5 transition-colors shrink-0"
                     >
                       {t("ws.settings.account.signOut")}
                     </button>
@@ -362,7 +388,7 @@ export function SettingsView({
                 ) : (
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <div className="text-[12px] font-medium text-text-primary">
+                      <div className="text-[13px] font-medium text-text-primary">
                         {t("ws.settings.account.notSignedIn")}
                       </div>
                       <div className="text-[11px] text-text-tertiary mt-0.5">
@@ -386,23 +412,13 @@ export function SettingsView({
 
             {/* Language */}
             <div className="rounded-xl border border-border bg-surface-1 overflow-hidden">
-              <div className="px-5 py-4 border-b border-border">
-                <div className="flex items-center gap-2">
-                  <Globe size={14} className="text-text-secondary" />
-                  <h3 className="text-[13px] font-semibold text-text-primary">
-                    {t("ws.settings.languageSection")}
-                  </h3>
-                </div>
-              </div>
               <div className="px-5 py-4">
                 <div className="flex items-center justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[12px] font-medium text-text-primary">
-                      {t("ws.settings.appearance.language")}
-                    </div>
-                    <div className="text-[11px] text-text-tertiary mt-0.5">
-                      {t("ws.settings.appearance.languageDesc")}
-                    </div>
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <Globe size={14} className="text-text-secondary shrink-0" />
+                    <h3 className="text-[13px] font-semibold text-text-primary">
+                      {t("ws.settings.languageSection")}
+                    </h3>
                   </div>
                   <Select value={locale} onValueChange={(v) => setLocale(v as Locale)}>
                     <SelectTrigger
@@ -442,7 +458,7 @@ export function SettingsView({
               <div className="px-5 py-4 divide-y divide-border">
                 <div className="flex items-start justify-between gap-4 pb-4">
                   <div className="min-w-0 flex-1">
-                    <div className="text-[12px] font-medium text-text-primary">
+                    <div className="text-[13px] font-medium text-text-primary">
                       {t("ws.settings.behavior.launchAtLogin")}
                     </div>
                     <div className="text-[11px] text-text-tertiary mt-0.5">
@@ -457,7 +473,7 @@ export function SettingsView({
                 </div>
                 <div className="flex items-start justify-between gap-4 pt-4">
                   <div className="min-w-0 flex-1">
-                    <div className="text-[12px] font-medium text-text-primary">
+                    <div className="text-[13px] font-medium text-text-primary">
                       {t("ws.settings.behavior.showInDock")}
                     </div>
                     <div className="text-[11px] text-text-tertiary mt-0.5">
@@ -486,7 +502,7 @@ export function SettingsView({
               <div className="px-5 py-4 divide-y divide-border">
                 <div className="flex items-start justify-between gap-4 pb-4">
                   <div className="min-w-0 flex-1">
-                    <div className="text-[12px] font-medium text-text-primary">
+                    <div className="text-[13px] font-medium text-text-primary">
                       {t("ws.settings.data.analytics")}
                     </div>
                     <div className="text-[11px] text-text-tertiary mt-0.5">
@@ -501,7 +517,7 @@ export function SettingsView({
                 </div>
                 <div className="flex items-start justify-between gap-4 pt-4">
                   <div className="min-w-0 flex-1">
-                    <div className="text-[12px] font-medium text-text-primary">
+                    <div className="text-[13px] font-medium text-text-primary">
                       {t("ws.settings.data.crashReports")}
                     </div>
                     <div className="text-[11px] text-text-tertiary mt-0.5">
@@ -519,27 +535,52 @@ export function SettingsView({
 
             {/* Updates */}
             <div className="rounded-xl border border-border bg-surface-1 overflow-hidden">
-              <div className="px-5 py-4 border-b border-border">
-                <div className="flex items-center gap-2">
-                  <RefreshCw size={14} className="text-text-secondary" />
-                  <h3 className="text-[13px] font-semibold text-text-primary">
-                    {t("ws.settings.updates")}
-                  </h3>
-                </div>
-              </div>
               <div className="px-5 py-4">
                 <div className="flex items-center justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[12px] font-medium text-text-primary">
-                      {t("ws.settings.updates.version")}
-                    </div>
-                    <div className="text-[11px] text-text-tertiary mt-0.5">
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <RefreshCw size={14} className="text-text-secondary shrink-0" />
+                    <h3 className="text-[13px] font-semibold text-text-primary">
+                      {t("ws.settings.updates")}
+                    </h3>
+                    <span className="text-[11px] text-text-tertiary">
                       {t("ws.settings.about.versionNumber")}
-                    </div>
+                    </span>
                   </div>
-                  <button className="shrink-0 rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium border border-border bg-surface-0 text-text-secondary hover:bg-surface-2 hover:text-text-primary transition-colors">
-                    {t("ws.settings.updates.checkNow")}
-                  </button>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {updateCheckState === "checking" && (
+                      <span className="inline-flex items-center gap-1.5 text-[12px] text-text-muted">
+                        <Loader2 size={13} className="animate-spin" />
+                        {t("ws.update.checking")}
+                      </span>
+                    )}
+                    {updateCheckState === "up-to-date" && (
+                      <span className="inline-flex items-center gap-1.5 text-[12px] text-[var(--color-success)]">
+                        <Check size={13} />
+                        {t("ws.update.upToDate")}
+                      </span>
+                    )}
+                    {updateCheckState === "available" && (
+                      <>
+                        <span className="text-[12px] text-text-secondary">
+                          {t("ws.update.readyToInstall").replace("{{version}}", MOCK_NEW_VERSION)}
+                        </span>
+                        <button
+                          onClick={handleInstallUpdate}
+                          className="rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium bg-accent text-accent-fg hover:bg-accent-hover transition-colors"
+                        >
+                          {t("ws.update.installRestart")}
+                        </button>
+                      </>
+                    )}
+                    {updateCheckState === "idle" && (
+                      <button
+                        onClick={handleCheckForUpdates}
+                        className="rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium border border-border bg-surface-0 text-text-primary hover:bg-surface-2 transition-colors"
+                      >
+                        {t("ws.settings.updates.checkNow")}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -592,9 +633,9 @@ export function SettingsView({
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2.5 px-2 py-2 rounded-lg text-[12px] font-medium text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors -mx-2"
+                      className="flex items-center gap-2.5 px-2 py-2 rounded-lg text-[12px] font-medium text-text-primary hover:bg-surface-2 transition-colors -mx-2"
                     >
-                      <link.icon size={13} className="text-text-muted shrink-0" />
+                      <link.icon size={13} className="text-text-secondary shrink-0" />
                       {t(link.labelKey)}
                       <ArrowUpRight size={10} className="text-text-muted ml-auto shrink-0" />
                     </a>
