@@ -1,7 +1,16 @@
 import { ArrowRight, Compass, Heart, Search } from "lucide-react";
 import { useState } from "react";
 
-import { Badge, Input, PageHeader, Tabs, TabsList, TabsTrigger, ToggleGroup, ToggleGroupItem } from "@nexu-design/ui-web";
+import {
+  Badge,
+  Input,
+  PageHeader,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@nexu-design/ui-web";
 
 import { useLocale } from "../../hooks/useLocale";
 import { SKILL_CATEGORIES, TOOL_TAG_LABELS, type ToolTag } from "./skillData";

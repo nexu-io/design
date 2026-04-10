@@ -49,7 +49,13 @@ import {
   WhatsAppIconSetup,
 } from "./channelSetup";
 import { MOCK_CHANNELS, getProviderDetails } from "./data";
-import { CreditIcon, ProviderLogo, TierPlusBadge, TierProBadge, getModelIconProvider } from "./iconHelpers";
+import {
+  CreditIcon,
+  ProviderLogo,
+  TierPlusBadge,
+  TierProBadge,
+  getModelIconProvider,
+} from "./iconHelpers";
 
 const SEEDANCE_COUNTDOWN_CYCLE_MS = 2 * 24 * 60 * 60 * 1000;
 const SEEDANCE_COUNTDOWN_LOOP_END_MS = Date.now() + SEEDANCE_COUNTDOWN_CYCLE_MS - 1000;
@@ -559,18 +565,25 @@ export function HomeDashboard({
                                           className={`flex min-h-9 w-full items-center gap-2.5 rounded-lg pl-7 pr-3 py-2 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/10 font-medium" : ""}`}
                                         >
                                           <span className="flex size-4 shrink-0 items-center justify-center">
-                                            <ProviderLogo provider={getModelIconProvider(model.name) || provider.id} size={14} />
+                                            <ProviderLogo
+                                              provider={
+                                                getModelIconProvider(model.name) || provider.id
+                                              }
+                                              size={14}
+                                            />
                                           </span>
                                           <span className="flex flex-1 items-center gap-1.5 min-w-0">
-                                            <span className={`truncate text-xs ${model.id === selectedModelId ? "font-semibold text-text-heading" : "font-normal text-text-primary"}`}>
+                                            <span
+                                              className={`truncate text-xs ${model.id === selectedModelId ? "font-semibold text-text-heading" : "font-normal text-text-primary"}`}
+                                            >
                                               {model.name}
                                             </span>
-                                          {model.tier === "pro" && (
-                                            <TierProBadge height={14} className="shrink-0" />
-                                          )}
-                                          {model.tier === "plus" && (
-                                            <TierPlusBadge height={14} className="shrink-0" />
-                                          )}
+                                            {model.tier === "pro" && (
+                                              <TierProBadge height={14} className="shrink-0" />
+                                            )}
+                                            {model.tier === "plus" && (
+                                              <TierPlusBadge height={14} className="shrink-0" />
+                                            )}
                                           </span>
                                           <span className="shrink-0 rounded-[4px] bg-gradient-to-r from-[#3DB9CE] to-[#34D399] px-1.5 py-[2px] text-[9px] font-bold text-white">
                                             Unlimited

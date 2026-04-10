@@ -55,4 +55,3 @@ export const FourOptions: Story = {
     </ToggleGroup>
   ),
 };
-

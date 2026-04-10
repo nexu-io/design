@@ -96,7 +96,6 @@ export const WithCount: Story = {
   ),
 };
 
-
 export const WithIcons: Story = {
   render: () => (
     <Tabs defaultValue="models" className="w-[420px]">
@@ -172,4 +171,3 @@ export const Compact: Story = {
     </div>
   ),
 };
-

@@ -331,10 +331,7 @@ export function SettingsView({
           }
         />
 
-        <Tabs
-          value={settingsTab}
-          onValueChange={(v) => setSettingsTab(v as SettingsTab)}
-        >
+        <Tabs value={settingsTab} onValueChange={(v) => setSettingsTab(v as SettingsTab)}>
           <TabsList className="mb-6">
             <TabsTrigger value="general">
               <Settings size={14} />
@@ -349,300 +346,301 @@ export function SettingsView({
           {/* ── General Tab ── */}
           <TabsContent value="general" className="mt-0">
             <div className="space-y-6">
-            {/* Account */}
-            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden px-5 py-4">
-              <div className="flex items-center gap-2 mb-4">
-                <User size={14} className="text-text-secondary" />
-                <h3 className="text-[13px] font-semibold text-text-primary">
-                  {t("ws.settings.account")}
-                </h3>
-              </div>
-              <div className="space-y-4">
-                {signedIn ? (
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex min-w-0 flex-1 items-center gap-3">
-                      <div
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[var(--color-accent)] text-[11px] font-semibold text-white"
-                        aria-hidden
-                      >
-                        {initialsFromEmail(accountEmail)}
-                      </div>
-                      <div className="min-w-0 flex-1">
+              {/* Account */}
+              <div className="rounded-xl border border-border bg-surface-1 overflow-hidden px-5 py-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <User size={14} className="text-text-secondary" />
+                  <h3 className="text-[13px] font-semibold text-text-primary">
+                    {t("ws.settings.account")}
+                  </h3>
+                </div>
+                <div className="space-y-4">
+                  {signedIn ? (
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex min-w-0 flex-1 items-center gap-3">
                         <div
-                          className="text-[13px] font-medium text-text-primary truncate"
-                          title={accountEmail || undefined}
+                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[var(--color-accent)] text-[11px] font-semibold text-white"
+                          aria-hidden
                         >
-                          {accountEmail || "—"}
+                          {initialsFromEmail(accountEmail)}
                         </div>
-                        <div className="mt-0.5 text-[11px] text-text-tertiary">
-                          {t("ws.settings.account.signedInDesc")}
+                        <div className="min-w-0 flex-1">
+                          <div
+                            className="text-[13px] font-medium text-text-primary truncate"
+                            title={accountEmail || undefined}
+                          >
+                            {accountEmail || "—"}
+                          </div>
+                          <div className="mt-0.5 text-[11px] text-text-tertiary">
+                            {t("ws.settings.account.signedInDesc")}
+                          </div>
                         </div>
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => onSignOut?.()}
+                        className="rounded-[8px] border border-border bg-surface-0 px-[14px] py-[5px] text-[12px] font-medium text-text-primary hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5 transition-colors shrink-0"
+                      >
+                        {t("ws.settings.account.signOut")}
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => onSignOut?.()}
-                      className="rounded-[8px] border border-border bg-surface-0 px-[14px] py-[5px] text-[12px] font-medium text-text-primary hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5 transition-colors shrink-0"
-                    >
-                      {t("ws.settings.account.signOut")}
-                    </button>
+                  ) : (
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[13px] font-medium text-text-primary">
+                          {t("ws.settings.account.notSignedIn")}
+                        </div>
+                        <div className="text-[11px] text-text-tertiary mt-0.5">
+                          {t("ws.settings.account.signInDesc")}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)
+                        }
+                        className="inline-flex shrink-0 items-center gap-1.5 rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium bg-accent text-accent-fg hover:bg-accent-hover transition-colors"
+                      >
+                        {t("ws.settings.account.signIn")}
+                        <ArrowUpRight size={11} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Language */}
+              <div className="rounded-xl border border-border bg-surface-1 overflow-hidden">
+                <div className="px-5 py-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <Globe size={14} className="text-text-secondary shrink-0" />
+                      <h3 className="text-[13px] font-semibold text-text-primary">
+                        {t("ws.settings.languageSection")}
+                      </h3>
+                    </div>
+                    <Select value={locale} onValueChange={(v) => setLocale(v as Locale)}>
+                      <SelectTrigger
+                        className="h-auto min-h-9 w-[220px] shrink-0 py-2"
+                        aria-label={t("ws.settings.appearance.language")}
+                      >
+                        <SelectValue>
+                          {WORKSPACE_LOCALE_OPTIONS.find((o) => o.value === locale)?.nativeLabel ??
+                            locale}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent position="popper" sideOffset={6} align="end">
+                        {WORKSPACE_LOCALE_OPTIONS.map((opt) => (
+                          <WorkspaceLocaleSelectItem
+                            key={opt.value}
+                            value={opt.value}
+                            nativeLabel={opt.nativeLabel}
+                            englishLabel={opt.englishLabel}
+                          />
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
-                ) : (
-                  <div className="flex items-center justify-between gap-3">
+                </div>
+              </div>
+
+              {/* Application behavior — launch at login + Dock (native reads nexu_launch_at_login, nexu_show_in_dock) */}
+              <div className="rounded-xl border border-border bg-surface-1 overflow-hidden px-5 py-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Monitor size={14} className="text-text-secondary" />
+                  <h3 className="text-[13px] font-semibold text-text-primary">
+                    {t("ws.settings.behavior")}
+                  </h3>
+                </div>
+                <div className="divide-y divide-border">
+                  <div className="flex items-start justify-between gap-4 pb-4">
                     <div className="min-w-0 flex-1">
                       <div className="text-[13px] font-medium text-text-primary">
-                        {t("ws.settings.account.notSignedIn")}
+                        {t("ws.settings.behavior.launchAtLogin")}
                       </div>
                       <div className="text-[11px] text-text-tertiary mt-0.5">
-                        {t("ws.settings.account.signInDesc")}
+                        {t("ws.settings.behavior.launchAtLoginDesc")}
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        openExternal(`${window.location.origin}/openclaw/auth?desktop=1`)
-                      }
-                      className="inline-flex shrink-0 items-center gap-1.5 rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium bg-accent text-accent-fg hover:bg-accent-hover transition-colors"
-                    >
-                      {t("ws.settings.account.signIn")}
-                      <ArrowUpRight size={11} />
-                    </button>
+                    <Switch
+                      size="sm"
+                      checked={launchAtLogin}
+                      onCheckedChange={setLaunchAtLoginPersist}
+                      className="shrink-0 mt-0.5"
+                    />
                   </div>
-                )}
+                  <div className="flex items-start justify-between gap-4 pt-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[13px] font-medium text-text-primary">
+                        {t("ws.settings.behavior.showInDock")}
+                      </div>
+                      <div className="text-[11px] text-text-tertiary mt-0.5">
+                        {t("ws.settings.behavior.showInDockDesc")}
+                      </div>
+                    </div>
+                    <Switch
+                      size="sm"
+                      checked={showInDock}
+                      onCheckedChange={setShowInDockPersist}
+                      className="shrink-0 mt-0.5"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {/* Language */}
-            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden">
-              <div className="px-5 py-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-2 min-w-0 flex-1">
-                    <Globe size={14} className="text-text-secondary shrink-0" />
-                    <h3 className="text-[13px] font-semibold text-text-primary">
-                      {t("ws.settings.languageSection")}
-                    </h3>
+              {/* Data & Privacy */}
+              <div className="rounded-xl border border-border bg-surface-1 overflow-hidden px-5 py-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Shield size={14} className="text-text-secondary" />
+                  <h3 className="text-[13px] font-semibold text-text-primary">
+                    {t("ws.settings.data")}
+                  </h3>
+                </div>
+                <div className="divide-y divide-border">
+                  <div className="flex items-start justify-between gap-4 pb-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[13px] font-medium text-text-primary">
+                        {t("ws.settings.data.analytics")}
+                      </div>
+                      <div className="text-[11px] text-text-tertiary mt-0.5">
+                        {t("ws.settings.data.analyticsDesc")}
+                      </div>
+                    </div>
+                    <Switch
+                      size="sm"
+                      checked={analytics}
+                      onCheckedChange={setAnalyticsPersist}
+                      className="shrink-0 mt-0.5"
+                    />
                   </div>
-                  <Select value={locale} onValueChange={(v) => setLocale(v as Locale)}>
-                    <SelectTrigger
-                      className="h-auto min-h-9 w-[220px] shrink-0 py-2"
-                      aria-label={t("ws.settings.appearance.language")}
-                    >
-                      <SelectValue>
-                        {WORKSPACE_LOCALE_OPTIONS.find((o) => o.value === locale)?.nativeLabel ??
-                          locale}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent position="popper" sideOffset={6} align="end">
-                      {WORKSPACE_LOCALE_OPTIONS.map((opt) => (
-                        <WorkspaceLocaleSelectItem
-                          key={opt.value}
-                          value={opt.value}
-                          nativeLabel={opt.nativeLabel}
-                          englishLabel={opt.englishLabel}
-                        />
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="flex items-start justify-between gap-4 pt-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[13px] font-medium text-text-primary">
+                        {t("ws.settings.data.crashReports")}
+                      </div>
+                      <div className="text-[11px] text-text-tertiary mt-0.5">
+                        {t("ws.settings.data.crashReportsDesc")}
+                      </div>
+                    </div>
+                    <Switch
+                      size="sm"
+                      checked={crashReports}
+                      onCheckedChange={setCrashReports}
+                      className="shrink-0 mt-0.5"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Application behavior — launch at login + Dock (native reads nexu_launch_at_login, nexu_show_in_dock) */}
-            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden px-5 py-4">
-              <div className="flex items-center gap-2 mb-4">
-                <Monitor size={14} className="text-text-secondary" />
-                <h3 className="text-[13px] font-semibold text-text-primary">
-                  {t("ws.settings.behavior")}
-                </h3>
-              </div>
-              <div className="divide-y divide-border">
-                <div className="flex items-start justify-between gap-4 pb-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[13px] font-medium text-text-primary">
-                      {t("ws.settings.behavior.launchAtLogin")}
-                    </div>
-                    <div className="text-[11px] text-text-tertiary mt-0.5">
-                      {t("ws.settings.behavior.launchAtLoginDesc")}
-                    </div>
-                  </div>
-                  <Switch
-                    size="sm"
-                    checked={launchAtLogin}
-                    onCheckedChange={setLaunchAtLoginPersist}
-                    className="shrink-0 mt-0.5"
-                  />
-                </div>
-                <div className="flex items-start justify-between gap-4 pt-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[13px] font-medium text-text-primary">
-                      {t("ws.settings.behavior.showInDock")}
-                    </div>
-                    <div className="text-[11px] text-text-tertiary mt-0.5">
-                      {t("ws.settings.behavior.showInDockDesc")}
-                    </div>
-                  </div>
-                  <Switch
-                    size="sm"
-                    checked={showInDock}
-                    onCheckedChange={setShowInDockPersist}
-                    className="shrink-0 mt-0.5"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Data & Privacy */}
-            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden px-5 py-4">
-              <div className="flex items-center gap-2 mb-4">
-                <Shield size={14} className="text-text-secondary" />
-                <h3 className="text-[13px] font-semibold text-text-primary">
-                  {t("ws.settings.data")}
-                </h3>
-              </div>
-              <div className="divide-y divide-border">
-                <div className="flex items-start justify-between gap-4 pb-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[13px] font-medium text-text-primary">
-                      {t("ws.settings.data.analytics")}
-                    </div>
-                    <div className="text-[11px] text-text-tertiary mt-0.5">
-                      {t("ws.settings.data.analyticsDesc")}
-                    </div>
-                  </div>
-                  <Switch
-                    size="sm"
-                    checked={analytics}
-                    onCheckedChange={setAnalyticsPersist}
-                    className="shrink-0 mt-0.5"
-                  />
-                </div>
-                <div className="flex items-start justify-between gap-4 pt-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[13px] font-medium text-text-primary">
-                      {t("ws.settings.data.crashReports")}
-                    </div>
-                    <div className="text-[11px] text-text-tertiary mt-0.5">
-                      {t("ws.settings.data.crashReportsDesc")}
-                    </div>
-                  </div>
-                  <Switch
-                    size="sm"
-                    checked={crashReports}
-                    onCheckedChange={setCrashReports}
-                    className="shrink-0 mt-0.5"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Updates */}
-            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden">
-              <div className="px-5 py-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-2 min-w-0 flex-1">
-                    <RefreshCw size={14} className="text-text-secondary shrink-0" />
-                    <h3 className="text-[13px] font-semibold text-text-primary">
-                      {t("ws.settings.updates")}
-                    </h3>
-                    <span className="text-[11px] text-text-tertiary">
-                      {t("ws.settings.about.versionNumber")}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    {updateCheckState === "checking" && (
-                      <span className="inline-flex items-center gap-1.5 text-[12px] text-text-muted">
-                        <Loader2 size={13} className="animate-spin" />
-                        {t("ws.update.checking")}
+              {/* Updates */}
+              <div className="rounded-xl border border-border bg-surface-1 overflow-hidden">
+                <div className="px-5 py-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <RefreshCw size={14} className="text-text-secondary shrink-0" />
+                      <h3 className="text-[13px] font-semibold text-text-primary">
+                        {t("ws.settings.updates")}
+                      </h3>
+                      <span className="text-[11px] text-text-tertiary">
+                        {t("ws.settings.about.versionNumber")}
                       </span>
-                    )}
-                    {updateCheckState === "up-to-date" && (
-                      <span className="inline-flex items-center gap-1.5 text-[12px] text-[var(--color-success)]">
-                        <Check size={13} />
-                        {t("ws.update.upToDate")}
-                      </span>
-                    )}
-                    {updateCheckState === "available" && (
-                      <>
-                        <span className="text-[12px] text-text-secondary">
-                          {t("ws.update.readyToInstall").replace("{{version}}", MOCK_NEW_VERSION)}
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {updateCheckState === "checking" && (
+                        <span className="inline-flex items-center gap-1.5 text-[12px] text-text-muted">
+                          <Loader2 size={13} className="animate-spin" />
+                          {t("ws.update.checking")}
                         </span>
+                      )}
+                      {updateCheckState === "up-to-date" && (
+                        <span className="inline-flex items-center gap-1.5 text-[12px] text-[var(--color-success)]">
+                          <Check size={13} />
+                          {t("ws.update.upToDate")}
+                        </span>
+                      )}
+                      {updateCheckState === "available" && (
+                        <>
+                          <span className="text-[12px] text-text-secondary">
+                            {t("ws.update.readyToInstall").replace("{{version}}", MOCK_NEW_VERSION)}
+                          </span>
+                          <button
+                            onClick={handleInstallUpdate}
+                            className="rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium bg-accent text-accent-fg hover:bg-accent-hover transition-colors"
+                          >
+                            {t("ws.update.installRestart")}
+                          </button>
+                        </>
+                      )}
+                      {updateCheckState === "idle" && (
                         <button
-                          onClick={handleInstallUpdate}
-                          className="rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium bg-accent text-accent-fg hover:bg-accent-hover transition-colors"
+                          onClick={handleCheckForUpdates}
+                          className="rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium border border-border bg-surface-0 text-text-primary hover:bg-surface-2 transition-colors"
                         >
-                          {t("ws.update.installRestart")}
+                          {t("ws.settings.updates.checkNow")}
                         </button>
-                      </>
-                    )}
-                    {updateCheckState === "idle" && (
-                      <button
-                        onClick={handleCheckForUpdates}
-                        className="rounded-[8px] px-[14px] py-[5px] text-[12px] font-medium border border-border bg-surface-0 text-text-primary hover:bg-surface-2 transition-colors"
-                      >
-                        {t("ws.settings.updates.checkNow")}
-                      </button>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* About */}
-            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden px-5 py-4">
-              <div className="flex items-center gap-2 mb-4">
-                <Info size={14} className="text-text-secondary" />
-                <h3 className="text-[13px] font-semibold text-text-primary">
-                  {t("ws.settings.about")}
-                </h3>
-              </div>
-              <div>
-                <div className="flex items-center gap-3 mb-4 -mx-2 px-2">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center shrink-0">
-                    <img src="/brand/nexu logo-black1.svg" alt="nexu" className="w-6 h-6" />
+              {/* About */}
+              <div className="rounded-xl border border-border bg-surface-1 overflow-hidden px-5 py-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Info size={14} className="text-text-secondary" />
+                  <h3 className="text-[13px] font-semibold text-text-primary">
+                    {t("ws.settings.about")}
+                  </h3>
+                </div>
+                <div>
+                  <div className="flex items-center gap-3 mb-4 -mx-2 px-2">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center shrink-0">
+                      <img src="/brand/nexu logo-black1.svg" alt="nexu" className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="text-[13px] font-semibold text-text-primary">
+                        {t("ws.settings.about.version")}
+                      </div>
+                      <div className="text-[11px] text-text-tertiary">
+                        {t("ws.settings.about.versionNumber")} ·{" "}
+                        {t("ws.settings.about.licenseValue")}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-[13px] font-semibold text-text-primary">
-                      {t("ws.settings.about.version")}
-                    </div>
-                    <div className="text-[11px] text-text-tertiary">
-                      {t("ws.settings.about.versionNumber")} · {t("ws.settings.about.licenseValue")}
-                    </div>
+                  <div className="space-y-1">
+                    {[
+                      {
+                        labelKey: "ws.settings.about.docs",
+                        url: "https://docs.nexu.io",
+                        icon: BookOpen,
+                      },
+                      { labelKey: "ws.settings.about.github", url: githubUrl, icon: GitHubIcon },
+                      {
+                        labelKey: "ws.settings.about.changelog",
+                        url: "https://docs.nexu.io/changelog",
+                        icon: ScrollText,
+                      },
+                      {
+                        labelKey: "ws.settings.about.feedback",
+                        url: `${githubUrl}/issues/new`,
+                        icon: Mail,
+                      },
+                    ].map((link) => (
+                      <a
+                        key={link.labelKey}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2.5 px-2 py-2 rounded-lg text-[12px] font-medium text-text-primary hover:bg-surface-2 transition-colors -mx-2"
+                      >
+                        <link.icon size={13} className="text-text-secondary shrink-0" />
+                        {t(link.labelKey)}
+                        <ArrowUpRight size={10} className="text-text-muted ml-auto shrink-0" />
+                      </a>
+                    ))}
                   </div>
                 </div>
-                <div className="space-y-1">
-                  {[
-                    {
-                      labelKey: "ws.settings.about.docs",
-                      url: "https://docs.nexu.io",
-                      icon: BookOpen,
-                    },
-                    { labelKey: "ws.settings.about.github", url: githubUrl, icon: GitHubIcon },
-                    {
-                      labelKey: "ws.settings.about.changelog",
-                      url: "https://docs.nexu.io/changelog",
-                      icon: ScrollText,
-                    },
-                    {
-                      labelKey: "ws.settings.about.feedback",
-                      url: `${githubUrl}/issues/new`,
-                      icon: Mail,
-                    },
-                  ].map((link) => (
-                    <a
-                      key={link.labelKey}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2.5 px-2 py-2 rounded-lg text-[12px] font-medium text-text-primary hover:bg-surface-2 transition-colors -mx-2"
-                    >
-                      <link.icon size={13} className="text-text-secondary shrink-0" />
-                      {t(link.labelKey)}
-                      <ArrowUpRight size={10} className="text-text-muted ml-auto shrink-0" />
-                    </a>
-                  ))}
-                </div>
               </div>
-            </div>
             </div>
           </TabsContent>
 

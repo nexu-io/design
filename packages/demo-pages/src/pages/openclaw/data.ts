@@ -92,7 +92,7 @@ export interface ProviderModel {
   releasedAt: string;
   inputPrice: string;
   outputPrice: string;
-  tier?: 'plus' | 'pro';
+  tier?: "plus" | "pro";
 }
 
 const PROVIDER_DETAILS: ProviderDetail[] = [
