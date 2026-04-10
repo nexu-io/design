@@ -346,16 +346,14 @@ export function SettingsView({
           <TabsContent value="general" className="mt-0">
             <div className="space-y-6">
             {/* Account */}
-            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden">
-              <div className="px-5 py-4 border-b border-border">
-                <div className="flex items-center gap-2">
-                  <User size={14} className="text-text-secondary" />
-                  <h3 className="text-[13px] font-semibold text-text-primary">
-                    {t("ws.settings.account")}
-                  </h3>
-                </div>
+            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden px-5 py-4">
+              <div className="flex items-center gap-2 mb-4">
+                <User size={14} className="text-text-secondary" />
+                <h3 className="text-[13px] font-semibold text-text-primary">
+                  {t("ws.settings.account")}
+                </h3>
               </div>
-              <div className="px-5 py-4 space-y-4">
+              <div className="space-y-4">
                 {signedIn ? (
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -446,16 +444,14 @@ export function SettingsView({
             </div>
 
             {/* Application behavior — launch at login + Dock (native reads nexu_launch_at_login, nexu_show_in_dock) */}
-            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden">
-              <div className="px-5 py-4 border-b border-border">
-                <div className="flex items-center gap-2">
-                  <Monitor size={14} className="text-text-secondary" />
-                  <h3 className="text-[13px] font-semibold text-text-primary">
-                    {t("ws.settings.behavior")}
-                  </h3>
-                </div>
+            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden px-5 py-4">
+              <div className="flex items-center gap-2 mb-4">
+                <Monitor size={14} className="text-text-secondary" />
+                <h3 className="text-[13px] font-semibold text-text-primary">
+                  {t("ws.settings.behavior")}
+                </h3>
               </div>
-              <div className="px-5 py-4 divide-y divide-border">
+              <div className="divide-y divide-border">
                 <div className="flex items-start justify-between gap-4 pb-4">
                   <div className="min-w-0 flex-1">
                     <div className="text-[13px] font-medium text-text-primary">
@@ -490,16 +486,14 @@ export function SettingsView({
             </div>
 
             {/* Data & Privacy */}
-            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden">
-              <div className="px-5 py-4 border-b border-border">
-                <div className="flex items-center gap-2">
-                  <Shield size={14} className="text-text-secondary" />
-                  <h3 className="text-[13px] font-semibold text-text-primary">
-                    {t("ws.settings.data")}
-                  </h3>
-                </div>
+            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden px-5 py-4">
+              <div className="flex items-center gap-2 mb-4">
+                <Shield size={14} className="text-text-secondary" />
+                <h3 className="text-[13px] font-semibold text-text-primary">
+                  {t("ws.settings.data")}
+                </h3>
               </div>
-              <div className="px-5 py-4 divide-y divide-border">
+              <div className="divide-y divide-border">
                 <div className="flex items-start justify-between gap-4 pb-4">
                   <div className="min-w-0 flex-1">
                     <div className="text-[13px] font-medium text-text-primary">
@@ -586,16 +580,14 @@ export function SettingsView({
             </div>
 
             {/* About */}
-            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden">
-              <div className="px-5 py-4 border-b border-border">
-                <div className="flex items-center gap-2">
-                  <Info size={14} className="text-text-secondary" />
-                  <h3 className="text-[13px] font-semibold text-text-primary">
-                    {t("ws.settings.about")}
-                  </h3>
-                </div>
+            <div className="rounded-xl border border-border bg-surface-1 overflow-hidden px-5 py-4">
+              <div className="flex items-center gap-2 mb-4">
+                <Info size={14} className="text-text-secondary" />
+                <h3 className="text-[13px] font-semibold text-text-primary">
+                  {t("ws.settings.about")}
+                </h3>
               </div>
-              <div className="px-5 py-4">
+              <div>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center shrink-0">
                     <img src="/brand/nexu logo-black1.svg" alt="nexu" className="w-6 h-6" />

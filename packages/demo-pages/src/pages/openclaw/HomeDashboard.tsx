@@ -49,7 +49,7 @@ import {
   WhatsAppIconSetup,
 } from "./channelSetup";
 import { MOCK_CHANNELS, getProviderDetails } from "./data";
-import { CreditIcon, ProviderLogo, getModelIconProvider } from "./iconHelpers";
+import { CreditIcon, ProviderLogo, TierPlusBadge, TierProBadge, getModelIconProvider } from "./iconHelpers";
 
 const SEEDANCE_COUNTDOWN_CYCLE_MS = 2 * 24 * 60 * 60 * 1000;
 const SEEDANCE_COUNTDOWN_LOOP_END_MS = Date.now() + SEEDANCE_COUNTDOWN_CYCLE_MS - 1000;
@@ -464,6 +464,12 @@ export function HomeDashboard({
                   <span className="font-medium">
                     {selectedModel?.name ?? t("ws.home.notSelected")}
                   </span>
+                  {selectedModel?.tier === "pro" && (
+                    <TierProBadge height={13} className="shrink-0" />
+                  )}
+                  {selectedModel?.tier === "plus" && (
+                    <TierPlusBadge height={13} className="shrink-0" />
+                  )}
                   <ChevronDown
                     size={12}
                     className={`text-text-muted transition-transform ${showModelDropdown ? "rotate-180" : ""}`}
@@ -487,7 +493,7 @@ export function HomeDashboard({
                       .filter((p) => p.models.length > 0);
 
                     return (
-                      <div className="absolute z-50 mt-2 left-0 w-[280px] rounded-xl border border-border bg-surface-1 shadow-xl">
+                      <div className="absolute z-50 mt-2 left-0 w-[320px] rounded-xl border border-border bg-surface-1 shadow-xl">
                         <div className="px-3 pt-3 pb-2">
                           <div className="flex items-center gap-2.5 rounded-lg border border-border bg-surface-0 px-3 py-2">
                             <Search size={14} className="text-text-muted shrink-0" />
@@ -529,11 +535,11 @@ export function HomeDashboard({
                                           return next;
                                         });
                                       }}
-                                      className="flex min-h-9 w-full items-center gap-2 rounded-lg pl-4 pr-3 py-2 transition-colors hover:bg-surface-2/50"
+                                      className="flex min-h-9 w-full items-center gap-2 rounded-lg pl-4 pr-3 py-2 transition-colors hover:bg-surface-2"
                                     >
                                       <ChevronDown
                                         size={12}
-                                        className={`text-text-muted/50 transition-transform ${isExpanded ? "" : "-rotate-90"}`}
+                                        className={`text-text-secondary transition-transform ${isExpanded ? "" : "-rotate-90"}`}
                                       />
                                       <span className="flex size-4 shrink-0 items-center justify-center">
                                         <ProviderLogo provider={provider.id} size={14} />
@@ -553,19 +559,28 @@ export function HomeDashboard({
                                             setSelectedModelId(model.id);
                                             setShowModelDropdown(false);
                                           }}
-                                          className={`flex min-h-9 w-full items-center gap-2.5 pl-10 pr-3 py-2 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/5" : ""}`}
+                                          className={`flex min-h-9 w-full items-center gap-2.5 rounded-lg pl-7 pr-3 py-2 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/5" : ""}`}
                                         >
-                                          {model.id === selectedModelId ? (
-                                            <Check size={14} className="text-accent shrink-0" />
-                                          ) : (
-                                            <span className="size-4 shrink-0" />
+                                          <span className="flex size-4 shrink-0 items-center justify-center">
+                                            <ProviderLogo provider={getModelIconProvider(model.name) || provider.id} size={14} />
+                                          </span>
+                                          <span className="flex flex-1 items-center gap-1.5 min-w-0">
+                                            <span className="truncate text-xs font-normal text-text-primary">
+                                              {model.name}
+                                            </span>
+                                          {model.tier === "pro" && (
+                                            <TierProBadge height={14} className="shrink-0" />
                                           )}
-                                          <span className="flex-1 truncate text-xs font-normal text-text-primary">
-                                            {model.name}
+                                          {model.tier === "plus" && (
+                                            <TierPlusBadge height={14} className="shrink-0" />
+                                          )}
                                           </span>
                                           <span className="shrink-0 text-[10px] font-normal text-text-muted/60 tabular-nums">
                                             {model.contextWindow}
                                           </span>
+                                          {model.id === selectedModelId && (
+                                            <Check size={14} strokeWidth={3} className="text-text-heading shrink-0" />
+                                          )}
                                         </button>
                                       ))}
                                   </div>
