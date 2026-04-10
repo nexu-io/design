@@ -2,6 +2,7 @@ import {
   Alert,
   AlertDescription,
   Button,
+  Card,
   Dialog,
   DialogBody,
   DialogContent,
@@ -10,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
   Input,
+  TextLink,
   cn,
 } from "@nexu-design/ui-web";
 import {
@@ -17,6 +19,7 @@ import {
   ArrowUp,
   ArrowUpRight,
   Cable,
+  Check,
   ChevronDown,
   Cpu,
   KeyRound,
@@ -31,6 +34,7 @@ import { useEffect, useRef, useState } from "react";
 import { useBudget } from "../../hooks/useBudget";
 import { useLocale } from "../../hooks/useLocale";
 import { openExternal } from "../../utils/open-external";
+import { GitHubStarButton } from "./GitHubStarButton";
 import {
   CHANNELS_CONNECTED_KEY,
   CHANNEL_ACTIVE_KEY,
@@ -48,13 +52,7 @@ import {
   WhatsAppIconSetup,
 } from "./channelSetup";
 import { MOCK_CHANNELS, getProviderDetails } from "./data";
-import {
-  CreditIcon,
-  ProviderLogo,
-  TierPlusBadge,
-  TierProBadge,
-  getModelIconProvider,
-} from "./iconHelpers";
+import { CreditIcon, ProviderLogo, getModelIconProvider } from "./iconHelpers";
 
 const SEEDANCE_COUNTDOWN_CYCLE_MS = 2 * 24 * 60 * 60 * 1000;
 const SEEDANCE_COUNTDOWN_LOOP_END_MS = Date.now() + SEEDANCE_COUNTDOWN_CYCLE_MS - 1000;
@@ -429,26 +427,15 @@ export function HomeDashboard({
                 />
                 {t("ws.home.running")}
               </span>
-              <a
+              <GitHubStarButton
                 href={githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link-github-star group ml-auto shrink-0"
-              >
-                <Star
-                  size={12}
-                  className="text-amber-500 group-hover:fill-amber-500 transition-colors shrink-0"
-                />
-                {t("ws.common.starOnGitHub")}
-                {stars && stars > 0 && (
-                  <span className="tabular-nums text-text-muted text-[10px]">
-                    ({stars.toLocaleString()})
-                  </span>
-                )}
-                <ArrowUpRight size={11} className="shrink-0 translate-y-px" />
-              </a>
+                label={t("ws.common.starOnGitHub")}
+                stars={stars ?? undefined}
+                iconSize={12}
+                className="ml-auto"
+              />
             </div>
-            <div className="flex items-center gap-4 mt-1.5">
+            <div className="flex items-center gap-2 mt-1.5">
               <div className="relative" ref={modelDropdownRef}>
                 <button
                   onClick={() => setShowModelDropdown(!showModelDropdown)}
@@ -469,12 +456,6 @@ export function HomeDashboard({
                   <span className="font-medium">
                     {selectedModel?.name ?? t("ws.home.notSelected")}
                   </span>
-                  {selectedModel?.tier === "pro" && (
-                    <TierProBadge height={13} className="shrink-0" />
-                  )}
-                  {selectedModel?.tier === "plus" && (
-                    <TierPlusBadge height={13} className="shrink-0" />
-                  )}
                   <ChevronDown
                     size={12}
                     className={`text-text-muted transition-transform ${showModelDropdown ? "rotate-180" : ""}`}
@@ -498,7 +479,7 @@ export function HomeDashboard({
                       .filter((p) => p.models.length > 0);
 
                     return (
-                      <div className="absolute z-50 mt-2 left-0 w-[320px] rounded-xl border border-border bg-surface-1 shadow-xl">
+                      <div className="absolute z-50 mt-2 left-0 w-[280px] rounded-xl border border-border bg-surface-1 shadow-xl">
                         <div className="px-3 pt-3 pb-2">
                           <div className="flex items-center gap-2.5 rounded-lg border border-border bg-surface-0 px-3 py-2">
                             <Search size={14} className="text-text-muted shrink-0" />
@@ -540,17 +521,20 @@ export function HomeDashboard({
                                           return next;
                                         });
                                       }}
-                                      className="flex min-h-9 w-full items-center gap-2 rounded-lg pl-4 pr-3 py-2 transition-colors hover:bg-surface-2"
+                                      className="flex min-h-9 w-full items-center gap-2 rounded-lg pl-4 pr-3 py-2 transition-colors hover:bg-surface-2/50"
                                     >
                                       <ChevronDown
                                         size={12}
-                                        className={`text-text-secondary transition-transform ${isExpanded ? "" : "-rotate-90"}`}
+                                        className={`text-text-muted/50 transition-transform ${isExpanded ? "" : "-rotate-90"}`}
                                       />
                                       <span className="flex size-4 shrink-0 items-center justify-center">
                                         <ProviderLogo provider={provider.id} size={14} />
                                       </span>
                                       <span className="text-xs font-normal text-text-secondary">
                                         {provider.name}
+                                      </span>
+                                      <span className="ml-auto text-[10px] font-normal text-text-muted/60 tabular-nums">
+                                        {provider.models.length}
                                       </span>
                                     </button>
                                     {isExpanded &&
@@ -561,31 +545,18 @@ export function HomeDashboard({
                                             setSelectedModelId(model.id);
                                             setShowModelDropdown(false);
                                           }}
-                                          className={`flex min-h-9 w-full items-center gap-2.5 rounded-lg pl-7 pr-3 py-2 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/10 font-medium" : ""}`}
+                                          className={`flex min-h-9 w-full items-center gap-2.5 pl-10 pr-3 py-2 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/5" : ""}`}
                                         >
-                                          <span className="flex size-4 shrink-0 items-center justify-center">
-                                            <ProviderLogo
-                                              provider={
-                                                getModelIconProvider(model.name) || provider.id
-                                              }
-                                              size={14}
-                                            />
+                                          {model.id === selectedModelId ? (
+                                            <Check size={14} className="text-accent shrink-0" />
+                                          ) : (
+                                            <span className="size-4 shrink-0" />
+                                          )}
+                                          <span className="flex-1 truncate text-xs font-normal text-text-primary">
+                                            {model.name}
                                           </span>
-                                          <span className="flex flex-1 items-center gap-1.5 min-w-0">
-                                            <span
-                                              className={`truncate text-xs ${model.id === selectedModelId ? "font-semibold text-text-heading" : "font-normal text-text-primary"}`}
-                                            >
-                                              {model.name}
-                                            </span>
-                                            {model.tier === "pro" && (
-                                              <TierProBadge height={14} className="shrink-0" />
-                                            )}
-                                            {model.tier === "plus" && (
-                                              <TierPlusBadge height={14} className="shrink-0" />
-                                            )}
-                                          </span>
-                                          <span className="shrink-0 rounded-[4px] bg-gradient-to-r from-[#3DB9CE] to-[#34D399] px-1.5 py-[2px] text-[9px] font-bold text-white">
-                                            Unlimited
+                                          <span className="shrink-0 text-[10px] font-normal text-text-muted/60 tabular-nums">
+                                            {model.contextWindow}
                                           </span>
                                         </button>
                                       ))}
@@ -614,7 +585,14 @@ export function HomeDashboard({
                     );
                   })()}
               </div>
-              <div className="flex items-center gap-2 text-[11px] text-text-muted">
+              <span
+                className="flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium"
+                title="Agent running"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-success)]" />
+                Agent running
+              </span>
+              <div className="flex items-center gap-2 text-[11px] text-text-muted ml-3">
                 <span>{t("ws.home.messagesToday")}</span>
                 <span className="text-border">·</span>
                 <span>{t("ws.home.activeAgo")}</span>
@@ -754,7 +732,7 @@ export function HomeDashboard({
         {seedanceBanner}
 
         {/* ═══ MIDDLE: Channels Panel ═══ */}
-        <div className="card card-static">
+        <Card variant="static" padding="none">
           <div className="px-5 pt-4 pb-3">
             <h2 className="text-[14px] font-semibold text-text-primary">{t("ws.home.channels")}</h2>
           </div>
@@ -844,10 +822,10 @@ export function HomeDashboard({
               </div>
             )}
           </div>
-        </div>
+        </Card>
 
         {/* ═══ Recent Activity ═══ */}
-        <div className="card card-static p-5">
+        <Card variant="static" padding="md">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-[14px] font-semibold text-text-primary">Recent Activity</h2>
           </div>
@@ -898,10 +876,10 @@ export function HomeDashboard({
               );
             })}
           </div>
-        </div>
+        </Card>
 
         {/* ═══ Star Nexu on GitHub CTA ═══ */}
-        <div className="card card-static">
+        <Card variant="static" padding="none">
           <div className="flex items-center gap-4 px-5 py-4">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-amber-50 shrink-0">
               <Star size={20} className="text-amber-500 fill-amber-400" />
@@ -912,20 +890,9 @@ export function HomeDashboard({
               </h3>
               <p className="text-[12px] text-text-muted mt-0.5">{t("ws.home.starCta")}</p>
             </div>
-            <a
-              href={githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link-github-star group shrink-0"
-            >
-              <svg viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4">
-                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
-              </svg>
-              GitHub
-              <ArrowUpRight size={11} className="shrink-0 translate-y-px" />
-            </a>
+            <GitHubStarButton href={githubUrl} label="GitHub" iconSize={14} />
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Channel config modal — shared across scenes */}
@@ -1034,14 +1001,16 @@ export function HomeDashboard({
                           <p className="mt-1 text-[11px] text-text-muted">{field.helpText}</p>
                         </div>
                       ))}
-                      <a
+                      <TextLink
                         href={ch.docUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-link mt-1"
+                        size="sm"
+                        showArrowUpRight
+                        className="mt-1 w-fit items-center gap-1 text-[12px] leading-none text-[var(--color-link)]"
                       >
                         {t("ws.home.viewSetupGuide").replace("{name}", ch.name)}
-                      </a>
+                      </TextLink>
                     </DialogBody>
                     <DialogFooter>
                       <Button type="button" variant="outline" onClick={handleCloseConfig}>

@@ -1,4 +1,4 @@
-import { Badge, Button, Input, Label, SlackIcon } from "@nexu-design/ui-web";
+import { Badge, Button, Card, Input, Label, SlackIcon } from "@nexu-design/ui-web";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Activity,
@@ -1546,7 +1546,7 @@ function WorkspaceStep({ onChatInSlack }: { onChatInSlack: () => void }) {
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
             {stats.map((s) => (
-              <div key={s.label} className="card p-4 text-left">
+              <Card key={s.label} variant="static" padding="none" className="p-4 text-left">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
                     <s.icon size={16} className="text-accent" strokeWidth={2} />
@@ -1556,7 +1556,7 @@ function WorkspaceStep({ onChatInSlack }: { onChatInSlack: () => void }) {
                   {s.value}
                 </div>
                 <div className="text-[11px] text-text-muted mt-0.5">{s.label}</div>
-              </div>
+              </Card>
             ))}
           </div>
         </div>

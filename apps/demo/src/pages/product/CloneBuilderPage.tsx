@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   EntityCard,
   EntityCardContent,
@@ -8,6 +9,12 @@ import {
   EntityCardMedia,
   EntityCardMeta,
   EntityCardTitle,
+  FilterPillTrigger,
+  FilterPills,
+  FilterPillsList,
+  Input,
+  PageHeader,
+  Textarea,
   ToggleGroup,
   ToggleGroupItem,
 } from "@nexu-design/ui-web";
@@ -849,7 +856,7 @@ function FeedDetailPanel({ item, onClose }: { item: FeedItem; onClose: () => voi
       {/* Follow-up input */}
       <div className="border-t border-border p-3 space-y-2 shrink-0">
         <div className="flex items-end gap-2 bg-surface-1 border border-border rounded-xl px-3 py-2">
-          <textarea
+          <Textarea
             value={followUp}
             onChange={(e) => setFollowUp(e.target.value)}
             onKeyDown={(e) => {
@@ -860,7 +867,7 @@ function FeedDetailPanel({ item, onClose }: { item: FeedItem; onClose: () => voi
             }}
             placeholder="追问、展开、提需求..."
             rows={1}
-            className="flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed"
+            className="min-h-0 flex-1 resize-none border-0 bg-transparent px-0 py-0 text-[12px] shadow-none focus-visible:ring-0"
           />
           <Button
             type="button"
@@ -919,12 +926,12 @@ function FeedsTab() {
         <div className="bg-surface-1 border border-border rounded-xl p-4">
           <div className="flex items-center gap-3">
             <div className="flex-1 relative">
-              <input
+              <Input
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 placeholder="有什么想法？随时开始对话..."
-                className="w-full bg-surface-0 border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[var(--color-brand-primary)]/30 focus:ring-1 focus:ring-[var(--color-brand-primary)]/20 transition-colors"
+                className="bg-surface-0"
               />
             </div>
             <Button
@@ -1338,28 +1345,17 @@ function MemoryTab() {
   return (
     <div className="space-y-4">
       {/* Category filter bar */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
-        {MEMORY_CATEGORIES.map((cat) => (
-          <button
-            type="button"
-            key={cat.id}
-            onClick={() => setActiveCat(cat.id)}
-            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[12px] whitespace-nowrap transition-colors border ${
-              activeCat === cat.id
-                ? "bg-accent text-accent-fg border-accent"
-                : "bg-surface-2 text-text-secondary border-border hover:border-border-hover"
-            }`}
-          >
-            <span className="text-[11px]">{cat.icon}</span>
-            {cat.label}
-            <span
-              className={`text-[10px] tabular-nums ${activeCat === cat.id ? "text-accent-fg/70" : "text-text-muted"}`}
-            >
-              {cat.count}
-            </span>
-          </button>
-        ))}
-      </div>
+      <FilterPills value={activeCat} onValueChange={(value) => value && setActiveCat(value)}>
+        <FilterPillsList className="overflow-x-auto pb-1">
+          {MEMORY_CATEGORIES.map((cat) => (
+            <FilterPillTrigger key={cat.id} value={cat.id} className="whitespace-nowrap">
+              <span className="text-[11px]">{cat.icon}</span>
+              {cat.label}
+              <span className="text-[10px] tabular-nums text-current/70">{cat.count}</span>
+            </FilterPillTrigger>
+          ))}
+        </FilterPillsList>
+      </FilterPills>
 
       {/* Update history link */}
       <button
@@ -1414,19 +1410,19 @@ function MemoryTab() {
                 <span className="text-[12px] font-medium text-clone">{cat?.label}</span>
                 <div className="ml-auto flex items-center gap-2">
                   {m.source === "fine-tuned" && (
-                    <span className="text-[9px] px-1.5 py-0.5 bg-clone/10 text-clone rounded-full">
+                    <Badge variant="accent" size="xs">
                       微调
-                    </span>
+                    </Badge>
                   )}
                   {m.source === "auto-extracted" && (
-                    <span className="text-[9px] px-1.5 py-0.5 bg-info-subtle text-info rounded-full">
+                    <Badge variant="outline" size="xs" className="bg-info-subtle text-info">
                       自动提取
-                    </span>
+                    </Badge>
                   )}
                   {m.source === "proactive" && (
-                    <span className="text-[9px] px-1.5 py-0.5 bg-success-subtle text-success rounded-full">
+                    <Badge variant="success" size="xs">
                       主动更新
-                    </span>
+                    </Badge>
                   )}
                   <span className="text-[10px] text-text-muted">{m.time}</span>
                 </div>
@@ -1709,22 +1705,27 @@ export default function CloneBuilderPage() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="max-w-5xl mx-auto px-6 py-8">
-        <div className="mb-8">
-          <h1 className="text-xl font-bold text-text-primary">分身搭建</h1>
-          <p className="text-sm text-text-secondary mt-1">
-            配置你的数字分身 — 所有配置存储在
-            <Button
-              type="button"
-              size="inline"
-              onClick={expandFileTree}
-              className="font-mono text-text-primary hover:text-accent transition-colors ml-1 inline-flex items-center gap-1"
-            >
-              <FolderOpen size={12} />
-              ~/clone/
-            </Button>
-            文件系统中
-          </p>
-        </div>
+        <PageHeader
+          className="mb-8"
+          density="shell"
+          title="分身搭建"
+          description={
+            <>
+              配置你的数字分身 — 所有配置存储在
+              <Button
+                type="button"
+                variant="link"
+                size="inline"
+                onClick={expandFileTree}
+                className="ml-1 inline-flex items-center gap-1 font-mono text-text-primary"
+              >
+                <FolderOpen size={12} />
+                ~/clone/
+              </Button>
+              文件系统中
+            </>
+          }
+        />
 
         <div className="flex gap-6 items-start">
           {/* Left: Persona — always visible */}

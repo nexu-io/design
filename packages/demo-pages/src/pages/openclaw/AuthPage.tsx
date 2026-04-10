@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLocale } from "../../hooks/useLocale";
 import { usePageTitle } from "../../hooks/usePageTitle";
+import { useOpenClawDemoState } from "./demo-state";
 
 /* ── Animated wrapper ── */
 function FadeIn({
@@ -29,6 +30,7 @@ export default function AuthPage() {
   const isDesktopFlow = searchParams.get("desktop") === "1";
   usePageTitle(t("auth.welcomeBack"));
   const navigate = useNavigate();
+  const { setLoggedIn } = useOpenClawDemoState();
   const [mode, setMode] = useState<"login" | "register">("register");
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [loading, setLoading] = useState<"google" | "email" | "github" | null>(null);
@@ -49,6 +51,7 @@ export default function AuthPage() {
   }, [authSuccess, countdown, isDesktopFlow]);
 
   const onAuthComplete = () => {
+    setLoggedIn(true);
     if (isDesktopFlow) {
       setAuthSuccess(true);
     } else {

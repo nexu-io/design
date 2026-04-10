@@ -1,5 +1,6 @@
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
+import { ArrowUpRight } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "../lib/cn";
@@ -37,6 +38,7 @@ export interface TextLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof textLinkVariants> {
   asChild?: boolean;
+  showArrowUpRight?: boolean;
 }
 
 /**
@@ -46,15 +48,37 @@ export interface TextLinkProps
  * <TextLink href="/docs">Read the docs</TextLink>
  */
 export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    { className, variant, size, asChild = false, showArrowUpRight = false, children, ...props },
+    ref,
+  ) => {
     const Comp = asChild ? Slot : "a";
+
+    if (asChild) {
+      return (
+        <Comp
+          ref={ref}
+          data-slot="text-link"
+          className={cn(textLinkVariants({ variant, size }), className)}
+          {...props}
+        >
+          {children}
+        </Comp>
+      );
+    }
+
     return (
       <Comp
         ref={ref}
         data-slot="text-link"
         className={cn(textLinkVariants({ variant, size }), className)}
         {...props}
-      />
+      >
+        {children}
+        {!asChild && showArrowUpRight ? (
+          <ArrowUpRight size={12} className="shrink-0" aria-hidden />
+        ) : null}
+      </Comp>
     );
   },
 );

@@ -11,7 +11,7 @@ import {
   ToggleGroupItem,
   cn,
 } from "@nexu-design/ui-web";
-import { ArrowUpRight, Check, Gift } from "lucide-react";
+import { Check, Gift } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   REWARD_CHANNELS,
@@ -314,10 +314,10 @@ export function RewardsCenter({
                 target="_blank"
                 rel="noopener noreferrer"
                 size="sm"
+                showArrowUpRight
                 className="inline-flex items-center gap-1 leading-none text-[var(--color-link)]"
               >
                 {t("budget.viral.rules")}
-                <ArrowUpRight size={12} className="shrink-0" aria-hidden />
               </TextLink>
             </>
           }

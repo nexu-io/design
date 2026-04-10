@@ -1,4 +1,4 @@
-import { Button } from "@nexu-design/ui-web";
+import { Button, TextLink } from "@nexu-design/ui-web";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
@@ -425,21 +425,22 @@ export default function TermsOfServicePage() {
           <ul className="list-none pl-0">
             <li>
               <strong>Email</strong>:{" "}
-              <a href="mailto:legal@refly.ai" className="text-accent hover:underline">
-                legal@refly.ai
-              </a>
+              <TextLink href="mailto:legal@refly.ai">legal@refly.ai</TextLink>
             </li>
             <li>
               <strong>Support</strong>:{" "}
-              <a href="mailto:support@refly.ai" className="text-accent hover:underline">
-                support@refly.ai
-              </a>
+              <TextLink href="mailto:support@refly.ai">support@refly.ai</TextLink>
             </li>
             <li>
               <strong>Website</strong>:{" "}
-              <a href="https://nexu.ai" className="text-accent hover:underline">
+              <TextLink
+                href="https://nexu.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                showArrowUpRight
+              >
                 nexu.ai
-              </a>
+              </TextLink>
             </li>
             <li>
               <strong>Business Hours</strong>: Monday to Friday, 9:00 AM – 6:00 PM (UTC+8)

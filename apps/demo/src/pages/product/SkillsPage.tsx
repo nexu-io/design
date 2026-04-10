@@ -1,18 +1,47 @@
 import {
+  Badge,
   Button,
   Combobox,
   ComboboxContent,
   ComboboxInput,
   ComboboxItem,
   ComboboxTrigger,
+  ConversationMessage,
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
   EntityCard,
   EntityCardContent,
   EntityCardDescription,
   EntityCardHeader,
   EntityCardMeta,
   EntityCardTitle,
+  FilterPillTrigger,
+  FilterPills,
+  FilterPillsList,
+  FormField,
+  FormFieldControl,
+  Input,
+  InteractiveRow,
+  InteractiveRowContent,
+  InteractiveRowLeading,
+  InteractiveRowTrailing,
+  PageHeader,
+  PanelFooter,
   PanelFooterActions,
+  PanelFooterMeta,
   ScrollArea,
+  Sheet,
+  SheetContent,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Textarea,
 } from "@nexu-design/ui-web";
 import {
   BarChart3,
@@ -39,16 +68,16 @@ import {
   Users,
   Workflow,
   Wrench,
-  X,
   Zap,
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import InspectorPanel from "./InspectorPanel";
 import { useProductLayout } from "./ProductLayoutContext";
+import { ImportSkillModal } from "./import-skill-modal";
 
 type TabId = "installed" | "featured" | "explore";
+type ExploreCategory = "All" | "integration" | "developer" | "productivity" | "design" | "business";
 
 interface Skill {
   name: string;
@@ -59,6 +88,45 @@ interface Skill {
   certified: boolean;
   installed: boolean;
   category: string;
+}
+
+function buildImportedSkillName(fileName: string, existingNames: string[]) {
+  const baseName = fileName.replace(/\.zip$/i, "").trim() || "Imported Skill";
+  const normalizedBase = baseName
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(" ");
+
+  if (!existingNames.includes(normalizedBase)) {
+    return normalizedBase;
+  }
+
+  let suffix = 2;
+  let nextName = `${normalizedBase} ${suffix}`;
+
+  while (existingNames.includes(nextName)) {
+    suffix += 1;
+    nextName = `${normalizedBase} ${suffix}`;
+  }
+
+  return nextName;
+}
+
+function createImportedSkill(fileName: string, existingSkills: Skill[]): Skill {
+  return {
+    name: buildImportedSkillName(
+      fileName,
+      existingSkills.map((skill) => skill.name),
+    ),
+    desc: "Imported from a local ZIP package.",
+    icon: FileText,
+    author: "local workspace",
+    installs: "—",
+    certified: false,
+    installed: true,
+    category: "custom",
+  };
 }
 
 const INSTALLED_SKILLS: Skill[] = [
@@ -375,169 +443,156 @@ function SkillDetailPanel({ skill, onClose }: { skill: Skill; onClose: () => voi
   const { expandFileTree } = useProductLayout();
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
-      <button
-        type="button"
-        aria-label="关闭详情面板"
-        className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"
-        onClick={onClose}
-      />
+    <Sheet open onOpenChange={(open) => !open && onClose()}>
+      <SheetContent
+        side="right"
+        className="w-[min(100vw,440px)] gap-0 overflow-hidden p-0 sm:max-w-[440px]"
+      >
+        <div className="flex h-full flex-col bg-surface-0">
+          <div className="border-b border-border px-6 py-6 pr-14">
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-surface-3">
+                <skill.icon size={22} className="text-text-secondary" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-base font-semibold text-text-primary">{skill.name}</h2>
+                  {skill.certified ? <Shield size={14} className="text-success" /> : null}
+                </div>
+                <p className="mt-0.5 text-xs text-text-muted">{skill.author}</p>
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-2xs text-text-muted">
+                  <span className="flex items-center gap-1">
+                    <Download size={10} />
+                    {skill.installs} 安装
+                  </span>
+                  {detail ? (
+                    <>
+                      <span>v{detail.version}</span>
+                      <span>更新于 {detail.updated}</span>
+                    </>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </div>
 
-      <InspectorPanel
-        width={420}
-        title={
-          <div className="flex items-center gap-2">
-            <span>{skill.name}</span>
-            {skill.certified ? <Shield size={14} className="text-success" /> : null}
-          </div>
-        }
-        description={skill.author}
-        meta={
-          <>
-            <span className="flex items-center gap-1">
-              <Download size={10} />
-              {skill.installs} 安装
-            </span>
-            {detail ? (
-              <>
-                <span>v{detail.version}</span>
-                <span>更新于 {detail.updated}</span>
-              </>
-            ) : null}
-          </>
-        }
-        onClose={onClose}
-        className="relative animate-slide-in-right shadow-2xl"
-        headerClassName="items-start gap-4 p-6"
-        closeButtonProps={{
-          srLabel: "关闭技能详情",
-          className: "mt-1 text-text-muted hover:bg-surface-3",
-        }}
-        leading={
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-surface-3">
-            <skill.icon size={22} className="text-text-secondary" />
-          </div>
-        }
-        footer={
-          <>
-            <span className="text-[11px] text-text-muted">
-              Skill metadata, auth, and source are managed here.
-            </span>
-            <PanelFooterActions>
-              <Button variant="ghost" size="xs">
-                关闭
+          <ScrollArea className="h-full flex-1">
+            <div className="flex items-center gap-2 border-b border-border px-6 py-4">
+              {skill.installed ? (
+                <>
+                  <Badge variant="success" size="default" radius="lg" className="gap-1.5 px-4 py-2">
+                    <Check size={14} />
+                    已安装
+                  </Badge>
+                  <Button variant="ghost" size="sm">
+                    卸载
+                  </Button>
+                </>
+              ) : (
+                <Button size="sm">
+                  <Download size={14} />
+                  安装此 Skill
+                </Button>
+              )}
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                onClick={expandFileTree}
+                className="ml-auto"
+                aria-label="在文件树中查看"
+                title="在文件树中查看"
+              >
+                <FolderOpen size={14} />
               </Button>
+            </div>
+
+            <div className="border-b border-border px-6 py-4">
+              <h3 className="mb-2 text-[12px] font-medium uppercase tracking-wider text-text-muted">
+                描述
+              </h3>
+              <p className="text-[13px] leading-relaxed text-text-primary">
+                {detail?.longDesc || skill.desc}
+              </p>
+            </div>
+
+            {detail && (
+              <div className="border-b border-border px-6 py-4">
+                <h3 className="mb-2 text-[12px] font-medium uppercase tracking-wider text-text-muted">
+                  触发条件
+                </h3>
+                <div className="space-y-1.5">
+                  {detail.triggers.map((t) => (
+                    <div key={t} className="flex items-center gap-2 text-[12px]">
+                      <Zap size={11} className="shrink-0 text-clone" />
+                      <span className="text-text-primary">{t}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {detail && (
+              <div className="border-b border-border px-6 py-4">
+                <h3 className="mb-2 text-[12px] font-medium uppercase tracking-wider text-text-muted">
+                  使用工具
+                </h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {detail.tools.map((t) => (
+                    <Badge key={t} variant="outline" size="xs" radius="md" className="font-mono">
+                      {t}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {detail && detail.auth.length > 0 && (
+              <div className="border-b border-border px-6 py-4">
+                <h3 className="mb-2 text-[12px] font-medium uppercase tracking-wider text-text-muted">
+                  需要授权
+                </h3>
+                <div className="space-y-1.5">
+                  {detail.auth.map((a) => (
+                    <div key={a} className="flex items-center gap-2 text-[12px]">
+                      <Lock size={11} className="text-success" />
+                      <span className="text-text-primary">{a}</span>
+                      <Badge variant="success" size="xs" className="ml-auto">
+                        已授权
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {detail && (
+              <div className="px-6 py-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <FileText size={12} className="text-text-muted" />
+                  <h3 className="text-[12px] font-medium uppercase tracking-wider text-text-muted">
+                    SKILL.md
+                  </h3>
+                  <span className="ml-auto text-[10px] font-mono text-text-muted">
+                    ~/clone/skills/{skill.name.toLowerCase().replace(/\s+/g, "-")}/
+                  </span>
+                </div>
+                <pre className="overflow-x-auto rounded-lg border border-border bg-surface-3/60 p-3 text-[11px] font-mono leading-relaxed text-text-secondary whitespace-pre-wrap">
+                  {detail.skillMd}
+                </pre>
+              </div>
+            )}
+          </ScrollArea>
+
+          <PanelFooter>
+            <PanelFooterMeta>Skill metadata, auth, and source are managed here.</PanelFooterMeta>
+            <PanelFooterActions>
               <Button size="xs">打开 Session</Button>
             </PanelFooterActions>
-          </>
-        }
-      >
-        <ScrollArea className="h-full flex-1">
-          <div className="px-6 py-4 border-b border-border flex items-center gap-2">
-            {skill.installed ? (
-              <>
-                <span className="flex items-center gap-1.5 px-4 py-2 bg-success-subtle text-success rounded-lg text-[13px] font-medium">
-                  <Check size={14} /> 已安装
-                </span>
-                <Button variant="ghost" className="px-4 py-2 text-[13px]">
-                  卸载
-                </Button>
-              </>
-            ) : (
-              <Button className="px-5 py-2 text-[13px]">
-                <Download size={14} /> 安装此 Skill
-              </Button>
-            )}
-            <Button
-              type="button"
-              size="inline"
-              onClick={expandFileTree}
-              className="ml-auto p-2 rounded-lg hover:bg-surface-3 text-text-muted hover:text-accent transition-colors"
-              title="在文件树中查看"
-            >
-              <FolderOpen size={14} />
-            </Button>
-          </div>
-
-          <div className="px-6 py-4 border-b border-border">
-            <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider mb-2">
-              描述
-            </h3>
-            <p className="text-[13px] text-text-primary leading-relaxed">
-              {detail?.longDesc || skill.desc}
-            </p>
-          </div>
-
-          {detail && (
-            <div className="px-6 py-4 border-b border-border">
-              <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider mb-2">
-                触发条件
-              </h3>
-              <div className="space-y-1.5">
-                {detail.triggers.map((t) => (
-                  <div key={t} className="flex items-center gap-2 text-[12px]">
-                    <Zap size={11} className="text-clone shrink-0" />
-                    <span className="text-text-primary">{t}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {detail && (
-            <div className="px-6 py-4 border-b border-border">
-              <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider mb-2">
-                使用工具
-              </h3>
-              <div className="flex flex-wrap gap-1.5">
-                {detail.tools.map((t) => (
-                  <span
-                    key={t}
-                    className="px-2 py-1 bg-surface-3 rounded text-[11px] font-mono text-text-secondary"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {detail && detail.auth.length > 0 && (
-            <div className="px-6 py-4 border-b border-border">
-              <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider mb-2">
-                需要授权
-              </h3>
-              <div className="space-y-1.5">
-                {detail.auth.map((a) => (
-                  <div key={a} className="flex items-center gap-2 text-[12px]">
-                    <Lock size={11} className="text-success" />
-                    <span className="text-text-primary">{a}</span>
-                    <span className="text-[10px] text-success ml-auto">已授权</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {detail && (
-            <div className="px-6 py-4">
-              <div className="flex items-center gap-2 mb-2">
-                <FileText size={12} className="text-text-muted" />
-                <h3 className="text-[12px] font-medium text-text-muted uppercase tracking-wider">
-                  SKILL.md
-                </h3>
-                <span className="text-[10px] text-text-muted font-mono ml-auto">
-                  ~/clone/skills/{skill.name.toLowerCase().replace(/\s+/g, "-")}/
-                </span>
-              </div>
-              <pre className="p-3 bg-surface-3/60 border border-border rounded-lg text-[11px] font-mono text-text-secondary leading-relaxed whitespace-pre-wrap overflow-x-auto">
-                {detail.skillMd}
-              </pre>
-            </div>
-          )}
-        </ScrollArea>
-      </InspectorPanel>
-    </div>
+          </PanelFooter>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
 
@@ -554,94 +609,81 @@ function ChatCreatorModal({ onClose }: { onClose: () => void }) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <button
-        type="button"
-        aria-label="关闭对话式创建"
-        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div className="relative w-[480px] max-h-[600px] bg-surface-1/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-3 border-b border-border/50">
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent size="md" className="max-h-[min(100vh-2rem,600px)] overflow-hidden p-0">
+        <DialogHeader className="border-b border-border px-5 py-4 pr-12">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-clone/15 flex items-center justify-center">
+            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-clone/15">
               <MessageSquare size={12} className="text-clone" />
             </div>
-            <span className="text-[13px] font-medium text-text-primary">对话式创建 Skill</span>
+            <DialogTitle className="text-base">对话式创建 Skill</DialogTitle>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-1 rounded-md hover:bg-surface-3 text-text-muted transition-colors"
-          >
-            <X size={14} />
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {chatMessages.map((msg) => (
-            <div
-              key={`${msg.from}-${msg.content}`}
-              className={`flex ${msg.from === "user" ? "justify-end" : "gap-2"}`}
-            >
-              {msg.from === "system" && (
-                <div className="w-5 h-5 rounded-full bg-clone/15 flex items-center justify-center text-[10px] shrink-0 mt-0.5">
-                  🛠
+          <DialogDescription className="text-sm">
+            通过对话快速生成 skill 结构、触发条件和工具配置。
+          </DialogDescription>
+        </DialogHeader>
+        <DialogBody className="flex min-h-0 flex-1 flex-col gap-0">
+          <ScrollArea className="max-h-[360px] flex-1 px-4 py-4">
+            <div className="space-y-3 pr-3">
+              {chatMessages.map((msg) => (
+                <ConversationMessage
+                  key={`${msg.from}-${msg.content}`}
+                  variant={msg.from === "user" ? "user" : "assistant"}
+                  avatar={
+                    msg.from === "system" ? (
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-clone/15 text-xs">
+                        🛠
+                      </div>
+                    ) : undefined
+                  }
+                  bubbleClassName={
+                    msg.from === "user" ? "border-accent bg-accent text-accent-fg" : ""
+                  }
+                  contentClassName="text-xs leading-relaxed"
+                >
+                  {msg.content}
+                </ConversationMessage>
+              ))}
+              <div className="rounded-xl border border-border/50 bg-surface-3/60 p-3">
+                <div className="mb-2 flex items-center gap-2">
+                  <FileText size={12} className="text-clone" />
+                  <span className="text-[11px] font-mono text-text-secondary">
+                    ~/clone/skills/github-pr-digest/SKILL.md
+                  </span>
                 </div>
-              )}
-              <div
-                className={`max-w-[85%] rounded-xl px-3 py-2 text-[12px] leading-relaxed whitespace-pre-line ${
-                  msg.from === "user"
-                    ? "bg-accent text-accent-fg rounded-br-sm"
-                    : "bg-surface-3/80 text-text-primary rounded-bl-sm"
-                }`}
-              >
-                {msg.content}
+                <div className="text-[11px] font-mono text-text-secondary leading-relaxed">
+                  <div className="text-text-primary"># GitHub PR Digest</div>
+                  <div className="mt-1">triggers: [&quot;PR 汇总&quot;, &quot;代码审查&quot;]</div>
+                  <div>schedule: &quot;0 9 * * *&quot;</div>
+                  <div>tools: [github_api, markdown_write]</div>
+                </div>
               </div>
             </div>
-          ))}
-          <div className="p-3 bg-surface-3/60 border border-border/50 rounded-xl">
-            <div className="flex items-center gap-2 mb-2">
-              <FileText size={12} className="text-clone" />
-              <span className="text-[11px] font-mono text-text-secondary">
-                ~/clone/skills/github-pr-digest/SKILL.md
-              </span>
-            </div>
-            <div className="text-[11px] font-mono text-text-secondary leading-relaxed">
-              <div className="text-text-primary"># GitHub PR Digest</div>
-              <div className="mt-1">triggers: [&quot;PR 汇总&quot;, &quot;代码审查&quot;]</div>
-              <div>schedule: &quot;0 9 * * *&quot;</div>
-              <div>tools: [github_api, markdown_write]</div>
-            </div>
-            <div className="flex items-center gap-2 mt-3">
-              <Button size="xs" className="flex-1">
-                保存并激活
-              </Button>
-              <Button variant="ghost" size="xs">
-                继续调整
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className="px-4 py-3 border-t border-border/50">
-          <div className="flex items-end gap-2 bg-surface-3/60 rounded-xl px-3 py-2">
-            <textarea
+          </ScrollArea>
+          <div className="border-t border-border px-4 py-4">
+            <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="描述你想要的技能..."
-              rows={1}
-              className="flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed"
+              rows={3}
+              className="min-h-[88px] border-border bg-surface-2/60 text-sm"
             />
-            <Button
-              type="button"
-              size="inline"
-              className="p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors"
-            >
-              <Send size={12} />
-            </Button>
           </div>
-        </div>
-      </div>
-    </div>
+        </DialogBody>
+        <DialogFooter className="border-t border-border px-4 py-3">
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            取消
+          </Button>
+          <Button variant="outline" size="sm">
+            继续调整
+          </Button>
+          <Button size="sm">
+            <Send size={14} />
+            保存并激活
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -695,42 +737,29 @@ function WorkflowEditorModal({ onClose }: { onClose: () => void }) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <button
-        type="button"
-        aria-label="关闭工作流编辑器"
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div className="relative w-[720px] h-[520px] bg-surface-1/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-3 border-b border-border/50">
-          <div className="flex items-center gap-3">
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent
+        size="xl"
+        className="h-[min(100vh-2rem,520px)] max-w-[720px] overflow-hidden p-0"
+      >
+        <DialogHeader className="border-b border-border px-5 py-4 pr-12">
+          <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-clone/15 flex items-center justify-center">
+              <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-clone/15">
                 <Workflow size={12} className="text-clone" />
               </div>
-              <span className="text-[13px] font-medium text-text-primary">Workflow Editor</span>
+              <DialogTitle className="text-base">Workflow Editor</DialogTitle>
             </div>
-            <span className="text-[10px] font-mono text-text-muted bg-surface-3 px-1.5 py-0.5 rounded">
+            <Badge variant="outline" size="xs" radius="md" className="font-mono">
               ~/clone/skills/github-pr-digest/
-            </span>
+            </Badge>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="xs">
-              预览 SKILL.md
-            </Button>
-            <Button size="xs">保存</Button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-1 rounded-md hover:bg-surface-3 text-text-muted transition-colors"
-            >
-              <X size={14} />
-            </button>
-          </div>
-        </div>
-        <div className="flex-1 flex">
-          <div className="flex-1 relative bg-surface-2/50 overflow-hidden">
+          <DialogDescription className="text-sm">
+            可视化配置技能工作流、节点关系和运行参数。
+          </DialogDescription>
+        </DialogHeader>
+        <DialogBody className="flex min-h-0 flex-1 gap-0">
+          <div className="relative flex-1 overflow-hidden bg-surface-2/50">
             <div
               className="absolute inset-0"
               style={{
@@ -803,101 +832,125 @@ function WorkflowEditorModal({ onClose }: { onClose: () => void }) {
               添加节点
             </Button>
           </div>
-          <div className="w-52 border-l border-border/50 p-3 overflow-y-auto">
+          <ScrollArea className="w-64 border-l border-border/50 px-4 py-4">
             <div className="text-[10px] font-medium text-text-muted uppercase tracking-wider mb-3">
               节点配置
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {[
                 { label: "名称", value: "GitHub PR Digest" },
                 { label: "触发器", value: "Cron: 0 9 * * *" },
                 { label: "超时", value: "30s" },
               ].map((f) => (
-                <div key={f.label}>
-                  <div className="text-[10px] text-text-muted mb-1">{f.label}</div>
-                  <input
-                    type="text"
-                    defaultValue={f.value}
-                    className="w-full px-2 py-1.5 bg-surface-3/60 border border-border/50 rounded-md text-[11px] text-text-primary focus:outline-none focus:border-[var(--color-brand-primary)]/30 focus:ring-1 focus:ring-[var(--color-brand-primary)]/20 transition-colors"
-                  />
-                </div>
+                <FormField key={f.label} label={f.label}>
+                  <FormFieldControl>
+                    <Input defaultValue={f.value} size="sm" className="bg-surface-3/60" />
+                  </FormFieldControl>
+                </FormField>
               ))}
               <div>
-                <div className="text-[10px] text-text-muted mb-1">工具</div>
-                <div className="space-y-1">
+                <div className="text-[10px] text-text-muted mb-2">工具</div>
+                <div className="space-y-1.5">
                   {["github_api", "markdown_write", "feishu_send"].map((t) => (
-                    <div
+                    <Badge
                       key={t}
-                      className="flex items-center gap-1.5 px-2 py-1 bg-surface-3/60 rounded text-[10px] font-mono text-text-secondary"
+                      variant="outline"
+                      size="xs"
+                      radius="md"
+                      className="flex w-full items-center justify-start gap-1.5 bg-surface-3/60 px-2 py-1 font-mono text-text-secondary"
                     >
                       <Settings size={9} className="text-text-muted" />
                       {t}
-                    </div>
+                    </Badge>
                   ))}
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </ScrollArea>
+        </DialogBody>
+        <DialogFooter className="border-t border-border px-5 py-3">
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            取消
+          </Button>
+          <Button variant="outline" size="sm">
+            预览 SKILL.md
+          </Button>
+          <Button size="sm">保存</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
 function SkillRow({ skill, onSelect }: { skill: Skill; onSelect: (s: Skill) => void }) {
   return (
-    <button
-      type="button"
-      className="flex items-center gap-3 p-3 hover:bg-surface-3/50 rounded-lg transition-colors cursor-pointer group"
+    <InteractiveRow
       onClick={() => onSelect(skill)}
+      tone="subtle"
+      className="group border-transparent p-3"
     >
-      <div className="w-9 h-9 rounded-xl bg-surface-3 flex items-center justify-center shrink-0">
-        <skill.icon size={16} className="text-text-secondary" />
-      </div>
-      <div className="flex-1 min-w-0">
+      <InteractiveRowLeading>
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-3">
+          <skill.icon size={16} className="text-text-secondary" />
+        </div>
+      </InteractiveRowLeading>
+      <InteractiveRowContent>
         <div className="flex items-center gap-1.5">
           <span className="text-[13px] font-medium text-text-primary">{skill.name}</span>
-          {skill.certified && <Shield size={11} className="text-success shrink-0" />}
+          {skill.certified && <Shield size={11} className="shrink-0 text-success" />}
         </div>
-        <div className="text-[11px] text-text-muted truncate">{skill.desc}</div>
-      </div>
-      {skill.installed ? (
-        <button
-          type="button"
-          className="p-1 text-text-muted hover:text-text-secondary transition-colors"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Pencil size={14} />
-        </button>
-      ) : (
-        <button
-          type="button"
-          className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted opacity-0 group-hover:opacity-100 transition-all"
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-          title="安装"
-        >
-          <Plus size={16} />
-        </button>
-      )}
-    </button>
+        <div className="truncate text-[12px] text-text-muted">{skill.desc}</div>
+      </InteractiveRowContent>
+      <InteractiveRowTrailing>
+        {skill.installed ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            className="text-text-muted hover:text-text-secondary"
+            onClick={(e) => e.stopPropagation()}
+            aria-label={`编辑 ${skill.name}`}
+          >
+            <Pencil size={14} />
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            className="text-text-muted opacity-0 transition-all group-hover:opacity-100 focus-visible:opacity-100"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            aria-label={`安装 ${skill.name}`}
+            title="安装"
+          >
+            <Plus size={16} />
+          </Button>
+        )}
+      </InteractiveRowTrailing>
+    </InteractiveRow>
   );
 }
 
-function InstalledTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) {
+function InstalledTab({
+  installedSkills,
+  onSelectSkill,
+}: {
+  installedSkills: Skill[];
+  onSelectSkill: (s: Skill) => void;
+}) {
   const [chatModal, setChatModal] = useState(false);
   const [workflowModal, setWorkflowModal] = useState(false);
 
   return (
     <div>
-      {/* Builder tools — elevated priority */}
       <div className="grid grid-cols-2 gap-3 mb-6">
         <Button
           type="button"
-          size="inline"
+          variant="outline"
           onClick={() => setChatModal(true)}
-          className="flex items-center gap-3 p-4 bg-surface-2 border border-border rounded-xl hover:border-border-hover transition-colors text-left"
+          className="h-auto items-start justify-start gap-3 rounded-xl bg-surface-2 p-4 text-left"
         >
           <div className="w-10 h-10 rounded-xl bg-clone/10 flex items-center justify-center shrink-0">
             <Pencil size={18} className="text-clone" />
@@ -909,9 +962,9 @@ function InstalledTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) 
         </Button>
         <Button
           type="button"
-          size="inline"
+          variant="outline"
           onClick={() => setWorkflowModal(true)}
-          className="flex items-center gap-3 p-4 bg-surface-2 border border-border rounded-xl hover:border-border-hover transition-colors text-left"
+          className="h-auto items-start justify-start gap-3 rounded-xl bg-surface-2 p-4 text-left"
         >
           <div className="w-10 h-10 rounded-xl bg-info-subtle flex items-center justify-center shrink-0">
             <Workflow size={18} className="text-info" />
@@ -923,9 +976,8 @@ function InstalledTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) 
         </Button>
       </div>
 
-      {/* Installed skills list */}
       <div className="space-y-0.5">
-        {INSTALLED_SKILLS.map((s) => (
+        {installedSkills.map((s) => (
           <SkillRow key={s.name} skill={s} onSelect={onSelectSkill} />
         ))}
       </div>
@@ -939,8 +991,7 @@ function InstalledTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) 
 function FeaturedTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) {
   return (
     <div>
-      {/* Featured cards */}
-      <div className="grid grid-cols-3 gap-3 mb-8">
+      <div className="grid grid-cols-1 gap-3 mb-8 sm:grid-cols-2 lg:grid-cols-3">
         {FEATURED_SKILLS.map((f) => (
           <EntityCard
             key={f.title}
@@ -949,9 +1000,9 @@ function FeaturedTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) {
           >
             <EntityCardHeader className="p-5 pb-0">
               <div>
-                <div className="mb-2 text-[10px] font-medium uppercase tracking-wider text-text-muted">
+                <Badge variant="outline" size="xs" className="mb-2 uppercase tracking-wider">
                   {f.badge}
-                </div>
+                </Badge>
                 <EntityCardTitle className="leading-snug">{f.title}</EntityCardTitle>
               </div>
             </EntityCardHeader>
@@ -963,8 +1014,7 @@ function FeaturedTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) {
         ))}
       </div>
 
-      {/* Recommended list — two columns */}
-      <div className="grid grid-cols-2 gap-x-4">
+      <div className="grid grid-cols-1 gap-x-4 sm:grid-cols-2">
         {RECOMMENDED_SKILLS.slice(0, 6).map((s) => (
           <SkillRow key={s.name} skill={s} onSelect={onSelectSkill} />
         ))}
@@ -974,41 +1024,50 @@ function FeaturedTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) {
 }
 
 function ExploreTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) {
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<ExploreCategory>("All");
+
+  const filteredSkills = RECOMMENDED_SKILLS.filter((skill) => {
+    const matchesQuery =
+      query.trim().length === 0 ||
+      `${skill.name} ${skill.desc} ${skill.author} ${skill.category}`
+        .toLowerCase()
+        .includes(query.toLowerCase());
+    const matchesCategory = category === "All" || skill.category === category;
+
+    return matchesQuery && matchesCategory;
+  });
+
   return (
     <div>
-      {/* Search */}
-      <div className="relative mb-4">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-        <input
-          type="text"
+      <div className="mb-4">
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Search skills..."
-          className="w-full pl-9 pr-4 py-2.5 bg-surface-2 border border-border rounded-lg text-[13px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[var(--color-brand-primary)]/30 focus:ring-1 focus:ring-[var(--color-brand-primary)]/20 transition-colors"
+          leadingIcon={<Search size={14} />}
+          className="bg-surface-2"
         />
       </div>
 
-      {/* Category filters */}
-      <div className="flex items-center gap-2 mb-5">
-        {["All", "integration", "developer", "productivity", "design", "business"].map((cat) => (
-          <button
-            type="button"
-            key={cat}
-            className={`px-3 py-1.5 rounded-lg text-[12px] transition-colors ${
-              cat === "All"
-                ? "bg-accent text-accent-fg font-medium"
-                : "text-text-secondary hover:bg-surface-3"
-            }`}
-          >
-            {cat === "All" ? cat : `#${cat}`}
-          </button>
-        ))}
-      </div>
+      <FilterPills
+        value={category}
+        onValueChange={(value) => setCategory(value as ExploreCategory)}
+      >
+        <FilterPillsList className="mb-5 flex-wrap">
+          {EXPLORE_CATEGORIES.map((item) => (
+            <FilterPillTrigger key={item} value={item}>
+              {item === "All" ? item : `#${item}`}
+            </FilterPillTrigger>
+          ))}
+        </FilterPillsList>
+      </FilterPills>
 
-      {/* Full skills list — two columns */}
       <div className="text-[12px] text-text-muted font-medium mb-2">
-        {RECOMMENDED_SKILLS.length} skills available
+        {filteredSkills.length} skills available
       </div>
-      <div className="grid grid-cols-2 gap-x-4">
-        {RECOMMENDED_SKILLS.map((s) => (
+      <div className="grid grid-cols-1 gap-x-4 sm:grid-cols-2">
+        {filteredSkills.map((s) => (
           <SkillRow key={s.name} skill={s} onSelect={onSelectSkill} />
         ))}
       </div>
@@ -1017,132 +1076,177 @@ function ExploreTab({ onSelectSkill }: { onSelectSkill: (s: Skill) => void }) {
 }
 
 const TABS_CONFIG = [
-  { id: "installed" as const, label: "Installed", icon: Wrench, count: INSTALLED_SKILLS.length },
-  { id: "featured" as const, label: "Featured", icon: Star, count: null },
-  { id: "explore" as const, label: "Explore", icon: Sparkles, count: RECOMMENDED_SKILLS.length },
+  { id: "installed" as const, label: "Installed", icon: Wrench },
+  { id: "featured" as const, label: "Featured", icon: Star },
+  { id: "explore" as const, label: "Explore", icon: Sparkles },
 ];
+
+const EXPLORE_CATEGORIES: ExploreCategory[] = [
+  "All",
+  "integration",
+  "developer",
+  "productivity",
+  "design",
+  "business",
+];
+
+function isTabId(value: string): value is TabId {
+  return TABS_CONFIG.some((tab) => tab.id === value);
+}
 
 export default function SkillsPage() {
   const [activeTab, setActiveTab] = useState<TabId>("installed");
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const [importModalOpen, setImportModalOpen] = useState(false);
+  const [importedSkills, setImportedSkills] = useState<Skill[]>([]);
   const { expandFileTree } = useProductLayout();
   const navigate = useNavigate();
-  const quickFindSkills = [...INSTALLED_SKILLS, ...RECOMMENDED_SKILLS].filter(
+  const installedSkills = [...importedSkills, ...INSTALLED_SKILLS];
+  const tabCounts: Record<TabId, number | null> = {
+    installed: installedSkills.length,
+    featured: null,
+    explore: RECOMMENDED_SKILLS.length,
+  };
+  const quickFindSkills = [...installedSkills, ...RECOMMENDED_SKILLS].filter(
     (skill, index, skills) =>
       skills.findIndex((candidate) => candidate.name === skill.name) === index,
   );
 
+  const handleImportSkill = async (file: File) => {
+    await new Promise((resolve) => window.setTimeout(resolve, 800));
+
+    const nextSkill = createImportedSkill(file.name, installedSkills);
+
+    setImportedSkills((current) => [nextSkill, ...current]);
+    setActiveTab("installed");
+    setSelectedSkill(nextSkill);
+  };
+
   return (
     <div className="h-full overflow-y-auto">
       <div className="max-w-3xl mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-xl font-bold text-text-primary">Skills</h1>
-            <p className="text-sm text-text-secondary mt-1">
+        <PageHeader
+          title="Skills"
+          description={
+            <>
               Give your clone superpowers.
               <Button
                 type="button"
+                variant="link"
                 size="inline"
                 onClick={expandFileTree}
-                className="font-mono text-text-primary hover:text-accent transition-colors ml-1 inline-flex items-center gap-1"
+                className="font-mono text-text-primary ml-1 inline-flex items-center gap-1"
               >
                 <FolderOpen size={12} />
                 ~/clone/skills/
               </Button>
-            </p>
-          </div>
-          <Button
-            type="button"
-            size="inline"
-            onClick={() => navigate("/app/sessions")}
-            className="flex items-center gap-1.5 px-4 py-2 bg-accent text-accent-fg rounded-lg text-[13px] font-medium hover:bg-accent-hover transition-colors"
-          >
-            <Plus size={14} />
-            New skill
-          </Button>
-        </div>
+            </>
+          }
+          actions={
+            <div className="flex items-center gap-2">
+              <Button type="button" variant="outline" onClick={() => setImportModalOpen(true)}>
+                <Download size={14} />
+                Import skill
+              </Button>
+              <Button type="button" onClick={() => navigate("/app/sessions")}>
+                <Plus size={14} />
+                New skill
+              </Button>
+            </div>
+          }
+        />
 
-        {/* Tabs + inline search */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            {TABS_CONFIG.map((t) => (
-              <button
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => {
+            if (isTabId(value)) {
+              setActiveTab(value);
+            }
+          }}
+        >
+          <div className="flex items-center justify-between mb-6 gap-4">
+            <TabsList className="w-auto">
+              {TABS_CONFIG.map((t) => (
+                <TabsTrigger key={t.id} value={t.id} className="px-0 pr-4">
+                  {t.label}
+                  {tabCounts[t.id] != null && (
+                    <span className="text-[11px] text-text-muted ml-1.5">{tabCounts[t.id]}</span>
+                  )}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            <div className="flex items-center gap-2">
+              <Button
                 type="button"
-                key={t.id}
-                onClick={() => setActiveTab(t.id)}
-                className={`text-[13px] transition-colors pb-2 border-b-2 ${
-                  activeTab === t.id
-                    ? "border-text-primary text-text-primary font-medium"
-                    : "border-transparent text-text-secondary hover:text-text-primary"
-                }`}
+                variant="ghost"
+                size="icon-sm"
+                title="Refresh"
+                aria-label="Refresh skills"
               >
-                {t.label}
-                {t.count != null && (
-                  <span className="text-[11px] text-text-muted ml-1.5">{t.count}</span>
-                )}
-              </button>
-            ))}
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              className="p-1.5 rounded-lg text-text-muted hover:text-text-secondary hover:bg-surface-3 transition-colors"
-              title="Refresh"
-            >
-              <RefreshCw size={13} />
-            </button>
-            <Combobox
-              value={selectedSkill?.name}
-              onValueChange={(value: string) => {
-                const nextSkill = quickFindSkills.find((skill) => skill.name === value);
-                if (!nextSkill) return;
-                setSelectedSkill(nextSkill);
-                setActiveTab(nextSkill.installed ? "installed" : "explore");
-              }}
-            >
-              <ComboboxTrigger className="h-8 w-48 bg-surface-2 text-[11px]">
-                <span className="flex items-center gap-2 text-left">
-                  <Search size={12} className="shrink-0 text-text-muted" />
-                  <span className="truncate text-text-primary">
-                    {selectedSkill ? selectedSkill.name : "Search skills"}
+                <RefreshCw size={13} />
+              </Button>
+              <Combobox
+                value={selectedSkill?.name}
+                onValueChange={(value: string) => {
+                  const nextSkill = quickFindSkills.find((skill) => skill.name === value);
+                  if (!nextSkill) return;
+                  setSelectedSkill(nextSkill);
+                  setActiveTab(nextSkill.installed ? "installed" : "explore");
+                }}
+              >
+                <ComboboxTrigger className="h-8 w-48 bg-surface-2 text-[12px]">
+                  <span className="flex items-center gap-2 text-left">
+                    <Search size={12} className="shrink-0 text-text-muted" />
+                    <span className="truncate text-text-primary">
+                      {selectedSkill ? selectedSkill.name : "Search skills"}
+                    </span>
                   </span>
-                </span>
-              </ComboboxTrigger>
-              <ComboboxContent>
-                <ComboboxInput placeholder="Search skills" leadingIcon={<Search size={12} />} />
-                <div className="max-h-80 overflow-y-auto p-1">
-                  {quickFindSkills.map((skill) => (
-                    <ComboboxItem
-                      key={skill.name}
-                      value={skill.name}
-                      textValue={`${skill.name} ${skill.desc} ${skill.category} ${skill.author}`}
-                    >
-                      <div className="min-w-0 flex-1">
-                        <div className="truncate text-[12px] font-medium text-text-primary">
-                          {skill.name}
+                </ComboboxTrigger>
+                <ComboboxContent>
+                  <ComboboxInput placeholder="Search skills" leadingIcon={<Search size={12} />} />
+                  <div className="max-h-80 overflow-y-auto p-1">
+                    {quickFindSkills.map((skill) => (
+                      <ComboboxItem
+                        key={skill.name}
+                        value={skill.name}
+                        textValue={`${skill.name} ${skill.desc} ${skill.category} ${skill.author}`}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate text-[12px] font-medium text-text-primary">
+                            {skill.name}
+                          </div>
+                          <div className="truncate text-[11px] text-text-muted">
+                            {skill.category} · {skill.author}
+                          </div>
                         </div>
-                        <div className="truncate text-[10px] text-text-muted">
-                          {skill.category} · {skill.author}
-                        </div>
-                      </div>
-                    </ComboboxItem>
-                  ))}
-                </div>
-              </ComboboxContent>
-            </Combobox>
+                      </ComboboxItem>
+                    ))}
+                  </div>
+                </ComboboxContent>
+              </Combobox>
+            </div>
           </div>
-        </div>
 
-        {/* Tab content */}
-        {activeTab === "installed" && <InstalledTab onSelectSkill={setSelectedSkill} />}
-        {activeTab === "featured" && <FeaturedTab onSelectSkill={setSelectedSkill} />}
-        {activeTab === "explore" && <ExploreTab onSelectSkill={setSelectedSkill} />}
+          <TabsContent value="installed">
+            <InstalledTab installedSkills={installedSkills} onSelectSkill={setSelectedSkill} />
+          </TabsContent>
+          <TabsContent value="featured">
+            <FeaturedTab onSelectSkill={setSelectedSkill} />
+          </TabsContent>
+          <TabsContent value="explore">
+            <ExploreTab onSelectSkill={setSelectedSkill} />
+          </TabsContent>
+        </Tabs>
       </div>
 
       {selectedSkill && (
         <SkillDetailPanel skill={selectedSkill} onClose={() => setSelectedSkill(null)} />
       )}
+      <ImportSkillModal
+        open={importModalOpen}
+        onClose={() => setImportModalOpen(false)}
+        onImport={handleImportSkill}
+      />
     </div>
   );
 }

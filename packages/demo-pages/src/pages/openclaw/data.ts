@@ -15,9 +15,30 @@ export type ModelProvider =
   | "anthropic"
   | "openai"
   | "google"
+  | "ollama"
+  | "nvidia"
+  | "stepfun"
+  | "amazon-bedrock"
+  | "deepseek"
+  | "mistral"
   | "xai"
+  | "together"
+  | "huggingface"
+  | "qwen"
+  | "volcengine"
+  | "qianfan"
+  | "vllm"
+  | "byteplus"
+  | "venice"
+  | "github-copilot"
+  | "xiaomi"
+  | "chutes"
   | "kimi"
   | "glm"
+  | "moonshot"
+  | "zai"
+  | "custom-openai"
+  | "custom-anthropic"
   | "minimax"
   | "openrouter"
   | "siliconflow"
@@ -93,6 +114,31 @@ export interface ProviderModel {
   inputPrice: string;
   outputPrice: string;
   tier?: "plus" | "pro";
+}
+
+function createProviderModel(
+  id: string,
+  name: string,
+  contextWindow: string,
+  releasedAt: string,
+  inputPrice: string,
+  outputPrice: string,
+  enabled = false,
+): ProviderModel {
+  return { id, name, enabled, contextWindow, releasedAt, inputPrice, outputPrice };
+}
+
+function createProviderDetail({
+  id,
+  name,
+  description,
+  apiKeyPlaceholder,
+  proxyUrl,
+  apiDocsUrl,
+  models,
+  enabled = false,
+}: ProviderDetail): ProviderDetail {
+  return { id, name, description, enabled, apiKeyPlaceholder, proxyUrl, apiDocsUrl, models };
 }
 
 const PROVIDER_DETAILS: ProviderDetail[] = [
@@ -398,6 +444,367 @@ const PROVIDER_DETAILS: ProviderDetail[] = [
       },
     ],
   },
+  createProviderDetail({
+    id: "ollama",
+    name: "Ollama",
+    description: "Run local open-weight models on your own machine",
+    enabled: false,
+    apiKeyPlaceholder: "Not required",
+    proxyUrl: "http://localhost:11434/v1",
+    models: [createProviderModel("qwen3-32b", "Qwen3 32B", "128K", "2026-02-10", "Local", "Local")],
+  }),
+  createProviderDetail({
+    id: "nvidia",
+    name: "NVIDIA",
+    description: "NVIDIA NIM endpoints for accelerated inference",
+    enabled: false,
+    apiKeyPlaceholder: "nvapi-...",
+    proxyUrl: "https://integrate.api.nvidia.com/v1",
+    apiDocsUrl: "https://build.nvidia.com/",
+    models: [
+      createProviderModel(
+        "llama-3_1-nemotron-70b",
+        "Llama 3.1 Nemotron 70B",
+        "128K",
+        "2026-01-06",
+        "$0.90/M",
+        "$0.90/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "stepfun",
+    name: "StepFun",
+    description: "Step series multimodal and reasoning models",
+    enabled: false,
+    apiKeyPlaceholder: "step-...",
+    proxyUrl: "https://api.stepfun.com/v1",
+    apiDocsUrl: "https://platform.stepfun.com/",
+    models: [createProviderModel("step-2", "Step 2", "256K", "2026-01-18", "¥4.00/M", "¥16.00/M")],
+  }),
+  createProviderDetail({
+    id: "amazon-bedrock",
+    name: "AWS Bedrock",
+    description: "Managed foundation model access through Amazon Bedrock",
+    enabled: false,
+    apiKeyPlaceholder: "AWS credentials",
+    proxyUrl: "https://bedrock-runtime.us-east-1.amazonaws.com",
+    apiDocsUrl: "https://console.aws.amazon.com/bedrock/",
+    models: [
+      createProviderModel(
+        "anthropic-claude-3_7-sonnet",
+        "Claude 3.7 Sonnet",
+        "200K",
+        "2026-02-01",
+        "$3.00/M",
+        "$15.00/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "deepseek",
+    name: "DeepSeek",
+    description: "DeepSeek reasoning and coder models",
+    enabled: false,
+    apiKeyPlaceholder: "sk-...",
+    proxyUrl: "https://api.deepseek.com/v1",
+    apiDocsUrl: "https://platform.deepseek.com/api_keys",
+    models: [
+      createProviderModel(
+        "deepseek-v3-2",
+        "DeepSeek V3.2",
+        "128K",
+        "2026-02-28",
+        "$0.27/M",
+        "$1.10/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "mistral",
+    name: "Mistral AI",
+    description: "Mistral flagship and coding models",
+    enabled: false,
+    apiKeyPlaceholder: "mistral-...",
+    proxyUrl: "https://api.mistral.ai/v1",
+    apiDocsUrl: "https://console.mistral.ai/api-keys/",
+    models: [
+      createProviderModel(
+        "mistral-large",
+        "Mistral Large",
+        "128K",
+        "2026-01-28",
+        "$2.00/M",
+        "$6.00/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "together",
+    name: "Together AI",
+    description: "Open-source model inference across many vendors",
+    enabled: false,
+    apiKeyPlaceholder: "together-...",
+    proxyUrl: "https://api.together.xyz/v1",
+    apiDocsUrl: "https://api.together.xyz/settings/api-keys",
+    models: [
+      createProviderModel(
+        "meta-llama-3_3-70b",
+        "Llama 3.3 70B Turbo",
+        "128K",
+        "2026-01-12",
+        "$0.88/M",
+        "$0.88/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "huggingface",
+    name: "Hugging Face",
+    description: "Hosted inference for open models from the Hugging Face hub",
+    enabled: false,
+    apiKeyPlaceholder: "hf_...",
+    proxyUrl: "https://router.huggingface.co/v1",
+    apiDocsUrl: "https://huggingface.co/settings/tokens",
+    models: [
+      createProviderModel(
+        "qwen2_5-coder-32b",
+        "Qwen2.5 Coder 32B",
+        "128K",
+        "2026-01-09",
+        "$0.70/M",
+        "$0.70/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "qwen",
+    name: "Qwen",
+    description: "Alibaba Qwen family with strong multilingual support",
+    enabled: false,
+    apiKeyPlaceholder: "sk-...",
+    proxyUrl: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    apiDocsUrl: "https://bailian.console.aliyun.com/?tab=model#/api-key",
+    models: [
+      createProviderModel("qwen-max", "Qwen Max", "128K", "2026-01-14", "¥4.00/M", "¥12.00/M"),
+    ],
+  }),
+  createProviderDetail({
+    id: "volcengine",
+    name: "Volcengine Ark",
+    description: "Doubao and partner models on Volcengine Ark",
+    enabled: false,
+    apiKeyPlaceholder: "ark-...",
+    proxyUrl: "https://ark.cn-beijing.volces.com/api/v3",
+    apiDocsUrl: "https://console.volcengine.com/ark",
+    models: [
+      createProviderModel(
+        "doubao-pro-32k",
+        "Doubao Pro 32K",
+        "32K",
+        "2026-01-22",
+        "¥0.80/M",
+        "¥2.00/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "qianfan",
+    name: "Baidu Qianfan",
+    description: "ERNIE and partner models on Baidu Qianfan",
+    enabled: false,
+    apiKeyPlaceholder: "bce-...",
+    proxyUrl: "https://qianfan.baidubce.com/v2",
+    apiDocsUrl: "https://console.bce.baidu.com/qianfan/",
+    models: [
+      createProviderModel(
+        "ernie-4_0-turbo",
+        "ERNIE 4.0 Turbo",
+        "128K",
+        "2026-01-30",
+        "¥2.00/M",
+        "¥8.00/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "vllm",
+    name: "vLLM",
+    description: "Self-hosted vLLM endpoints for OpenAI-compatible inference",
+    enabled: false,
+    apiKeyPlaceholder: "Optional",
+    proxyUrl: "http://localhost:8000/v1",
+    models: [
+      createProviderModel(
+        "llama-3_1-8b",
+        "Llama 3.1 8B",
+        "128K",
+        "2026-01-04",
+        "Self-hosted",
+        "Self-hosted",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "byteplus",
+    name: "BytePlus ModelArk",
+    description: "BytePlus hosted model APIs and enterprise inference",
+    enabled: false,
+    apiKeyPlaceholder: "bp-...",
+    proxyUrl: "https://ark.byteplus.com/api/v3",
+    apiDocsUrl: "https://console.byteplus.com/modelark",
+    models: [
+      createProviderModel(
+        "doubao-seed-1_6",
+        "Doubao Seed 1.6",
+        "128K",
+        "2026-02-08",
+        "$0.90/M",
+        "$3.00/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "venice",
+    name: "Venice",
+    description: "Privacy-first hosted AI models on Venice",
+    enabled: false,
+    apiKeyPlaceholder: "venice-...",
+    proxyUrl: "https://api.venice.ai/api/v1",
+    apiDocsUrl: "https://venice.ai/settings/api",
+    models: [
+      createProviderModel(
+        "venice-uncensored",
+        "Venice Uncensored",
+        "32K",
+        "2026-01-11",
+        "$3.00/M",
+        "$9.00/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "github-copilot",
+    name: "GitHub Copilot",
+    description: "GitHub-managed access to leading frontier models",
+    enabled: false,
+    apiKeyPlaceholder: "GitHub token",
+    proxyUrl: "https://api.githubcopilot.com",
+    apiDocsUrl: "https://github.com/settings/copilot",
+    models: [
+      createProviderModel(
+        "gpt-4_1-copilot",
+        "GPT-4.1 via Copilot",
+        "128K",
+        "2026-02-02",
+        "Included",
+        "Included",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "xiaomi",
+    name: "Xiaomi MiMo",
+    description: "Xiaomi MiMo hosted models and enterprise endpoints",
+    enabled: false,
+    apiKeyPlaceholder: "mimo-...",
+    proxyUrl: "https://api.mimo.com/v1",
+    apiDocsUrl: "https://platform.xiaomi.com/",
+    models: [createProviderModel("mimo-7b", "MiMo 7B", "32K", "2026-01-16", "¥0.50/M", "¥1.50/M")],
+  }),
+  createProviderDetail({
+    id: "chutes",
+    name: "Chutes",
+    description: "Managed inference endpoints on Chutes",
+    enabled: false,
+    apiKeyPlaceholder: "chutes-...",
+    proxyUrl: "https://api.chutes.ai/v1",
+    apiDocsUrl: "https://app.chutes.ai/settings/api-keys",
+    models: [
+      createProviderModel(
+        "deepseek-r1-distill",
+        "DeepSeek R1 Distill",
+        "128K",
+        "2026-01-03",
+        "$0.60/M",
+        "$2.40/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "moonshot",
+    name: "Moonshot AI",
+    description: "Moonshot official endpoints for Kimi and long-context models",
+    enabled: false,
+    apiKeyPlaceholder: "sk-...",
+    proxyUrl: "https://api.moonshot.cn/v1",
+    apiDocsUrl: "https://platform.moonshot.cn/console/api-keys",
+    models: [
+      createProviderModel(
+        "moonshot-v1-128k",
+        "Moonshot V1 128K",
+        "128K",
+        "2026-01-07",
+        "¥12.00/M",
+        "¥60.00/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "zai",
+    name: "Z.ai",
+    description: "Z.ai hosted multimodal and reasoning models",
+    enabled: false,
+    apiKeyPlaceholder: "zai-...",
+    proxyUrl: "https://api.z.ai/v1",
+    apiDocsUrl: "https://platform.z.ai/",
+    models: [
+      createProviderModel(
+        "zai-thinking",
+        "Z.ai Thinking",
+        "128K",
+        "2026-02-12",
+        "$1.50/M",
+        "$6.00/M",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "custom-openai",
+    name: "Custom OpenAI-compatible",
+    description: "Connect any OpenAI-compatible endpoint with your own base URL",
+    enabled: false,
+    apiKeyPlaceholder: "sk-...",
+    proxyUrl: "https://your-openai-compatible-endpoint/v1",
+    models: [
+      createProviderModel(
+        "custom-gpt",
+        "Custom OpenAI Model",
+        "128K",
+        "2026-01-01",
+        "Custom",
+        "Custom",
+      ),
+    ],
+  }),
+  createProviderDetail({
+    id: "custom-anthropic",
+    name: "Custom Anthropic-compatible",
+    description: "Connect any Anthropic-compatible endpoint with your own base URL",
+    enabled: false,
+    apiKeyPlaceholder: "sk-ant-...",
+    proxyUrl: "https://your-anthropic-compatible-endpoint",
+    models: [
+      createProviderModel(
+        "custom-claude",
+        "Custom Claude-compatible Model",
+        "200K",
+        "2026-01-01",
+        "Custom",
+        "Custom",
+      ),
+    ],
+  }),
   {
     id: "xiaoxiang",
     name: "Xiaoma",

@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 
+import { TextLink } from "../primitives/text-link";
 import { expectNoA11yViolations } from "../test/a11y";
 import { BrandRail } from "./brand-rail";
 
@@ -15,7 +16,7 @@ describe("BrandRail", () => {
         topRight={<button type="button">Language</button>}
         title={<h1>OpenClaw, ready to use.</h1>}
         description="Desktop AI that ships with the right tools already wired in."
-        footer={<a href="https://github.com/refly-ai/nexu">Star us on GitHub</a>}
+        footer={<TextLink href="https://github.com/refly-ai/nexu">Star us on GitHub</TextLink>}
       >
         <p>Bring your workspace online in minutes.</p>
       </BrandRail>,

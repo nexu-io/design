@@ -1,3 +1,4 @@
+import { Badge, Button, ConversationMessage, Input } from "@nexu-design/ui-web";
 import {
   BarChart3,
   Bookmark,
@@ -166,15 +167,17 @@ function NewSessionViewCondensed({ onStartChat }: { onStartChat: (msg: string) =
         {/* Quick action pills */}
         <div className="flex flex-wrap gap-1.5 justify-center mb-4">
           {QUICK_ACTIONS.map((t) => (
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="xs"
               key={t.label}
               onClick={() => onStartChat(t.label)}
-              className="flex items-center gap-1 px-2.5 py-1 bg-surface-2 border border-border rounded-full text-[11px] text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors"
+              className="rounded-full"
             >
               <t.icon size={10} className={t.color} />
               {t.label}
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -273,10 +276,7 @@ export default function StepSession() {
                 size={12}
                 className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted"
               />
-              <input
-                placeholder="搜索对话..."
-                className="w-full pl-7 pr-2 py-1.5 bg-surface-2 border border-border-subtle rounded-md text-[10px] text-text-primary placeholder:text-text-muted focus:outline-none"
-              />
+              <Input placeholder="搜索对话..." size="sm" className="pl-7" />
             </div>
             <button
               type="button"
@@ -346,12 +346,12 @@ export default function StepSession() {
                 <span className="text-[12px] font-medium text-text-primary">
                   竞品分析 · AI 赛道
                 </span>
-                <span className="text-[9px] bg-surface-3 px-1 py-0.5 rounded flex items-center gap-0.5">
+                <Badge variant="outline" size="xs" className="gap-0.5">
                   🌐 web
-                </span>
-                <span className="text-[9px] text-text-muted bg-surface-3 px-1 py-0.5 rounded font-mono">
+                </Badge>
+                <Badge variant="outline" size="xs" className="font-mono text-text-muted">
                   8 file ops
-                </span>
+                </Badge>
               </div>
               <div className="flex items-center gap-1">
                 <button
@@ -388,15 +388,23 @@ export default function StepSession() {
                       </div>
                     )}
                     {msg.content && (
-                      <div
-                        className={`rounded-xl px-3 py-2 text-[11px] leading-relaxed whitespace-pre-line ${
+                      <ConversationMessage
+                        variant={msg.from === "user" ? "user" : "assistant"}
+                        avatar={
+                          msg.from === "clone" ? (
+                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-clone/15 text-[10px]">
+                              😊
+                            </div>
+                          ) : undefined
+                        }
+                        bubbleClassName={
                           msg.from === "user"
-                            ? "bg-accent text-accent-fg rounded-br-sm"
-                            : "bg-surface-2 border border-border text-text-primary rounded-bl-sm"
-                        }`}
+                            ? "bg-accent text-accent-fg text-[11px]"
+                            : "bg-surface-2 text-[11px]"
+                        }
                       >
                         {msg.content}
-                      </div>
+                      </ConversationMessage>
                     )}
                   </div>
                 </div>
@@ -412,11 +420,12 @@ export default function StepSession() {
                 <button type="button" className="p-1 text-text-muted hover:text-text-secondary">
                   <Sparkles size={13} />
                 </button>
-                <input
+                <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="跟分身说点什么..."
-                  className="flex-1 bg-transparent text-[12px] text-text-primary placeholder:text-text-muted focus:outline-none"
+                  size="sm"
+                  className="border-0 bg-transparent shadow-none"
                 />
                 <button type="button" className="p-1 text-text-muted hover:text-text-secondary">
                   <Mic size={13} />
@@ -437,9 +446,9 @@ export default function StepSession() {
                   <span className="text-[11px] font-medium text-text-primary truncate">
                     ai-agent-product-plan.md
                   </span>
-                  <span className="text-[8px] text-success bg-success-subtle px-1 py-0.5 rounded">
+                  <Badge variant="success" size="xs">
                     新建
-                  </span>
+                  </Badge>
                 </div>
                 <button
                   type="button"
@@ -507,11 +516,9 @@ Phase 3: Skills 生态`}
                         className="p-1.5 rounded-md hover:bg-surface-3 transition-colors cursor-pointer"
                       >
                         <div className="flex items-center gap-1.5">
-                          <span
-                            className={`px-0.5 py-0.5 rounded text-[7px] font-bold ${style.color}`}
-                          >
+                          <Badge size="xs" className={`${style.color} font-bold`}>
                             {op.action}
-                          </span>
+                          </Badge>
                           <span className="text-[10px] font-medium text-text-secondary truncate">
                             {name}
                           </span>

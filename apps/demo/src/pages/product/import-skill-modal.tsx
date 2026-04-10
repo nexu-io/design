@@ -58,6 +58,10 @@ export function ImportSkillModal({ open, onClose, onImport }: ImportSkillModalPr
     onClose();
   }, [onClose, reset]);
 
+  const handleFileClick = () => {
+    fileInputRef.current?.click();
+  };
+
   const handleFileSelection = (file: File | null | undefined) => {
     const zipFile = getSelectedZipFile(file);
 
@@ -69,6 +73,17 @@ export function ImportSkillModal({ open, onClose, onImport }: ImportSkillModalPr
 
     setSelectedFile(zipFile);
     setError(null);
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleFileSelection(event.target.files?.[0]);
+    event.target.value = "";
+  };
+
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
+    setDragOver(false);
+    handleFileSelection(event.dataTransfer.files[0]);
   };
 
   const handleImport = async () => {
@@ -98,7 +113,8 @@ export function ImportSkillModal({ open, onClose, onImport }: ImportSkillModalPr
         <DialogHeader className="border-b border-border px-5 py-4">
           <DialogTitle className="text-base">Import skill</DialogTitle>
           <DialogDescription>
-            Import a local skill package into the OpenClaw workspace demo.
+            Import a local skill package into the demo workspace. Based on the canonical workspace
+            import flow.
           </DialogDescription>
         </DialogHeader>
 
@@ -129,7 +145,9 @@ export function ImportSkillModal({ open, onClose, onImport }: ImportSkillModalPr
                 <div className="flex flex-col items-center justify-center gap-2 py-10">
                   <CheckCircle2 size={32} className="text-success" />
                   <p className="text-sm font-medium text-text-primary">Skill imported</p>
-                  <p className="text-xs text-text-muted">The skill is now available under Yours.</p>
+                  <p className="text-xs text-text-muted">
+                    The imported skill is now available in Installed.
+                  </p>
                 </div>
               ) : (
                 <div>
@@ -140,12 +158,8 @@ export function ImportSkillModal({ open, onClose, onImport }: ImportSkillModalPr
                       setDragOver(true);
                     }}
                     onDragLeave={() => setDragOver(false)}
-                    onDrop={(event) => {
-                      event.preventDefault();
-                      setDragOver(false);
-                      handleFileSelection(event.dataTransfer.files[0]);
-                    }}
-                    onClick={() => fileInputRef.current?.click()}
+                    onDrop={handleDrop}
+                    onClick={handleFileClick}
                     className={`flex w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed px-6 py-10 text-center transition-colors ${
                       dragOver
                         ? "border-brand-primary bg-brand-subtle"
@@ -181,10 +195,7 @@ export function ImportSkillModal({ open, onClose, onImport }: ImportSkillModalPr
                     type="file"
                     accept=".zip"
                     className="hidden"
-                    onChange={(event) => {
-                      handleFileSelection(event.target.files?.[0]);
-                      event.target.value = "";
-                    }}
+                    onChange={handleFileChange}
                   />
 
                   {error ? (

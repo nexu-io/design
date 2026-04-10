@@ -2,6 +2,7 @@
 import {
   Badge,
   Button,
+  Card,
   Dialog,
   DialogBody,
   DialogContent,
@@ -34,6 +35,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { type RewardTaskState, useBudget } from "../../hooks/useBudget";
 import { usePageTitle } from "../../hooks/usePageTitle";
+import { useOpenClawDemoState } from "./demo-state";
 
 type RewardGroupKey = "daily" | "community" | "social";
 
@@ -94,6 +96,7 @@ export default function RewardsPage() {
   usePageTitle("Rewards");
 
   const budget = useBudget();
+  const { loggedIn, setLoggedIn } = useOpenClawDemoState();
   const [materialTaskId, setMaterialTaskId] = useState<string | null>(null);
   const [confirmTaskId, setConfirmTaskId] = useState<string | null>(null);
   const [captionCopiedFor, setCaptionCopiedFor] = useState<string | null>(null);
@@ -137,15 +140,15 @@ export default function RewardsPage() {
           <div className="flex flex-wrap items-center gap-2">
             <Button
               size="sm"
-              variant={budget.isSignedIn ? "default" : "outline"}
-              onClick={() => budget.setIsSignedIn(true)}
+              variant={loggedIn ? "default" : "outline"}
+              onClick={() => setLoggedIn(true)}
             >
               Signed in
             </Button>
             <Button
               size="sm"
-              variant={!budget.isSignedIn ? "default" : "outline"}
-              onClick={() => budget.setIsSignedIn(false)}
+              variant={!loggedIn ? "default" : "outline"}
+              onClick={() => setLoggedIn(false)}
             >
               Signed out
             </Button>
@@ -187,7 +190,7 @@ export default function RewardsPage() {
       <div className="mt-6 grid gap-6 lg:grid-cols-[1.5fr_0.9fr]">
         <div className="space-y-5">
           {groupedTasks.map((group) => (
-            <section key={group.key} className="card p-5 sm:p-6">
+            <Card key={group.key} variant="static" padding="none" className="p-5 sm:p-6">
               <SectionHeader
                 title={
                   <div>
@@ -266,12 +269,12 @@ export default function RewardsPage() {
                   );
                 })}
               </div>
-            </section>
+            </Card>
           ))}
         </div>
 
         <div className="space-y-4">
-          <div className="card p-5">
+          <Card variant="static" padding="md">
             <div className="flex items-center gap-2">
               <Share2 size={16} className="text-accent" />
               <h2 className="text-sm font-semibold text-text-primary">How reward sharing works</h2>
@@ -286,9 +289,9 @@ export default function RewardsPage() {
                 Back to Pricing / Usage <ArrowUpRight size={14} />
               </Link>
             </Button>
-          </div>
+          </Card>
 
-          <div className="card p-5">
+          <Card variant="static" padding="md">
             <div className="text-sm font-semibold text-text-primary">Supported share channels</div>
             <div className="mt-3 grid gap-3">
               {["小红书", "即刻", "飞书"].map((channel) => (
@@ -303,7 +306,7 @@ export default function RewardsPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
         </div>
       </div>
 

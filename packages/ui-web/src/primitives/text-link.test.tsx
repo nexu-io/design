@@ -37,4 +37,26 @@ describe("TextLink", () => {
     );
     expect(screen.getByRole("link")).toHaveClass("font-bold");
   });
+
+  it("renders ArrowUpRight when enabled", () => {
+    const { container } = render(
+      <TextLink href="#" showArrowUpRight>
+        Open in browser
+      </TextLink>,
+    );
+
+    expect(screen.getByRole("link", { name: "Open in browser" })).toBeInTheDocument();
+    expect(container.querySelector("svg")).toBeInTheDocument();
+  });
+
+  it("does not render ArrowUpRight for asChild links", () => {
+    const { container } = render(
+      <TextLink asChild showArrowUpRight>
+        <a href="https://example.com">Open in browser</a>
+      </TextLink>,
+    );
+
+    expect(screen.getByRole("link", { name: "Open in browser" })).toBeInTheDocument();
+    expect(container.querySelector("svg")).not.toBeInTheDocument();
+  });
 });

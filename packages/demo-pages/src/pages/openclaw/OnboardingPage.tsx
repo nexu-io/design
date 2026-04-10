@@ -1,5 +1,6 @@
 import {
   Button,
+  Card,
   ConversationMessage,
   Input,
   Label,
@@ -274,14 +275,20 @@ function UseCaseStep({
               key={opt.value}
               type="button"
               onClick={() => toggle(opt.value)}
-              className={`card text-left cursor-pointer transition-shadow duration-150 p-5 ${
-                isSelected
-                  ? "ring-2 ring-[var(--color-brand-primary)] border-[var(--color-brand-primary)]"
-                  : ""
-              }`}
+              className="text-left cursor-pointer"
             >
-              <span className="text-2xl mb-2 block">{opt.icon}</span>
-              <span className="text-[14px] font-medium text-text-primary block">{opt.label}</span>
+              <Card
+                variant="static"
+                padding="md"
+                className={`transition-shadow duration-150 ${
+                  isSelected
+                    ? "ring-2 ring-[var(--color-brand-primary)] border-[var(--color-brand-primary)]"
+                    : ""
+                }`}
+              >
+                <span className="text-2xl mb-2 block">{opt.icon}</span>
+                <span className="text-[14px] font-medium text-text-primary block">{opt.label}</span>
+              </Card>
             </button>
           );
         })}
@@ -335,23 +342,29 @@ function ChannelsStep({
               key={ch.id}
               type="button"
               onClick={() => toggle(ch.id)}
-              className={`card flex flex-col items-center justify-center cursor-pointer transition-shadow duration-150 py-7 px-5 ${
-                isSelected
-                  ? "ring-2 ring-[var(--color-brand-primary)] border-[var(--color-brand-primary)]"
-                  : ""
-              }`}
+              className="cursor-pointer"
               style={{ color: ch.color }}
             >
-              <div className="mb-3">{ch.icon}</div>
-              <span className="text-[14px] font-medium text-text-primary">{ch.name}</span>
-              {isSelected && (
-                <div
-                  className="mt-2 flex items-center gap-1 text-[12px] font-medium"
-                  style={{ color: "var(--color-brand-primary)" }}
-                >
-                  <Check size={12} /> Selected
-                </div>
-              )}
+              <Card
+                variant="static"
+                padding="none"
+                className={`flex flex-col items-center justify-center transition-shadow duration-150 py-7 px-5 ${
+                  isSelected
+                    ? "ring-2 ring-[var(--color-brand-primary)] border-[var(--color-brand-primary)]"
+                    : ""
+                }`}
+              >
+                <div className="mb-3">{ch.icon}</div>
+                <span className="text-[14px] font-medium text-text-primary">{ch.name}</span>
+                {isSelected && (
+                  <div
+                    className="mt-2 flex items-center gap-1 text-[12px] font-medium"
+                    style={{ color: "var(--color-brand-primary)" }}
+                  >
+                    <Check size={12} /> Selected
+                  </div>
+                )}
+              </Card>
             </button>
           );
         })}

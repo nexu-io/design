@@ -1,4 +1,4 @@
-import { Button } from "@nexu-design/ui-web";
+import { Button, TextLink } from "@nexu-design/ui-web";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { usePageTitle } from "../../hooks/usePageTitle";
@@ -349,10 +349,7 @@ export default function PrivacyPolicyPage() {
           </ul>
           <p className="mt-4">
             For specific data residency requirements, contact us at{" "}
-            <a href="mailto:privacy@refly.ai" className="text-accent hover:underline">
-              privacy@refly.ai
-            </a>
-            .
+            <TextLink href="mailto:privacy@refly.ai">privacy@refly.ai</TextLink>.
           </p>
         </Section>
 
@@ -384,10 +381,7 @@ export default function PrivacyPolicyPage() {
           <p className="mt-4">
             You can delete specific memories, knowledge, or conversations from your Clone at any
             time. Request full account and data deletion via settings or by contacting{" "}
-            <a href="mailto:privacy@refly.ai" className="text-accent hover:underline">
-              privacy@refly.ai
-            </a>
-            .
+            <TextLink href="mailto:privacy@refly.ai">privacy@refly.ai</TextLink>.
           </p>
         </Section>
 
@@ -424,11 +418,8 @@ export default function PrivacyPolicyPage() {
             </li>
           </ul>
           <p className="mt-4">
-            Contact{" "}
-            <a href="mailto:privacy@refly.ai" className="text-accent hover:underline">
-              privacy@refly.ai
-            </a>{" "}
-            or use in-product settings to exercise your rights. We respond within 30 days.
+            Contact <TextLink href="mailto:privacy@refly.ai">privacy@refly.ai</TextLink> or use
+            in-product settings to exercise your rights. We respond within 30 days.
           </p>
         </Section>
 
@@ -516,21 +507,15 @@ export default function PrivacyPolicyPage() {
           <ul className="list-none pl-0">
             <li>
               <strong>General Privacy</strong>:{" "}
-              <a href="mailto:privacy@refly.ai" className="text-accent hover:underline">
-                privacy@refly.ai
-              </a>
+              <TextLink href="mailto:privacy@refly.ai">privacy@refly.ai</TextLink>
             </li>
             <li>
               <strong>Data Protection Officer</strong>:{" "}
-              <a href="mailto:dpo@refly.ai" className="text-accent hover:underline">
-                dpo@refly.ai
-              </a>
+              <TextLink href="mailto:dpo@refly.ai">dpo@refly.ai</TextLink>
             </li>
             <li>
               <strong>EU Representative</strong>:{" "}
-              <a href="mailto:eu-privacy@refly.ai" className="text-accent hover:underline">
-                eu-privacy@refly.ai
-              </a>
+              <TextLink href="mailto:eu-privacy@refly.ai">eu-privacy@refly.ai</TextLink>
             </li>
           </ul>
           <p className="mt-3">

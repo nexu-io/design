@@ -1,4 +1,5 @@
 import {
+  Badge,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
@@ -13,10 +14,12 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxTrigger,
+  ConversationMessage,
   DataTable,
   InteractiveRow,
   InteractiveRowContent,
   InteractiveRowTrailing,
+  PageHeader,
   ScrollArea,
   Table,
   TableBody,
@@ -24,6 +27,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  Textarea,
 } from "@nexu-design/ui-web";
 import {
   BarChart3,
@@ -138,9 +142,9 @@ function FileOpBadge({ op }: { op: FileOp }) {
   const style = FILE_OP_STYLES[op.action];
   return (
     <div className="flex items-center gap-1.5 px-2 py-1 bg-surface-3 rounded text-[11px] font-mono">
-      <span className={`px-1 py-0.5 rounded text-[9px] font-bold ${style.color}`}>
+      <Badge size="xs" className={`${style.color} font-bold`}>
         {style.label}
-      </span>
+      </Badge>
       <span className="text-text-secondary truncate">{op.path}</span>
     </div>
   );
@@ -280,22 +284,27 @@ function NewSessionView({
   return (
     <div className="flex-1 flex flex-col items-center px-8 overflow-y-auto">
       <div className="w-full max-w-xl flex flex-col items-center py-8">
-        {/* Avatar + Greeting */}
-        <div className="w-16 h-16 rounded-full bg-surface-3 animate-clone-breath-subtle flex items-center justify-center text-3xl mb-5">
-          😊
+        <div className="mb-6 flex w-full flex-col items-center">
+          <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-surface-3 text-3xl animate-clone-breath-subtle">
+            😊
+          </div>
+          <PageHeader
+            className="w-full max-w-lg items-center text-center"
+            title="Good evening, Tom"
+            description={
+              <>
+                你的主线入口 — <span className="text-accent font-medium">对话即操控一切</span>
+                <br />
+                写文件、记笔记、问同事、设自动化、装技能、查 OKR — 这一个对话窗就是你的 agent
+                computer。所有操作都沉淀在 <span className="text-text-secondary">分身的大脑</span>里
+              </>
+            }
+          />
         </div>
-        <h2 className="text-xl font-semibold text-text-primary mb-1">Good evening, Tom</h2>
-        <p className="text-sm text-text-secondary mb-1">
-          你的主线入口 — <span className="text-accent font-medium">对话即操控一切</span>
-        </p>
-        <p className="text-[11px] text-text-muted mb-6 text-center max-w-sm">
-          写文件、记笔记、问同事、设自动化、装技能、查 OKR — 这一个对话窗就是你的 agent
-          computer。所有操作都沉淀在 <span className="text-text-secondary">分身的大脑</span>里
-        </p>
 
         {/* Input */}
         <div className="w-full bg-surface-2 border border-border rounded-2xl overflow-hidden mb-4 focus-within:border-accent transition-colors">
-          <textarea
+          <Textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
@@ -306,59 +315,42 @@ function NewSessionView({
             }}
             placeholder="说什么都行 — 帮我写 PRD / 帮我问李四 / 设个自动化 / 记一下..."
             rows={2}
-            className="w-full px-4 pt-4 pb-2 bg-transparent text-[14px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed"
+            className="min-h-0 w-full border-0 bg-transparent px-4 pb-2 pt-4 text-[14px] shadow-none focus-visible:ring-0"
           />
           <div className="flex items-center justify-between px-3 pb-3">
             <div className="flex items-center gap-1">
-              <button
-                type="button"
-                className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted transition-colors"
-                title="上传文件"
-              >
+              <Button type="button" variant="ghost" size="icon-sm" title="上传文件">
                 <Paperclip size={15} />
-              </button>
-              <button
-                type="button"
-                className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted transition-colors"
-                title="拍照/录屏"
-              >
+              </Button>
+              <Button type="button" variant="ghost" size="icon-sm" title="拍照/录屏">
                 <Image size={15} />
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
                 onClick={() => setShowSkills(!showSkills)}
-                className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[12px] transition-colors ${
-                  showSkills ? "bg-clone/10 text-clone" : "hover:bg-surface-3 text-text-muted"
-                }`}
+                variant={showSkills ? "soft" : "ghost"}
+                size="xs"
               >
                 <Sparkles size={13} />
                 Skills
-              </button>
+              </Button>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-[11px] text-text-muted">Claude 4.5</span>
-              <button
-                type="button"
-                className="p-1.5 rounded-lg hover:bg-surface-3 text-text-muted transition-colors"
-                title="语音输入"
-              >
+              <Button type="button" variant="ghost" size="icon-sm" title="语音输入">
                 <Mic size={15} />
-              </button>
-              <button
-                type="button"
-                onClick={handleSubmit}
-                className="p-1.5 bg-accent text-accent-fg rounded-lg hover:bg-accent-hover transition-colors"
-              >
+              </Button>
+              <Button type="button" onClick={handleSubmit} size="icon-sm">
                 <Send size={14} />
-              </button>
+              </Button>
             </div>
           </div>
           <div className="flex items-center gap-2 px-3 pb-2 text-[10px] text-text-muted">
             <span>支持上传：</span>
             {["图片", "PDF", "文档", "表格", "代码", "音视频"].map((t) => (
-              <span key={t} className="px-1.5 py-0.5 bg-surface-3 rounded">
+              <Badge key={t} variant="outline" size="xs">
                 {t}
-              </span>
+              </Badge>
             ))}
           </div>
         </div>
@@ -370,13 +362,15 @@ function NewSessionView({
               已激活的 Skills
             </div>
             {ACTIVE_SKILLS.map((s) => (
-              <button
-                type="button"
+              <Button
                 key={s}
-                className="w-full text-left px-3 py-2 rounded-lg text-[13px] text-text-primary hover:bg-surface-3 transition-colors"
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start"
               >
                 {s}
-              </button>
+              </Button>
             ))}
             <div className="border-t border-border mt-1 pt-1">
               <Button
@@ -393,15 +387,17 @@ function NewSessionView({
         {/* Quick action pills */}
         <div className="flex flex-wrap gap-2 justify-center mb-6">
           {QUICK_ACTIONS.map((t) => (
-            <button
+            <Button
               type="button"
               key={t.label}
+              variant="outline"
+              size="xs"
               onClick={() => onStartChat(t.label)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-surface-2 border border-border rounded-full text-[12px] text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors"
+              className="rounded-full"
             >
               <t.icon size={12} className={t.color} />
               {t.label}
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -415,11 +411,13 @@ function NewSessionView({
           </div>
           <div className="grid grid-cols-3 gap-2">
             {CAPABILITY_DOMAINS.map((d) => (
-              <button
+              <Button
                 type="button"
                 key={d.domain}
+                variant="outline"
+                size="sm"
                 onClick={() => onStartChat(d.items[0])}
-                className={`p-3 bg-surface-2 border border-border ${d.accent} border-l-2 rounded-lg hover:border-border-hover transition-colors text-left group`}
+                className={`h-auto p-3 ${d.accent} border-l-2 text-left group`}
               >
                 <div className="text-[12px] font-medium text-text-primary mb-1.5">{d.domain}</div>
                 <div className="space-y-0.5">
@@ -429,7 +427,7 @@ function NewSessionView({
                     </div>
                   ))}
                 </div>
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -464,13 +462,10 @@ function NewSessionView({
                 color: "bg-violet-500/10 text-violet-400 border-violet-500/20",
               },
             ].map((s) => (
-              <span
-                key={s.label}
-                className={`inline-flex items-center gap-1 px-2 py-1 rounded-md border text-[10px] ${s.color}`}
-              >
+              <Badge key={s.label} variant="outline" size="xs" className={`${s.color}`}>
                 {s.label}
                 <span className="text-text-muted">· {s.desc}</span>
-              </span>
+              </Badge>
             ))}
           </div>
         </div>
@@ -693,33 +688,27 @@ function ActiveChatView({
           <div className="flex items-center gap-2">
             <span className="text-sm">{session.emoji}</span>
             <span className="text-[13px] font-medium text-text-primary">{session.title}</span>
-            <span className="text-[10px] bg-surface-3 px-1.5 py-0.5 rounded flex items-center gap-1">
+            <Badge variant="outline" size="xs" radius="md" className="gap-1">
               <span>{ch?.icon}</span>
               <span className="text-text-muted">{session.channel}</span>
-            </span>
-            <span className="text-[10px] text-text-muted bg-surface-3 px-1.5 py-0.5 rounded font-mono">
+            </Badge>
+            <Badge variant="outline" size="xs" radius="md" className="font-mono text-text-muted">
               {fileOps.length} file ops
-            </span>
+            </Badge>
           </div>
           <div className="flex items-center gap-1">
-            <button
+            <Button
               type="button"
+              variant={previewOpen ? "secondary" : "ghost"}
+              size="icon-sm"
               onClick={() => setPreviewOpen(!previewOpen)}
-              className={`p-1 rounded transition-colors ${
-                previewOpen
-                  ? "text-text-primary bg-surface-3"
-                  : "text-text-muted hover:text-text-secondary"
-              }`}
               title="文件预览"
             >
               <Eye size={14} />
-            </button>
-            <button
-              type="button"
-              className="p-1 rounded hover:bg-surface-3 text-text-muted transition-colors"
-            >
+            </Button>
+            <Button type="button" variant="ghost" size="icon-sm">
               <MoreHorizontal size={14} />
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -728,53 +717,56 @@ function ActiveChatView({
             {messages.map((msg, i) => (
               <div
                 key={`${msg.from}-${msg.content || msg.tool?.name || i}`}
-                className={`flex ${msg.from === "user" ? "justify-end" : "gap-2"}`}
+                className="space-y-1.5"
               >
-                {msg.from === "clone" && (
-                  <div className="w-6 h-6 rounded-full bg-clone/15 flex items-center justify-center text-[11px] shrink-0 mt-0.5">
-                    😊
+                {msg.attachments && msg.attachments.length > 0 && (
+                  <div
+                    className={`flex flex-wrap gap-1.5 ${msg.from === "user" ? "justify-end" : "ml-8"}`}
+                  >
+                    {msg.attachments.map((att) => (
+                      <AttachmentChip
+                        key={att.name}
+                        attachment={att}
+                        variant={msg.from === "user" ? "dark" : "light"}
+                      />
+                    ))}
                   </div>
                 )}
-                <div className="max-w-[80%] space-y-1.5">
-                  {msg.attachments && msg.attachments.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 justify-end">
-                      {msg.attachments.map((att) => (
-                        <AttachmentChip
-                          key={att.name}
-                          attachment={att}
-                          variant={msg.from === "user" ? "dark" : "light"}
-                        />
-                      ))}
-                    </div>
-                  )}
-                  {msg.cards && msg.cards.length > 0 ? (
-                    <ChatCardGroup cards={msg.cards} onCardAction={handleCardAction} interactive />
-                  ) : msg.fileOps ? (
-                    <div className="space-y-1">
-                      {msg.fileOps.map((op) => (
-                        <FileOpBadge key={`${op.action}-${op.path}`} op={op} />
-                      ))}
-                    </div>
-                  ) : null}
-                  {msg.tool && !msg.cards && (
-                    <div className="flex items-center gap-2 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[12px]">
-                      <msg.tool.icon size={13} className="text-clone shrink-0" />
-                      <span className="text-text-secondary">{msg.tool.name}</span>
-                      <span className="text-[10px] text-success ml-auto">✓</span>
-                    </div>
-                  )}
-                  {msg.content && (
-                    <div
-                      className={`rounded-xl px-3 py-2.5 text-[12px] leading-relaxed whitespace-pre-line ${
-                        msg.from === "user"
-                          ? "bg-accent text-accent-fg rounded-br-sm"
-                          : "bg-surface-2 border border-border text-text-primary rounded-bl-sm"
-                      }`}
-                    >
-                      {msg.content}
-                    </div>
-                  )}
-                </div>
+                {msg.cards && msg.cards.length > 0 ? (
+                  <ChatCardGroup cards={msg.cards} onCardAction={handleCardAction} interactive />
+                ) : msg.fileOps ? (
+                  <div className="space-y-1">
+                    {msg.fileOps.map((op) => (
+                      <FileOpBadge key={`${op.action}-${op.path}`} op={op} />
+                    ))}
+                  </div>
+                ) : null}
+                {msg.tool && !msg.cards && (
+                  <div className="flex items-center gap-2 px-3 py-2 bg-surface-2 border border-border rounded-lg text-[12px]">
+                    <msg.tool.icon size={13} className="text-clone shrink-0" />
+                    <span className="text-text-secondary">{msg.tool.name}</span>
+                    <span className="text-[10px] text-success ml-auto">✓</span>
+                  </div>
+                )}
+                {msg.content && (
+                  <ConversationMessage
+                    variant={msg.from === "user" ? "user" : "assistant"}
+                    avatar={
+                      msg.from === "clone" ? (
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-clone/15 text-[11px]">
+                          😊
+                        </div>
+                      ) : undefined
+                    }
+                    bubbleClassName={
+                      msg.from === "user"
+                        ? "bg-accent text-accent-fg text-[12px]"
+                        : "bg-surface-2 text-[12px]"
+                    }
+                  >
+                    {msg.content}
+                  </ConversationMessage>
+                )}
               </div>
             ))}
           </div>
@@ -787,66 +779,49 @@ function ActiveChatView({
             <div className="flex items-center gap-1 px-2 py-1 bg-surface-3 rounded-md text-[10px] text-text-secondary">
               <Image size={11} className="text-role-designer" />
               <span className="truncate max-w-[80px]">screenshot.png</span>
-              <button type="button" className="ml-0.5 text-text-muted hover:text-text-primary">
+              <Button type="button" variant="ghost" size="icon-sm" className="ml-0.5 h-5 w-5">
                 <X size={10} />
-              </button>
+              </Button>
             </div>
             <div className="flex items-center gap-1 px-2 py-1 bg-surface-3 rounded-md text-[10px] text-text-secondary">
               <File size={11} className="text-danger" />
               <span className="truncate max-w-[80px]">report.pdf</span>
-              <button type="button" className="ml-0.5 text-text-muted hover:text-text-primary">
+              <Button type="button" variant="ghost" size="icon-sm" className="ml-0.5 h-5 w-5">
                 <X size={10} />
-              </button>
+              </Button>
             </div>
-            <button
-              type="button"
-              className="p-1 rounded-md hover:bg-surface-3 text-text-muted transition-colors"
-              title="添加更多"
-            >
+            <Button type="button" variant="ghost" size="icon-sm" title="添加更多">
               <Plus size={12} />
-            </button>
+            </Button>
           </div>
           <div className="flex items-end gap-2 bg-surface-2 border border-border rounded-xl px-3 py-2">
-            <button
+            <Button
               type="button"
-              className="p-1 text-text-muted hover:text-text-secondary transition-colors shrink-0"
+              variant="ghost"
+              size="icon-sm"
               title="上传文件 (图片/PDF/文档/表格/代码/音视频...)"
             >
               <Paperclip size={14} />
-            </button>
-            <button
-              type="button"
-              className="p-1 text-text-muted hover:text-text-secondary transition-colors shrink-0"
-            >
+            </Button>
+            <Button type="button" variant="ghost" size="icon-sm">
               <Sparkles size={14} />
-            </button>
-            <textarea
+            </Button>
+            <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="跟分身说点什么...  可以上传文件、图片、语音作为 context"
               rows={1}
-              className="flex-1 bg-transparent text-[13px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none leading-relaxed"
+              className="min-h-0 flex-1 resize-none border-0 bg-transparent px-0 py-0 text-[13px] shadow-none focus-visible:ring-0"
             />
-            <button
-              type="button"
-              className="p-1 text-text-muted hover:text-text-secondary transition-colors shrink-0"
-              title="语音输入"
-            >
+            <Button type="button" variant="ghost" size="icon-sm" title="语音输入">
               <Mic size={14} />
-            </button>
-            <button
-              type="button"
-              className="p-1 text-text-muted hover:text-text-secondary transition-colors shrink-0"
-              title="拍照/录屏"
-            >
+            </Button>
+            <Button type="button" variant="ghost" size="icon-sm" title="拍照/录屏">
               <Film size={14} />
-            </button>
-            <button
-              type="button"
-              className="p-1.5 bg-accent text-accent-fg rounded-lg shrink-0 hover:bg-accent-hover transition-colors"
-            >
+            </Button>
+            <Button type="button" size="icon-sm">
               <Send size={13} />
-            </button>
+            </Button>
           </div>
         </div>
       </div>

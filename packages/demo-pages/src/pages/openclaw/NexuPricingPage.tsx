@@ -14,6 +14,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useOpenClawDemoState } from "./demo-state";
 
 // ── Plan data ──────────────────────────────────────────────────────────────────
 const STANDARD_MODELS = [
@@ -186,7 +187,33 @@ export default function NexuPricingPage() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("yearly");
   const [showUpgradeDetails, setShowUpgradeDetails] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const { loggedIn, setLoggedIn, plan: currentPlan, setPlan } = useOpenClawDemoState();
   const countdown = useCountdown();
+
+  const planOrder = { free: 0, plus: 1, pro: 2 } as const;
+
+  function getPlanCta(planId: "free" | "plus" | "pro") {
+    if (!loggedIn) {
+      if (planId === "free") {
+        return { label: "登录并开始", variant: "default" as const, disabled: false };
+      }
+      return { label: "登录后升级", variant: "outline" as const, disabled: false };
+    }
+
+    if (planId === currentPlan) {
+      return { label: "当前套餐", variant: "outline" as const, disabled: true };
+    }
+
+    if (planOrder[planId] < planOrder[currentPlan]) {
+      return { label: "已包含", variant: "ghost" as const, disabled: true };
+    }
+
+    return {
+      label: `升级 ${planId === "plus" ? "Plus" : "Pro"}`,
+      variant: "default" as const,
+      disabled: false,
+    };
+  }
 
   return (
     <div className="min-h-screen bg-[var(--color-surface-0)]">
@@ -254,6 +281,7 @@ export default function NexuPricingPage() {
             const price = billing === "yearly" ? plan.yearlyPrice : plan.monthlyPrice;
             const yearHint =
               billing === "yearly" && plan.yearSavings ? `年付省 $${plan.yearSavings}` : null;
+            const cta = getPlanCta(plan.id as "free" | "plus" | "pro");
 
             return (
               <div
@@ -342,8 +370,18 @@ export default function NexuPricingPage() {
                 </div>
 
                 {/* CTA */}
-                <Button variant={plan.ctaVariant} size="sm" className="w-full my-5 text-[12px]">
-                  {plan.ctaLabel}
+                <Button
+                  variant={cta.variant}
+                  size="sm"
+                  className="w-full my-5 text-[12px]"
+                  disabled={cta.disabled}
+                  onClick={() => {
+                    if (cta.disabled) return;
+                    setLoggedIn(true);
+                    setPlan(plan.id as "free" | "plus" | "pro");
+                  }}
+                >
+                  {cta.label}
                 </Button>
 
                 {/* Divider */}
@@ -522,8 +560,13 @@ export default function NexuPricingPage() {
                   </span>
                 )}
               </div>
-              <Button variant="outline" size="sm" className="w-full mt-4 text-[12px]">
-                购买
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full mt-4 text-[12px]"
+                disabled={!loggedIn || currentPlan === "free"}
+              >
+                {!loggedIn ? "登录后购买" : currentPlan === "free" ? "升级后购买" : "购买"}
               </Button>
             </div>
           ))}

@@ -1,5 +1,21 @@
 import {
+  GitHubIcon,
+  NavigationMenu,
+  NavigationMenuButton,
+  NavigationMenuItem,
+  NavigationMenuLabel,
+  NavigationMenuList,
+  NexuLogoIcon,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+} from "@nexu-design/ui-web";
+import {
+  ChevronUp,
+  CircleHelp,
   Clock,
+  Globe,
   Monitor,
   PanelLeft,
   PanelLeftClose,
@@ -10,7 +26,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { useState } from "react";
-import { NavLink, Navigate, Route, Routes } from "react-router-dom";
+import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import { CommentSystem } from "../components/CommentSystem";
 import { ProductRouteElements } from "./routes/product-routes";
@@ -34,35 +50,32 @@ function NavSection({
   items: typeof PRODUCT_NAV;
   collapsed: boolean;
 }) {
+  const location = useLocation();
+
+  const isSelected = (to: string) =>
+    location.pathname === to || location.pathname.startsWith(`${to}/`);
+
   return (
-    <div>
-      {!collapsed && (
-        <div className="px-3 mb-1 text-[10px] font-medium text-text-muted uppercase tracking-wider">
-          {title}
-        </div>
-      )}
-      <div className="space-y-0.5">
+    <NavigationMenu>
+      {!collapsed && <NavigationMenuLabel>{title}</NavigationMenuLabel>}
+      <NavigationMenuList>
         {items.map(({ to, label, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            title={collapsed ? label : undefined}
-            className={({ isActive }) =>
-              `flex items-center gap-2.5 rounded-md text-[13px] transition-colors ${
-                collapsed ? "justify-center px-0 py-2" : "px-3 py-2"
-              } ${
-                isActive
-                  ? "bg-clone-subtle text-clone font-medium"
-                  : "text-text-secondary hover:text-text-primary hover:bg-surface-3"
-              }`
-            }
-          >
-            <Icon size={16} />
-            {!collapsed && label}
-          </NavLink>
+          <NavigationMenuItem key={to}>
+            <NavigationMenuButton
+              asChild
+              active={isSelected(to)}
+              className={collapsed ? "justify-center px-0" : undefined}
+              title={collapsed ? label : undefined}
+            >
+              <NavLink to={to}>
+                <Icon className="size-4" />
+                {!collapsed && label}
+              </NavLink>
+            </NavigationMenuButton>
+          </NavigationMenuItem>
         ))}
-      </div>
-    </div>
+      </NavigationMenuList>
+    </NavigationMenu>
   );
 }
 
@@ -72,54 +85,101 @@ export function DesignSystemShell() {
   return (
     <>
       <div className="flex h-full">
-        <nav
-          className={`${
-            collapsed ? "w-14" : "w-56"
-          } shrink-0 border-r border-border bg-surface-0 flex flex-col transition-all duration-200`}
+        <Sidebar
+          className={`${collapsed ? "w-14" : "w-[220px]"} shrink-0 transition-all duration-200`}
         >
-          {!collapsed && (
-            <div className="flex justify-between items-center p-5 border-b border-border">
-              <div className="flex gap-2 items-center">
-                <div className="flex justify-center items-center w-7 h-7 rounded-lg bg-accent">
-                  <span className="text-xs font-bold text-accent-fg">N</span>
-                </div>
-                <div>
-                  <div className="text-sm font-semibold text-text-primary">nexu</div>
-                  <div className="text-[11px] text-text-tertiary">Product Demo</div>
-                </div>
+          {collapsed ? (
+            <SidebarHeader className="flex h-[52px] items-center justify-center border-b border-border px-3 py-3">
+              <NexuLogoIcon size={28} />
+            </SidebarHeader>
+          ) : (
+            <SidebarHeader className="flex items-center justify-between gap-2.5 border-b border-border px-4 py-3">
+              <NexuLogoIcon size={28} />
+              <div className="min-w-0 flex-1">
+                <div className="text-lg font-semibold text-text-primary">Nexu</div>
+                <div className="text-2xs text-text-tertiary">Product Demo</div>
               </div>
               <button
                 type="button"
                 onClick={() => setCollapsed(true)}
-                className="p-1 rounded transition-colors text-text-muted hover:text-text-secondary"
                 title="收起侧边栏"
+                className="shrink-0 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface-3 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <PanelLeftClose size={14} />
+              </button>
+            </SidebarHeader>
+          )}
+
+          <SidebarContent className="flex-1 overflow-y-auto">
+            <div className={collapsed ? "px-1.5 pb-1 pt-3" : "px-2 pb-1 pt-3"}>
+              <NavSection title="Product Pages" items={PRODUCT_NAV} collapsed={collapsed} />
+            </div>
+          </SidebarContent>
+
+          {!collapsed && (
+            <div className="flex shrink-0 items-center justify-between gap-1 px-3 pb-1.5">
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  className="flex size-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  title="Help"
+                >
+                  <CircleHelp size={16} />
+                </button>
+                <a
+                  href="https://github.com/nexu-io/nexu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex size-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  title="GitHub"
+                >
+                  <GitHubIcon size={16} />
+                </a>
+              </div>
+              <button
+                type="button"
+                title="Language"
+                className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Globe size={14} />
+                <span>EN</span>
               </button>
             </div>
           )}
 
-          <div className={`flex-1 ${collapsed ? "p-1.5" : "p-3"} space-y-4 overflow-y-auto`}>
-            <NavSection title="Product Pages" items={PRODUCT_NAV} collapsed={collapsed} />
-          </div>
-
-          <div className="p-4 border-t border-border">
+          <SidebarFooter
+            className={
+              collapsed ? "border-t border-border px-3 py-2" : "border-t border-border px-2 py-2"
+            }
+          >
             {collapsed ? (
               <button
                 type="button"
                 onClick={() => setCollapsed(false)}
-                className="flex justify-center items-center mx-auto w-7 h-7 rounded-lg transition-colors bg-accent hover:bg-accent-hover"
                 title="展开侧边栏"
+                className="flex size-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-3 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <PanelLeft size={14} className="text-accent-fg" />
+                <PanelLeft size={14} />
               </button>
             ) : (
-              <div className="text-[11px] text-text-muted">v1.0 — nexu Product Demo</div>
+              <button
+                type="button"
+                className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 transition-all hover:bg-surface-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-accent/20 to-accent/5 text-xs font-bold text-accent ring-1 ring-accent/10">
+                  N
+                </div>
+                <div className="min-w-0 flex-1 text-left">
+                  <div className="truncate text-sm font-medium text-text-primary">Nexu Design</div>
+                  <div className="truncate text-xs text-text-muted">design@nexu.ai</div>
+                </div>
+                <ChevronUp size={12} className="shrink-0 rotate-180 text-text-muted/50" />
+              </button>
             )}
-          </div>
-        </nav>
+          </SidebarFooter>
+        </Sidebar>
 
-        <main className="overflow-y-auto flex-1 min-h-0">
+        <main className="min-h-0 flex-1 overflow-y-auto">
           <Routes>
             {ProductRouteElements()}
             <Route path="/openclaw/*" element={<Navigate to="/openclaw/workspace" replace />} />

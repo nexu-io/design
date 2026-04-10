@@ -1,4 +1,14 @@
-import { Button, StatsBar, ToggleGroup, ToggleGroupItem } from "@nexu-design/ui-web";
+import {
+  Badge,
+  Button,
+  Card,
+  PageHeader,
+  Progress,
+  StatsBar,
+  StatusDot,
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   BarChart3,
@@ -62,11 +72,11 @@ const TABS = [
   { id: "members" as TabId, label: "成员", icon: Users },
 ];
 
-const STATUS_COLORS: Record<string, string> = {
-  online: "bg-success",
-  busy: "bg-warning",
-  away: "bg-text-muted",
-  offline: "bg-surface-4",
+const STATUS_VARIANTS: Record<string, "success" | "warning" | "neutral"> = {
+  online: "success",
+  busy: "warning",
+  away: "neutral",
+  offline: "neutral",
 };
 
 const URGENCY_STYLES: Record<string, { bg: string; text: string; label: string }> = {
@@ -84,16 +94,9 @@ function ProgressBar({
   value: number;
   className?: string;
 }) {
-  return (
-    <div className={`h-1.5 bg-surface-3 rounded-full overflow-hidden ${className}`}>
-      <div
-        className={`h-full rounded-full transition-all ${
-          value >= 100 ? "bg-success" : value >= 50 ? "bg-clone" : "bg-warning"
-        }`}
-        style={{ width: `${Math.min(value, 100)}%` }}
-      />
-    </div>
-  );
+  const variant = value >= 100 ? "success" : value >= 50 ? "accent" : "warning";
+
+  return <Progress value={value} variant={variant} size="sm" className={className} />;
 }
 
 function CardWrapper({
@@ -108,12 +111,10 @@ function CardWrapper({
   selected?: boolean;
 }) {
   return (
-    <div
-      className={`relative border rounded-xl overflow-hidden bg-surface-1 transition-colors ${
-        onClick ? "cursor-pointer" : ""
-      } ${selected ? "ring-2 ring-accent/30 border-accent/40" : ""} ${
-        accent ? `border-l-2 ${accent}` : "border-border"
-      } ${onClick && !selected ? "hover:border-border-hover" : ""}`}
+    <Card
+      variant={onClick ? "interactive" : "static"}
+      padding="none"
+      className={`relative overflow-hidden bg-surface-1 ${selected ? "ring-2 ring-accent/30 border-accent/40" : "border-border"} ${accent ? `border-l-2 ${accent}` : ""}`}
     >
       {onClick && (
         <button
@@ -124,7 +125,7 @@ function CardWrapper({
         />
       )}
       <div className="relative z-10">{children}</div>
-    </div>
+    </Card>
   );
 }
 
@@ -138,20 +139,21 @@ function CardButton({
   onClick?: (e: React.MouseEvent) => void;
 }) {
   const styles = {
-    default: "bg-surface-2 text-text-secondary hover:bg-surface-3",
-    primary: "bg-accent/10 text-accent hover:bg-accent/15",
-    success: "bg-success-subtle text-success hover:bg-success/20",
-    danger: "bg-danger-subtle text-danger hover:bg-danger/20",
+    default: "outline",
+    primary: "soft",
+    success: "soft",
+    danger: "destructive",
   };
   return (
     <Button
       type="button"
-      size="inline"
+      size="sm"
+      variant={styles[variant] as "outline" | "soft" | "destructive"}
       onClick={(e) => {
         e.stopPropagation();
         onClick?.(e);
       }}
-      className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${styles[variant]}`}
+      className="h-7 px-3 text-[11px]"
     >
       {children}
     </Button>
@@ -293,11 +295,14 @@ function AlignmentRequestIMCard({
             对齐请求 · 来自{card.from.replace("的分身", "")}
           </span>
         </div>
-        <span
-          className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${urgency.bg} ${urgency.text}`}
+        <Badge
+          variant={
+            card.urgency === "high" ? "danger" : card.urgency === "medium" ? "warning" : "accent"
+          }
+          size="xs"
         >
           ⚡ {urgency.label}
-        </span>
+        </Badge>
       </div>
       <div className="p-4 space-y-3">
         <div>
@@ -534,18 +539,19 @@ function MemberCard({
           <div className="flex justify-center items-center w-10 h-10 text-lg rounded-full bg-surface-3">
             {member.avatar}
           </div>
-          <div
-            className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-surface-1 ${
-              STATUS_COLORS[member.status]
-            }`}
+          <StatusDot
+            status={STATUS_VARIANTS[member.status]}
+            size="lg"
+            pulse={member.status === "online"}
+            className="absolute -bottom-0.5 -right-0.5 border-2 border-surface-1"
           />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex gap-2 items-center">
             <span className="text-[13px] font-semibold text-text-primary">{member.name}</span>
-            <span className="text-[10px] px-1.5 py-0.5 bg-clone/10 text-clone rounded font-medium">
+            <Badge variant="accent" size="xs" radius="md">
               Lv.{member.level}
-            </span>
+            </Badge>
           </div>
           <div className="text-[11px] text-text-secondary">{member.role}</div>
         </div>
@@ -593,9 +599,9 @@ function MembersTab({
             {online}/{total} 在线
           </span>
         </div>
-        <span className="text-[10px] px-2 py-1 bg-success-subtle text-success rounded-md font-medium">
+        <Badge variant="success" size="sm" radius="md">
           网络效应 +{Math.round((total / 3 - 1) * 100)}% vs 3 人
-        </span>
+        </Badge>
       </div>
       <div className="grid grid-cols-2 gap-4 p-5">
         {TEAM_MEMBERS.map((m) => (
@@ -901,11 +907,24 @@ export default function TeamPage() {
 
   return (
     <div className="flex flex-col h-full bg-surface-0">
-      <TeamStatsBar
-        onSelectStat={handleSelectStat}
-        selectedStat={selected?.type === "stat" ? selected.data : null}
-        onSwitchTab={(tab) => handleTabSwitch(tab, true)}
-      />
+      <div className="border-b border-border bg-surface-0 px-5 pt-5">
+        <PageHeader
+          density="shell"
+          title="团队协作"
+          description="团队分身、对齐请求、任务流和 OKR 在同一套协作视图里联动。"
+          actions={
+            <Button variant="outline" size="sm">
+              <UserPlus size={14} />
+              邀请成员
+            </Button>
+          }
+        />
+        <TeamStatsBar
+          onSelectStat={handleSelectStat}
+          selectedStat={selected?.type === "stat" ? selected.data : null}
+          onSwitchTab={(tab) => handleTabSwitch(tab, true)}
+        />
+      </div>
 
       {/* Tab bar */}
       <ToggleGroup
@@ -923,19 +942,19 @@ export default function TeamPage() {
             <tab.icon size={14} />
             {tab.label}
             {tab.id === "tasks" && (
-              <span className="text-[9px] px-1 py-0.5 bg-clone/10 text-clone rounded-full ml-0.5">
+              <Badge variant="accent" size="xs" className="ml-0.5">
                 {TASK_BOARD.filter((t) => t.status === "in_progress").length}
-              </span>
+              </Badge>
             )}
             {tab.id === "alignments" && (
-              <span className="text-[9px] px-1 py-0.5 bg-warning-subtle text-warning rounded-full ml-0.5">
+              <Badge variant="warning" size="xs" className="ml-0.5">
                 1
-              </span>
+              </Badge>
             )}
             {tab.id === "okr" && atRiskOKR > 0 && (
-              <span className="text-[9px] px-1 py-0.5 bg-danger-subtle text-danger rounded-full ml-0.5">
+              <Badge variant="danger" size="xs" className="ml-0.5">
                 {atRiskOKR}
-              </span>
+              </Badge>
             )}
           </ToggleGroupItem>
         ))}

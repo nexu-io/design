@@ -1,4 +1,4 @@
-import { Badge, Button, SlackIcon } from "@nexu-design/ui-web";
+import { Badge, Button, Card, SlackIcon } from "@nexu-design/ui-web";
 import {
   ArrowRight,
   BarChart3,
@@ -27,6 +27,7 @@ import { Link, useNavigate } from "react-router-dom";
 import CursorEffect from "../../components/CursorEffect";
 import SlackDemo, { DEMO_SCENARIOS } from "../../components/SlackDemo";
 import { usePageTitle } from "../../hooks/usePageTitle";
+import { openExternal } from "../../utils/open-external";
 import { TOOL_TAG_LABELS } from "./skillData";
 
 function GmailIcon({ size = 20 }: { size?: number }) {
@@ -168,7 +169,7 @@ function NavSkillsDropdown() {
         <div className="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-64 rounded-lg border border-border/60 bg-surface-0 shadow-[var(--shadow-dropdown)] shadow-black/10 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
           <div className="p-1.5">
             <Link
-              to="/openclaw/skills"
+              to="/openclaw/workspace?view=skills"
               onClick={() => setOpen(false)}
               className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg hover:bg-accent/5 transition-colors group"
             >
@@ -188,7 +189,7 @@ function NavSkillsDropdown() {
               return (
                 <Link
                   key={id}
-                  to={`/openclaw/skills?tag=${id}`}
+                  to={`/openclaw/workspace?view=skills&tab=explore&tag=${id}`}
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-surface-2 transition-colors group"
                 >
@@ -247,7 +248,7 @@ function FeatureCard({
   badge?: string;
 }) {
   return (
-    <div className="card p-6">
+    <Card variant="static" padding="lg">
       <div className="flex justify-between items-start mb-4">
         <div className="flex justify-center items-center w-10 h-10 rounded-[12px] bg-white border border-border">
           <Icon size={20} className="text-accent" />
@@ -260,7 +261,7 @@ function FeatureCard({
       </div>
       <div className="text-[14px] font-semibold text-text-primary mb-2">{title}</div>
       <div className="text-[13px] text-text-muted leading-relaxed">{desc}</div>
-    </div>
+    </Card>
   );
 }
 
@@ -369,11 +370,13 @@ export default function OpenClawLanding() {
             <Button onClick={goToAuth} size="lg">
               Get started free <ArrowRight size={14} />
             </Button>
-            <Button variant="outline" size="lg" asChild>
-              <a href={SLACK_EXPERIENCE_GROUP_URL} target="_blank" rel="noopener noreferrer">
-                <SlackIcon size={16} />
-                Join Slack Group
-              </a>
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => openExternal(SLACK_EXPERIENCE_GROUP_URL)}
+            >
+              <SlackIcon size={16} />
+              Join Slack Group
             </Button>
           </div>
           <div className="flex items-center justify-center text-[13px] text-text-muted">

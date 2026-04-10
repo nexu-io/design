@@ -1,8 +1,9 @@
-import { ArrowRight, Compass, Heart, Search } from "lucide-react";
-import { useState } from "react";
+import { Compass, Download, FileText, Search, Settings2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import {
   Badge,
+  Button,
   Input,
   PageHeader,
   Tabs,
@@ -13,23 +14,96 @@ import {
 } from "@nexu-design/ui-web";
 
 import { useLocale } from "../../hooks/useLocale";
-import { SKILL_CATEGORIES, TOOL_TAG_LABELS, type ToolTag } from "./skillData";
+import { GitHubStarButton } from "./GitHubStarButton";
+import { ImportSkillModal } from "./ImportSkillModal";
+import { SKILL_CATEGORIES, type SkillDef, TOOL_TAG_LABELS, type ToolTag } from "./skillData";
 
 type SkillTagFilter = "all" | ToolTag;
 type SkillTopTab = "explore" | "yours";
+type YoursFilter = "all" | "builtin" | "custom";
 
-export function SkillsPanel() {
+function buildImportedSkillName(fileName: string, existingNames: string[]) {
+  const baseName = fileName.replace(/\.zip$/i, "").trim() || "Imported Skill";
+  const normalizedBase = baseName
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(" ");
+
+  if (!existingNames.includes(normalizedBase)) {
+    return normalizedBase;
+  }
+
+  let suffix = 2;
+  let nextName = `${normalizedBase} ${suffix}`;
+
+  while (existingNames.includes(nextName)) {
+    suffix += 1;
+    nextName = `${normalizedBase} ${suffix}`;
+  }
+
+  return nextName;
+}
+
+function createImportedSkill(fileName: string, existingSkills: SkillDef[]): SkillDef {
+  return {
+    id: `workspace-imported-${fileName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${existingSkills.length + 1}`,
+    name: buildImportedSkillName(
+      fileName,
+      existingSkills.map((skill) => skill.name),
+    ),
+    desc: "Imported from a local ZIP package.",
+    icon: FileText,
+    prompt: "Run the imported skill package.",
+    tag: "dev-tools",
+    source: "custom",
+    longDesc: "Imported demo skill package. Local ZIP import is mocked for the design demo.",
+  };
+}
+
+export function SkillsPanel({
+  githubUrl,
+  stars,
+  initialTab = "yours",
+  initialTag,
+}: {
+  githubUrl: string;
+  stars?: number;
+  initialTab?: SkillTopTab;
+  initialTag?: ToolTag;
+}) {
   const [query, setQuery] = useState("");
-  const [topTab, setTopTab] = useState<SkillTopTab>("yours");
-  const [tagFilter, setTagFilter] = useState<SkillTagFilter>("all");
+  const [topTab, setTopTab] = useState<SkillTopTab>(initialTag ? "explore" : initialTab);
+  const [tagFilter, setTagFilter] = useState<SkillTagFilter>(initialTag ?? "all");
+  const [yoursFilter, setYoursFilter] = useState<YoursFilter>("all");
+  const [importModalOpen, setImportModalOpen] = useState(false);
+  const [importedSkills, setImportedSkills] = useState<SkillDef[]>([]);
 
-  const allSkills = SKILL_CATEGORIES.flatMap((cat) =>
-    cat.skills.map((skill) => ({ skill, category: cat })),
-  );
-  const yourSkills = allSkills.filter((s) => s.skill.source === "custom");
+  useEffect(() => {
+    setTopTab(initialTag ? "explore" : initialTab);
+    setTagFilter(initialTag ?? "all");
+  }, [initialTab, initialTag]);
+
+  const allSkills = [
+    ...importedSkills.map((skill) => ({
+      skill,
+      category: { id: "imported", label: "Imported", icon: FileText, skills: importedSkills },
+    })),
+    ...SKILL_CATEGORIES.flatMap((cat) => cat.skills.map((skill) => ({ skill, category: cat }))),
+  ];
+  const yourSkills = allSkills;
   const exploreSkills = allSkills.filter((s) => s.skill.source === "official");
+  const yourBuiltInSkills = allSkills.filter((s) => s.skill.source === "official");
+  const yourCustomSkills = allSkills.filter((s) => s.skill.source === "custom");
 
-  const base = topTab === "yours" ? yourSkills : exploreSkills;
+  const base =
+    topTab === "yours"
+      ? yoursFilter === "builtin"
+        ? yourBuiltInSkills
+        : yoursFilter === "custom"
+          ? yourCustomSkills
+          : yourSkills
+      : exploreSkills;
   let filtered = base;
   if (topTab === "explore" && tagFilter !== "all") {
     filtered = filtered.filter((item) => item.skill.tag === tagFilter);
@@ -50,8 +124,30 @@ export function SkillsPanel() {
       count: exploreSkills.filter((s) => s.skill.tag === id).length,
     })),
   ];
+  const yoursTabs: { id: YoursFilter; label: string; count: number }[] = [
+    { id: "all", label: "All", count: yourSkills.length },
+    { id: "builtin", label: "Built-in", count: yourBuiltInSkills.length },
+    { id: "custom", label: "Custom", count: yourCustomSkills.length },
+  ];
 
   const { t } = useLocale();
+  const infoText =
+    topTab === "yours"
+      ? `${filtered.length} skill${filtered.length === 1 ? "" : "s"} in your workspace.`
+      : "Skills come from ClawHub — network or service may occasionally be unstable. If you encounter issues, please report on GitHub Issues.";
+
+  const handleImportSkill = async (file: File) => {
+    await new Promise((resolve) => window.setTimeout(resolve, 800));
+
+    const nextSkill = createImportedSkill(
+      file.name,
+      allSkills.map(({ skill }) => skill),
+    );
+
+    setImportedSkills((current) => [nextSkill, ...current]);
+    setTopTab("yours");
+    setQuery("");
+  };
 
   return (
     <div className="h-full overflow-y-auto">
@@ -60,28 +156,33 @@ export function SkillsPanel() {
           density="shell"
           title={t("ws.skills.title")}
           description={t("ws.skills.subtitle")}
+          actions={<GitHubStarButton href={githubUrl} label="Star on GitHub" stars={stars} />}
         />
 
-        <div className="flex items-center gap-4 mb-6">
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Tabs
             value={topTab}
             onValueChange={(value: string) => {
+              if (!value) return;
               setTopTab(value as SkillTopTab);
               setTagFilter("all");
+              setYoursFilter("all");
             }}
+            className="w-auto"
           >
-            <TabsList>
+            <TabsList className="w-auto">
               {[
-                { id: "yours" as SkillTopTab, label: "Yours", icon: Heart },
-                { id: "explore" as SkillTopTab, label: "Explore", icon: Compass },
+                { id: "yours" as SkillTopTab, label: "Yours", icon: Settings2 },
+                { id: "explore" as SkillTopTab, label: "ClawHub", icon: Compass },
               ].map((tab) => {
                 const TabIcon = tab.icon;
+
                 return (
-                  <TabsTrigger key={tab.id} value={tab.id}>
-                    <TabIcon size={14} />
+                  <TabsTrigger key={tab.id} value={tab.id} className="gap-1.5 text-[13px]">
+                    <TabIcon size={13} />
                     {tab.label}
                     {tab.id === "yours" && yourSkills.length > 0 && (
-                      <span className="tabular-nums text-[11px] text-text-tertiary">
+                      <span className="ml-1 tabular-nums text-[10px] opacity-70">
                         {yourSkills.length}
                       </span>
                     )}
@@ -91,54 +192,85 @@ export function SkillsPanel() {
             </TabsList>
           </Tabs>
 
-          <div className="ml-auto relative" style={{ width: 220 }}>
-            <Search
-              size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-              style={{ color: "var(--color-text-placeholder)" }}
-            />
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search skills..."
-              className="pl-9 h-9 text-[12px]"
+              placeholder="Search"
+              leadingIcon={<Search size={14} />}
+              size="sm"
+              className="w-full bg-surface-0 sm:w-72"
             />
+            <Button type="button" size="sm" onClick={() => setImportModalOpen(true)}>
+              <Download size={14} />
+              Import
+            </Button>
           </div>
         </div>
 
-        {topTab === "explore" && (
-          <div className="mb-5 overflow-x-auto pb-0.5">
+        {topTab === "yours" && (
+          <div className="mb-3 -mt-2 overflow-x-auto pb-0.5">
             <ToggleGroup
               type="single"
-              value={tagFilter}
+              value={yoursFilter}
               onValueChange={(value: string) => {
-                if (value) setTagFilter(value as SkillTagFilter);
+                if (value) setYoursFilter(value as YoursFilter);
               }}
-              variant="underline"
-              aria-label="Skill categories"
+              variant="outline"
+              aria-label="Your skills filter"
               className="min-w-max"
             >
-              {tagTabs.map((tab) => (
+              {yoursTabs.map((tab) => (
                 <ToggleGroupItem
                   key={tab.id}
                   value={tab.id}
-                  variant="underline"
-                  className="shrink-0 text-[13px]"
+                  variant="outline"
+                  size="sm"
+                  className="text-[12px]"
                 >
-                  {tab.label}
+                  <span>{tab.label}</span>
+                  <span className="ml-1 tabular-nums text-[10px] opacity-70">{tab.count}</span>
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
           </div>
         )}
 
-        <div
-          className="grid gap-3"
-          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}
-        >
-          {filtered.map(({ skill, category }) => {
+        {topTab === "explore" && (
+          <div className="mb-3 -mt-2 overflow-x-auto pb-0.5">
+            <ToggleGroup
+              type="single"
+              value={tagFilter}
+              onValueChange={(value: string) => {
+                if (value) setTagFilter(value as SkillTagFilter);
+              }}
+              variant="outline"
+              aria-label="Skill filter"
+              className="min-w-max"
+            >
+              {tagTabs.map((tab) => (
+                <ToggleGroupItem
+                  key={tab.id}
+                  value={tab.id}
+                  variant="outline"
+                  size="sm"
+                  className="text-[12px]"
+                >
+                  <span>{tab.label}</span>
+                  <span className="ml-1 tabular-nums text-[10px] opacity-70">{tab.count}</span>
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
+        )}
+
+        <div className="mb-4 text-xs text-text-tertiary">{infoText}</div>
+
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {filtered.map(({ skill }) => {
             const Icon = skill.icon;
             const isCustom = skill.source === "custom";
+            const actionLabel = topTab === "yours" ? "Uninstall" : "Install";
 
             return (
               <div
@@ -192,16 +324,10 @@ export function SkillsPanel() {
                 >
                   {skill.desc}
                 </p>
-                <div className="flex items-center justify-between">
-                  <span className="tag">{category.label}</span>
-                  {!isCustom && (
-                    <span
-                      className="inline-flex items-center gap-1"
-                      style={{ fontSize: 12, fontWeight: 600, color: "var(--color-text-primary)" }}
-                    >
-                      View details <ArrowRight size={12} />
-                    </span>
-                  )}
+                <div className="flex items-center justify-end">
+                  <Button variant="outline" size="sm" type="button">
+                    {actionLabel}
+                  </Button>
                 </div>
               </div>
             );
@@ -216,6 +342,12 @@ export function SkillsPanel() {
             No matching skills found
           </div>
         )}
+
+        <ImportSkillModal
+          open={importModalOpen}
+          onClose={() => setImportModalOpen(false)}
+          onImport={handleImportSkill}
+        />
       </div>
     </div>
   );

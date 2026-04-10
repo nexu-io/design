@@ -1,3 +1,4 @@
+import { Badge, Button, Input, Textarea } from "@nexu-design/ui-web";
 import { AnimatePresence, motion } from "framer-motion";
 import { type MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -170,9 +171,9 @@ function CommentCard({
               <span className="text-[11px] text-text-muted">{timeAgo(comment.timestamp)}</span>
             </div>
             <div className="flex items-center gap-1">
-              <span className="text-[10px] font-medium text-text-muted bg-surface-2 px-1.5 py-0.5 rounded-full">
+              <Badge variant="outline" size="xs">
                 #{index + 1}
-              </span>
+              </Badge>
               <button
                 type="button"
                 onClick={(e: MouseEvent<HTMLButtonElement>) => {
@@ -260,7 +261,7 @@ function CommentCard({
 
           {showReplyInput ? (
             <div className="mt-2 flex gap-1.5">
-              <input
+              <Input
                 onClick={(e) => e.stopPropagation()}
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
@@ -273,10 +274,12 @@ function CommentCard({
                   if (e.key === "Escape") setShowReplyInput(false);
                 }}
                 placeholder="Reply..."
-                className="flex-1 text-[12px] px-2.5 py-1.5 border border-border rounded-lg bg-surface-1 focus:outline-none focus:border-border-hover"
+                className="flex-1"
+                size="sm"
               />
-              <button
+              <Button
                 type="button"
+                size="xs"
                 onClick={() => {
                   if (replyText.trim()) {
                     onReply(replyText.trim());
@@ -284,22 +287,23 @@ function CommentCard({
                     setShowReplyInput(false);
                   }
                 }}
-                className="px-2.5 py-1.5 text-[11px] font-medium bg-accent text-accent-fg rounded-lg hover:bg-accent-hover transition-colors cursor-pointer"
               >
                 Send
-              </button>
+              </Button>
             </div>
           ) : (
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="xs"
               onClick={(e) => {
                 e.stopPropagation();
                 setShowReplyInput(true);
               }}
-              className="mt-1.5 text-[11px] text-text-muted hover:text-text-secondary transition-colors cursor-pointer"
+              className="mt-1.5 h-auto px-0"
             >
               Reply
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -475,7 +479,7 @@ export function CommentSystem() {
                           {authorName}
                         </span>
                       </div>
-                      <textarea
+                      <Textarea
                         ref={inputRef}
                         value={newCommentText}
                         onChange={(e) => setNewCommentText(e.target.value)}
@@ -490,20 +494,20 @@ export function CommentSystem() {
                           }
                         }}
                         placeholder="Add a comment..."
-                        className="w-full text-[13px] text-text-primary placeholder:text-text-muted resize-none border-0 focus:outline-none bg-transparent min-h-[60px]"
+                        className="min-h-[60px] border-0 bg-transparent px-0 py-0 text-[13px] shadow-none focus-visible:ring-0"
                         rows={2}
                       />
                     </div>
                     <div className="flex items-center justify-between px-3 py-2 bg-surface-2 border-t border-border">
                       <span className="text-[10px] text-text-muted">⏎ to send · Esc to cancel</span>
-                      <button
+                      <Button
                         type="button"
+                        size="xs"
                         onClick={submitComment}
                         disabled={!newCommentText.trim()}
-                        className="px-3 py-1 text-[11px] font-medium bg-accent text-accent-fg rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-30 cursor-pointer"
                       >
                         Comment
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </motion.div>
@@ -562,16 +566,17 @@ export function CommentSystem() {
                 <div className="flex items-center gap-2">
                   <h3 className="text-[13px] font-semibold text-text-primary">Comments</h3>
                   {openCount > 0 && (
-                    <span className="text-[10px] font-medium bg-[#F24E1E] text-white px-1.5 py-0.5 rounded-full">
+                    <Badge size="xs" className="bg-[#F24E1E] text-white">
                       {openCount}
-                    </span>
+                    </Badge>
                   )}
                 </div>
                 <div className="flex items-center gap-1">
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon-sm"
                     onClick={startPinMode}
-                    className="p-1.5 rounded-lg hover:bg-surface-3 transition-colors text-text-secondary hover:text-text-primary cursor-pointer"
                     title="Add comment"
                   >
                     <svg
@@ -586,14 +591,15 @@ export function CommentSystem() {
                     >
                       <path d="M8 3v10M3 8h10" />
                     </svg>
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon-sm"
                     onClick={() => {
                       setIsOpen(false);
                       setActiveComment(null);
                     }}
-                    className="p-1.5 rounded-lg hover:bg-surface-3 transition-colors text-text-secondary hover:text-text-primary cursor-pointer"
                   >
                     <svg
                       width="16"
@@ -607,29 +613,26 @@ export function CommentSystem() {
                     >
                       <path d="M4 4l8 8M12 4l-8 8" />
                     </svg>
-                  </button>
+                  </Button>
                 </div>
               </div>
 
               {/* Filter tabs */}
               <div className="px-4 py-2 border-b border-border flex gap-1">
                 {(["all", "open", "resolved"] as const).map((f) => (
-                  <button
+                  <Button
                     type="button"
+                    variant={filter === f ? "default" : "ghost"}
+                    size="xs"
                     key={f}
                     onClick={() => setFilter(f)}
-                    className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors cursor-pointer ${
-                      filter === f
-                        ? "bg-accent text-accent-fg"
-                        : "text-text-tertiary hover:text-text-secondary hover:bg-surface-3"
-                    }`}
                   >
                     {f === "all"
                       ? `All (${pageComments.length})`
                       : f === "open"
                         ? `Open (${openCount})`
                         : `Resolved (${pageComments.length - openCount})`}
-                  </button>
+                  </Button>
                 ))}
               </div>
 
@@ -708,7 +711,7 @@ export function CommentSystem() {
               <p className="text-[12px] text-text-tertiary mb-4">
                 This will be shown with your comments
               </p>
-              <input
+              <Input
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
                 onKeyDown={(e) => {
@@ -720,18 +723,19 @@ export function CommentSystem() {
                   }
                 }}
                 placeholder="e.g. Alex Chen"
-                className="w-full px-3 py-2.5 border border-border rounded-lg text-[13px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-border-hover"
               />
               <div className="flex gap-2 mt-3">
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  className="flex-1"
                   onClick={() => setShowAuthorPrompt(false)}
-                  className="flex-1 py-2 text-[12px] font-medium text-text-secondary border border-border rounded-lg hover:bg-surface-3 transition-colors cursor-pointer"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  className="flex-1"
                   onClick={() => {
                     if (authorName.trim()) {
                       localStorage.setItem("nexu_comment_author", authorName.trim());
@@ -741,10 +745,9 @@ export function CommentSystem() {
                     }
                   }}
                   disabled={!authorName.trim()}
-                  className="flex-1 py-2 text-[12px] font-medium bg-accent text-accent-fg rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-30 cursor-pointer"
                 >
                   Continue
-                </button>
+                </Button>
               </div>
             </motion.div>
           </motion.div>

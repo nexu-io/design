@@ -20,6 +20,7 @@ import { SkillsPanel } from "./SkillsPanel";
 import { StarModal } from "./StarModal";
 import { WorkspaceTopRightControls } from "./WorkspaceTopRightControls";
 import { WorkspaceUtilityOverlays } from "./WorkspaceUtilityOverlays";
+import { getCreditPackInfo, useOpenClawDemoState } from "./demo-state";
 import { SKILL_CATEGORIES } from "./skillData";
 import { type RewardType, type View, getInitialWorkspaceView } from "./workspaceTypes";
 
@@ -58,24 +59,19 @@ export default function OpenClawWorkspace() {
   const location = useLocation();
   const { stars } = useGitHubStars();
   const { locale, setLocale, t } = useLocale();
-  // ── Demo Control State (for presentation/review) ──────────────────────
-  type DemoPlan = "free" | "plus" | "pro";
-  type DemoBudget = "healthy" | "warning" | "depleted";
-  type DemoCreditPack = "none" | "2000" | "5200" | "11000" | "55000";
-  const CREDIT_PACK_MAP: Record<DemoCreditPack, { label: string; remaining: number }> = {
-    none: { label: "无", remaining: 0 },
-    "2000": { label: "2,000 积分包", remaining: 1620 },
-    "5200": { label: "5,200 积分包", remaining: 3840 },
-    "11000": { label: "11,000 积分包", remaining: 8200 },
-    "55000": { label: "55,000 积分包", remaining: 41500 },
-  };
-  const [demoLoggedIn, setDemoLoggedIn] = useState(true);
-  const [demoPlan, setDemoPlan] = useState<DemoPlan>("pro");
-  const [demoBudgetStatus, setDemoBudgetStatus] = useState<DemoBudget>("healthy");
-  const [demoCreditPack, setDemoCreditPack] = useState<DemoCreditPack>("none");
+  const {
+    loggedIn: demoLoggedIn,
+    setLoggedIn: setDemoLoggedIn,
+    plan: demoPlan,
+    setPlan: setDemoPlan,
+    budgetStatus: demoBudgetStatus,
+    setBudgetStatus: setDemoBudgetStatus,
+    creditPack: demoCreditPack,
+    setCreditPack: setDemoCreditPack,
+  } = useOpenClawDemoState();
   const [showDemoPanel, setShowDemoPanel] = useState(false);
   const [showUsagePanel, setShowUsagePanel] = useState(false);
-  const creditPackInfo = CREDIT_PACK_MAP[demoCreditPack];
+  const creditPackInfo = getCreditPackInfo(demoCreditPack);
   // ── End Demo Control ───────────────────────────────────────────────────
 
   const nexuLoggedIn = demoLoggedIn;
@@ -336,7 +332,7 @@ export default function OpenClawWorkspace() {
       {!collapsed && (
         <div
           onMouseDown={handleResizeStart}
-          className="hidden md:block w-px shrink-0 cursor-col-resize group relative z-10"
+          className="group relative z-10 hidden w-0 shrink-0 cursor-col-resize md:block"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
           <div className="absolute inset-y-0 -left-1.5 -right-1.5" />
@@ -345,7 +341,7 @@ export default function OpenClawWorkspace() {
 
       {/* Main content */}
       <div className="relative flex-1 min-w-0">
-        <main className="relative flex h-full min-w-0 flex-col bg-surface-1 rounded-l-[12px] overflow-hidden pt-14">
+        <main className="relative -ml-px flex h-full min-w-0 flex-col overflow-hidden rounded-l-[12px] bg-surface-1 pt-20">
           {/* Update banner — floating bottom-right of canvas */}
           {hasUpdate && !updateDismissed && (
             <div className="absolute bottom-4 right-4 z-30 w-[280px] px-3 py-2.5 rounded-[10px] border border-border bg-surface-0/90 backdrop-blur-md shadow-[var(--shadow-dropdown)] animate-float">
@@ -534,7 +530,14 @@ export default function OpenClawWorkspace() {
                 <ConversationsView initialChannelId={view.channelId} />
               )}
               {view.type === "deployments" && <DeploymentsView />}
-              {view.type === "skills" && <SkillsPanel />}
+              {view.type === "skills" && (
+                <SkillsPanel
+                  githubUrl={GITHUB_URL}
+                  stars={stars ?? undefined}
+                  initialTab={view.tab}
+                  initialTag={view.tag}
+                />
+              )}
               {view.type === "schedule" && <SchedulePanel />}
               {view.type === "rewards" && (
                 <RewardsCenter

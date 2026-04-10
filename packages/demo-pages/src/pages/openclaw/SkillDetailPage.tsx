@@ -10,6 +10,7 @@ import {
   SlackIcon,
   Switch,
   TelegramIcon,
+  TextLink,
 } from "@nexu-design/ui-web";
 import {
   ArrowLeft,
@@ -280,7 +281,7 @@ export default function SkillDetailPage() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/openclaw/skills")}
+            onClick={() => navigate("/openclaw/workspace?view=skills")}
             className="shrink-0 size-8"
           >
             <ArrowLeft size={18} />
@@ -875,9 +876,15 @@ export default function SkillDetailPage() {
             >
               Explore other skills
             </h2>
-            <Link to="/openclaw/skills" className="text-link">
-              View all <ArrowRight size={14} />
-            </Link>
+            <TextLink
+              asChild
+              size="sm"
+              className="text-[12px] leading-none text-[var(--color-link)]"
+            >
+              <Link to="/openclaw/workspace?view=skills">
+                View all <ArrowRight size={12} className="shrink-0" aria-hidden />
+              </Link>
+            </TextLink>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {allRelated.map((s) => (

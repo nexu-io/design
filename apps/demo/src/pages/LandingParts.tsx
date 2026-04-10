@@ -1,3 +1,9 @@
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+  ConversationMessage,
+} from "@nexu-design/ui-web";
 import { CheckCircle2, ChevronDown, type LucideIcon } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
@@ -12,26 +18,30 @@ export function ChatMsg({
 }) {
   if (from === "user") {
     return (
-      <div className="flex justify-end mb-2.5">
-        <div className="max-w-[78%] rounded-lg rounded-br-sm bg-accent text-accent-fg px-3 py-2 text-[13px] leading-relaxed">
+      <div className="mb-2.5">
+        <ConversationMessage
+          variant="user"
+          bubbleClassName="bg-accent text-accent-fg px-3 py-2 text-[13px]"
+        >
           {children}
-        </div>
+        </ConversationMessage>
       </div>
     );
   }
   return (
-    <div className="flex gap-2 mb-2.5">
-      <div className="w-6 h-6 rounded-full bg-clone/15 flex items-center justify-center text-xs shrink-0 mt-0.5">
-        {from === "clone" ? "😊" : (name?.[0] ?? "?")}
-      </div>
-      <div className="flex-1 min-w-0">
-        {name && from === "other" && (
-          <div className="text-[11px] text-text-tertiary mb-0.5">{name}</div>
-        )}
-        <div className="inline-block max-w-[90%] rounded-lg rounded-bl-sm bg-surface-2 border border-border px-3 py-2 text-[13px] text-text-primary leading-relaxed">
-          {children}
-        </div>
-      </div>
+    <div className="mb-2.5">
+      <ConversationMessage
+        variant="assistant"
+        avatar={
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-clone/15 text-xs">
+            {from === "clone" ? "😊" : (name?.[0] ?? "?")}
+          </div>
+        }
+        bubbleClassName="bg-surface-2 px-3 py-2 text-[13px]"
+        meta={name && from === "other" ? name : undefined}
+      >
+        {children}
+      </ConversationMessage>
     </div>
   );
 }
@@ -142,19 +152,17 @@ export function SectionHeading({
 export function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-border">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between py-4 text-left cursor-pointer"
-      >
+    <Collapsible open={open} onOpenChange={setOpen} className="border-b border-border">
+      <CollapsibleTrigger className="flex w-full items-center justify-between py-4 text-left">
         <span className="text-sm font-medium text-text-primary">{q}</span>
         <ChevronDown
           size={16}
-          className={`text-text-tertiary shrink-0 ml-4 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`ml-4 shrink-0 text-text-tertiary transition-transform ${open ? "rotate-180" : ""}`}
         />
-      </button>
-      {open && <div className="pb-4 text-sm text-text-secondary leading-relaxed">{a}</div>}
-    </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="pb-4 text-sm leading-relaxed text-text-secondary">
+        {a}
+      </CollapsibleContent>
+    </Collapsible>
   );
 }
