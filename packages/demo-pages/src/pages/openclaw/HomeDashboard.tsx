@@ -52,13 +52,7 @@ import {
   WhatsAppIconSetup,
 } from "./channelSetup";
 import { MOCK_CHANNELS, getProviderDetails } from "./data";
-import {
-  CreditIcon,
-  ProviderLogo,
-  TierPlusBadge,
-  TierProBadge,
-  getModelIconProvider,
-} from "./iconHelpers";
+import { CreditIcon, ProviderLogo, getModelIconProvider } from "./iconHelpers";
 
 const SEEDANCE_COUNTDOWN_CYCLE_MS = 2 * 24 * 60 * 60 * 1000;
 const SEEDANCE_COUNTDOWN_LOOP_END_MS = Date.now() + SEEDANCE_COUNTDOWN_CYCLE_MS - 1000;

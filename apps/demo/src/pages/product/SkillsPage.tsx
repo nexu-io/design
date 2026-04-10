@@ -73,8 +73,8 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ImportSkillModal } from "./import-skill-modal";
 import { useProductLayout } from "./ProductLayoutContext";
+import { ImportSkillModal } from "./import-skill-modal";
 
 type TabId = "installed" | "featured" | "explore";
 type ExploreCategory = "All" | "integration" | "developer" | "productivity" | "design" | "business";
@@ -1144,11 +1144,7 @@ export default function SkillsPage() {
           }
           actions={
             <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setImportModalOpen(true)}
-              >
+              <Button type="button" variant="outline" onClick={() => setImportModalOpen(true)}>
                 <Download size={14} />
                 Import skill
               </Button>
@@ -1169,15 +1165,15 @@ export default function SkillsPage() {
           }}
         >
           <div className="flex items-center justify-between mb-6 gap-4">
-              <TabsList variant="underline" className="w-auto">
-                {TABS_CONFIG.map((t) => (
-                  <TabsTrigger key={t.id} value={t.id} variant="underline" className="px-0 pr-4">
-                    {t.label}
-                    {tabCounts[t.id] != null && (
-                      <span className="text-[11px] text-text-muted ml-1.5">{tabCounts[t.id]}</span>
-                    )}
-                  </TabsTrigger>
-                ))}
+            <TabsList className="w-auto">
+              {TABS_CONFIG.map((t) => (
+                <TabsTrigger key={t.id} value={t.id} className="px-0 pr-4">
+                  {t.label}
+                  {tabCounts[t.id] != null && (
+                    <span className="text-[11px] text-text-muted ml-1.5">{tabCounts[t.id]}</span>
+                  )}
+                </TabsTrigger>
+              ))}
             </TabsList>
             <div className="flex items-center gap-2">
               <Button

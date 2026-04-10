@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TextLink } from "@nexu-design/ui-web";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta = {
   title: "Primitives/TextLink",
@@ -35,13 +35,7 @@ export const ExternalLinks: Story = {
       <TextLink href="#" target="_blank" rel="noopener noreferrer" showArrowUpRight>
         Open documentation
       </TextLink>
-      <TextLink
-        href="#"
-        size="default"
-        target="_blank"
-        rel="noopener noreferrer"
-        showArrowUpRight
-      >
+      <TextLink href="#" size="default" target="_blank" rel="noopener noreferrer" showArrowUpRight>
         Visit provider console
       </TextLink>
     </div>

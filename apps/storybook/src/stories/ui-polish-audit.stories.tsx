@@ -1,4 +1,3 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Button,
   Card,
@@ -20,6 +19,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@nexu-design/ui-web";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta = {
   title: "Scenarios/UI Polish Audit",

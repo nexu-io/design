@@ -13,125 +13,125 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@nexu-design/ui-web'
-import { AlertCircle, CheckCircle2, Info, Lock, Upload } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+} from "@nexu-design/ui-web";
+import { AlertCircle, CheckCircle2, Info, Lock, Upload } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import { createAutoCloseController, getSelectedZipFile } from './import-skill-modal-state'
+import { createAutoCloseController, getSelectedZipFile } from "./import-skill-modal-state";
 
-type ImportTab = 'zip' | 'github'
+type ImportTab = "zip" | "github";
 
 interface ImportSkillModalProps {
-  open: boolean
-  onClose: () => void
-  onImport: (file: File) => Promise<void> | void
+  open: boolean;
+  onClose: () => void;
+  onImport: (file: File) => Promise<void> | void;
 }
 
 export function ImportSkillModal({ open, onClose, onImport }: ImportSkillModalProps) {
-  const [tab, setTab] = useState<ImportTab>('zip')
-  const [dragOver, setDragOver] = useState(false)
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [done, setDone] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [importing, setImporting] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const autoCloseControllerRef = useRef(createAutoCloseController())
+  const [tab, setTab] = useState<ImportTab>("zip");
+  const [dragOver, setDragOver] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const autoCloseControllerRef = useRef(createAutoCloseController());
 
   const reset = useCallback(() => {
-    autoCloseControllerRef.current.cancel()
-    setTab('zip')
-    setDragOver(false)
-    setSelectedFile(null)
-    setDone(false)
-    setError(null)
-    setImporting(false)
-  }, [])
+    autoCloseControllerRef.current.cancel();
+    setTab("zip");
+    setDragOver(false);
+    setSelectedFile(null);
+    setDone(false);
+    setError(null);
+    setImporting(false);
+  }, []);
 
   useEffect(() => {
     return () => {
-      autoCloseControllerRef.current.cancel()
-    }
-  }, [])
+      autoCloseControllerRef.current.cancel();
+    };
+  }, []);
 
   const handleClose = useCallback(() => {
-    reset()
-    onClose()
-  }, [onClose, reset])
+    reset();
+    onClose();
+  }, [onClose, reset]);
 
   const handleFileClick = () => {
-    fileInputRef.current?.click()
-  }
+    fileInputRef.current?.click();
+  };
 
   const handleFileSelection = (file: File | null | undefined) => {
-    const zipFile = getSelectedZipFile(file)
+    const zipFile = getSelectedZipFile(file);
 
     if (!zipFile && file) {
-      setSelectedFile(null)
-      setError('Only .zip skill packages are supported in this demo.')
-      return
+      setSelectedFile(null);
+      setError("Only .zip skill packages are supported in this demo.");
+      return;
     }
 
-    setSelectedFile(zipFile)
-    setError(null)
-  }
+    setSelectedFile(zipFile);
+    setError(null);
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    handleFileSelection(event.target.files?.[0])
-    event.target.value = ''
-  }
+    handleFileSelection(event.target.files?.[0]);
+    event.target.value = "";
+  };
 
   const handleDrop = (event: React.DragEvent) => {
-    event.preventDefault()
-    setDragOver(false)
-    handleFileSelection(event.dataTransfer.files[0])
-  }
+    event.preventDefault();
+    setDragOver(false);
+    handleFileSelection(event.dataTransfer.files[0]);
+  };
 
   const handleImport = async () => {
-    if (!selectedFile) return
+    if (!selectedFile) return;
 
     try {
-      setImporting(true)
-      setError(null)
-      await onImport(selectedFile)
-      setDone(true)
-      autoCloseControllerRef.current.schedule(handleClose, 1200)
+      setImporting(true);
+      setError(null);
+      await onImport(selectedFile);
+      setDone(true);
+      autoCloseControllerRef.current.schedule(handleClose, 1200);
     } catch (importError) {
-      setError(importError instanceof Error ? importError.message : 'Import failed')
+      setError(importError instanceof Error ? importError.message : "Import failed");
     } finally {
-      setImporting(false)
+      setImporting(false);
     }
-  }
+  };
 
   return (
     <Dialog
       open={open}
       onOpenChange={(isOpen) => {
-        if (!isOpen) handleClose()
+        if (!isOpen) handleClose();
       }}
     >
       <DialogContent size="md" className="max-w-[560px] p-0">
         <DialogHeader className="border-b border-border px-5 py-4">
           <DialogTitle className="text-base">Import skill</DialogTitle>
           <DialogDescription>
-            Import a local skill package into the demo workspace. Based on the canonical
-            workspace import flow.
+            Import a local skill package into the demo workspace. Based on the canonical workspace
+            import flow.
           </DialogDescription>
         </DialogHeader>
 
         <Tabs
           value={tab}
           onValueChange={(value) => {
-            setTab(value as ImportTab)
-            setDone(false)
-            setError(null)
+            setTab(value as ImportTab);
+            setDone(false);
+            setError(null);
           }}
           className="px-5 pt-4"
         >
-          <TabsList variant="pill" className="inline-flex h-10 rounded-full">
-            <TabsTrigger value="zip" variant="pill" className="px-4 text-[13px]">
+          <TabsList className="inline-flex h-10 rounded-full">
+            <TabsTrigger value="zip" className="px-4 text-[13px]">
               Upload ZIP
             </TabsTrigger>
-            <TabsTrigger value="github" variant="pill" className="gap-1.5 px-4 text-[13px]">
+            <TabsTrigger value="github" className="gap-1.5 px-4 text-[13px]">
               GitHub link
               <Badge variant="outline" size="xs" className="pointer-events-none">
                 Soon
@@ -145,25 +145,27 @@ export function ImportSkillModal({ open, onClose, onImport }: ImportSkillModalPr
                 <div className="flex flex-col items-center justify-center gap-2 py-10">
                   <CheckCircle2 size={32} className="text-success" />
                   <p className="text-sm font-medium text-text-primary">Skill imported</p>
-                  <p className="text-xs text-text-muted">The imported skill is now available in Installed.</p>
+                  <p className="text-xs text-text-muted">
+                    The imported skill is now available in Installed.
+                  </p>
                 </div>
               ) : (
                 <div>
                   <button
                     type="button"
                     onDragOver={(event) => {
-                      event.preventDefault()
-                      setDragOver(true)
+                      event.preventDefault();
+                      setDragOver(true);
                     }}
                     onDragLeave={() => setDragOver(false)}
                     onDrop={handleDrop}
                     onClick={handleFileClick}
                     className={`flex w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed px-6 py-10 text-center transition-colors ${
                       dragOver
-                        ? 'border-brand-primary bg-brand-subtle'
+                        ? "border-brand-primary bg-brand-subtle"
                         : selectedFile
-                          ? 'border-success bg-success-subtle'
-                          : 'border-border-strong hover:border-border-hover hover:bg-surface-1'
+                          ? "border-success bg-success-subtle"
+                          : "border-border-strong hover:border-border-hover hover:bg-surface-1"
                     }`}
                   >
                     <div className="flex size-10 items-center justify-center rounded-full bg-surface-1 text-text-secondary">
@@ -172,12 +174,18 @@ export function ImportSkillModal({ open, onClose, onImport }: ImportSkillModalPr
                     {selectedFile ? (
                       <>
                         <p className="text-sm font-medium text-text-primary">{selectedFile.name}</p>
-                        <p className="text-xs text-text-muted">Click or drop another file to replace it.</p>
+                        <p className="text-xs text-text-muted">
+                          Click or drop another file to replace it.
+                        </p>
                       </>
                     ) : (
                       <>
-                        <p className="text-sm font-medium text-text-primary">Drop a .zip skill package here</p>
-                        <p className="text-xs text-text-muted">or click to browse from your computer</p>
+                        <p className="text-sm font-medium text-text-primary">
+                          Drop a .zip skill package here
+                        </p>
+                        <p className="text-xs text-text-muted">
+                          or click to browse from your computer
+                        </p>
                       </>
                     )}
                   </button>
@@ -240,7 +248,7 @@ export function ImportSkillModal({ open, onClose, onImport }: ImportSkillModalPr
               size="sm"
               onClick={handleImport}
               loading={importing}
-              disabled={tab === 'github' || !selectedFile}
+              disabled={tab === "github" || !selectedFile}
             >
               <Upload size={14} />
               Import
@@ -249,5 +257,5 @@ export function ImportSkillModal({ open, onClose, onImport }: ImportSkillModalPr
         ) : null}
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -29,9 +29,9 @@ import {
   Shield,
   Zap,
 } from "lucide-react";
-import { openExternal } from "../../utils/open-external";
 import { useState } from "react";
 import { usePageTitle } from "../../hooks/usePageTitle";
+import { openExternal } from "../../utils/open-external";
 import { getPlatformConfig } from "./data";
 
 const NEXU_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
@@ -390,8 +390,8 @@ function SlackOAuthView() {
                 className="rounded-full"
                 onClick={() => openExternal("https://api.slack.com/apps")}
               >
-                  <ArrowUpRight size={12} className="shrink-0" />
-                  Open Slack API Dashboard
+                <ArrowUpRight size={12} className="shrink-0" />
+                Open Slack API Dashboard
               </Button>
             </div>
           </Card>

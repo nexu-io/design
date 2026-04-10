@@ -195,9 +195,6 @@ export function SettingsView({
     }
   }, []);
   const providers = getProviderDetails();
-  const customProviderTemplates = providers.filter(
-    (provider) => provider.id === "custom-openai" || provider.id === "custom-anthropic",
-  );
   const baseProviders = providers.filter(
     (provider) => provider.id !== "custom-openai" && provider.id !== "custom-anthropic",
   );
