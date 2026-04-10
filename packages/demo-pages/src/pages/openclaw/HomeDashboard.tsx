@@ -2,6 +2,7 @@ import {
   Alert,
   AlertDescription,
   Button,
+  Card,
   Dialog,
   DialogBody,
   DialogContent,
@@ -10,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
   Input,
+  TextLink,
   cn,
 } from "@nexu-design/ui-web";
 import {
@@ -730,7 +732,7 @@ export function HomeDashboard({
         {seedanceBanner}
 
         {/* ═══ MIDDLE: Channels Panel ═══ */}
-        <div className="card card-static">
+        <Card variant="static" padding="none">
           <div className="px-5 pt-4 pb-3">
             <h2 className="text-[14px] font-semibold text-text-primary">{t("ws.home.channels")}</h2>
           </div>
@@ -820,10 +822,10 @@ export function HomeDashboard({
               </div>
             )}
           </div>
-        </div>
+        </Card>
 
         {/* ═══ Recent Activity ═══ */}
-        <div className="card card-static p-5">
+        <Card variant="static" padding="md">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-[14px] font-semibold text-text-primary">Recent Activity</h2>
           </div>
@@ -874,10 +876,10 @@ export function HomeDashboard({
               );
             })}
           </div>
-        </div>
+        </Card>
 
         {/* ═══ Star Nexu on GitHub CTA ═══ */}
-        <div className="card card-static">
+        <Card variant="static" padding="none">
           <div className="flex items-center gap-4 px-5 py-4">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-amber-50 shrink-0">
               <Star size={20} className="text-amber-500 fill-amber-400" />
@@ -890,7 +892,7 @@ export function HomeDashboard({
             </div>
             <GitHubStarButton href={githubUrl} label="GitHub" iconSize={14} />
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Channel config modal — shared across scenes */}
@@ -999,14 +1001,16 @@ export function HomeDashboard({
                           <p className="mt-1 text-[11px] text-text-muted">{field.helpText}</p>
                         </div>
                       ))}
-                      <a
+                      <TextLink
                         href={ch.docUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-link mt-1"
+                        size="sm"
+                        className="mt-1 w-fit items-center gap-1 text-[12px] leading-none text-[var(--color-link)]"
                       >
                         {t("ws.home.viewSetupGuide").replace("{name}", ch.name)}
-                      </a>
+                        <ArrowUpRight size={12} className="shrink-0" aria-hidden />
+                      </TextLink>
                     </DialogBody>
                     <DialogFooter>
                       <Button type="button" variant="outline" onClick={handleCloseConfig}>

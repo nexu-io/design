@@ -1,4 +1,5 @@
 import {
+  Card,
   PageHeader,
   UnderlineTabs,
   UnderlineTabsContent,
@@ -87,7 +88,7 @@ export default function PricingPage({ initialTab = "usage" }: PricingPageProps) 
               onOpenRewards={() => navigate("/openclaw/rewards")}
             />
 
-            <div className="card p-6">
+            <Card variant="static" padding="lg">
               <h2 className="mb-4 text-sm font-semibold text-text-primary">
                 Pricing &amp; usage FAQ
               </h2>
@@ -105,7 +106,7 @@ export default function PricingPage({ initialTab = "usage" }: PricingPageProps) 
                   remains available in Settings → AI Model Providers.
                 </p>
               </div>
-            </div>
+            </Card>
           </div>
         </UnderlineTabsContent>
 

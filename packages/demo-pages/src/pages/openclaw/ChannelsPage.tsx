@@ -3,6 +3,7 @@ import {
   AlertDescription,
   AlertTitle,
   Button,
+  Card,
   Input,
   Label,
   PageHeader,
@@ -39,7 +40,7 @@ function ConfiguredView({ onShowGuide }: { onShowGuide: () => void }) {
 
   return (
     <div className="max-w-xl space-y-6">
-      <div className="card flex gap-4 items-center p-5">
+      <Card variant="static" padding="md" className="flex gap-4 items-center">
         <div className="flex justify-center items-center w-11 h-11 rounded-lg shrink-0 bg-success-subtle">
           <CheckCircle2 size={22} className="text-success" />
         </div>
@@ -53,7 +54,7 @@ function ConfiguredView({ onShowGuide }: { onShowGuide: () => void }) {
         <Button variant="outline" size="sm" onClick={onShowGuide}>
           <BookOpen size={14} /> Setup guide
         </Button>
-      </div>
+      </Card>
 
       <Alert variant="destructive" className="p-5">
         <Shield size={14} aria-hidden="true" />
@@ -106,7 +107,7 @@ function SlackOAuthView() {
   if (phase === "oauth") {
     return (
       <div className="max-w-md mx-auto space-y-3">
-        <div className="card p-6 text-center">
+        <Card variant="static" padding="lg" className="text-center">
           <div
             className="flex justify-center items-center w-12 h-12 rounded-lg mx-auto mb-4"
             style={{ background: "rgba(74,21,75,0.10)" }}
@@ -175,7 +176,7 @@ function SlackOAuthView() {
             <Shield size={10} />
             <span>After auth, teammates join with zero config. Each has their own memory.</span>
           </div>
-        </div>
+        </Card>
 
         <Button
           variant="ghost"
@@ -195,7 +196,7 @@ function SlackOAuthView() {
   if (phase === "authorizing") {
     return (
       <div className="max-w-md mx-auto">
-        <div className="card p-8 text-center">
+        <Card variant="static" padding="none" className="p-8 text-center">
           <div
             className="flex justify-center items-center w-12 h-12 rounded-lg mx-auto mb-5"
             style={{ background: "rgba(74,21,75,0.10)" }}
@@ -226,7 +227,7 @@ function SlackOAuthView() {
           >
             Connecting your Slack workspace
           </p>
-        </div>
+        </Card>
       </div>
     );
   }
@@ -310,7 +311,7 @@ function SlackOAuthView() {
         </div>
 
         {manualStep === 0 && (
-          <div className="card p-5">
+          <Card variant="static" padding="md">
             <div className="flex gap-3 items-start mb-4">
               <div
                 className="flex justify-center items-center w-8 h-8 rounded-lg shrink-0"
@@ -389,11 +390,11 @@ function SlackOAuthView() {
                 </a>
               </Button>
             </div>
-          </div>
+          </Card>
         )}
 
         {manualStep === 1 && (
-          <div className="card p-5">
+          <Card variant="static" padding="md">
             <div className="flex gap-3 items-start mb-4">
               <div
                 className="flex justify-center items-center w-8 h-8 rounded-lg shrink-0"
@@ -455,11 +456,11 @@ function SlackOAuthView() {
                 </p>
               </div>
             </div>
-          </div>
+          </Card>
         )}
 
         {manualStep === 2 && (
-          <div className="card p-5">
+          <Card variant="static" padding="md">
             <div className="flex gap-3 items-start mb-4">
               <div
                 className="flex justify-center items-center w-8 h-8 rounded-lg shrink-0"
@@ -554,11 +555,11 @@ function SlackOAuthView() {
                 ))}
               </div>
             </div>
-          </div>
+          </Card>
         )}
 
         {manualStep === 3 && (
-          <div className="card p-5">
+          <Card variant="static" padding="md">
             <div className="flex gap-3 items-start mb-4">
               <div
                 className="flex justify-center items-center w-8 h-8 rounded-lg shrink-0"
@@ -671,7 +672,7 @@ function SlackOAuthView() {
                 Verify & connect
               </Button>
             </div>
-          </div>
+          </Card>
         )}
 
         <div className="flex justify-between items-center mt-5">
@@ -742,7 +743,7 @@ function SlackOAuthView() {
 
   return (
     <div className="max-w-md mx-auto space-y-4">
-      <div className="card p-8 text-center">
+      <Card variant="static" padding="none" className="p-8 text-center">
         <div
           className="flex justify-center items-center w-14 h-14 rounded-lg mx-auto mb-5"
           style={{ background: "rgba(52,110,88,0.10)" }}
@@ -828,7 +829,7 @@ function SlackOAuthView() {
             </p>
           </AlertDescription>
         </Alert>
-      </div>
+      </Card>
     </div>
   );
 }

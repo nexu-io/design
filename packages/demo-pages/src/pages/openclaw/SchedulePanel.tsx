@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { type ElementType, useState } from "react";
 
-import { Button, PageHeader } from "@nexu-design/ui-web";
+import { Button, Card, PageHeader } from "@nexu-design/ui-web";
 
 import { useLocale } from "../../hooks/useLocale";
 
@@ -382,7 +382,7 @@ export function SchedulePanel() {
               );
             })}
 
-            <div className="mt-6 card px-4 py-3">
+            <Card variant="static" padding="none" className="mt-6 px-4 py-3">
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-[13px] font-semibold text-text-primary">
                   {t("ws.schedule.dailyOverview")}
@@ -395,7 +395,7 @@ export function SchedulePanel() {
               <p className="text-[12px] text-text-secondary leading-relaxed">
                 {t("ws.schedule.singleAgentNote")}
               </p>
-            </div>
+            </Card>
           </div>
         )}
       </div>

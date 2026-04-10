@@ -1,4 +1,4 @@
-import { Badge, Button, SlackIcon } from "@nexu-design/ui-web";
+import { Badge, Button, Card, SlackIcon } from "@nexu-design/ui-web";
 import {
   ArrowRight,
   BarChart3,
@@ -247,7 +247,7 @@ function FeatureCard({
   badge?: string;
 }) {
   return (
-    <div className="card p-6">
+    <Card variant="static" padding="lg">
       <div className="flex justify-between items-start mb-4">
         <div className="flex justify-center items-center w-10 h-10 rounded-[12px] bg-white border border-border">
           <Icon size={20} className="text-accent" />
@@ -260,7 +260,7 @@ function FeatureCard({
       </div>
       <div className="text-[14px] font-semibold text-text-primary mb-2">{title}</div>
       <div className="text-[13px] text-text-muted leading-relaxed">{desc}</div>
-    </div>
+    </Card>
   );
 }
 

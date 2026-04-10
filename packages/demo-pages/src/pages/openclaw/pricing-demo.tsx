@@ -1,6 +1,7 @@
 import {
   Badge,
   Button,
+  Card,
   FilterPillTrigger,
   FilterPills,
   FilterPillsList,
@@ -391,7 +392,7 @@ export function UsageSummaryPanel({
       <div
         className={`grid gap-4 ${compact ? "xl:grid-cols-[1.4fr_1fr]" : "lg:grid-cols-[1.45fr_1fr]"}`}
       >
-        <div className="card p-6">
+        <Card variant="static" padding="lg">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <div className="flex items-center gap-2">
@@ -493,10 +494,10 @@ export function UsageSummaryPanel({
               ))}
             </div>
           </div>
-        </div>
+        </Card>
 
         <div className="space-y-4">
-          <div className="card p-5">
+          <Card variant="static" padding="md">
             <div className="flex items-center gap-2">
               <Gift size={16} className="text-accent" />
               <h2 className="text-sm font-semibold text-text-primary">Rewards credits split</h2>
@@ -523,9 +524,9 @@ export function UsageSummaryPanel({
               Reward credits available this cycle:{" "}
               <span className="font-semibold text-text-primary">{formatCredits(rewardTotal)}</span>
             </div>
-          </div>
+          </Card>
 
-          <div className="card p-5">
+          <Card variant="static" padding="md">
             <div className="flex items-center gap-2">
               <UserRound size={16} className="text-accent" />
               <h2 className="text-sm font-semibold text-text-primary">
@@ -550,7 +551,7 @@ export function UsageSummaryPanel({
             >
               {isSignedIn ? "Open share rewards" : "Sign in to unlock sharing"}
             </Button>
-          </div>
+          </Card>
         </div>
       </div>
     </div>

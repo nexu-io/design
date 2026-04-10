@@ -446,6 +446,7 @@ export function SettingsView({
                   <Switch
                     checked={launchAtLogin}
                     onCheckedChange={setLaunchAtLoginPersist}
+                    size="sm"
                     className="shrink-0 mt-0.5"
                   />
                 </div>
@@ -461,6 +462,7 @@ export function SettingsView({
                   <Switch
                     checked={showInDock}
                     onCheckedChange={setShowInDockPersist}
+                    size="sm"
                     className="shrink-0 mt-0.5"
                   />
                 </div>
@@ -487,7 +489,7 @@ export function SettingsView({
                       {t("ws.settings.data.analyticsDesc")}
                     </div>
                   </div>
-                  <Switch checked={analytics} onCheckedChange={setAnalyticsPersist} />
+                  <Switch checked={analytics} onCheckedChange={setAnalyticsPersist} size="sm" />
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
@@ -498,7 +500,7 @@ export function SettingsView({
                       {t("ws.settings.data.crashReportsDesc")}
                     </div>
                   </div>
-                  <Switch checked={crashReports} onCheckedChange={setCrashReports} />
+                  <Switch checked={crashReports} onCheckedChange={setCrashReports} size="sm" />
                 </div>
               </div>
             </div>

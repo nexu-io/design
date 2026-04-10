@@ -1,4 +1,11 @@
-import { Badge, Button, DiscordIcon, FeishuIcon, SlackIcon } from "@nexu-design/ui-web";
+import {
+  Badge,
+  Button,
+  DiscordIcon,
+  FeishuIcon,
+  SlackIcon,
+  TextLink,
+} from "@nexu-design/ui-web";
 import { ArrowUpRight, FolderOpen, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -116,26 +123,28 @@ function MessageBubble({ msg }: { msg: BotMessage }) {
             </div>
           )}
           {msg.deployment && (
-            <a
+            <TextLink
               href={msg.deployment.url}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-[12px] text-link hover:underline"
+              size="sm"
+              className="text-[12px] leading-none text-[var(--color-link)]"
             >
               <span className="min-w-0">{msg.deployment.title}</span>
               <ArrowUpRight size={12} className="shrink-0 translate-y-px" aria-hidden />
-            </a>
+            </TextLink>
           )}
           {msg.contentArtifact && (
-            <a
+            <TextLink
               href={msg.contentArtifact.url}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-[12px] text-link hover:underline"
+              size="sm"
+              className="text-[12px] leading-none text-[var(--color-link)]"
             >
               <span className="min-w-0">{msg.contentArtifact.title}</span>
               <ArrowUpRight size={12} className="shrink-0 translate-y-px" aria-hidden />
-            </a>
+            </TextLink>
           )}
         </div>
         <div className={`text-[10px] text-text-muted mt-1 ${isBot ? "" : "text-right"}`}>
