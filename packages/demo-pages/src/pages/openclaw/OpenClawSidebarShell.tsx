@@ -29,6 +29,11 @@ import LanguageSwitcher from "../../components/LanguageSwitcher";
 import { MOCK_CHANNELS } from "./data";
 import type { View } from "./workspaceTypes";
 
+const MAC_COLLAPSE_BUTTON_LEFT = 74;
+const MAC_COLLAPSE_BUTTON_TOP = 10;
+const WINDOWS_COLLAPSE_BUTTON_LEFT = 12;
+const WINDOWS_COLLAPSE_BUTTON_TOP = 64;
+
 type NavItem = {
   id: View["type"];
   labelKey: string;
@@ -86,6 +91,12 @@ export function OpenClawSidebarShell({
   githubUrl,
   navItems,
 }: Props) {
+  const platform =
+    (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform ??
+    navigator.userAgent ??
+    "";
+  const isMacOS = /mac/i.test(platform);
+
   return (
     <>
       {collapsed && (
@@ -95,9 +106,19 @@ export function OpenClawSidebarShell({
             setCollapsed(next);
             localStorage.setItem("nexu_sidebar_collapsed", String(next));
           }}
-          className="fixed z-50 hidden h-8 w-8 items-center justify-center rounded-lg text-text-tertiary transition-colors hover:bg-black/5 hover:text-text-primary md:flex"
+          className={`fixed z-50 hidden h-8 w-8 items-center justify-center rounded-lg transition-colors md:flex ${
+            isMacOS
+              ? 'text-text-muted hover:text-text-primary'
+              : 'text-text-tertiary hover:bg-black/5 hover:text-text-primary'
+          }`}
           style={
-            { top: 58, left: sidebarWidth - 48, WebkitAppRegion: "no-drag" } as React.CSSProperties
+            {
+              top: isMacOS ? MAC_COLLAPSE_BUTTON_TOP : WINDOWS_COLLAPSE_BUTTON_TOP,
+              left: isMacOS ? MAC_COLLAPSE_BUTTON_LEFT : WINDOWS_COLLAPSE_BUTTON_LEFT,
+              transform: isMacOS ? 'translateZ(0)' : undefined,
+              backfaceVisibility: isMacOS ? 'hidden' : undefined,
+              WebkitAppRegion: "no-drag",
+            } as React.CSSProperties
           }
           title={t("ws.sidebar.expand")}
         >
@@ -122,7 +143,22 @@ export function OpenClawSidebarShell({
           className="flex shrink-0 items-center justify-between px-3 pb-0"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
-          <img src="/brand/logo-black-1.svg" alt="nexu" className="h-6 object-contain" />
+          <div className="flex min-w-0 items-center gap-2">
+            <img src="/brand/logo-black-1.svg" alt="nexu" className="h-6 object-contain" />
+            {!isMacOS && (
+              <button
+                onClick={() => {
+                  const next = !collapsed;
+                  setCollapsed(next);
+                  localStorage.setItem("nexu_sidebar_collapsed", String(next));
+                }}
+                className="shrink-0 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface-3 hover:text-text-primary"
+                title={t("ws.sidebar.collapse")}
+              >
+                <PanelLeftClose size={14} />
+              </button>
+            )}
+          </div>
           <div className="flex items-center gap-2">
             {hasUpdate && updateDismissed && (
               <button
@@ -132,17 +168,28 @@ export function OpenClawSidebarShell({
                 {t("ws.sidebar.update")}
               </button>
             )}
-            <button
-              onClick={() => {
-                const next = !collapsed;
-                setCollapsed(next);
-                localStorage.setItem("nexu_sidebar_collapsed", String(next));
-              }}
-              className="shrink-0 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface-3 hover:text-text-primary"
-              title={t("ws.sidebar.collapse")}
-            >
-              <PanelLeftClose size={14} />
-            </button>
+            {isMacOS && (
+              <button
+                onClick={() => {
+                  const next = !collapsed;
+                  setCollapsed(next);
+                  localStorage.setItem("nexu_sidebar_collapsed", String(next));
+                }}
+                className="fixed z-50 hidden h-8 w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:text-text-primary md:flex"
+                style={
+                  {
+                    top: MAC_COLLAPSE_BUTTON_TOP,
+                    left: MAC_COLLAPSE_BUTTON_LEFT,
+                    transform: 'translateZ(0)',
+                    backfaceVisibility: 'hidden',
+                    WebkitAppRegion: 'no-drag',
+                  } as React.CSSProperties
+                }
+                title={t("ws.sidebar.collapse")}
+              >
+                <PanelLeftClose size={14} />
+              </button>
+            )}
           </div>
         </SidebarHeader>
 

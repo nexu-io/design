@@ -36,9 +36,30 @@ export function isModelProvider(value: string | null): value is ModelProvider {
     value === "anthropic" ||
     value === "openai" ||
     value === "google" ||
+    value === "ollama" ||
+    value === "nvidia" ||
+    value === "stepfun" ||
+    value === "amazon-bedrock" ||
+    value === "deepseek" ||
+    value === "mistral" ||
     value === "xai" ||
+    value === "together" ||
+    value === "huggingface" ||
+    value === "qwen" ||
+    value === "volcengine" ||
+    value === "qianfan" ||
+    value === "vllm" ||
+    value === "byteplus" ||
+    value === "venice" ||
+    value === "github-copilot" ||
+    value === "xiaomi" ||
+    value === "chutes" ||
     value === "kimi" ||
     value === "glm" ||
+    value === "moonshot" ||
+    value === "zai" ||
+    value === "custom-openai" ||
+    value === "custom-anthropic" ||
     value === "minimax" ||
     value === "openrouter" ||
     value === "siliconflow" ||

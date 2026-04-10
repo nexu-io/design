@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   GitHubIcon,
   Input,
@@ -27,15 +28,17 @@ import {
   Info,
   Mail,
   Monitor,
+  Plus,
   RefreshCw,
   ScrollText,
   Shield,
+  Trash2,
   User,
 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { type Locale, useLocale } from "../../hooks/useLocale";
 import { openExternal } from "../../utils/open-external";
-import { type ModelProvider, getProviderDetails } from "./data";
+import { type ModelProvider, type ProviderDetail, getProviderDetails } from "./data";
 import { GitHubStarButton } from "./GitHubStarButton";
 
 const WORKSPACE_LOCALE_OPTIONS: { value: Locale; nativeLabel: string; englishLabel: string }[] = [
@@ -77,6 +80,23 @@ function WorkspaceLocaleSelectItem({
 }
 
 type SettingsTab = "general" | "providers";
+
+type CustomProviderTemplateId = "custom-openai" | "custom-anthropic";
+
+type CustomProviderDraft = {
+  compatibility: CustomProviderTemplateId;
+  displayName: string;
+  id: string;
+  instanceId: string;
+  providerTemplateId: CustomProviderTemplateId;
+  proxyUrl: string;
+};
+
+type ProviderListItem = ProviderDetail & {
+  isCustom?: boolean;
+  isDraft?: boolean;
+  sourceKey?: string;
+};
 
 type WorkspaceView =
   | { type: "home" }
@@ -175,7 +195,15 @@ export function SettingsView({
     }
   }, []);
   const providers = getProviderDetails();
-  const [activeProviderId, setActiveProviderId] = useState<ModelProvider>(initialProviderId);
+  const customProviderTemplates = providers.filter(
+    (provider) => provider.id === "custom-openai" || provider.id === "custom-anthropic",
+  );
+  const baseProviders = providers.filter(
+    (provider) => provider.id !== "custom-openai" && provider.id !== "custom-anthropic",
+  );
+  const [customProviders, setCustomProviders] = useState<ProviderListItem[]>([]);
+  const [customProviderDrafts, setCustomProviderDrafts] = useState<CustomProviderDraft[]>([]);
+  const [activeProviderId, setActiveProviderId] = useState<string>(initialProviderId);
   const [selectedModelId, setSelectedModelId] = useState<string | null>(() => {
     const nexu = providers.find((p) => p.id === "nexu");
     return nexu?.models[0]?.id ?? null;
@@ -192,10 +220,41 @@ export function SettingsView({
   const [checkStates, setCheckStates] = useState<
     Record<string, "idle" | "checking" | "success" | "error">
   >({});
-  const activeProvider = providers.find((p) => p.id === activeProviderId) ?? providers[0];
+  const getCustomTemplateLabel = useCallback(
+    (templateId: CustomProviderTemplateId) =>
+      templateId === "custom-openai"
+        ? t("ws.settings.customProviderCompatibilityOpenAI")
+        : t("ws.settings.customProviderCompatibilityAnthropic"),
+    [t],
+  );
+  const combinedProviders: ProviderListItem[] = [
+    ...baseProviders,
+    ...customProviders,
+    ...customProviderDrafts.map((draft) => ({
+      id: draft.id as ModelProvider,
+      name:
+        draft.displayName ||
+        (draft.instanceId.trim()
+          ? `${getCustomTemplateLabel(draft.compatibility)} / ${draft.instanceId.trim()}`
+          : t("ws.settings.customProviderDraft")),
+      description: t("ws.settings.customProviderDraftDesc"),
+      enabled: false,
+      apiKeyPlaceholder:
+        draft.compatibility === "custom-openai" ? "sk-..." : "sk-ant-...",
+      proxyUrl: draft.proxyUrl,
+      models: [],
+      isCustom: true,
+      isDraft: true,
+      sourceKey: draft.id,
+    })),
+  ];
+  const activeProvider = combinedProviders.find((p) => p.id === activeProviderId) ?? combinedProviders[0];
+  const activeCustomDraft = customProviderDrafts.find((draft) => draft.id === activeProviderId) ?? null;
+  const isCustomProvider = !!activeProvider?.isCustom;
+  const isCustomDraft = !!activeProvider?.isDraft;
 
   const getFormValues = (providerId: string) => {
-    const p = providers.find((x) => x.id === providerId);
+    const p = combinedProviders.find((x) => x.id === providerId);
     return formValues[providerId] ?? { apiKey: "", proxyUrl: p?.proxyUrl ?? "" };
   };
 
@@ -210,7 +269,7 @@ export function SettingsView({
     setFormValues((prev) => {
       const curr = prev[providerId] ?? {
         apiKey: "",
-        proxyUrl: providers.find((p) => p.id === providerId)?.proxyUrl ?? "",
+        proxyUrl: combinedProviders.find((p) => p.id === providerId)?.proxyUrl ?? "",
       };
       return { ...prev, [providerId]: { ...curr, [field]: value } };
     });
@@ -227,7 +286,7 @@ export function SettingsView({
       if (verifyOk) {
         setSaveStates((prev) => ({ ...prev, [providerId]: "saved" }));
         setSavedValues((prev) => ({ ...prev, [providerId]: { ...curr } }));
-        const p = providers.find((x) => x.id === providerId);
+        const p = combinedProviders.find((x) => x.id === providerId);
         if (p?.models[0]) setSelectedModelId(p.models[0].id);
         setShowSavedBannerFor(providerId);
         setTimeout(() => setShowSavedBannerFor(null), 2500);
@@ -254,6 +313,81 @@ export function SettingsView({
   const checkState = checkStates[activeProvider.id] ?? "idle";
   const providerDirty = activeProvider.id !== "nexu" && isDirty(activeProvider.id);
   const showSaved = saveState === "saved" && !providerDirty;
+
+  const createCustomProviderDraft = () => {
+    const id = `custom-draft-${Date.now()}`;
+    const draft: CustomProviderDraft = {
+      id,
+      providerTemplateId: "custom-openai",
+      compatibility: "custom-openai",
+      instanceId: "",
+      displayName: "",
+      proxyUrl: "",
+    };
+    setCustomProviderDrafts((prev) => [...prev, draft]);
+    setActiveProviderId(id);
+  };
+
+  const updateCustomDraft = (draftId: string, field: keyof CustomProviderDraft, value: string) => {
+    setCustomProviderDrafts((prev) =>
+      prev.map((draft) => (draft.id === draftId ? { ...draft, [field]: value } : draft)),
+    );
+  };
+
+  const removeCustomDraft = (draftId: string) => {
+    setCustomProviderDrafts((prev) => prev.filter((draft) => draft.id !== draftId));
+    if (activeProviderId === draftId) setActiveProviderId("nexu");
+  };
+
+  const removeCustomProvider = (providerId: string) => {
+    setCustomProviders((prev) => prev.filter((provider) => provider.id !== providerId));
+    setFormValues((prev) => {
+      const next = { ...prev };
+      delete next[providerId];
+      return next;
+    });
+    setSavedValues((prev) => {
+      const next = { ...prev };
+      delete next[providerId];
+      return next;
+    });
+    if (activeProviderId === providerId) setActiveProviderId("nexu");
+  };
+
+  const createCustomProvider = (draft: CustomProviderDraft) => {
+    if (!draft.instanceId.trim() || !draft.proxyUrl.trim()) return;
+    const instanceId = draft.instanceId.trim();
+    const providerId = `${draft.providerTemplateId}/${instanceId}`;
+    const providerName =
+      draft.displayName.trim() ||
+      `${getCustomTemplateLabel(draft.providerTemplateId)} / ${instanceId}`;
+    const providerDetail: ProviderListItem = {
+      id: providerId as ModelProvider,
+      name: providerName,
+      description:
+        draft.providerTemplateId === "custom-openai"
+          ? t("ws.settings.customProviderDescOpenAI")
+          : t("ws.settings.customProviderDescAnthropic"),
+      enabled: false,
+      apiKeyPlaceholder:
+        draft.providerTemplateId === "custom-openai" ? "sk-..." : "sk-ant-...",
+      proxyUrl: draft.proxyUrl.trim(),
+      models: [],
+      isCustom: true,
+      sourceKey: providerId,
+    };
+
+    setCustomProviders((prev) => [...prev, providerDetail]);
+    setCustomProviderDrafts((prev) => prev.filter((item) => item.id !== draft.id));
+    setFormValues((prev) => ({
+      ...prev,
+      [providerId]: {
+        apiKey: prev[providerId]?.apiKey ?? "",
+        proxyUrl: draft.proxyUrl.trim(),
+      },
+    }));
+    setActiveProviderId(providerId);
+  };
 
   return (
     <div className="h-full overflow-y-auto">
@@ -578,7 +712,7 @@ export function SettingsView({
                     {t("ws.settings.tab.providers")}
                   </div>
                   <div className="flex-1 space-y-0.5 overflow-y-auto px-2 pb-3">
-                    {providers.map((p) => {
+                    {combinedProviders.map((p) => {
                       const active = p.id === activeProviderId;
                       return (
                         <button
@@ -596,10 +730,28 @@ export function SettingsView({
                           <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-text-primary">
                             {p.name}
                           </span>
-                          <span className="text-[11px] text-text-tertiary">{p.models.length}</span>
+                          {p.isCustom ? (
+                            <Badge variant="outline" size="xs" className="shrink-0">
+                              {t("ws.settings.customProviderBadge")}
+                            </Badge>
+                          ) : (
+                            <span className="text-[11px] text-text-tertiary">{p.models.length}</span>
+                          )}
                         </button>
                       );
                     })}
+                    <button
+                      type="button"
+                      onClick={createCustomProviderDraft}
+                      className="mt-1 flex w-full items-center gap-2 rounded-xl border border-dashed border-border-strong px-3 py-1.5 text-left transition-colors hover:bg-surface-1"
+                    >
+                      <span className="flex size-6 shrink-0 items-center justify-center rounded-md border border-dashed border-border-strong bg-white text-text-secondary">
+                        <Plus size={14} />
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-text-secondary">
+                        {t("ws.settings.addCustomProvider")}
+                      </span>
+                    </button>
                   </div>
                 </section>
 
@@ -619,7 +771,25 @@ export function SettingsView({
                       </div>
                     </div>
 
-                    {activeProvider.apiDocsUrl && !(activeProvider.id === "nexu" && !signedIn) ? (
+                    {isCustomDraft ? (
+                      <button
+                        type="button"
+                        onClick={() => activeCustomDraft && removeCustomDraft(activeCustomDraft.id)}
+                        className="inline-flex items-center gap-1.5 text-[12px] font-medium text-text-secondary transition-colors hover:text-[var(--color-error)]"
+                      >
+                        <Trash2 size={13} />
+                        <span>{t("ws.settings.customProviderRemove")}</span>
+                      </button>
+                    ) : isCustomProvider ? (
+                      <button
+                        type="button"
+                        onClick={() => removeCustomProvider(activeProvider.id)}
+                        className="inline-flex items-center gap-1.5 text-[12px] font-medium text-text-secondary transition-colors hover:text-[var(--color-error)]"
+                      >
+                        <Trash2 size={13} />
+                        <span>{t("ws.settings.customProviderRemove")}</span>
+                      </button>
+                    ) : activeProvider.apiDocsUrl && !(activeProvider.id === "nexu" && !signedIn) ? (
                       <TextLink
                         href={activeProvider.apiDocsUrl}
                         target="_blank"
@@ -652,8 +822,103 @@ export function SettingsView({
                     </div>
                   ) : null}
 
-                  {activeProvider.id !== "nexu" && (
-                    <div className="my-4 space-y-3 rounded-xl border border-border-subtle bg-surface-0 p-3">
+                  {isCustomDraft && activeCustomDraft ? (
+                    <div className="my-4 space-y-4 p-1">
+                      <div>
+                        <label className="mb-1 block text-[12px] font-semibold text-text-primary">
+                          {t("ws.settings.customProviderCompatibility")}
+                        </label>
+                        <div className="flex gap-2">
+                          {(["custom-openai", "custom-anthropic"] as const).map((templateId) => {
+                            const active = activeCustomDraft.compatibility === templateId;
+                            return (
+                              <button
+                                key={templateId}
+                                type="button"
+                                onClick={() => {
+                                  updateCustomDraft(activeCustomDraft.id, "compatibility", templateId);
+                                  updateCustomDraft(activeCustomDraft.id, "providerTemplateId", templateId);
+                                }}
+                                className={cn(
+                                  "rounded-full border px-3 py-1.5 text-[12px] font-medium transition-colors",
+                                  active
+                                    ? "border-accent bg-accent text-[var(--color-accent-fg)]"
+                                    : "border-border bg-surface-0 text-text-secondary hover:bg-surface-1",
+                                )}
+                              >
+                                {templateId === "custom-openai"
+                                  ? t("ws.settings.customProviderCompatibilityOpenAI")
+                                  : t("ws.settings.customProviderCompatibilityAnthropic")}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-[12px] font-semibold text-text-primary">
+                          {t("ws.settings.customProviderInstanceId")}
+                        </label>
+                        <Input
+                          type="text"
+                          placeholder="my-provider"
+                          value={activeCustomDraft.instanceId}
+                          onChange={(e) =>
+                            updateCustomDraft(activeCustomDraft.id, "instanceId", e.target.value)
+                          }
+                          className="w-full text-[12px]"
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-[12px] font-semibold text-text-primary">
+                          {t("ws.settings.customProviderDisplayName")}
+                        </label>
+                        <Input
+                          type="text"
+                          placeholder={t("ws.settings.customProviderDraft")}
+                          value={activeCustomDraft.displayName}
+                          onChange={(e) =>
+                            updateCustomDraft(activeCustomDraft.id, "displayName", e.target.value)
+                          }
+                          className="w-full text-[12px]"
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-[12px] font-semibold text-text-primary">
+                          {t("ws.settings.customProviderBaseUrl")}
+                        </label>
+                        <Input
+                          type="text"
+                          placeholder={
+                            activeCustomDraft.compatibility === "custom-openai"
+                              ? "https://your-endpoint/v1"
+                              : "https://your-anthropic-endpoint"
+                          }
+                          value={activeCustomDraft.proxyUrl}
+                          onChange={(e) => updateCustomDraft(activeCustomDraft.id, "proxyUrl", e.target.value)}
+                          className="w-full text-[12px]"
+                        />
+                      </div>
+                      <div className="flex items-center justify-between gap-3">
+                        <button
+                          type="button"
+                          onClick={() => removeCustomDraft(activeCustomDraft.id)}
+                          className="text-[12px] text-text-muted hover:text-text-secondary"
+                        >
+                          {t("ws.settings.customProviderRemove")}
+                        </button>
+                        <Button
+                          size="sm"
+                          disabled={
+                            !activeCustomDraft.instanceId.trim() || !activeCustomDraft.proxyUrl.trim()
+                          }
+                          onClick={() => createCustomProvider(activeCustomDraft)}
+                        >
+                          {t("ws.settings.customProviderCreate")}
+                        </Button>
+                      </div>
+                    </div>
+                  ) : activeProvider.id !== "nexu" && (
+                    <div className="my-4 space-y-3 p-1">
                       <div>
                         <label className="mb-1 block text-[12px] font-semibold text-text-primary">
                           {t("ws.settings.apiKey")}
@@ -668,7 +933,9 @@ export function SettingsView({
                       </div>
                       <div>
                         <label className="mb-1 block text-[12px] font-semibold text-text-primary">
-                          {t("ws.settings.apiProxyUrl")}
+                          {isCustomProvider
+                            ? t("ws.settings.customProviderBaseUrl")
+                            : t("ws.settings.apiProxyUrl")}
                         </label>
                         <Input
                           type="text"
@@ -706,7 +973,7 @@ export function SettingsView({
                     </div>
                   )}
 
-                  {!(activeProvider.id === "nexu" && !signedIn) ? (
+                  {!(activeProvider.id === "nexu" && !signedIn) && !isCustomDraft ? (
                     <>
                       <div className="my-4 border-t border-border-subtle" />
 
@@ -736,36 +1003,47 @@ export function SettingsView({
                         </button>
                       </div>
 
-                      <div className="space-y-0.5">
-                        {activeProvider.models.map((model) => {
-                          const isActive = model.id === selectedModelId;
-                          return (
-                            <button
-                              type="button"
-                              key={model.id}
-                              onClick={() => setSelectedModelId(model.id)}
-                              className={cn(
-                                "flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors",
-                                isActive ? "bg-surface-2" : "hover:bg-surface-1",
-                              )}
-                            >
-                              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-white">
-                                <ModelLogo
-                                  model={model.id}
-                                  provider={activeProvider.id}
-                                  size={16}
-                                  title={model.name}
-                                />
-                              </span>
-                              <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-text-primary">
-                                {model.name}
-                              </span>
-                              <span className="text-[11px] text-text-tertiary">{model.contextWindow}</span>
-                              {isActive ? <Check size={14} className="shrink-0 text-accent" /> : null}
-                            </button>
-                          );
-                        })}
-                      </div>
+                      {activeProvider.models.length === 0 ? (
+                        <div className="rounded-xl border border-dashed border-border-subtle bg-surface-0 px-4 py-5">
+                          <div className="text-[12px] font-medium text-text-primary">
+                            {t("ws.settings.customProviderNoModelsTitle")}
+                          </div>
+                          <div className="mt-1 text-[11px] text-text-secondary">
+                            {t("ws.settings.customProviderNoModelsDesc")}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-0.5">
+                          {activeProvider.models.map((model) => {
+                            const isActive = model.id === selectedModelId;
+                            return (
+                              <button
+                                type="button"
+                                key={model.id}
+                                onClick={() => setSelectedModelId(model.id)}
+                                className={cn(
+                                  "flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors",
+                                  isActive ? "bg-surface-2" : "hover:bg-surface-1",
+                                )}
+                              >
+                                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-white">
+                                  <ModelLogo
+                                    model={model.id}
+                                    provider={activeProvider.id}
+                                    size={16}
+                                    title={model.name}
+                                  />
+                                </span>
+                                <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-text-primary">
+                                  {model.name}
+                                </span>
+                                <span className="text-[11px] text-text-tertiary">{model.contextWindow}</span>
+                                {isActive ? <Check size={14} className="shrink-0 text-accent" /> : null}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
                     </>
                   ) : null}
                 </section>
