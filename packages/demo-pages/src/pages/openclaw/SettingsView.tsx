@@ -436,7 +436,7 @@ export function SettingsView({
                       </div>
                       <div className="min-w-0 flex-1">
                         <div
-                          className="text-[12px] font-medium text-text-primary truncate"
+                          className="text-[13px] font-medium text-text-primary truncate"
                           title={accountEmail || undefined}
                         >
                           {accountEmail || "—"}
@@ -449,7 +449,7 @@ export function SettingsView({
                     <button
                       type="button"
                       onClick={() => onSignOut?.()}
-                      className="rounded-[8px] border border-border bg-surface-0 px-[14px] py-[5px] text-[12px] font-medium text-text-secondary hover:bg-surface-2 hover:text-text-primary transition-colors shrink-0"
+                      className="shrink-0 rounded-[8px] border border-border bg-surface-0 px-[14px] py-[5px] text-[12px] font-medium text-text-primary transition-colors hover:border-destructive/30 hover:bg-destructive/5 hover:text-destructive"
                     >
                       {t("ws.settings.account.signOut")}
                     </button>
@@ -457,7 +457,7 @@ export function SettingsView({
                 ) : (
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
-                      <div className="text-[12px] font-medium text-text-primary">
+                      <div className="text-[13px] font-medium text-text-primary">
                         {t("ws.settings.account.notSignedIn")}
                       </div>
                       <div className="text-[11px] text-text-tertiary mt-0.5">
@@ -493,7 +493,7 @@ export function SettingsView({
               <div className="px-5 py-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
                   <div className="min-w-0 flex-1">
-                    <div className="text-[12px] font-medium text-text-primary">
+                    <div className="text-[13px] font-medium text-text-primary">
                       {t("ws.settings.appearance.language")}
                     </div>
                     <div className="text-[11px] text-text-tertiary mt-0.5">
@@ -538,7 +538,7 @@ export function SettingsView({
               <div className="px-5 py-4 divide-y divide-border">
                 <div className="flex items-start justify-between gap-4 pb-4">
                   <div className="min-w-0 flex-1">
-                    <div className="text-[12px] font-medium text-text-primary">
+                    <div className="text-[13px] font-medium text-text-primary">
                       {t("ws.settings.behavior.launchAtLogin")}
                     </div>
                     <div className="text-[11px] text-text-tertiary mt-0.5">
@@ -554,7 +554,7 @@ export function SettingsView({
                 </div>
                 <div className="flex items-start justify-between gap-4 pt-4">
                   <div className="min-w-0 flex-1">
-                    <div className="text-[12px] font-medium text-text-primary">
+                    <div className="text-[13px] font-medium text-text-primary">
                       {t("ws.settings.behavior.showInDock")}
                     </div>
                     <div className="text-[11px] text-text-tertiary mt-0.5">
@@ -584,7 +584,7 @@ export function SettingsView({
               <div className="px-5 py-4 space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-[12px] font-medium text-text-primary">
+                    <div className="text-[13px] font-medium text-text-primary">
                       {t("ws.settings.data.analytics")}
                     </div>
                     <div className="text-[11px] text-text-tertiary mt-0.5">
@@ -595,7 +595,7 @@ export function SettingsView({
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-[12px] font-medium text-text-primary">
+                    <div className="text-[13px] font-medium text-text-primary">
                       {t("ws.settings.data.crashReports")}
                     </div>
                     <div className="text-[11px] text-text-tertiary mt-0.5">
@@ -620,7 +620,7 @@ export function SettingsView({
               <div className="px-5 py-4 space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-[12px] font-medium text-text-primary">
+                    <div className="text-[13px] font-medium text-text-primary">
                       {t("ws.settings.updates.version")}
                     </div>
                     <div className="text-[11px] text-text-tertiary mt-0.5">
