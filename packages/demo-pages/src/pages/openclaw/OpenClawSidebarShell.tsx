@@ -93,7 +93,9 @@ export function OpenClawSidebarShell({
             localStorage.setItem("nexu_sidebar_collapsed", String(next));
           }}
           className="fixed z-50 hidden h-8 w-8 items-center justify-center rounded-lg text-text-tertiary transition-colors hover:bg-black/5 hover:text-text-primary md:flex"
-          style={{ top: 58, left: sidebarWidth - 48, WebkitAppRegion: "no-drag" } as React.CSSProperties}
+          style={
+            { top: 58, left: sidebarWidth - 48, WebkitAppRegion: "no-drag" } as React.CSSProperties
+          }
           title={t("ws.sidebar.expand")}
         >
           <PanelLeftOpen size={16} />
@@ -107,7 +109,7 @@ export function OpenClawSidebarShell({
             ...(!collapsed ? { width: sidebarWidth } : {}),
             transition: isResizing ? "none" : "width 200ms",
             WebkitAppRegion: "drag",
-            background: 'rgba(255, 255, 255, 0.08)',
+            background: "rgba(255, 255, 255, 0.08)",
           } as React.CSSProperties
         }
       >

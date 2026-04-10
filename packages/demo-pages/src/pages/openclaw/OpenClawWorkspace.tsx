@@ -304,7 +304,7 @@ export default function OpenClawWorkspace() {
   return (
     <div
       className="relative flex h-full flex-row overflow-hidden"
-      style={{ background: 'rgba(255, 255, 255, 0.08)' }}
+      style={{ background: "rgba(255, 255, 255, 0.08)" }}
     >
       <OpenClawSidebarShell
         t={t}
@@ -337,7 +337,7 @@ export default function OpenClawWorkspace() {
         <div
           onMouseDown={handleResizeStart}
           className="hidden md:block w-px shrink-0 cursor-col-resize group relative z-10"
-          style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
+          style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
         >
           <div className="absolute inset-y-0 -left-1.5 -right-1.5" />
         </div>
@@ -349,214 +349,214 @@ export default function OpenClawWorkspace() {
           {/* Update banner — floating bottom-right of canvas */}
           {hasUpdate && !updateDismissed && (
             <div className="absolute bottom-4 right-4 z-30 w-[280px] px-3 py-2.5 rounded-[10px] border border-border bg-surface-0/90 backdrop-blur-md shadow-[var(--shadow-dropdown)] animate-float">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2 shrink-0">
-                  <span
-                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${updateError ? "bg-red-500" : "bg-[var(--color-success)]"}`}
-                  />
-                  <span
-                    className={`relative inline-flex rounded-full h-2 w-2 ${updateError ? "bg-red-500" : "bg-[var(--color-success)]"}`}
-                  />
-                </span>
-                <span className="text-[12px] font-medium text-text-primary whitespace-nowrap">
-                  {updating && t("ws.update.downloading")}
-                  {updateReady && t("ws.update.ready").replace("{{version}}", MOCK_VERSION)}
-                  {updateError && t("ws.update.failed")}
-                  {!updating &&
-                    !updateReady &&
-                    !updateError &&
-                    t("ws.update.available").replace("{{version}}", MOCK_VERSION)}
-                </span>
-              </div>
-              {!updating && (
-                <button
-                  onClick={() => setUpdateDismissed(true)}
-                  className="text-text-muted hover:text-text-primary transition-colors -mr-1"
-                >
-                  <X size={12} />
-                </button>
-              )}
-            </div>
-            {updating && (
-              <div className="pl-4 pr-1">
-                <div className="h-[6px] w-full rounded-full bg-border overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-300 ease-out"
-                    style={{ width: `${downloadProgress}%`, background: "#1c1f23" }}
-                  />
-                </div>
-                <div className="flex justify-end mt-1.5">
-                  <span className="text-[10px] tabular-nums text-text-muted">
-                    {downloadProgress}%
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2 w-2 shrink-0">
+                    <span
+                      className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${updateError ? "bg-red-500" : "bg-[var(--color-success)]"}`}
+                    />
+                    <span
+                      className={`relative inline-flex rounded-full h-2 w-2 ${updateError ? "bg-red-500" : "bg-[var(--color-success)]"}`}
+                    />
+                  </span>
+                  <span className="text-[12px] font-medium text-text-primary whitespace-nowrap">
+                    {updating && t("ws.update.downloading")}
+                    {updateReady && t("ws.update.ready").replace("{{version}}", MOCK_VERSION)}
+                    {updateError && t("ws.update.failed")}
+                    {!updating &&
+                      !updateReady &&
+                      !updateError &&
+                      t("ws.update.available").replace("{{version}}", MOCK_VERSION)}
                   </span>
                 </div>
+                {!updating && (
+                  <button
+                    onClick={() => setUpdateDismissed(true)}
+                    className="text-text-muted hover:text-text-primary transition-colors -mr-1"
+                  >
+                    <X size={12} />
+                  </button>
+                )}
               </div>
-            )}
-            {!updating && !updateReady && !updateError && (
-              <div className="flex items-center gap-2 pl-4">
-                <button
-                  onClick={() => {
-                    setUpdating(true);
-                    setDownloadProgress(0);
-                    let progress = 0;
-                    downloadTimer.current = setInterval(() => {
-                      const remaining = 100 - progress;
-                      const step = Math.max(1, Math.floor(Math.random() * remaining * 0.15));
-                      progress = Math.min(100, progress + step);
-                      setDownloadProgress(progress);
-                      if (progress >= 100) {
-                        if (downloadTimer.current) clearInterval(downloadTimer.current);
-                        setTimeout(() => {
-                          setUpdating(false);
-                          setUpdateReady(true);
-                        }, 600);
-                      }
-                    }, 200);
-                  }}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[12px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
-                >
-                  {t("ws.update.download")}
-                </button>
-                <button
-                  onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[12px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
-                >
-                  {t("ws.update.changelog")}
-                </button>
-              </div>
-            )}
-            {updateReady && (
-              <div className="flex items-center gap-2 pl-4">
-                <button
-                  onClick={() => {
-                    setUpdateReady(false);
-                    setHasUpdate(false);
-                  }}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[12px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
-                >
-                  {t("ws.update.restart")}
-                </button>
-                <button
-                  onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[12px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
-                >
-                  {t("ws.update.changelog")}
-                </button>
-              </div>
-            )}
-            {updateError && (
-              <div className="flex items-center gap-2 pl-4">
-                <button
-                  onClick={() => {
-                    setUpdateError(false);
-                    setHasUpdate(true);
-                  }}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[12px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
-                >
-                  {t("ws.update.retry")}
-                </button>
-                <button
-                  onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
-                  className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[12px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
-                >
-                  {t("ws.update.changelog")}
-                </button>
-              </div>
-            )}
+              {updating && (
+                <div className="pl-4 pr-1">
+                  <div className="h-[6px] w-full rounded-full bg-border overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-300 ease-out"
+                      style={{ width: `${downloadProgress}%`, background: "#1c1f23" }}
+                    />
+                  </div>
+                  <div className="flex justify-end mt-1.5">
+                    <span className="text-[10px] tabular-nums text-text-muted">
+                      {downloadProgress}%
+                    </span>
+                  </div>
+                </div>
+              )}
+              {!updating && !updateReady && !updateError && (
+                <div className="flex items-center gap-2 pl-4">
+                  <button
+                    onClick={() => {
+                      setUpdating(true);
+                      setDownloadProgress(0);
+                      let progress = 0;
+                      downloadTimer.current = setInterval(() => {
+                        const remaining = 100 - progress;
+                        const step = Math.max(1, Math.floor(Math.random() * remaining * 0.15));
+                        progress = Math.min(100, progress + step);
+                        setDownloadProgress(progress);
+                        if (progress >= 100) {
+                          if (downloadTimer.current) clearInterval(downloadTimer.current);
+                          setTimeout(() => {
+                            setUpdating(false);
+                            setUpdateReady(true);
+                          }, 600);
+                        }
+                      }, 200);
+                    }}
+                    className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[12px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
+                  >
+                    {t("ws.update.download")}
+                  </button>
+                  <button
+                    onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
+                    className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[12px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
+                  >
+                    {t("ws.update.changelog")}
+                  </button>
+                </div>
+              )}
+              {updateReady && (
+                <div className="flex items-center gap-2 pl-4">
+                  <button
+                    onClick={() => {
+                      setUpdateReady(false);
+                      setHasUpdate(false);
+                    }}
+                    className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[12px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
+                  >
+                    {t("ws.update.restart")}
+                  </button>
+                  <button
+                    onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
+                    className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[12px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
+                  >
+                    {t("ws.update.changelog")}
+                  </button>
+                </div>
+              )}
+              {updateError && (
+                <div className="flex items-center gap-2 pl-4">
+                  <button
+                    onClick={() => {
+                      setUpdateError(false);
+                      setHasUpdate(true);
+                    }}
+                    className="inline-flex items-center justify-center rounded-[6px] h-7 px-2.5 text-[12px] leading-none font-medium bg-[var(--color-accent)] text-white hover:opacity-85 transition-opacity"
+                  >
+                    {t("ws.update.retry")}
+                  </button>
+                  <button
+                    onClick={() => void openExternal("https://github.com/nexu-io/nexu/releases")}
+                    className="inline-flex items-center justify-center rounded-[6px] h-7 px-2 text-[12px] leading-none font-medium text-text-muted hover:text-text-primary transition-colors"
+                  >
+                    {t("ws.update.changelog")}
+                  </button>
+                </div>
+              )}
             </div>
           )}
           {budget.status === "depleted" && view.type === "conversations" ? (
             <div className="relative z-0 flex-1 flex items-center justify-center min-h-0">
-            <div className="flex flex-col items-center text-center max-w-[360px]">
-              <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-6">
-                <Zap size={28} className="text-neutral-400" />
-              </div>
-              <h2 className="text-[22px] font-bold text-text-primary mb-2">
-                {t("budget.depleted.title")}
-              </h2>
-              <p className="text-[13px] text-text-secondary mb-1">
-                {budget.resetsInDays === 1
-                  ? t("budget.depleted.desc1")
-                  : t("budget.depleted.desc").replace("{n}", String(budget.resetsInDays))}
-              </p>
-              <p className="text-[13px] text-text-muted mb-6">{t("budget.depleted.byok")}</p>
-              <button
-                onClick={() =>
-                  setView({ type: "settings", tab: "providers", providerId: "anthropic" })
-                }
-                className="flex items-center justify-center gap-2 h-[42px] px-6 rounded-full bg-neutral-900 text-white text-[13px] font-medium hover:bg-neutral-800 active:scale-[0.98] transition-all cursor-pointer"
-              >
-                {t("budget.depleted.cta")}
-              </button>
-              <div className="mt-8 w-full max-w-[320px]">
+              <div className="flex flex-col items-center text-center max-w-[360px]">
+                <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-6">
+                  <Zap size={28} className="text-neutral-400" />
+                </div>
+                <h2 className="text-[22px] font-bold text-text-primary mb-2">
+                  {t("budget.depleted.title")}
+                </h2>
+                <p className="text-[13px] text-text-secondary mb-1">
+                  {budget.resetsInDays === 1
+                    ? t("budget.depleted.desc1")
+                    : t("budget.depleted.desc").replace("{n}", String(budget.resetsInDays))}
+                </p>
+                <p className="text-[13px] text-text-muted mb-6">{t("budget.depleted.byok")}</p>
                 <button
-                  onClick={() => setView({ type: "rewards" })}
-                  className="flex items-center gap-3 w-full py-3 px-4 rounded-xl border border-amber-200/60 bg-gradient-to-r from-amber-50/80 to-orange-50/40 hover:from-amber-50 hover:to-orange-50/60 transition-all group"
+                  onClick={() =>
+                    setView({ type: "settings", tab: "providers", providerId: "anthropic" })
+                  }
+                  className="flex items-center justify-center gap-2 h-[42px] px-6 rounded-full bg-neutral-900 text-white text-[13px] font-medium hover:bg-neutral-800 active:scale-[0.98] transition-all cursor-pointer"
                 >
-                  <Gift size={16} className="text-amber-500 shrink-0" />
-                  <div className="flex-1 text-left">
-                    <div className="text-[13px] font-medium text-text-primary">
-                      {t("budget.depleted.earnMore")}
-                    </div>
-                    <div className="text-[11px] text-text-muted tabular-nums">
-                      {budget.claimedCount}/{budget.channelCount} · +
-                      {formatRewardAmount(budget.totalRewardClaimed)} 积分
-                    </div>
-                  </div>
-                  <ChevronRight
-                    size={14}
-                    className="text-text-muted group-hover:text-text-secondary transition-colors shrink-0"
-                  />
+                  {t("budget.depleted.cta")}
                 </button>
+                <div className="mt-8 w-full max-w-[320px]">
+                  <button
+                    onClick={() => setView({ type: "rewards" })}
+                    className="flex items-center gap-3 w-full py-3 px-4 rounded-xl border border-amber-200/60 bg-gradient-to-r from-amber-50/80 to-orange-50/40 hover:from-amber-50 hover:to-orange-50/60 transition-all group"
+                  >
+                    <Gift size={16} className="text-amber-500 shrink-0" />
+                    <div className="flex-1 text-left">
+                      <div className="text-[13px] font-medium text-text-primary">
+                        {t("budget.depleted.earnMore")}
+                      </div>
+                      <div className="text-[11px] text-text-muted tabular-nums">
+                        {budget.claimedCount}/{budget.channelCount} · +
+                        {formatRewardAmount(budget.totalRewardClaimed)} 积分
+                      </div>
+                    </div>
+                    <ChevronRight
+                      size={14}
+                      className="text-text-muted group-hover:text-text-secondary transition-colors shrink-0"
+                    />
+                  </button>
+                </div>
               </div>
-            </div>
             </div>
           ) : (
             <div className="relative z-0 flex-1 flex flex-col overflow-hidden min-h-0">
-            {view.type === "home" && (
-              <HomeDashboard
-                onNavigate={setView}
-                showTyping={showTyping}
-                onTypingComplete={handleTypingComplete}
-                stars={stars}
-                budgetStatus={budget.status}
-                demoPlan={demoPlan}
-                onRequestStarOnboarding={() => {
-                  setStarModalStep("prompt");
-                  setShowStarModal(true);
-                }}
-                onRequestSeedanceModal={() => setShowSeedanceModal(true)}
-                githubUrl={GITHUB_URL}
-              />
-            )}
-            {view.type === "conversations" && (
-              <ConversationsView initialChannelId={view.channelId} />
-            )}
-            {view.type === "deployments" && <DeploymentsView />}
-            {view.type === "skills" && <SkillsPanel />}
-            {view.type === "schedule" && <SchedulePanel />}
-            {view.type === "rewards" && (
-              <RewardsCenter
-                budget={budget}
-                onDailyCheckIn={() => budget.claimChannel("daily_checkin")}
-                onOpenMaterial={(ch) => setMaterialChannelId(ch.id)}
-                onRequestConfirm={(ch) => setRewardConfirm(ch.id)}
-                t={t}
-              />
-            )}
-            {view.type === "settings" && (
-              <SettingsView
-                initialTab={view.tab}
-                initialProviderId={view.providerId}
-                signedIn={nexuLoggedIn}
-                accountEmail={nexuAccountEmail}
-                onSignOut={() => setDemoLoggedIn(false)}
-                demoPlan={demoPlan}
-                demoBudgetStatus={demoBudgetStatus}
-                githubUrl={GITHUB_URL}
-              />
-            )}
+              {view.type === "home" && (
+                <HomeDashboard
+                  onNavigate={setView}
+                  showTyping={showTyping}
+                  onTypingComplete={handleTypingComplete}
+                  stars={stars}
+                  budgetStatus={budget.status}
+                  demoPlan={demoPlan}
+                  onRequestStarOnboarding={() => {
+                    setStarModalStep("prompt");
+                    setShowStarModal(true);
+                  }}
+                  onRequestSeedanceModal={() => setShowSeedanceModal(true)}
+                  githubUrl={GITHUB_URL}
+                />
+              )}
+              {view.type === "conversations" && (
+                <ConversationsView initialChannelId={view.channelId} />
+              )}
+              {view.type === "deployments" && <DeploymentsView />}
+              {view.type === "skills" && <SkillsPanel />}
+              {view.type === "schedule" && <SchedulePanel />}
+              {view.type === "rewards" && (
+                <RewardsCenter
+                  budget={budget}
+                  onDailyCheckIn={() => budget.claimChannel("daily_checkin")}
+                  onOpenMaterial={(ch) => setMaterialChannelId(ch.id)}
+                  onRequestConfirm={(ch) => setRewardConfirm(ch.id)}
+                  t={t}
+                />
+              )}
+              {view.type === "settings" && (
+                <SettingsView
+                  initialTab={view.tab}
+                  initialProviderId={view.providerId}
+                  signedIn={nexuLoggedIn}
+                  accountEmail={nexuAccountEmail}
+                  onSignOut={() => setDemoLoggedIn(false)}
+                  demoPlan={demoPlan}
+                  demoBudgetStatus={demoBudgetStatus}
+                  githubUrl={GITHUB_URL}
+                />
+              )}
             </div>
           )}
         </main>

@@ -55,17 +55,17 @@ const SEEDANCE_COUNTDOWN_CYCLE_MS = 2 * 24 * 60 * 60 * 1000;
 const SEEDANCE_COUNTDOWN_LOOP_END_MS = Date.now() + SEEDANCE_COUNTDOWN_CYCLE_MS - 1000;
 
 const RECENT_ACTIVITY_CHANNEL_LABELS: Record<string, string> = {
-  feishu: '飞书',
-  dingtalk: '钉钉',
-  wecom: '企微',
-  qqbot: 'QQ',
-  slack: 'Slack',
-  discord: 'Discord',
-  telegram: 'Telegram',
-  whatsapp: 'WhatsApp',
-  wechat: 'WeChat',
-  web: 'Web',
-}
+  feishu: "飞书",
+  dingtalk: "钉钉",
+  wecom: "企微",
+  qqbot: "QQ",
+  slack: "Slack",
+  discord: "Discord",
+  telegram: "Telegram",
+  whatsapp: "WhatsApp",
+  wechat: "WeChat",
+  web: "Web",
+};
 
 function formatSeedanceCompactLabel(
   days: number,
@@ -861,8 +861,8 @@ export function HomeDashboard({
                   <div className="flex items-start gap-3">
                     <div
                       className={cn(
-                        'mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full',
-                        ch.status === 'active' ? 'bg-[var(--color-success)]' : 'bg-surface-4'
+                        "mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full",
+                        ch.status === "active" ? "bg-[var(--color-success)]" : "bg-surface-4",
                       )}
                     />
                     <div className="min-w-0 flex-1">
@@ -1033,7 +1033,11 @@ export function HomeDashboard({
                       <Button type="button" variant="outline" onClick={handleCloseConfig}>
                         {t("ws.common.cancel")}
                       </Button>
-                      <Button type="button" onClick={() => handleConnectChannel(configChannel)} disabled={!allFilled}>
+                      <Button
+                        type="button"
+                        onClick={() => handleConnectChannel(configChannel)}
+                        disabled={!allFilled}
+                      >
                         {t("ws.common.connect")}
                       </Button>
                     </DialogFooter>

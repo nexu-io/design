@@ -6,7 +6,8 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": true
+    "ignoreUnknown": true,
+    "ignore": ["**/dist/**", "**/dist-electron/**", "**/release/**", "**/storybook-static/**"]
   },
   "formatter": {
     "enabled": true,
