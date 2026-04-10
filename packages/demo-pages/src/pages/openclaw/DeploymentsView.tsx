@@ -25,7 +25,7 @@ export function DeploymentsView() {
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8">
+      <div className="mx-auto max-w-[800px] px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
         <PageHeader
           density="shell"
           title={t("ws.deployments.title")}

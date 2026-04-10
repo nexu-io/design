@@ -17,7 +17,6 @@ import {
   ArrowUp,
   ArrowUpRight,
   Cable,
-  Check,
   ChevronDown,
   Cpu,
   KeyRound,
@@ -49,7 +48,13 @@ import {
   WhatsAppIconSetup,
 } from "./channelSetup";
 import { MOCK_CHANNELS, getProviderDetails } from "./data";
-import { CreditIcon, ProviderLogo, getModelIconProvider } from "./iconHelpers";
+import {
+  CreditIcon,
+  ProviderLogo,
+  TierPlusBadge,
+  TierProBadge,
+  getModelIconProvider,
+} from "./iconHelpers";
 
 const SEEDANCE_COUNTDOWN_CYCLE_MS = 2 * 24 * 60 * 60 * 1000;
 const SEEDANCE_COUNTDOWN_LOOP_END_MS = Date.now() + SEEDANCE_COUNTDOWN_CYCLE_MS - 1000;
@@ -384,7 +389,7 @@ export function HomeDashboard({
   /* ── Scene C: Operational — compact hero, efficiency-first ── */
   return (
     <div className="h-full overflow-y-auto">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+      <div className="max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8 space-y-6">
         {/* ═══ TOP: Compact Hero — Bot + CTA ═══ */}
         <div className="flex items-center gap-4">
           <div
@@ -443,7 +448,7 @@ export function HomeDashboard({
                 <ArrowUpRight size={11} className="shrink-0 translate-y-px" />
               </a>
             </div>
-            <div className="flex items-center gap-2 mt-1.5">
+            <div className="flex items-center gap-4 mt-1.5">
               <div className="relative" ref={modelDropdownRef}>
                 <button
                   onClick={() => setShowModelDropdown(!showModelDropdown)}
@@ -464,6 +469,12 @@ export function HomeDashboard({
                   <span className="font-medium">
                     {selectedModel?.name ?? t("ws.home.notSelected")}
                   </span>
+                  {selectedModel?.tier === "pro" && (
+                    <TierProBadge height={13} className="shrink-0" />
+                  )}
+                  {selectedModel?.tier === "plus" && (
+                    <TierPlusBadge height={13} className="shrink-0" />
+                  )}
                   <ChevronDown
                     size={12}
                     className={`text-text-muted transition-transform ${showModelDropdown ? "rotate-180" : ""}`}
@@ -487,7 +498,7 @@ export function HomeDashboard({
                       .filter((p) => p.models.length > 0);
 
                     return (
-                      <div className="absolute z-50 mt-2 left-0 w-[280px] rounded-xl border border-border bg-surface-1 shadow-xl">
+                      <div className="absolute z-50 mt-2 left-0 w-[320px] rounded-xl border border-border bg-surface-1 shadow-xl">
                         <div className="px-3 pt-3 pb-2">
                           <div className="flex items-center gap-2.5 rounded-lg border border-border bg-surface-0 px-3 py-2">
                             <Search size={14} className="text-text-muted shrink-0" />
@@ -529,20 +540,17 @@ export function HomeDashboard({
                                           return next;
                                         });
                                       }}
-                                      className="flex min-h-9 w-full items-center gap-2 rounded-lg pl-4 pr-3 py-2 transition-colors hover:bg-surface-2/50"
+                                      className="flex min-h-9 w-full items-center gap-2 rounded-lg pl-4 pr-3 py-2 transition-colors hover:bg-surface-2"
                                     >
                                       <ChevronDown
                                         size={12}
-                                        className={`text-text-muted/50 transition-transform ${isExpanded ? "" : "-rotate-90"}`}
+                                        className={`text-text-secondary transition-transform ${isExpanded ? "" : "-rotate-90"}`}
                                       />
                                       <span className="flex size-4 shrink-0 items-center justify-center">
                                         <ProviderLogo provider={provider.id} size={14} />
                                       </span>
                                       <span className="text-xs font-normal text-text-secondary">
                                         {provider.name}
-                                      </span>
-                                      <span className="ml-auto text-[10px] font-normal text-text-muted/60 tabular-nums">
-                                        {provider.models.length}
                                       </span>
                                     </button>
                                     {isExpanded &&
@@ -553,18 +561,31 @@ export function HomeDashboard({
                                             setSelectedModelId(model.id);
                                             setShowModelDropdown(false);
                                           }}
-                                          className={`flex min-h-9 w-full items-center gap-2.5 pl-10 pr-3 py-2 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/5" : ""}`}
+                                          className={`flex min-h-9 w-full items-center gap-2.5 rounded-lg pl-7 pr-3 py-2 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/10 font-medium" : ""}`}
                                         >
-                                          {model.id === selectedModelId ? (
-                                            <Check size={14} className="text-accent shrink-0" />
-                                          ) : (
-                                            <span className="size-4 shrink-0" />
-                                          )}
-                                          <span className="flex-1 truncate text-xs font-normal text-text-primary">
-                                            {model.name}
+                                          <span className="flex size-4 shrink-0 items-center justify-center">
+                                            <ProviderLogo
+                                              provider={
+                                                getModelIconProvider(model.name) || provider.id
+                                              }
+                                              size={14}
+                                            />
                                           </span>
-                                          <span className="shrink-0 text-[10px] font-normal text-text-muted/60 tabular-nums">
-                                            {model.contextWindow}
+                                          <span className="flex flex-1 items-center gap-1.5 min-w-0">
+                                            <span
+                                              className={`truncate text-xs ${model.id === selectedModelId ? "font-semibold text-text-heading" : "font-normal text-text-primary"}`}
+                                            >
+                                              {model.name}
+                                            </span>
+                                            {model.tier === "pro" && (
+                                              <TierProBadge height={14} className="shrink-0" />
+                                            )}
+                                            {model.tier === "plus" && (
+                                              <TierPlusBadge height={14} className="shrink-0" />
+                                            )}
+                                          </span>
+                                          <span className="shrink-0 rounded-[4px] bg-gradient-to-r from-[#3DB9CE] to-[#34D399] px-1.5 py-[2px] text-[9px] font-bold text-white">
+                                            Unlimited
                                           </span>
                                         </button>
                                       ))}
@@ -593,14 +614,7 @@ export function HomeDashboard({
                     );
                   })()}
               </div>
-              <span
-                className="flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium"
-                title="Agent running"
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-success)]" />
-                Agent running
-              </span>
-              <div className="flex items-center gap-2 text-[11px] text-text-muted ml-3">
+              <div className="flex items-center gap-2 text-[11px] text-text-muted">
                 <span>{t("ws.home.messagesToday")}</span>
                 <span className="text-border">·</span>
                 <span>{t("ws.home.activeAgo")}</span>

@@ -8,14 +8,14 @@ const UnderlineTabsContent = TabsContent;
 const UnderlineTabsList = React.forwardRef<
   React.ComponentRef<typeof TabsList>,
   Omit<React.ComponentPropsWithoutRef<typeof TabsList>, "variant">
->(({ ...props }, ref) => <TabsList ref={ref} variant="underline" {...props} />);
+>(({ ...props }, ref) => <TabsList ref={ref} variant="default" {...props} />);
 
 UnderlineTabsList.displayName = "UnderlineTabsList";
 
 const UnderlineTabsTrigger = React.forwardRef<
   React.ComponentRef<typeof TabsTrigger>,
   Omit<React.ComponentPropsWithoutRef<typeof TabsTrigger>, "variant">
->(({ ...props }, ref) => <TabsTrigger ref={ref} variant="underline" {...props} />);
+>(({ ...props }, ref) => <TabsTrigger ref={ref} variant="default" {...props} />);
 
 UnderlineTabsTrigger.displayName = "UnderlineTabsTrigger";
 

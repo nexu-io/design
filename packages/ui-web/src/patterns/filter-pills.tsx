@@ -8,14 +8,14 @@ const FilterPillsContent = TabsContent;
 const FilterPillsList = React.forwardRef<
   React.ComponentRef<typeof TabsList>,
   Omit<React.ComponentPropsWithoutRef<typeof TabsList>, "variant">
->(({ ...props }, ref) => <TabsList ref={ref} variant="pill" {...props} />);
+>(({ ...props }, ref) => <TabsList ref={ref} variant="default" {...props} />);
 
 FilterPillsList.displayName = "FilterPillsList";
 
 const FilterPillTrigger = React.forwardRef<
   React.ComponentRef<typeof TabsTrigger>,
   Omit<React.ComponentPropsWithoutRef<typeof TabsTrigger>, "variant">
->(({ ...props }, ref) => <TabsTrigger ref={ref} variant="pill" {...props} />);
+>(({ ...props }, ref) => <TabsTrigger ref={ref} variant="default" {...props} />);
 
 FilterPillTrigger.displayName = "FilterPillTrigger";
 

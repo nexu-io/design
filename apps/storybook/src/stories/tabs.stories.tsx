@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Cpu, MessageCircle, Zap } from "lucide-react";
 
 import { Card, CardContent, Tabs, TabsContent, TabsList, TabsTrigger } from "@nexu-design/ui-web";
 
@@ -68,6 +69,48 @@ export const WithCount: Story = {
         </TabsTrigger>
         <TabsTrigger value="skills">
           Skills <CountBadge count={38} />
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="models">
+        <Card>
+          <CardContent className="mt-0 text-base text-muted-foreground">
+            Manage model providers and priorities.
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="channels">
+        <Card>
+          <CardContent className="mt-0 text-base text-muted-foreground">
+            Connect Slack, Feishu, WeChat and more.
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="skills">
+        <Card>
+          <CardContent className="mt-0 text-base text-muted-foreground">
+            Install and organize agent skills.
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
+  ),
+};
+
+export const WithIcons: Story = {
+  render: () => (
+    <Tabs defaultValue="models" className="w-[420px]">
+      <TabsList>
+        <TabsTrigger value="models">
+          <Cpu size={14} />
+          Models
+        </TabsTrigger>
+        <TabsTrigger value="channels">
+          <MessageCircle size={14} />
+          Channels
+        </TabsTrigger>
+        <TabsTrigger value="skills">
+          <Zap size={14} />
+          Skills
         </TabsTrigger>
       </TabsList>
       <TabsContent value="models">

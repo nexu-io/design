@@ -113,13 +113,9 @@ export default function ImportSkillModal({ open, onClose }: ImportSkillModalProp
           }}
           className="px-6"
         >
-          <TabsList variant="underline">
-            <TabsTrigger value="folder" variant="underline">
-              Upload Folder
-            </TabsTrigger>
-            <TabsTrigger value="github" variant="underline">
-              GitHub Link
-            </TabsTrigger>
+          <TabsList>
+            <TabsTrigger value="folder">Upload Folder</TabsTrigger>
+            <TabsTrigger value="github">GitHub Link</TabsTrigger>
           </TabsList>
 
           <TabsContent value="folder">
