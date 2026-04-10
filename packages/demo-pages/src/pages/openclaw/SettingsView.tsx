@@ -388,7 +388,7 @@ export function SettingsView({
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
+      <div className="max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
         <PageHeader
           density="shell"
           title={t("ws.settings.title")}
@@ -698,7 +698,7 @@ export function SettingsView({
           <TabsContent value="providers" className="mt-0">
             <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-[0_1px_2px_rgba(15,23,42,0.03)]">
               <div className="flex min-h-[600px]">
-                <section className="flex w-[240px] shrink-0 flex-col border-r border-border-subtle bg-[#fcfcfb]">
+                <section className="flex w-[216px] shrink-0 flex-col border-r border-border-subtle bg-[#fcfcfb]">
                   <div className="px-4 pb-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-tertiary">
                     {t("ws.settings.tab.providers")}
                   </div>
