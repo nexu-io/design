@@ -17,7 +17,6 @@ import {
   ArrowUp,
   ArrowUpRight,
   Cable,
-  Check,
   ChevronDown,
   Cpu,
   KeyRound,
