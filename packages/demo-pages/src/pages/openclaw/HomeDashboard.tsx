@@ -549,7 +549,11 @@ export function HomeDashboard({
                                       </button>
                                       {provider.id === "nexu" && (
                                         <button
-                                          onClick={() => openExternal("https://docs.nexu.io/zh/guide/model-pricing")}
+                                          onClick={() =>
+                                            openExternal(
+                                              "https://docs.nexu.io/zh/guide/model-pricing",
+                                            )
+                                          }
                                           className="flex size-7 shrink-0 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface-2 hover:text-text-primary"
                                           title="模型积分消耗说明"
                                         >
@@ -595,13 +599,19 @@ export function HomeDashboard({
                                           </span>
                                           {provider.id === "nexu" ? (
                                             <span className="shrink-0 text-[9px] font-normal tabular-nums text-text-muted/60">
-                                              {"~"}{model.creditsPerConversation}{" 积分/次"}
+                                              {"~"}
+                                              {model.creditsPerConversation}
+                                              {" 积分/次"}
                                             </span>
                                           ) : (
                                             <span className="shrink-0 text-[9px] font-normal tabular-nums text-text-muted/60">
-                                              {model.inputPrice.replace(/\.00/g, "").replace(/\/M$/, "")}
+                                              {model.inputPrice
+                                                .replace(/\.00/g, "")
+                                                .replace(/\/M$/, "")}
                                               {" / "}
-                                              {model.outputPrice.replace(/\.00/g, "").replace(/\/M$/, "")}
+                                              {model.outputPrice
+                                                .replace(/\.00/g, "")
+                                                .replace(/\/M$/, "")}
                                             </span>
                                           )}
                                         </button>

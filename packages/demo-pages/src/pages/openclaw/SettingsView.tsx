@@ -1015,7 +1015,9 @@ export function SettingsView({
                           {activeProvider.id === "nexu" && (
                             <button
                               type="button"
-                              onClick={() => openExternal("https://docs.nexu.io/zh/guide/model-pricing")}
+                              onClick={() =>
+                                openExternal("https://docs.nexu.io/zh/guide/model-pricing")
+                              }
                               className="flex size-4 items-center justify-center text-text-muted transition-colors hover:text-text-primary"
                               title="模型积分消耗说明"
                             >
@@ -1067,8 +1069,12 @@ export function SettingsView({
                                   <span className="truncate text-[12px] font-medium text-text-primary">
                                     {model.name}
                                   </span>
-                                  {model.tier === "pro" && <TierProBadge height={13} className="shrink-0" />}
-                                  {model.tier === "plus" && <TierPlusBadge height={13} className="shrink-0" />}
+                                  {model.tier === "pro" && (
+                                    <TierProBadge height={13} className="shrink-0" />
+                                  )}
+                                  {model.tier === "plus" && (
+                                    <TierPlusBadge height={13} className="shrink-0" />
+                                  )}
                                   {activeProvider.id === "nexu" && !model.tier && (
                                     <span className="shrink-0 rounded-[4px] bg-gradient-to-r from-[#3DB9CE] to-[#34D399] px-1.5 py-[2px] text-[9px] font-bold text-white">
                                       Unlimited
