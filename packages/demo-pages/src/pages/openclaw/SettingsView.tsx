@@ -25,6 +25,7 @@ import {
   BookOpen,
   Check,
   Globe,
+  HelpCircle,
   Info,
   Mail,
   Monitor,
@@ -40,6 +41,7 @@ import { type Locale, useLocale } from "../../hooks/useLocale";
 import { openExternal } from "../../utils/open-external";
 import { GitHubStarButton } from "./GitHubStarButton";
 import { type ModelProvider, type ProviderDetail, getProviderDetails } from "./data";
+import { TierPlusBadge, TierProBadge } from "./iconHelpers";
 
 const WORKSPACE_LOCALE_OPTIONS: { value: Locale; nativeLabel: string; englishLabel: string }[] = [
   { value: "en", nativeLabel: "English", englishLabel: "English" },
@@ -1008,8 +1010,20 @@ export function SettingsView({
                       ) : null}
 
                       <div className="mb-3 flex items-center justify-between gap-4">
-                        <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-tertiary">
+                        <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-tertiary">
                           {t("ws.settings.model")} ({activeProvider.models.length})
+                          {activeProvider.id === "nexu" && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                openExternal("https://docs.nexu.io/zh/guide/model-pricing")
+                              }
+                              className="flex size-4 items-center justify-center text-text-muted transition-colors hover:text-text-primary"
+                              title="模型积分消耗说明"
+                            >
+                              <HelpCircle size={12} />
+                            </button>
+                          )}
                         </div>
                         <button
                           type="button"
@@ -1051,12 +1065,33 @@ export function SettingsView({
                                     title={model.name}
                                   />
                                 </span>
-                                <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-text-primary">
-                                  {model.name}
+                                <span className="flex min-w-0 flex-1 items-center gap-1.5">
+                                  <span className="truncate text-[12px] font-medium text-text-primary">
+                                    {model.name}
+                                  </span>
+                                  {model.tier === "pro" && (
+                                    <TierProBadge height={13} className="shrink-0" />
+                                  )}
+                                  {model.tier === "plus" && (
+                                    <TierPlusBadge height={13} className="shrink-0" />
+                                  )}
+                                  {activeProvider.id === "nexu" && !model.tier && (
+                                    <span className="shrink-0 rounded-[4px] bg-gradient-to-r from-[#3DB9CE] to-[#34D399] px-1.5 py-[2px] text-[9px] font-bold text-white">
+                                      Unlimited
+                                    </span>
+                                  )}
                                 </span>
-                                <span className="text-[11px] text-text-tertiary">
-                                  {model.contextWindow}
-                                </span>
+                                {activeProvider.id === "nexu" && model.creditsPerConversation ? (
+                                  <span className="shrink-0 text-[10px] tabular-nums text-text-tertiary">
+                                    ~{model.creditsPerConversation} 积分/次
+                                  </span>
+                                ) : activeProvider.id !== "nexu" ? (
+                                  <span className="shrink-0 text-[10px] tabular-nums text-text-tertiary">
+                                    {model.inputPrice.replace(/\.00/g, "").replace(/\/M$/, "")}
+                                    {" / "}
+                                    {model.outputPrice.replace(/\.00/g, "").replace(/\/M$/, "")}
+                                  </span>
+                                ) : null}
                                 {isActive ? (
                                   <Check size={14} className="shrink-0 text-accent" />
                                 ) : null}
