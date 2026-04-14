@@ -7,6 +7,7 @@ export type SettingsTab = "general" | "providers";
 
 export type View =
   | { type: "home" }
+  | { type: "channels" }
   | { type: "conversations"; channelId?: string }
   | { type: "deployments" }
   | { type: "skills"; tab?: "yours" | "explore"; tag?: ToolTag }

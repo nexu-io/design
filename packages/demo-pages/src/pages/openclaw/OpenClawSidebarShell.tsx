@@ -209,11 +209,6 @@ export function OpenClawSidebarShell({
                     >
                       <item.icon className="size-4" />
                       {t(item.labelKey)}
-                      {item.id === "skills" && (
-                        <span className="ml-auto text-xs font-normal text-text-tertiary">
-                          {capabilitiesNavCount}
-                        </span>
-                      )}
                     </NavigationMenuButton>
                   </NavigationMenuItem>
                 ))}
@@ -284,6 +279,7 @@ export function OpenClawSidebarShell({
             </button>
           </div>
         )}
+
 
         <div
           className="flex shrink-0 items-center justify-between gap-1 px-3 pb-1.5"

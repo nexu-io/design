@@ -46,6 +46,8 @@ type Props = {
   setDemoLoggedIn: (v: boolean) => void;
   creditsShellRef: React.RefObject<HTMLDivElement | null>;
   avatarRef: React.RefObject<HTMLButtonElement | null>;
+  budgetStatus?: "healthy" | "warning" | "depleted";
+  onBudgetDotClick?: () => void;
 };
 
 export function WorkspaceTopRightControls({
@@ -71,6 +73,8 @@ export function WorkspaceTopRightControls({
   setDemoLoggedIn,
   creditsShellRef,
   avatarRef,
+  budgetStatus,
+  onBudgetDotClick,
 }: Props) {
   if (!nexuLoggedIn) {
     return (
@@ -161,6 +165,26 @@ export function WorkspaceTopRightControls({
             <span className={cn("text-[13px] tabular-nums leading-none", pillStyle.value)}>
               {totalCredits.toLocaleString()}
             </span>
+            {(budgetStatus === "warning" || budgetStatus === "depleted") && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onBudgetDotClick?.();
+                }}
+                className="relative flex items-center justify-center ml-0.5 cursor-pointer"
+                title={budgetStatus === "depleted" ? "Credits depleted" : "Credits running low"}
+              >
+                <span className={cn(
+                  "w-2 h-2 rounded-full shrink-0",
+                  budgetStatus === "depleted" ? "bg-[var(--color-danger)]" : "bg-[var(--color-warning)]",
+                )} />
+                <span className={cn(
+                  "absolute inset-0 w-2 h-2 rounded-full animate-ping opacity-75",
+                  budgetStatus === "depleted" ? "bg-[var(--color-danger)]" : "bg-[var(--color-warning)]",
+                )} />
+              </button>
+            )}
             {(isFree || isPlus) && (
               <>
                 <span className="w-px h-3 bg-border-subtle mx-1.5" />

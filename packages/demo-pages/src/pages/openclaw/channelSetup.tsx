@@ -84,6 +84,15 @@ export function WeComIconSetup({ size = 20 }: { size?: number }) {
 
 export const ONBOARDING_CHANNELS = [
   {
+    id: "wechat",
+    name: "WeChat",
+    shortName: "WeChat",
+    icon: WeChatIconSetup,
+    color: "#FFFFFF",
+    docUrl: "https://docs.nexu.ai/channels/wechat",
+    chatUrl: "https://web.wechat.com/",
+  },
+  {
     id: "feishu",
     name: "Feishu",
     shortName: "Feishu",
@@ -92,6 +101,15 @@ export const ONBOARDING_CHANNELS = [
     recommended: true,
     docUrl: "https://docs.nexu.ai/channels/feishu",
     chatUrl: "https://www.feishu.cn/",
+  },
+  {
+    id: "wecom",
+    name: "WeCom",
+    shortName: "WeCom",
+    icon: WeComIconSetup,
+    color: "#FFFFFF",
+    docUrl: "https://docs.nexu.ai/channels/wecom",
+    chatUrl: "https://work.weixin.qq.com/",
   },
   {
     id: "slack",
@@ -103,15 +121,6 @@ export const ONBOARDING_CHANNELS = [
     chatUrl: "https://slack.com/",
   },
   {
-    id: "discord",
-    name: "Discord",
-    shortName: "Discord",
-    icon: DiscordIconSetup,
-    color: "#FFFFFF",
-    docUrl: "https://docs.nexu.ai/channels/discord",
-    chatUrl: "https://discord.com/",
-  },
-  {
     id: "telegram",
     name: "Telegram",
     shortName: "Telegram",
@@ -121,6 +130,15 @@ export const ONBOARDING_CHANNELS = [
     chatUrl: "https://telegram.org/",
   },
   {
+    id: "discord",
+    name: "Discord",
+    shortName: "Discord",
+    icon: DiscordIconSetup,
+    color: "#FFFFFF",
+    docUrl: "https://docs.nexu.ai/channels/discord",
+    chatUrl: "https://discord.com/",
+  },
+  {
     id: "whatsapp",
     name: "WhatsApp",
     shortName: "WhatsApp",
@@ -128,15 +146,6 @@ export const ONBOARDING_CHANNELS = [
     color: "#FFFFFF",
     docUrl: "https://docs.nexu.ai/channels/whatsapp",
     chatUrl: "https://web.whatsapp.com/",
-  },
-  {
-    id: "wechat",
-    name: "WeChat",
-    shortName: "WeChat",
-    icon: WeChatIconSetup,
-    color: "#FFFFFF",
-    docUrl: "https://docs.nexu.ai/channels/wechat",
-    chatUrl: "https://web.wechat.com/",
   },
   {
     id: "dingtalk",
@@ -155,15 +164,6 @@ export const ONBOARDING_CHANNELS = [
     color: "#FFFFFF",
     docUrl: "https://docs.nexu.ai/channels/qqbot",
     chatUrl: "https://bot.q.qq.com/",
-  },
-  {
-    id: "wecom",
-    name: "WeCom",
-    shortName: "WeCom",
-    icon: WeComIconSetup,
-    color: "#FFFFFF",
-    docUrl: "https://docs.nexu.ai/channels/wecom",
-    chatUrl: "https://work.weixin.qq.com/",
   },
 ];
 

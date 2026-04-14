@@ -898,6 +898,44 @@ export function getProviderDetails(): ProviderDetail[] {
   return PROVIDER_DETAILS;
 }
 
+export function getDefaultModelsForCustomProvider(
+  templateId: "custom-openai" | "custom-anthropic",
+): ProviderModel[] {
+  if (templateId === "custom-openai") {
+    return [
+      createProviderModel("gpt-5", "GPT-5", "1M", "2026-01-20", "$5.00/M", "$15.00/M", true),
+      createProviderModel("o3", "o3", "200K", "2025-12-05", "$10.00/M", "$40.00/M", true),
+      createProviderModel("gpt-4o", "GPT-4o", "128K", "2025-05-13", "$2.50/M", "$10.00/M"),
+    ];
+  }
+  return [
+    createProviderModel("claude-sonnet-4-6", "Claude Sonnet 4.6", "200K", "2026-02-17", "$3.00/M", "$15.00/M", true),
+    createProviderModel("claude-haiku-4-5", "Claude Haiku 4.5", "200K", "2025-10-16", "$1.00/M", "$5.00/M"),
+  ];
+}
+
+/** Catalogue of well-known models for each provider template, used by the "Add model" dialog. */
+export function getModelCatalogueForProvider(
+  templateId: "custom-openai" | "custom-anthropic",
+): ProviderModel[] {
+  if (templateId === "custom-openai") {
+    return [
+      createProviderModel("gpt-5", "GPT-5", "1M", "2026-01-20", "$5.00/M", "$15.00/M"),
+      createProviderModel("gpt-4o", "GPT-4o", "128K", "2025-05-13", "$2.50/M", "$10.00/M"),
+      createProviderModel("gpt-4o-mini", "GPT-4o Mini", "128K", "2025-07-18", "$0.15/M", "$0.60/M"),
+      createProviderModel("gpt-4-turbo", "GPT-4 Turbo", "128K", "2024-04-09", "$10.00/M", "$30.00/M"),
+      createProviderModel("gpt-3.5-turbo", "GPT-3.5 Turbo", "16K", "2024-01-25", "$0.50/M", "$1.50/M"),
+      createProviderModel("o3", "o3", "200K", "2025-12-05", "$10.00/M", "$40.00/M"),
+      createProviderModel("o3-mini", "o3 Mini", "200K", "2025-12-05", "$1.10/M", "$4.40/M"),
+    ];
+  }
+  return [
+    createProviderModel("claude-opus-4-6", "Claude Opus 4.6", "200K", "2026-02-05", "$5.00/M", "$25.00/M"),
+    createProviderModel("claude-sonnet-4-6", "Claude Sonnet 4.6", "200K", "2026-02-17", "$3.00/M", "$15.00/M"),
+    createProviderModel("claude-haiku-4-5", "Claude Haiku 4.5", "200K", "2025-10-16", "$1.00/M", "$5.00/M"),
+  ];
+}
+
 export const MOCK_CHANNELS: Channel[] = [
   {
     id: "1",
