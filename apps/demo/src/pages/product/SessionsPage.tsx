@@ -32,6 +32,8 @@ import {
 import {
   BarChart3,
   Bookmark,
+  Check,
+  ChevronDown,
   Clock,
   Code,
   Eye,
@@ -58,7 +60,7 @@ import {
   Wrench,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import ChatCardGroup from "./ChatCards";
@@ -125,6 +127,72 @@ const ACTIVE_SKILLS = [
   "Code Automation",
   "Daily Digest",
 ];
+
+const HARNESS_AGENTS = [
+  { id: "claude-sonnet", name: "Claude Sonnet", model: "claude-sonnet-4-5", provider: "Anthropic" },
+  { id: "claude-code", name: "Claude Code", model: "claude-code", provider: "Anthropic" },
+  { id: "deepseek-v3", name: "DeepSeek V3", model: "deepseek-v3-0324", provider: "Nexu" },
+  { id: "gpt-4o", name: "GPT-4o", model: "gpt-4o", provider: "OpenAI" },
+  { id: "gemini-pro", name: "Gemini 2.5 Pro", model: "gemini-2.5-pro", provider: "Google" },
+];
+
+function AgentPicker({
+  value,
+  onChange,
+  compact,
+}: {
+  value: string;
+  onChange: (id: string) => void;
+  compact?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const agent = HARNESS_AGENTS.find((a) => a.id === value) ?? HARNESS_AGENTS[0];
+
+  return (
+    <div className="relative">
+      <Button
+        type="button"
+        variant="ghost"
+        size={compact ? "icon-sm" : "xs"}
+        className={compact ? "" : "gap-1"}
+        onClick={() => setOpen(!open)}
+        title={`${agent.name} (${agent.model})`}
+      >
+        <Sparkles size={compact ? 13 : 11} className="text-text-muted" />
+        {!compact && <span className="text-[11px] text-text-muted">{agent.name}</span>}
+        <ChevronDown size={10} className="text-text-muted" />
+      </Button>
+      {open && (
+        <>
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: backdrop */}
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute bottom-full right-0 z-50 mb-1 w-[220px] rounded-xl border border-border bg-surface-1 shadow-dropdown-dark p-1">
+            {HARNESS_AGENTS.map((a) => (
+              <button
+                key={a.id}
+                type="button"
+                className={`w-full flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left transition-colors ${
+                  a.id === value ? "bg-surface-2" : "hover:bg-surface-2"
+                }`}
+                onClick={() => {
+                  onChange(a.id);
+                  setOpen(false);
+                }}
+              >
+                <Sparkles size={12} className="text-text-muted shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-[11px] font-medium text-text-primary">{a.name}</div>
+                  <div className="text-[9px] text-text-muted">{a.model}</div>
+                </div>
+                {a.id === value && <Check size={12} className="text-text-primary shrink-0" />}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 const FILE_OP_STYLES: Record<FileOpAction, { color: string; label: string }> = {
   read: { color: "text-info bg-info-subtle", label: "READ" },
@@ -276,6 +344,9 @@ function NewSessionView({
 }) {
   const [input, setInput] = useState("");
   const [showSkills, setShowSkills] = useState(false);
+  const [agentId, setAgentId] = useState("claude-sonnet");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [pendingFiles, setPendingFiles] = useState<{ name: string; size: string }[]>([]);
 
   const handleSubmit = () => {
     if (input.trim()) onStartChat(input);
@@ -317,9 +388,36 @@ function NewSessionView({
             rows={2}
             className="min-h-0 w-full border-0 bg-transparent px-4 pb-2 pt-4 text-[14px] shadow-none focus-visible:ring-0"
           />
+          {pendingFiles.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 px-3 pb-2">
+              {pendingFiles.map((f, i) => (
+                <div
+                  key={`${f.name}-${i}`}
+                  className="flex items-center gap-1 px-2 py-1 bg-surface-3 rounded-md text-[10px] text-text-secondary"
+                >
+                  <Paperclip size={10} />
+                  <span className="truncate max-w-[100px]">{f.name}</span>
+                  <span className="text-text-muted">{f.size}</span>
+                  <button
+                    type="button"
+                    className="ml-0.5 hover:text-text-primary"
+                    onClick={() => setPendingFiles((prev) => prev.filter((_, idx) => idx !== i))}
+                  >
+                    <X size={10} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
           <div className="flex items-center justify-between px-3 pb-3">
             <div className="flex items-center gap-1">
-              <Button type="button" variant="ghost" size="icon-sm" title="上传文件">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                title="上传文件"
+                onClick={() => fileInputRef.current?.click()}
+              >
                 <Paperclip size={15} />
               </Button>
               <Button type="button" variant="ghost" size="icon-sm" title="拍照/录屏">
@@ -336,7 +434,7 @@ function NewSessionView({
               </Button>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="text-[11px] text-text-muted">Claude 4.5</span>
+              <AgentPicker value={agentId} onChange={setAgentId} />
               <Button type="button" variant="ghost" size="icon-sm" title="语音输入">
                 <Mic size={15} />
               </Button>
@@ -354,6 +452,23 @@ function NewSessionView({
             ))}
           </div>
         </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          className="hidden"
+          accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.md,.json,.py,.ts,.tsx,.js"
+          onChange={(e) => {
+            const files = e.target.files;
+            if (!files) return;
+            const newFiles = Array.from(files).map((f) => ({
+              name: f.name,
+              size: f.size < 1024 * 1024 ? `${(f.size / 1024).toFixed(0)} KB` : `${(f.size / (1024 * 1024)).toFixed(1)} MB`,
+            }));
+            setPendingFiles((prev) => [...prev, ...newFiles]);
+            e.target.value = "";
+          }}
+        />
 
         {/* Skills dropdown */}
         {showSkills && (
@@ -640,6 +755,9 @@ function ActiveChatView({
   const [input, setInput] = useState("");
   const [selectedFileOp, setSelectedFileOp] = useState<number>(0);
   const [pricingOpen, setPricingOpen] = useState(false);
+  const [chatAgentId, setChatAgentId] = useState("claude-sonnet");
+  const chatFileInputRef = useRef<HTMLInputElement>(null);
+  const [chatPendingFiles, setChatPendingFiles] = useState<{ name: string; size: string }[]>([]);
   const navigate = useNavigate();
   const { openFile } = useProductLayout();
 
@@ -776,21 +894,48 @@ function ActiveChatView({
         <div className="border-t border-border p-2.5">
           {/* Pending uploads bar */}
           <div className="flex items-center gap-1.5 px-2 pb-2">
-            <div className="flex items-center gap-1 px-2 py-1 bg-surface-3 rounded-md text-[10px] text-text-secondary">
-              <Image size={11} className="text-role-designer" />
-              <span className="truncate max-w-[80px]">screenshot.png</span>
-              <Button type="button" variant="ghost" size="icon-sm" className="ml-0.5 h-5 w-5">
-                <X size={10} />
-              </Button>
-            </div>
-            <div className="flex items-center gap-1 px-2 py-1 bg-surface-3 rounded-md text-[10px] text-text-secondary">
-              <File size={11} className="text-danger" />
-              <span className="truncate max-w-[80px]">report.pdf</span>
-              <Button type="button" variant="ghost" size="icon-sm" className="ml-0.5 h-5 w-5">
-                <X size={10} />
-              </Button>
-            </div>
-            <Button type="button" variant="ghost" size="icon-sm" title="添加更多">
+            {chatPendingFiles.map((f, i) => (
+              <div
+                key={`${f.name}-${i}`}
+                className="flex items-center gap-1 px-2 py-1 bg-surface-3 rounded-md text-[10px] text-text-secondary"
+              >
+                <Paperclip size={10} />
+                <span className="truncate max-w-[80px]">{f.name}</span>
+                <span className="text-text-muted">{f.size}</span>
+                <button
+                  type="button"
+                  className="ml-0.5 hover:text-text-primary"
+                  onClick={() => setChatPendingFiles((prev) => prev.filter((_, idx) => idx !== i))}
+                >
+                  <X size={10} />
+                </button>
+              </div>
+            ))}
+            {chatPendingFiles.length === 0 && (
+              <>
+                <div className="flex items-center gap-1 px-2 py-1 bg-surface-3 rounded-md text-[10px] text-text-secondary">
+                  <Image size={11} className="text-role-designer" />
+                  <span className="truncate max-w-[80px]">screenshot.png</span>
+                  <Button type="button" variant="ghost" size="icon-sm" className="ml-0.5 h-5 w-5">
+                    <X size={10} />
+                  </Button>
+                </div>
+                <div className="flex items-center gap-1 px-2 py-1 bg-surface-3 rounded-md text-[10px] text-text-secondary">
+                  <File size={11} className="text-danger" />
+                  <span className="truncate max-w-[80px]">report.pdf</span>
+                  <Button type="button" variant="ghost" size="icon-sm" className="ml-0.5 h-5 w-5">
+                    <X size={10} />
+                  </Button>
+                </div>
+              </>
+            )}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              title="添加更多"
+              onClick={() => chatFileInputRef.current?.click()}
+            >
               <Plus size={12} />
             </Button>
           </div>
@@ -800,11 +945,9 @@ function ActiveChatView({
               variant="ghost"
               size="icon-sm"
               title="上传文件 (图片/PDF/文档/表格/代码/音视频...)"
+              onClick={() => chatFileInputRef.current?.click()}
             >
               <Paperclip size={14} />
-            </Button>
-            <Button type="button" variant="ghost" size="icon-sm">
-              <Sparkles size={14} />
             </Button>
             <Textarea
               value={input}
@@ -813,16 +956,31 @@ function ActiveChatView({
               rows={1}
               className="min-h-0 flex-1 resize-none border-0 bg-transparent px-0 py-0 text-[13px] shadow-none focus-visible:ring-0"
             />
+            <AgentPicker value={chatAgentId} onChange={setChatAgentId} compact />
             <Button type="button" variant="ghost" size="icon-sm" title="语音输入">
               <Mic size={14} />
-            </Button>
-            <Button type="button" variant="ghost" size="icon-sm" title="拍照/录屏">
-              <Film size={14} />
             </Button>
             <Button type="button" size="icon-sm">
               <Send size={13} />
             </Button>
           </div>
+          <input
+            ref={chatFileInputRef}
+            type="file"
+            multiple
+            className="hidden"
+            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.md,.json,.py,.ts,.tsx,.js"
+            onChange={(e) => {
+              const files = e.target.files;
+              if (!files) return;
+              const newFiles = Array.from(files).map((f) => ({
+                name: f.name,
+                size: f.size < 1024 * 1024 ? `${(f.size / 1024).toFixed(0)} KB` : `${(f.size / (1024 * 1024)).toFixed(1)} MB`,
+              }));
+              setChatPendingFiles((prev) => [...prev, ...newFiles]);
+              e.target.value = "";
+            }}
+          />
         </div>
       </div>
 

@@ -148,8 +148,15 @@ export default function ProductLayout({ children }: { children: ReactNode }) {
               >
                 <Zap size={16} className="text-clone" />
               </div>
-              <ActivityBarItem title="设置">
-                <Settings size={16} />
+              <ActivityBarItem
+                asChild
+                active={location.pathname.startsWith("/app/settings")}
+                title="设置"
+              >
+                <NavLink to="/app/settings">
+                  {location.pathname.startsWith("/app/settings") ? <ActivityBarIndicator /> : null}
+                  <Settings size={16} />
+                </NavLink>
               </ActivityBarItem>
             </ActivityBarFooter>
           </ActivityBar>

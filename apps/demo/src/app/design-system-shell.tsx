@@ -183,7 +183,7 @@ export function DesignSystemShell() {
           <Routes>
             {ProductRouteElements()}
             <Route path="/openclaw/*" element={<Navigate to="/openclaw/workspace" replace />} />
-            <Route path="*" element={<Navigate to="/openclaw/workspace" replace />} />
+            <Route path="*" element={<Navigate to="/app/sessions" replace />} />
           </Routes>
         </main>
       </div>

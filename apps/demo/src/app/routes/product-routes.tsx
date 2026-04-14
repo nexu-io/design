@@ -6,6 +6,7 @@ import CloneBuilderPage from "../../pages/product/CloneBuilderPage";
 import ProductDemoPage from "../../pages/product/ProductDemoPage";
 import ProductLayout from "../../pages/product/ProductLayout";
 import SessionsPage from "../../pages/product/SessionsPage";
+import SettingsPage from "../../pages/product/SettingsPage";
 import SkillsPage from "../../pages/product/SkillsPage";
 import TeamPage from "../../pages/product/TeamPage";
 
@@ -14,7 +15,7 @@ export function ProductRouteElements() {
     <>
       <Route path="/demo" element={<ProductDemoPage />} />
       <Route path="/journey" element={<JourneyPage />} />
-      <Route path="/app" element={<Navigate to="/app/clone" replace />} />
+      <Route path="/app" element={<Navigate to="/app/sessions" replace />} />
       <Route
         path="/app/sessions"
         element={
@@ -52,6 +53,14 @@ export function ProductRouteElements() {
         element={
           <ProductLayout>
             <SkillsPage />
+          </ProductLayout>
+        }
+      />
+      <Route
+        path="/app/settings"
+        element={
+          <ProductLayout>
+            <SettingsPage />
           </ProductLayout>
         }
       />
