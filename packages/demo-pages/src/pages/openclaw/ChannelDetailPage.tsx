@@ -1,5 +1,6 @@
-import { Badge, Button, DiscordIcon, FeishuIcon, SlackIcon, TextLink } from "@nexu-design/ui-web";
-import { ArrowUpRight, FolderOpen, Shield } from "lucide-react";
+import { Badge, Button, Card, DiscordIcon, FeishuIcon, SlackIcon, TextLink, cn } from "@nexu-design/ui-web";
+import { ArrowUp, ArrowUpRight, ChevronDown, FolderOpen, Paperclip, Settings, Shield, Sparkles } from "lucide-react";
+import { useLocale } from "../../hooks/useLocale";
 import { useNavigate } from "react-router-dom";
 import {
   type BotMessage,
@@ -149,6 +150,7 @@ function MessageBubble({ msg }: { msg: BotMessage }) {
 }
 
 export default function ChannelDetailPage({ channelId }: { channelId: string }) {
+  const { t } = useLocale();
   const channel = getChannel(channelId);
 
   if (!channel) {
@@ -164,57 +166,6 @@ export default function ChannelDetailPage({ channelId }: { channelId: string }) 
 
   return (
     <div className="flex flex-col h-full w-full">
-      {/* Header */}
-      <div className="shrink-0 border-b border-border px-6 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex gap-3 items-center">
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-[15px] font-bold text-text-heading">{channel.name}</h1>
-                <Badge
-                  variant={channel.chatType === "group" ? "accent" : "default"}
-                  className={
-                    channel.chatType === "group"
-                      ? "bg-[var(--color-info-subtle)] text-[var(--color-info)]"
-                      : "bg-[rgba(217,153,247,0.10)] text-[var(--color-pink)]"
-                  }
-                >
-                  {channel.chatType === "group" ? "Group" : "DM"}
-                </Badge>
-              </div>
-              <div className="text-[11px] text-text-muted mt-0.5">
-                {getPlatformLabel(channel.platform)} · {channel.messageCount} messages · Last active{" "}
-                {channel.lastMessage ?? channel.createdAt}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                // Opens the local folder containing all chat artifacts
-              }}
-              title="Open local folder"
-            >
-              <FolderOpen size={14} />
-              Open Folder
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                // In production, this would deep-link to the actual Slack conversation
-              }}
-            >
-              <PIcon size={16} />
-              {PLATFORM_OPEN_LABELS[channel.platform]}
-              <ArrowUpRight size={12} className="text-text-muted size-3" />
-            </Button>
-          </div>
-        </div>
-      </div>
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto">
@@ -237,6 +188,33 @@ export default function ChannelDetailPage({ channelId }: { channelId: string }) 
             </div>
           )}
         </div>
+      </div>
+
+      {/* Input bar */}
+      <div className="shrink-0 px-6 py-4">
+        <Card variant="static" padding="none" className="w-full max-w-[640px] mx-auto">
+          <div className="px-4 pt-4 pb-2">
+            <textarea
+              rows={3}
+              placeholder={t("ws.home.chatPlaceholder")}
+              className="w-full resize-none bg-transparent text-[14px] text-text-primary placeholder:text-text-muted/50 outline-none leading-relaxed"
+            />
+          </div>
+          <div className="flex items-center justify-between px-4 pb-3 pt-1">
+            <div className="flex items-center gap-1">
+              <button type="button" className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] font-medium text-text-secondary hover:bg-surface-2 transition-colors">
+                <Sparkles size={14} />
+                <span className="truncate max-w-[120px]">DeepSeek V3.2</span>
+                <ChevronDown size={10} className="text-text-muted" />
+              </button>
+              <button type="button" className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"><Paperclip size={16} /></button>
+              <button type="button" className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"><Settings size={16} /></button>
+            </div>
+            <button type="button" className="flex items-center justify-center w-8 h-8 rounded-lg transition-all bg-surface-2 text-text-muted cursor-default">
+              <ArrowUp size={16} />
+            </button>
+          </div>
+        </Card>
       </div>
     </div>
   );

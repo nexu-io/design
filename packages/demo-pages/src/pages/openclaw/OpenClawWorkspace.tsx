@@ -1,4 +1,4 @@
-import { ChevronRight, Gift, Home, Settings, Sparkles, X, Zap } from "lucide-react";
+import { Cable, ChevronRight, Gift, Settings, Sparkles, SquarePen, X, Zap } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { REWARD_CHANNELS, useBudget } from "../../hooks/useBudget";
@@ -6,6 +6,8 @@ import { useGitHubStars } from "../../hooks/useGitHubStars";
 import { useLocale } from "../../hooks/useLocale";
 import { usePageTitle } from "../../hooks/usePageTitle";
 import { openExternal } from "../../utils/open-external";
+import { ChannelsView, getDefaultConnectedChannels } from "./ChannelsView";
+import type { ChannelId } from "./ChannelsView";
 import { ConversationsView } from "./ConversationsView";
 import { DeploymentsView } from "./DeploymentsView";
 import { HomeDashboard } from "./HomeDashboard";
@@ -48,8 +50,9 @@ function formatRewardAmount(n: number): string {
 
 /* UsageTab removed — usage details moved to Web dashboard (app.nexu.io/usage). */
 
-const NAV_ITEMS: { id: View["type"]; labelKey: string; icon: typeof Home }[] = [
-  { id: "home", labelKey: "ws.nav.home", icon: Home },
+const NAV_ITEMS: { id: View["type"]; labelKey: string; icon: typeof SquarePen }[] = [
+  { id: "home", labelKey: "ws.nav.home", icon: SquarePen },
+  { id: "channels", labelKey: "ws.nav.channels", icon: Cable },
   { id: "skills", labelKey: "ws.nav.skills", icon: Sparkles },
   { id: "settings", labelKey: "ws.nav.settings", icon: Settings },
 ];
@@ -81,7 +84,10 @@ export default function OpenClawWorkspace() {
   const [showStarModal, setShowStarModal] = useState(false);
   const [starModalStep, setStarModalStep] = useState<"prompt" | "confirm">("prompt");
   const [showSeedanceModal, setShowSeedanceModal] = useState(false);
+  const budgetNeedsAttention = demoBudgetStatus === "warning" || demoBudgetStatus === "depleted";
+  const [showBudgetDialog, setShowBudgetDialog] = useState(budgetNeedsAttention);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [connectedChannels, setConnectedChannels] = useState<Set<ChannelId>>(getDefaultConnectedChannels);
   const [collapsed, setCollapsed] = useState(() => {
     const saved = localStorage.getItem("nexu_sidebar_collapsed");
     return saved !== null ? saved === "true" : true;
@@ -89,7 +95,7 @@ export default function OpenClawWorkspace() {
   const [showHelpMenu, setShowHelpMenu] = useState(false);
   const nexuAccountEmail = "hello@nexu.ai";
   const [hasUpdate, setHasUpdate] = useState(true);
-  const [updateDismissed, setUpdateDismissed] = useState(false);
+  const [updateDismissed, setUpdateDismissed] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [updateError, setUpdateError] = useState(false);
@@ -524,6 +530,15 @@ export default function OpenClawWorkspace() {
                   }}
                   onRequestSeedanceModal={() => setShowSeedanceModal(true)}
                   githubUrl={GITHUB_URL}
+                  showBudgetDialog={showBudgetDialog}
+                  onBudgetDialogChange={setShowBudgetDialog}
+                  connectedChannels={connectedChannels}
+                />
+              )}
+              {view.type === "channels" && (
+                <ChannelsView
+                  connectedChannels={connectedChannels}
+                  onConnectedChange={setConnectedChannels}
                 />
               )}
               {view.type === "conversations" && (
@@ -588,6 +603,8 @@ export default function OpenClawWorkspace() {
         setDemoLoggedIn={setDemoLoggedIn}
         creditsShellRef={creditsShellRef}
         avatarRef={avatarRef}
+        budgetStatus={demoBudgetStatus}
+        onBudgetDotClick={() => setShowBudgetDialog(true)}
       />
 
       {rewardConfirm &&
@@ -668,6 +685,8 @@ export default function OpenClawWorkspace() {
         setShowStarModal={setShowStarModal}
         setShowSeedanceModal={setShowSeedanceModal}
         toast={toast}
+        connectedChannels={connectedChannels}
+        setConnectedChannels={setConnectedChannels}
       />
     </div>
   );

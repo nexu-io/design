@@ -1,5 +1,6 @@
 import { AlertCircle, CheckCircle, Settings, X } from "lucide-react";
-import { SEEDANCE_BANNER_DISMISSED_KEY } from "./channelSetup";
+import { ONBOARDING_CHANNELS, SEEDANCE_BANNER_DISMISSED_KEY } from "./channelSetup";
+import type { ChannelId } from "./ChannelsView";
 
 type Props = {
   checkingUpdate: boolean;
@@ -21,6 +22,8 @@ type Props = {
   setShowStarModal: (v: boolean) => void;
   setShowSeedanceModal: (v: boolean) => void;
   toast: { message: string; type: "success" | "error" } | null;
+  connectedChannels: Set<ChannelId>;
+  setConnectedChannels: (v: Set<ChannelId>) => void;
 };
 
 export function WorkspaceUtilityOverlays({
@@ -43,6 +46,8 @@ export function WorkspaceUtilityOverlays({
   setShowStarModal,
   setShowSeedanceModal,
   toast,
+  connectedChannels,
+  setConnectedChannels,
 }: Props) {
   return (
     <>
@@ -127,7 +132,6 @@ export function WorkspaceUtilityOverlays({
                 <X size={13} />
               </button>
             </div>
-
             <div className="px-3.5 py-3 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-[12px] text-text-secondary">登录状态</span>
@@ -140,7 +144,6 @@ export function WorkspaceUtilityOverlays({
                   />
                 </button>
               </div>
-
               <div>
                 <div className="text-[11px] text-text-muted mb-1.5">套餐</div>
                 <div className="grid grid-cols-2 gap-1">
@@ -155,7 +158,6 @@ export function WorkspaceUtilityOverlays({
                   ))}
                 </div>
               </div>
-
               <div>
                 <div className="text-[11px] text-text-muted mb-1.5">额度状态</div>
                 <div className="grid grid-cols-3 gap-1">
@@ -175,7 +177,6 @@ export function WorkspaceUtilityOverlays({
                   ))}
                 </div>
               </div>
-
               <div>
                 <div className="text-[11px] text-text-muted mb-1.5">积分包</div>
                 <div className="grid grid-cols-2 gap-1">
@@ -193,39 +194,36 @@ export function WorkspaceUtilityOverlays({
               </div>
 
               <div>
-                <div className="text-[11px] text-text-muted mb-1.5">引导</div>
+                <div className="text-[11px] text-text-muted mb-1.5">Channel 连接</div>
                 <div className="space-y-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setStarModalStep("prompt");
-                      setShowStarModal(true);
-                    }}
-                    className="w-full py-1.5 rounded-lg text-[12px] font-medium bg-surface-2 text-text-secondary hover:bg-surface-0 border border-border transition-colors"
-                  >
-                    GitHub Star 引导弹窗
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowSeedanceModal(true)}
-                    className="w-full py-1.5 rounded-lg text-[12px] font-medium bg-violet-500/10 text-violet-600 hover:bg-violet-500/20 border border-violet-200/60 transition-colors"
-                  >
-                    🎬 Seedance 2.0 推广弹窗
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      try {
-                        localStorage.removeItem(SEEDANCE_BANNER_DISMISSED_KEY);
-                      } catch {
-                        // noop
-                      }
-                      window.dispatchEvent(new Event("seedance-banner-reset"));
-                    }}
-                    className="w-full py-1.5 rounded-lg text-[12px] font-medium bg-[var(--color-warning)]/12 text-[var(--color-warning)] hover:bg-[var(--color-warning)]/18 border border-[var(--color-warning)]/30 transition-colors"
-                  >
-                    恢复 Seedance Banner
-                  </button>
+                  {ONBOARDING_CHANNELS.map((ch) => {
+                    const on = connectedChannels.has(ch.id as ChannelId);
+                    return (
+                      <button
+                        key={ch.id}
+                        type="button"
+                        onClick={() => {
+                          const next = new Set(connectedChannels);
+                          if (on) next.delete(ch.id as ChannelId);
+                          else next.add(ch.id as ChannelId);
+                          setConnectedChannels(next);
+                        }}
+                        className="flex w-full items-center gap-2 rounded-md px-1.5 py-1 hover:bg-surface-2 transition-colors"
+                      >
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                          <ch.icon size={14} />
+                        </span>
+                        <span className="flex-1 text-[11px] text-text-secondary text-left">{ch.shortName}</span>
+                        <span
+                          className={`relative inline-flex h-[16px] w-[28px] shrink-0 items-center rounded-full transition-colors ${on ? "bg-[var(--color-brand-primary)]" : "bg-border"}`}
+                        >
+                          <span
+                            className={`inline-block h-3 w-3 transform rounded-full bg-white shadow transition-transform ${on ? "translate-x-3.5" : "translate-x-0.5"}`}
+                          />
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
