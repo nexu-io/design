@@ -1,5 +1,6 @@
 import { Badge, Button, Card, DiscordIcon, FeishuIcon, SlackIcon, TextLink, cn } from "@nexu-design/ui-web";
-import { ArrowUp, ArrowUpRight, FolderOpen, Paperclip, Shield, Sparkles } from "lucide-react";
+import { ArrowUp, ArrowUpRight, ChevronDown, FolderOpen, Paperclip, Settings, Shield, Sparkles } from "lucide-react";
+import { useLocale } from "../../hooks/useLocale";
 import { useNavigate } from "react-router-dom";
 import {
   type BotMessage,
@@ -149,6 +150,7 @@ function MessageBubble({ msg }: { msg: BotMessage }) {
 }
 
 export default function ChannelDetailPage({ channelId }: { channelId: string }) {
+  const { t } = useLocale();
   const channel = getChannel(channelId);
 
   if (!channel) {
@@ -190,24 +192,27 @@ export default function ChannelDetailPage({ channelId }: { channelId: string }) 
 
       {/* Input bar */}
       <div className="shrink-0 px-6 py-4">
-        <Card variant="static" padding="none" className="w-full max-w-[720px] mx-auto">
-          <div className="px-4 pt-3 pb-2">
+        <Card variant="static" padding="none" className="w-full max-w-[640px] mx-auto">
+          <div className="px-4 pt-4 pb-2">
             <textarea
-              rows={2}
-              placeholder="Ask me anything..."
+              rows={3}
+              placeholder={t("ws.home.chatPlaceholder")}
               className="w-full resize-none bg-transparent text-[14px] text-text-primary placeholder:text-text-muted/50 outline-none leading-relaxed"
             />
           </div>
           <div className="flex items-center justify-between px-4 pb-3 pt-1">
             <div className="flex items-center gap-1">
-              <button type="button" className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"><Paperclip size={16} /></button>
-              <button type="button" className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"><Sparkles size={16} /></button>
-            </div>
-            <div className="flex items-center gap-2">
-              <button type="button" className={cn("flex items-center justify-center w-8 h-8 rounded-lg transition-all bg-surface-2 text-text-muted cursor-default")}>
-                <ArrowUp size={16} />
+              <button type="button" className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] font-medium text-text-secondary hover:bg-surface-2 transition-colors">
+                <Sparkles size={14} />
+                <span className="truncate max-w-[120px]">DeepSeek V3.2</span>
+                <ChevronDown size={10} className="text-text-muted" />
               </button>
+              <button type="button" className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"><Paperclip size={16} /></button>
+              <button type="button" className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"><Settings size={16} /></button>
             </div>
+            <button type="button" className="flex items-center justify-center w-8 h-8 rounded-lg transition-all bg-surface-2 text-text-muted cursor-default">
+              <ArrowUp size={16} />
+            </button>
           </div>
         </Card>
       </div>

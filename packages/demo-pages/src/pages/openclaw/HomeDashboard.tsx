@@ -515,7 +515,7 @@ export function HomeDashboard({
 
           {/* Chat thread */}
           {chatMessages.length > 0 && (
-            <div className="w-full max-w-[720px] flex-1 min-h-0 overflow-y-auto space-y-5 px-2 pb-4">
+            <div className="w-full max-w-[640px] flex-1 min-h-0 overflow-y-auto space-y-5 px-2 pb-4">
               {chatMessages.map((msg, i) => {
                 const isBot = msg.role === "bot";
                 return (
@@ -548,7 +548,7 @@ export function HomeDashboard({
 
           {/* ── Compact input — sticky bottom ── */}
           {chatMessages.length > 0 && (
-            <div className="w-full max-w-[720px] shrink-0 px-2 pb-2">
+            <div className="w-full max-w-[640px] shrink-0 px-2 pb-2">
             <Card variant="static" padding="none" className="w-full">
               <div className="px-4 pt-3 pb-2">
                 <textarea
