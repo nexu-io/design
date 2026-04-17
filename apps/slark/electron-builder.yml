@@ -1,5 +1,5 @@
-appId: com.slark.app
-productName: Slark
+appId: com.nexu.app
+productName: Nexu
 directories:
   buildResources: build
 files:

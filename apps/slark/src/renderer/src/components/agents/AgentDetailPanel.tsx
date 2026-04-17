@@ -1,16 +1,16 @@
-import { SlidePanel } from "@/components/layout/SlidePanel";
-import { mockRuntimes } from "@/mock/data";
-import { useAgentsStore } from "@/stores/agents";
-import { usePanelStore } from "@/stores/panel";
-import { cn } from "@nexu-design/ui-web";
-import { ArrowLeft, Bot, Wrench, Zap } from "lucide-react";
+import { ArrowLeft, Bot, Zap, Wrench } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { useAgentsStore } from '@/stores/agents'
+import { usePanelStore } from '@/stores/panel'
+import { mockRuntimes } from '@/mock/data'
+import { SlidePanel } from '@/components/layout/SlidePanel'
 
 export function AgentDetailPanel(): React.ReactElement {
-  const panelData = usePanelStore((s) => s.panelData);
-  const openPanel = usePanelStore((s) => s.openPanel);
-  const agents = useAgentsStore((s) => s.agents);
+  const panelData = usePanelStore((s) => s.panelData)
+  const openPanel = usePanelStore((s) => s.openPanel)
+  const agents = useAgentsStore((s) => s.agents)
 
-  const agent = agents.find((a) => a.id === panelData.agentId);
+  const agent = agents.find((a) => a.id === panelData.agentId)
 
   if (!agent) {
     return (
@@ -19,17 +19,18 @@ export function AgentDetailPanel(): React.ReactElement {
           Agent not found
         </div>
       </SlidePanel>
-    );
+    )
   }
 
-  const runtime = agent.runtimeId ? mockRuntimes.find((r) => r.id === agent.runtimeId) : undefined;
+  const runtime = agent.runtimeId
+    ? mockRuntimes.find((r) => r.id === agent.runtimeId)
+    : undefined
 
   return (
     <SlidePanel title={agent.name}>
       <div className="p-4 space-y-6">
         <button
-          type="button"
-          onClick={() => openPanel("agents")}
+          onClick={() => openPanel('agents')}
           className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-3 w-3" />
@@ -43,10 +44,10 @@ export function AgentDetailPanel(): React.ReactElement {
               <h3 className="font-semibold">{agent.name}</h3>
               <div
                 className={cn(
-                  "flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full",
-                  agent.status === "online" && "bg-slark-online/10 text-slark-online",
-                  agent.status === "busy" && "bg-slark-busy/10 text-slark-busy",
-                  agent.status === "offline" && "bg-slark-offline/10 text-slark-offline",
+                  'flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full',
+                  agent.status === 'online' && 'bg-nexu-online/10 text-nexu-online',
+                  agent.status === 'busy' && 'bg-nexu-busy/10 text-nexu-busy',
+                  agent.status === 'offline' && 'bg-nexu-offline/10 text-nexu-offline'
                 )}
               >
                 <div className="h-1.5 w-1.5 rounded-full bg-current" />
@@ -74,18 +75,13 @@ export function AgentDetailPanel(): React.ReactElement {
           </h4>
           <div className="space-y-1.5">
             {agent.skills.map((skill) => (
-              <div
-                key={skill.id}
-                className="flex items-center gap-2.5 rounded-lg border border-border p-2.5"
-              >
+              <div key={skill.id} className="flex items-center gap-2.5 rounded-lg border border-border p-2.5">
                 <div className="flex h-7 w-7 items-center justify-center rounded-md bg-accent">
                   <Wrench className="h-3.5 w-3.5 text-muted-foreground" />
                 </div>
                 <div className="min-w-0">
                   <div className="text-xs font-medium">{skill.name}</div>
-                  <div className="text-[11px] text-muted-foreground truncate">
-                    {skill.description}
-                  </div>
+                  <div className="text-[11px] text-muted-foreground truncate">{skill.description}</div>
                 </div>
               </div>
             ))}
@@ -101,10 +97,10 @@ export function AgentDetailPanel(): React.ReactElement {
             <div className="flex items-center gap-2.5 rounded-lg border border-border p-2.5">
               <div
                 className={cn(
-                  "h-2.5 w-2.5 rounded-full",
-                  runtime.status === "connected" && "bg-slark-online",
-                  runtime.status === "disconnected" && "bg-slark-offline",
-                  runtime.status === "error" && "bg-destructive",
+                  'h-2.5 w-2.5 rounded-full',
+                  runtime.status === 'connected' && 'bg-nexu-online',
+                  runtime.status === 'disconnected' && 'bg-nexu-offline',
+                  runtime.status === 'error' && 'bg-destructive'
                 )}
               />
               <div>
@@ -118,5 +114,5 @@ export function AgentDetailPanel(): React.ReactElement {
         )}
       </div>
     </SlidePanel>
-  );
+  )
 }

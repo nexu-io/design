@@ -1,15 +1,15 @@
-import { Outlet } from "react-router-dom";
-import { ActivityBar } from "./ActivityBar";
-import { Sidebar } from "./Sidebar";
+import { Outlet } from 'react-router-dom'
+import { ActivityBar } from './ActivityBar'
+import { Sidebar } from './Sidebar'
 
 export function AppLayout(): React.ReactElement {
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-surface-0 text-text-primary">
+    <div className="flex h-screen w-screen overflow-hidden bg-background">
       <ActivityBar />
       <Sidebar />
-      <main className="min-w-0 flex-1 bg-background">
+      <main className="flex-1 min-w-0">
         <Outlet />
       </main>
     </div>
-  );
+  )
 }

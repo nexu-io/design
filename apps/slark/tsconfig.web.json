@@ -1,14 +1,11 @@
 {
   "compilerOptions": {
     "composite": true,
-    "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "rootDir": "../..",
     "outDir": "./out",
     "declaration": true,
     "strict": true,
@@ -17,21 +14,11 @@
     "noUnusedParameters": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/renderer/src/*"],
-      "@nexu-design/ui-web": ["../../packages/ui-web/src/index.ts"],
-      "@nexu-design/tokens": ["../../packages/tokens/src/index.ts"]
+      "@/*": ["./src/renderer/src/*"]
     }
   },
   "include": [
     "src/renderer/src/**/*",
-    "src/renderer/*.d.ts",
-    "../../packages/ui-web/src/**/*",
-    "../../packages/tokens/src/**/*",
-    "../../packages/tokens/src/token-source.json"
-  ],
-  "exclude": [
-    "../../packages/ui-web/src/test/**/*",
-    "../../packages/ui-web/src/**/*.test.ts",
-    "../../packages/ui-web/src/**/*.test.tsx"
+    "src/renderer/*.d.ts"
   ]
 }

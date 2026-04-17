@@ -1,5 +1,5 @@
 {
-  "name": "slark",
+  "name": "nexu",
   "version": "0.1.0",
   "description": "AI-native team IM desktop app",
   "main": "./out/main/index.js",
@@ -7,19 +7,30 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
-    "build:unpack": "pnpm build && electron-builder --dir",
-    "build:mac": "pnpm build && electron-builder --mac",
-    "build:win": "pnpm build && electron-builder --win",
-    "build:linux": "pnpm build && electron-builder --linux"
+    "postinstall": "electron-builder install-app-deps",
+    "build:unpack": "npm run build && electron-builder --dir",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:win": "npm run build && electron-builder --win",
+    "build:linux": "npm run build && electron-builder --linux"
   },
   "dependencies": {
-    "@nexu-design/tokens": "workspace:*",
-    "@nexu-design/ui-web": "workspace:*",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.5.0",
     "zustand": "^5.0.3",
-    "lucide-react": "^0.500.0"
+    "lucide-react": "^0.500.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.2.0",
+    "class-variance-authority": "^0.7.1",
+    "@radix-ui/react-avatar": "^1.1.10",
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-dropdown-menu": "^2.1.14",
+    "@radix-ui/react-scroll-area": "^1.2.8",
+    "@radix-ui/react-separator": "^1.1.7",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tooltip": "^1.2.7",
+    "@radix-ui/react-popover": "^1.1.14",
+    "@radix-ui/react-tabs": "^1.1.12"
   },
   "devDependencies": {
     "@electron-toolkit/preload": "^3.0.1",
