@@ -1,11 +1,37 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Github, Mail, ArrowRight, ArrowLeft, Lock, ShieldCheck } from "lucide-react";
-import { cn } from "@nexu-design/ui-web";
+import {
+  AlertCircle,
+  ArrowLeft,
+  ArrowRight,
+  Github,
+  Lock,
+  Mail,
+  ShieldCheck,
+  Sparkles,
+  Workflow,
+} from "lucide-react";
+import {
+  Alert,
+  AlertDescription,
+  AuthShell,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Separator,
+  cn,
+} from "@nexu-design/ui-web";
+import { TitleBarSpacer } from "@/components/layout/WindowChrome";
+import { SlarkAuthRail } from "./slark-auth-rail";
 
 function GoogleIcon({ className }: { className?: string }): React.ReactElement {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none">
+      <title>Google</title>
       <path
         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
         fill="#4285F4"
@@ -27,6 +53,7 @@ function GoogleIcon({ className }: { className?: string }): React.ReactElement {
 }
 
 type EmailStep = "email" | "verify" | "password";
+const CODE_SLOTS = ["one", "two", "three", "four", "five", "six"] as const;
 
 export function WelcomePage(): React.ReactElement {
   const navigate = useNavigate();
@@ -37,6 +64,8 @@ export function WelcomePage(): React.ReactElement {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
   const codeRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const login = (): void => {
@@ -54,11 +83,27 @@ export function WelcomePage(): React.ReactElement {
   };
 
   useEffect(() => {
-    if (emailStep === "verify" && code.every((d) => d !== "")) {
+    if (emailStep === "verify" && code.every((digit) => digit !== "")) {
       const timer = setTimeout(() => setEmailStep("password"), 300);
       return () => clearTimeout(timer);
     }
   }, [code, emailStep]);
+
+  useEffect(() => {
+    if (view !== "email") return;
+
+    if (emailStep === "email") {
+      emailInputRef.current?.focus();
+      return;
+    }
+
+    if (emailStep === "verify") {
+      codeRefs.current[0]?.focus();
+      return;
+    }
+
+    passwordInputRef.current?.focus();
+  }, [view, emailStep]);
 
   const handleEmailSubmit = (): void => {
     const trimmed = email.trim();
@@ -72,34 +117,38 @@ export function WelcomePage(): React.ReactElement {
   };
 
   const handleCodeChange = (index: number, value: string): void => {
-    if (value.length > 1) value = value.slice(-1);
-    if (value && !/^\d$/.test(value)) return;
+    let nextValue = value;
+    if (nextValue.length > 1) nextValue = nextValue.slice(-1);
+    if (nextValue && !/^\d$/.test(nextValue)) return;
+
     const next = [...code];
-    next[index] = value;
+    next[index] = nextValue;
     setCode(next);
     setError("");
-    if (value && index < 5) {
+
+    if (nextValue && index < 5) {
       codeRefs.current[index + 1]?.focus();
     }
   };
 
-  const handleCodeKeyDown = (index: number, e: React.KeyboardEvent): void => {
-    if (e.key === "Backspace" && !code[index] && index > 0) {
+  const handleCodeKeyDown = (index: number, event: React.KeyboardEvent): void => {
+    if (event.key === "Backspace" && !code[index] && index > 0) {
       codeRefs.current[index - 1]?.focus();
     }
   };
 
-  const handleCodePaste = (e: React.ClipboardEvent): void => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+  const handleCodePaste = (event: React.ClipboardEvent): void => {
+    event.preventDefault();
+    const pasted = event.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
     if (!pasted) return;
+
     const next = [...code];
-    for (let i = 0; i < 6; i++) {
-      next[i] = pasted[i] ?? "";
+    for (let index = 0; index < 6; index += 1) {
+      next[index] = pasted[index] ?? "";
     }
+
     setCode(next);
-    const focusIdx = Math.min(pasted.length, 5);
-    codeRefs.current[focusIdx]?.focus();
+    codeRefs.current[Math.min(pasted.length, 5)]?.focus();
   };
 
   const handlePasswordSubmit = (): void => {
@@ -107,262 +156,311 @@ export function WelcomePage(): React.ReactElement {
       setError("Password must be at least 8 characters");
       return;
     }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
+
     setError("");
     login();
   };
 
+  const panelTitle =
+    view === "buttons"
+      ? "Sign in to Slark"
+      : emailStep === "email"
+        ? "Continue with email"
+        : emailStep === "verify"
+          ? "Check your inbox"
+          : "Create your password";
+
+  const panelDescription =
+    view === "buttons"
+      ? "Choose an auth method to create your workspace and connect your first agents."
+      : emailStep === "email"
+        ? "We’ll send a verification code to your email."
+        : emailStep === "verify"
+          ? "Enter the 6-digit code to finish verifying your account."
+          : "One more step before you enter your workspace.";
+
+  const renderButtonsView = (): React.ReactElement => (
+    <div className="space-y-3">
+      <Button className="w-full justify-center" size="md" onClick={login}>
+        <GoogleIcon className="size-4" />
+        Continue with Google
+      </Button>
+      <Button
+        className="w-full justify-center bg-[#24292f] text-white hover:bg-[#24292f]/90"
+        size="md"
+        onClick={login}
+      >
+        <Github className="size-4" />
+        Continue with GitHub
+      </Button>
+
+      <div className="flex items-center gap-3 py-1">
+        <Separator className="flex-1" />
+        <span className="text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
+          or
+        </span>
+        <Separator className="flex-1" />
+      </div>
+
+      <Button
+        variant="outline"
+        className="w-full justify-center"
+        size="md"
+        onClick={() => setView("email")}
+      >
+        <Mail className="size-4" />
+        Continue with Email
+      </Button>
+    </div>
+  );
+
   const renderEmailFlow = (): React.ReactElement => {
     if (emailStep === "email") {
       return (
-        <>
-          <p className="text-sm text-muted-foreground text-center">
-            Enter your email to get started
-          </p>
-          <div>
-            <div
-              className={cn(
-                "flex items-center gap-2 h-11 rounded-lg border bg-background px-3 transition-shadow focus-within:ring-2",
-                error
-                  ? "border-destructive focus-within:ring-destructive/30"
-                  : "border-input focus-within:ring-ring",
-              )}
-            >
-              <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setError("");
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    handleEmailSubmit();
-                  }
-                }}
-                placeholder="you@company.com"
-                className="flex-1 h-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-                autoFocus
-              />
-            </div>
-            {error && <p className="text-[11px] text-destructive mt-1.5">{error}</p>}
-          </div>
-          <button
+        <div className="space-y-4">
+          <Input
+            ref={emailInputRef}
+            type="email"
+            value={email}
+            invalid={!!error}
+            leadingIcon={<Mail className="size-4" />}
+            placeholder="you@company.com"
+            onChange={(event) => {
+              setEmail(event.target.value);
+              setError("");
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                handleEmailSubmit();
+              }
+            }}
+          />
+
+          {error ? (
+            <Alert variant="destructive">
+              <AlertCircle className="size-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          ) : null}
+
+          <Button
+            className="w-full justify-center"
             onClick={handleEmailSubmit}
             disabled={!email.trim()}
-            className="flex items-center justify-center gap-2 h-11 rounded-lg font-medium transition-colors bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Send verification code
-            <ArrowRight className="h-4 w-4" />
-          </button>
-          <button
+            <ArrowRight className="size-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-center text-text-secondary"
             onClick={resetEmail}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            <span className="flex items-center gap-1 justify-center">
-              <ArrowLeft className="h-3.5 w-3.5" /> Back
-            </span>
-          </button>
-        </>
+            <ArrowLeft className="size-4" />
+            Back
+          </Button>
+        </div>
       );
     }
 
     if (emailStep === "verify") {
       return (
-        <>
-          <div className="text-center">
-            <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-accent mx-auto mb-3">
-              <ShieldCheck className="h-5 w-5 text-muted-foreground" />
+        <div className="space-y-4">
+          <div className="rounded-xl border border-border bg-surface-1 px-4 py-3 text-center">
+            <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle text-brand-primary">
+              <ShieldCheck className="size-5" />
             </div>
-            <p className="text-sm text-muted-foreground">We sent a 6-digit code to</p>
-            <p className="text-sm font-medium mt-0.5">{email}</p>
+            <p className="text-sm text-text-secondary">We sent a 6-digit code to</p>
+            <p className="mt-1 text-sm font-semibold text-text-primary">{email}</p>
           </div>
-          <div>
-            <div className="flex items-center justify-center gap-2">
-              {code.map((digit, i) => (
-                <input
-                  key={i}
-                  ref={(el) => {
-                    codeRefs.current[i] = el;
-                  }}
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={1}
-                  value={digit}
-                  onChange={(e) => handleCodeChange(i, e.target.value)}
-                  onKeyDown={(e) => handleCodeKeyDown(i, e)}
-                  onPaste={i === 0 ? handleCodePaste : undefined}
-                  className={cn(
-                    "w-10 h-12 rounded-lg border bg-background text-center text-lg font-semibold focus:outline-none focus:ring-2 transition-shadow",
-                    error
-                      ? "border-destructive focus:ring-destructive/30"
-                      : "border-input focus:ring-ring",
-                  )}
-                  autoFocus={i === 0}
-                />
-              ))}
-            </div>
-            {error && <p className="text-[11px] text-destructive mt-2 text-center">{error}</p>}
-          </div>
-          <button
+
+          <fieldset
+            className="flex items-center justify-center gap-2"
+            aria-label="Verification code"
+          >
+            {CODE_SLOTS.map((slot, index) => (
+              <input
+                key={slot}
+                ref={(element) => {
+                  codeRefs.current[index] = element;
+                }}
+                type="text"
+                inputMode="numeric"
+                maxLength={1}
+                aria-label={`Digit ${index + 1} of 6`}
+                value={code[index]}
+                onChange={(event) => handleCodeChange(index, event.target.value)}
+                onKeyDown={(event) => handleCodeKeyDown(index, event)}
+                onPaste={index === 0 ? handleCodePaste : undefined}
+                className={cn(
+                  "h-12 w-11 rounded-xl border bg-surface-0 text-center text-lg font-semibold text-text-primary outline-none transition-colors",
+                  error
+                    ? "border-destructive focus:border-destructive focus:ring-2 focus:ring-destructive/20"
+                    : "border-input focus:border-accent focus:ring-2 focus:ring-accent/20",
+                )}
+              />
+            ))}
+          </fieldset>
+
+          {error ? (
+            <Alert variant="destructive">
+              <AlertCircle className="size-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          ) : null}
+
+          <Button
+            className="w-full justify-center"
+            disabled={code.some((digit) => digit === "")}
             onClick={() => {
-              if (code.some((d) => d === "")) {
+              if (code.some((digit) => digit === "")) {
                 setError("Please enter the full code");
                 return;
               }
+
               setError("");
               setEmailStep("password");
             }}
-            disabled={code.some((d) => d === "")}
-            className="flex items-center justify-center gap-2 h-11 rounded-lg font-medium transition-colors bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Verify
-            <ArrowRight className="h-4 w-4" />
-          </button>
-          <button
+            <ArrowRight className="size-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-center text-text-secondary"
             onClick={() => {
               setEmailStep("email");
               setCode(["", "", "", "", "", ""]);
               setError("");
             }}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            <span className="flex items-center gap-1 justify-center">
-              <ArrowLeft className="h-3.5 w-3.5" /> Change email
-            </span>
-          </button>
-        </>
+            <ArrowLeft className="size-4" />
+            Change email
+          </Button>
+        </div>
       );
     }
 
     return (
-      <>
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground">
-            Set a password for <span className="font-medium text-foreground">{email}</span>
-          </p>
-        </div>
-        <div className="space-y-3">
-          <div
-            className={cn(
-              "flex items-center gap-2 h-11 rounded-lg border bg-background px-3 transition-shadow focus-within:ring-2",
-              error
-                ? "border-destructive focus-within:ring-destructive/30"
-                : "border-input focus-within:ring-ring",
-            )}
-          >
-            <Lock className="h-4 w-4 text-muted-foreground shrink-0" />
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setError("");
-              }}
-              placeholder="Password (min 8 characters)"
-              className="flex-1 h-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-              autoFocus
-            />
-          </div>
-          <div
-            className={cn(
-              "flex items-center gap-2 h-11 rounded-lg border bg-background px-3 transition-shadow focus-within:ring-2",
-              error && error.includes("match")
-                ? "border-destructive focus-within:ring-destructive/30"
-                : "border-input focus-within:ring-ring",
-            )}
-          >
-            <Lock className="h-4 w-4 text-muted-foreground shrink-0" />
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => {
-                setConfirmPassword(e.target.value);
-                setError("");
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handlePasswordSubmit();
-                }
-              }}
-              placeholder="Confirm password"
-              className="flex-1 h-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-            />
-          </div>
-          {error && <p className="text-[11px] text-destructive">{error}</p>}
-        </div>
-        <button
+      <div className="space-y-4">
+        <Input
+          ref={passwordInputRef}
+          type="password"
+          value={password}
+          invalid={!!error && !error.includes("match")}
+          leadingIcon={<Lock className="size-4" />}
+          placeholder="Password (min 8 characters)"
+          onChange={(event) => {
+            setPassword(event.target.value);
+            setError("");
+          }}
+        />
+        <Input
+          type="password"
+          value={confirmPassword}
+          invalid={!!error && error.includes("match")}
+          leadingIcon={<Lock className="size-4" />}
+          placeholder="Confirm password"
+          onChange={(event) => {
+            setConfirmPassword(event.target.value);
+            setError("");
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              handlePasswordSubmit();
+            }
+          }}
+        />
+
+        {error ? (
+          <Alert variant="destructive">
+            <AlertCircle className="size-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        ) : null}
+
+        <Button
+          className="w-full justify-center"
           onClick={handlePasswordSubmit}
           disabled={!password || !confirmPassword}
-          className="flex items-center justify-center gap-2 h-11 rounded-lg font-medium transition-colors bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Create account
-          <ArrowRight className="h-4 w-4" />
-        </button>
-        <button
+          <ArrowRight className="size-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          className="w-full justify-center text-text-secondary"
           onClick={() => {
             setEmailStep("verify");
             setPassword("");
             setConfirmPassword("");
             setError("");
           }}
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          <span className="flex items-center gap-1 justify-center">
-            <ArrowLeft className="h-3.5 w-3.5" /> Back
-          </span>
-        </button>
-      </>
+          <ArrowLeft className="size-4" />
+          Back
+        </Button>
+      </div>
     );
   };
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-background">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_oklch(0.85_0.05_260)_0%,_transparent_70%)] dark:bg-[radial-gradient(ellipse_at_center,_oklch(0.25_0.05_260)_0%,_transparent_70%)] opacity-40" />
-      <div className="relative z-10 flex flex-col items-center gap-8 px-8">
-        <h1 className="text-4xl font-bold tracking-tight">Slark</h1>
-        <p className="text-sm text-muted-foreground/70 font-medium tracking-wide uppercase">
-          The Open-source Managed Agent Workspace
-        </p>
-        <p className="text-lg text-muted-foreground max-w-md text-center -mt-4">
-          Slack for the Agent Era, built for human &amp; agent collaboration.
-        </p>
-
-        <div className="flex flex-col gap-3 w-80 mt-4">
-          {view === "buttons" ? (
-            <>
-              <button
-                onClick={login}
-                className="flex items-center justify-center gap-3 h-11 rounded-lg font-medium transition-colors border border-border bg-background text-foreground hover:bg-accent"
-              >
-                <GoogleIcon className="h-4 w-4" />
-                Continue with Google
-              </button>
-              <button
-                onClick={login}
-                className="flex items-center justify-center gap-3 h-11 rounded-lg font-medium transition-colors bg-[#24292f] text-white hover:bg-[#24292f]/90"
-              >
-                <Github className="h-4 w-4" />
-                Continue with GitHub
-              </button>
-              <button
-                onClick={() => setView("email")}
-                className="flex items-center justify-center gap-3 h-11 rounded-lg font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-secondary/80"
-              >
-                <Mail className="h-4 w-4" />
-                Continue with Email
-              </button>
-            </>
-          ) : (
-            renderEmailFlow()
-          )}
-        </div>
+    <div className="flex h-screen flex-col bg-background">
+      <TitleBarSpacer />
+      <div className="min-h-0 flex-1">
+        <AuthShell
+          className="h-full min-h-full"
+          rail={
+            <SlarkAuthRail
+              title={
+                <>
+                  Sign in once.
+                  <br />
+                  Start shipping.
+                </>
+              }
+              description="Bring your workspace, connected runtimes, and agent teammates into one desktop flow with consistent shells and safer defaults."
+              highlights={[
+                {
+                  icon: Sparkles,
+                  text: "Move from sign-in to onboarding without leaving the shared product shell.",
+                },
+                {
+                  icon: Workflow,
+                  text: "Create a workspace, connect runtimes, and launch your first agent in one pass.",
+                },
+                {
+                  icon: ShieldCheck,
+                  text: "Keep trust cues visible while verification and invite flows stay clear and guided.",
+                },
+              ]}
+            />
+          }
+          contentInnerClassName="max-w-[420px]"
+        >
+          <Card
+            variant="static"
+            padding="lg"
+            className="rounded-2xl border-border bg-surface-1 shadow-card"
+          >
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl text-text-primary">{panelTitle}</CardTitle>
+              <CardDescription className="text-sm text-text-secondary">
+                {panelDescription}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {view === "buttons" ? renderButtonsView() : renderEmailFlow()}
+            </CardContent>
+          </Card>
+        </AuthShell>
       </div>
     </div>
   );

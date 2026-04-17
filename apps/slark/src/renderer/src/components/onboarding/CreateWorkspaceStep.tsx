@@ -1,23 +1,31 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Building2, Mail, Send, Check } from "lucide-react";
-import { cn } from "@nexu-design/ui-web";
+import { ArrowRight, Building2, Check, Mail, Send } from "lucide-react";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  FormField,
+  Input,
+} from "@nexu-design/ui-web";
 import { useWorkspaceStore } from "@/stores/workspace";
 
 export function CreateWorkspaceStep(): React.ReactElement {
   const navigate = useNavigate();
-  const setWorkspace = useWorkspaceStore((s) => s.setWorkspace);
+  const setWorkspace = useWorkspaceStore((state) => state.setWorkspace);
   const [name, setName] = useState("");
   const [invitedEmails, setInvitedEmails] = useState<string[]>([]);
   const [emailInput, setEmailInput] = useState("");
   const [emailError, setEmailError] = useState("");
-  const emailRef = useRef<HTMLInputElement>(null);
   const errorTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   const isValidEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const showError = (msg: string): void => {
-    setEmailError(msg);
+  const showError = (message: string): void => {
+    setEmailError(message);
     if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
     errorTimerRef.current = setTimeout(() => setEmailError(""), 3000);
   };
@@ -25,122 +33,121 @@ export function CreateWorkspaceStep(): React.ReactElement {
   const addEmail = (): void => {
     const email = emailInput.trim();
     if (!email) return;
+
     if (!isValidEmail(email)) {
       showError("Please enter a valid email address");
       return;
     }
+
     if (invitedEmails.includes(email)) {
       showError("This email has already been added");
       return;
     }
-    setInvitedEmails((prev) => [...prev, email]);
+
+    setInvitedEmails((previous) => [...previous, email]);
     setEmailInput("");
     setEmailError("");
   };
 
-  const handleEmailKeyDown = (e: React.KeyboardEvent): void => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addEmail();
-    }
-  };
-
   const handleContinue = (): void => {
     if (!name.trim()) return;
+
     setWorkspace({
       id: `ws-${Date.now()}`,
       name: name.trim(),
       createdAt: Date.now(),
     });
+
     navigate("/onboarding/runtime");
   };
 
   return (
-    <div className="flex flex-col items-center gap-6 pt-10">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent">
-        <Building2 className="h-7 w-7 text-muted-foreground" />
-      </div>
-      <div className="text-center">
-        <h2 className="text-2xl font-semibold">Create your workspace</h2>
-        <p className="text-muted-foreground mt-2">Set up your team space and invite colleagues</p>
-      </div>
-
-      <div className="w-full max-w-sm space-y-5">
-        <div>
-          <label className="text-sm font-medium mb-1.5 block">Workspace name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Acme Engineering"
-            className="w-full h-10 rounded-lg border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-            autoFocus
-          />
+    <Card
+      variant="static"
+      padding="lg"
+      className="rounded-2xl border-border bg-surface-1 shadow-card"
+    >
+      <CardHeader className="items-center text-center">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-subtle text-brand-primary">
+          <Building2 className="size-7" />
         </div>
+        <div className="space-y-1">
+          <CardTitle className="text-2xl text-text-primary">Create your workspace</CardTitle>
+          <CardDescription className="text-sm text-text-secondary">
+            Set up your team space, then send the first round of invites.
+          </CardDescription>
+        </div>
+      </CardHeader>
 
-        <div>
-          <label className="text-sm font-medium mb-1.5 block">Invite Members</label>
-          <div className="flex items-center gap-2">
-            <div
-              className={cn(
-                "flex-1 flex items-center gap-2 h-10 rounded-lg border bg-background px-3 transition-shadow focus-within:ring-2",
-                emailError
-                  ? "border-destructive focus-within:ring-destructive/30"
-                  : "border-input focus-within:ring-ring",
-              )}
-            >
-              <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-              <input
-                ref={emailRef}
+      <CardContent className="space-y-5">
+        <FormField
+          label="Workspace name"
+          description="You can rename it later from Workspace settings."
+        >
+          <Input
+            autoComplete="organization"
+            value={name}
+            placeholder="e.g. Acme Engineering"
+            onChange={(event) => setName(event.target.value)}
+          />
+        </FormField>
+
+        <div className="space-y-3 rounded-xl border border-border bg-surface-0 p-4">
+          <FormField
+            label="Invite teammates"
+            description="Optional for now — invitations are sent as soon as you add them."
+            error={emailError}
+            invalid={!!emailError}
+          >
+            <div className="flex items-start gap-2">
+              <Input
                 type="email"
                 value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-                onKeyDown={handleEmailKeyDown}
+                invalid={!!emailError}
+                leadingIcon={<Mail className="size-4" />}
                 placeholder="colleague@company.com"
-                className="flex-1 h-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                onChange={(event) => setEmailInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    addEmail();
+                  }
+                }}
               />
+              <Button variant="outline" onClick={addEmail} disabled={!emailInput.trim()}>
+                <Send className="size-4" />
+                Invite
+              </Button>
             </div>
-            <button
-              onClick={addEmail}
-              disabled={!emailInput.trim()}
-              className="flex items-center gap-1.5 h-10 px-4 rounded-lg bg-foreground text-background text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-foreground/90 transition-colors shrink-0"
-            >
-              <Send className="h-3.5 w-3.5" />
-              Invite
-            </button>
-          </div>
-          {emailError && (
-            <p className="text-[11px] text-destructive-foreground mt-1.5">{emailError}</p>
-          )}
-
-          {invitedEmails.length > 0 && (
-            <div className="mt-3 space-y-1">
+          </FormField>
+          {invitedEmails.length > 0 ? (
+            <div className="space-y-2">
               {invitedEmails.map((email) => (
                 <div
                   key={email}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-border"
+                  className="flex items-center gap-3 rounded-xl border border-border bg-surface-1 px-4 py-3"
                 >
-                  <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium truncate">{email}</div>
-                    <div className="text-xs text-muted-foreground">Invitation sent</div>
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-subtle text-brand-primary">
+                    <Mail className="size-4" />
                   </div>
-                  <Check className="h-3.5 w-3.5 text-slark-online shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-sm font-medium text-text-primary">{email}</div>
+                    <div className="text-xs text-text-secondary">Invitation queued</div>
+                  </div>
+                  <Check className="size-4 text-success" strokeWidth={3} />
                 </div>
               ))}
             </div>
-          )}
+          ) : null}
         </div>
-      </div>
 
-      <button
-        onClick={handleContinue}
-        disabled={!name.trim()}
-        className="flex items-center gap-2 h-11 px-6 rounded-lg bg-foreground text-background font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-foreground/90 transition-colors mt-2"
-      >
-        Continue
-        <ArrowRight className="h-4 w-4" />
-      </button>
-    </div>
+        <div className="flex justify-end gap-2">
+          <Button onClick={handleContinue} disabled={!name.trim()}>
+            Continue
+            <ArrowRight className="size-4" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

@@ -229,28 +229,28 @@
 - `components/invite/*`
 
 ### 6.1 可迁移部分
-- [ ] 外层欢迎/认证框架改为 `AuthShell` + `BrandRail`
-- [ ] 按钮改为 `Button`
-- [ ] 表单改为 `FormField + Input`
-- [ ] 错误提示改为 `Alert` / `FormField.error`
-- [ ] 内容容器改为 `Card`
+- [x] 外层欢迎/认证框架改为 `AuthShell` + `BrandRail`
+- [x] 按钮改为 `Button`
+- [x] 表单改为 `FormField + Input`
+- [x] 错误提示改为 `Alert` / `FormField.error`
+- [x] 内容容器改为 `Card`
 
 ### 6.2 保留项
-- [ ] 验证码 6 格输入先保留现有实现
+- [x] 验证码 6 格输入先保留现有实现
 
 ### 6.3 Stepper 评估
-- [ ] 评估 `ui-web` `Stepper` 是否适合 route-driven onboarding
-- [ ] 如果适合，则迁移 step indicator
-- [ ] 如果不适合，则保留当前步骤流，只迁移 shell / 表单 / CTA
+- [x] 评估 `ui-web` `Stepper` 是否适合 route-driven onboarding
+- [x] 如果适合，则迁移 step indicator
+- [x] 结论：`Stepper` 可承接当前 route-driven onboarding；保留 route 切换逻辑，仅替换步骤指示 UI
 
 ### 6.4 Invite 页面
-- [ ] 对齐同一套 shell 和卡片语言
-- [ ] 不再使用独立手写按钮/输入视觉
+- [x] 对齐同一套 shell 和卡片语言
+- [x] 不再使用独立手写按钮/输入视觉
 
 ### 6.5 阶段验收
-- [ ] WelcomePage 正常打开
-- [ ] 输入与前进/返回正常
-- [ ] invite 页面正常打开
+- [x] WelcomePage 正常打开
+- [x] 输入与前进/返回正常
+- [x] invite 页面正常打开
 
 ---
 

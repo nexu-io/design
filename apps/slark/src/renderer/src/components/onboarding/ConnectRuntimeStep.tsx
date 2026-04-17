@@ -1,7 +1,18 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Check, X, Loader2, Search, AlertTriangle } from "lucide-react";
-import { cn } from "@nexu-design/ui-web";
+import { AlertTriangle, ArrowRight, Check, Loader2, Search, X } from "lucide-react";
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Progress,
+  cn,
+} from "@nexu-design/ui-web";
 import { useRuntimesStore } from "@/stores/runtimes";
 import type { Runtime } from "@/types";
 
@@ -31,7 +42,7 @@ const STAGGER_DELAY = 400;
 
 export function ConnectRuntimeStep(): React.ReactElement {
   const navigate = useNavigate();
-  const setGlobalRuntimes = useRuntimesStore((s) => s.setRuntimes);
+  const setGlobalRuntimes = useRuntimesStore((state) => state.setRuntimes);
   const [phase, setPhase] = useState<"scanning" | "done">("scanning");
   const [scanProgress, setScanProgress] = useState(0);
   const [runtimes, setRuntimes] = useState<DetectedRuntime[]>([
@@ -68,6 +79,7 @@ export function ConnectRuntimeStep(): React.ReactElement {
 
     let revealedCount = 0;
     let finished = false;
+
     const finishScan = (): void => {
       if (finished) return;
       finished = true;
@@ -76,20 +88,22 @@ export function ConnectRuntimeStep(): React.ReactElement {
       setScanProgress(1);
     };
 
-    const timers = mockResults.map(({ index, version, path, error }, i) =>
+    const timers = mockResults.map(({ index, version, path, error }, offset) =>
       setTimeout(
         () => {
-          setRuntimes((prev) =>
-            prev.map((rt, j) =>
-              j === index ? { ...rt, detected: true, version, path, error } : rt,
+          setRuntimes((previous) =>
+            previous.map((runtime, runtimeIndex) =>
+              runtimeIndex === index
+                ? { ...runtime, detected: true, version, path, error }
+                : runtime,
             ),
           );
-          revealedCount++;
+          revealedCount += 1;
           if (revealedCount === mockResults.length) {
             setTimeout(finishScan, 400);
           }
         },
-        STAGGER_DELAY * (i + 2),
+        STAGGER_DELAY * (offset + 2),
       ),
     );
 
@@ -104,150 +118,177 @@ export function ConnectRuntimeStep(): React.ReactElement {
 
   useEffect(() => {
     if (phase === "done") {
-      const workingTypes = runtimes.filter((r) => r.detected && !r.error).map((r) => r.type);
+      const workingTypes = runtimes
+        .filter((runtime) => runtime.detected && !runtime.error)
+        .map((runtime) => runtime.type);
       setSelected(new Set(workingTypes));
     }
   }, [phase, runtimes]);
 
   const toggleSelect = (type: string): void => {
-    const rt = runtimes.find((r) => r.type === type);
-    if (!rt?.detected || rt.error) return;
-    setSelected((prev) => {
-      const next = new Set(prev);
+    const runtime = runtimes.find((item) => item.type === type);
+    if (!runtime?.detected || runtime.error) return;
+
+    setSelected((previous) => {
+      const next = new Set(previous);
       if (next.has(type)) next.delete(type);
       else next.add(type);
       return next;
     });
   };
 
-  const errorCount = runtimes.filter((r) => r.detected && r.error).length;
-  const detectedCount = runtimes.filter((r) => r.detected).length;
+  const errorCount = runtimes.filter((runtime) => runtime.detected && runtime.error).length;
+  const detectedCount = runtimes.filter((runtime) => runtime.detected).length;
 
   return (
-    <div className="flex flex-col items-center gap-6 pt-8">
-      <div className="text-center max-w-lg">
-        <h2 className="text-2xl font-semibold">
-          {phase === "scanning" ? "Detecting Runtimes..." : "Runtimes Detected"}
-        </h2>
-        <p className="text-muted-foreground mt-2">
+    <Card
+      variant="static"
+      padding="lg"
+      className="rounded-2xl border-border bg-surface-1 shadow-card"
+    >
+      <CardHeader className="text-center">
+        <CardTitle className="text-2xl text-text-primary">
+          {phase === "scanning" ? "Detecting runtimes" : "Review detected runtimes"}
+        </CardTitle>
+        <CardDescription className="text-sm text-text-secondary">
           {phase === "scanning"
-            ? "Scanning your system for installed AI runtimes"
-            : `Found ${detectedCount} runtime${detectedCount !== 1 ? "s" : ""} on your system${errorCount > 0 ? ` · ${errorCount} need attention` : ""}`}
-        </p>
-        <p className="text-xs text-muted-foreground/70 mt-3 leading-relaxed">
-          Runtimes power your Agents — each agent connects to a runtime to execute tasks.
-          <br />
-          Once set up, you can @mention agents in chat to assign work, just like messaging a
-          teammate.
-        </p>
-      </div>
+            ? "Scanning your machine for compatible AI runtimes."
+            : `Found ${detectedCount} runtime${detectedCount !== 1 ? "s" : ""}${errorCount > 0 ? ` • ${errorCount} need attention` : ""}.`}
+        </CardDescription>
+      </CardHeader>
 
-      <div className="w-full max-w-2xl h-10">
-        {phase === "scanning" && (
-          <>
-            <div className="flex items-center gap-2 mb-3">
-              <Search className="h-4 w-4 text-muted-foreground animate-pulse" />
-              <span className="text-sm text-muted-foreground">
-                Checking PATH and common install locations...
-              </span>
+      <CardContent className="space-y-5">
+        <Alert>
+          <Search className="size-4" />
+          <AlertDescription>
+            Runtimes power your agents. Choose the ones Slark should use when you mention or assign
+            work.
+          </AlertDescription>
+        </Alert>
+
+        {phase === "scanning" ? (
+          <div className="space-y-3 rounded-xl border border-border bg-surface-0 p-4">
+            <div className="flex items-center gap-2 text-sm text-text-secondary">
+              <Loader2 className="size-4 animate-spin" />
+              Checking PATH and common install locations…
             </div>
-            <div className="h-1 w-full rounded-full bg-secondary overflow-hidden">
-              <div
-                className="h-full bg-foreground/60 rounded-full transition-all duration-100"
-                style={{ width: `${scanProgress * 100}%` }}
-              />
-            </div>
-          </>
-        )}
-      </div>
+            <Progress value={scanProgress * 100} />
+          </div>
+        ) : null}
 
-      <div className="grid grid-cols-4 gap-3 w-full max-w-2xl">
-        {runtimes.map(({ type, name, desc, detected, version, path, error }) => {
-          const isSelected = selected.has(type);
-          const isScanning = phase === "scanning" && !detected;
-          const isError = detected && !!error;
-          const isWorking = detected && !error;
-          const brand = RUNTIME_BRANDS[type];
-          return (
-            <button
-              key={type}
-              onClick={() => phase === "done" && toggleSelect(type)}
-              disabled={phase === "scanning" || !isWorking}
-              className={cn(
-                "flex flex-col items-start gap-2 p-4 rounded-xl border transition-all text-left relative min-h-[120px]",
-                isWorking && isSelected
-                  ? "border-foreground bg-accent"
-                  : isWorking && !isSelected
-                    ? "border-border hover:border-muted-foreground/50"
-                    : isError
-                      ? "border-amber-500/40 bg-amber-500/5 opacity-80"
-                      : "border-border/50 opacity-50",
-              )}
-            >
-              <div className="flex items-center justify-between w-full">
-                <div
-                  className="h-6 w-6 rounded-md flex items-center justify-center text-[10px] font-bold text-white shrink-0"
-                  style={{ backgroundColor: brand?.color ?? "#666" }}
-                >
-                  {brand?.label ?? "?"}
-                </div>
-                {isWorking && <Check className="h-3 w-3 text-slark-online" />}
-                {isError && <AlertTriangle className="h-3 w-3 text-amber-500" />}
-                {phase === "done" && !detected && <X className="h-3 w-3 text-muted-foreground" />}
-                {isScanning && <Loader2 className="h-3 w-3 text-muted-foreground animate-spin" />}
-              </div>
-              <div>
-                <div className="font-medium text-sm">{name}</div>
-                <div className="text-xs text-muted-foreground">{desc}</div>
-              </div>
-              {isWorking && (
-                <div className="text-[11px] text-muted-foreground truncate w-full">
-                  v{version} · {path}
-                </div>
-              )}
-              {isError && (
-                <div className="text-[11px] text-amber-500 w-full leading-tight">
-                  v{version} · {error}
-                </div>
-              )}
-              {phase === "done" && !detected && (
-                <div className="text-[11px] text-muted-foreground">Not found</div>
-              )}
-            </button>
-          );
-        })}
-      </div>
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {runtimes.map(({ type, name, desc, detected, version, path, error }) => {
+            const isSelected = selected.has(type);
+            const isError = detected && !!error;
+            const isWorking = detected && !error;
+            const brand = RUNTIME_BRANDS[type];
 
-      <div className="flex items-center gap-3 mt-4">
-        <button
-          onClick={() => navigate("/onboarding/agent")}
-          className="h-10 px-5 rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Skip for now
-        </button>
-        <button
-          onClick={() => {
-            const selectedRuntimes: Runtime[] = runtimes
-              .filter((r) => r.detected && !r.error && selected.has(r.type))
-              .map((r) => ({
-                id: `rt-${r.type}`,
-                name: r.name,
-                type: r.type as Runtime["type"],
-                status: "connected" as const,
-                version: r.version,
-                config: r.path ? { path: r.path } : {},
-                ownerId: "u-1",
-              }));
-            setGlobalRuntimes(selectedRuntimes);
-            navigate("/onboarding/agent");
-          }}
-          disabled={phase === "scanning" || selected.size === 0}
-          className="flex items-center gap-2 h-10 px-5 rounded-lg bg-foreground text-background text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-foreground/90 transition-colors"
-        >
-          Continue with {selected.size} runtime{selected.size !== 1 ? "s" : ""}
-          <ArrowRight className="h-4 w-4" />
-        </button>
-      </div>
-    </div>
+            return (
+              <button
+                key={type}
+                type="button"
+                onClick={() => phase === "done" && toggleSelect(type)}
+                disabled={phase === "scanning" || !isWorking}
+                className={cn(
+                  "flex min-h-[152px] flex-col items-start gap-3 rounded-2xl border p-4 text-left transition-colors",
+                  isWorking && isSelected
+                    ? "border-accent bg-accent/5"
+                    : isWorking
+                      ? "border-border bg-surface-0 hover:bg-surface-2"
+                      : isError
+                        ? "border-warning/30 bg-warning-subtle/20"
+                        : "border-border/60 bg-surface-0 opacity-60",
+                )}
+              >
+                <div className="flex w-full items-center justify-between gap-2">
+                  <div
+                    className="flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold text-white"
+                    style={{ backgroundColor: brand?.color ?? "#666" }}
+                  >
+                    {brand?.label ?? "?"}
+                  </div>
+
+                  {isWorking ? (
+                    <Check
+                      className={cn(
+                        "size-4 shrink-0",
+                        isSelected ? "text-text-primary" : "text-success",
+                      )}
+                      strokeWidth={3}
+                    />
+                  ) : isError ? (
+                    <AlertTriangle className="size-4 shrink-0 text-warning" />
+                  ) : phase === "done" ? (
+                    <X className="size-4 shrink-0 text-text-muted" />
+                  ) : (
+                    <Loader2 className="size-4 shrink-0 animate-spin text-text-muted" />
+                  )}
+                </div>
+
+                <div className="space-y-1">
+                  <div className="text-sm font-semibold text-text-primary">{name}</div>
+                  <div className="text-xs leading-relaxed text-text-secondary">{desc}</div>
+                </div>
+
+                {isWorking ? (
+                  <div className="mt-auto text-xs text-text-tertiary">
+                    v{version} • {path}
+                  </div>
+                ) : null}
+
+                {isError ? (
+                  <div className="mt-auto text-xs leading-relaxed text-warning">
+                    v{version} • {error}
+                  </div>
+                ) : null}
+
+                {phase === "done" && !detected ? (
+                  <div className="mt-auto text-xs text-text-tertiary">Not found</div>
+                ) : null}
+              </button>
+            );
+          })}
+        </div>
+
+        {errorCount > 0 && phase === "done" ? (
+          <Alert variant="warning">
+            <AlertTriangle className="size-4" />
+            <AlertDescription>
+              Some runtimes were detected but need attention before they can be selected.
+            </AlertDescription>
+          </Alert>
+        ) : null}
+
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" onClick={() => navigate("/onboarding/agent")}>
+            Skip for now
+          </Button>
+          <Button
+            onClick={() => {
+              const selectedRuntimes: Runtime[] = runtimes
+                .filter(
+                  (runtime) => runtime.detected && !runtime.error && selected.has(runtime.type),
+                )
+                .map((runtime) => ({
+                  id: `rt-${runtime.type}`,
+                  name: runtime.name,
+                  type: runtime.type as Runtime["type"],
+                  status: "connected" as const,
+                  version: runtime.version,
+                  config: runtime.path ? { path: runtime.path } : {},
+                  ownerId: "u-1",
+                }));
+
+              setGlobalRuntimes(selectedRuntimes);
+              navigate("/onboarding/agent");
+            }}
+            disabled={phase === "scanning" || selected.size === 0}
+          >
+            Continue with {selected.size} runtime{selected.size !== 1 ? "s" : ""}
+            <ArrowRight className="size-4" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
