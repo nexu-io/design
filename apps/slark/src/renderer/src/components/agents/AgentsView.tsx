@@ -3,6 +3,7 @@ import { Bot } from "lucide-react";
 import { cn } from "@nexu-design/ui-web";
 import { useAgentsStore } from "@/stores/agents";
 import { mockRuntimes } from "@/mock/data";
+import { TitleBarSpacer } from "@/components/layout/WindowChrome";
 import { AgentDetail } from "./AgentDetail";
 
 export function AgentsView(): React.ReactElement {
@@ -33,7 +34,7 @@ export function AgentsView(): React.ReactElement {
 
   return (
     <div className="p-6">
-      <div className="drag-region h-10" />
+      <TitleBarSpacer />
       <h1 className="text-xl font-semibold mb-6">Agents</h1>
       <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
         {agents.map((agent) => {

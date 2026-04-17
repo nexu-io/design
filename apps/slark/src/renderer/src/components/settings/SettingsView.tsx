@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 
 import { mockUsers } from "@/mock/data";
+import { TitleBarSpacer } from "@/components/layout/WindowChrome";
 import { useThemeStore } from "@/stores/theme";
 import { useWorkspaceStore } from "@/stores/workspace";
 
@@ -135,7 +136,7 @@ export function SettingsView(): ReactElement {
   return (
     <div className="h-full overflow-y-auto">
       <div className="max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
-        <div className="drag-region h-10" />
+        <TitleBarSpacer />
 
         <PageHeader
           density="shell"

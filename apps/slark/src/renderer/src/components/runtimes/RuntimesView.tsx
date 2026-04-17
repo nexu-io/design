@@ -19,6 +19,7 @@ import {
   RotateCw,
 } from "lucide-react";
 import { cn } from "@nexu-design/ui-web";
+import { TitleBarSpacer } from "@/components/layout/WindowChrome";
 import { useRuntimesStore } from "@/stores/runtimes";
 import { useAgentsStore } from "@/stores/agents";
 import type { Runtime } from "@/types";
@@ -346,7 +347,7 @@ export function RuntimesView(): ReactElement {
   if (!rt) {
     return (
       <div className="flex h-full flex-col">
-        <div className="drag-region h-10 shrink-0" />
+        <TitleBarSpacer />
         <div className="flex flex-1 items-center justify-center">
           <div className="flex flex-col items-center gap-3 text-muted-foreground">
             <Wifi className="h-10 w-10" />
@@ -365,7 +366,7 @@ export function RuntimesView(): ReactElement {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="drag-region h-10 shrink-0" />
+      <TitleBarSpacer />
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-6 pb-8 space-y-6">
           <div className="flex items-center justify-between">

@@ -32,6 +32,7 @@ import {
 import { useChatStore } from "@/stores/chat";
 import { useAgentsStore } from "@/stores/agents";
 import { mockRuntimes } from "@/mock/data";
+import { TitleBarSpacer } from "@/components/layout/WindowChrome";
 import { RuntimePicker } from "./RuntimePicker";
 import type { Agent, Channel } from "@/types";
 
@@ -79,7 +80,7 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="drag-region h-10 shrink-0" />
+      <TitleBarSpacer />
 
       <div className="flex items-center gap-3 px-5 h-12 border-b border-border shrink-0">
         <Bot className="h-4 w-4 text-muted-foreground shrink-0" />

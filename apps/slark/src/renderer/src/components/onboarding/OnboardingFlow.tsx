@@ -1,6 +1,7 @@
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Check } from "lucide-react";
 import { cn } from "@nexu-design/ui-web";
+import { TitleBarSpacer } from "@/components/layout/WindowChrome";
 import { CreateWorkspaceStep } from "./CreateWorkspaceStep";
 import { ConnectRuntimeStep } from "./ConnectRuntimeStep";
 import { CreateAgentStep } from "./CreateAgentStep";
@@ -17,7 +18,7 @@ export function OnboardingFlow(): React.ReactElement {
 
   return (
     <div className="flex h-screen w-screen flex-col items-center bg-background">
-      <div className="drag-region h-10 w-full shrink-0" />
+      <TitleBarSpacer />
       <div className="flex items-center gap-2 py-6">
         {steps.map((step, i) => (
           <div key={step.path} className="flex items-center gap-2">
