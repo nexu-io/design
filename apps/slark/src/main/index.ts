@@ -1,35 +1,36 @@
-import { app, shell, BrowserWindow } from 'electron'
-import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { join } from "node:path";
+import { electronApp, is, optimizer } from "@electron-toolkit/utils";
+import { BrowserWindow, app, shell } from "electron";
 
-const PROTOCOL = 'slark'
+const PROTOCOL = "slark";
 
-app.disableHardwareAcceleration()
+app.disableHardwareAcceleration();
 
 if (process.defaultApp) {
   if (process.argv.length >= 2) {
-    app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, [process.argv[1]])
+    app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, [process.argv[1]]);
   }
 } else {
-  app.setAsDefaultProtocolClient(PROTOCOL)
+  app.setAsDefaultProtocolClient(PROTOCOL);
 }
 
 function getMainWindow(): BrowserWindow | undefined {
-  return BrowserWindow.getAllWindows()[0]
+  return BrowserWindow.getAllWindows()[0];
 }
 
 function handleDeepLink(url: string): void {
-  const win = getMainWindow()
-  if (!win) return
+  const win = getMainWindow();
+  if (!win) return;
 
-  if (win.isMinimized()) win.restore()
-  win.focus()
+  if (win.isMinimized()) win.restore();
+  win.focus();
 
-  const parsed = new URL(url)
-  if (parsed.hostname === 'join' || parsed.pathname.startsWith('/join')) {
-    const token = parsed.pathname.replace(/^\/?(join\/?)?/, '') || parsed.searchParams.get('token') || ''
+  const parsed = new URL(url);
+  if (parsed.hostname === "join" || parsed.pathname.startsWith("/join")) {
+    const token =
+      parsed.pathname.replace(/^\/?(join\/?)?/, "") || parsed.searchParams.get("token") || "";
     if (token) {
-      win.webContents.send('deep-link:join', token)
+      win.webContents.send("deep-link:join", token);
     }
   }
 }
@@ -41,61 +42,61 @@ function createWindow(): void {
     minWidth: 960,
     minHeight: 600,
     show: false,
-    titleBarStyle: 'hiddenInset',
+    titleBarStyle: "hiddenInset",
     trafficLightPosition: { x: 16, y: 14 },
-    backgroundColor: '#09090b',
+    backgroundColor: "#09090b",
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
-    }
-  })
+      preload: join(__dirname, "../preload/index.js"),
+      sandbox: false,
+    },
+  });
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
-  })
+  mainWindow.on("ready-to-show", () => {
+    mainWindow.show();
+  });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
-    return { action: 'deny' }
-  })
+    shell.openExternal(details.url);
+    return { action: "deny" };
+  });
 
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+  if (is.dev && process.env.ELECTRON_RENDERER_URL) {
+    mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL);
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
 }
 
-const gotLock = app.requestSingleInstanceLock()
+const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
-  app.quit()
+  app.quit();
 } else {
-  app.on('second-instance', (_event, argv) => {
-    const deepUrl = argv.find((a) => a.startsWith(`${PROTOCOL}://`))
-    if (deepUrl) handleDeepLink(deepUrl)
-  })
+  app.on("second-instance", (_event, argv) => {
+    const deepUrl = argv.find((a) => a.startsWith(`${PROTOCOL}://`));
+    if (deepUrl) handleDeepLink(deepUrl);
+  });
 
-  app.on('open-url', (_event, url) => {
-    handleDeepLink(url)
-  })
+  app.on("open-url", (_event, url) => {
+    handleDeepLink(url);
+  });
 
   app.whenReady().then(() => {
-    electronApp.setAppUserModelId('com.slark.app')
+    electronApp.setAppUserModelId("com.slark.app");
 
-    app.on('browser-window-created', (_, window) => {
-      optimizer.watchWindowShortcuts(window)
-    })
+    app.on("browser-window-created", (_, window) => {
+      optimizer.watchWindowShortcuts(window);
+    });
 
-    createWindow()
+    createWindow();
 
-    app.on('activate', () => {
-      if (BrowserWindow.getAllWindows().length === 0) createWindow()
-    })
-  })
+    app.on("activate", () => {
+      if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
+  });
 
-  app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-      app.quit()
+  app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+      app.quit();
     }
-  })
+  });
 }

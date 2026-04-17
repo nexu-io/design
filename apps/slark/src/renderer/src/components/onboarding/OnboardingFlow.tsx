@@ -1,49 +1,63 @@
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
-import { Check } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { CreateWorkspaceStep } from './CreateWorkspaceStep'
-import { ConnectRuntimeStep } from './ConnectRuntimeStep'
-import { CreateAgentStep } from './CreateAgentStep'
+import { Stepper, StepperItem, StepperSeparator } from "@nexu-design/ui-web";
+import { Bot, Building2, PlugZap } from "lucide-react";
+import { Fragment } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { ConnectRuntimeStep } from "./ConnectRuntimeStep";
+import { CreateAgentStep } from "./CreateAgentStep";
+import { CreateWorkspaceStep } from "./CreateWorkspaceStep";
+import { SlarkAuthFrame } from "./slark-auth-frame";
 
 const steps = [
-  { path: 'workspace', label: 'Workspace' },
-  { path: 'runtime', label: 'Runtime' },
-  { path: 'agent', label: 'Agent' }
-] as const
+  {
+    path: "workspace",
+    label: "Workspace",
+    icon: <Building2 className="size-4" />,
+  },
+  {
+    path: "runtime",
+    label: "Runtimes",
+    icon: <PlugZap className="size-4" />,
+  },
+  {
+    path: "agent",
+    label: "Agent",
+    icon: <Bot className="size-4" />,
+  },
+] as const;
 
 export function OnboardingFlow(): React.ReactElement {
-  const location = useLocation()
-  const currentStep = steps.findIndex((s) => location.pathname.includes(s.path))
+  const location = useLocation();
+  const currentStep = Math.max(
+    steps.findIndex((step) => location.pathname.includes(step.path)),
+    0,
+  );
+  const isRuntimeStep = location.pathname.includes("/runtime");
 
   return (
-    <div className="flex h-screen w-screen flex-col items-center bg-background">
-      <div className="drag-region h-10 w-full shrink-0" />
-      <div className="flex items-center gap-2 py-6">
-        {steps.map((step, i) => (
-          <div key={step.path} className="flex items-center gap-2">
-            <div
-              className={cn(
-                'flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors',
-                i <= currentStep
-                  ? 'bg-foreground text-background'
-                  : 'bg-secondary text-muted-foreground'
-              )}
-            >
-              {i < currentStep ? <Check className="h-4 w-4" /> : i + 1}
-            </div>
-            <span
-              className={cn(
-                'text-sm font-medium',
-                i <= currentStep ? 'text-foreground' : 'text-muted-foreground'
-              )}
-            >
-              {step.label}
-            </span>
-            {i < steps.length - 1 && <div className="w-8 h-px bg-border" />}
-          </div>
-        ))}
-      </div>
-      <div className="flex-1 w-full max-w-2xl px-8 pb-8">
+    <SlarkAuthFrame
+      contentInnerClassName={
+        isRuntimeStep ? "w-[760px] max-w-full mx-auto" : "max-w-[560px] mx-auto"
+      }
+      hideBranding
+      hideFooter
+    >
+      <div className="space-y-8">
+        <Stepper>
+          {steps.map((step, index) => (
+            <Fragment key={step.path}>
+              <StepperItem
+                status={
+                  index < currentStep ? "completed" : index === currentStep ? "current" : "pending"
+                }
+                step={index + 1}
+                label={step.label}
+                icon={step.icon}
+              />
+              {index < steps.length - 1 ? <StepperSeparator active={index < currentStep} /> : null}
+            </Fragment>
+          ))}
+        </Stepper>
+
         <Routes>
           <Route path="workspace" element={<CreateWorkspaceStep />} />
           <Route path="runtime" element={<ConnectRuntimeStep />} />
@@ -51,6 +65,6 @@ export function OnboardingFlow(): React.ReactElement {
           <Route path="*" element={<Navigate to="workspace" replace />} />
         </Routes>
       </div>
-    </div>
-  )
+    </SlarkAuthFrame>
+  );
 }

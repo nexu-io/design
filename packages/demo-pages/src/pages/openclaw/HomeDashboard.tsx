@@ -12,22 +12,20 @@ import {
   ArrowRight,
   ArrowUp,
   BarChart3,
-  BookOpen,
   Cable,
+  Check,
   ChevronDown,
+  Code2,
   Cpu,
+  Diamond,
   Globe,
   HelpCircle,
+  MousePointer2,
   Paperclip,
-  Presentation,
   Search,
   Settings,
   Sparkles,
   Terminal,
-  Check,
-  Code2,
-  MousePointer2,
-  Diamond,
   X,
   Zap,
 } from "lucide-react";
@@ -35,11 +33,8 @@ import { useEffect, useRef, useState } from "react";
 import { useBudget } from "../../hooks/useBudget";
 import { useLocale } from "../../hooks/useLocale";
 import { openExternal } from "../../utils/open-external";
-import {
-  ONBOARDING_CHANNELS,
-  SEEDANCE_BANNER_DISMISSED_KEY,
-} from "./channelSetup";
 import type { ChannelId } from "./ChannelsView";
+import { ONBOARDING_CHANNELS, SEEDANCE_BANNER_DISMISSED_KEY } from "./channelSetup";
 import { getProviderDetails } from "./data";
 import {
   CreditIcon,
@@ -131,7 +126,11 @@ const HARNESS_LIST = [
 const QUICK_ACTIONS = [
   { labelKey: "ws.home.actionCron", icon: Cable, promptKey: "ws.home.actionCronPrompt" },
   { labelKey: "ws.home.actionDesktop", icon: Cpu, promptKey: "ws.home.actionDesktopPrompt" },
-  { labelKey: "ws.home.actionAnalysis", icon: BarChart3, promptKey: "ws.home.actionAnalysisPrompt" },
+  {
+    labelKey: "ws.home.actionAnalysis",
+    icon: BarChart3,
+    promptKey: "ws.home.actionAnalysisPrompt",
+  },
   { labelKey: "ws.home.actionWebsite", icon: Globe, promptKey: "ws.home.actionWebsitePrompt" },
 ] as const;
 
@@ -293,7 +292,7 @@ export function HomeDashboard({
     }
   };
 
-  const seedanceBanner = showSeedanceBanner ? (
+  void (showSeedanceBanner ? (
     <div
       role="button"
       tabIndex={0}
@@ -339,7 +338,7 @@ export function HomeDashboard({
         <X size={12} />
       </button>
     </div>
-  ) : null;
+  ) : null);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -368,8 +367,20 @@ export function HomeDashboard({
 
   /* ── Scene C: Operational — compact hero, efficiency-first ── */
   return (
-    <div className={cn("h-full", chatMessages.length > 0 ? "flex flex-col overflow-hidden" : "overflow-y-auto")}>
-      <div className={cn("max-w-[800px] mx-auto px-4 sm:px-6", chatMessages.length > 0 ? "flex flex-col flex-1 min-h-0 pt-2 pb-2" : "pt-2 pb-6 sm:pb-8 space-y-6")}>
+    <div
+      className={cn(
+        "h-full",
+        chatMessages.length > 0 ? "flex flex-col overflow-hidden" : "overflow-y-auto",
+      )}
+    >
+      <div
+        className={cn(
+          "max-w-[800px] mx-auto px-4 sm:px-6",
+          chatMessages.length > 0
+            ? "flex flex-col flex-1 min-h-0 pt-2 pb-2"
+            : "pt-2 pb-6 sm:pb-8 space-y-6",
+        )}
+      >
         {/* ── Budget warning / depleted card — below Bot, nexu Official only ── */}
         {/* Budget warning dialog */}
         {(budget.status === "depleted" || budget.status === "warning") &&
@@ -389,7 +400,12 @@ export function HomeDashboard({
                 <DialogContent size="md" className="max-w-[480px]">
                   <DialogHeader>
                     <DialogTitle className="flex items-center gap-2 text-[15px] font-semibold text-text-primary">
-                      <Zap size={16} className={isDepleted ? "text-[var(--color-danger)]" : "text-[var(--color-warning)]"} />
+                      <Zap
+                        size={16}
+                        className={
+                          isDepleted ? "text-[var(--color-danger)]" : "text-[var(--color-warning)]"
+                        }
+                      />
                       {headline}
                     </DialogTitle>
                   </DialogHeader>
@@ -473,7 +489,9 @@ export function HomeDashboard({
                             variant={isDepleted ? "destructive" : "default"}
                             size="sm"
                             leadingIcon={<ArrowUp className="size-3.5" />}
-                            onClick={() => openExternal(`${window.location.origin}/openclaw/pricing`)}
+                            onClick={() =>
+                              openExternal(`${window.location.origin}/openclaw/pricing`)
+                            }
                           >
                             Upgrade plan
                           </Button>
@@ -487,7 +505,12 @@ export function HomeDashboard({
           })()}
 
         {/* ═══ MIDDLE: Welcome + Chat ═══ */}
-        <div className={cn("flex flex-col items-center", chatMessages.length > 0 ? "flex-1 min-h-0 overflow-hidden py-2" : "flex-1 py-6")}>
+        <div
+          className={cn(
+            "flex flex-col items-center",
+            chatMessages.length > 0 ? "flex-1 min-h-0 overflow-hidden py-2" : "flex-1 py-6",
+          )}
+        >
           {/* Welcome greeting — hide when chatting */}
           {chatMessages.length === 0 && (
             <div className="flex flex-col items-center text-center mb-8">
@@ -508,7 +531,10 @@ export function HomeDashboard({
                 />
               </div>
               <h2 className="text-[22px] text-text-primary mb-2">
-                <span className="font-bold">{t("ws.home.welcomeTitle")}</span><span className="font-normal text-text-muted">: {t("ws.home.welcomeSubtitle")}</span>
+                <span className="font-bold">{t("ws.home.welcomeTitle")}</span>
+                <span className="font-normal text-text-muted">
+                  : {t("ws.home.welcomeSubtitle")}
+                </span>
               </h2>
             </div>
           )}
@@ -521,7 +547,11 @@ export function HomeDashboard({
                 return (
                   <div key={i} className={`flex gap-3 ${isBot ? "" : "flex-row-reverse"}`}>
                     {isBot ? (
-                      <img src="/brand/ip-nexu.svg" alt="" className="w-8 h-8 shrink-0 object-contain mt-0.5" />
+                      <img
+                        src="/brand/ip-nexu.svg"
+                        alt=""
+                        className="w-8 h-8 shrink-0 object-contain mt-0.5"
+                      />
                     ) : (
                       <div className="w-7 h-7 shrink-0 rounded-lg bg-surface-3 flex items-center justify-center text-[11px] font-semibold text-text-secondary mt-0.5">
                         U
@@ -549,363 +579,462 @@ export function HomeDashboard({
           {/* ── Compact input — sticky bottom ── */}
           {chatMessages.length > 0 && (
             <div className="w-full max-w-[640px] shrink-0 px-2 pb-2">
-            <Card variant="static" padding="none" className="w-full">
-              <div className="px-4 pt-3 pb-2">
-                <textarea
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
-                  placeholder="Ask me anything..."
-                  rows={2}
-                  className="w-full resize-none bg-transparent text-[14px] text-text-primary placeholder:text-text-muted/50 outline-none leading-relaxed"
-                />
-              </div>
-              <div className="flex items-center justify-between px-4 pb-3 pt-1">
-                <div className="flex items-center gap-1">
-                  <button type="button" className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"><Paperclip size={16} /></button>
-                  <button type="button" className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"><Sparkles size={16} /></button>
+              <Card variant="static" padding="none" className="w-full">
+                <div className="px-4 pt-3 pb-2">
+                  <textarea
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }}
+                    placeholder="Ask me anything..."
+                    rows={2}
+                    className="w-full resize-none bg-transparent text-[14px] text-text-primary placeholder:text-text-muted/50 outline-none leading-relaxed"
+                  />
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-2 text-[11px] text-text-muted cursor-default" title="Current Harness: Claude Code">
-                    <Sparkles size={11} />
-                    Claude Code
-                  </span>
-                  {selectedModel && (
-                    <span className="inline-flex items-center gap-1.5 text-[12px] text-text-muted">
-                      <span className="w-4 h-4 shrink-0 flex items-center justify-center"><ProviderLogo provider={getModelIconProvider(selectedModel.name) || selectedModel.providerId} size={14} /></span>
-                      <span className="truncate max-w-[120px]">{selectedModel.name}</span>
+                <div className="flex items-center justify-between px-4 pb-3 pt-1">
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"
+                    >
+                      <Paperclip size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"
+                    >
+                      <Sparkles size={16} />
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-2 text-[11px] text-text-muted cursor-default"
+                      title="Current Harness: Claude Code"
+                    >
+                      <Sparkles size={11} />
+                      Claude Code
                     </span>
-                  )}
-                  <button type="button" onClick={handleSendMessage} className={cn("flex items-center justify-center w-8 h-8 rounded-lg transition-all", chatInput.trim() ? "bg-[var(--color-accent)] text-white hover:opacity-85" : "bg-surface-2 text-text-muted cursor-default")}>
-                    <ArrowUp size={16} />
-                  </button>
+                    {selectedModel && (
+                      <span className="inline-flex items-center gap-1.5 text-[12px] text-text-muted">
+                        <span className="w-4 h-4 shrink-0 flex items-center justify-center">
+                          <ProviderLogo
+                            provider={
+                              getModelIconProvider(selectedModel.name) || selectedModel.providerId
+                            }
+                            size={14}
+                          />
+                        </span>
+                        <span className="truncate max-w-[120px]">{selectedModel.name}</span>
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={handleSendMessage}
+                      className={cn(
+                        "flex items-center justify-center w-8 h-8 rounded-lg transition-all",
+                        chatInput.trim()
+                          ? "bg-[var(--color-accent)] text-white hover:opacity-85"
+                          : "bg-surface-2 text-text-muted cursor-default",
+                      )}
+                    >
+                      <ArrowUp size={16} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
             </div>
           )}
 
           {/* ── Full input when idle ── */}
-          {chatMessages.length === 0 && (<>
-          <Card variant="static" padding="none" className="w-full max-w-[640px]">
-            <div className="px-4 pt-4 pb-2">
-              <textarea
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage();
-                  }
-                }}
-                placeholder={t("ws.home.chatPlaceholder")}
-                rows={3}
-                className="w-full resize-none bg-transparent text-[14px] text-text-primary placeholder:text-text-muted/50 outline-none leading-relaxed"
-              />
-            </div>
-            <div className="flex items-center justify-between px-4 pb-3 pt-1">
-              <div className="flex items-center gap-1">
-                {/* 1. Harness */}
-                <div className="relative" ref={harnessDropdownRef}>
-                  <button type="button" onClick={() => setShowHarnessDropdown(!showHarnessDropdown)} className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-medium text-text-muted hover:text-text-secondary hover:bg-surface-2 transition-colors">
-                    <Terminal size={13} />
-                    <span>{(HARNESS_LIST.find((h) => h.id === activeHarness) ?? HARNESS_LIST[0]).name}</span>
-                    <ChevronDown size={10} className={cn("transition-transform", showHarnessDropdown && "rotate-180")} />
-                  </button>
-                  {showHarnessDropdown && (
-                    <div className="absolute bottom-full left-0 mb-1 w-[200px] rounded-xl border border-border bg-surface-1 shadow-xl z-50 p-1">
-                      <div className="px-2 py-1.5 text-[9px] font-bold uppercase tracking-wider text-text-muted">Harness</div>
-                      {HARNESS_LIST.map((h) => (
-                        <button key={h.id} type="button" onClick={() => { setActiveHarness(h.id); setShowHarnessDropdown(false); }} className={cn("w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-left transition-colors", h.id === activeHarness ? "bg-surface-2" : "hover:bg-surface-2")}>
-                          <h.icon size={13} className="text-text-secondary shrink-0" />
-                          <div className="flex-1 min-w-0"><div className="text-[11px] font-medium text-text-primary">{h.name}</div><div className="text-[9px] text-text-muted">{h.desc}</div></div>
-                          {h.id === activeHarness && <Check size={12} className="text-accent shrink-0" />}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+          {chatMessages.length === 0 && (
+            <>
+              <Card variant="static" padding="none" className="w-full max-w-[640px]">
+                <div className="px-4 pt-4 pb-2">
+                  <textarea
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }}
+                    placeholder={t("ws.home.chatPlaceholder")}
+                    rows={3}
+                    className="w-full resize-none bg-transparent text-[14px] text-text-primary placeholder:text-text-muted/50 outline-none leading-relaxed"
+                  />
                 </div>
-                {/* 2. Model */}
-                <div className="relative" ref={modelDropdownRef}>
-                  <button
-                    type="button"
-                    onClick={() => setShowModelDropdown(!showModelDropdown)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] font-medium text-text-secondary hover:bg-surface-2 transition-colors"
-                  >
-                    {selectedModel && (
-                      <span className="w-4 h-4 shrink-0 flex items-center justify-center">
-                        <ProviderLogo
-                          provider={
-                            getModelIconProvider(selectedModel.name) || selectedModel.providerId
+                <div className="flex items-center justify-between px-4 pb-3 pt-1">
+                  <div className="flex items-center gap-1">
+                    {/* 1. Harness */}
+                    <div className="relative" ref={harnessDropdownRef}>
+                      <button
+                        type="button"
+                        onClick={() => setShowHarnessDropdown(!showHarnessDropdown)}
+                        className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-medium text-text-muted hover:text-text-secondary hover:bg-surface-2 transition-colors"
+                      >
+                        <Terminal size={13} />
+                        <span>
+                          {
+                            (HARNESS_LIST.find((h) => h.id === activeHarness) ?? HARNESS_LIST[0])
+                              .name
                           }
-                          size={14}
+                        </span>
+                        <ChevronDown
+                          size={10}
+                          className={cn(
+                            "transition-transform",
+                            showHarnessDropdown && "rotate-180",
+                          )}
                         />
-                      </span>
-                    )}
-                    <span className="truncate max-w-[120px]">{selectedModel?.name ?? t("ws.home.notSelected")}</span>
-                    <ChevronDown size={10} className={`text-text-muted transition-transform ${showModelDropdown ? "rotate-180" : ""}`} />
-                  </button>
-
-                  {/* Model dropdown */}
-                  {showModelDropdown &&
-                    (() => {
-                      const query = modelSearch.toLowerCase().trim();
-                      const filteredProviders = enabledProviders
-                        .map((p) => ({
-                          ...p,
-                          models: p.models.filter(
-                            (m) =>
-                              m.enabled &&
-                              (!query ||
-                                m.name.toLowerCase().includes(query) ||
-                                p.name.toLowerCase().includes(query)),
-                          ),
-                        }))
-                        .filter((p) => p.models.length > 0);
-
-                      return (
-                        <div className="absolute z-50 top-full mt-2 left-0 w-[320px] rounded-xl border border-border bg-surface-1 shadow-xl">
-                          <div className="px-3 pt-3 pb-2">
-                            <div className="flex items-center gap-2.5 rounded-lg border border-border bg-surface-0 px-3 py-2">
-                              <Search size={14} className="text-text-muted shrink-0" />
-                              <input
-                                type="text"
-                                value={modelSearch}
-                                onChange={(e) => {
-                                  setModelSearch(e.target.value);
-                                  if (e.target.value.trim()) {
-                                    setExpandedProviders(new Set(enabledProviders.map((p) => p.id)));
-                                  }
-                                }}
-                                placeholder={t("ws.home.searchModels")}
-                                className="flex-1 bg-transparent text-xs font-normal text-text-primary placeholder:text-text-muted/50 outline-none"
-                              />
-                            </div>
+                      </button>
+                      {showHarnessDropdown && (
+                        <div className="absolute bottom-full left-0 mb-1 w-[200px] rounded-xl border border-border bg-surface-1 shadow-xl z-50 p-1">
+                          <div className="px-2 py-1.5 text-[9px] font-bold uppercase tracking-wider text-text-muted">
+                            Harness
                           </div>
-                          <div className="relative px-3 pb-2">
-                            <div
-                              className="max-h-[280px] overflow-y-auto py-1"
-                              style={{ overscrollBehavior: "contain" }}
-                            >
-                              {filteredProviders.length === 0 ? (
-                                <div className="px-4 py-6 text-center text-xs text-text-muted">
-                                  {t("ws.home.noMatchingModels")}
-                                </div>
-                              ) : (
-                                filteredProviders.map((provider) => {
-                                  const isExpanded = expandedProviders.has(provider.id) || !!query;
-                                  return (
-                                    <div key={provider.id}>
-                                      <div className="flex items-center">
-                                        <button
-                                          type="button"
-                                          onClick={() => {
-                                            if (query) return;
-                                            setExpandedProviders((prev) => {
-                                              const next = new Set(prev);
-                                              if (next.has(provider.id)) next.delete(provider.id);
-                                              else next.add(provider.id);
-                                              return next;
-                                            });
-                                          }}
-                                          className="flex min-h-9 flex-1 items-center gap-2 rounded-lg pl-4 pr-3 py-2 transition-colors hover:bg-surface-2"
-                                        >
-                                          <ChevronDown
-                                            size={12}
-                                            className={`text-text-secondary transition-transform ${isExpanded ? "" : "-rotate-90"}`}
-                                          />
-                                          <span className="flex size-4 shrink-0 items-center justify-center">
-                                            <ProviderLogo provider={provider.id} size={14} />
-                                          </span>
-                                          <span className="text-xs font-normal text-text-secondary">
-                                            {provider.name}
-                                          </span>
-                                        </button>
-                                        {provider.id === "nexu" && (
-                                          <button
-                                            type="button"
-                                            onClick={() =>
-                                              openExternal(
-                                                "https://docs.nexu.io/zh/guide/model-pricing",
-                                              )
-                                            }
-                                            className="flex size-7 shrink-0 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface-2 hover:text-text-primary"
-                                            title={locale === "zh" ? "模型积分消耗说明" : "Model credits info"}
-                                          >
-                                            <HelpCircle size={12} />
-                                          </button>
-                                        )}
-                                      </div>
-                                      {isExpanded &&
-                                        provider.models.map((model) => (
-                                          <button
-                                            type="button"
-                                            key={model.id}
-                                            onClick={() => {
-                                              setSelectedModelId(model.id);
-                                              setShowModelDropdown(false);
-                                            }}
-                                            className={`flex min-h-9 w-full items-center gap-2.5 rounded-lg pl-7 pr-3 py-2 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/10 font-medium" : ""}`}
-                                          >
-                                            <span className="flex size-4 shrink-0 items-center justify-center">
-                                              <ProviderLogo
-                                                provider={
-                                                  getModelIconProvider(model.name) || provider.id
-                                                }
-                                                size={14}
-                                              />
-                                            </span>
-                                            <span className="flex flex-1 items-center gap-1.5 min-w-0">
-                                              <span
-                                                className={`truncate text-xs ${model.id === selectedModelId ? "font-semibold text-text-heading" : "font-normal text-text-primary"}`}
-                                              >
-                                                {model.name}
-                                              </span>
-                                              {model.tier === "pro" && (
-                                                <TierProBadge height={14} className="shrink-0" />
-                                              )}
-                                              {model.tier === "plus" && (
-                                                <TierPlusBadge height={14} className="shrink-0" />
-                                              )}
-                                              {provider.id === "nexu" && !model.tier && (
-                                                <span className="shrink-0 rounded-[4px] bg-gradient-to-r from-[#3DB9CE] to-[#34D399] px-1.5 py-[2px] text-[9px] font-bold text-white">
-                                                  Unlimited
-                                                </span>
-                                              )}
-                                            </span>
-                                            {provider.id === "nexu" ? (
-                                              <span className="shrink-0 text-[9px] font-normal tabular-nums text-text-muted/60">
-                                                {"~"}
-                                                {model.creditsPerConversation}
-                                                {locale === "zh" ? " 积分/次" : " credits/conv"}
-                                              </span>
-                                            ) : (
-                                              <span className="shrink-0 text-[9px] font-normal tabular-nums text-text-muted/60">
-                                                {model.inputPrice
-                                                  .replace(/\.00/g, "")
-                                                  .replace(/\/M$/, "")}
-                                                {" / "}
-                                                {model.outputPrice
-                                                  .replace(/\.00/g, "")
-                                                  .replace(/\/M$/, "")}
-                                              </span>
-                                            )}
-                                          </button>
-                                        ))}
-                                    </div>
-                                  );
-                                })
-                              )}
-                            </div>
-                          </div>
-                          <div className="border-t border-border px-3 py-2">
+                          {HARNESS_LIST.map((h) => (
                             <button
+                              key={h.id}
                               type="button"
                               onClick={() => {
-                                setShowModelDropdown(false);
-                                onNavigate({ type: "settings" });
+                                setActiveHarness(h.id);
+                                setShowHarnessDropdown(false);
                               }}
-                              className="flex min-h-9 w-full items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors hover:bg-surface-2"
+                              className={cn(
+                                "w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-left transition-colors",
+                                h.id === activeHarness ? "bg-surface-2" : "hover:bg-surface-2",
+                              )}
                             >
-                              <Settings size={14} className="text-text-primary" />
-                              <span className="text-sm font-medium text-text-primary">
-                                {t("ws.home.configureProviders")}
-                              </span>
-                              <ArrowRight size={12} className="ml-auto text-text-secondary" />
+                              <h.icon size={13} className="text-text-secondary shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="text-[11px] font-medium text-text-primary">
+                                  {h.name}
+                                </div>
+                                <div className="text-[9px] text-text-muted">{h.desc}</div>
+                              </div>
+                              {h.id === activeHarness && (
+                                <Check size={12} className="text-accent shrink-0" />
+                              )}
                             </button>
-                          </div>
+                          ))}
                         </div>
-                      );
-                    })()}
-                </div>
-                {/* 3. File upload */}
-                <button
-                  type="button"
-                  className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"
-                >
-                  <Paperclip size={16} />
-                </button>
-              </div>
-              <button
-                type="button"
-                onClick={handleSendMessage}
-                className={cn(
-                  "flex items-center justify-center w-8 h-8 rounded-lg transition-all",
-                  chatInput.trim()
-                    ? "bg-[var(--color-accent)] text-white hover:opacity-85"
-                    : "bg-surface-2 text-text-muted cursor-default",
-                )}
-              >
-                <ArrowUp size={16} />
-              </button>
-            </div>
-          </Card>
+                      )}
+                    </div>
+                    {/* 2. Model */}
+                    <div className="relative" ref={modelDropdownRef}>
+                      <button
+                        type="button"
+                        onClick={() => setShowModelDropdown(!showModelDropdown)}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] font-medium text-text-secondary hover:bg-surface-2 transition-colors"
+                      >
+                        {selectedModel && (
+                          <span className="w-4 h-4 shrink-0 flex items-center justify-center">
+                            <ProviderLogo
+                              provider={
+                                getModelIconProvider(selectedModel.name) || selectedModel.providerId
+                              }
+                              size={14}
+                            />
+                          </span>
+                        )}
+                        <span className="truncate max-w-[120px]">
+                          {selectedModel?.name ?? t("ws.home.notSelected")}
+                        </span>
+                        <ChevronDown
+                          size={10}
+                          className={`text-text-muted transition-transform ${showModelDropdown ? "rotate-180" : ""}`}
+                        />
+                      </button>
 
-          {/* Quick action chips */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-4 max-w-[640px]">
-            {QUICK_ACTIONS.map((action) => (
-              <button
-                key={action.labelKey}
-                type="button"
-                onClick={() => setChatInput(t(action.promptKey))}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-border bg-surface-0 text-[12px] font-medium text-text-secondary hover:bg-surface-1 hover:border-border-hover transition-all"
-              >
-                <action.icon size={14} />
-                <span>{t(action.labelKey)}</span>
-              </button>
-            ))}
-          </div>
+                      {/* Model dropdown */}
+                      {showModelDropdown &&
+                        (() => {
+                          const query = modelSearch.toLowerCase().trim();
+                          const filteredProviders = enabledProviders
+                            .map((p) => ({
+                              ...p,
+                              models: p.models.filter(
+                                (m) =>
+                                  m.enabled &&
+                                  (!query ||
+                                    m.name.toLowerCase().includes(query) ||
+                                    p.name.toLowerCase().includes(query)),
+                              ),
+                            }))
+                            .filter((p) => p.models.length > 0);
 
-          {/* Channel section */}
-          {(() => {
-            const connected = connectedChannels ? ONBOARDING_CHANNELS.filter((c) => connectedChannels.has(c.id as ChannelId)) : [];
-            if (connected.length > 0) {
-              return (
-                <div className="mt-12 flex items-center gap-2 opacity-60 hover:opacity-90 transition-opacity">
-                  {connected.map((ch) => (
+                          return (
+                            <div className="absolute z-50 top-full mt-2 left-0 w-[320px] rounded-xl border border-border bg-surface-1 shadow-xl">
+                              <div className="px-3 pt-3 pb-2">
+                                <div className="flex items-center gap-2.5 rounded-lg border border-border bg-surface-0 px-3 py-2">
+                                  <Search size={14} className="text-text-muted shrink-0" />
+                                  <input
+                                    type="text"
+                                    value={modelSearch}
+                                    onChange={(e) => {
+                                      setModelSearch(e.target.value);
+                                      if (e.target.value.trim()) {
+                                        setExpandedProviders(
+                                          new Set(enabledProviders.map((p) => p.id)),
+                                        );
+                                      }
+                                    }}
+                                    placeholder={t("ws.home.searchModels")}
+                                    className="flex-1 bg-transparent text-xs font-normal text-text-primary placeholder:text-text-muted/50 outline-none"
+                                  />
+                                </div>
+                              </div>
+                              <div className="relative px-3 pb-2">
+                                <div
+                                  className="max-h-[280px] overflow-y-auto py-1"
+                                  style={{ overscrollBehavior: "contain" }}
+                                >
+                                  {filteredProviders.length === 0 ? (
+                                    <div className="px-4 py-6 text-center text-xs text-text-muted">
+                                      {t("ws.home.noMatchingModels")}
+                                    </div>
+                                  ) : (
+                                    filteredProviders.map((provider) => {
+                                      const isExpanded =
+                                        expandedProviders.has(provider.id) || !!query;
+                                      return (
+                                        <div key={provider.id}>
+                                          <div className="flex items-center">
+                                            <button
+                                              type="button"
+                                              onClick={() => {
+                                                if (query) return;
+                                                setExpandedProviders((prev) => {
+                                                  const next = new Set(prev);
+                                                  if (next.has(provider.id))
+                                                    next.delete(provider.id);
+                                                  else next.add(provider.id);
+                                                  return next;
+                                                });
+                                              }}
+                                              className="flex min-h-9 flex-1 items-center gap-2 rounded-lg pl-4 pr-3 py-2 transition-colors hover:bg-surface-2"
+                                            >
+                                              <ChevronDown
+                                                size={12}
+                                                className={`text-text-secondary transition-transform ${isExpanded ? "" : "-rotate-90"}`}
+                                              />
+                                              <span className="flex size-4 shrink-0 items-center justify-center">
+                                                <ProviderLogo provider={provider.id} size={14} />
+                                              </span>
+                                              <span className="text-xs font-normal text-text-secondary">
+                                                {provider.name}
+                                              </span>
+                                            </button>
+                                            {provider.id === "nexu" && (
+                                              <button
+                                                type="button"
+                                                onClick={() =>
+                                                  openExternal(
+                                                    "https://docs.nexu.io/zh/guide/model-pricing",
+                                                  )
+                                                }
+                                                className="flex size-7 shrink-0 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface-2 hover:text-text-primary"
+                                                title={
+                                                  locale === "zh"
+                                                    ? "模型积分消耗说明"
+                                                    : "Model credits info"
+                                                }
+                                              >
+                                                <HelpCircle size={12} />
+                                              </button>
+                                            )}
+                                          </div>
+                                          {isExpanded &&
+                                            provider.models.map((model) => (
+                                              <button
+                                                type="button"
+                                                key={model.id}
+                                                onClick={() => {
+                                                  setSelectedModelId(model.id);
+                                                  setShowModelDropdown(false);
+                                                }}
+                                                className={`flex min-h-9 w-full items-center gap-2.5 rounded-lg pl-7 pr-3 py-2 text-left transition-colors hover:bg-surface-2 ${model.id === selectedModelId ? "bg-accent/10 font-medium" : ""}`}
+                                              >
+                                                <span className="flex size-4 shrink-0 items-center justify-center">
+                                                  <ProviderLogo
+                                                    provider={
+                                                      getModelIconProvider(model.name) ||
+                                                      provider.id
+                                                    }
+                                                    size={14}
+                                                  />
+                                                </span>
+                                                <span className="flex flex-1 items-center gap-1.5 min-w-0">
+                                                  <span
+                                                    className={`truncate text-xs ${model.id === selectedModelId ? "font-semibold text-text-heading" : "font-normal text-text-primary"}`}
+                                                  >
+                                                    {model.name}
+                                                  </span>
+                                                  {model.tier === "pro" && (
+                                                    <TierProBadge
+                                                      height={14}
+                                                      className="shrink-0"
+                                                    />
+                                                  )}
+                                                  {model.tier === "plus" && (
+                                                    <TierPlusBadge
+                                                      height={14}
+                                                      className="shrink-0"
+                                                    />
+                                                  )}
+                                                  {provider.id === "nexu" && !model.tier && (
+                                                    <span className="shrink-0 rounded-[4px] bg-gradient-to-r from-[#3DB9CE] to-[#34D399] px-1.5 py-[2px] text-[9px] font-bold text-white">
+                                                      Unlimited
+                                                    </span>
+                                                  )}
+                                                </span>
+                                                {provider.id === "nexu" ? (
+                                                  <span className="shrink-0 text-[9px] font-normal tabular-nums text-text-muted/60">
+                                                    {"~"}
+                                                    {model.creditsPerConversation}
+                                                    {locale === "zh" ? " 积分/次" : " credits/conv"}
+                                                  </span>
+                                                ) : (
+                                                  <span className="shrink-0 text-[9px] font-normal tabular-nums text-text-muted/60">
+                                                    {model.inputPrice
+                                                      .replace(/\.00/g, "")
+                                                      .replace(/\/M$/, "")}
+                                                    {" / "}
+                                                    {model.outputPrice
+                                                      .replace(/\.00/g, "")
+                                                      .replace(/\/M$/, "")}
+                                                  </span>
+                                                )}
+                                              </button>
+                                            ))}
+                                        </div>
+                                      );
+                                    })
+                                  )}
+                                </div>
+                              </div>
+                              <div className="border-t border-border px-3 py-2">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setShowModelDropdown(false);
+                                    onNavigate({ type: "settings" });
+                                  }}
+                                  className="flex min-h-9 w-full items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors hover:bg-surface-2"
+                                >
+                                  <Settings size={14} className="text-text-primary" />
+                                  <span className="text-sm font-medium text-text-primary">
+                                    {t("ws.home.configureProviders")}
+                                  </span>
+                                  <ArrowRight size={12} className="ml-auto text-text-secondary" />
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })()}
+                    </div>
+                    {/* 3. File upload */}
                     <button
-                      key={ch.id}
                       type="button"
-                      onClick={() => onNavigate({ type: "channels" })}
-                      className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-surface-0 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all hover:border-accent/30 hover:shadow-md"
-                      title={ch.name}
+                      className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-2 transition-colors"
                     >
-                      <ch.icon size={18} />
+                      <Paperclip size={16} />
                     </button>
-                  ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleSendMessage}
+                    className={cn(
+                      "flex items-center justify-center w-8 h-8 rounded-lg transition-all",
+                      chatInput.trim()
+                        ? "bg-[var(--color-accent)] text-white hover:opacity-85"
+                        : "bg-surface-2 text-text-muted cursor-default",
+                    )}
+                  >
+                    <ArrowUp size={16} />
+                  </button>
+                </div>
+              </Card>
+
+              {/* Quick action chips */}
+              <div className="flex flex-wrap items-center justify-center gap-2 mt-4 max-w-[640px]">
+                {QUICK_ACTIONS.map((action) => (
+                  <button
+                    key={action.labelKey}
+                    type="button"
+                    onClick={() => setChatInput(t(action.promptKey))}
+                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-border bg-surface-0 text-[12px] font-medium text-text-secondary hover:bg-surface-1 hover:border-border-hover transition-all"
+                  >
+                    <action.icon size={14} />
+                    <span>{t(action.labelKey)}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Channel section */}
+              {(() => {
+                const connected = connectedChannels
+                  ? ONBOARDING_CHANNELS.filter((c) => connectedChannels.has(c.id as ChannelId))
+                  : [];
+                if (connected.length > 0) {
+                  return (
+                    <div className="mt-12 flex items-center gap-2 opacity-60 hover:opacity-90 transition-opacity">
+                      {connected.map((ch) => (
+                        <button
+                          key={ch.id}
+                          type="button"
+                          onClick={() => onNavigate({ type: "channels" })}
+                          className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-surface-0 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-all hover:border-accent/30 hover:shadow-md"
+                          title={ch.name}
+                        >
+                          <ch.icon size={18} />
+                        </button>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => onNavigate({ type: "channels" })}
+                        className="flex h-9 w-9 items-center justify-center rounded-xl border border-dashed border-border/60 text-text-muted/40 transition-all hover:border-accent/30 hover:text-accent hover:bg-accent/5"
+                        title={t("ws.home.channelGuideTitle")}
+                      >
+                        <Cable size={16} />
+                      </button>
+                    </div>
+                  );
+                }
+                return (
                   <button
                     type="button"
                     onClick={() => onNavigate({ type: "channels" })}
-                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-dashed border-border/60 text-text-muted/40 transition-all hover:border-accent/30 hover:text-accent hover:bg-accent/5"
-                    title={t("ws.home.channelGuideTitle")}
+                    className="mt-12 flex items-center gap-3 px-5 py-3 rounded-xl border border-dashed border-border/50 bg-transparent text-left transition-all hover:border-accent/30 hover:bg-accent/5 max-w-[480px] group opacity-50 hover:opacity-80"
                   >
-                    <Cable size={16} />
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-1 group-hover:bg-accent/10 transition-colors">
+                      <Cable
+                        size={16}
+                        className="text-text-muted/60 group-hover:text-accent transition-colors"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[12px] font-medium text-text-muted group-hover:text-accent transition-colors">
+                        {t("ws.home.channelGuideTitle")}
+                      </div>
+                      <div className="text-[11px] text-text-muted/60 mt-0.5">
+                        {t("ws.home.channelGuideDesc")}
+                      </div>
+                    </div>
+                    <ArrowRight
+                      size={12}
+                      className="text-text-muted/40 shrink-0 group-hover:text-accent transition-colors"
+                    />
                   </button>
-                </div>
-              );
-            }
-            return (
-              <button
-                type="button"
-                onClick={() => onNavigate({ type: "channels" })}
-                className="mt-12 flex items-center gap-3 px-5 py-3 rounded-xl border border-dashed border-border/50 bg-transparent text-left transition-all hover:border-accent/30 hover:bg-accent/5 max-w-[480px] group opacity-50 hover:opacity-80"
-              >
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-1 group-hover:bg-accent/10 transition-colors">
-                  <Cable size={16} className="text-text-muted/60 group-hover:text-accent transition-colors" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-[12px] font-medium text-text-muted group-hover:text-accent transition-colors">
-                    {t("ws.home.channelGuideTitle")}
-                  </div>
-                  <div className="text-[11px] text-text-muted/60 mt-0.5">
-                    {t("ws.home.channelGuideDesc")}
-                  </div>
-                </div>
-                <ArrowRight size={12} className="text-text-muted/40 shrink-0 group-hover:text-accent transition-colors" />
-              </button>
-            );
-          })()}
-          </>)}
+                );
+              })()}
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -393,15 +393,20 @@ const en: Record<string, string> = {
   "ws.home.welcomeSubtitle": "next to you",
   "ws.home.chatPlaceholder": "Assign a task or ask any question",
   "ws.home.actionCron": "Scheduled Task",
-  "ws.home.actionCronPrompt": "Set up a scheduled task: every weekday at 8am, search the latest AI industry news (new models, product launches, funding, policy), pick the top 10 most valuable items, and compile them into a Markdown briefing with one-line summaries and source links.",
+  "ws.home.actionCronPrompt":
+    "Set up a scheduled task: every weekday at 8am, search the latest AI industry news (new models, product launches, funding, policy), pick the top 10 most valuable items, and compile them into a Markdown briefing with one-line summaries and source links.",
   "ws.home.actionDesktop": "Desktop Automation",
-  "ws.home.actionDesktopPrompt": "Scan my desktop, classify all files by type (docs, images, code, archives, misc), move them into organized folders, and give me a summary of what was moved where.",
+  "ws.home.actionDesktopPrompt":
+    "Scan my desktop, classify all files by type (docs, images, code, archives, misc), move them into organized folders, and give me a summary of what was moved where.",
   "ws.home.actionAnalysis": "Data Analysis",
-  "ws.home.actionAnalysisPrompt": "I'm going to upload a data file. Please auto-detect the format, clean the data, generate key statistical summaries, identify trends and outliers, and output a visual analysis report with charts.",
+  "ws.home.actionAnalysisPrompt":
+    "I'm going to upload a data file. Please auto-detect the format, clean the data, generate key statistical summaries, identify trends and outliers, and output a visual analysis report with charts.",
   "ws.home.actionWebsite": "Create Website",
-  "ws.home.actionWebsitePrompt": "Create a modern single-page website with a hero section, feature highlights, pricing table, and footer. Use a clean minimal design with smooth scroll and responsive layout. Output the full HTML/CSS/JS and open it in the browser when done.",
+  "ws.home.actionWebsitePrompt":
+    "Create a modern single-page website with a hero section, feature highlights, pricing table, and footer. Use a clean minimal design with smooth scroll and responsive layout. Output the full HTML/CSS/JS and open it in the browser when done.",
   "ws.home.channelGuideTitle": "Connect your channels",
-  "ws.home.channelGuideDesc": "Link Feishu, Slack, Discord and more to manage all conversations in one place.",
+  "ws.home.channelGuideDesc":
+    "Link Feishu, Slack, Discord and more to manage all conversations in one place.",
   "ws.home.seedanceBannerTitle": "Get your Seedance 2.0 trial key",
   "ws.home.seedanceBannerSubtitle":
     "nexu now supports Seedance 2.0. Star the repo, join the Feishu group, and fill out the form — we'll follow up with your key.",
@@ -449,15 +454,20 @@ const en: Record<string, string> = {
   "ws.harness.subtitle": "Switch between coding agents",
   "ws.harness.current": "Current",
   "ws.harness.pi.desc": "Built-in Code Agent",
-  "ws.harness.pi.advantage": "OpenClaw built-in agent with advanced multi-file editing, project-aware context, and zero-config setup. Best for full-stack workflows.",
+  "ws.harness.pi.advantage":
+    "OpenClaw built-in agent with advanced multi-file editing, project-aware context, and zero-config setup. Best for full-stack workflows.",
   "ws.harness.claudeCode.desc": "Anthropic CLI Agent",
-  "ws.harness.claudeCode.advantage": "Anthropic's official CLI agent powered by Claude. Excels at complex reasoning, large codebase navigation, and nuanced code review.",
+  "ws.harness.claudeCode.advantage":
+    "Anthropic's official CLI agent powered by Claude. Excels at complex reasoning, large codebase navigation, and nuanced code review.",
   "ws.harness.codex.desc": "OpenAI CLI Agent",
-  "ws.harness.codex.advantage": "OpenAI's coding agent with strong code generation, refactoring capabilities, and broad language support across 20+ programming languages.",
+  "ws.harness.codex.advantage":
+    "OpenAI's coding agent with strong code generation, refactoring capabilities, and broad language support across 20+ programming languages.",
   "ws.harness.cursor.desc": "Cursor IDE Agent",
-  "ws.harness.cursor.advantage": "IDE-native agent with deep editor integration. Ideal for real-time pair programming, inline completions, and visual diff workflows.",
+  "ws.harness.cursor.advantage":
+    "IDE-native agent with deep editor integration. Ideal for real-time pair programming, inline completions, and visual diff workflows.",
   "ws.harness.gemini.desc": "Google CLI Agent",
-  "ws.harness.gemini.advantage": "Google's CLI agent with 1M token context window. Great for analyzing large codebases, long documents, and multi-repo projects.",
+  "ws.harness.gemini.advantage":
+    "Google's CLI agent with 1M token context window. Great for analyzing large codebases, long documents, and multi-repo projects.",
   "ws.agents.title": "Add your local agent",
   "ws.agents.subtitle": "Choose how this agent will run tasks.",
   "ws.agents.name": "Agent name",
@@ -881,13 +891,17 @@ const zh: Record<string, string> = {
   "ws.home.welcomeSubtitle": "next to you",
   "ws.home.chatPlaceholder": "描述任务或提问任何问题",
   "ws.home.actionCron": "定时任务",
-  "ws.home.actionCronPrompt": "创建一个定时任务：每个工作日早上 8 点，自动搜索 AI 行业最新动态（新模型发布、产品上线、融资、政策），筛选最有价值的 10 条，整理成 Markdown 简报，附一句话摘要和来源链接。",
+  "ws.home.actionCronPrompt":
+    "创建一个定时任务：每个工作日早上 8 点，自动搜索 AI 行业最新动态（新模型发布、产品上线、融资、政策），筛选最有价值的 10 条，整理成 Markdown 简报，附一句话摘要和来源链接。",
   "ws.home.actionDesktop": "桌面自动化",
-  "ws.home.actionDesktopPrompt": "扫描我的桌面，按类型（文档、图片、代码、压缩包、其他）自动分类所有文件，移入对应文件夹，完成后给我一份整理报告说明每个文件去了哪里。",
+  "ws.home.actionDesktopPrompt":
+    "扫描我的桌面，按类型（文档、图片、代码、压缩包、其他）自动分类所有文件，移入对应文件夹，完成后给我一份整理报告说明每个文件去了哪里。",
   "ws.home.actionAnalysis": "数据分析",
-  "ws.home.actionAnalysisPrompt": "我准备上传一份数据文件，请自动识别格式并清洗数据，生成关键统计指标摘要，识别趋势和异常值，输出一份带可视化图表的分析报告。",
+  "ws.home.actionAnalysisPrompt":
+    "我准备上传一份数据文件，请自动识别格式并清洗数据，生成关键统计指标摘要，识别趋势和异常值，输出一份带可视化图表的分析报告。",
   "ws.home.actionWebsite": "创建网站",
-  "ws.home.actionWebsitePrompt": "帮我创建一个现代风格的单页网站，包含 Hero 区域、功能亮点、定价表和页脚。使用简洁设计，支持平滑滚动和响应式布局，输出完整的 HTML/CSS/JS 代码，完成后直接用浏览器打开。",
+  "ws.home.actionWebsitePrompt":
+    "帮我创建一个现代风格的单页网站，包含 Hero 区域、功能亮点、定价表和页脚。使用简洁设计，支持平滑滚动和响应式布局，输出完整的 HTML/CSS/JS 代码，完成后直接用浏览器打开。",
   "ws.home.channelGuideTitle": "连接你的 Channel",
   "ws.home.channelGuideDesc": "接入飞书、Slack、Discord 等平台，在一个地方管理所有对话。",
   "ws.home.seedanceBannerTitle": "领取 Seedance 2.0 体验 Key",
@@ -936,15 +950,20 @@ const zh: Record<string, string> = {
   "ws.harness.subtitle": "切换编程 Agent",
   "ws.harness.current": "当前",
   "ws.harness.pi.desc": "内置编程 Agent",
-  "ws.harness.pi.advantage": "OpenClaw 内置的最先进编程 Agent，支持多文件编辑、项目级上下文感知、零配置开箱即用。最适合全栈开发工作流。",
+  "ws.harness.pi.advantage":
+    "OpenClaw 内置的最先进编程 Agent，支持多文件编辑、项目级上下文感知、零配置开箱即用。最适合全栈开发工作流。",
   "ws.harness.claudeCode.desc": "Anthropic CLI Agent",
-  "ws.harness.claudeCode.advantage": "Anthropic 官方推出的 CLI Agent，基于 Claude 驱动。擅长复杂推理、大型代码库导航和细致的代码审查。",
+  "ws.harness.claudeCode.advantage":
+    "Anthropic 官方推出的 CLI Agent，基于 Claude 驱动。擅长复杂推理、大型代码库导航和细致的代码审查。",
   "ws.harness.codex.desc": "OpenAI CLI Agent",
-  "ws.harness.codex.advantage": "OpenAI 推出的编程 Agent，具备强大的代码生成和重构能力，支持 20+ 编程语言的广泛覆盖。",
+  "ws.harness.codex.advantage":
+    "OpenAI 推出的编程 Agent，具备强大的代码生成和重构能力，支持 20+ 编程语言的广泛覆盖。",
   "ws.harness.cursor.desc": "Cursor IDE Agent",
-  "ws.harness.cursor.advantage": "深度集成 IDE 的 Agent，适合实时结对编程、行内补全和可视化 Diff 工作流。",
+  "ws.harness.cursor.advantage":
+    "深度集成 IDE 的 Agent，适合实时结对编程、行内补全和可视化 Diff 工作流。",
   "ws.harness.gemini.desc": "Google CLI Agent",
-  "ws.harness.gemini.advantage": "Google 推出的 CLI Agent，拥有 100 万 token 上下文窗口。适合分析大型代码库、长文档和多仓库项目。",
+  "ws.harness.gemini.advantage":
+    "Google 推出的 CLI Agent，拥有 100 万 token 上下文窗口。适合分析大型代码库、长文档和多仓库项目。",
   "ws.agents.title": "添加本地 Agent",
   "ws.agents.subtitle": "选择此 Agent 执行任务的方式。",
   "ws.agents.name": "Agent 名称",

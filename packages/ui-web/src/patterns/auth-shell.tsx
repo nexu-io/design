@@ -6,6 +6,7 @@ export interface AuthShellProps extends React.HTMLAttributes<HTMLDivElement> {
   rail?: React.ReactNode;
   railClassName?: string;
   contentClassName?: string;
+  contentContainerClassName?: string;
   contentInnerClassName?: string;
   contentBackdrop?: React.ReactNode;
 }
@@ -30,6 +31,7 @@ export function AuthShell({
   className,
   railClassName,
   contentClassName,
+  contentContainerClassName,
   contentInnerClassName,
   contentBackdrop,
   ...props
@@ -55,7 +57,12 @@ export function AuthShell({
         )}
       >
         {contentBackdrop ?? <DefaultAuthShellBackdrop />}
-        <div className="relative z-10 flex flex-1 items-center justify-center px-5 py-8">
+        <div
+          className={cn(
+            "relative z-10 flex flex-1 items-start justify-center px-5 pt-0 pb-8",
+            contentContainerClassName,
+          )}
+        >
           <div className={cn("w-full", contentInnerClassName)}>{children}</div>
         </div>
       </div>

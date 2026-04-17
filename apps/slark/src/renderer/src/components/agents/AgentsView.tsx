@@ -1,22 +1,23 @@
-import { useParams } from 'react-router-dom'
-import { Bot } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useAgentsStore } from '@/stores/agents'
-import { mockRuntimes } from '@/mock/data'
-import { AgentDetail } from './AgentDetail'
+import { TitleBarSpacer } from "@/components/layout/WindowChrome";
+import { mockRuntimes } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
+import { cn } from "@nexu-design/ui-web";
+import { Bot } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { AgentDetail } from "./AgentDetail";
 
 export function AgentsView(): React.ReactElement {
-  const { agentId } = useParams()
-  const agents = useAgentsStore((s) => s.agents)
+  const { agentId } = useParams();
+  const agents = useAgentsStore((s) => s.agents);
 
-  if (agentId && agentId !== 'create') {
-    const agent = agents.find((a) => a.id === agentId)
-    if (agent) return <AgentDetail agent={agent} />
+  if (agentId && agentId !== "create") {
+    const agent = agents.find((a) => a.id === agentId);
+    if (agent) return <AgentDetail agent={agent} />;
     return (
       <div className="flex h-full items-center justify-center text-muted-foreground">
         Agent not found
       </div>
-    )
+    );
   }
 
   if (agents.length === 0) {
@@ -28,18 +29,18 @@ export function AgentsView(): React.ReactElement {
           <p className="text-sm">Create your first agent to get started</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="p-6">
-      <div className="drag-region h-10" />
+      <TitleBarSpacer />
       <h1 className="text-xl font-semibold mb-6">Agents</h1>
       <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
         {agents.map((agent) => {
           const runtime = agent.runtimeId
             ? mockRuntimes.find((r) => r.id === agent.runtimeId)
-            : undefined
+            : undefined;
           return (
             <div
               key={agent.id}
@@ -52,10 +53,10 @@ export function AgentsView(): React.ReactElement {
                     <span className="font-semibold text-sm">{agent.name}</span>
                     <div
                       className={cn(
-                        'h-2 w-2 rounded-full',
-                        agent.status === 'online' && 'bg-slark-online',
-                        agent.status === 'busy' && 'bg-slark-busy',
-                        agent.status === 'offline' && 'bg-slark-offline'
+                        "h-2 w-2 rounded-full",
+                        agent.status === "online" && "bg-slark-online",
+                        agent.status === "busy" && "bg-slark-busy",
+                        agent.status === "offline" && "bg-slark-offline",
                       )}
                     />
                   </div>
@@ -74,9 +75,9 @@ export function AgentsView(): React.ReactElement {
                 )}
               </div>
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

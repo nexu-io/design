@@ -87,7 +87,9 @@ export default function OpenClawWorkspace() {
   const budgetNeedsAttention = demoBudgetStatus === "warning" || demoBudgetStatus === "depleted";
   const [showBudgetDialog, setShowBudgetDialog] = useState(budgetNeedsAttention);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
-  const [connectedChannels, setConnectedChannels] = useState<Set<ChannelId>>(getDefaultConnectedChannels);
+  const [connectedChannels, setConnectedChannels] = useState<Set<ChannelId>>(
+    getDefaultConnectedChannels,
+  );
   const [collapsed, setCollapsed] = useState(() => {
     const saved = localStorage.getItem("nexu_sidebar_collapsed");
     return saved !== null ? saved === "true" : true;

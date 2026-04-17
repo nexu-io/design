@@ -77,7 +77,7 @@ export function OpenClawSidebarShell({
   onReopenUpdate,
   view,
   setView,
-  capabilitiesNavCount,
+  capabilitiesNavCount: _capabilitiesNavCount,
   nexuLoggedIn,
   budgetClaimedCount,
   budgetChannelCount,
@@ -279,7 +279,6 @@ export function OpenClawSidebarShell({
             </button>
           </div>
         )}
-
 
         <div
           className="flex shrink-0 items-center justify-between gap-1 px-3 pb-1.5"

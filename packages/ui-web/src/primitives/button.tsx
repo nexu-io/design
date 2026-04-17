@@ -85,6 +85,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const Comp = asChild ? Slot : "button";
+    const content = asChild ? (
+      children
+    ) : (
+      <>
+        {loading ? (
+          <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
+        ) : (
+          leadingIcon
+        )}
+        {children}
+        {!loading ? trailingIcon : null}
+      </>
+    );
 
     return (
       <Comp
@@ -95,13 +108,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         data-loading={loading ? "" : undefined}
         {...props}
       >
-        {loading ? (
-          <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
-        ) : (
-          leadingIcon
-        )}
-        {children}
-        {!loading ? trailingIcon : null}
+        {content}
       </Comp>
     );
   },

@@ -1,6 +1,6 @@
 import { AlertCircle, CheckCircle, Settings, X } from "lucide-react";
-import { ONBOARDING_CHANNELS, SEEDANCE_BANNER_DISMISSED_KEY } from "./channelSetup";
 import type { ChannelId } from "./ChannelsView";
+import { ONBOARDING_CHANNELS } from "./channelSetup";
 
 type Props = {
   checkingUpdate: boolean;
@@ -42,9 +42,9 @@ export function WorkspaceUtilityOverlays({
   setDemoBudgetStatus,
   demoCreditPack,
   setDemoCreditPack,
-  setStarModalStep,
-  setShowStarModal,
-  setShowSeedanceModal,
+  setStarModalStep: _setStarModalStep,
+  setShowStarModal: _setShowStarModal,
+  setShowSeedanceModal: _setShowSeedanceModal,
   toast,
   connectedChannels,
   setConnectedChannels,
@@ -213,7 +213,9 @@ export function WorkspaceUtilityOverlays({
                         <span className="flex h-5 w-5 shrink-0 items-center justify-center">
                           <ch.icon size={14} />
                         </span>
-                        <span className="flex-1 text-[11px] text-text-secondary text-left">{ch.shortName}</span>
+                        <span className="flex-1 text-[11px] text-text-secondary text-left">
+                          {ch.shortName}
+                        </span>
                         <span
                           className={`relative inline-flex h-[16px] w-[28px] shrink-0 items-center rounded-full transition-colors ${on ? "bg-[var(--color-brand-primary)]" : "bg-border"}`}
                         >

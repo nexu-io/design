@@ -1,200 +1,230 @@
-import { useState, useEffect, useRef } from 'react'
-import { X, Mail, Send, Check, Eye } from 'lucide-react'
-import { InviteEmailPreview } from '@/components/invite/InviteEmailPreview'
+import { InviteEmailPreview } from "@/components/invite/InviteEmailPreview";
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  Card,
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  FormField,
+  Input,
+} from "@nexu-design/ui-web";
+import { Check, Eye, Mail, Send } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface InvitePeopleDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 interface PendingInvite {
-  email: string
-  status: 'sending' | 'sent'
-  token: string
+  email: string;
+  status: "sending" | "sent";
+  token: string;
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function InvitePeopleDialog({ open, onOpenChange }: InvitePeopleDialogProps): React.ReactElement | null {
-  const [email, setEmail] = useState('')
-  const [error, setError] = useState('')
-  const [invites, setInvites] = useState<PendingInvite[]>([])
-  const [previewEmail, setPreviewEmail] = useState<string | null>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+export function InvitePeopleDialog({
+  open,
+  onOpenChange,
+}: InvitePeopleDialogProps): React.ReactElement {
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [invites, setInvites] = useState<PendingInvite[]>([]);
+  const [previewEmail, setPreviewEmail] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (open) requestAnimationFrame(() => inputRef.current?.focus())
-  }, [open])
-
-  if (!open) return null
+    if (open) {
+      requestAnimationFrame(() => inputRef.current?.focus());
+    }
+  }, [open]);
 
   const generateToken = (): string =>
-    Math.random().toString(36).slice(2, 10) + Date.now().toString(36)
+    Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 
   const handleInvite = (): void => {
-    const trimmed = email.trim()
+    const trimmed = email.trim();
     if (!trimmed) {
-      setError('Please enter an email address')
-      return
+      setError("Please enter an email address");
+      return;
     }
     if (!EMAIL_RE.test(trimmed)) {
-      setError('Please enter a valid email address')
-      return
+      setError("Please enter a valid email address");
+      return;
     }
-    if (invites.some((i) => i.email === trimmed)) {
-      setError('This email has already been invited')
-      return
+    if (invites.some((invite) => invite.email === trimmed)) {
+      setError("This email has already been invited");
+      return;
     }
 
-    setError('')
-    const token = generateToken()
-    setInvites((prev) => [...prev, { email: trimmed, status: 'sending', token }])
-    setEmail('')
+    setError("");
+    const token = generateToken();
+    setInvites((previous) => [...previous, { email: trimmed, status: "sending", token }]);
+    setEmail("");
 
     setTimeout(() => {
-      setInvites((prev) =>
-        prev.map((i) => (i.email === trimmed ? { ...i, status: 'sent' } : i))
-      )
-    }, 1200)
-  }
+      setInvites((previous) =>
+        previous.map((invite) =>
+          invite.email === trimmed ? { ...invite, status: "sent" } : invite,
+        ),
+      );
+    }, 1200);
+  };
 
-  const handleClose = (): void => {
-    onOpenChange(false)
-    setEmail('')
-    setError('')
-    setInvites([])
-    setPreviewEmail(null)
-  }
+  const handleClose = (nextOpen: boolean): void => {
+    onOpenChange(nextOpen);
+    if (nextOpen) return;
+    setEmail("");
+    setError("");
+    setInvites([]);
+    setPreviewEmail(null);
+  };
 
-  const previewInvite = invites.find((i) => i.email === previewEmail)
+  const previewInvite = invites.find((invite) => invite.email === previewEmail);
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      onClick={handleClose}
-    >
-      <div
-        className={`rounded-xl border border-border bg-background p-0 shadow-xl transition-all ${previewEmail ? 'w-[860px]' : 'w-[420px]'}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between px-5 pt-5 pb-1">
-          <h2 className="text-base font-semibold">
-            {previewEmail ? 'Email Preview' : 'Invite People'}
-          </h2>
-          <button
-            onClick={previewEmail ? () => setPreviewEmail(null) : handleClose}
-            className="flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent size={previewEmail ? "xl" : "md"} className="p-0">
+        <DialogHeader className="px-5 pt-5 pb-1">
+          <DialogTitle className="text-base font-semibold">
+            {previewEmail ? "Email preview" : "Invite people"}
+          </DialogTitle>
+          <DialogDescription className="text-sm text-text-secondary">
+            {previewEmail
+              ? "Review the workspace invite before sending it to more teammates."
+              : "Invite teammates by email. They’ll get a link to join this workspace."}
+          </DialogDescription>
+        </DialogHeader>
 
         {previewEmail && previewInvite ? (
-          <div className="px-5 py-4 space-y-3">
-            <div className="text-xs text-muted-foreground space-y-1 px-1">
-              <div><span className="font-medium text-foreground">To:</span> {previewInvite.email}</div>
-              <div><span className="font-medium text-foreground">From:</span> slark@notifications.slark.app</div>
-              <div><span className="font-medium text-foreground">Subject:</span> Alice Chen invited you to Acme Engineering on Slark</div>
-            </div>
-            <div className="rounded-lg overflow-hidden border border-border">
+          <DialogBody className="px-5 py-4 space-y-4">
+            <Card variant="static" padding="sm" className="rounded-xl border-border bg-surface-1">
+              <div className="space-y-1 text-xs text-text-secondary">
+                <div>
+                  <span className="font-medium text-text-primary">To:</span> {previewInvite.email}
+                </div>
+                <div>
+                  <span className="font-medium text-text-primary">From:</span>{" "}
+                  slark@notifications.slark.app
+                </div>
+                <div>
+                  <span className="font-medium text-text-primary">Subject:</span> Alice Chen invited
+                  you to Acme Engineering on Slark
+                </div>
+              </div>
+            </Card>
+
+            <div className="overflow-hidden rounded-xl border border-border">
               <InviteEmailPreview
                 inviterName="Alice Chen"
                 workspaceName="Acme Engineering"
                 inviteLink={`${window.location.origin}/invite/${previewInvite.token}`}
               />
             </div>
-            <div className="flex justify-end">
-              <button
-                onClick={() => setPreviewEmail(null)}
-                className="h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors"
-              >
-                Back
-              </button>
-            </div>
-          </div>
+          </DialogBody>
         ) : (
           <>
-            <div className="px-5 py-4 space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Invite teammates by email. They'll get an invitation to join this workspace.
-              </p>
-
-              <div className="flex items-center gap-2">
-                <div className="relative flex-1">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                  <input
+            <DialogBody className="px-5 py-4 space-y-4">
+              <FormField label="Email address" error={error} invalid={!!error}>
+                <div className="flex items-start gap-2">
+                  <Input
                     ref={inputRef}
                     type="email"
                     value={email}
-                    onChange={(e) => { setEmail(e.target.value); setError('') }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleInvite()
-                      if (e.key === 'Escape') handleClose()
-                    }}
+                    invalid={!!error}
+                    leadingIcon={<Mail className="size-4" />}
                     placeholder="colleague@company.com"
-                    className="w-full h-9 rounded-md border border-input bg-background pl-9 pr-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                    onChange={(event) => {
+                      setEmail(event.target.value);
+                      setError("");
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") handleInvite();
+                    }}
                   />
+                  <Button onClick={handleInvite} disabled={!email.trim()}>
+                    <Send className="size-4" />
+                    Send
+                  </Button>
                 </div>
-                <button
-                  onClick={handleInvite}
-                  className="flex items-center gap-1.5 h-9 px-3 rounded-md text-sm font-medium bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:pointer-events-none transition-colors"
-                >
-                  <Send className="h-3.5 w-3.5" />
-                  Send
-                </button>
-              </div>
+              </FormField>
 
-              {error && (
-                <p className="text-xs text-destructive-foreground">{error}</p>
-              )}
+              {error ? (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              ) : null}
 
-              {invites.length > 0 && (
+              {invites.length > 0 ? (
                 <div className="space-y-2">
-                  {invites.map((inv) => (
-                    <div
-                      key={inv.email}
-                      className="group flex items-center gap-3 rounded-lg border border-dashed border-border p-2.5"
+                  {invites.map((invite) => (
+                    <Card
+                      key={invite.email}
+                      variant="static"
+                      padding="sm"
+                      className="rounded-xl border border-border bg-surface-1"
                     >
-                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent shrink-0">
-                        <Mail className="h-3 w-3 text-muted-foreground" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm truncate">{inv.email}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {inv.status === 'sending' ? 'Sending...' : 'Invitation sent'}
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-subtle text-brand-primary">
+                          <Mail className="size-4" />
                         </div>
-                      </div>
-                      {inv.status === 'sending' ? (
-                        <div className="h-4 w-4 rounded-full border-2 border-muted-foreground border-t-transparent animate-spin shrink-0" />
-                      ) : (
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => setPreviewEmail(inv.email)}
-                            className="hidden group-hover:flex items-center justify-center h-6 w-6 rounded hover:bg-accent transition-colors"
-                            title="Preview email"
-                          >
-                            <Eye className="h-3.5 w-3.5 text-muted-foreground" />
-                          </button>
-                          <Check className="h-4 w-4 text-slark-online shrink-0" />
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate text-sm font-medium text-text-primary">
+                            {invite.email}
+                          </div>
+                          <div className="text-xs text-text-secondary">
+                            {invite.status === "sending" ? "Sending…" : "Invitation sent"}
+                          </div>
                         </div>
-                      )}
-                    </div>
+                        {invite.status === "sending" ? (
+                          <div className="h-4 w-4 rounded-full border-2 border-text-muted border-t-transparent animate-spin shrink-0" />
+                        ) : (
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={() => setPreviewEmail(invite.email)}
+                              title="Preview email"
+                              className="text-text-secondary hover:text-text-primary"
+                            >
+                              <Eye className="size-4" />
+                            </Button>
+                            <Check className="size-4 shrink-0 text-success" strokeWidth={3} />
+                          </div>
+                        )}
+                      </div>
+                    </Card>
                   ))}
                 </div>
-              )}
-            </div>
+              ) : null}
+            </DialogBody>
 
-            <div className="flex justify-end px-5 pb-5">
-              <button
-                onClick={handleClose}
-                className="h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors"
-              >
+            <DialogFooter className="px-5 pb-5">
+              <Button variant="outline" size="sm" onClick={() => handleClose(false)}>
                 Done
-              </button>
-            </div>
+              </Button>
+            </DialogFooter>
           </>
         )}
-      </div>
-    </div>
-  )
+
+        {previewEmail && previewInvite ? (
+          <DialogFooter className="px-5 pb-5">
+            <Button variant="outline" size="sm" onClick={() => setPreviewEmail(null)}>
+              Back
+            </Button>
+            <Button size="sm" onClick={() => handleClose(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        ) : null}
+      </DialogContent>
+    </Dialog>
+  );
 }

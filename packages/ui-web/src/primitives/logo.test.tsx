@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 
 import { expectNoA11yViolations } from "../test/a11y";
-import { BrandLogo, ModelLogo, PlatformLogo, ProviderLogo } from "./logo";
+import { BrandLogo, ModelLogo, PlatformLogo, ProviderLogo, RuntimeLogo } from "./logo";
 
 describe("logo primitives", () => {
   it("renders provider, platform, and brand logos with accessible titles", () => {
@@ -65,12 +65,37 @@ describe("logo primitives", () => {
     expect(screen.getByRole("img", { name: "custom-model" })).toBeInTheDocument();
   });
 
+  it("resolves runtime logos for supported runtimes", () => {
+    render(
+      <>
+        <RuntimeLogo runtime="claude-code" />
+        <RuntimeLogo runtime="codex" />
+        <RuntimeLogo runtime="cursor" />
+        <RuntimeLogo runtime="opencode" />
+        <RuntimeLogo runtime="gemini-cli" />
+        <RuntimeLogo runtime="openclaw" />
+        <RuntimeLogo runtime="pi" />
+        <RuntimeLogo runtime="hermes" />
+      </>,
+    );
+
+    expect(screen.getByAltText("claude-code")).toBeInTheDocument();
+    expect(screen.getByAltText("codex")).toBeInTheDocument();
+    expect(screen.getByAltText("cursor")).toBeInTheDocument();
+    expect(screen.getByAltText("opencode")).toBeInTheDocument();
+    expect(screen.getByAltText("gemini-cli")).toBeInTheDocument();
+    expect(screen.getByAltText("openclaw")).toBeInTheDocument();
+    expect(screen.getByAltText("pi")).toBeInTheDocument();
+    expect(screen.getByAltText("hermes")).toBeInTheDocument();
+  });
+
   it("has no accessibility violations", async () => {
     const { container } = render(
       <div>
         <ProviderLogo provider="google" title="Google" />
         <PlatformLogo platform="discord" title="Discord" />
         <BrandLogo brand="nexu" title="nexu" />
+        <RuntimeLogo runtime="codex" title="Codex" />
       </div>,
     );
 

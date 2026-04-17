@@ -35,6 +35,22 @@ describe("Button", () => {
     await expectNoA11yViolations(container);
   });
 
+  it("renders asChild anchor without throwing", () => {
+    expect(() =>
+      render(
+        <Button asChild>
+          <a href="/settings">Open settings</a>
+        </Button>,
+      ),
+    ).not.toThrow();
+
+    expect(
+      screen.getByRole("link", {
+        name: "Open settings",
+      }),
+    ).toBeInTheDocument();
+  });
+
   it("keeps outline buttons visible on hover", () => {
     render(<Button variant="outline">Cancel</Button>);
 
