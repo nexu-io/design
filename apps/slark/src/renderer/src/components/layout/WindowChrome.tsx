@@ -13,3 +13,16 @@ export function TitleBarSpacer({
     />
   );
 }
+
+export function TitleBarDragRegion({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>): React.ReactElement {
+  return (
+    <div
+      aria-hidden="true"
+      className={cn("drag-region absolute inset-x-0 top-0 z-20 h-10 w-full shrink-0", className)}
+      {...props}
+    />
+  );
+}

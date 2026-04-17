@@ -5,7 +5,6 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
-  AuthShell,
   Button,
   Card,
   CardContent,
@@ -13,8 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@nexu-design/ui-web";
-import { TitleBarSpacer } from "@/components/layout/WindowChrome";
-import { SlarkAuthRail } from "@/components/onboarding/slark-auth-rail";
+import { SlarkAuthFrame } from "@/components/onboarding/slark-auth-frame";
 import { useWorkspaceStore } from "@/stores/workspace";
 
 type JoinState = "idle" | "joining" | "joined" | "error";
@@ -47,141 +45,107 @@ export function InviteLandingPage(): React.ReactElement {
   };
 
   return (
-    <div className="flex h-screen flex-col bg-background">
-      <TitleBarSpacer />
-      <div className="min-h-0 flex-1">
-        <AuthShell
-          className="h-full min-h-full"
-          rail={
-            <SlarkAuthRail
-              title={
-                <>
-                  Join the workspace.
-                  <br />
-                  Keep momentum.
-                </>
-              }
-              description="Invite links use the same shell language as onboarding so teammates immediately know where they are and what happens next."
-              highlights={[
-                {
-                  icon: Users,
-                  text: "See the inviter, workspace context, and next action without scanning a custom page.",
-                },
-                {
-                  icon: MailPlus,
-                  text: "Match invite, onboarding, and confirmation states with the same card and alert patterns.",
-                },
-                {
-                  icon: ExternalLink,
-                  text: "Deep-link directly into the desktop app after the join is confirmed.",
-                },
-              ]}
-            />
-          }
-          contentInnerClassName="max-w-[420px]"
-        >
-          <Card
-            variant="static"
-            padding="lg"
-            className="rounded-2xl border-border bg-surface-1 shadow-card"
-          >
-            <CardHeader className="items-center text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-subtle text-brand-primary">
-                {state === "joined" ? (
-                  <CheckCircle2 className="size-7" />
-                ) : state === "error" ? (
-                  <AlertCircle className="size-7" />
-                ) : state === "joining" ? (
-                  <Loader2 className="size-7 animate-spin" />
-                ) : (
-                  <Users className="size-7" />
-                )}
-              </div>
+    <SlarkAuthFrame>
+      <Card
+        variant="static"
+        padding="lg"
+        className="w-full rounded-2xl border-border bg-surface-1 shadow-card"
+      >
+        <CardHeader className="items-center text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-subtle text-brand-primary">
+            {state === "joined" ? (
+              <CheckCircle2 className="size-7" />
+            ) : state === "error" ? (
+              <AlertCircle className="size-7" />
+            ) : state === "joining" ? (
+              <Loader2 className="size-7 animate-spin" />
+            ) : (
+              <Users className="size-7" />
+            )}
+          </div>
 
-              {state === "idle" ? (
-                <>
-                  <CardTitle className="text-2xl text-text-primary">
-                    {inviterName} invited you to join
-                  </CardTitle>
-                  <CardDescription className="text-sm text-text-secondary">
-                    Accept the invitation to collaborate in <strong>{workspaceName}</strong> with
-                    your team and agents.
-                  </CardDescription>
-                </>
-              ) : null}
+          {state === "idle" ? (
+            <>
+              <CardTitle className="text-2xl text-text-primary">
+                {inviterName} invited you to join
+              </CardTitle>
+              <CardDescription className="text-sm text-text-secondary">
+                Accept the invitation to collaborate in <strong>{workspaceName}</strong> with your
+                team and agents.
+              </CardDescription>
+            </>
+          ) : null}
 
-              {state === "joining" ? (
-                <>
-                  <CardTitle className="text-2xl text-text-primary">Joining workspace</CardTitle>
-                  <CardDescription className="text-sm text-text-secondary">
-                    We’re preparing your access now.
-                  </CardDescription>
-                </>
-              ) : null}
+          {state === "joining" ? (
+            <>
+              <CardTitle className="text-2xl text-text-primary">Joining workspace</CardTitle>
+              <CardDescription className="text-sm text-text-secondary">
+                We’re preparing your access now.
+              </CardDescription>
+            </>
+          ) : null}
 
-              {state === "joined" ? (
-                <>
-                  <CardTitle className="text-2xl text-text-primary">You’re in</CardTitle>
-                  <CardDescription className="text-sm text-text-secondary">
-                    You’ve successfully joined <strong>{workspaceName}</strong>.
-                  </CardDescription>
-                </>
-              ) : null}
+          {state === "joined" ? (
+            <>
+              <CardTitle className="text-2xl text-text-primary">You’re in</CardTitle>
+              <CardDescription className="text-sm text-text-secondary">
+                You’ve successfully joined <strong>{workspaceName}</strong>.
+              </CardDescription>
+            </>
+          ) : null}
 
-              {state === "error" ? (
-                <>
-                  <CardTitle className="text-2xl text-text-primary">Invalid invite</CardTitle>
-                  <CardDescription className="text-sm text-text-secondary">
-                    This invitation link is invalid or expired.
-                  </CardDescription>
-                </>
-              ) : null}
-            </CardHeader>
+          {state === "error" ? (
+            <>
+              <CardTitle className="text-2xl text-text-primary">Invalid invite</CardTitle>
+              <CardDescription className="text-sm text-text-secondary">
+                This invitation link is invalid or expired.
+              </CardDescription>
+            </>
+          ) : null}
+        </CardHeader>
 
-            <CardContent className="space-y-4">
-              {state === "idle" ? (
-                <>
-                  <Alert>
-                    <MailPlus className="size-4" />
-                    <AlertTitle>Invite code</AlertTitle>
-                    <AlertDescription className="font-mono text-xs text-text-tertiary">
-                      {token}
-                    </AlertDescription>
-                  </Alert>
-                  <Button className="w-full justify-center" onClick={handleJoin}>
-                    Join {workspaceName}
-                  </Button>
-                </>
-              ) : null}
+        <CardContent className="space-y-4">
+          {state === "idle" ? (
+            <>
+              <Alert>
+                <MailPlus className="size-4" />
+                <AlertTitle>Invite code</AlertTitle>
+                <AlertDescription className="font-mono text-xs text-text-tertiary">
+                  {token}
+                </AlertDescription>
+              </Alert>
+              <Button className="w-full justify-center" onClick={handleJoin}>
+                Join {workspaceName}
+              </Button>
+            </>
+          ) : null}
 
-              {state === "joining" ? (
-                <Alert>
-                  <Loader2 className="size-4 animate-spin" />
-                  <AlertDescription>
-                    Finalizing access and syncing your workspace context…
-                  </AlertDescription>
-                </Alert>
-              ) : null}
+          {state === "joining" ? (
+            <Alert>
+              <Loader2 className="size-4 animate-spin" />
+              <AlertDescription>
+                Finalizing access and syncing your workspace context…
+              </AlertDescription>
+            </Alert>
+          ) : null}
 
-              {state === "joined" ? (
-                <Button className="w-full justify-center" onClick={handleTryDeepLink}>
-                  <ExternalLink className="size-4" />
-                  Open in Slark app
-                </Button>
-              ) : null}
+          {state === "joined" ? (
+            <Button className="w-full justify-center" onClick={handleTryDeepLink}>
+              <ExternalLink className="size-4" />
+              Open in Slark app
+            </Button>
+          ) : null}
 
-              {state === "error" ? (
-                <Alert variant="destructive">
-                  <AlertCircle className="size-4" />
-                  <AlertDescription>
-                    Ask your teammate for a new invite link and try again.
-                  </AlertDescription>
-                </Alert>
-              ) : null}
-            </CardContent>
-          </Card>
-        </AuthShell>
-      </div>
-    </div>
+          {state === "error" ? (
+            <Alert variant="destructive">
+              <AlertCircle className="size-4" />
+              <AlertDescription>
+                Ask your teammate for a new invite link and try again.
+              </AlertDescription>
+            </Alert>
+          ) : null}
+        </CardContent>
+      </Card>
+    </SlarkAuthFrame>
   );
 }

@@ -8,13 +8,10 @@ import {
   Lock,
   Mail,
   ShieldCheck,
-  Sparkles,
-  Workflow,
 } from "lucide-react";
 import {
   Alert,
   AlertDescription,
-  AuthShell,
   Button,
   Card,
   CardContent,
@@ -25,8 +22,7 @@ import {
   Separator,
   cn,
 } from "@nexu-design/ui-web";
-import { TitleBarSpacer } from "@/components/layout/WindowChrome";
-import { SlarkAuthRail } from "./slark-auth-rail";
+import { SlarkAuthFrame } from "./slark-auth-frame";
 
 function GoogleIcon({ className }: { className?: string }): React.ReactElement {
   return (
@@ -412,56 +408,22 @@ export function WelcomePage(): React.ReactElement {
   };
 
   return (
-    <div className="flex h-screen flex-col bg-background">
-      <TitleBarSpacer />
-      <div className="min-h-0 flex-1">
-        <AuthShell
-          className="h-full min-h-full"
-          rail={
-            <SlarkAuthRail
-              title={
-                <>
-                  Sign in once.
-                  <br />
-                  Start shipping.
-                </>
-              }
-              description="Bring your workspace, connected runtimes, and agent teammates into one desktop flow with consistent shells and safer defaults."
-              highlights={[
-                {
-                  icon: Sparkles,
-                  text: "Move from sign-in to onboarding without leaving the shared product shell.",
-                },
-                {
-                  icon: Workflow,
-                  text: "Create a workspace, connect runtimes, and launch your first agent in one pass.",
-                },
-                {
-                  icon: ShieldCheck,
-                  text: "Keep trust cues visible while verification and invite flows stay clear and guided.",
-                },
-              ]}
-            />
-          }
-          contentInnerClassName="max-w-[420px]"
-        >
-          <Card
-            variant="static"
-            padding="lg"
-            className="rounded-2xl border-border bg-surface-1 shadow-card"
-          >
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl text-text-primary">{panelTitle}</CardTitle>
-              <CardDescription className="text-sm text-text-secondary">
-                {panelDescription}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {view === "buttons" ? renderButtonsView() : renderEmailFlow()}
-            </CardContent>
-          </Card>
-        </AuthShell>
-      </div>
-    </div>
+    <SlarkAuthFrame>
+      <Card
+        variant="static"
+        padding="lg"
+        className="w-full rounded-2xl border-border bg-surface-1 shadow-card"
+      >
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl text-text-primary">{panelTitle}</CardTitle>
+          <CardDescription className="text-sm text-text-secondary">
+            {panelDescription}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {view === "buttons" ? renderButtonsView() : renderEmailFlow()}
+        </CardContent>
+      </Card>
+    </SlarkAuthFrame>
   );
 }
