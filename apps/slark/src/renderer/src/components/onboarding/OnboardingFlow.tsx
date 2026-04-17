@@ -35,7 +35,9 @@ export function OnboardingFlow(): React.ReactElement {
 
   return (
     <SlarkAuthFrame
-      contentInnerClassName={isRuntimeStep ? "max-w-[760px]" : "max-w-[560px]"}
+      contentInnerClassName={
+        isRuntimeStep ? "w-[760px] max-w-full mx-auto" : "max-w-[560px] mx-auto"
+      }
       hideBranding
       hideFooter
     >

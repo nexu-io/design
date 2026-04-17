@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertTriangle, ArrowRight, Check, Loader2, X } from "lucide-react";
-import { Alert, AlertDescription, Button, Progress, cn } from "@nexu-design/ui-web";
+import { ArrowRight, Check, Loader2, X } from "lucide-react";
+import { Button, Progress, RuntimeLogo, cn } from "@nexu-design/ui-web";
 import { useRuntimesStore } from "@/stores/runtimes";
 import type { Runtime } from "@/types";
 
@@ -12,19 +12,7 @@ interface DetectedRuntime {
   detected: boolean;
   version?: string;
   path?: string;
-  error?: string;
 }
-
-const RUNTIME_BRANDS: Record<string, { label: string; color: string }> = {
-  "claude-code": { label: ">_", color: "#B45309" },
-  cursor: { label: "▸", color: "#171717" },
-  opencode: { label: "</>", color: "#059669" },
-  codex: { label: "◎", color: "#0369A1" },
-  "gemini-cli": { label: "✦", color: "#4285F4" },
-  hermes: { label: "H", color: "#EA580C" },
-  openclaw: { label: "⊞", color: "#7C3AED" },
-  pi: { label: "π", color: "#DB2777" },
-};
 
 const SCAN_DURATION = 3500;
 const STAGGER_DELAY = 400;
@@ -53,17 +41,12 @@ export function ConnectRuntimeStep(): React.ReactElement {
       setScanProgress(Math.min(elapsed / SCAN_DURATION, 1));
     }, 50);
 
-    const mockResults: { index: number; version: string; path: string; error?: string }[] = [
+    const mockResults: { index: number; version: string; path: string }[] = [
       { index: 0, version: "1.0.12", path: "/usr/local/bin/claude" },
       { index: 2, version: "0.5.3", path: "/usr/local/bin/opencode" },
       { index: 4, version: "0.1.0", path: "/usr/local/bin/gemini" },
-      {
-        index: 6,
-        version: "0.2.1",
-        path: "/usr/local/bin/openclaw",
-        error: "Requires update (min v0.3.0)",
-      },
-      { index: 7, version: "1.3.0", path: "/usr/local/bin/pi", error: "Auth token expired" },
+      { index: 6, version: "0.2.1", path: "/usr/local/bin/openclaw" },
+      { index: 7, version: "1.3.0", path: "/usr/local/bin/pi" },
     ];
 
     let revealedCount = 0;
@@ -77,14 +60,12 @@ export function ConnectRuntimeStep(): React.ReactElement {
       setScanProgress(1);
     };
 
-    const timers = mockResults.map(({ index, version, path, error }, offset) =>
+    const timers = mockResults.map(({ index, version, path }, offset) =>
       setTimeout(
         () => {
           setRuntimes((previous) =>
             previous.map((runtime, runtimeIndex) =>
-              runtimeIndex === index
-                ? { ...runtime, detected: true, version, path, error }
-                : runtime,
+              runtimeIndex === index ? { ...runtime, detected: true, version, path } : runtime,
             ),
           );
           revealedCount += 1;
@@ -107,16 +88,16 @@ export function ConnectRuntimeStep(): React.ReactElement {
 
   useEffect(() => {
     if (phase === "done") {
-      const workingTypes = runtimes
-        .filter((runtime) => runtime.detected && !runtime.error)
+      const detectedTypes = runtimes
+        .filter((runtime) => runtime.detected)
         .map((runtime) => runtime.type);
-      setSelected(new Set(workingTypes));
+      setSelected(new Set(detectedTypes));
     }
   }, [phase, runtimes]);
 
   const toggleSelect = (type: string): void => {
     const runtime = runtimes.find((item) => item.type === type);
-    if (!runtime?.detected || runtime.error) return;
+    if (!runtime?.detected) return;
 
     setSelected((previous) => {
       const next = new Set(previous);
@@ -126,8 +107,8 @@ export function ConnectRuntimeStep(): React.ReactElement {
     });
   };
 
-  const errorCount = runtimes.filter((runtime) => runtime.detected && runtime.error).length;
   const detectedCount = runtimes.filter((runtime) => runtime.detected).length;
+  const unavailableCount = runtimes.length - detectedCount;
 
   return (
     <div className="w-full">
@@ -138,7 +119,7 @@ export function ConnectRuntimeStep(): React.ReactElement {
         <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
           {phase === "scanning"
             ? "Scanning your machine for compatible AI runtimes."
-            : `Found ${detectedCount} runtime${detectedCount !== 1 ? "s" : ""}${errorCount > 0 ? ` • ${errorCount} need attention` : ""}.`}
+            : `Found ${detectedCount} available runtime${detectedCount !== 1 ? "s" : ""}${unavailableCount > 0 ? ` • ${unavailableCount} unavailable` : ""}.`}
         </p>
       </div>
 
@@ -154,50 +135,45 @@ export function ConnectRuntimeStep(): React.ReactElement {
         ) : null}
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {runtimes.map(({ type, name, desc, detected, version, path, error }) => {
+          {runtimes.map(({ type, name, desc, detected, version }) => {
             const isSelected = selected.has(type);
-            const isError = detected && !!error;
-            const isWorking = detected && !error;
             const notFound = phase === "done" && !detected;
-            const brand = RUNTIME_BRANDS[type];
-            const brandColor = brand?.color ?? "#666";
 
             return (
               <button
                 key={type}
                 type="button"
                 onClick={() => phase === "done" && toggleSelect(type)}
-                disabled={phase === "scanning" || !isWorking}
+                disabled={phase === "scanning" || !detected}
                 className={cn(
-                  "flex min-h-[128px] flex-col items-start gap-3 rounded-xl border p-3.5 text-left transition-colors",
-                  isWorking && isSelected
+                  "flex h-[148px] flex-col items-start gap-3 rounded-xl border p-3.5 text-left transition-colors",
+                  detected && isSelected
                     ? "border-accent bg-accent/5"
-                    : isWorking
+                    : detected
                       ? "border-border bg-surface-0 hover:bg-surface-2"
-                      : isError
-                        ? "border-warning/40 bg-warning-subtle"
-                        : "border-dashed border-border bg-surface-0",
+                      : "border-dashed border-border bg-surface-0",
                 )}
               >
                 <div className="flex w-full items-center justify-between gap-2">
                   <div
-                    className="flex h-7 w-7 items-center justify-center rounded-md text-[11px] font-semibold"
-                    style={{
-                      color: notFound ? undefined : brandColor,
-                      backgroundColor: notFound ? undefined : `${brandColor}1A`,
-                    }}
+                    className={cn(
+                      "flex size-8 items-center justify-center rounded-lg border border-border bg-surface-1",
+                      notFound && "border-border-subtle bg-surface-0",
+                    )}
                   >
-                    {brand?.label ?? "?"}
+                    <RuntimeLogo
+                      runtime={type}
+                      size={18}
+                      className={cn(notFound ? "text-text-muted opacity-60" : "text-text-heading")}
+                    />
                   </div>
 
-                  {isWorking && isSelected ? (
+                  {detected && isSelected ? (
                     <div className="flex size-4 shrink-0 items-center justify-center rounded-full bg-accent">
                       <Check className="size-3 text-accent-fg" strokeWidth={3} />
                     </div>
-                  ) : isWorking ? (
+                  ) : detected ? (
                     <Check className="size-4 shrink-0 text-success" strokeWidth={3} />
-                  ) : isError ? (
-                    <AlertTriangle className="size-4 shrink-0 text-warning" />
                   ) : phase === "done" ? (
                     <X className="size-4 shrink-0 text-text-muted" />
                   ) : (
@@ -205,10 +181,10 @@ export function ConnectRuntimeStep(): React.ReactElement {
                   )}
                 </div>
 
-                <div className="space-y-1">
+                <div className="min-w-0 space-y-1">
                   <div
                     className={cn(
-                      "text-[13px] font-semibold",
+                      "truncate text-[13px] font-semibold",
                       notFound ? "text-text-muted" : "text-text-primary",
                     )}
                   >
@@ -216,7 +192,7 @@ export function ConnectRuntimeStep(): React.ReactElement {
                   </div>
                   <div
                     className={cn(
-                      "text-[11px] leading-relaxed",
+                      "line-clamp-2 text-[11px] leading-relaxed",
                       notFound ? "text-text-muted" : "text-text-secondary",
                     )}
                   >
@@ -224,15 +200,9 @@ export function ConnectRuntimeStep(): React.ReactElement {
                   </div>
                 </div>
 
-                {isWorking ? (
+                {detected ? (
                   <div className="mt-auto w-full truncate font-mono text-[10.5px] text-text-tertiary">
-                    v{version} · {path}
-                  </div>
-                ) : null}
-
-                {isError ? (
-                  <div className="mt-auto w-full truncate font-mono text-[10.5px] text-warning">
-                    v{version} · {error}
+                    v{version}
                   </div>
                 ) : null}
 
@@ -244,15 +214,6 @@ export function ConnectRuntimeStep(): React.ReactElement {
           })}
         </div>
 
-        {errorCount > 0 && phase === "done" ? (
-          <Alert variant="warning">
-            <AlertTriangle className="size-4" />
-            <AlertDescription>
-              Some runtimes were detected but need attention before they can be selected.
-            </AlertDescription>
-          </Alert>
-        ) : null}
-
         <div className="flex justify-end gap-2">
           <Button variant="ghost" onClick={() => navigate("/onboarding/agent")}>
             Skip for now
@@ -260,9 +221,7 @@ export function ConnectRuntimeStep(): React.ReactElement {
           <Button
             onClick={() => {
               const selectedRuntimes: Runtime[] = runtimes
-                .filter(
-                  (runtime) => runtime.detected && !runtime.error && selected.has(runtime.type),
-                )
+                .filter((runtime) => runtime.detected && selected.has(runtime.type))
                 .map((runtime) => ({
                   id: `rt-${runtime.type}`,
                   name: runtime.name,

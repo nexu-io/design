@@ -4,6 +4,7 @@ import { cn } from "../lib/cn";
 import {
   CANONICAL_MODEL_ICON_DATA_URIS,
   CANONICAL_PROVIDER_ICON_DATA_URIS,
+  CANONICAL_RUNTIME_ICON_DATA_URIS,
 } from "./logo-icon-data";
 
 export type ProviderName =
@@ -25,6 +26,16 @@ export type ProviderName =
 export type PlatformName = "slack" | "feishu" | "discord" | "telegram" | "wechat" | "whatsapp";
 
 export type BrandName = "nexu" | "github";
+
+export type RuntimeName =
+  | "claude-code"
+  | "cursor"
+  | "opencode"
+  | "hermes"
+  | "codex"
+  | "gemini-cli"
+  | "openclaw"
+  | "pi";
 
 export type ModelName = string;
 
@@ -220,6 +231,21 @@ function resolveModelIconKey(model: string, provider?: string): string | null {
   }
 
   return null;
+}
+
+function getRuntimeMonogramLabel(runtime: string): string {
+  const normalized = runtime.trim();
+
+  if (!normalized) {
+    return "?";
+  }
+
+  return normalized
+    .split(/[^a-z0-9]+/i)
+    .map((part) => part[0] ?? "")
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }
 
 export function AnthropicIcon(props: LogoProps) {
@@ -465,6 +491,49 @@ export function ModelLogo({
   return (
     <MonogramLogo
       label={(displayModelId[0] ?? "?").toUpperCase()}
+      background="var(--color-surface-3, #E5E7EB)"
+      foreground="var(--color-text-muted, #6B7280)"
+      {...props}
+    />
+  );
+}
+
+export function RuntimeLogo({ runtime, ...props }: LogoProps & { runtime: RuntimeName | string }) {
+  const normalizedRuntime = runtime.trim().toLowerCase();
+
+  const directIconKeyByRuntime: Partial<
+    Record<string, keyof typeof CANONICAL_RUNTIME_ICON_DATA_URIS>
+  > = {
+    "claude-code": "claudecodecolor",
+    codex: "codexcolor",
+    cursor: "cursor",
+    "gemini-cli": "geminiclicolor",
+    hermes: "nousresearch",
+    opencode: "opencode",
+    openclaw: "openclawcolor",
+    pi: "inflection",
+  };
+
+  const modelIconKeyByRuntime: Partial<
+    Record<string, keyof typeof CANONICAL_MODEL_ICON_DATA_URIS>
+  > = {};
+
+  const directIconKey = directIconKeyByRuntime[normalizedRuntime];
+  const modelIconKey = modelIconKeyByRuntime[normalizedRuntime];
+
+  const src = directIconKey
+    ? CANONICAL_RUNTIME_ICON_DATA_URIS[directIconKey]
+    : modelIconKey
+      ? CANONICAL_MODEL_ICON_DATA_URIS[modelIconKey]
+      : null;
+
+  if (src) {
+    return <ImageLogo src={src} alt={normalizedRuntime || runtime} {...props} />;
+  }
+
+  return (
+    <MonogramLogo
+      label={getRuntimeMonogramLabel(runtime)}
       background="var(--color-surface-3, #E5E7EB)"
       foreground="var(--color-text-muted, #6B7280)"
       {...props}

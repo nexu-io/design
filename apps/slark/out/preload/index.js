@@ -44,7 +44,7 @@ const electronAPI = {
     },
     removeAllListeners(channel) {
       electron.ipcRenderer.removeAllListeners(channel);
-    },
+    }
   },
   webFrame: {
     insertCSS(css) {
@@ -59,12 +59,12 @@ const electronAPI = {
       if (typeof level === "number") {
         electron.webFrame.setZoomLevel(level);
       }
-    },
+    }
   },
   webUtils: {
     getPathForFile(file) {
       return electron.webUtils.getPathForFile(file);
-    },
+    }
   },
   process: {
     get platform() {
@@ -75,8 +75,8 @@ const electronAPI = {
     },
     get env() {
       return { ...process.env };
-    },
-  },
+    }
+  }
 };
 if (process.contextIsolated) {
   try {
