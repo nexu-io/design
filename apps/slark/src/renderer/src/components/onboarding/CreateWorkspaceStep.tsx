@@ -1,60 +1,59 @@
-import { useState, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Building2, Mail, Send, Check } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useWorkspaceStore } from '@/stores/workspace'
+import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowRight, Building2, Mail, Send, Check } from "lucide-react";
+import { cn } from "@nexu-design/ui-web";
+import { useWorkspaceStore } from "@/stores/workspace";
 
 export function CreateWorkspaceStep(): React.ReactElement {
-  const navigate = useNavigate()
-  const setWorkspace = useWorkspaceStore((s) => s.setWorkspace)
-  const [name, setName] = useState('')
-  const [invitedEmails, setInvitedEmails] = useState<string[]>([])
-  const [emailInput, setEmailInput] = useState('')
-  const [emailError, setEmailError] = useState('')
-  const emailRef = useRef<HTMLInputElement>(null)
-  const errorTimerRef = useRef<ReturnType<typeof setTimeout>>(null)
+  const navigate = useNavigate();
+  const setWorkspace = useWorkspaceStore((s) => s.setWorkspace);
+  const [name, setName] = useState("");
+  const [invitedEmails, setInvitedEmails] = useState<string[]>([]);
+  const [emailInput, setEmailInput] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const emailRef = useRef<HTMLInputElement>(null);
+  const errorTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
-  const isValidEmail = (email: string): boolean =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  const isValidEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const showError = (msg: string): void => {
-    setEmailError(msg)
-    if (errorTimerRef.current) clearTimeout(errorTimerRef.current)
-    errorTimerRef.current = setTimeout(() => setEmailError(''), 3000)
-  }
+    setEmailError(msg);
+    if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+    errorTimerRef.current = setTimeout(() => setEmailError(""), 3000);
+  };
 
   const addEmail = (): void => {
-    const email = emailInput.trim()
-    if (!email) return
+    const email = emailInput.trim();
+    if (!email) return;
     if (!isValidEmail(email)) {
-      showError('Please enter a valid email address')
-      return
+      showError("Please enter a valid email address");
+      return;
     }
     if (invitedEmails.includes(email)) {
-      showError('This email has already been added')
-      return
+      showError("This email has already been added");
+      return;
     }
-    setInvitedEmails((prev) => [...prev, email])
-    setEmailInput('')
-    setEmailError('')
-  }
+    setInvitedEmails((prev) => [...prev, email]);
+    setEmailInput("");
+    setEmailError("");
+  };
 
   const handleEmailKeyDown = (e: React.KeyboardEvent): void => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      addEmail()
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addEmail();
     }
-  }
+  };
 
   const handleContinue = (): void => {
-    if (!name.trim()) return
+    if (!name.trim()) return;
     setWorkspace({
       id: `ws-${Date.now()}`,
       name: name.trim(),
-      createdAt: Date.now()
-    })
-    navigate('/onboarding/runtime')
-  }
+      createdAt: Date.now(),
+    });
+    navigate("/onboarding/runtime");
+  };
 
   return (
     <div className="flex flex-col items-center gap-6 pt-10">
@@ -84,10 +83,10 @@ export function CreateWorkspaceStep(): React.ReactElement {
           <div className="flex items-center gap-2">
             <div
               className={cn(
-                'flex-1 flex items-center gap-2 h-10 rounded-lg border bg-background px-3 transition-shadow focus-within:ring-2',
+                "flex-1 flex items-center gap-2 h-10 rounded-lg border bg-background px-3 transition-shadow focus-within:ring-2",
                 emailError
-                  ? 'border-destructive focus-within:ring-destructive/30'
-                  : 'border-input focus-within:ring-ring'
+                  ? "border-destructive focus-within:ring-destructive/30"
+                  : "border-input focus-within:ring-ring",
               )}
             >
               <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -143,5 +142,5 @@ export function CreateWorkspaceStep(): React.ReactElement {
         <ArrowRight className="h-4 w-4" />
       </button>
     </div>
-  )
+  );
 }

@@ -1,55 +1,66 @@
-import { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import * as Tabs from '@radix-ui/react-tabs'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { Bot, Zap, Wrench, MessageSquare, MoreHorizontal, FileText, Settings, Trash2, Copy } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useChatStore } from '@/stores/chat'
-import { useAgentsStore } from '@/stores/agents'
-import { mockRuntimes } from '@/mock/data'
-import { RuntimePicker } from './RuntimePicker'
-import type { Agent, Channel } from '@/types'
+import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import * as Tabs from "@radix-ui/react-tabs";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import {
+  Bot,
+  Zap,
+  Wrench,
+  MessageSquare,
+  MoreHorizontal,
+  FileText,
+  Settings,
+  Trash2,
+  Copy,
+} from "lucide-react";
+import { cn } from "@nexu-design/ui-web";
+import { useChatStore } from "@/stores/chat";
+import { useAgentsStore } from "@/stores/agents";
+import { mockRuntimes } from "@/mock/data";
+import { RuntimePicker } from "./RuntimePicker";
+import type { Agent, Channel } from "@/types";
 
 interface AgentDetailProps {
-  agent: Agent
+  agent: Agent;
 }
 
 export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
-  const navigate = useNavigate()
-  const channels = useChatStore((s) => s.channels)
-  const addChannel = useChatStore((s) => s.addChannel)
-  const addAgent = useAgentsStore((s) => s.addAgent)
-  const updateAgent = useAgentsStore((s) => s.updateAgent)
-  const removeAgent = useAgentsStore((s) => s.removeAgent)
+  const navigate = useNavigate();
+  const channels = useChatStore((s) => s.channels);
+  const addChannel = useChatStore((s) => s.addChannel);
+  const addAgent = useAgentsStore((s) => s.addAgent);
+  const updateAgent = useAgentsStore((s) => s.updateAgent);
+  const removeAgent = useAgentsStore((s) => s.removeAgent);
 
-  const runtime = agent.runtimeId
-    ? mockRuntimes.find((r) => r.id === agent.runtimeId)
-    : undefined
+  const runtime = agent.runtimeId ? mockRuntimes.find((r) => r.id === agent.runtimeId) : undefined;
 
   const dmChannelId = useMemo(() => {
     const dm = channels.find(
-      (c) => c.type === 'dm' && c.members.some((m) => m.kind === 'agent' && m.id === agent.id)
-    )
-    return dm?.id
-  }, [channels, agent.id])
+      (c) => c.type === "dm" && c.members.some((m) => m.kind === "agent" && m.id === agent.id),
+    );
+    return dm?.id;
+  }, [channels, agent.id]);
 
   const handleSendMessage = (): void => {
     if (dmChannelId) {
-      navigate(`/chat/${dmChannelId}`)
-      return
+      navigate(`/chat/${dmChannelId}`);
+      return;
     }
     const newDm: Channel = {
       id: `dm-${agent.id}`,
       name: agent.name,
-      type: 'dm',
-      members: [{ kind: 'user', id: 'u-1' }, { kind: 'agent', id: agent.id }],
+      type: "dm",
+      members: [
+        { kind: "user", id: "u-1" },
+        { kind: "agent", id: agent.id },
+      ],
       lastMessageAt: Date.now(),
       unreadCount: 0,
-      createdAt: Date.now()
-    }
-    addChannel(newDm)
-    navigate(`/chat/${newDm.id}`)
-  }
+      createdAt: Date.now(),
+    };
+    addChannel(newDm);
+    navigate(`/chat/${newDm.id}`);
+  };
 
   return (
     <div className="flex h-full flex-col">
@@ -58,14 +69,16 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
       <div className="flex items-center gap-3 px-5 h-12 border-b border-border shrink-0">
         <Bot className="h-4 w-4 text-muted-foreground shrink-0" />
         <span className="font-semibold text-sm">{agent.name}</span>
-        <div className={cn(
-          'flex items-center gap-1 text-xs',
-          agent.status === 'online' && 'text-slark-online',
-          agent.status === 'busy' && 'text-slark-busy',
-          agent.status === 'offline' && 'text-muted-foreground'
-        )}>
+        <div
+          className={cn(
+            "flex items-center gap-1 text-xs",
+            agent.status === "online" && "text-slark-online",
+            agent.status === "busy" && "text-slark-busy",
+            agent.status === "offline" && "text-muted-foreground",
+          )}
+        >
           <div className="h-1.5 w-1.5 rounded-full bg-current" />
-          {agent.status === 'online' ? 'Online' : agent.status === 'busy' ? 'Busy' : 'Offline'}
+          {agent.status === "online" ? "Online" : agent.status === "busy" ? "Busy" : "Offline"}
         </div>
         {runtime && (
           <>
@@ -98,15 +111,27 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
               >
                 <DropdownMenu.Item
                   onClick={() => {
-                    const dupId = `a-${Date.now()}`
-                    addAgent({ ...agent, id: dupId, name: `${agent.name} (copy)`, createdAt: Date.now() })
+                    const dupId = `a-${Date.now()}`;
+                    addAgent({
+                      ...agent,
+                      id: dupId,
+                      name: `${agent.name} (copy)`,
+                      createdAt: Date.now(),
+                    });
                     const dmCh: Channel = {
-                      id: `dm-${dupId}`, name: `${agent.name} (copy)`, type: 'dm',
-                      members: [{ kind: 'user', id: 'u-1' }, { kind: 'agent', id: dupId }],
-                      lastMessageAt: Date.now(), unreadCount: 0, createdAt: Date.now()
-                    }
-                    addChannel(dmCh)
-                    navigate(`/agents/${dupId}`)
+                      id: `dm-${dupId}`,
+                      name: `${agent.name} (copy)`,
+                      type: "dm",
+                      members: [
+                        { kind: "user", id: "u-1" },
+                        { kind: "agent", id: dupId },
+                      ],
+                      lastMessageAt: Date.now(),
+                      unreadCount: 0,
+                      createdAt: Date.now(),
+                    };
+                    addChannel(dmCh);
+                    navigate(`/agents/${dupId}`);
                   }}
                   className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm cursor-pointer outline-none hover:bg-accent transition-colors"
                 >
@@ -116,8 +141,8 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
                 <DropdownMenu.Separator className="my-1 h-px bg-border" />
                 <DropdownMenu.Item
                   onClick={() => {
-                    removeAgent(agent.id)
-                    navigate('/agents')
+                    removeAgent(agent.id);
+                    navigate("/agents");
                   }}
                   className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm cursor-pointer outline-none text-destructive-foreground hover:bg-destructive/10 transition-colors"
                 >
@@ -132,13 +157,24 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
 
       <Tabs.Root defaultValue="instructions" className="flex-1 flex flex-col min-h-0">
         <Tabs.List className="flex items-center gap-1 px-5 h-10 border-b border-border shrink-0">
-          <TabTrigger value="instructions" icon={<FileText className="h-3.5 w-3.5" />} label="Instructions" />
+          <TabTrigger
+            value="instructions"
+            icon={<FileText className="h-3.5 w-3.5" />}
+            label="Instructions"
+          />
           <TabTrigger value="skills" icon={<Wrench className="h-3.5 w-3.5" />} label="Skills" />
-          <TabTrigger value="settings" icon={<Settings className="h-3.5 w-3.5" />} label="Settings" />
+          <TabTrigger
+            value="settings"
+            icon={<Settings className="h-3.5 w-3.5" />}
+            label="Settings"
+          />
         </Tabs.List>
 
         <Tabs.Content value="instructions" className="flex-1 overflow-y-auto outline-none">
-          <InstructionsTab agent={agent} onSave={(prompt) => updateAgent(agent.id, { systemPrompt: prompt })} />
+          <InstructionsTab
+            agent={agent}
+            onSave={(prompt) => updateAgent(agent.id, { systemPrompt: prompt })}
+          />
         </Tabs.Content>
 
         <Tabs.Content value="skills" className="flex-1 overflow-y-auto outline-none">
@@ -150,10 +186,14 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
         </Tabs.Content>
       </Tabs.Root>
     </div>
-  )
+  );
 }
 
-function TabTrigger({ value, icon, label }: { value: string; icon: React.ReactNode; label: string }): React.ReactElement {
+function TabTrigger({
+  value,
+  icon,
+  label,
+}: { value: string; icon: React.ReactNode; label: string }): React.ReactElement {
   return (
     <Tabs.Trigger
       value={value}
@@ -162,12 +202,15 @@ function TabTrigger({ value, icon, label }: { value: string; icon: React.ReactNo
       {icon}
       {label}
     </Tabs.Trigger>
-  )
+  );
 }
 
-function InstructionsTab({ agent, onSave }: { agent: Agent; onSave: (prompt: string) => void }): React.ReactElement {
-  const [prompt, setPrompt] = useState(agent.systemPrompt)
-  const isDirty = prompt !== agent.systemPrompt
+function InstructionsTab({
+  agent,
+  onSave,
+}: { agent: Agent; onSave: (prompt: string) => void }): React.ReactElement {
+  const [prompt, setPrompt] = useState(agent.systemPrompt);
+  const isDirty = prompt !== agent.systemPrompt;
 
   return (
     <div className="p-6 max-w-3xl">
@@ -175,7 +218,8 @@ function InstructionsTab({ agent, onSave }: { agent: Agent; onSave: (prompt: str
         <div>
           <h3 className="text-sm font-semibold">Agent Instructions</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Define this agent's identity and working style. These instructions are injected into the agent's context for every task.
+            Define this agent's identity and working style. These instructions are injected into the
+            agent's context for every task.
           </p>
         </div>
       </div>
@@ -196,7 +240,7 @@ function InstructionsTab({ agent, onSave }: { agent: Agent; onSave: (prompt: str
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 function SkillsTab({ agent }: { agent: Agent }): React.ReactElement {
@@ -204,7 +248,9 @@ function SkillsTab({ agent }: { agent: Agent }): React.ReactElement {
     <div className="p-6 max-w-3xl">
       <div className="mb-4">
         <h3 className="text-sm font-semibold">Skills</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">Skills assigned to this agent. These are synced from the connected runtime.</p>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          Skills assigned to this agent. These are synced from the connected runtime.
+        </p>
       </div>
 
       {agent.skills.length > 0 ? (
@@ -225,37 +271,48 @@ function SkillsTab({ agent }: { agent: Agent }): React.ReactElement {
         <div className="rounded-lg border border-border border-dashed p-8 flex flex-col items-center gap-2 text-center">
           <Wrench className="h-8 w-8 text-muted-foreground" />
           <p className="text-sm font-medium text-muted-foreground">No skills available</p>
-          <p className="text-xs text-muted-foreground">Connect a runtime to load skills automatically.</p>
+          <p className="text-xs text-muted-foreground">
+            Connect a runtime to load skills automatically.
+          </p>
         </div>
       )}
     </div>
-  )
+  );
 }
 
-function SettingsTab({ agent, onUpdate }: { agent: Agent; onUpdate: (updates: Partial<Agent>) => void }): React.ReactElement {
-  const [name, setName] = useState(agent.name)
-  const [description, setDescription] = useState(agent.description)
-  const [runtimeId, setRuntimeId] = useState<string | null>(agent.runtimeId)
-  const [avatar, setAvatar] = useState(agent.avatar)
+function SettingsTab({
+  agent,
+  onUpdate,
+}: { agent: Agent; onUpdate: (updates: Partial<Agent>) => void }): React.ReactElement {
+  const [name, setName] = useState(agent.name);
+  const [description, setDescription] = useState(agent.description);
+  const [runtimeId, setRuntimeId] = useState<string | null>(agent.runtimeId);
+  const [avatar, setAvatar] = useState(agent.avatar);
 
-  const isDirty = name !== agent.name || description !== agent.description || runtimeId !== agent.runtimeId || avatar !== agent.avatar
+  const isDirty =
+    name !== agent.name ||
+    description !== agent.description ||
+    runtimeId !== agent.runtimeId ||
+    avatar !== agent.avatar;
 
   const handleSave = (): void => {
-    const trimmed = name.trim()
-    if (!trimmed) return
-    onUpdate({ name: trimmed, description: description.trim(), runtimeId, avatar })
-  }
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    onUpdate({ name: trimmed, description: description.trim(), runtimeId, avatar });
+  };
 
   const handleRandomizeAvatar = (): void => {
-    const seed = Math.random().toString(36).slice(2, 8)
-    setAvatar(`https://api.dicebear.com/9.x/bottts/svg?seed=${seed}`)
-  }
+    const seed = Math.random().toString(36).slice(2, 8);
+    setAvatar(`https://api.dicebear.com/9.x/bottts/svg?seed=${seed}`);
+  };
 
   return (
     <div className="p-6 max-w-3xl space-y-6">
       <div>
         <h3 className="text-sm font-semibold">Settings</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">Configure agent identity and runtime.</p>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          Configure agent identity and runtime.
+        </p>
       </div>
 
       <div className="space-y-4">
@@ -306,7 +363,5 @@ function SettingsTab({ agent, onUpdate }: { agent: Agent; onUpdate: (updates: Pa
         Save Changes
       </button>
     </div>
-  )
+  );
 }
-
-

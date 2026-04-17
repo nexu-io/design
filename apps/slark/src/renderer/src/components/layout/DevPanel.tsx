@@ -1,48 +1,48 @@
-import { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { Settings2, ChevronDown, ChevronUp, RotateCcw, LogIn, LogOut, UserCog } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useWorkspaceStore } from '@/stores/workspace'
-import { mockUsers } from '@/mock/data'
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Settings2, ChevronDown, ChevronUp, RotateCcw, LogIn, LogOut, UserCog } from "lucide-react";
+import { cn } from "@nexu-design/ui-web";
+import { useWorkspaceStore } from "@/stores/workspace";
+import { mockUsers } from "@/mock/data";
 
-type AppState = 'welcome' | 'onboarding' | 'app'
+type AppState = "welcome" | "onboarding" | "app";
 
 export function DevPanel(): React.ReactElement {
-  const [open, setOpen] = useState(false)
-  const navigate = useNavigate()
-  const location = useLocation()
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
   const { isOnboarded, currentUserId, setCurrentUser, completeOnboarding, switchWorkspace, reset } =
-    useWorkspaceStore()
+    useWorkspaceStore();
 
   const currentState: AppState = !isOnboarded
-    ? location.pathname.startsWith('/onboarding')
-      ? 'onboarding'
-      : 'welcome'
-    : 'app'
+    ? location.pathname.startsWith("/onboarding")
+      ? "onboarding"
+      : "welcome"
+    : "app";
 
   const jumpTo = (state: AppState): void => {
     switch (state) {
-      case 'welcome':
-        reset()
-        navigate('/')
-        break
-      case 'onboarding':
-        reset()
-        navigate('/onboarding/workspace')
-        break
-      case 'app':
-        switchWorkspace('ws-1')
-        completeOnboarding()
-        navigate('/chat')
-        break
+      case "welcome":
+        reset();
+        navigate("/");
+        break;
+      case "onboarding":
+        reset();
+        navigate("/onboarding/workspace");
+        break;
+      case "app":
+        switchWorkspace("ws-1");
+        completeOnboarding();
+        navigate("/chat");
+        break;
     }
-  }
+  };
 
   const states: { id: AppState; label: string; icon: React.ElementType }[] = [
-    { id: 'welcome', label: 'Welcome (Logged out)', icon: LogOut },
-    { id: 'onboarding', label: 'Onboarding', icon: LogIn },
-    { id: 'app', label: 'Main App (Logged in)', icon: Settings2 }
-  ]
+    { id: "welcome", label: "Welcome (Logged out)", icon: LogOut },
+    { id: "onboarding", label: "Onboarding", icon: LogIn },
+    { id: "app", label: "Main App (Logged in)", icon: Settings2 },
+  ];
 
   if (!open) {
     return (
@@ -54,7 +54,7 @@ export function DevPanel(): React.ReactElement {
         Dev
         <ChevronUp className="h-3 w-3" />
       </button>
-    )
+    );
   }
 
   return (
@@ -83,10 +83,10 @@ export function DevPanel(): React.ReactElement {
                 key={id}
                 onClick={() => jumpTo(id)}
                 className={cn(
-                  'flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-xs transition-colors',
+                  "flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-xs transition-colors",
                   currentState === id
-                    ? 'bg-slark-primary/15 text-slark-primary font-medium'
-                    : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                    ? "bg-slark-primary/15 text-slark-primary font-medium"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground",
                 )}
               >
                 <Icon className="h-3.5 w-3.5" />
@@ -112,18 +112,20 @@ export function DevPanel(): React.ReactElement {
                 key={user.id}
                 onClick={() => setCurrentUser(user.id)}
                 className={cn(
-                  'flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-xs transition-colors',
+                  "flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-xs transition-colors",
                   currentUserId === user.id
-                    ? 'bg-accent text-foreground font-medium'
-                    : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
+                    ? "bg-accent text-foreground font-medium"
+                    : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
                 )}
               >
                 <img src={user.avatar} alt="" className="h-4 w-4 rounded-full" />
                 <span className="flex-1 text-left truncate">{user.name}</span>
                 <span
                   className={cn(
-                    'text-[10px] px-1.5 py-0.5 rounded',
-                    user.role === 'owner' ? 'bg-slark-primary/10 text-slark-primary' : 'bg-secondary text-muted-foreground'
+                    "text-[10px] px-1.5 py-0.5 rounded",
+                    user.role === "owner"
+                      ? "bg-slark-primary/10 text-slark-primary"
+                      : "bg-secondary text-muted-foreground",
                   )}
                 >
                   {user.role}
@@ -137,8 +139,8 @@ export function DevPanel(): React.ReactElement {
 
         <button
           onClick={() => {
-            reset()
-            navigate('/')
+            reset();
+            navigate("/");
           }}
           className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-xs text-destructive-foreground hover:bg-destructive/10 transition-colors"
         >
@@ -147,5 +149,5 @@ export function DevPanel(): React.ReactElement {
         </button>
       </div>
     </div>
-  )
+  );
 }
