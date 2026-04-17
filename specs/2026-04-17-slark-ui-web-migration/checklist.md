@@ -338,15 +338,15 @@
 - [ ] 标记哪些是未来可能沉淀到 ui-web 的候选能力
 
 ### 9.4 最终验收
-- [ ] onboarding 正常
-- [ ] invite 正常
-- [ ] chat 正常
-- [ ] agents 正常
-- [ ] runtimes 正常
-- [ ] settings 正常
-- [ ] workspace switcher 正常
-- [ ] theme 切换正常
-- [ ] 构建通过
+- [x] onboarding 正常
+- [x] invite 正常
+- [x] chat 正常
+- [x] agents 正常
+- [x] runtimes 正常
+- [x] settings 正常
+- [x] workspace switcher 正常
+- [x] theme 切换正常
+- [x] 构建通过
 
 ---
 

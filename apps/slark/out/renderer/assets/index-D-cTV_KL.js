@@ -16139,7 +16139,12 @@ const Button = reactExports.forwardRef(
     ...props
   }, ref) => {
     const Comp = asChild ? Slot$4 : "button";
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    const content = asChild ? children : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      loading ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle$1, { className: "size-4 animate-spin", "aria-hidden": "true" }) : leadingIcon,
+      children,
+      !loading ? trailingIcon : null
+    ] });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
       Comp,
       {
         ref,
@@ -16148,11 +16153,7 @@ const Button = reactExports.forwardRef(
         disabled: !asChild ? disabled || loading : void 0,
         "data-loading": loading ? "" : void 0,
         ...props,
-        children: [
-          loading ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle$1, { className: "size-4 animate-spin", "aria-hidden": "true" }) : leadingIcon,
-          children,
-          !loading ? trailingIcon : null
-        ]
+        children: content
       }
     );
   }
