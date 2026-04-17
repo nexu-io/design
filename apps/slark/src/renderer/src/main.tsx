@@ -1,28 +1,22 @@
-import { App } from "@/app/App";
-import { useThemeStore } from "@/stores/theme";
-import { ThemeRoot } from "@nexu-design/ui-web";
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "@/app/globals.css";
+import React, { useEffect } from 'react'
+import ReactDOM from 'react-dom/client'
+import { App } from '@/app/App'
+import { useThemeStore } from '@/stores/theme'
+import '@/app/globals.css'
 
-function Root(): React.ReactElement {
-  const theme = useThemeStore((s) => s.theme);
-
-  return (
-    <ThemeRoot theme={theme} className="min-h-screen">
-      <App />
-    </ThemeRoot>
-  );
+function ThemeInit(): null {
+  const theme = useThemeStore((s) => s.theme)
+  useEffect(() => {
+    const isDark =
+      theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    document.documentElement.classList.toggle('dark', isDark)
+  }, [theme])
+  return null
 }
 
-const rootElement = document.getElementById("root");
-
-if (!rootElement) {
-  throw new Error("Slark renderer root element not found");
-}
-
-ReactDOM.createRoot(rootElement).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Root />
-  </React.StrictMode>,
-);
+    <ThemeInit />
+    <App />
+  </React.StrictMode>
+)

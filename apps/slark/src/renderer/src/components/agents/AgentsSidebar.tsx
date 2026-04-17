@@ -1,115 +1,215 @@
-import { mockAgentTemplates, mockAgents } from "@/mock/data";
-import { useAgentsStore } from "@/stores/agents";
-import { Button, Input, ScrollArea, Tabs, TabsList, TabsTrigger, cn } from "@nexu-design/ui-web";
-import { Plus, Search } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { CreateAgentDialog } from "./CreateAgentDialog";
-
-type Filter = "all" | "mine";
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Plus, Search, Users as UsersIcon, Bot, UserPlus } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { useT } from '@/i18n'
+import { useAgentsStore } from '@/stores/agents'
+import { mockAgents, mockAgentTemplates, mockUsers } from '@/mock/data'
+import { CreateAgentDialog } from './CreateAgentDialog'
+import { InvitePeopleDialog } from '@/components/chat/InvitePeopleDialog'
+import type { Agent, User } from '@/types'
 
 export function AgentsSidebar(): React.ReactElement {
-  const navigate = useNavigate();
-  const { agentId } = useParams();
-  const { agents, setAgents, setTemplates, selectAgent } = useAgentsStore();
-  const [showCreateAgent, setShowCreateAgent] = useState(false);
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<Filter>("all");
-  const onlineCount = agents.filter((agent) => agent.status === "online").length;
+  const navigate = useNavigate()
+  const t = useT()
+  const { memberId } = useParams()
+  const { agents, setAgents, setTemplates, selectAgent } = useAgentsStore()
+  const [showCreateAgent, setShowCreateAgent] = useState(false)
+  const [showInvite, setShowInvite] = useState(false)
+  const [showAddMenu, setShowAddMenu] = useState(false)
+  const [search, setSearch] = useState('')
+  const addMenuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (agents.length === 0) {
-      setAgents(mockAgents);
-      setTemplates(mockAgentTemplates);
+      setAgents(mockAgents)
+      setTemplates(mockAgentTemplates)
     }
-  }, [agents.length, setAgents, setTemplates]);
+  }, [agents.length, setAgents, setTemplates])
 
   useEffect(() => {
-    if (!agentId && agents.length > 0) {
-      navigate(`/agents/${agents[0].id}`, { replace: true });
+    if (!memberId && (mockUsers.length > 0 || agents.length > 0)) {
+      const first = mockUsers[0]?.id ?? agents[0]?.id
+      if (first) navigate(`/agents/${first}`, { replace: true })
     }
-  }, [agentId, agents, navigate]);
+  }, [memberId, agents, navigate])
 
-  const filtered = agents.filter((a) => {
-    if (search && !a.name.toLowerCase().includes(search.toLowerCase())) return false;
-    if (filter === "mine" && a.createdBy !== "u-1") return false;
-    return true;
-  });
+  useEffect(() => {
+    if (!showAddMenu) return
+    const handler = (e: MouseEvent): void => {
+      if (addMenuRef.current && !addMenuRef.current.contains(e.target as Node)) {
+        setShowAddMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [showAddMenu])
+
+  const matchSearch = (text: string): boolean => {
+    if (!search) return true
+    return text.toLowerCase().includes(search.toLowerCase())
+  }
+
+  const filteredUsers = mockUsers.filter((u) => matchSearch(u.name) || matchSearch(u.email))
+  const filteredAgents = agents.filter((a) => matchSearch(a.name) || matchSearch(a.description))
+
+  const atAgentLimit = agents.length >= 10
+
+  const handleSelectUser = (user: User): void => {
+    navigate(`/agents/${user.id}`)
+  }
+
+  const handleSelectAgent = (agent: Agent): void => {
+    selectAgent(agent.id)
+    navigate(`/agents/${agent.id}`)
+  }
 
   return (
-    <div className="flex h-full min-h-0 flex-col">
-      <div className="px-3 pb-2 flex items-center gap-2">
-        <span className="text-xs text-text-tertiary">
-          {onlineCount}/{agents.length} online
-        </span>
-      </div>
+    <div className="flex flex-col h-full">
       <div className="px-3 pb-2 space-y-2">
-        <Button
-          onClick={() => setShowCreateAgent(true)}
-          size="sm"
-          className="w-full justify-start"
-          leadingIcon={<Plus className="size-3.5" />}
-        >
-          Create Agent
-        </Button>
-        <Input
-          size="sm"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search agents"
-          leadingIcon={<Search className="size-3.5" />}
-        />
-        <Tabs value={filter} onValueChange={(value) => setFilter(value as Filter)}>
-          <TabsList variant="compact">
-            <TabsTrigger value="all" variant="compact">
-              All
-            </TabsTrigger>
-            <TabsTrigger value="mine" variant="compact">
-              My Agents
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
-      <ScrollArea className="min-h-0 flex-1 px-2 pb-3">
-        <div className="space-y-1 pr-1">
-          {filtered.map((agent) => (
-            <button
-              key={agent.id}
-              type="button"
-              onClick={() => {
-                selectAgent(agent.id);
-                navigate(`/agents/${agent.id}`);
-              }}
-              className={cn(
-                "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors",
-                agentId === agent.id
-                  ? "bg-surface-2 text-text-primary"
-                  : "text-text-secondary hover:bg-surface-2 hover:text-text-primary",
-              )}
-            >
-              <div className="relative shrink-0">
-                <img src={agent.avatar} alt="" className="h-7 w-7 rounded-lg" />
-                <div
-                  className={cn(
-                    "absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-surface-1",
-                    agent.status === "online" && "bg-slark-online",
-                    agent.status === "busy" && "bg-slark-busy",
-                    agent.status === "offline" && "bg-slark-offline",
-                  )}
-                />
-              </div>
-              <div className="min-w-0 flex-1 text-left">
-                <div className="truncate text-[13px] font-medium">{agent.name}</div>
-                <div className="truncate text-xs text-text-tertiary">{agent.description}</div>
-              </div>
-            </button>
-          ))}
-          {filtered.length === 0 && (
-            <div className="px-2 py-4 text-center text-xs text-text-tertiary">No agents found</div>
+        <div className="relative" ref={addMenuRef}>
+          <button
+            onClick={() => setShowAddMenu((v) => !v)}
+            className="flex items-center gap-2 w-full h-8 px-3 rounded-md text-sm bg-nav-hover text-nav-fg hover:bg-nav-border transition-colors"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            {t('team.addMember')}
+          </button>
+
+          {showAddMenu && (
+            <div className="absolute top-9 left-0 right-0 z-50 rounded-lg border border-border bg-popover text-foreground shadow-lg overflow-hidden p-1">
+              <button
+                onClick={() => {
+                  setShowAddMenu(false)
+                  setShowInvite(true)
+                }}
+                className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-md text-xs hover:bg-accent transition-colors text-left"
+              >
+                <UserPlus className="h-3.5 w-3.5 shrink-0" />
+                <span className="flex-1">{t('team.invitePerson')}</span>
+              </button>
+              <button
+                onClick={() => {
+                  setShowAddMenu(false)
+                  if (!atAgentLimit) setShowCreateAgent(true)
+                }}
+                disabled={atAgentLimit}
+                title={atAgentLimit ? `${agents.length}/10` : undefined}
+                className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-md text-xs hover:bg-accent transition-colors text-left disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
+              >
+                <Bot className="h-3.5 w-3.5 shrink-0" />
+                <span className="flex-1">{t('team.createAgent')}</span>
+                {atAgentLimit && <span className="text-[10px] text-muted-foreground">{agents.length}/10</span>}
+              </button>
+            </div>
           )}
         </div>
-      </ScrollArea>
+
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-nav-muted" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t('team.searchPlaceholder')}
+            className="w-full h-8 rounded-md bg-nav-input text-nav-fg pl-8 pr-3 text-[13px] placeholder:text-nav-muted focus:outline-none focus:ring-1 focus:ring-nav-ring"
+          />
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-2 space-y-3">
+        {filteredUsers.length > 0 && (
+          <div>
+            <div className="flex items-center gap-1.5 px-2 py-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
+              <UsersIcon className="h-3 w-3" />
+              <span className="flex-1">{t('team.people')}</span>
+              <span className="text-[10px] normal-case tracking-normal font-medium">{filteredUsers.length}</span>
+            </div>
+            {filteredUsers.map((user) => (
+              <button
+                key={user.id}
+                onClick={() => handleSelectUser(user)}
+                className={cn(
+                  'flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors',
+                  memberId === user.id
+                    ? 'bg-nav-active text-white'
+                    : 'text-nav-muted hover:bg-nav-hover hover:text-nav-fg'
+                )}
+              >
+                <img src={user.avatar} alt="" className="h-7 w-7 rounded-full shrink-0" />
+                <div className="min-w-0 flex-1 text-left">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-medium truncate">{user.name}</span>
+                    {user.role === 'owner' && (
+                      <span
+                        className={cn(
+                          'text-[9px] font-semibold uppercase tracking-wide px-1 py-px rounded shrink-0',
+                          memberId === user.id
+                            ? 'text-white/80 bg-white/15'
+                            : 'text-nav-muted bg-nav-hover'
+                        )}
+                      >
+                        {t('team.role.owner')}
+                      </span>
+                    )}
+                  </div>
+                  <div
+                    className={cn(
+                      'text-xs truncate',
+                      memberId === user.id ? 'text-white/75' : 'text-nav-muted'
+                    )}
+                  >
+                    {user.email}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {filteredAgents.length > 0 && (
+          <div>
+            <div className="flex items-center gap-1.5 px-2 py-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
+              <Bot className="h-3 w-3" />
+              <span className="flex-1">{t('team.agents')}</span>
+              <span className="text-[10px] normal-case tracking-normal font-medium">{filteredAgents.length}</span>
+            </div>
+            {filteredAgents.map((agent) => (
+              <button
+                key={agent.id}
+                onClick={() => handleSelectAgent(agent)}
+                className={cn(
+                  'flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors',
+                  memberId === agent.id
+                    ? 'bg-nav-active text-white'
+                    : 'text-nav-muted hover:bg-nav-hover hover:text-nav-fg'
+                )}
+              >
+                <img src={agent.avatar} alt="" className="h-7 w-7 rounded-lg shrink-0" />
+                <div className="min-w-0 flex-1 text-left">
+                  <div className="text-sm font-medium truncate">{agent.name}</div>
+                  <div
+                    className={cn(
+                      'text-xs truncate',
+                      memberId === agent.id ? 'text-white/75' : 'text-nav-muted'
+                    )}
+                  >
+                    {agent.description}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {filteredUsers.length === 0 && filteredAgents.length === 0 && (
+          <div className="px-2 py-4 text-center text-xs text-nav-muted">
+            {t('team.noResults')}
+          </div>
+        )}
+      </div>
+
       <CreateAgentDialog open={showCreateAgent} onOpenChange={setShowCreateAgent} />
+      <InvitePeopleDialog open={showInvite} onOpenChange={setShowInvite} />
     </div>
-  );
+  )
 }
