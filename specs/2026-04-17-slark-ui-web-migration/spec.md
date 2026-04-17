@@ -410,6 +410,16 @@
 - sidebar 统一沿用 shell phase 的 section sidebar 模式
 - 如 `InviteEmailPreview` / `DevPanel` 中存在 ui-web 无法覆盖的部分，则保留现有实现
 
+### 7.2 当前保留的 ui-web gap / 复杂视图说明
+
+- `components/runtimes/RuntimesView.tsx`
+  - 详情页的整体 shell、详情卡片、linked agents、周期切换、基础 stats 已迁到 `PageHeader` / `Card` / `InteractiveRow` / `StatCard`
+  - **保留本地实现**：donut chart、activity heatmap、per-model analytics table
+  - 原因：`ui-web` 目前没有可直接承接的 dashboard / heatmap / chart primitives
+- `components/invite/InviteEmailPreview.tsx`
+  - 保持独立 email-safe markup
+  - 原因：邮件预览需要内联样式和脱离应用壳的渲染约束，不适合直接套用 app-level ui-web primitives
+
 ---
 
 ## Phase 8 — Chat 迁移（仅迁移明确匹配的部分）

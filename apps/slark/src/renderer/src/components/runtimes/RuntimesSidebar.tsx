@@ -1,11 +1,26 @@
 import { useEffect, useState } from "react";
-import { ChevronDown, Code, Cpu, MousePointer, Plus, Sparkles, Terminal, Box } from "lucide-react";
+import {
+  ChevronDown,
+  Code,
+  Cpu,
+  MousePointer,
+  Plus,
+  Sparkles,
+  Terminal,
+  Box,
+  User,
+  Users,
+} from "lucide-react";
 import {
   Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  InteractiveRow,
+  InteractiveRowContent,
+  InteractiveRowLeading,
+  InteractiveRowTrailing,
   ScrollArea,
   Tabs,
   TabsList,
@@ -95,7 +110,7 @@ export function RuntimesSidebar(): React.ReactElement {
                   <DropdownMenuItem
                     key={item.type}
                     onClick={() => handleAdd(item)}
-                    className="gap-2.5 rounded-lg text-[13px]"
+                    className="gap-2.5 rounded-lg text-[13px] hover:bg-surface-2"
                   >
                     <Icon className="size-3.5 shrink-0" />
                     <span className="font-medium">{item.name}</span>
@@ -116,9 +131,11 @@ export function RuntimesSidebar(): React.ReactElement {
         <Tabs value={tab} onValueChange={(value) => setTab(value as Tab)}>
           <TabsList variant="compact">
             <TabsTrigger value="mine" variant="compact">
+              <User className="size-3.5" />
               Mine
             </TabsTrigger>
             <TabsTrigger value="all" variant="compact">
+              <Users className="size-3.5" />
               All
             </TabsTrigger>
           </TabsList>
@@ -131,20 +148,20 @@ export function RuntimesSidebar(): React.ReactElement {
             const Icon = typeIcons[rt.type];
             const ownerUser = tab === "all" ? mockUsers.find((u) => u.id === rt.ownerId) : null;
             return (
-              <button
+              <InteractiveRow
                 key={rt.id}
-                type="button"
+                tone="subtle"
+                selected={selectedRuntimeId === rt.id}
                 onClick={() => selectRuntime(rt.id)}
-                className={cn(
-                  "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors",
-                  selectedRuntimeId === rt.id
-                    ? "bg-surface-2 text-text-primary"
-                    : "text-text-secondary hover:bg-surface-2 hover:text-text-primary",
-                )}
+                className="items-center gap-2.5 rounded-lg px-2.5 py-2"
               >
-                <Icon className="h-4 w-4 shrink-0" />
-                <div className="min-w-0 flex-1 text-left">
-                  <div className="truncate text-[13px] font-medium">{rt.name}</div>
+                <InteractiveRowLeading className="pt-0.5">
+                  <Icon className="h-4 w-4 shrink-0" />
+                </InteractiveRowLeading>
+                <InteractiveRowContent className="text-left">
+                  <div className="truncate text-[13px] font-medium text-text-primary">
+                    {rt.name}
+                  </div>
                   {ownerUser ? (
                     <div className="flex items-center gap-1 text-xs text-text-tertiary">
                       <img src={ownerUser.avatar} alt="" className="h-3 w-3 rounded-full" />
@@ -153,16 +170,18 @@ export function RuntimesSidebar(): React.ReactElement {
                   ) : (
                     <div className="text-xs text-text-tertiary">{rt.type}</div>
                   )}
-                </div>
-                <div
-                  className={cn(
-                    "h-2 w-2 rounded-full shrink-0",
-                    rt.status === "connected" && "bg-slark-online",
-                    rt.status === "disconnected" && "bg-slark-offline",
-                    rt.status === "error" && "bg-destructive",
-                  )}
-                />
-              </button>
+                </InteractiveRowContent>
+                <InteractiveRowTrailing className="pt-1">
+                  <div
+                    className={cn(
+                      "h-2 w-2 rounded-full shrink-0",
+                      rt.status === "connected" && "bg-slark-online",
+                      rt.status === "disconnected" && "bg-slark-offline",
+                      rt.status === "error" && "bg-destructive",
+                    )}
+                  />
+                </InteractiveRowTrailing>
+              </InteractiveRow>
             );
           })}
         </div>
