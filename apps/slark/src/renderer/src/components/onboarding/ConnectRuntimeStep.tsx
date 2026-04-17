@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowRight, Check, Loader2, X } from "lucide-react";
-import { Button, Progress, RuntimeLogo, cn } from "@nexu-design/ui-web";
 import { useRuntimesStore } from "@/stores/runtimes";
 import type { Runtime } from "@/types";
+import { Button, Progress, RuntimeLogo, cn } from "@nexu-design/ui-web";
+import { ArrowRight, Check, Loader2, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface DetectedRuntime {
   type: string;
@@ -33,6 +33,15 @@ export function ConnectRuntimeStep(): React.ReactElement {
     { type: "pi", name: "Pi", desc: "Conversational AI assistant", detected: false },
   ]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  const supportedRuntimeTypes = new Set<Runtime["type"]>([
+    "claude-code",
+    "cursor",
+    "opencode",
+    "hermes",
+    "codex",
+    "gemini-cli",
+  ]);
 
   useEffect(() => {
     const start = Date.now();
@@ -221,11 +230,16 @@ export function ConnectRuntimeStep(): React.ReactElement {
           <Button
             onClick={() => {
               const selectedRuntimes: Runtime[] = runtimes
-                .filter((runtime) => runtime.detected && selected.has(runtime.type))
+                .filter(
+                  (runtime): runtime is typeof runtime & { type: Runtime["type"] } =>
+                    runtime.detected &&
+                    selected.has(runtime.type) &&
+                    supportedRuntimeTypes.has(runtime.type as Runtime["type"]),
+                )
                 .map((runtime) => ({
                   id: `rt-${runtime.type}`,
                   name: runtime.name,
-                  type: runtime.type as Runtime["type"],
+                  type: runtime.type,
                   status: "connected" as const,
                   version: runtime.version,
                   config: runtime.path ? { path: runtime.path } : {},

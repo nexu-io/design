@@ -1,7 +1,7 @@
 import type * as React from "react";
 
-import { AuthShell, cn } from "@nexu-design/ui-web";
 import { TitleBarDragRegion } from "@/components/layout/WindowChrome";
+import { AuthShell, cn } from "@nexu-design/ui-web";
 
 interface SlarkAuthFrameProps {
   children: React.ReactNode;

@@ -1,9 +1,9 @@
+import { mockAgentTemplates, mockAgents } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
+import { Button, Input, ScrollArea, Tabs, TabsList, TabsTrigger, cn } from "@nexu-design/ui-web";
+import { Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Plus, Search } from "lucide-react";
-import { Button, Input, ScrollArea, Tabs, TabsList, TabsTrigger, cn } from "@nexu-design/ui-web";
-import { useAgentsStore } from "@/stores/agents";
-import { mockAgents, mockAgentTemplates } from "@/mock/data";
 import { CreateAgentDialog } from "./CreateAgentDialog";
 
 type Filter = "all" | "mine";

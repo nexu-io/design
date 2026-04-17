@@ -1,56 +1,16 @@
-import {
-  Badge,
-  Button,
-  Card,
-  DiscordIcon,
-  FeishuIcon,
-  SlackIcon,
-  TextLink,
-  cn,
-} from "@nexu-design/ui-web";
+import { Button, Card, TextLink } from "@nexu-design/ui-web";
 import {
   ArrowUp,
   ArrowUpRight,
   ChevronDown,
-  FolderOpen,
   Paperclip,
   Settings,
   Shield,
   Sparkles,
 } from "lucide-react";
-import { useLocale } from "../../hooks/useLocale";
 import { useNavigate } from "react-router-dom";
-import {
-  type BotMessage,
-  type Platform,
-  getChannel,
-  getChannelMessages,
-  getPlatformLabel,
-} from "./data";
-
-const PLATFORM_ICONS: Record<Platform, typeof SlackIcon> = {
-  slack: SlackIcon,
-  feishu: FeishuIcon,
-  discord: DiscordIcon,
-  telegram: SlackIcon,
-  wechat: SlackIcon,
-  whatsapp: SlackIcon,
-  dingtalk: SlackIcon,
-  qqbot: SlackIcon,
-  wecom: SlackIcon,
-};
-
-const PLATFORM_OPEN_LABELS: Record<Platform, string> = {
-  slack: "Open in Slack",
-  feishu: "Open in Feishu",
-  discord: "Open in Discord",
-  telegram: "Open in Telegram",
-  wechat: "Open in WeChat",
-  whatsapp: "Open in WhatsApp",
-  dingtalk: "Open in DingTalk",
-  qqbot: "Open in QQ Bot",
-  wecom: "Open in WeCom",
-};
+import { useLocale } from "../../hooks/useLocale";
+import { type BotMessage, getChannel, getChannelMessages, getPlatformLabel } from "./data";
 
 const USER_AVATAR =
   "https://api.dicebear.com/7.x/lorelei/svg?seed=user&backgroundColor=b6e3f4,c0aede";
@@ -180,8 +140,6 @@ export default function ChannelDetailPage({ channelId }: { channelId: string }) 
   }
 
   const messages = getChannelMessages(channelId);
-  const PIcon = PLATFORM_ICONS[channel.platform];
-
   return (
     <div className="flex flex-col h-full w-full">
       {/* Scrollable content */}

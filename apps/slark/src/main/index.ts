@@ -1,6 +1,6 @@
-import { app, shell, BrowserWindow } from "electron";
-import { join } from "path";
-import { electronApp, optimizer, is } from "@electron-toolkit/utils";
+import { join } from "node:path";
+import { electronApp, is, optimizer } from "@electron-toolkit/utils";
+import { BrowserWindow, app, shell } from "electron";
 
 const PROTOCOL = "slark";
 
@@ -60,8 +60,8 @@ function createWindow(): void {
     return { action: "deny" };
   });
 
-  if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-    mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
+  if (is.dev && process.env.ELECTRON_RENDERER_URL) {
+    mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL);
   } else {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }

@@ -1,5 +1,3 @@
-import { type ReactElement, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
 import {
   Badge,
   Button,
@@ -34,9 +32,11 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { type ReactElement, useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-import { mockUsers } from "@/mock/data";
 import { TitleBarSpacer } from "@/components/layout/WindowChrome";
+import { mockUsers } from "@/mock/data";
 import { useThemeStore } from "@/stores/theme";
 import { useWorkspaceStore } from "@/stores/workspace";
 

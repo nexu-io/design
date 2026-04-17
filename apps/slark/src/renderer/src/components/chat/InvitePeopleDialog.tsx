@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { Check, Eye, Mail, Send } from "lucide-react";
+import { InviteEmailPreview } from "@/components/invite/InviteEmailPreview";
 import {
   Alert,
   AlertDescription,
@@ -15,7 +14,8 @@ import {
   FormField,
   Input,
 } from "@nexu-design/ui-web";
-import { InviteEmailPreview } from "@/components/invite/InviteEmailPreview";
+import { Check, Eye, Mail, Send } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface InvitePeopleDialogProps {
   open: boolean;

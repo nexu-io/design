@@ -1,5 +1,5 @@
-import type * as React from "react";
 import { cn } from "@nexu-design/ui-web";
+import type * as React from "react";
 
 export function TitleBarSpacer({
   className,

@@ -12,22 +12,20 @@ import {
   ArrowRight,
   ArrowUp,
   BarChart3,
-  BookOpen,
   Cable,
+  Check,
   ChevronDown,
+  Code2,
   Cpu,
+  Diamond,
   Globe,
   HelpCircle,
+  MousePointer2,
   Paperclip,
-  Presentation,
   Search,
   Settings,
   Sparkles,
   Terminal,
-  Check,
-  Code2,
-  MousePointer2,
-  Diamond,
   X,
   Zap,
 } from "lucide-react";
@@ -35,8 +33,8 @@ import { useEffect, useRef, useState } from "react";
 import { useBudget } from "../../hooks/useBudget";
 import { useLocale } from "../../hooks/useLocale";
 import { openExternal } from "../../utils/open-external";
-import { ONBOARDING_CHANNELS, SEEDANCE_BANNER_DISMISSED_KEY } from "./channelSetup";
 import type { ChannelId } from "./ChannelsView";
+import { ONBOARDING_CHANNELS, SEEDANCE_BANNER_DISMISSED_KEY } from "./channelSetup";
 import { getProviderDetails } from "./data";
 import {
   CreditIcon,
@@ -294,7 +292,7 @@ export function HomeDashboard({
     }
   };
 
-  const seedanceBanner = showSeedanceBanner ? (
+  void (showSeedanceBanner ? (
     <div
       role="button"
       tabIndex={0}
@@ -340,7 +338,7 @@ export function HomeDashboard({
         <X size={12} />
       </button>
     </div>
-  ) : null;
+  ) : null);
 
   useEffect(() => {
     const v = videoRef.current;

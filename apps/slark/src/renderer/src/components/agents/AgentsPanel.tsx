@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { Bot, ChevronRight } from "lucide-react";
-import { cn } from "@nexu-design/ui-web";
+import { SlidePanel } from "@/components/layout/SlidePanel";
+import { mockAgentTemplates, mockAgents, mockRuntimes } from "@/mock/data";
 import { useAgentsStore } from "@/stores/agents";
 import { usePanelStore } from "@/stores/panel";
-import { mockAgents, mockAgentTemplates, mockRuntimes } from "@/mock/data";
-import { SlidePanel } from "@/components/layout/SlidePanel";
+import { cn } from "@nexu-design/ui-web";
+import { Bot, ChevronRight } from "lucide-react";
+import { useEffect } from "react";
 
 export function AgentsPanel(): React.ReactElement {
   const { agents, setAgents, setTemplates } = useAgentsStore();
@@ -26,6 +26,7 @@ export function AgentsPanel(): React.ReactElement {
             : undefined;
           return (
             <button
+              type="button"
               key={agent.id}
               onClick={() => openPanel("agent-detail", { agentId: agent.id })}
               className="flex items-center gap-3 w-full p-3 rounded-xl border border-border hover:bg-accent/50 transition-colors text-left"

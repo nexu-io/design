@@ -1,7 +1,7 @@
+import { Alert, AlertDescription, Button, Input, TextLink, cn } from "@nexu-design/ui-web";
+import { AlertCircle, ArrowLeft, ArrowRight, Github, Lock, Mail } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertCircle, ArrowLeft, ArrowRight, Github, Lock, Mail } from "lucide-react";
-import { Alert, AlertDescription, Button, Input, TextLink, cn } from "@nexu-design/ui-web";
 import { SlarkAuthFrame } from "./slark-auth-frame";
 
 function GoogleIcon({ className }: { className?: string }): React.ReactElement {

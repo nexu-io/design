@@ -11,14 +11,13 @@ import {
 import {
   AlertTriangle,
   CheckCircle2,
+  ExternalLink,
   Eye,
   EyeOff,
-  ExternalLink,
   MessageSquare,
   Smartphone,
 } from "lucide-react";
 import { useState } from "react";
-import { useLocale } from "../../hooks/useLocale";
 import { CHANNEL_CONFIG_FIELDS, ONBOARDING_CHANNELS } from "./channelSetup";
 
 const QR_CHANNELS = new Set(["wechat", "whatsapp"]);
@@ -47,7 +46,6 @@ type ChannelsViewProps = {
 };
 
 export function ChannelsView({ connectedChannels, onConnectedChange }: ChannelsViewProps) {
-  const { t } = useLocale();
   const [selectedId, setSelectedId] = useState<ChannelId>(ONBOARDING_CHANNELS[0].id);
   const saved = connectedChannels;
   const setSaved = (updater: (prev: Set<ChannelId>) => Set<ChannelId>) => {

@@ -1,4 +1,4 @@
-import { Circle } from "lucide-react";
+import { mockRuntimes } from "@/mock/data";
 import {
   Select,
   SelectContent,
@@ -8,7 +8,7 @@ import {
   SelectValue,
   cn,
 } from "@nexu-design/ui-web";
-import { mockRuntimes } from "@/mock/data";
+import { Circle } from "lucide-react";
 
 interface RuntimePickerProps {
   value: string | null;

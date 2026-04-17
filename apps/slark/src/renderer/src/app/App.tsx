@@ -1,17 +1,17 @@
-import { Component, type ReactNode, type ErrorInfo } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
-import { useWorkspaceStore } from "@/stores/workspace";
-import { useAgentsStore } from "@/stores/agents";
+import { AgentDetail } from "@/components/agents/AgentDetail";
+import { AgentsView } from "@/components/agents/AgentsView";
+import { ChatView } from "@/components/chat/ChatView";
+import { InviteLandingPage } from "@/components/invite/InviteLandingPage";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { DevPanel } from "@/components/layout/DevPanel";
-import { WelcomePage } from "@/components/onboarding/WelcomePage";
 import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
-import { ChatView } from "@/components/chat/ChatView";
-import { AgentsView } from "@/components/agents/AgentsView";
-import { AgentDetail } from "@/components/agents/AgentDetail";
+import { WelcomePage } from "@/components/onboarding/WelcomePage";
 import { RuntimesView } from "@/components/runtimes/RuntimesView";
 import { SettingsView } from "@/components/settings/SettingsView";
-import { InviteLandingPage } from "@/components/invite/InviteLandingPage";
+import { useAgentsStore } from "@/stores/agents";
+import { useWorkspaceStore } from "@/stores/workspace";
+import { Component, type ErrorInfo, type ReactNode } from "react";
+import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router-dom";
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state: { error: Error | null } = { error: null };
@@ -44,6 +44,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
             {this.state.error.stack}
           </pre>
           <button
+            type="button"
             onClick={() => this.setState({ error: null })}
             style={{
               marginTop: 16,

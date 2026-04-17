@@ -77,7 +77,7 @@ export function OpenClawSidebarShell({
   onReopenUpdate,
   view,
   setView,
-  capabilitiesNavCount,
+  capabilitiesNavCount: _capabilitiesNavCount,
   nexuLoggedIn,
   budgetClaimedCount,
   budgetChannelCount,

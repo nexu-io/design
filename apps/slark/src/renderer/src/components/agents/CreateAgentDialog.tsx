@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Check, Zap } from "lucide-react";
+import { mockSkills } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
+import { useChatStore } from "@/stores/chat";
+import type { Agent, AgentTemplate, Channel } from "@/types";
 import {
   Button,
   Dialog,
@@ -13,11 +14,10 @@ import {
   Input,
   cn,
 } from "@nexu-design/ui-web";
-import { useAgentsStore } from "@/stores/agents";
-import { useChatStore } from "@/stores/chat";
-import { mockSkills } from "@/mock/data";
+import { Check, Zap } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { RuntimePicker } from "./RuntimePicker";
-import type { Agent, AgentTemplate, Channel } from "@/types";
 
 interface CreateAgentDialogProps {
   open: boolean;

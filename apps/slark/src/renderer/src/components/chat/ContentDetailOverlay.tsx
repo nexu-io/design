@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { X, Copy, Check, GitPullRequestArrow, Maximize2 } from "lucide-react";
-import { cn } from "@nexu-design/ui-web";
 import type { ContentBlock } from "@/types";
+import { cn } from "@nexu-design/ui-web";
+import { Check, Copy, GitPullRequestArrow, Maximize2, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface ContentDetailOverlayProps {
   block: ContentBlock | null;
@@ -47,14 +47,18 @@ function ImageLightbox({
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
       onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onClose();
+      }}
     >
       <button
+        type="button"
         onClick={onClose}
         className="absolute top-4 right-4 flex items-center justify-center h-9 w-9 rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-colors"
       >
         <X className="h-5 w-5" />
       </button>
-      <div className="max-w-[90vw] max-h-[85vh] p-4" onClick={(e) => e.stopPropagation()}>
+      <div className="max-w-[90vw] max-h-[85vh] p-4" onMouseDown={(e) => e.stopPropagation()}>
         <img
           src={url}
           alt={alt ?? ""}
@@ -75,6 +79,12 @@ function CodeDetailView({
 }): React.ReactElement {
   const [copied, setCopied] = useState(false);
   const lines = block.code.split("\n");
+  const lineOccurrences = new Map<string, number>();
+  const keyedLines = lines.map((line) => {
+    const occurrence = (lineOccurrences.get(line) ?? 0) + 1;
+    lineOccurrences.set(line, occurrence);
+    return { line, key: `${line}-${occurrence}` };
+  });
 
   const handleCopy = (): void => {
     navigator.clipboard.writeText(block.code);
@@ -86,10 +96,13 @@ function CodeDetailView({
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
       onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onClose();
+      }}
     >
       <div
         className="w-[min(720px,90vw)] max-h-[85vh] rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0d1117] shadow-2xl flex flex-col"
-        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between h-11 px-4 bg-white/[0.03] border-b border-white/[0.06] shrink-0">
           <div className="flex items-center gap-3 min-w-0">
@@ -104,6 +117,7 @@ function CodeDetailView({
           </div>
           <div className="flex items-center gap-1 shrink-0 ml-3">
             <button
+              type="button"
               onClick={handleCopy}
               className={cn(
                 "flex items-center gap-1.5 h-7 px-2.5 rounded-md text-[12px] transition-colors",
@@ -116,6 +130,7 @@ function CodeDetailView({
               {copied ? "Copied" : "Copy"}
             </button>
             <button
+              type="button"
               onClick={onClose}
               className="flex items-center justify-center h-7 w-7 rounded-md text-white/30 hover:text-white/60 hover:bg-white/[0.05] transition-colors"
             >
@@ -127,8 +142,8 @@ function CodeDetailView({
         <div className="flex-1 overflow-auto">
           <table className="w-full border-collapse">
             <tbody>
-              {lines.map((line, i) => (
-                <tr key={i} className="hover:bg-white/[0.02]">
+              {keyedLines.map(({ line, key }, i) => (
+                <tr key={key} className="hover:bg-white/[0.02]">
                   <td className="w-[1%] whitespace-nowrap px-4 py-0 text-right text-[12px] font-mono text-white/15 select-none align-top leading-[22px]">
                     {i + 1}
                   </td>
@@ -157,15 +172,24 @@ function DiffDetailView({
   onClose: () => void;
 }): React.ReactElement {
   const lines = block.content.split("\n");
+  const lineOccurrences = new Map<string, number>();
+  const keyedLines = lines.map((line) => {
+    const occurrence = (lineOccurrences.get(line) ?? 0) + 1;
+    lineOccurrences.set(line, occurrence);
+    return { line, key: `${line}-${occurrence}` };
+  });
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
       onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onClose();
+      }}
     >
       <div
         className="w-[min(720px,90vw)] max-h-[85vh] rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0d1117] shadow-2xl flex flex-col"
-        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between h-11 px-4 bg-white/[0.03] border-b border-white/[0.06] shrink-0">
           <div className="flex items-center gap-3 min-w-0">
@@ -177,6 +201,7 @@ function DiffDetailView({
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
             className="flex items-center justify-center h-7 w-7 rounded-md text-white/30 hover:text-white/60 hover:bg-white/[0.05] transition-colors shrink-0 ml-3"
           >
@@ -187,14 +212,14 @@ function DiffDetailView({
         <div className="flex-1 overflow-auto">
           <table className="w-full border-collapse">
             <tbody>
-              {lines.map((line, i) => {
+              {keyedLines.map(({ line, key }, i) => {
                 const isAdd = line.startsWith("+");
                 const isDel = line.startsWith("-");
                 const isHunk = line.startsWith("@@");
 
                 return (
                   <tr
-                    key={i}
+                    key={key}
                     className={cn(
                       isAdd && "bg-green-500/[0.07]",
                       isDel && "bg-red-500/[0.07]",

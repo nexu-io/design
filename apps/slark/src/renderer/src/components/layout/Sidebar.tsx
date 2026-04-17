@@ -1,15 +1,15 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { Building2, GitFork, Palette, User } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuButton,
   NavigationMenuItem,
   NavigationMenuList,
   ScrollArea,
-  Sidebar as UiSidebar,
   SidebarContent,
   SidebarHeader,
+  Sidebar as UiSidebar,
 } from "@nexu-design/ui-web";
+import { Building2, GitFork, Palette, User } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { AgentsSidebar } from "@/components/agents/AgentsSidebar";
 import { ChatSidebar } from "@/components/chat/ChatSidebar";

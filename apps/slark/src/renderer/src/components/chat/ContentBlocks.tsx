@@ -1,22 +1,22 @@
-import { useState } from "react";
-import {
-  FileText,
-  Image as ImageIcon,
-  Archive,
-  Copy,
-  Check,
-  Loader2,
-  CheckCircle2,
-  XCircle,
-  ChevronRight,
-  ChevronDown,
-  Terminal,
-  GitPullRequestArrow,
-  Download,
-  ShieldQuestion,
-} from "lucide-react";
-import { cn } from "@nexu-design/ui-web";
 import type { ContentBlock } from "@/types";
+import { cn } from "@nexu-design/ui-web";
+import {
+  Archive,
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
+  Copy,
+  Download,
+  FileText,
+  GitPullRequestArrow,
+  Image as ImageIcon,
+  Loader2,
+  ShieldQuestion,
+  Terminal,
+  XCircle,
+} from "lucide-react";
+import { useState } from "react";
 
 interface ContentBlockRendererProps {
   block: ContentBlock;
@@ -41,8 +41,27 @@ function ImageBlock({
   block,
   onExpand,
 }: { block: Extract<ContentBlock, { type: "image" }>; onExpand?: () => void }): React.ReactElement {
+  if (onExpand) {
+    return (
+      <button
+        type="button"
+        className="overflow-hidden rounded-xl cursor-pointer group text-left"
+        onClick={onExpand}
+      >
+        <img
+          src={block.url}
+          alt={block.alt ?? ""}
+          className="max-w-[320px] max-h-[280px] object-cover group-hover:scale-[1.02] transition-transform duration-200"
+        />
+        {block.alt && (
+          <p className="text-[11px] text-muted-foreground/70 mt-1.5 italic">{block.alt}</p>
+        )}
+      </button>
+    );
+  }
+
   return (
-    <div className="overflow-hidden rounded-xl cursor-pointer group" onClick={onExpand}>
+    <div className="overflow-hidden rounded-xl group">
       <img
         src={block.url}
         alt={block.alt ?? ""}
@@ -112,7 +131,16 @@ function CodeBlock({
         isMe ? "bg-black/30" : "bg-[#0d1117]",
         onExpand && "cursor-pointer",
       )}
+      role={onExpand ? "button" : undefined}
+      tabIndex={onExpand ? 0 : undefined}
       onClick={onExpand}
+      onKeyDown={
+        onExpand
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") onExpand();
+            }
+          : undefined
+      }
     >
       <div className="flex items-center justify-between h-8 px-3 bg-white/[0.03] border-b border-white/[0.05]">
         <div className="flex items-center gap-2 min-w-0">
@@ -128,6 +156,7 @@ function CodeBlock({
         </div>
         <div className="flex items-center gap-1 shrink-0 ml-3">
           <button
+            type="button"
             onClick={handleCopy}
             className={cn(
               "flex items-center gap-1 text-[11px] transition-colors",
@@ -197,6 +226,7 @@ function ToolResultBlock({
   return (
     <div className="w-[360px] rounded-xl overflow-hidden border border-white/[0.06]">
       <button
+        type="button"
         onClick={() => setExpanded(!expanded)}
         className={cn(
           "flex items-center gap-2.5 w-full px-3.5 py-2.5 text-left transition-colors",
@@ -258,6 +288,7 @@ function DiffBlock({
   const lines = block.content.split("\n");
   const isTruncated = lines.length > DIFF_PREVIEW_LINES;
   const previewLines = isTruncated ? lines.slice(0, DIFF_PREVIEW_LINES) : lines;
+  const lineOccurrences = new Map<string, number>();
 
   return (
     <div
@@ -265,7 +296,16 @@ function DiffBlock({
         "w-[420px] rounded-xl overflow-hidden border border-white/[0.06]",
         onExpand && "cursor-pointer",
       )}
+      role={onExpand ? "button" : undefined}
+      tabIndex={onExpand ? 0 : undefined}
       onClick={onExpand}
+      onKeyDown={
+        onExpand
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") onExpand();
+            }
+          : undefined
+      }
     >
       <div className="flex items-center justify-between h-9 px-3.5 bg-white/[0.03] border-b border-white/[0.04]">
         <div className="flex items-center gap-2 min-w-0">
@@ -278,14 +318,16 @@ function DiffBlock({
         </div>
       </div>
       <div className="bg-[#0d1117] overflow-x-auto">
-        {previewLines.map((line, i) => {
+        {previewLines.map((line) => {
+          const occurrence = (lineOccurrences.get(line) ?? 0) + 1;
+          lineOccurrences.set(line, occurrence);
           const isAdd = line.startsWith("+");
           const isDel = line.startsWith("-");
           const isHunk = line.startsWith("@@");
 
           return (
             <div
-              key={i}
+              key={`${line}-${occurrence}`}
               className={cn(
                 "px-3.5 text-[11px] font-mono leading-[22px] min-h-[22px] border-l-2",
                 isAdd && "bg-green-500/[0.07] text-green-300/80 border-green-500/40",
@@ -347,6 +389,7 @@ function ApprovalBlock({
         {block.status === "pending" && (
           <div className="flex gap-2">
             <button
+              type="button"
               onClick={() => onAction?.(block.id, "approved")}
               className="flex-1 flex items-center justify-center gap-1.5 h-8 rounded-lg text-[12px] font-medium bg-green-600/90 text-white hover:bg-green-600 transition-colors"
             >
@@ -354,6 +397,7 @@ function ApprovalBlock({
               Approve
             </button>
             <button
+              type="button"
               onClick={() => onAction?.(block.id, "rejected")}
               className="flex-1 flex items-center justify-center gap-1.5 h-8 rounded-lg text-[12px] font-medium bg-white/[0.06] text-muted-foreground hover:bg-red-600/80 hover:text-white transition-colors"
             >
@@ -412,8 +456,8 @@ function ProgressBlock({
       {block.steps && block.steps.length > 0 && (
         <div className="mt-3.5 pt-3 border-t border-white/[0.04]">
           <div className="flex flex-col gap-1.5">
-            {block.steps.map((step, i) => (
-              <div key={i} className="flex items-center gap-2.5">
+            {block.steps.map((step) => (
+              <div key={`${step.label}-${step.status}`} className="flex items-center gap-2.5">
                 <div
                   className={cn(
                     "h-[7px] w-[7px] rounded-full shrink-0 ring-2",

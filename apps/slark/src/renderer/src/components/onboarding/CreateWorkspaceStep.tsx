@@ -1,8 +1,8 @@
+import { useWorkspaceStore } from "@/stores/workspace";
+import { Button, FormField, Input } from "@nexu-design/ui-web";
+import { ArrowRight, Check, Mail, Send } from "lucide-react";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Check, Mail, Send } from "lucide-react";
-import { Button, FormField, Input } from "@nexu-design/ui-web";
-import { useWorkspaceStore } from "@/stores/workspace";
 
 export function CreateWorkspaceStep(): React.ReactElement {
   const navigate = useNavigate();

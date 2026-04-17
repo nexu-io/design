@@ -1,16 +1,7 @@
-import { useEffect, useState } from "react";
-import {
-  ChevronDown,
-  Code,
-  Cpu,
-  MousePointer,
-  Plus,
-  Sparkles,
-  Terminal,
-  Box,
-  User,
-  Users,
-} from "lucide-react";
+import { mockRuntimes, mockUsers } from "@/mock/data";
+import { useRuntimesStore } from "@/stores/runtimes";
+import { useWorkspaceStore } from "@/stores/workspace";
+import type { Runtime } from "@/types";
 import {
   Button,
   DropdownMenu,
@@ -27,10 +18,19 @@ import {
   TabsTrigger,
   cn,
 } from "@nexu-design/ui-web";
-import { useRuntimesStore } from "@/stores/runtimes";
-import { useWorkspaceStore } from "@/stores/workspace";
-import { mockRuntimes, mockUsers } from "@/mock/data";
-import type { Runtime } from "@/types";
+import {
+  Box,
+  ChevronDown,
+  Code,
+  Cpu,
+  MousePointer,
+  Plus,
+  Sparkles,
+  Terminal,
+  User,
+  Users,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 const typeIcons: Record<Runtime["type"], React.ElementType> = {
   "claude-code": Terminal,

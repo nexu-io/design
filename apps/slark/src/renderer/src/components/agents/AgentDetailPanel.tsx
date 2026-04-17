@@ -1,9 +1,9 @@
-import { ArrowLeft, Bot, Zap, Wrench } from "lucide-react";
-import { cn } from "@nexu-design/ui-web";
+import { SlidePanel } from "@/components/layout/SlidePanel";
+import { mockRuntimes } from "@/mock/data";
 import { useAgentsStore } from "@/stores/agents";
 import { usePanelStore } from "@/stores/panel";
-import { mockRuntimes } from "@/mock/data";
-import { SlidePanel } from "@/components/layout/SlidePanel";
+import { cn } from "@nexu-design/ui-web";
+import { ArrowLeft, Bot, Wrench, Zap } from "lucide-react";
 
 export function AgentDetailPanel(): React.ReactElement {
   const panelData = usePanelStore((s) => s.panelData);
@@ -28,6 +28,7 @@ export function AgentDetailPanel(): React.ReactElement {
     <SlidePanel title={agent.name}>
       <div className="p-4 space-y-6">
         <button
+          type="button"
           onClick={() => openPanel("agents")}
           className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >

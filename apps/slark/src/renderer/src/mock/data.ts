@@ -1,14 +1,14 @@
 import { useAgentsStore } from "@/stores/agents";
 import type {
-  User,
   Agent,
   AgentTemplate,
-  Skill,
-  Runtime,
   Channel,
-  Message,
-  Workspace,
   MemberRef,
+  Message,
+  Runtime,
+  Skill,
+  User,
+  Workspace,
 } from "@/types";
 
 export const mockWorkspace: Workspace = {

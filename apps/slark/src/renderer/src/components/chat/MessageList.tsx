@@ -1,24 +1,30 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import { Bot, Hash, Sparkles } from "lucide-react";
-import { cn } from "@nexu-design/ui-web";
-import { useChatStore } from "@/stores/chat";
-import { useAgentsStore } from "@/stores/agents";
-import { resolveRef } from "@/mock/data";
 import { formatRelativeTime } from "@/hooks/useRelativeTime";
+import { resolveRef } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
+import { useChatStore } from "@/stores/chat";
+import type { Channel, ContentBlock } from "@/types";
+import { cn } from "@nexu-design/ui-web";
+import { Bot, Hash, Sparkles } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ContentBlockRenderer } from "./ContentBlocks";
 import { ContentDetailOverlay } from "./ContentDetailOverlay";
-import type { Channel, ContentBlock } from "@/types";
 
 const CURRENT_USER_ID = "u-1";
 
 function renderContent(content: string): React.ReactNode {
   const parts = content.split(/(```[\s\S]*?```|`[^`]+`|\*\*[^*]+\*\*)/g);
+  const partCounts = new Map<string, number>();
+
   return parts.map((part, i) => {
+    const occurrence = partCounts.get(part) ?? 0;
+    partCounts.set(part, occurrence + 1);
+    const key = `${part}-${occurrence}-${i}`;
+
     if (part.startsWith("```") && part.endsWith("```")) {
       const code = part.slice(3, -3).replace(/^\w+\n/, "");
       return (
         <pre
-          key={i}
+          key={key}
           className="my-2 rounded-lg bg-black/10 dark:bg-white/10 p-3 text-xs overflow-x-auto"
         >
           <code>{code}</code>
@@ -27,15 +33,15 @@ function renderContent(content: string): React.ReactNode {
     }
     if (part.startsWith("`") && part.endsWith("`")) {
       return (
-        <code key={i} className="rounded bg-black/10 dark:bg-white/10 px-1.5 py-0.5 text-xs">
+        <code key={key} className="rounded bg-black/10 dark:bg-white/10 px-1.5 py-0.5 text-xs">
           {part.slice(1, -1)}
         </code>
       );
     }
     if (part.startsWith("**") && part.endsWith("**")) {
-      return <strong key={i}>{part.slice(2, -2)}</strong>;
+      return <strong key={key}>{part.slice(2, -2)}</strong>;
     }
-    return <span key={i}>{part}</span>;
+    return <span key={key}>{part}</span>;
   });
 }
 
@@ -102,7 +108,7 @@ function ChannelEmptyState({ channel }: { channel: Channel }): React.ReactElemen
           <div className="flex items-center gap-1 mt-2">
             {memberAvatars.slice(0, 8).map((m, i) => (
               <img
-                key={i}
+                key={`${m.name}-${m.avatar}`}
                 src={m.avatar}
                 alt={m.name}
                 title={m.name}
@@ -127,28 +133,28 @@ function ChannelEmptyState({ channel }: { channel: Channel }): React.ReactElemen
             <div className="grid gap-2">
               {channelAgents.map((agent) => (
                 <div
-                  key={agent!.id}
+                  key={agent?.id}
                   className="flex items-start gap-3 rounded-xl border border-border/60 bg-secondary/30 p-3"
                 >
                   <img
-                    src={agent!.avatar}
-                    alt={agent!.name}
+                    src={agent?.avatar}
+                    alt={agent?.name}
                     className="h-9 w-9 rounded-full shrink-0 mt-0.5"
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-sm font-semibold">{agent!.name}</span>
+                      <span className="text-sm font-semibold">{agent?.name}</span>
                       <span className="flex items-center gap-0.5 text-[10px] font-medium text-slark-agent bg-slark-agent/10 px-1.5 py-0.5 rounded-full">
                         <Bot className="h-2.5 w-2.5" />
                         Agent
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
-                      {agent!.description}
+                      {agent?.description}
                     </p>
-                    {agent!.skills.length > 0 && (
+                    {agent?.skills.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-1.5">
-                        {agent!.skills.slice(0, 4).map((skill) => (
+                        {agent?.skills.slice(0, 4).map((skill) => (
                           <span
                             key={skill.id}
                             className="text-[10px] text-muted-foreground bg-secondary rounded-md px-1.5 py-0.5"
@@ -170,10 +176,11 @@ function ChannelEmptyState({ channel }: { channel: Channel }): React.ReactElemen
             <p className="text-xs font-medium text-muted-foreground px-1">Try asking</p>
             <div className="flex flex-wrap gap-2">
               {channelAgents.slice(0, 3).map((agent) => {
-                const prompts = getQuickPrompts(agent!.name, agent!.templateId);
+                const prompts = getQuickPrompts(agent?.name, agent?.templateId);
                 return prompts.map((prompt, i) => (
                   <button
-                    key={`${agent!.id}-${i}`}
+                    type="button"
+                    key={`${agent?.id}-${i}`}
                     onClick={() => handleQuickAction(prompt)}
                     className="text-xs px-3 py-1.5 rounded-full border border-border/60 bg-secondary/30 text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-colors"
                   >
@@ -208,7 +215,6 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
   const messages = useChatStore((s) => s.messages[channelId] ?? EMPTY_MESSAGES);
   const updateMessage = useChatStore((s) => s.updateMessage);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const lastMsg = messages[messages.length - 1];
   const [expandedBlock, setExpandedBlock] = useState<ContentBlock | null>(null);
   const closeExpanded = useCallback(() => setExpandedBlock(null), []);
 
@@ -227,7 +233,7 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages.length, lastMsg?.content]);
+  });
 
   if (messages.length === 0) {
     if (channel?.type === "dm") {
@@ -306,7 +312,7 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
                 <div className="flex flex-col gap-2 mt-1 max-w-full">
                   {msg.blocks.map((block, bi) => (
                     <ContentBlockRenderer
-                      key={bi}
+                      key={`${block.type}-${JSON.stringify(block)}-${bi}`}
                       block={block}
                       isMe={isMe}
                       onApprovalAction={(aid, action) =>

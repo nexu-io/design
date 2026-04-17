@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Rocket, Search, Zap } from "lucide-react";
+import { mockAgentTemplates, mockRuntimes } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
+import { useRuntimesStore } from "@/stores/runtimes";
+import { useWorkspaceStore } from "@/stores/workspace";
+import type { AgentTemplate } from "@/types";
 import {
   Alert,
   AlertDescription,
@@ -19,11 +21,9 @@ import {
   Textarea,
   cn,
 } from "@nexu-design/ui-web";
-import { useAgentsStore } from "@/stores/agents";
-import { useRuntimesStore } from "@/stores/runtimes";
-import { useWorkspaceStore } from "@/stores/workspace";
-import { mockAgentTemplates, mockRuntimes } from "@/mock/data";
-import type { AgentTemplate } from "@/types";
+import { ArrowLeft, Plus, Rocket, Search, Zap } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type Phase = "templates" | "settings";
 

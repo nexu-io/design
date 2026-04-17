@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
-import { X } from "lucide-react";
-import { cn } from "@nexu-design/ui-web";
 import { usePanelStore } from "@/stores/panel";
+import { cn } from "@nexu-design/ui-web";
+import { X } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 interface SlidePanelProps {
   children: React.ReactNode;
@@ -37,6 +37,7 @@ export function SlidePanel({
       <div className="flex items-center justify-between h-12 px-4 border-b border-border shrink-0">
         <h2 className="text-sm font-semibold">{title}</h2>
         <button
+          type="button"
           onClick={closePanel}
           className="flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
         >

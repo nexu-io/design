@@ -1,8 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { ThemeRoot } from "@nexu-design/ui-web";
 import { App } from "@/app/App";
 import { useThemeStore } from "@/stores/theme";
+import { ThemeRoot } from "@nexu-design/ui-web";
+import React from "react";
+import ReactDOM from "react-dom/client";
 import "@/app/globals.css";
 
 function Root(): React.ReactElement {

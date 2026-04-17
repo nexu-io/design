@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Settings2, ChevronDown, ChevronUp, RotateCcw, LogIn, LogOut, UserCog } from "lucide-react";
+import { mockUsers } from "@/mock/data";
+import { useWorkspaceStore } from "@/stores/workspace";
 import {
   Badge,
   Button,
@@ -14,8 +13,9 @@ import {
   InteractiveRowTrailing,
   Separator,
 } from "@nexu-design/ui-web";
-import { useWorkspaceStore } from "@/stores/workspace";
-import { mockUsers } from "@/mock/data";
+import { ChevronDown, ChevronUp, LogIn, LogOut, RotateCcw, Settings2, UserCog } from "lucide-react";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type AppState = "welcome" | "onboarding" | "app";
 

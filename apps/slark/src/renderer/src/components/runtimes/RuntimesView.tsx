@@ -1,24 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
-import type { ElementType, ReactElement, ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  ArrowRight,
-  Bot,
-  Box,
-  CircleAlert,
-  Code,
-  Cpu,
-  MousePointer,
-  Play,
-  RefreshCw,
-  RotateCw,
-  Sparkles,
-  Square,
-  Terminal,
-  Trash2,
-  Wifi,
-  Zap,
-} from "lucide-react";
 import {
   Alert,
   AlertDescription,
@@ -39,6 +18,27 @@ import {
   TabsTrigger,
   cn,
 } from "@nexu-design/ui-web";
+import {
+  ArrowRight,
+  Bot,
+  Box,
+  CircleAlert,
+  Code,
+  Cpu,
+  MousePointer,
+  Play,
+  RefreshCw,
+  RotateCw,
+  Sparkles,
+  Square,
+  Terminal,
+  Trash2,
+  Wifi,
+  Zap,
+} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import type { ElementType, ReactElement, ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { TitleBarSpacer } from "@/components/layout/WindowChrome";
 import { useAgentsStore } from "@/stores/agents";

@@ -1,9 +1,9 @@
-import { useParams } from "react-router-dom";
-import { Bot } from "lucide-react";
-import { cn } from "@nexu-design/ui-web";
-import { useAgentsStore } from "@/stores/agents";
-import { mockRuntimes } from "@/mock/data";
 import { TitleBarSpacer } from "@/components/layout/WindowChrome";
+import { mockRuntimes } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
+import { cn } from "@nexu-design/ui-web";
+import { Bot } from "lucide-react";
+import { useParams } from "react-router-dom";
 import { AgentDetail } from "./AgentDetail";
 
 export function AgentsView(): React.ReactElement {

@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import type { Channel, Message } from "@/types";
+import { create } from "zustand";
 
 interface ChatState {
   channels: Channel[];

@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { AlertCircle, CheckCircle2, ExternalLink, Loader2, MailPlus, Users } from "lucide-react";
+import { SlarkAuthFrame } from "@/components/onboarding/slark-auth-frame";
+import { useWorkspaceStore } from "@/stores/workspace";
 import {
   Alert,
   AlertDescription,
@@ -12,8 +11,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@nexu-design/ui-web";
-import { SlarkAuthFrame } from "@/components/onboarding/slark-auth-frame";
-import { useWorkspaceStore } from "@/stores/workspace";
+import { AlertCircle, CheckCircle2, ExternalLink, Loader2, MailPlus, Users } from "lucide-react";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 type JoinState = "idle" | "joining" | "joined" | "error";
 

@@ -1,5 +1,5 @@
+import type { Repository, Workspace } from "@/types";
 import { create } from "zustand";
-import type { Workspace, Repository } from "@/types";
 
 interface WorkspaceState {
   workspaces: Workspace[];

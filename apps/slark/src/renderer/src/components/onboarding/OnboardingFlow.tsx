@@ -1,9 +1,9 @@
+import { Stepper, StepperItem, StepperSeparator } from "@nexu-design/ui-web";
+import { Bot, Building2, PlugZap } from "lucide-react";
 import { Fragment } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { Bot, Building2, PlugZap } from "lucide-react";
-import { Stepper, StepperItem, StepperSeparator } from "@nexu-design/ui-web";
-import { CreateAgentStep } from "./CreateAgentStep";
 import { ConnectRuntimeStep } from "./ConnectRuntimeStep";
+import { CreateAgentStep } from "./CreateAgentStep";
 import { CreateWorkspaceStep } from "./CreateWorkspaceStep";
 import { SlarkAuthFrame } from "./slark-auth-frame";
 

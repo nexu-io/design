@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import type { Agent, AgentTemplate } from "@/types";
+import { create } from "zustand";
 
 interface AgentsState {
   agents: Agent[];

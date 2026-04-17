@@ -44,12 +44,11 @@ import {
   Mail,
   Monitor,
   MousePointer2,
-  Pause,
-  Play,
   Plus,
   RefreshCw,
   ScrollText,
   Search,
+  Settings,
   Shield,
   Smartphone,
   Sparkles,
@@ -61,7 +60,6 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { type Locale, useLocale } from "../../hooks/useLocale";
 import { openExternal } from "../../utils/open-external";
-import { GitHubStarButton } from "./GitHubStarButton";
 import {
   type ModelProvider,
   type ProviderDetail,
@@ -456,8 +454,6 @@ function AgentDetailView({
   const [activeHarness, setActiveHarness] = useState("claude-code");
 
   const currentHarness = HARNESS_OPTIONS.find((h) => h.id === activeHarness) ?? HARNESS_OPTIONS[0];
-  const CurrentIcon = currentHarness.icon;
-
   return (
     <div>
       {/* Breadcrumb */}
@@ -672,13 +668,7 @@ function AgentDetailView({
                     <ScrollText size={13} className="text-text-muted" />
                     <span className="text-[12px] text-text-primary">{file.name}</span>
                   </div>
-                  {file.badge ? (
-                    <Badge variant="outline" size="xs" className="text-[9px]">
-                      {file.badge}
-                    </Badge>
-                  ) : (
-                    <span className="text-[10px] text-text-muted">{file.size}</span>
-                  )}
+                  <span className="text-[10px] text-text-muted">{file.size}</span>
                 </div>
               ))}
             </div>
@@ -867,7 +857,14 @@ there.
   );
 }
 
-const ADAPTER_TYPES = [
+const ADAPTER_TYPES: {
+  id: string;
+  name: string;
+  descKey: string;
+  icon: typeof Sparkles;
+  recommended?: boolean;
+  dimmed?: boolean;
+}[] = [
   {
     id: "claude-code",
     name: "Claude Code",
@@ -1802,15 +1799,9 @@ export function SettingsView({
                             <span className="text-[12px] text-text-primary flex-1 truncate">
                               {file.name}
                             </span>
-                            {"badge" in file ? (
-                              <span className="text-[9px] font-semibold text-[var(--color-accent)] bg-[hsl(var(--accent)/0.1)] px-1.5 py-0.5 rounded">
-                                {file.badge}
-                              </span>
-                            ) : (
-                              <span className="text-[10px] text-text-muted tabular-nums">
-                                {file.size}
-                              </span>
-                            )}
+                            <span className="text-[10px] text-text-muted tabular-nums">
+                              {file.size}
+                            </span>
                           </button>
                         ))}
                       </div>

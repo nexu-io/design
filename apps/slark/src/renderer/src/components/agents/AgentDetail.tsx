@@ -1,16 +1,8 @@
-import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Bot,
-  Zap,
-  Wrench,
-  MessageSquare,
-  MoreHorizontal,
-  FileText,
-  Settings,
-  Trash2,
-  Copy,
-} from "lucide-react";
+import { TitleBarSpacer } from "@/components/layout/WindowChrome";
+import { mockRuntimes } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
+import { useChatStore } from "@/stores/chat";
+import type { Agent, Channel } from "@/types";
 import {
   Badge,
   Button,
@@ -29,12 +21,20 @@ import {
   Textarea,
   cn,
 } from "@nexu-design/ui-web";
-import { useChatStore } from "@/stores/chat";
-import { useAgentsStore } from "@/stores/agents";
-import { mockRuntimes } from "@/mock/data";
-import { TitleBarSpacer } from "@/components/layout/WindowChrome";
+import {
+  Bot,
+  Copy,
+  FileText,
+  MessageSquare,
+  MoreHorizontal,
+  Settings,
+  Trash2,
+  Wrench,
+  Zap,
+} from "lucide-react";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { RuntimePicker } from "./RuntimePicker";
-import type { Agent, Channel } from "@/types";
 
 interface AgentDetailProps {
   agent: Agent;

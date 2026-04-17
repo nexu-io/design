@@ -1,8 +1,4 @@
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Bot, Check, LogOut, MessageSquare, Plus, Settings, Zap } from "lucide-react";
 import {
-  ActivityBar as UiActivityBar,
   ActivityBarContent,
   ActivityBarFooter,
   ActivityBarHeader,
@@ -17,8 +13,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  ActivityBar as UiActivityBar,
   cn,
 } from "@nexu-design/ui-web";
+import { Bot, Check, LogOut, MessageSquare, Plus, Settings, Zap } from "lucide-react";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useWorkspaceStore } from "@/stores/workspace";
 

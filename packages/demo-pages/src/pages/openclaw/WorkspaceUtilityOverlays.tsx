@@ -1,6 +1,6 @@
 import { AlertCircle, CheckCircle, Settings, X } from "lucide-react";
-import { ONBOARDING_CHANNELS, SEEDANCE_BANNER_DISMISSED_KEY } from "./channelSetup";
 import type { ChannelId } from "./ChannelsView";
+import { ONBOARDING_CHANNELS } from "./channelSetup";
 
 type Props = {
   checkingUpdate: boolean;
@@ -42,9 +42,9 @@ export function WorkspaceUtilityOverlays({
   setDemoBudgetStatus,
   demoCreditPack,
   setDemoCreditPack,
-  setStarModalStep,
-  setShowStarModal,
-  setShowSeedanceModal,
+  setStarModalStep: _setStarModalStep,
+  setShowStarModal: _setShowStarModal,
+  setShowSeedanceModal: _setShowSeedanceModal,
   toast,
   connectedChannels,
   setConnectedChannels,
