@@ -13,20 +13,20 @@
 ## Phase 0 — Workspace 接入
 
 ### 0.1 依赖接入决策
-- [ ] 确认 `apps/slark` 是否纳入 pnpm workspace 管理
-- [ ] 确认 `apps/slark` 后续使用 `pnpm` 而不是独立 `npm`
-- [ ] 确认 `@nexu-design/ui-web` / `@nexu-design/tokens` 的接入方式
+- [x] 确认 `apps/slark` 是否纳入 pnpm workspace 管理
+- [x] 确认 `apps/slark` 后续使用 `pnpm` 而不是独立 `npm`
+- [x] 确认 `@nexu-design/ui-web` / `@nexu-design/tokens` 的接入方式
 
 ### 0.2 workspace 改造
-- [ ] 删除 `apps/slark/package-lock.json`
-- [ ] 在 `apps/slark/package.json` 中添加 workspace 依赖：
-  - [ ] `@nexu-design/ui-web`
-  - [ ] `@nexu-design/tokens`
-- [ ] 运行安装命令并确认 lockfile / workspace 状态正常
+- [x] 删除 `apps/slark/package-lock.json`
+- [x] 在 `apps/slark/package.json` 中添加 workspace 依赖：
+  - [x] `@nexu-design/ui-web`
+  - [x] `@nexu-design/tokens`
+- [x] 运行安装命令并确认 lockfile / workspace 状态正常
 
 ### 0.3 阶段验收
-- [ ] `apps/slark` 可正常安装依赖
-- [ ] `apps/slark` 可正常启动或构建
+- [x] `apps/slark` 可正常安装依赖
+- [x] `apps/slark` 可正常启动或构建
 
 ---
 
