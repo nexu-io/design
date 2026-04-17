@@ -1,13 +1,14 @@
-import { useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { MessageSquare, Hash, Bot } from "lucide-react";
+import { TitleBarSpacer } from "@/components/layout/WindowChrome";
+import { getSlarkIntroResponse, mockChannels, mockMessages, resolveRef } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
 import { useChatStore } from "@/stores/chat";
 import { useWorkspaceStore } from "@/stores/workspace";
-import { useAgentsStore } from "@/stores/agents";
-import { mockMessages, mockChannels, resolveRef, getSlarkIntroResponse } from "@/mock/data";
-import { TitleBarSpacer } from "@/components/layout/WindowChrome";
-import { MessageList } from "./MessageList";
+import { Badge } from "@nexu-design/ui-web";
+import { Bot, Hash, MessageSquare } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { MessageInput } from "./MessageInput";
+import { MessageList } from "./MessageList";
 
 export function ChatView(): React.ReactElement {
   const { channelId } = useParams();
@@ -111,20 +112,25 @@ export function ChatView(): React.ReactElement {
       <TitleBarSpacer />
       <div className="flex items-center gap-2 px-4 h-12 border-b border-border shrink-0">
         {channel.type === "channel" ? (
-          <Hash className="h-4 w-4 text-muted-foreground" />
+          <Hash className="h-4 w-4 text-text-tertiary" />
         ) : otherResolved?.isAgent ? (
           <Bot className="h-4 w-4 text-slark-agent" />
         ) : null}
-        <h2 className="font-semibold text-sm">
+        <h2 className="text-sm font-semibold text-text-primary">
           {channel.type === "dm" ? (otherResolved?.name ?? channel.name) : channel.name}
         </h2>
         {channel.description && (
-          <span className="text-xs text-muted-foreground ml-2">{channel.description}</span>
+          <span className="ml-2 truncate text-xs text-text-secondary">{channel.description}</span>
         )}
+        {channel.type === "dm" && otherResolved?.isAgent ? (
+          <Badge variant="accent" size="xs" className="ml-auto">
+            Agent
+          </Badge>
+        ) : null}
         {channel.type === "channel" && (
-          <span className="ml-auto text-xs text-muted-foreground">
+          <Badge variant="outline" size="xs" className="ml-auto">
             {channel.members.length} members
-          </span>
+          </Badge>
         )}
       </div>
       <MessageList channelId={channelId} channel={channel} />

@@ -483,6 +483,36 @@ ui-web 当前没有明确等价的 chat composer 组件，因此本次：
 - `SlarkComposer`
   - 理由：这是复杂业务交互组件，ui-web 无稳定对应物；该 wrapper 负责保留业务行为，同时尽可能复用 `Button` / `Popover` / token
 
+### 8.4 本轮 review 结论 / 当前保留 gap
+
+- `components/chat/ChatSidebar.tsx`
+  - 已将列表区域继续统一到 `ScrollArea` + `InteractiveRow` + `NavigationMenu`，并把删除确认迁到 `Dialog`
+  - **保留本地实现**：右键 pin menu
+  - 原因：当前是基于指针位置的轻量上下文菜单，`ui-web` 里没有等价的 context-menu primitive
+- `components/chat/CreateChannelDialog.tsx`
+  - 已迁到 `Dialog` + `FormField` + `Input` + `Button`
+- `components/chat/InvitePeopleDialog.tsx`
+  - 已继续沿用 `Dialog` 方案，无需额外本地 overlay
+- `components/chat/ChatView.tsx`
+  - 头部状态徽标统一到 `Badge`
+- `components/chat/MentionPicker.tsx`
+  - 已将候选列表统一到 `Card` + `ScrollArea` + `InteractiveRow`
+  - **保留本地实现**：基于 textarea 光标触发的展示/插入逻辑
+  - 原因：`ui-web` 有 popover/list primitives，但没有可直接承接 mention 查询、插入与 selection 管理的现成 composer pattern
+- `components/chat/MessageInput.tsx`
+  - 已把发送按钮和 token 对齐到 `ui-web Button`
+  - **保留本地实现**：autosize textarea、enter-send、draft injection、mention state machine
+  - 原因：`FollowUpInput` / `Textarea` 只能覆盖基础输入外观，无法完整承接 Slark composer 行为
+- `components/chat/MessageList.tsx`
+  - **本次保留原实现**：普通消息气泡、streaming cursor、reactions、时间分组逻辑
+  - 原因：`ConversationMessage` 只适合基础 bubble；当前列表还耦合 rich content blocks、agent badge、连续消息布局与 reaction rendering
+- `components/chat/ContentBlocks.tsx`
+  - **本次保留原实现**：code/file/diff/action/tool-result/approval 等 rich blocks
+  - 原因：`ui-web` 暂无可覆盖这组消息级富内容的 primitives / patterns
+- `components/chat/ContentDetailOverlay.tsx`
+  - **本次保留原实现**：image lightbox、code viewer、diff viewer
+  - 原因：虽然有 `Dialog` / `Sheet`，但缺少承接代码查看器、diff viewer 与大图灯箱内容的完整视图 primitives
+
 ---
 
 ## 本地 wrapper 白名单

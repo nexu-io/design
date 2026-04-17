@@ -1,13 +1,33 @@
+import { CreateAgentDialog } from "@/components/agents/CreateAgentDialog";
+import { mockChannels, resolveRef } from "@/mock/data";
+import { useChatStore } from "@/stores/chat";
+import type { Channel } from "@/types";
+import {
+  Badge,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Input,
+  InteractiveRow,
+  InteractiveRowContent,
+  InteractiveRowLeading,
+  InteractiveRowTrailing,
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLabel,
+  NavigationMenuList,
+  ScrollArea,
+  cn,
+} from "@nexu-design/ui-web";
+import { Bot, Hash, Pin, PinOff, Plus, Search, User, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Hash, Search, Bot, User, Plus, X, Pin, PinOff } from "lucide-react";
-import { Badge, Button, Input, ScrollArea, cn } from "@nexu-design/ui-web";
-import { useChatStore } from "@/stores/chat";
-import { mockChannels, resolveRef } from "@/mock/data";
 import { CreateChannelDialog } from "./CreateChannelDialog";
-import { CreateAgentDialog } from "@/components/agents/CreateAgentDialog";
 import { InvitePeopleDialog } from "./InvitePeopleDialog";
-import type { Channel } from "@/types";
 
 interface ContextMenuState {
   x: number;
@@ -135,42 +155,43 @@ export function ChatSidebar(): React.ReactElement {
 
   const renderSidebarItem = (c: Channel, opts?: { showDelete?: boolean }): React.ReactElement => (
     <div key={c.id} className="group/item flex items-center gap-1">
-      <button
-        type="button"
+      <InteractiveRow
+        tone="subtle"
+        selected={channelId === c.id}
         onClick={() => handleSelect(c.id)}
         onContextMenu={(e) => openCtx(e, c)}
-        className={cn(
-          "flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2.5 py-2 text-[13px] transition-colors",
-          channelId === c.id
-            ? "bg-surface-2 text-text-primary"
-            : "text-text-secondary hover:bg-surface-2 hover:text-text-primary",
-        )}
+        className="min-w-0 flex-1 items-center gap-2 rounded-lg px-2.5 py-2"
       >
-        {renderItemIcon(c)}
-        <span className="truncate flex-1 text-left">{renderItemLabel(c)}</span>
+        <InteractiveRowLeading className="pt-0.5">{renderItemIcon(c)}</InteractiveRowLeading>
+        <InteractiveRowContent className="truncate text-left text-[13px]">
+          {renderItemLabel(c)}
+        </InteractiveRowContent>
         {c.unreadCount > 0 ? (
-          <Badge
-            variant="default"
-            size="xs"
-            className={cn(
-              "ml-auto min-w-5 justify-center px-1.5",
-              opts?.showDelete && "group-hover/item:hidden",
-            )}
-          >
-            {c.unreadCount}
-          </Badge>
+          <InteractiveRowTrailing>
+            <Badge
+              variant="default"
+              size="xs"
+              className={cn(
+                "min-w-5 justify-center px-1.5",
+                opts?.showDelete && "group-hover/item:hidden",
+              )}
+            >
+              {c.unreadCount}
+            </Badge>
+          </InteractiveRowTrailing>
         ) : null}
-      </button>
+      </InteractiveRow>
 
       {opts?.showDelete ? (
-        <button
-          type="button"
+        <Button
           onClick={(e) => handleDeleteClick(e, c)}
-          className="hidden h-7 w-7 shrink-0 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-destructive/10 hover:text-destructive group-hover/item:flex"
+          variant="ghost"
+          size="icon-sm"
+          className="hidden shrink-0 rounded-md text-text-secondary hover:bg-destructive/10 hover:text-destructive group-hover/item:inline-flex"
           title="Delete channel"
         >
-          <X className="h-3 w-3" />
-        </button>
+          <X className="size-3" />
+        </Button>
       ) : null}
     </div>
   );
@@ -188,19 +209,23 @@ export function ChatSidebar(): React.ReactElement {
       </div>
 
       <ScrollArea className="min-h-0 flex-1 px-2 pb-3">
-        <div className="space-y-4 pr-1">
+        <NavigationMenu className="space-y-4 pr-1">
           {pinnedChannels.length > 0 && (
             <div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-text-tertiary">
+              <NavigationMenuLabel className="flex items-center gap-1.5 py-1 font-semibold">
                 <Pin className="h-3 w-3" />
                 Pinned
-              </div>
-              {pinnedChannels.map((c) => renderSidebarItem(c))}
+              </NavigationMenuLabel>
+              <NavigationMenuList>
+                {pinnedChannels.map((c) => (
+                  <NavigationMenuItem key={c.id}>{renderSidebarItem(c)}</NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
             </div>
           )}
 
           <div>
-            <div className="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-text-tertiary">
+            <NavigationMenuLabel className="flex items-center gap-1.5 py-1 font-semibold">
               <Hash className="h-3 w-3" />
               <span className="flex-1">Channels</span>
               <Button
@@ -212,13 +237,19 @@ export function ChatSidebar(): React.ReactElement {
               >
                 <Plus className="h-3 w-3" />
               </Button>
-            </div>
-            {channelList.map((c) => renderSidebarItem(c, { showDelete: true }))}
+            </NavigationMenuLabel>
+            <NavigationMenuList>
+              {channelList.map((c) => (
+                <NavigationMenuItem key={c.id}>
+                  {renderSidebarItem(c, { showDelete: true })}
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
           </div>
 
           {peopleDMs.length > 0 && (
             <div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-text-tertiary">
+              <NavigationMenuLabel className="flex items-center gap-1.5 py-1 font-semibold">
                 <User className="h-3 w-3" />
                 <span className="flex-1">People</span>
                 <Button
@@ -230,14 +261,18 @@ export function ChatSidebar(): React.ReactElement {
                 >
                   <Plus className="h-3 w-3" />
                 </Button>
-              </div>
-              {peopleDMs.map((c) => renderSidebarItem(c))}
+              </NavigationMenuLabel>
+              <NavigationMenuList>
+                {peopleDMs.map((c) => (
+                  <NavigationMenuItem key={c.id}>{renderSidebarItem(c)}</NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
             </div>
           )}
 
           {agentDMs.length > 0 && (
             <div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-text-tertiary">
+              <NavigationMenuLabel className="flex items-center gap-1.5 py-1 font-semibold">
                 <Bot className="h-3 w-3" />
                 <span className="flex-1">Agents</span>
                 <Button
@@ -249,11 +284,15 @@ export function ChatSidebar(): React.ReactElement {
                 >
                   <Plus className="h-3 w-3" />
                 </Button>
-              </div>
-              {agentDMs.map((c) => renderSidebarItem(c))}
+              </NavigationMenuLabel>
+              <NavigationMenuList>
+                {agentDMs.map((c) => (
+                  <NavigationMenuItem key={c.id}>{renderSidebarItem(c)}</NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
             </div>
           )}
-        </div>
+        </NavigationMenu>
       </ScrollArea>
 
       {menu && (
@@ -306,39 +345,25 @@ export function ChatSidebar(): React.ReactElement {
 
       <CreateAgentDialog open={createAgentOpen} onOpenChange={setCreateAgentOpen} />
 
-      {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <button
-            type="button"
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setDeleteTarget(null)}
-            aria-label="Close delete channel dialog"
-          />
-          <div className="relative w-[360px] rounded-xl border border-border bg-background p-5 shadow-xl">
-            <h3 className="text-base font-semibold">Delete #{deleteTarget.name}?</h3>
-            <p className="text-sm text-muted-foreground mt-2">
+      <Dialog open={deleteTarget != null} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <DialogContent size="sm">
+          <DialogHeader>
+            <DialogTitle>Delete {deleteTarget ? `#${deleteTarget.name}` : "channel"}?</DialogTitle>
+            <DialogDescription>
               This will permanently delete the channel and all its messages. This action cannot be
               undone.
-            </p>
-            <div className="flex justify-end gap-2 mt-5">
-              <button
-                type="button"
-                onClick={() => setDeleteTarget(null)}
-                className="h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleDeleteConfirm}
-                className="h-8 px-4 rounded-md text-sm font-medium bg-destructive text-white hover:bg-destructive/90 transition-colors"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" size="sm" onClick={() => setDeleteTarget(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" size="sm" onClick={handleDeleteConfirm}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

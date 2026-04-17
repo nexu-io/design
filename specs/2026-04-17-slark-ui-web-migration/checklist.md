@@ -283,33 +283,34 @@
 - `components/chat/*`
 
 ### 8.1 先做 compatibility check
-- [ ] 检查 `ConversationMessage` 是否支持：
-  - [ ] avatar
+- [x] 检查 `ConversationMessage` 是否支持：
+  - [x] avatar
   - [ ] mentions
   - [ ] reactions
   - [ ] streaming
   - [ ] content blocks
   - [ ] overlay entry
-- [ ] 输出结论：可迁移 / 不可迁移
+- [x] 输出结论：可迁移 / 不可迁移
+  - 结论：仅基础 avatar / bubble 可迁移；message body 整体暂不可迁移，保留 Slark 原实现并记录 gap
 
 ### 8.2 本次确定可迁移的内容
-- [ ] chat sidebar 改为 `Sidebar` / `InteractiveRow` / `ScrollArea`
-- [ ] header 中可迁移按钮/徽标改为 `Button` / `Badge`
-- [ ] `CreateChannelDialog` 改为 `Dialog`
-- [ ] `InvitePeopleDialog` 改为 `Dialog`
-- [ ] `ContentDetailOverlay` 如 `Sheet` / `Dialog` 能承接则迁移，否则保留
+- [x] chat sidebar 改为 `Sidebar` / `InteractiveRow` / `ScrollArea`
+- [x] header 中可迁移按钮/徽标改为 `Button` / `Badge`
+- [x] `CreateChannelDialog` 改为 `Dialog`
+- [x] `InvitePeopleDialog` 改为 `Dialog`
+- [x] `ContentDetailOverlay` 如 `Sheet` / `Dialog` 能承接则迁移，否则保留
 
 ### 8.3 MessageList
 - [ ] 若 `ConversationMessage` 能承接，则迁移普通消息 UI
-- [ ] 若不能承接，则保留 Slark 原实现并记录 gap
+- [x] 若不能承接，则保留 Slark 原实现并记录 gap
 
 ### 8.4 MessageInput / Composer
-- [ ] 不强制改造成 ui-web composer
+- [x] 不强制改造成 ui-web composer
 - [ ] 可迁移部分向 ui-web 靠拢：
-  - [ ] 发送按钮
-  - [ ] mention popover
-  - [ ] token / focus / spacing
-- [ ] 保留 autosize / enter-send / mention insertion 逻辑
+  - [x] 发送按钮
+  - [x] mention popover
+  - [x] token / focus / spacing
+- [x] 保留 autosize / enter-send / mention insertion 逻辑
 - [ ] 如需要，新增 `SlarkComposer`
 
 ### 8.5 阶段验收

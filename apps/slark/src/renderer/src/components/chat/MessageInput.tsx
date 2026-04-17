@@ -1,10 +1,10 @@
-import { useState, useRef, useCallback, useLayoutEffect, useEffect } from "react";
-import { ArrowUp } from "lucide-react";
-import { cn } from "@nexu-design/ui-web";
-import { useChatStore } from "@/stores/chat";
 import { getRandomAgentResponse, mockAgents } from "@/mock/data";
+import { useChatStore } from "@/stores/chat";
+import type { Channel, MemberRef, Message } from "@/types";
+import { Button, cn } from "@nexu-design/ui-web";
+import { ArrowUp } from "lucide-react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MentionPicker } from "./MentionPicker";
-import type { Channel, Message, MemberRef } from "@/types";
 
 interface MessageInputProps {
   channelId: string;
@@ -45,6 +45,7 @@ export function MessageInput({
   }, []);
 
   useLayoutEffect(() => {
+    void text;
     adjustHeight(textareaRef.current);
   }, [text, adjustHeight]);
 
@@ -91,12 +92,14 @@ export function MessageInput({
 
     const mentionedAgents: MemberRef[] = [];
     const mentionPattern = /@(\w+)/g;
-    let match: RegExpExecArray | null = null;
-    while ((match = mentionPattern.exec(trimmed)) !== null) {
-      const agent = mockAgents.find((a) => a.name.toLowerCase() === match![1].toLowerCase());
+    let match = mentionPattern.exec(trimmed);
+    while (match) {
+      const [, mentionName] = match;
+      const agent = mockAgents.find((a) => a.name.toLowerCase() === mentionName.toLowerCase());
       if (agent) {
         mentionedAgents.push({ kind: "agent", id: agent.id });
       }
+      match = mentionPattern.exec(trimmed);
     }
 
     const userMsg: Message = {
@@ -116,7 +119,9 @@ export function MessageInput({
       const agentMember = channel.members.find((m) => m.kind === "agent");
       if (agentMember) simulateAgentReply(agentMember);
     } else if (mentionedAgents.length > 0) {
-      mentionedAgents.forEach((ref) => simulateAgentReply(ref));
+      for (const ref of mentionedAgents) {
+        simulateAgentReply(ref);
+      }
     }
 
     adjustHeight(textareaRef.current);
@@ -197,19 +202,19 @@ export function MessageInput({
           rows={1}
           className="message-textarea flex-1 resize-none bg-transparent text-sm placeholder:text-muted-foreground focus:outline-none px-2 py-1.5"
         />
-        <button
+        <Button
+          type="button"
           onClick={handleSend}
           disabled={!hasText}
           className={cn(
-            "message-send-btn flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
-            "transition-all duration-200 ease-out",
+            "message-send-btn h-8 w-8 shrink-0 rounded-lg p-0 transition-all duration-200 ease-out",
             hasText
-              ? "bg-foreground text-background hover:bg-foreground/90"
-              : "bg-secondary text-muted-foreground",
+              ? "bg-accent text-accent-fg hover:bg-accent-hover"
+              : "bg-surface-2 text-text-muted hover:bg-surface-2",
           )}
         >
           <ArrowUp className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
     </div>
   );
