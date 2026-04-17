@@ -7,7 +7,13 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": ["**/dist/**", "**/dist-electron/**", "**/release/**", "**/storybook-static/**"]
+    "ignore": [
+      "**/dist/**",
+      "**/dist-electron/**",
+      "**/release/**",
+      "**/storybook-static/**",
+      "apps/slark/out/**"
+    ]
   },
   "formatter": {
     "enabled": true,

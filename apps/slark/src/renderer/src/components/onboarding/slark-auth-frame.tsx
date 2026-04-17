@@ -1,11 +1,13 @@
-import type * as React from 'react'
+import type * as React from "react";
 
-import { AuthShell, cn } from '@nexu-design/ui-web'
-import { TitleBarDragRegion } from '@/components/layout/WindowChrome'
+import { AuthShell, cn } from "@nexu-design/ui-web";
+import { TitleBarDragRegion } from "@/components/layout/WindowChrome";
 
 interface SlarkAuthFrameProps {
-  children: React.ReactNode
-  contentInnerClassName?: string
+  children: React.ReactNode;
+  contentInnerClassName?: string;
+  hideBranding?: boolean;
+  hideFooter?: boolean;
 }
 
 function SlarkAuthBackdrop(): React.ReactElement {
@@ -14,11 +16,10 @@ function SlarkAuthBackdrop(): React.ReactElement {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0"
       style={{
-        background:
-          'radial-gradient(120% 80% at 50% -10%, rgba(45,212,191,0.08), transparent 55%)',
+        background: "radial-gradient(120% 80% at 50% -10%, rgba(45,212,191,0.08), transparent 55%)",
       }}
     />
-  )
+  );
 }
 
 function SlarkAuthMark(): React.ReactElement {
@@ -34,7 +35,7 @@ function SlarkAuthMark(): React.ReactElement {
         <p className="text-[12px] text-text-muted">Desktop-first workspace for humans and agents</p>
       </div>
     </div>
-  )
+  );
 }
 
 function SlarkAuthFooter(): React.ReactElement {
@@ -42,12 +43,14 @@ function SlarkAuthFooter(): React.ReactElement {
     <p className="text-center text-[11px] text-text-tertiary">
       Sign in, join invites, and finish setup without leaving the shared desktop shell.
     </p>
-  )
+  );
 }
 
 export function SlarkAuthFrame({
   children,
   contentInnerClassName,
+  hideBranding = false,
+  hideFooter = false,
 }: SlarkAuthFrameProps): React.ReactElement {
   return (
     <div className="relative flex h-screen flex-col bg-background">
@@ -57,15 +60,15 @@ export function SlarkAuthFrame({
           className="h-full min-h-full"
           contentBackdrop={<SlarkAuthBackdrop />}
           contentContainerClassName="items-center p-0"
-          contentInnerClassName={cn('w-full max-w-[400px]', contentInnerClassName)}
+          contentInnerClassName={cn("w-full max-w-[400px]", contentInnerClassName)}
         >
           <div className="flex flex-col items-center gap-8 px-5 py-8">
-            <SlarkAuthMark />
+            {hideBranding ? null : <SlarkAuthMark />}
             {children}
-            <SlarkAuthFooter />
+            {hideFooter ? null : <SlarkAuthFooter />}
           </div>
         </AuthShell>
       </div>
     </div>
-  )
+  );
 }

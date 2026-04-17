@@ -2,28 +2,26 @@
 const electron = require("electron");
 const path = require("path");
 const is = {
-  dev: !electron.app.isPackaged
+  dev: !electron.app.isPackaged,
 };
 const platform = {
   isWindows: process.platform === "win32",
   isMacOS: process.platform === "darwin",
-  isLinux: process.platform === "linux"
+  isLinux: process.platform === "linux",
 };
 const electronApp = {
   setAppUserModelId(id) {
-    if (platform.isWindows)
-      electron.app.setAppUserModelId(is.dev ? process.execPath : id);
+    if (platform.isWindows) electron.app.setAppUserModelId(is.dev ? process.execPath : id);
   },
   setAutoLaunch(auto) {
-    if (platform.isLinux)
-      return false;
+    if (platform.isLinux) return false;
     const isOpenAtLogin = () => {
       return electron.app.getLoginItemSettings().openAtLogin;
     };
     if (isOpenAtLogin() !== auto) {
       electron.app.setLoginItemSettings({
         openAtLogin: auto,
-        path: process.execPath
+        path: process.execPath,
       });
       return isOpenAtLogin() === auto;
     } else {
@@ -32,19 +30,17 @@ const electronApp = {
   },
   skipProxy() {
     return electron.session.defaultSession.setProxy({ mode: "direct" });
-  }
+  },
 };
 const optimizer = {
   watchWindowShortcuts(window, shortcutOptions) {
-    if (!window)
-      return;
+    if (!window) return;
     const { webContents } = window;
     const { escToCloseWindow = false, zoom = false } = shortcutOptions || {};
     webContents.on("before-input-event", (event, input) => {
       if (input.type === "keyDown") {
         if (!is.dev) {
-          if (input.code === "KeyR" && (input.control || input.meta))
-            event.preventDefault();
+          if (input.code === "KeyR" && (input.control || input.meta)) event.preventDefault();
         } else {
           if (input.code === "F12") {
             if (webContents.isDevToolsOpened()) {
@@ -62,8 +58,7 @@ const optimizer = {
           }
         }
         if (!zoom) {
-          if (input.code === "Minus" && (input.control || input.meta))
-            event.preventDefault();
+          if (input.code === "Minus" && (input.control || input.meta)) event.preventDefault();
           if (input.code === "Equal" && input.shift && (input.control || input.meta))
             event.preventDefault();
         }
@@ -92,7 +87,7 @@ const optimizer = {
         }
       }
     });
-  }
+  },
 };
 const PROTOCOL = "slark";
 electron.app.disableHardwareAcceleration();
@@ -113,7 +108,8 @@ function handleDeepLink(url) {
   win.focus();
   const parsed = new URL(url);
   if (parsed.hostname === "join" || parsed.pathname.startsWith("/join")) {
-    const token = parsed.pathname.replace(/^\/?(join\/?)?/, "") || parsed.searchParams.get("token") || "";
+    const token =
+      parsed.pathname.replace(/^\/?(join\/?)?/, "") || parsed.searchParams.get("token") || "";
     if (token) {
       win.webContents.send("deep-link:join", token);
     }
@@ -131,8 +127,8 @@ function createWindow() {
     backgroundColor: "#09090b",
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.js"),
-      sandbox: false
-    }
+      sandbox: false,
+    },
   });
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();

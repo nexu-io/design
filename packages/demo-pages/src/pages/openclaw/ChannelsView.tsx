@@ -8,7 +8,15 @@ import {
   DialogTitle,
   PageHeader,
 } from "@nexu-design/ui-web";
-import { AlertTriangle, CheckCircle2, Eye, EyeOff, ExternalLink, MessageSquare, Smartphone } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  ExternalLink,
+  MessageSquare,
+  Smartphone,
+} from "lucide-react";
 import { useState } from "react";
 import { useLocale } from "../../hooks/useLocale";
 import { CHANNEL_CONFIG_FIELDS, ONBOARDING_CHANNELS } from "./channelSetup";
@@ -195,9 +203,7 @@ export function ChannelsView({ connectedChannels, onConnectedChange }: ChannelsV
                   <div className="w-[200px] h-[200px] rounded-xl border-2 border-dashed border-border bg-surface-1 flex items-center justify-center mb-5">
                     <div className="text-center">
                       <Smartphone size={32} className="mx-auto text-text-muted/40 mb-2" />
-                      <span className="text-[11px] text-text-muted">
-                        QR Code
-                      </span>
+                      <span className="text-[11px] text-text-muted">QR Code</span>
                     </div>
                   </div>
 
@@ -335,7 +341,6 @@ export function ChannelsView({ connectedChannels, onConnectedChange }: ChannelsV
                         </div>
                       );
                     })}
-
                   </div>
 
                   {/* Footer */}
@@ -365,8 +370,8 @@ export function ChannelsView({ connectedChannels, onConnectedChange }: ChannelsV
           </DialogHeader>
           <DialogBody className="py-2">
             <p className="text-[13px] text-text-muted leading-relaxed">
-              This will remove the {selected.name} bot connection. All configuration will be
-              cleared and the bot will stop responding to messages.
+              This will remove the {selected.name} bot connection. All configuration will be cleared
+              and the bot will stop responding to messages.
             </p>
             <div className="flex items-center justify-end gap-2 mt-5">
               <Button variant="outline" size="sm" onClick={() => setShowDisconnectConfirm(false)}>

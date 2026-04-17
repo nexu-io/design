@@ -1,29 +1,29 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Rocket, Plus, X } from 'lucide-react'
-import { useWorkspaceStore } from '@/stores/workspace'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Rocket, Plus, X } from "lucide-react";
+import { useWorkspaceStore } from "@/stores/workspace";
 
 export function InviteTeamStep(): React.ReactElement {
-  const navigate = useNavigate()
-  const completeOnboarding = useWorkspaceStore((s) => s.completeOnboarding)
-  const [emails, setEmails] = useState([''])
+  const navigate = useNavigate();
+  const completeOnboarding = useWorkspaceStore((s) => s.completeOnboarding);
+  const [emails, setEmails] = useState([""]);
 
   const addEmail = (): void => {
-    setEmails((prev) => [...prev, ''])
-  }
+    setEmails((prev) => [...prev, ""]);
+  };
 
   const removeEmail = (index: number): void => {
-    setEmails((prev) => prev.filter((_, i) => i !== index))
-  }
+    setEmails((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const updateEmail = (index: number, value: string): void => {
-    setEmails((prev) => prev.map((e, i) => (i === index ? value : e)))
-  }
+    setEmails((prev) => prev.map((e, i) => (i === index ? value : e)));
+  };
 
   const handleGetStarted = (): void => {
-    completeOnboarding()
-    navigate('/chat')
-  }
+    completeOnboarding();
+    navigate("/chat");
+  };
 
   return (
     <div className="flex flex-col items-center gap-6 pt-8">
@@ -75,5 +75,5 @@ export function InviteTeamStep(): React.ReactElement {
         </button>
       </div>
     </div>
-  )
+  );
 }

@@ -1,18 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertTriangle, ArrowRight, Check, Loader2, Search, X } from "lucide-react";
-import {
-  Alert,
-  AlertDescription,
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Progress,
-  cn,
-} from "@nexu-design/ui-web";
+import { AlertTriangle, ArrowRight, Check, Loader2, X } from "lucide-react";
+import { Alert, AlertDescription, Button, Progress, cn } from "@nexu-design/ui-web";
 import { useRuntimesStore } from "@/stores/runtimes";
 import type { Runtime } from "@/types";
 
@@ -141,47 +130,37 @@ export function ConnectRuntimeStep(): React.ReactElement {
   const detectedCount = runtimes.filter((runtime) => runtime.detected).length;
 
   return (
-    <Card
-      variant="static"
-      padding="lg"
-      className="rounded-2xl border-border bg-surface-1 shadow-card"
-    >
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl text-text-primary">
+    <div className="w-full">
+      <div className="text-center">
+        <h1 className="text-[20px] font-semibold leading-tight text-text-heading">
           {phase === "scanning" ? "Detecting runtimes" : "Review detected runtimes"}
-        </CardTitle>
-        <CardDescription className="text-sm text-text-secondary">
+        </h1>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
           {phase === "scanning"
             ? "Scanning your machine for compatible AI runtimes."
             : `Found ${detectedCount} runtime${detectedCount !== 1 ? "s" : ""}${errorCount > 0 ? ` • ${errorCount} need attention` : ""}.`}
-        </CardDescription>
-      </CardHeader>
+        </p>
+      </div>
 
-      <CardContent className="space-y-5">
-        <Alert>
-          <Search className="size-4" />
-          <AlertDescription>
-            Runtimes power your agents. Choose the ones Slark should use when you mention or assign
-            work.
-          </AlertDescription>
-        </Alert>
-
+      <div className="mt-6 space-y-5">
         {phase === "scanning" ? (
-          <div className="space-y-3 rounded-xl border border-border bg-surface-0 p-4">
-            <div className="flex items-center gap-2 text-sm text-text-secondary">
-              <Loader2 className="size-4 animate-spin" />
+          <div className="space-y-2">
+            <div className="flex items-center justify-center gap-2 text-[12px] text-text-secondary">
+              <Loader2 className="size-3.5 animate-spin" />
               Checking PATH and common install locations…
             </div>
-            <Progress value={scanProgress * 100} />
+            <Progress value={scanProgress * 100} className="h-1" />
           </div>
         ) : null}
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {runtimes.map(({ type, name, desc, detected, version, path, error }) => {
             const isSelected = selected.has(type);
             const isError = detected && !!error;
             const isWorking = detected && !error;
+            const notFound = phase === "done" && !detected;
             const brand = RUNTIME_BRANDS[type];
+            const brandColor = brand?.color ?? "#666";
 
             return (
               <button
@@ -190,32 +169,33 @@ export function ConnectRuntimeStep(): React.ReactElement {
                 onClick={() => phase === "done" && toggleSelect(type)}
                 disabled={phase === "scanning" || !isWorking}
                 className={cn(
-                  "flex min-h-[152px] flex-col items-start gap-3 rounded-2xl border p-4 text-left transition-colors",
+                  "flex min-h-[128px] flex-col items-start gap-3 rounded-xl border p-3.5 text-left transition-colors",
                   isWorking && isSelected
                     ? "border-accent bg-accent/5"
                     : isWorking
                       ? "border-border bg-surface-0 hover:bg-surface-2"
                       : isError
-                        ? "border-warning/30 bg-warning-subtle/20"
-                        : "border-border/60 bg-surface-0 opacity-60",
+                        ? "border-warning/40 bg-warning-subtle"
+                        : "border-dashed border-border bg-surface-0",
                 )}
               >
                 <div className="flex w-full items-center justify-between gap-2">
                   <div
-                    className="flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold text-white"
-                    style={{ backgroundColor: brand?.color ?? "#666" }}
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-[11px] font-semibold"
+                    style={{
+                      color: notFound ? undefined : brandColor,
+                      backgroundColor: notFound ? undefined : `${brandColor}1A`,
+                    }}
                   >
                     {brand?.label ?? "?"}
                   </div>
 
-                  {isWorking ? (
-                    <Check
-                      className={cn(
-                        "size-4 shrink-0",
-                        isSelected ? "text-text-primary" : "text-success",
-                      )}
-                      strokeWidth={3}
-                    />
+                  {isWorking && isSelected ? (
+                    <div className="flex size-4 shrink-0 items-center justify-center rounded-full bg-accent">
+                      <Check className="size-3 text-accent-fg" strokeWidth={3} />
+                    </div>
+                  ) : isWorking ? (
+                    <Check className="size-4 shrink-0 text-success" strokeWidth={3} />
                   ) : isError ? (
                     <AlertTriangle className="size-4 shrink-0 text-warning" />
                   ) : phase === "done" ? (
@@ -226,24 +206,38 @@ export function ConnectRuntimeStep(): React.ReactElement {
                 </div>
 
                 <div className="space-y-1">
-                  <div className="text-sm font-semibold text-text-primary">{name}</div>
-                  <div className="text-xs leading-relaxed text-text-secondary">{desc}</div>
+                  <div
+                    className={cn(
+                      "text-[13px] font-semibold",
+                      notFound ? "text-text-muted" : "text-text-primary",
+                    )}
+                  >
+                    {name}
+                  </div>
+                  <div
+                    className={cn(
+                      "text-[11px] leading-relaxed",
+                      notFound ? "text-text-muted" : "text-text-secondary",
+                    )}
+                  >
+                    {desc}
+                  </div>
                 </div>
 
                 {isWorking ? (
-                  <div className="mt-auto text-xs text-text-tertiary">
-                    v{version} • {path}
+                  <div className="mt-auto w-full truncate font-mono text-[10.5px] text-text-tertiary">
+                    v{version} · {path}
                   </div>
                 ) : null}
 
                 {isError ? (
-                  <div className="mt-auto text-xs leading-relaxed text-warning">
-                    v{version} • {error}
+                  <div className="mt-auto w-full truncate font-mono text-[10.5px] text-warning">
+                    v{version} · {error}
                   </div>
                 ) : null}
 
-                {phase === "done" && !detected ? (
-                  <div className="mt-auto text-xs text-text-tertiary">Not found</div>
+                {notFound ? (
+                  <div className="mt-auto text-[11px] text-text-muted">Not found</div>
                 ) : null}
               </button>
             );
@@ -260,7 +254,7 @@ export function ConnectRuntimeStep(): React.ReactElement {
         ) : null}
 
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => navigate("/onboarding/agent")}>
+          <Button variant="ghost" onClick={() => navigate("/onboarding/agent")}>
             Skip for now
           </Button>
           <Button
@@ -283,12 +277,12 @@ export function ConnectRuntimeStep(): React.ReactElement {
               navigate("/onboarding/agent");
             }}
             disabled={phase === "scanning" || selected.size === 0}
+            trailingIcon={<ArrowRight size={16} />}
           >
             Continue with {selected.size} runtime{selected.size !== 1 ? "s" : ""}
-            <ArrowRight className="size-4" />
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

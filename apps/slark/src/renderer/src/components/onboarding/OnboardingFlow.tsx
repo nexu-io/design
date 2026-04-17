@@ -11,19 +11,16 @@ const steps = [
   {
     path: "workspace",
     label: "Workspace",
-    description: "Name your team space and invite collaborators.",
     icon: <Building2 className="size-4" />,
   },
   {
     path: "runtime",
     label: "Runtimes",
-    description: "Choose which local tools Slark can orchestrate.",
     icon: <PlugZap className="size-4" />,
   },
   {
     path: "agent",
     label: "Agent",
-    description: "Launch the first agent your workspace will use.",
     icon: <Bot className="size-4" />,
   },
 ] as const;
@@ -34,30 +31,27 @@ export function OnboardingFlow(): React.ReactElement {
     steps.findIndex((step) => location.pathname.includes(step.path)),
     0,
   );
+  const isRuntimeStep = location.pathname.includes("/runtime");
 
   return (
-    <SlarkAuthFrame contentInnerClassName="max-w-[560px]">
-      <div className="space-y-6">
+    <SlarkAuthFrame
+      contentInnerClassName={isRuntimeStep ? "max-w-[760px]" : "max-w-[560px]"}
+      hideBranding
+      hideFooter
+    >
+      <div className="space-y-8">
         <Stepper>
           {steps.map((step, index) => (
             <Fragment key={step.path}>
               <StepperItem
-                className="max-w-[180px]"
                 status={
-                  index < currentStep
-                    ? "completed"
-                    : index === currentStep
-                      ? "current"
-                      : "pending"
+                  index < currentStep ? "completed" : index === currentStep ? "current" : "pending"
                 }
                 step={index + 1}
                 label={step.label}
-                description={step.description}
                 icon={step.icon}
               />
-              {index < steps.length - 1 ? (
-                <StepperSeparator active={index < currentStep} />
-              ) : null}
+              {index < steps.length - 1 ? <StepperSeparator active={index < currentStep} /> : null}
             </Fragment>
           ))}
         </Stepper>

@@ -175,14 +175,22 @@ export function WorkspaceTopRightControls({
                 className="relative flex items-center justify-center ml-0.5 cursor-pointer"
                 title={budgetStatus === "depleted" ? "Credits depleted" : "Credits running low"}
               >
-                <span className={cn(
-                  "w-2 h-2 rounded-full shrink-0",
-                  budgetStatus === "depleted" ? "bg-[var(--color-danger)]" : "bg-[var(--color-warning)]",
-                )} />
-                <span className={cn(
-                  "absolute inset-0 w-2 h-2 rounded-full animate-ping opacity-75",
-                  budgetStatus === "depleted" ? "bg-[var(--color-danger)]" : "bg-[var(--color-warning)]",
-                )} />
+                <span
+                  className={cn(
+                    "w-2 h-2 rounded-full shrink-0",
+                    budgetStatus === "depleted"
+                      ? "bg-[var(--color-danger)]"
+                      : "bg-[var(--color-warning)]",
+                  )}
+                />
+                <span
+                  className={cn(
+                    "absolute inset-0 w-2 h-2 rounded-full animate-ping opacity-75",
+                    budgetStatus === "depleted"
+                      ? "bg-[var(--color-danger)]"
+                      : "bg-[var(--color-warning)]",
+                  )}
+                />
               </button>
             )}
             {(isFree || isPlus) && (

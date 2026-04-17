@@ -5,11 +5,6 @@ import {
   Alert,
   AlertDescription,
   Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
   FormField,
   Input,
   InteractiveRow,
@@ -121,33 +116,31 @@ export function CreateAgentStep(): React.ReactElement {
 
   if (phase === "templates") {
     return (
-      <Card
-        variant="static"
-        padding="lg"
-        className="rounded-2xl border-border bg-surface-1 shadow-card"
-      >
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-text-primary">Create your first agent</CardTitle>
-          <CardDescription className="text-sm text-text-secondary">
+      <div className="w-full">
+        <div className="text-center">
+          <h1 className="text-[20px] font-semibold leading-tight text-text-heading">
+            Create your first agent
+          </h1>
+          <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
             Start with a proven template or create an agent from scratch.
-          </CardDescription>
-        </CardHeader>
+          </p>
+        </div>
 
-        <CardContent className="space-y-4">
+        <div className="mt-6 space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
             {mockAgentTemplates.map((template) => (
               <InteractiveRow
                 key={template.id}
                 onClick={() => handleSelectTemplate(template)}
-                className="rounded-2xl border-border bg-surface-0 px-4 py-4"
+                className="rounded-xl border-border bg-surface-0 p-3.5"
                 aria-label={`Use ${template.name} template`}
               >
                 <InteractiveRowLeading>
-                  <img src={template.avatar} alt="" className="h-10 w-10 rounded-lg shrink-0" />
+                  <img src={template.avatar} alt="" className="h-9 w-9 rounded-md shrink-0" />
                 </InteractiveRowLeading>
                 <InteractiveRowContent>
-                  <div className="text-sm font-semibold text-text-primary">{template.name}</div>
-                  <div className="mt-1 text-xs leading-relaxed text-text-secondary line-clamp-2">
+                  <div className="text-[13px] font-semibold text-text-primary">{template.name}</div>
+                  <div className="mt-0.5 text-[11px] leading-relaxed text-text-secondary line-clamp-2">
                     {template.description}
                   </div>
                 </InteractiveRowContent>
@@ -157,45 +150,45 @@ export function CreateAgentStep(): React.ReactElement {
 
           <Button
             variant="outline"
-            className="w-full justify-center rounded-2xl border-dashed"
+            className="w-full justify-center rounded-xl border-dashed"
             onClick={handleBlankAgent}
+            leadingIcon={<Plus size={16} />}
           >
-            <Plus className="size-4" />
             Start from scratch
           </Button>
 
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={handleSkip}>
+            <Button variant="ghost" onClick={handleSkip}>
               Skip for now
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card
-      variant="static"
-      padding="lg"
-      className="rounded-2xl border-border bg-surface-1 shadow-card"
-    >
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl text-text-primary">Customize your agent</CardTitle>
-        <CardDescription className="text-sm text-text-secondary">
+    <div className="w-full">
+      <div className="text-center">
+        <h1 className="text-[20px] font-semibold leading-tight text-text-heading">
+          Customize your agent
+        </h1>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
           Set a name, tune the prompt context, and choose a runtime to execute work.
-        </CardDescription>
-      </CardHeader>
+        </p>
+      </div>
 
-      <CardContent className="space-y-5">
+      <div className="mt-6 space-y-5">
         {selectedTemplate ? (
-          <div className="flex items-center gap-3 rounded-xl border border-border bg-surface-0 px-4 py-3">
-            <img src={selectedTemplate.avatar} alt="" className="h-10 w-10 rounded-lg shrink-0" />
-            <div className="min-w-0 flex-1">
-              <div className="text-xs font-medium uppercase tracking-[0.08em] text-text-tertiary">
+          <div className="flex items-center gap-2.5 rounded-lg bg-surface-1 px-3 py-2.5">
+            <img src={selectedTemplate.avatar} alt="" className="h-7 w-7 rounded-md shrink-0" />
+            <div className="min-w-0 flex-1 leading-tight">
+              <div className="text-[10px] font-medium uppercase tracking-[0.08em] text-text-tertiary">
                 Based on template
               </div>
-              <div className="text-sm font-semibold text-text-primary">{selectedTemplate.name}</div>
+              <div className="mt-0.5 text-[13px] font-semibold text-text-primary">
+                {selectedTemplate.name}
+              </div>
             </div>
           </div>
         ) : null}
@@ -277,28 +270,30 @@ export function CreateAgentStep(): React.ReactElement {
             <Search className="size-4" />
             <AlertDescription>
               No connected runtimes yet.
-              <button
-                type="button"
-                onClick={handleDetectRuntimes}
-                className="ml-1 inline-flex items-center gap-1 text-text-primary underline underline-offset-2"
-              >
+              <Button variant="link" size="inline" onClick={handleDetectRuntimes} className="ml-1">
                 Scan now
-              </button>
+              </Button>
             </AlertDescription>
           </Alert>
         ) : null}
 
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={handleBackToTemplates}>
-            <ArrowLeft className="size-4" />
+          <Button
+            variant="ghost"
+            onClick={handleBackToTemplates}
+            leadingIcon={<ArrowLeft size={16} />}
+          >
             Back to templates
           </Button>
-          <Button onClick={handleCreate} disabled={!agentName.trim()}>
-            <Rocket className="size-4" />
+          <Button
+            onClick={handleCreate}
+            disabled={!agentName.trim()}
+            leadingIcon={<Rocket size={16} />}
+          >
             Create agent
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

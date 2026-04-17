@@ -59,7 +59,7 @@ export function AuthShell({
         {contentBackdrop ?? <DefaultAuthShellBackdrop />}
         <div
           className={cn(
-            'relative z-10 flex flex-1 items-start justify-center px-5 pt-0 pb-8',
+            "relative z-10 flex flex-1 items-start justify-center px-5 pt-0 pb-8",
             contentContainerClassName,
           )}
         >

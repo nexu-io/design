@@ -1,16 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Building2, Check, Mail, Send } from "lucide-react";
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  FormField,
-  Input,
-} from "@nexu-design/ui-web";
+import { ArrowRight, Check, Mail, Send } from "lucide-react";
+import { Button, FormField, Input } from "@nexu-design/ui-web";
 import { useWorkspaceStore } from "@/stores/workspace";
 
 export function CreateWorkspaceStep(): React.ReactElement {
@@ -62,24 +53,17 @@ export function CreateWorkspaceStep(): React.ReactElement {
   };
 
   return (
-    <Card
-      variant="static"
-      padding="lg"
-      className="rounded-2xl border-border bg-surface-1 shadow-card"
-    >
-      <CardHeader className="items-center text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-subtle text-brand-primary">
-          <Building2 className="size-7" />
-        </div>
-        <div className="space-y-1">
-          <CardTitle className="text-2xl text-text-primary">Create your workspace</CardTitle>
-          <CardDescription className="text-sm text-text-secondary">
-            Set up your team space, then send the first round of invites.
-          </CardDescription>
-        </div>
-      </CardHeader>
+    <div className="w-full">
+      <div className="text-center">
+        <h1 className="text-[20px] font-semibold leading-tight text-text-heading">
+          Create your workspace
+        </h1>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
+          Set up your team space, then send the first round of invites.
+        </p>
+      </div>
 
-      <CardContent className="space-y-5">
+      <div className="mt-6 space-y-5">
         <FormField
           label="Workspace name"
           description="You can rename it later from Workspace settings."
@@ -92,7 +76,7 @@ export function CreateWorkspaceStep(): React.ReactElement {
           />
         </FormField>
 
-        <div className="space-y-3 rounded-xl border border-border bg-surface-0 p-4">
+        <div className="space-y-3">
           <FormField
             label="Invite teammates"
             description="Optional for now — invitations are sent as soon as you add them."
@@ -114,40 +98,45 @@ export function CreateWorkspaceStep(): React.ReactElement {
                   }
                 }}
               />
-              <Button variant="outline" onClick={addEmail} disabled={!emailInput.trim()}>
+              <Button
+                variant="outline"
+                size="md"
+                onClick={addEmail}
+                disabled={!emailInput.trim()}
+                aria-label="Send invite"
+              >
                 <Send className="size-4" />
-                Invite
               </Button>
             </div>
           </FormField>
           {invitedEmails.length > 0 ? (
-            <div className="space-y-2">
+            <ul className="space-y-1.5">
               {invitedEmails.map((email) => (
-                <div
+                <li
                   key={email}
-                  className="flex items-center gap-3 rounded-xl border border-border bg-surface-1 px-4 py-3"
+                  className="flex items-center gap-2 rounded-lg bg-surface-1 px-3 py-2"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-subtle text-brand-primary">
-                    <Mail className="size-4" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-medium text-text-primary">{email}</div>
-                    <div className="text-xs text-text-secondary">Invitation queued</div>
-                  </div>
-                  <Check className="size-4 text-success" strokeWidth={3} />
-                </div>
+                  <Mail className="size-3.5 shrink-0 text-text-tertiary" />
+                  <span className="min-w-0 flex-1 truncate text-[13px] text-text-primary">
+                    {email}
+                  </span>
+                  <Check className="ml-auto size-3.5 shrink-0 text-success" strokeWidth={3} />
+                </li>
               ))}
-            </div>
+            </ul>
           ) : null}
         </div>
 
         <div className="flex justify-end gap-2">
-          <Button onClick={handleContinue} disabled={!name.trim()}>
+          <Button
+            onClick={handleContinue}
+            disabled={!name.trim()}
+            trailingIcon={<ArrowRight size={16} />}
+          >
             Continue
-            <ArrowRight className="size-4" />
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

@@ -1,27 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  AlertCircle,
-  ArrowLeft,
-  ArrowRight,
-  Github,
-  Lock,
-  Mail,
-  ShieldCheck,
-} from "lucide-react";
-import {
-  Alert,
-  AlertDescription,
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Input,
-  Separator,
-  cn,
-} from "@nexu-design/ui-web";
+import { AlertCircle, ArrowLeft, ArrowRight, Github, Lock, Mail } from "lucide-react";
+import { Alert, AlertDescription, Button, Input, TextLink, cn } from "@nexu-design/ui-web";
 import { SlarkAuthFrame } from "./slark-auth-frame";
 
 function GoogleIcon({ className }: { className?: string }): React.ReactElement {
@@ -173,257 +153,253 @@ export function WelcomePage(): React.ReactElement {
 
   const panelDescription =
     view === "buttons"
-      ? "Choose an auth method to create your workspace and connect your first agents."
+      ? "Choose how you want to sign in."
       : emailStep === "email"
-        ? "We’ll send a verification code to your email."
+        ? "We’ll send a 6-digit verification code."
         : emailStep === "verify"
-          ? "Enter the 6-digit code to finish verifying your account."
-          : "One more step before you enter your workspace.";
+          ? null
+          : "Set a password to finish creating your account.";
 
   const renderButtonsView = (): React.ReactElement => (
-    <div className="space-y-3">
-      <Button className="w-full justify-center" size="md" onClick={login}>
-        <GoogleIcon className="size-4" />
-        Continue with Google
-      </Button>
-      <Button
-        className="w-full justify-center bg-[#24292f] text-white hover:bg-[#24292f]/90"
-        size="md"
-        onClick={login}
-      >
-        <Github className="size-4" />
-        Continue with GitHub
-      </Button>
-
-      <div className="flex items-center gap-3 py-1">
-        <Separator className="flex-1" />
-        <span className="text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
-          or
-        </span>
-        <Separator className="flex-1" />
+    <div className="space-y-4">
+      <div className="space-y-2.5">
+        <Button className="w-full justify-center" size="md" onClick={login}>
+          <Github className="size-[18px]" />
+          Continue with GitHub
+        </Button>
+        <Button variant="outline" className="w-full justify-center" size="md" onClick={login}>
+          <GoogleIcon className="-ml-0.5 size-[18px]" />
+          Continue with Google
+        </Button>
+        <Button
+          variant="outline"
+          className="w-full justify-center"
+          size="md"
+          onClick={() => setView("email")}
+        >
+          <Mail className="size-[18px]" />
+          Continue with Email
+        </Button>
       </div>
 
-      <Button
-        variant="outline"
-        className="w-full justify-center"
-        size="md"
-        onClick={() => setView("email")}
-      >
-        <Mail className="size-4" />
-        Continue with Email
-      </Button>
+      <p className="px-2 text-center text-[11px] leading-relaxed text-text-tertiary">
+        By continuing, you agree to our{" "}
+        <TextLink href="#" variant="muted" size="xs">
+          Terms of Service
+        </TextLink>{" "}
+        and{" "}
+        <TextLink href="#" variant="muted" size="xs">
+          Privacy Policy
+        </TextLink>
+        .
+      </p>
     </div>
+  );
+
+  const renderBackButton = (onClick: () => void): React.ReactElement => (
+    <Button
+      variant="ghost"
+      size="sm"
+      className="mx-auto"
+      onClick={onClick}
+      leadingIcon={<ArrowLeft size={14} />}
+    >
+      Back
+    </Button>
   );
 
   const renderEmailFlow = (): React.ReactElement => {
     if (emailStep === "email") {
       return (
-        <div className="space-y-4">
-          <Input
-            ref={emailInputRef}
-            type="email"
-            value={email}
-            invalid={!!error}
-            leadingIcon={<Mail className="size-4" />}
-            placeholder="you@company.com"
-            onChange={(event) => {
-              setEmail(event.target.value);
-              setError("");
-            }}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                event.preventDefault();
-                handleEmailSubmit();
-              }
-            }}
-          />
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <Input
+              ref={emailInputRef}
+              type="email"
+              value={email}
+              invalid={!!error}
+              leadingIcon={<Mail className="size-4" />}
+              placeholder="you@company.com"
+              onChange={(event) => {
+                setEmail(event.target.value);
+                setError("");
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  handleEmailSubmit();
+                }
+              }}
+            />
 
-          {error ? (
-            <Alert variant="destructive">
-              <AlertCircle className="size-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          ) : null}
+            {error ? (
+              <Alert variant="destructive" className="mt-2">
+                <AlertCircle className="size-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            ) : null}
+          </div>
 
           <Button
             className="w-full justify-center"
             onClick={handleEmailSubmit}
             disabled={!email.trim()}
+            trailingIcon={<ArrowRight size={16} />}
           >
             Send verification code
-            <ArrowRight className="size-4" />
           </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-center text-text-secondary"
-            onClick={resetEmail}
-          >
-            <ArrowLeft className="size-4" />
-            Back
-          </Button>
+          {renderBackButton(resetEmail)}
         </div>
       );
     }
 
     if (emailStep === "verify") {
       return (
-        <div className="space-y-4">
-          <div className="rounded-xl border border-border bg-surface-1 px-4 py-3 text-center">
-            <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle text-brand-primary">
-              <ShieldCheck className="size-5" />
-            </div>
-            <p className="text-sm text-text-secondary">We sent a 6-digit code to</p>
-            <p className="mt-1 text-sm font-semibold text-text-primary">{email}</p>
+        <div className="space-y-5">
+          <p className="text-center text-[13px] leading-relaxed text-text-secondary">
+            We sent a code to <span className="font-semibold text-text-primary">{email}</span>
+          </p>
+
+          <div className="space-y-2">
+            <fieldset
+              className="flex items-center justify-center gap-1.5"
+              aria-label="Verification code"
+            >
+              {CODE_SLOTS.map((slot, index) => (
+                <input
+                  key={slot}
+                  ref={(element) => {
+                    codeRefs.current[index] = element;
+                  }}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  aria-label={`Digit ${index + 1} of 6`}
+                  value={code[index]}
+                  onChange={(event) => handleCodeChange(index, event.target.value)}
+                  onKeyDown={(event) => handleCodeKeyDown(index, event)}
+                  onPaste={index === 0 ? handleCodePaste : undefined}
+                  className={cn(
+                    "h-11 w-10 rounded-lg border bg-surface-0 text-center text-[17px] font-semibold text-text-primary outline-none transition-colors",
+                    error
+                      ? "border-destructive focus:border-destructive focus:ring-2 focus:ring-destructive/20"
+                      : "border-input focus:border-accent focus:ring-2 focus:ring-accent/20",
+                  )}
+                />
+              ))}
+            </fieldset>
+
+            {error ? (
+              <Alert variant="destructive" className="mt-2">
+                <AlertCircle className="size-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            ) : null}
           </div>
 
-          <fieldset
-            className="flex items-center justify-center gap-2"
-            aria-label="Verification code"
-          >
-            {CODE_SLOTS.map((slot, index) => (
-              <input
-                key={slot}
-                ref={(element) => {
-                  codeRefs.current[index] = element;
-                }}
-                type="text"
-                inputMode="numeric"
-                maxLength={1}
-                aria-label={`Digit ${index + 1} of 6`}
-                value={code[index]}
-                onChange={(event) => handleCodeChange(index, event.target.value)}
-                onKeyDown={(event) => handleCodeKeyDown(index, event)}
-                onPaste={index === 0 ? handleCodePaste : undefined}
-                className={cn(
-                  "h-12 w-11 rounded-xl border bg-surface-0 text-center text-lg font-semibold text-text-primary outline-none transition-colors",
-                  error
-                    ? "border-destructive focus:border-destructive focus:ring-2 focus:ring-destructive/20"
-                    : "border-input focus:border-accent focus:ring-2 focus:ring-accent/20",
-                )}
-              />
-            ))}
-          </fieldset>
+          <div className="space-y-3">
+            <Button
+              className="w-full justify-center"
+              disabled={code.some((digit) => digit === "")}
+              trailingIcon={<ArrowRight size={16} />}
+              onClick={() => {
+                if (code.some((digit) => digit === "")) {
+                  setError("Please enter the full code");
+                  return;
+                }
 
-          {error ? (
-            <Alert variant="destructive">
-              <AlertCircle className="size-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          ) : null}
-
-          <Button
-            className="w-full justify-center"
-            disabled={code.some((digit) => digit === "")}
-            onClick={() => {
-              if (code.some((digit) => digit === "")) {
-                setError("Please enter the full code");
-                return;
-              }
-
-              setError("");
-              setEmailStep("password");
-            }}
-          >
-            Verify
-            <ArrowRight className="size-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-center text-text-secondary"
-            onClick={() => {
+                setError("");
+                setEmailStep("password");
+              }}
+            >
+              Verify
+            </Button>
+            {renderBackButton(() => {
               setEmailStep("email");
               setCode(["", "", "", "", "", ""]);
               setError("");
-            }}
-          >
-            <ArrowLeft className="size-4" />
-            Change email
-          </Button>
+            })}
+          </div>
         </div>
       );
     }
 
     return (
-      <div className="space-y-4">
-        <Input
-          ref={passwordInputRef}
-          type="password"
-          value={password}
-          invalid={!!error && !error.includes("match")}
-          leadingIcon={<Lock className="size-4" />}
-          placeholder="Password (min 8 characters)"
-          onChange={(event) => {
-            setPassword(event.target.value);
-            setError("");
-          }}
-        />
-        <Input
-          type="password"
-          value={confirmPassword}
-          invalid={!!error && error.includes("match")}
-          leadingIcon={<Lock className="size-4" />}
-          placeholder="Confirm password"
-          onChange={(event) => {
-            setConfirmPassword(event.target.value);
-            setError("");
-          }}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              handlePasswordSubmit();
-            }
-          }}
-        />
+      <div className="space-y-3">
+        <div className="space-y-2">
+          <Input
+            ref={passwordInputRef}
+            type="password"
+            value={password}
+            invalid={!!error && !error.includes("match")}
+            leadingIcon={<Lock className="size-4" />}
+            placeholder="Password (min 8 characters)"
+            onChange={(event) => {
+              setPassword(event.target.value);
+              setError("");
+            }}
+          />
+          <Input
+            type="password"
+            value={confirmPassword}
+            invalid={!!error && error.includes("match")}
+            leadingIcon={<Lock className="size-4" />}
+            placeholder="Confirm password"
+            onChange={(event) => {
+              setConfirmPassword(event.target.value);
+              setError("");
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                handlePasswordSubmit();
+              }
+            }}
+          />
 
-        {error ? (
-          <Alert variant="destructive">
-            <AlertCircle className="size-4" />
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        ) : null}
+          {error ? (
+            <Alert variant="destructive" className="mt-2">
+              <AlertCircle className="size-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          ) : null}
+        </div>
 
         <Button
           className="w-full justify-center"
           onClick={handlePasswordSubmit}
           disabled={!password || !confirmPassword}
+          trailingIcon={<ArrowRight size={16} />}
         >
           Create account
-          <ArrowRight className="size-4" />
         </Button>
-        <Button
-          variant="ghost"
-          className="w-full justify-center text-text-secondary"
-          onClick={() => {
-            setEmailStep("verify");
-            setPassword("");
-            setConfirmPassword("");
-            setError("");
-          }}
-        >
-          <ArrowLeft className="size-4" />
-          Back
-        </Button>
+        {renderBackButton(() => {
+          setEmailStep("verify");
+          setPassword("");
+          setConfirmPassword("");
+          setError("");
+        })}
       </div>
     );
   };
 
   return (
-    <SlarkAuthFrame>
-      <Card
-        variant="static"
-        padding="lg"
-        className="w-full rounded-2xl border-border bg-surface-1 shadow-card"
-      >
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-text-primary">{panelTitle}</CardTitle>
-          <CardDescription className="text-sm text-text-secondary">
-            {panelDescription}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+    <SlarkAuthFrame hideFooter>
+      <div className="w-full">
+        <div className="text-center">
+          <h1 className="text-[20px] font-semibold leading-tight text-text-heading">
+            {panelTitle}
+          </h1>
+          {panelDescription ? (
+            <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
+              {panelDescription}
+            </p>
+          ) : null}
+        </div>
+        <div className={cn(view === "buttons" ? "mt-8" : "mt-6")}>
           {view === "buttons" ? renderButtonsView() : renderEmailFlow()}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </SlarkAuthFrame>
   );
 }
