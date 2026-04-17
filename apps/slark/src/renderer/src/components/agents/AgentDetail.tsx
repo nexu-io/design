@@ -1,7 +1,5 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import * as Tabs from "@radix-ui/react-tabs";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   Bot,
   Zap,
@@ -13,7 +11,24 @@ import {
   Trash2,
   Copy,
 } from "lucide-react";
-import { cn } from "@nexu-design/ui-web";
+import {
+  Badge,
+  Button,
+  Card,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  FormField,
+  Input,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Textarea,
+  cn,
+} from "@nexu-design/ui-web";
 import { useChatStore } from "@/stores/chat";
 import { useAgentsStore } from "@/stores/agents";
 import { mockRuntimes } from "@/mock/data";
@@ -81,127 +96,127 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
           {agent.status === "online" ? "Online" : agent.status === "busy" ? "Busy" : "Offline"}
         </div>
         {runtime && (
-          <>
-            <span className="text-border">·</span>
-            <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <Zap className="h-3 w-3" />
-              {runtime.name}
-            </span>
-          </>
+          <Badge variant="outline" size="xs" radius="md" className="gap-1">
+            <Zap className="h-3 w-3" />
+            {runtime.name}
+          </Badge>
         )}
         <div className="ml-auto flex items-center gap-1.5">
-          <button
-            onClick={handleSendMessage}
-            className="flex items-center gap-1.5 h-7 px-2.5 rounded-md text-xs font-medium border border-border hover:bg-accent transition-colors"
-          >
+          <Button onClick={handleSendMessage} variant="outline" size="xs">
             <MessageSquare className="h-3 w-3" />
             Message
-          </button>
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger asChild>
-              <button className="flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
-                <MoreHorizontal className="h-4 w-4" />
-              </button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Portal>
-              <DropdownMenu.Content
-                align="end"
-                sideOffset={4}
-                className="min-w-[160px] rounded-lg border border-border bg-popover p-1 shadow-lg animate-in fade-in-0 zoom-in-95 duration-100"
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className="text-muted-foreground hover:text-foreground"
               >
-                <DropdownMenu.Item
-                  onClick={() => {
-                    const dupId = `a-${Date.now()}`;
-                    addAgent({
-                      ...agent,
-                      id: dupId,
-                      name: `${agent.name} (copy)`,
-                      createdAt: Date.now(),
-                    });
-                    const dmCh: Channel = {
-                      id: `dm-${dupId}`,
-                      name: `${agent.name} (copy)`,
-                      type: "dm",
-                      members: [
-                        { kind: "user", id: "u-1" },
-                        { kind: "agent", id: dupId },
-                      ],
-                      lastMessageAt: Date.now(),
-                      unreadCount: 0,
-                      createdAt: Date.now(),
-                    };
-                    addChannel(dmCh);
-                    navigate(`/agents/${dupId}`);
-                  }}
-                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm cursor-pointer outline-none hover:bg-accent transition-colors"
-                >
-                  <Copy className="h-3.5 w-3.5 text-muted-foreground" />
-                  Duplicate
-                </DropdownMenu.Item>
-                <DropdownMenu.Separator className="my-1 h-px bg-border" />
-                <DropdownMenu.Item
-                  onClick={() => {
-                    removeAgent(agent.id);
-                    navigate("/agents");
-                  }}
-                  className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm cursor-pointer outline-none text-destructive-foreground hover:bg-destructive/10 transition-colors"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                  Delete Agent
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Portal>
-          </DropdownMenu.Root>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-[180px]">
+              <DropdownMenuItem
+                onClick={() => {
+                  const dupId = `a-${Date.now()}`;
+                  addAgent({
+                    ...agent,
+                    id: dupId,
+                    name: `${agent.name} (copy)`,
+                    createdAt: Date.now(),
+                  });
+                  const dmCh: Channel = {
+                    id: `dm-${dupId}`,
+                    name: `${agent.name} (copy)`,
+                    type: "dm",
+                    members: [
+                      { kind: "user", id: "u-1" },
+                      { kind: "agent", id: dupId },
+                    ],
+                    lastMessageAt: Date.now(),
+                    unreadCount: 0,
+                    createdAt: Date.now(),
+                  };
+                  addChannel(dmCh);
+                  navigate(`/agents/${dupId}`);
+                }}
+                className="rounded-lg hover:bg-surface-2"
+              >
+                <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                Duplicate
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  removeAgent(agent.id);
+                  navigate("/agents");
+                }}
+                className="rounded-lg text-destructive hover:bg-destructive/10"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                Delete Agent
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
-      <Tabs.Root defaultValue="instructions" className="flex-1 flex flex-col min-h-0">
-        <Tabs.List className="flex items-center gap-1 px-5 h-10 border-b border-border shrink-0">
-          <TabTrigger
+      <Tabs defaultValue="instructions" className="flex-1 flex flex-col min-h-0">
+        <TabsList
+          variant="compact"
+          className="px-5 h-10 border-b border-border shrink-0 rounded-none bg-transparent p-0 gap-1"
+        >
+          <AgentTabTrigger
             value="instructions"
             icon={<FileText className="h-3.5 w-3.5" />}
             label="Instructions"
           />
-          <TabTrigger value="skills" icon={<Wrench className="h-3.5 w-3.5" />} label="Skills" />
-          <TabTrigger
+          <AgentTabTrigger
+            value="skills"
+            icon={<Wrench className="h-3.5 w-3.5" />}
+            label="Skills"
+          />
+          <AgentTabTrigger
             value="settings"
             icon={<Settings className="h-3.5 w-3.5" />}
             label="Settings"
           />
-        </Tabs.List>
+        </TabsList>
 
-        <Tabs.Content value="instructions" className="flex-1 overflow-y-auto outline-none">
+        <TabsContent value="instructions" className="mt-0 flex-1 overflow-y-auto outline-none">
           <InstructionsTab
             agent={agent}
             onSave={(prompt) => updateAgent(agent.id, { systemPrompt: prompt })}
           />
-        </Tabs.Content>
+        </TabsContent>
 
-        <Tabs.Content value="skills" className="flex-1 overflow-y-auto outline-none">
+        <TabsContent value="skills" className="mt-0 flex-1 overflow-y-auto outline-none">
           <SkillsTab agent={agent} />
-        </Tabs.Content>
+        </TabsContent>
 
-        <Tabs.Content value="settings" className="flex-1 overflow-y-auto outline-none">
+        <TabsContent value="settings" className="mt-0 flex-1 overflow-y-auto outline-none">
           <SettingsTab agent={agent} onUpdate={(updates) => updateAgent(agent.id, updates)} />
-        </Tabs.Content>
-      </Tabs.Root>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
 
-function TabTrigger({
+function AgentTabTrigger({
   value,
   icon,
   label,
 }: { value: string; icon: React.ReactNode; label: string }): React.ReactElement {
   return (
-    <Tabs.Trigger
+    <TabsTrigger
+      variant="compact"
       value={value}
-      className="flex items-center gap-1.5 px-3 h-10 text-sm text-muted-foreground hover:text-foreground transition-colors border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:text-foreground -mb-px"
+      className="h-10 px-3 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent"
     >
       {icon}
       {label}
-    </Tabs.Trigger>
+    </TabsTrigger>
   );
 }
 
@@ -214,7 +229,7 @@ function InstructionsTab({
 
   return (
     <div className="p-6 max-w-3xl">
-      <div className="flex items-start justify-between mb-1">
+      <Card variant="static" padding="md" className="shadow-none border-border">
         <div>
           <h3 className="text-sm font-semibold">Agent Instructions</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
@@ -222,23 +237,21 @@ function InstructionsTab({
             agent's context for every task.
           </p>
         </div>
-      </div>
-      <textarea
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        className="w-full mt-3 rounded-lg border border-input bg-background p-4 text-sm font-mono leading-relaxed placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring resize-y min-h-[200px]"
-        placeholder="You are a helpful assistant..."
-      />
-      <div className="flex items-center justify-between mt-2">
-        <span className="text-xs text-muted-foreground">{prompt.length} characters</span>
-        <button
-          onClick={() => onSave(prompt)}
-          disabled={!isDirty}
-          className="flex items-center gap-1.5 h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:pointer-events-none transition-colors"
-        >
-          Save
-        </button>
-      </div>
+
+        <Textarea
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          className="mt-3 min-h-[200px] resize-y font-mono leading-relaxed"
+          placeholder="You are a helpful assistant..."
+        />
+
+        <div className="mt-2 flex items-center justify-between">
+          <span className="text-xs text-muted-foreground">{prompt.length} characters</span>
+          <Button onClick={() => onSave(prompt)} disabled={!isDirty} size="sm">
+            Save
+          </Button>
+        </div>
+      </Card>
     </div>
   );
 }
@@ -254,7 +267,11 @@ function SkillsTab({ agent }: { agent: Agent }): React.ReactElement {
       </div>
 
       {agent.skills.length > 0 ? (
-        <div className="rounded-lg border border-border divide-y divide-border">
+        <Card
+          variant="static"
+          padding="none"
+          className="rounded-lg border border-border divide-y divide-border shadow-none"
+        >
           {agent.skills.map((skill) => (
             <div key={skill.id} className="flex items-center gap-3 px-4 py-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent shrink-0">
@@ -266,15 +283,19 @@ function SkillsTab({ agent }: { agent: Agent }): React.ReactElement {
               </div>
             </div>
           ))}
-        </div>
+        </Card>
       ) : (
-        <div className="rounded-lg border border-border border-dashed p-8 flex flex-col items-center gap-2 text-center">
+        <Card
+          variant="static"
+          padding="lg"
+          className="rounded-lg border border-border border-dashed flex flex-col items-center gap-2 text-center shadow-none"
+        >
           <Wrench className="h-8 w-8 text-muted-foreground" />
           <p className="text-sm font-medium text-muted-foreground">No skills available</p>
           <p className="text-xs text-muted-foreground">
             Connect a runtime to load skills automatically.
           </p>
-        </div>
+        </Card>
       )}
     </div>
   );
@@ -307,61 +328,47 @@ function SettingsTab({
   };
 
   return (
-    <div className="p-6 max-w-3xl space-y-6">
-      <div>
-        <h3 className="text-sm font-semibold">Settings</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          Configure agent identity and runtime.
-        </p>
-      </div>
+    <div className="p-6 max-w-3xl">
+      <Card variant="static" padding="md" className="space-y-4 shadow-none border-border">
+        <div>
+          <h3 className="text-sm font-semibold">Settings</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Configure agent identity and runtime.
+          </p>
+        </div>
 
-      <div className="space-y-4">
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium">Avatar</label>
+        <FormField label="Avatar">
           <div className="flex items-center gap-3">
             <img src={avatar} alt="" className="h-12 w-12 rounded-xl" />
-            <button
-              type="button"
-              onClick={handleRandomizeAvatar}
-              className="h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors"
-            >
+            <Button type="button" variant="outline" size="sm" onClick={handleRandomizeAvatar}>
               Randomize
-            </button>
+            </Button>
           </div>
-        </div>
+        </FormField>
 
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium">Name</label>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-          />
-        </div>
+        <FormField label="Name">
+          <Input value={name} onChange={(e) => setName(e.target.value)} />
+        </FormField>
 
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium">Description</label>
-          <textarea
+        <FormField label="Description">
+          <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm resize-y focus:outline-none focus:ring-1 focus:ring-ring"
+            className="resize-y"
           />
-        </div>
+        </FormField>
 
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium">Runtime</label>
+        <FormField label="Runtime">
           <RuntimePicker value={runtimeId} onChange={setRuntimeId} />
-        </div>
-      </div>
+        </FormField>
 
-      <button
-        onClick={handleSave}
-        disabled={!isDirty || !name.trim()}
-        className="flex items-center gap-1.5 h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:pointer-events-none transition-colors"
-      >
-        Save Changes
-      </button>
+        <div className="flex justify-end">
+          <Button onClick={handleSave} disabled={!isDirty || !name.trim()} size="sm">
+            Save Changes
+          </Button>
+        </div>
+      </Card>
     </div>
   );
 }

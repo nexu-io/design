@@ -16029,54 +16029,54 @@ const createLucideIcon$1 = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$14 = [
+const __iconNode$15 = [
   ["path", { d: "M7 7h10v10", key: "1tivn9" }],
   ["path", { d: "M7 17 17 7", key: "1vkiza" }]
 ];
-const ArrowUpRight = createLucideIcon$1("arrow-up-right", __iconNode$14);
+const ArrowUpRight = createLucideIcon$1("arrow-up-right", __iconNode$15);
 /**
  * @license lucide-react v0.542.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$13 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check$1 = createLucideIcon$1("check", __iconNode$13);
+const __iconNode$14 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check$1 = createLucideIcon$1("check", __iconNode$14);
 /**
  * @license lucide-react v0.542.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$12 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown$1 = createLucideIcon$1("chevron-down", __iconNode$12);
+const __iconNode$13 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown$1 = createLucideIcon$1("chevron-down", __iconNode$13);
 /**
  * @license lucide-react v0.542.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$11 = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp$1 = createLucideIcon$1("chevron-up", __iconNode$11);
+const __iconNode$12 = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp$1 = createLucideIcon$1("chevron-up", __iconNode$12);
 /**
  * @license lucide-react v0.542.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$10 = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle$1 = createLucideIcon$1("loader-circle", __iconNode$10);
+const __iconNode$11 = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle$1 = createLucideIcon$1("loader-circle", __iconNode$11);
 /**
  * @license lucide-react v0.542.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$$ = [
+const __iconNode$10 = [
   ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
   ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
 ];
-const X$1 = createLucideIcon$1("x", __iconNode$$);
+const X$1 = createLucideIcon$1("x", __iconNode$10);
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-lg text-base font-medium transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*=size-])]:size-4",
   {
@@ -19916,7 +19916,7 @@ function getSideAndAlignFromPlacement(placement) {
   const [side, align = "center"] = placement.split("-");
   return [side, align];
 }
-var Root2$4 = Popper;
+var Root2$5 = Popper;
 var Anchor = PopperAnchor;
 var Content$2 = PopperContent;
 var Arrow = PopperArrow;
@@ -21907,7 +21907,7 @@ var Menu = (props) => {
       document.removeEventListener("pointermove", handlePointer, { capture: true });
     };
   }, []);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root2$4, { ...popperScope, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root2$5, { ...popperScope, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
     MenuProvider,
     {
       scope: __scopeMenu,
@@ -22628,7 +22628,7 @@ var Root3 = Menu;
 var Anchor2 = MenuAnchor;
 var Portal$2 = MenuPortal;
 var Content2$3 = MenuContent;
-var Group = MenuGroup;
+var Group$1 = MenuGroup;
 var Label$3 = MenuLabel;
 var Item2$3 = MenuItem;
 var CheckboxItem = MenuCheckboxItem;
@@ -22646,7 +22646,7 @@ var [createDropdownMenuContext] = createContextScope(
 );
 var useMenuScope = createMenuScope();
 var [DropdownMenuProvider, useDropdownMenuContext] = createDropdownMenuContext(DROPDOWN_MENU_NAME);
-var DropdownMenu = (props) => {
+var DropdownMenu$1 = (props) => {
   const {
     __scopeDropdownMenu,
     children,
@@ -22679,9 +22679,9 @@ var DropdownMenu = (props) => {
     }
   );
 };
-DropdownMenu.displayName = DROPDOWN_MENU_NAME;
+DropdownMenu$1.displayName = DROPDOWN_MENU_NAME;
 var TRIGGER_NAME$3 = "DropdownMenuTrigger";
-var DropdownMenuTrigger = reactExports.forwardRef(
+var DropdownMenuTrigger$1 = reactExports.forwardRef(
   (props, forwardedRef) => {
     const { __scopeDropdownMenu, disabled = false, ...triggerProps } = props;
     const context = useDropdownMenuContext(TRIGGER_NAME$3, __scopeDropdownMenu);
@@ -22715,7 +22715,7 @@ var DropdownMenuTrigger = reactExports.forwardRef(
     ) });
   }
 );
-DropdownMenuTrigger.displayName = TRIGGER_NAME$3;
+DropdownMenuTrigger$1.displayName = TRIGGER_NAME$3;
 var PORTAL_NAME$2 = "DropdownMenuPortal";
 var DropdownMenuPortal = (props) => {
   const { __scopeDropdownMenu, ...portalProps } = props;
@@ -22724,7 +22724,7 @@ var DropdownMenuPortal = (props) => {
 };
 DropdownMenuPortal.displayName = PORTAL_NAME$2;
 var CONTENT_NAME$3 = "DropdownMenuContent";
-var DropdownMenuContent = reactExports.forwardRef(
+var DropdownMenuContent$1 = reactExports.forwardRef(
   (props, forwardedRef) => {
     const { __scopeDropdownMenu, ...contentProps } = props;
     const context = useDropdownMenuContext(CONTENT_NAME$3, __scopeDropdownMenu);
@@ -22764,13 +22764,13 @@ var DropdownMenuContent = reactExports.forwardRef(
     );
   }
 );
-DropdownMenuContent.displayName = CONTENT_NAME$3;
+DropdownMenuContent$1.displayName = CONTENT_NAME$3;
 var GROUP_NAME$1 = "DropdownMenuGroup";
 var DropdownMenuGroup = reactExports.forwardRef(
   (props, forwardedRef) => {
     const { __scopeDropdownMenu, ...groupProps } = props;
     const menuScope = useMenuScope(__scopeDropdownMenu);
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(Group, { ...menuScope, ...groupProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Group$1, { ...menuScope, ...groupProps, ref: forwardedRef });
   }
 );
 DropdownMenuGroup.displayName = GROUP_NAME$1;
@@ -22784,14 +22784,14 @@ var DropdownMenuLabel = reactExports.forwardRef(
 );
 DropdownMenuLabel.displayName = LABEL_NAME$1;
 var ITEM_NAME$3 = "DropdownMenuItem";
-var DropdownMenuItem = reactExports.forwardRef(
+var DropdownMenuItem$1 = reactExports.forwardRef(
   (props, forwardedRef) => {
     const { __scopeDropdownMenu, ...itemProps } = props;
     const menuScope = useMenuScope(__scopeDropdownMenu);
     return /* @__PURE__ */ jsxRuntimeExports.jsx(Item2$3, { ...menuScope, ...itemProps, ref: forwardedRef });
   }
 );
-DropdownMenuItem.displayName = ITEM_NAME$3;
+DropdownMenuItem$1.displayName = ITEM_NAME$3;
 var CHECKBOX_ITEM_NAME = "DropdownMenuCheckboxItem";
 var DropdownMenuCheckboxItem = reactExports.forwardRef((props, forwardedRef) => {
   const { __scopeDropdownMenu, ...checkboxItemProps } = props;
@@ -22821,12 +22821,12 @@ var DropdownMenuItemIndicator = reactExports.forwardRef((props, forwardedRef) =>
 });
 DropdownMenuItemIndicator.displayName = INDICATOR_NAME$1;
 var SEPARATOR_NAME$1 = "DropdownMenuSeparator";
-var DropdownMenuSeparator = reactExports.forwardRef((props, forwardedRef) => {
+var DropdownMenuSeparator$1 = reactExports.forwardRef((props, forwardedRef) => {
   const { __scopeDropdownMenu, ...separatorProps } = props;
   const menuScope = useMenuScope(__scopeDropdownMenu);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Separator$3, { ...menuScope, ...separatorProps, ref: forwardedRef });
 });
-DropdownMenuSeparator.displayName = SEPARATOR_NAME$1;
+DropdownMenuSeparator$1.displayName = SEPARATOR_NAME$1;
 var ARROW_NAME$2 = "DropdownMenuArrow";
 var DropdownMenuArrow = reactExports.forwardRef(
   (props, forwardedRef) => {
@@ -22868,12 +22868,66 @@ var DropdownMenuSubContent = reactExports.forwardRef((props, forwardedRef) => {
   );
 });
 DropdownMenuSubContent.displayName = SUB_CONTENT_NAME;
-var Root2$3 = DropdownMenu;
-var Trigger$2 = DropdownMenuTrigger;
+var Root2$4 = DropdownMenu$1;
+var Trigger$2 = DropdownMenuTrigger$1;
 var Portal2 = DropdownMenuPortal;
-var Content2$2 = DropdownMenuContent;
-var Item2$2 = DropdownMenuItem;
-var Separator2 = DropdownMenuSeparator;
+var Content2$2 = DropdownMenuContent$1;
+var Item2$2 = DropdownMenuItem$1;
+var Separator2 = DropdownMenuSeparator$1;
+const DropdownMenu = Root2$4;
+const DropdownMenuTrigger = Trigger$2;
+function DropdownMenuContent({
+  className,
+  sideOffset = 4,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Portal2, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Content2$2,
+    {
+      "data-slot": "dropdown-menu-content",
+      sideOffset,
+      className: cn(
+        "z-50 min-w-[8rem] overflow-hidden rounded-xl border border-border-subtle bg-surface-0 p-1 text-text-primary shadow-lg",
+        className
+      ),
+      ...props
+    }
+  ) });
+}
+function DropdownMenuItem({
+  className,
+  inset,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Item2$2,
+    {
+      "data-slot": "dropdown-menu-item",
+      className: cn(
+        "relative flex cursor-default select-none items-center gap-2 rounded-md px-2 py-1.5 text-base outline-none transition-colors hover:bg-surface-2 focus:bg-surface-2 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        inset && "pl-8",
+        className
+      ),
+      ...props
+    }
+  );
+}
+function DropdownMenuSeparator({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Separator2,
+    {
+      "data-slot": "dropdown-menu-separator",
+      className: cn("-mx-1 my-1 h-px bg-border-subtle", className),
+      ...props
+    }
+  );
+}
+DropdownMenuContent.displayName = "DropdownMenuContent";
+DropdownMenuItem.displayName = "DropdownMenuItem";
+DropdownMenuSeparator.displayName = "DropdownMenuSeparator";
 const InteractiveRow = reactExports.forwardRef(
   ({ className, selected, tone = "default", type = "button", ...props }, ref) => {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -23295,11 +23349,11 @@ var RadioGroupIndicator = reactExports.forwardRef(
   }
 );
 RadioGroupIndicator.displayName = INDICATOR_NAME2;
-var Root2$2 = RadioGroup$1;
+var Root2$3 = RadioGroup$1;
 var Item2$1 = RadioGroupItem$1;
 var Indicator = RadioGroupIndicator;
-const RadioGroup = reactExports.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntimeExports.jsx(Root2$2, { ref, className: cn("grid gap-2", className), ...props }));
-RadioGroup.displayName = Root2$2.displayName;
+const RadioGroup = reactExports.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntimeExports.jsx(Root2$3, { ref, className: cn("grid gap-2", className), ...props }));
+RadioGroup.displayName = Root2$3.displayName;
 const RadioGroupItem = reactExports.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntimeExports.jsx(
   Item2$1,
   {
@@ -23394,6 +23448,105 @@ var [createSelectContext] = createContextScope(SELECT_NAME, [
 var usePopperScope$1 = createPopperScope();
 var [SelectProvider, useSelectContext] = createSelectContext(SELECT_NAME);
 var [SelectNativeOptionsProvider, useSelectNativeOptionsContext] = createSelectContext(SELECT_NAME);
+var Select$1 = (props) => {
+  const {
+    __scopeSelect,
+    children,
+    open: openProp,
+    defaultOpen,
+    onOpenChange,
+    value: valueProp,
+    defaultValue,
+    onValueChange,
+    dir,
+    name,
+    autoComplete,
+    disabled,
+    required,
+    form
+  } = props;
+  const popperScope = usePopperScope$1(__scopeSelect);
+  const [trigger, setTrigger] = reactExports.useState(null);
+  const [valueNode, setValueNode] = reactExports.useState(null);
+  const [valueNodeHasChildren, setValueNodeHasChildren] = reactExports.useState(false);
+  const direction = useDirection(dir);
+  const [open, setOpen] = useControllableState({
+    prop: openProp,
+    defaultProp: defaultOpen ?? false,
+    onChange: onOpenChange,
+    caller: SELECT_NAME
+  });
+  const [value, setValue] = useControllableState({
+    prop: valueProp,
+    defaultProp: defaultValue,
+    onChange: onValueChange,
+    caller: SELECT_NAME
+  });
+  const triggerPointerDownPosRef = reactExports.useRef(null);
+  const isFormControl = trigger ? form || !!trigger.closest("form") : true;
+  const [nativeOptionsSet, setNativeOptionsSet] = reactExports.useState(/* @__PURE__ */ new Set());
+  const nativeSelectKey = Array.from(nativeOptionsSet).map((option) => option.props.value).join(";");
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root2$5, { ...popperScope, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    SelectProvider,
+    {
+      required,
+      scope: __scopeSelect,
+      trigger,
+      onTriggerChange: setTrigger,
+      valueNode,
+      onValueNodeChange: setValueNode,
+      valueNodeHasChildren,
+      onValueNodeHasChildrenChange: setValueNodeHasChildren,
+      contentId: useId(),
+      value,
+      onValueChange: setValue,
+      open,
+      onOpenChange: setOpen,
+      dir: direction,
+      triggerPointerDownPosRef,
+      disabled,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Collection.Provider, { scope: __scopeSelect, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          SelectNativeOptionsProvider,
+          {
+            scope: props.__scopeSelect,
+            onNativeOptionAdd: reactExports.useCallback((option) => {
+              setNativeOptionsSet((prev) => new Set(prev).add(option));
+            }, []),
+            onNativeOptionRemove: reactExports.useCallback((option) => {
+              setNativeOptionsSet((prev) => {
+                const optionsSet = new Set(prev);
+                optionsSet.delete(option);
+                return optionsSet;
+              });
+            }, []),
+            children
+          }
+        ) }),
+        isFormControl ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          SelectBubbleInput,
+          {
+            "aria-hidden": true,
+            required,
+            tabIndex: -1,
+            name,
+            autoComplete,
+            value,
+            onChange: (event) => setValue(event.target.value),
+            disabled,
+            form,
+            children: [
+              value === void 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "" }) : null,
+              Array.from(nativeOptionsSet)
+            ]
+          },
+          nativeSelectKey
+        ) : null
+      ]
+    }
+  ) });
+};
+Select$1.displayName = SELECT_NAME;
 var TRIGGER_NAME$2 = "SelectTrigger";
 var SelectTrigger$1 = reactExports.forwardRef(
   (props, forwardedRef) => {
@@ -23473,7 +23626,7 @@ var SelectTrigger$1 = reactExports.forwardRef(
 );
 SelectTrigger$1.displayName = TRIGGER_NAME$2;
 var VALUE_NAME = "SelectValue";
-var SelectValue = reactExports.forwardRef(
+var SelectValue$1 = reactExports.forwardRef(
   (props, forwardedRef) => {
     const { __scopeSelect, className, style, children, placeholder = "", ...valueProps } = props;
     const context = useSelectContext(VALUE_NAME, __scopeSelect);
@@ -23494,7 +23647,7 @@ var SelectValue = reactExports.forwardRef(
     );
   }
 );
-SelectValue.displayName = VALUE_NAME;
+SelectValue$1.displayName = VALUE_NAME;
 var ICON_NAME = "SelectIcon";
 var SelectIcon = reactExports.forwardRef(
   (props, forwardedRef) => {
@@ -24033,14 +24186,14 @@ var SelectViewport = reactExports.forwardRef(
 SelectViewport.displayName = VIEWPORT_NAME;
 var GROUP_NAME = "SelectGroup";
 var [SelectGroupContextProvider, useSelectGroupContext] = createSelectContext(GROUP_NAME);
-var SelectGroup = reactExports.forwardRef(
+var SelectGroup$1 = reactExports.forwardRef(
   (props, forwardedRef) => {
     const { __scopeSelect, ...groupProps } = props;
     const groupId = useId();
     return /* @__PURE__ */ jsxRuntimeExports.jsx(SelectGroupContextProvider, { scope: __scopeSelect, id: groupId, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Primitive.div, { role: "group", "aria-labelledby": groupId, ...groupProps, ref: forwardedRef }) });
   }
 );
-SelectGroup.displayName = GROUP_NAME;
+SelectGroup$1.displayName = GROUP_NAME;
 var LABEL_NAME = "SelectLabel";
 var SelectLabel$1 = reactExports.forwardRef(
   (props, forwardedRef) => {
@@ -24398,11 +24551,14 @@ function findNextItem(items, search, currentItem) {
 function wrapArray(array, startIndex) {
   return array.map((_, index2) => array[(startIndex + index2) % array.length]);
 }
+var Root2$2 = Select$1;
 var Trigger$1 = SelectTrigger$1;
+var Value = SelectValue$1;
 var Icon$1 = SelectIcon;
 var Portal$1 = SelectPortal;
 var Content2$1 = SelectContent$1;
 var Viewport = SelectViewport;
+var Group = SelectGroup$1;
 var Label = SelectLabel$1;
 var Item = SelectItem$1;
 var ItemText = SelectItemText;
@@ -24410,6 +24566,9 @@ var ItemIndicator = SelectItemIndicator;
 var ScrollUpButton = SelectScrollUpButton$1;
 var ScrollDownButton = SelectScrollDownButton$1;
 var Separator$2 = SelectSeparator$1;
+const Select = Root2$2;
+const SelectGroup = Group;
+const SelectValue = Value;
 const SelectTrigger = reactExports.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
   Trigger$1,
   {
@@ -25235,7 +25394,7 @@ var [createTabsContext] = createContextScope(TABS_NAME, [
 ]);
 var useRovingFocusGroupScope$1 = createRovingFocusGroupScope();
 var [TabsProvider, useTabsContext] = createTabsContext(TABS_NAME);
-var Tabs = reactExports.forwardRef(
+var Tabs$1 = reactExports.forwardRef(
   (props, forwardedRef) => {
     const {
       __scopeTabs,
@@ -25277,7 +25436,7 @@ var Tabs = reactExports.forwardRef(
     );
   }
 );
-Tabs.displayName = TABS_NAME;
+Tabs$1.displayName = TABS_NAME;
 var TAB_LIST_NAME = "TabsList";
 var TabsList$1 = reactExports.forwardRef(
   (props, forwardedRef) => {
@@ -25399,10 +25558,11 @@ function makeTriggerId(baseId, value) {
 function makeContentId(baseId, value) {
   return `${baseId}-content-${value}`;
 }
-var Root2$1 = Tabs;
+var Root2$1 = Tabs$1;
 var List = TabsList$1;
 var Trigger = TabsTrigger$1;
 var Content = TabsContent$1;
+const Tabs = Root2$1;
 const tabsListVariants = cva("inline-flex items-center", {
   variants: {
     variant: {
@@ -29010,12 +29170,23 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$_ = [
+const __iconNode$$ = [
   ["rect", { width: "20", height: "5", x: "2", y: "3", rx: "1", key: "1wp1u1" }],
   ["path", { d: "M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8", key: "1s80jp" }],
   ["path", { d: "M10 12h4", key: "a56b0p" }]
 ];
-const Archive = createLucideIcon("archive", __iconNode$_);
+const Archive = createLucideIcon("archive", __iconNode$$);
+/**
+ * @license lucide-react v0.500.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$_ = [
+  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
+  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+];
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$_);
 /**
  * @license lucide-react v0.500.0 - ISC
  *
@@ -29023,10 +29194,10 @@ const Archive = createLucideIcon("archive", __iconNode$_);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$Z = [
-  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
-  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$Z);
+const ArrowRight = createLucideIcon("arrow-right", __iconNode$Z);
 /**
  * @license lucide-react v0.500.0 - ISC
  *
@@ -29034,10 +29205,10 @@ const ArrowLeft = createLucideIcon("arrow-left", __iconNode$Z);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$Y = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+  ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
+  ["path", { d: "M12 19V5", key: "x0mq9r" }]
 ];
-const ArrowRight = createLucideIcon("arrow-right", __iconNode$Y);
+const ArrowUp = createLucideIcon("arrow-up", __iconNode$Y);
 /**
  * @license lucide-react v0.500.0 - ISC
  *
@@ -29045,17 +29216,6 @@ const ArrowRight = createLucideIcon("arrow-right", __iconNode$Y);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$X = [
-  ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
-  ["path", { d: "M12 19V5", key: "x0mq9r" }]
-];
-const ArrowUp = createLucideIcon("arrow-up", __iconNode$X);
-/**
- * @license lucide-react v0.500.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$W = [
   ["path", { d: "M12 8V4H8", key: "hb8ula" }],
   ["rect", { width: "16", height: "12", x: "4", y: "8", rx: "2", key: "enze0r" }],
   ["path", { d: "M2 14h2", key: "vft8re" }],
@@ -29063,14 +29223,14 @@ const __iconNode$W = [
   ["path", { d: "M15 13v2", key: "1xurst" }],
   ["path", { d: "M9 13v2", key: "rq6x2g" }]
 ];
-const Bot = createLucideIcon("bot", __iconNode$W);
+const Bot = createLucideIcon("bot", __iconNode$X);
 /**
  * @license lucide-react v0.500.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$V = [
+const __iconNode$W = [
   [
     "path",
     {
@@ -29081,14 +29241,14 @@ const __iconNode$V = [
   ["path", { d: "m3.3 7 8.7 5 8.7-5", key: "g66t2b" }],
   ["path", { d: "M12 22V12", key: "d0xqtd" }]
 ];
-const Box = createLucideIcon("box", __iconNode$V);
+const Box = createLucideIcon("box", __iconNode$W);
 /**
  * @license lucide-react v0.500.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$U = [
+const __iconNode$V = [
   ["path", { d: "M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z", key: "1b4qmf" }],
   ["path", { d: "M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2", key: "i71pzd" }],
   ["path", { d: "M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2", key: "10jefs" }],
@@ -29097,39 +29257,50 @@ const __iconNode$U = [
   ["path", { d: "M10 14h4", key: "kelpxr" }],
   ["path", { d: "M10 18h4", key: "1ulq68" }]
 ];
-const Building2 = createLucideIcon("building-2", __iconNode$U);
+const Building2 = createLucideIcon("building-2", __iconNode$V);
 /**
  * @license lucide-react v0.500.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$T = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$T);
+const __iconNode$U = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$U);
 /**
  * @license lucide-react v0.500.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$S = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$S);
+const __iconNode$T = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$T);
 /**
  * @license lucide-react v0.500.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$R = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$R);
+const __iconNode$S = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$S);
 /**
  * @license lucide-react v0.500.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$Q = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$Q);
+const __iconNode$R = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$R);
+/**
+ * @license lucide-react v0.500.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$Q = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+];
+const CircleCheck = createLucideIcon("circle-check", __iconNode$Q);
 /**
  * @license lucide-react v0.500.0 - ISC
  *
@@ -29138,21 +29309,18 @@ const ChevronUp = createLucideIcon("chevron-up", __iconNode$Q);
  */
 const __iconNode$P = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+  ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
+  ["path", { d: "m9 9 6 6", key: "z0biqf" }]
 ];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$P);
+const CircleX = createLucideIcon("circle-x", __iconNode$P);
 /**
  * @license lucide-react v0.500.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$O = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
-  ["path", { d: "m9 9 6 6", key: "z0biqf" }]
-];
-const CircleX = createLucideIcon("circle-x", __iconNode$O);
+const __iconNode$O = [["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]];
+const Circle = createLucideIcon("circle", __iconNode$O);
 /**
  * @license lucide-react v0.500.0 - ISC
  *
@@ -30597,88 +30765,54 @@ function CreateChannelDialog({ open, onOpenChange, onCreated }) {
   );
 }
 function RuntimePicker({ value, onChange }) {
-  const [open, setOpen] = reactExports.useState(false);
-  const ref = reactExports.useRef(null);
   const selected = value ? mockRuntimes.find((r2) => r2.id === value) : null;
-  reactExports.useEffect(() => {
-    if (!open) return;
-    const handleClick = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [open]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref, className: "relative", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "button",
-      {
-        type: "button",
-        onClick: () => setOpen(!open),
-        className: "flex items-center gap-3 w-full h-10 px-3 rounded-md border border-input bg-background text-sm text-left hover:bg-accent/30 transition-colors",
-        children: [
-          selected ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "div",
-              {
-                className: cn(
-                  "h-2 w-2 rounded-full shrink-0",
-                  selected.status === "connected" && "bg-slark-online",
-                  selected.status === "disconnected" && "bg-slark-offline",
-                  selected.status === "error" && "bg-destructive"
-                )
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "flex-1 truncate", children: selected.name })
-          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "flex-1 text-muted-foreground", children: "No runtime" }),
+  const noRuntimeValue = "__none__";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    Select,
+    {
+      value: value ?? noRuntimeValue,
+      onValueChange: (nextValue) => onChange(nextValue === noRuntimeValue ? null : nextValue),
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "h-10", children: selected ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5 min-w-0", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(
-            ChevronDown,
+            Circle,
             {
               className: cn(
-                "h-3.5 w-3.5 text-muted-foreground transition-transform",
-                open && "rotate-180"
-              )
-            }
-          )
-        ]
-      }
-    ),
-    open && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute z-50 mt-1 w-full max-h-[240px] overflow-y-auto rounded-lg border border-border bg-popover shadow-lg animate-in fade-in-0 zoom-in-95 duration-100", children: mockRuntimes.map((rt) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "button",
-      {
-        type: "button",
-        onClick: () => {
-          onChange(rt.id);
-          setOpen(false);
-        },
-        className: cn(
-          "flex items-center gap-3 w-full px-3 py-2.5 text-sm text-left transition-colors hover:bg-accent",
-          value === rt.id && "bg-accent/50"
-        ),
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "div",
-            {
-              className: cn(
-                "h-2 w-2 rounded-full shrink-0",
-                rt.status === "connected" && "bg-slark-online",
-                rt.status === "disconnected" && "bg-slark-offline",
-                rt.status === "error" && "bg-destructive"
+                "size-2 fill-current stroke-none shrink-0",
+                selected.status === "connected" && "text-slark-online",
+                selected.status === "disconnected" && "text-slark-offline",
+                selected.status === "error" && "text-destructive"
               )
             }
           ),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm", children: rt.name }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-muted-foreground", children: [
-              rt.type,
-              rt.version ? ` v${rt.version}` : ""
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: selected.name })
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "No runtime" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { className: "max-h-[240px]", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectGroup, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: noRuntimeValue, className: "hover:bg-surface-2 rounded-lg", children: "No runtime" }),
+          mockRuntimes.map((rt) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: rt.id, className: "hover:bg-surface-2 rounded-lg pr-10", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5 min-w-0 w-full", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Circle,
+              {
+                className: cn(
+                  "size-2 fill-current stroke-none shrink-0",
+                  rt.status === "connected" && "text-slark-online",
+                  rt.status === "disconnected" && "text-slark-offline",
+                  rt.status === "error" && "text-destructive"
+                )
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm text-foreground truncate", children: rt.name }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-muted-foreground truncate", children: [
+                rt.type,
+                rt.version ? ` v${rt.version}` : ""
+              ] })
             ] })
-          ] }),
-          value === rt.id && /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "h-3.5 w-3.5 text-foreground shrink-0" })
-        ]
-      },
-      rt.id
-    )) })
-  ] });
+          ] }) }, rt.id))
+        ] }) })
+      ]
+    }
+  );
 }
 function CreateAgentDialog({
   open,
@@ -30747,90 +30881,84 @@ function CreateAgentDialog({
     }
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Root$7,
+    Dialog,
     {
       open,
       onOpenChange: (v) => {
         onOpenChange(v);
         if (!v) reset();
       },
-      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Portal$3, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Overlay, { className: "fixed inset-0 bg-black/50 animate-in fade-in-0 duration-150" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Content$1, { className: "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] max-h-[85vh] overflow-y-auto rounded-xl border border-border bg-background p-0 shadow-xl animate-in fade-in-0 zoom-in-95 duration-150 focus:outline-none", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-5 pt-5 pb-1", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { className: "text-base font-semibold", children: "Create Agent" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Close, { className: "flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "h-4 w-4" }) })
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { size: "md", className: "w-[500px] max-h-[85vh] overflow-y-auto p-0", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { className: "px-5 pt-5 pb-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "text-base font-semibold", children: "Create Agent" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogBody, { className: "px-5 py-4 space-y-4", children: [
+          templates.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium", children: "Template" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-2", children: templates.map((tpl) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              Button,
+              {
+                type: "button",
+                variant: "outline",
+                onClick: () => handleSelectTemplate(tpl),
+                className: cn(
+                  "h-auto justify-start gap-2.5 p-2.5 text-left",
+                  selectedTemplate?.id === tpl.id ? "border-ring bg-surface-2" : "hover:bg-surface-2"
+                ),
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: tpl.avatar, alt: "", className: "h-8 w-8 rounded-lg shrink-0" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium truncate", children: tpl.name }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-muted-foreground truncate", children: tpl.category })
+                  ] }),
+                  selectedTemplate?.id === tpl.id && /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "h-4 w-4 text-foreground shrink-0", strokeWidth: 3 })
+                ]
+              },
+              tpl.id
+            )) })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-4 space-y-4", children: [
-            templates.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm font-medium", children: "Template" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-2", children: templates.map((tpl) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                "button",
-                {
-                  onClick: () => handleSelectTemplate(tpl),
-                  className: cn(
-                    "flex items-center gap-2.5 p-2.5 rounded-lg border text-left transition-colors",
-                    selectedTemplate?.id === tpl.id ? "border-ring bg-accent/50" : "border-border hover:bg-accent/30"
-                  ),
-                  children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: tpl.avatar, alt: "", className: "h-8 w-8 rounded-lg shrink-0" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium truncate", children: tpl.name }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-muted-foreground truncate", children: tpl.category })
-                    ] }),
-                    selectedTemplate?.id === tpl.id && /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "h-4 w-4 text-foreground shrink-0" })
-                  ]
-                },
-                tpl.id
-              )) })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm font-medium", children: "Name" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "input",
-                {
-                  autoFocus: true,
-                  value: name,
-                  onChange: (e) => setName(e.target.value),
-                  onKeyDown: handleKeyDown,
-                  placeholder: "e.g. MyAssistant",
-                  className: "w-full h-9 rounded-md border border-input bg-background px-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm font-medium", children: "Description" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "input",
-                {
-                  value: description,
-                  onChange: (e) => setDescription(e.target.value),
-                  onKeyDown: handleKeyDown,
-                  placeholder: "What does this agent do?",
-                  className: "w-full h-9 rounded-md border border-input bg-background px-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "text-sm font-medium flex items-center gap-1.5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(FormField, { label: "Name", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Input,
+            {
+              autoFocus: true,
+              value: name,
+              onChange: (e) => setName(e.target.value),
+              onKeyDown: handleKeyDown,
+              placeholder: "e.g. MyAssistant"
+            }
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(FormField, { label: "Description", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Input,
+            {
+              value: description,
+              onChange: (e) => setDescription(e.target.value),
+              onKeyDown: handleKeyDown,
+              placeholder: "What does this agent do?"
+            }
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            FormField,
+            {
+              label: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1.5", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "h-3.5 w-3.5" }),
                 "Runtime"
               ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(RuntimePicker, { value: runtimeId, onChange: setRuntimeId })
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-end gap-2 px-5 pb-5", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Close, { className: "h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors", children: "Cancel" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "button",
-              {
-                onClick: handleCreate,
-                disabled: !name.trim(),
-                className: "h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:pointer-events-none transition-colors",
-                children: "Create"
-              }
-            )
-          ] })
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(RuntimePicker, { value: runtimeId, onChange: setRuntimeId })
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { className: "px-5 pb-5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "outline",
+              size: "sm",
+              onClick: () => {
+                onOpenChange(false);
+                reset();
+              },
+              children: "Cancel"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCreate, disabled: !name.trim(), size: "sm", children: "Create" })
         ] })
       ] })
     }
@@ -34104,130 +34232,135 @@ function AgentDetail({ agent }) {
           ]
         }
       ),
-      runtime && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-border", children: "·" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-muted-foreground flex items-center gap-1", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "h-3 w-3" }),
-          runtime.name
-        ] })
+      runtime && /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { variant: "outline", size: "xs", radius: "md", className: "gap-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "h-3 w-3" }),
+        runtime.name
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "ml-auto flex items-center gap-1.5", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "button",
-          {
-            onClick: handleSendMessage,
-            className: "flex items-center gap-1.5 h-7 px-2.5 rounded-md text-xs font-medium border border-border hover:bg-accent transition-colors",
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { className: "h-3 w-3" }),
-              "Message"
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Root2$3, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Trigger$2, { asChild: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Ellipsis, { className: "h-4 w-4" }) }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Portal2, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            Content2$2,
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { onClick: handleSendMessage, variant: "outline", size: "xs", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { className: "h-3 w-3" }),
+          "Message"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DropdownMenu, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownMenuTrigger, { asChild: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
             {
-              align: "end",
-              sideOffset: 4,
-              className: "min-w-[160px] rounded-lg border border-border bg-popover p-1 shadow-lg animate-in fade-in-0 zoom-in-95 duration-100",
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  Item2$2,
-                  {
-                    onClick: () => {
-                      const dupId = `a-${Date.now()}`;
-                      addAgent({
-                        ...agent,
-                        id: dupId,
-                        name: `${agent.name} (copy)`,
-                        createdAt: Date.now()
-                      });
-                      const dmCh = {
-                        id: `dm-${dupId}`,
-                        name: `${agent.name} (copy)`,
-                        type: "dm",
-                        members: [
-                          { kind: "user", id: "u-1" },
-                          { kind: "agent", id: dupId }
-                        ],
-                        lastMessageAt: Date.now(),
-                        unreadCount: 0,
-                        createdAt: Date.now()
-                      };
-                      addChannel(dmCh);
-                      navigate(`/agents/${dupId}`);
-                    },
-                    className: "flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm cursor-pointer outline-none hover:bg-accent transition-colors",
-                    children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { className: "h-3.5 w-3.5 text-muted-foreground" }),
-                      "Duplicate"
-                    ]
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Separator2, { className: "my-1 h-px bg-border" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  Item2$2,
-                  {
-                    onClick: () => {
-                      removeAgent(agent.id);
-                      navigate("/agents");
-                    },
-                    className: "flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm cursor-pointer outline-none text-destructive-foreground hover:bg-destructive/10 transition-colors",
-                    children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "h-3.5 w-3.5" }),
-                      "Delete Agent"
-                    ]
-                  }
-                )
-              ]
+              variant: "ghost",
+              size: "icon-sm",
+              className: "text-muted-foreground hover:text-foreground",
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Ellipsis, { className: "h-4 w-4" })
             }
-          ) })
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(DropdownMenuContent, { align: "end", className: "min-w-[180px]", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              DropdownMenuItem,
+              {
+                onClick: () => {
+                  const dupId = `a-${Date.now()}`;
+                  addAgent({
+                    ...agent,
+                    id: dupId,
+                    name: `${agent.name} (copy)`,
+                    createdAt: Date.now()
+                  });
+                  const dmCh = {
+                    id: `dm-${dupId}`,
+                    name: `${agent.name} (copy)`,
+                    type: "dm",
+                    members: [
+                      { kind: "user", id: "u-1" },
+                      { kind: "agent", id: dupId }
+                    ],
+                    lastMessageAt: Date.now(),
+                    unreadCount: 0,
+                    createdAt: Date.now()
+                  };
+                  addChannel(dmCh);
+                  navigate(`/agents/${dupId}`);
+                },
+                className: "rounded-lg hover:bg-surface-2",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { className: "h-3.5 w-3.5 text-muted-foreground" }),
+                  "Duplicate"
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownMenuSeparator, {}),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              DropdownMenuItem,
+              {
+                onClick: () => {
+                  removeAgent(agent.id);
+                  navigate("/agents");
+                },
+                className: "rounded-lg text-destructive hover:bg-destructive/10",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "h-3.5 w-3.5" }),
+                  "Delete Agent"
+                ]
+              }
+            )
+          ] })
         ] })
       ] })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Root2$1, { defaultValue: "instructions", className: "flex-1 flex flex-col min-h-0", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(List, { className: "flex items-center gap-1 px-5 h-10 border-b border-border shrink-0", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TabTrigger,
-          {
-            value: "instructions",
-            icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { className: "h-3.5 w-3.5" }),
-            label: "Instructions"
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TabTrigger, { value: "skills", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Wrench, { className: "h-3.5 w-3.5" }), label: "Skills" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TabTrigger,
-          {
-            value: "settings",
-            icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { className: "h-3.5 w-3.5" }),
-            label: "Settings"
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Content, { value: "instructions", className: "flex-1 overflow-y-auto outline-none", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Tabs, { defaultValue: "instructions", className: "flex-1 flex flex-col min-h-0", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        TabsList,
+        {
+          variant: "compact",
+          className: "px-5 h-10 border-b border-border shrink-0 rounded-none bg-transparent p-0 gap-1",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              AgentTabTrigger,
+              {
+                value: "instructions",
+                icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { className: "h-3.5 w-3.5" }),
+                label: "Instructions"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              AgentTabTrigger,
+              {
+                value: "skills",
+                icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Wrench, { className: "h-3.5 w-3.5" }),
+                label: "Skills"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              AgentTabTrigger,
+              {
+                value: "settings",
+                icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { className: "h-3.5 w-3.5" }),
+                label: "Settings"
+              }
+            )
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TabsContent, { value: "instructions", className: "mt-0 flex-1 overflow-y-auto outline-none", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         InstructionsTab,
         {
           agent,
           onSave: (prompt) => updateAgent(agent.id, { systemPrompt: prompt })
         }
       ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Content, { value: "skills", className: "flex-1 overflow-y-auto outline-none", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SkillsTab, { agent }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Content, { value: "settings", className: "flex-1 overflow-y-auto outline-none", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsTab, { agent, onUpdate: (updates) => updateAgent(agent.id, updates) }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TabsContent, { value: "skills", className: "mt-0 flex-1 overflow-y-auto outline-none", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SkillsTab, { agent }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TabsContent, { value: "settings", className: "mt-0 flex-1 overflow-y-auto outline-none", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsTab, { agent, onUpdate: (updates) => updateAgent(agent.id, updates) }) })
     ] })
   ] });
 }
-function TabTrigger({
+function AgentTabTrigger({
   value,
   icon,
   label
 }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    Trigger,
+    TabsTrigger,
     {
+      variant: "compact",
       value,
-      className: "flex items-center gap-1.5 px-3 h-10 text-sm text-muted-foreground hover:text-foreground transition-colors border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:text-foreground -mb-px",
+      className: "h-10 px-3 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent",
       children: [
         icon,
         label
@@ -34241,36 +34374,28 @@ function InstructionsTab({
 }) {
   const [prompt, setPrompt] = reactExports.useState(agent.systemPrompt);
   const isDirty = prompt !== agent.systemPrompt;
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 max-w-3xl", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-start justify-between mb-1", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-6 max-w-3xl", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { variant: "static", padding: "md", className: "shadow-none border-border", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold", children: "Agent Instructions" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mt-0.5", children: "Define this agent's identity and working style. These instructions are injected into the agent's context for every task." })
-    ] }) }),
+    ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "textarea",
+      Textarea,
       {
         value: prompt,
         onChange: (e) => setPrompt(e.target.value),
-        className: "w-full mt-3 rounded-lg border border-input bg-background p-4 text-sm font-mono leading-relaxed placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring resize-y min-h-[200px]",
+        className: "mt-3 min-h-[200px] resize-y font-mono leading-relaxed",
         placeholder: "You are a helpful assistant..."
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mt-2", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 flex items-center justify-between", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-muted-foreground", children: [
         prompt.length,
         " characters"
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "button",
-        {
-          onClick: () => onSave(prompt),
-          disabled: !isDirty,
-          className: "flex items-center gap-1.5 h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:pointer-events-none transition-colors",
-          children: "Save"
-        }
-      )
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: () => onSave(prompt), disabled: !isDirty, size: "sm", children: "Save" })
     ] })
-  ] });
+  ] }) });
 }
 function SkillsTab({ agent }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 max-w-3xl", children: [
@@ -34278,17 +34403,33 @@ function SkillsTab({ agent }) {
       /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold", children: "Skills" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mt-0.5", children: "Skills assigned to this agent. These are synced from the connected runtime." })
     ] }),
-    agent.skills.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rounded-lg border border-border divide-y divide-border", children: agent.skills.map((skill) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 px-4 py-3", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex h-8 w-8 items-center justify-center rounded-md bg-accent shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Wrench, { className: "h-4 w-4 text-muted-foreground" }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium", children: skill.name }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-muted-foreground truncate", children: skill.description })
-      ] })
-    ] }, skill.id)) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg border border-border border-dashed p-8 flex flex-col items-center gap-2 text-center", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Wrench, { className: "h-8 w-8 text-muted-foreground" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-medium text-muted-foreground", children: "No skills available" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Connect a runtime to load skills automatically." })
-    ] })
+    agent.skills.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Card,
+      {
+        variant: "static",
+        padding: "none",
+        className: "rounded-lg border border-border divide-y divide-border shadow-none",
+        children: agent.skills.map((skill) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 px-4 py-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex h-8 w-8 items-center justify-center rounded-md bg-accent shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Wrench, { className: "h-4 w-4 text-muted-foreground" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium", children: skill.name }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-muted-foreground truncate", children: skill.description })
+          ] })
+        ] }, skill.id))
+      }
+    ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      Card,
+      {
+        variant: "static",
+        padding: "lg",
+        className: "rounded-lg border border-border border-dashed flex flex-col items-center gap-2 text-center shadow-none",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Wrench, { className: "h-8 w-8 text-muted-foreground" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-medium text-muted-foreground", children: "No skills available" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Connect a runtime to load skills automatically." })
+        ]
+      }
+    )
   ] });
 }
 function SettingsTab({
@@ -34309,65 +34450,28 @@ function SettingsTab({
     const seed = Math.random().toString(36).slice(2, 8);
     setAvatar(`https://api.dicebear.com/9.x/bottts/svg?seed=${seed}`);
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 max-w-3xl space-y-6", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-6 max-w-3xl", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { variant: "static", padding: "md", className: "space-y-4 shadow-none border-border", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold", children: "Settings" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mt-0.5", children: "Configure agent identity and runtime." })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm font-medium", children: "Avatar" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: avatar, alt: "", className: "h-12 w-12 rounded-xl" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              type: "button",
-              onClick: handleRandomizeAvatar,
-              className: "h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors",
-              children: "Randomize"
-            }
-          )
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm font-medium", children: "Name" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "input",
-          {
-            value: name,
-            onChange: (e) => setName(e.target.value),
-            className: "w-full h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm font-medium", children: "Description" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "textarea",
-          {
-            value: description,
-            onChange: (e) => setDescription(e.target.value),
-            rows: 3,
-            className: "w-full rounded-md border border-input bg-background px-3 py-2 text-sm resize-y focus:outline-none focus:ring-1 focus:ring-ring"
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm font-medium", children: "Runtime" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(RuntimePicker, { value: runtimeId, onChange: setRuntimeId })
-      ] })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "button",
+    /* @__PURE__ */ jsxRuntimeExports.jsx(FormField, { label: "Avatar", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: avatar, alt: "", className: "h-12 w-12 rounded-xl" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "button", variant: "outline", size: "sm", onClick: handleRandomizeAvatar, children: "Randomize" })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(FormField, { label: "Name", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: name, onChange: (e) => setName(e.target.value) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(FormField, { label: "Description", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Textarea,
       {
-        onClick: handleSave,
-        disabled: !isDirty || !name.trim(),
-        className: "flex items-center gap-1.5 h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:pointer-events-none transition-colors",
-        children: "Save Changes"
+        value: description,
+        onChange: (e) => setDescription(e.target.value),
+        rows: 3,
+        className: "resize-y"
       }
-    )
-  ] });
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(FormField, { label: "Runtime", children: /* @__PURE__ */ jsxRuntimeExports.jsx(RuntimePicker, { value: runtimeId, onChange: setRuntimeId }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-end", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleSave, disabled: !isDirty || !name.trim(), size: "sm", children: "Save Changes" }) })
+  ] }) });
 }
 function AgentsView() {
   const { agentId } = useParams();
