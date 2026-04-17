@@ -25628,6 +25628,19 @@ function NavigationMenuList({ className, ...props }) {
 function NavigationMenuItem({ className, ...props }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "data-slot": "navigation-menu-item", className: cn("min-w-0", className), ...props });
 }
+function NavigationMenuLabel({ className, ...props }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      "data-slot": "navigation-menu-label",
+      className: cn(
+        "mb-1 px-2.5 text-[10px] font-medium uppercase tracking-[0.08em] text-text-tertiary",
+        className
+      ),
+      ...props
+    }
+  );
+}
 const NavigationMenuButton = reactExports.forwardRef(
   ({ className, asChild = false, active = false, ...props }, ref) => {
     const Comp = asChild ? Slot$4 : "button";
@@ -31797,7 +31810,11 @@ function AgentsSidebar() {
     /* @__PURE__ */ jsxRuntimeExports.jsx(CreateAgentDialog, { open: showCreateAgent, onOpenChange: setShowCreateAgent })
   ] });
 }
-function CreateChannelDialog({ open, onOpenChange, onCreated }) {
+function CreateChannelDialog({
+  open,
+  onOpenChange,
+  onCreated
+}) {
   const addChannel = useChatStore((s) => s.addChannel);
   const [name, setName] = reactExports.useState("");
   const [description, setDescription] = reactExports.useState("");
@@ -31807,7 +31824,6 @@ function CreateChannelDialog({ open, onOpenChange, onCreated }) {
       requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [open]);
-  if (!open) return null;
   const handleCreate = () => {
     const trimmed = name.trim().toLowerCase().replace(/\s+/g, "-");
     if (!trimmed) return;
@@ -31840,83 +31856,52 @@ function CreateChannelDialog({ open, onOpenChange, onCreated }) {
       onOpenChange(false);
     }
   };
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) onOpenChange(false);
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "div",
-    {
-      className: "fixed inset-0 z-50 flex items-center justify-center bg-black/50",
-      onClick: handleOverlayClick,
-      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-[420px] rounded-xl border border-border bg-background p-0 shadow-xl", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-5 pt-5 pb-1", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-base font-semibold", children: "Create Channel" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              onClick: () => onOpenChange(false),
-              className: "flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors",
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "h-4 w-4" })
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-4 space-y-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-sm font-medium", children: "Name" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Hash, { className: "absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "input",
-                {
-                  ref: inputRef,
-                  value: name,
-                  onChange: (e) => setName(e.target.value),
-                  onKeyDown: handleKeyDown,
-                  placeholder: "e.g. design-review",
-                  className: "w-full h-9 rounded-md border border-input bg-background pl-9 pr-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                }
-              )
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "text-sm font-medium", children: [
-              "Description ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground font-normal", children: "(optional)" })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "input",
-              {
-                value: description,
-                onChange: (e) => setDescription(e.target.value),
-                onKeyDown: handleKeyDown,
-                placeholder: "What's this channel about?",
-                className: "w-full h-9 rounded-md border border-input bg-background px-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-              }
-            )
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-end gap-2 px-5 pb-5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              onClick: () => onOpenChange(false),
-              className: "h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors",
-              children: "Cancel"
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              onClick: handleCreate,
-              disabled: !name.trim(),
-              className: "h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:pointer-events-none transition-colors",
-              children: "Create"
-            }
-          )
-        ] })
-      ] })
+  const handleClose = (nextOpen) => {
+    onOpenChange(nextOpen);
+    if (!nextOpen) {
+      setName("");
+      setDescription("");
     }
-  );
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open, onOpenChange: handleClose, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { size: "md", className: "p-0", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogHeader, { className: "px-5 pt-5 pb-1", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "text-base font-semibold", children: "Create channel" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogDescription, { className: "text-sm text-text-secondary", children: "Start a new shared conversation for your workspace." })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogBody, { className: "space-y-4 px-5 py-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(FormField, { label: "Name", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Input,
+        {
+          ref: inputRef,
+          value: name,
+          onChange: (e) => setName(e.target.value),
+          onKeyDown: handleKeyDown,
+          placeholder: "e.g. design-review",
+          leadingIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(Hash, { className: "size-3.5" })
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        FormField,
+        {
+          label: "Description",
+          description: "Optional context for teammates browsing channels.",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Input,
+            {
+              value: description,
+              onChange: (e) => setDescription(e.target.value),
+              onKeyDown: handleKeyDown,
+              placeholder: "What's this channel about?"
+            }
+          )
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { className: "px-5 pb-5", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", size: "sm", onClick: () => handleClose(false), children: "Cancel" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "sm", onClick: handleCreate, disabled: !name.trim(), children: "Create channel" })
+    ] })
+  ] }) });
 }
 function InviteEmailPreview({
   inviterName,
@@ -32211,41 +32196,40 @@ function ChatSidebar() {
   };
   const renderSidebarItem = (c, opts) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group/item flex items-center gap-1", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "button",
+      InteractiveRow,
       {
-        type: "button",
+        tone: "subtle",
+        selected: channelId === c.id,
         onClick: () => handleSelect(c.id),
         onContextMenu: (e) => openCtx(e, c),
-        className: cn(
-          "flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2.5 py-2 text-[13px] transition-colors",
-          channelId === c.id ? "bg-surface-2 text-text-primary" : "text-text-secondary hover:bg-surface-2 hover:text-text-primary"
-        ),
+        className: "min-w-0 flex-1 items-center gap-2 rounded-lg px-2.5 py-2",
         children: [
-          renderItemIcon(c),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate flex-1 text-left", children: renderItemLabel(c) }),
-          c.unreadCount > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          /* @__PURE__ */ jsxRuntimeExports.jsx(InteractiveRowLeading, { className: "pt-0.5", children: renderItemIcon(c) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(InteractiveRowContent, { className: "truncate text-left text-[13px]", children: renderItemLabel(c) }),
+          c.unreadCount > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(InteractiveRowTrailing, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             Badge,
             {
               variant: "default",
               size: "xs",
               className: cn(
-                "ml-auto min-w-5 justify-center px-1.5",
+                "min-w-5 justify-center px-1.5",
                 opts?.showDelete && "group-hover/item:hidden"
               ),
               children: c.unreadCount
             }
-          ) : null
+          ) }) : null
         ]
       }
     ),
     opts?.showDelete ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "button",
+      Button,
       {
-        type: "button",
         onClick: (e) => handleDeleteClick(e, c),
-        className: "hidden h-7 w-7 shrink-0 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-destructive/10 hover:text-destructive group-hover/item:flex",
+        variant: "ghost",
+        size: "icon-sm",
+        className: "hidden shrink-0 rounded-md text-text-secondary hover:bg-destructive/10 hover:text-destructive group-hover/item:inline-flex",
         title: "Delete channel",
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "h-3 w-3" })
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "size-3" })
       }
     ) : null
   ] }, c.id);
@@ -32260,16 +32244,16 @@ function ChatSidebar() {
         leadingIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "size-3.5" })
       }
     ) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(ScrollArea, { className: "min-h-0 flex-1 px-2 pb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 pr-1", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(ScrollArea, { className: "min-h-0 flex-1 px-2 pb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(NavigationMenu, { className: "space-y-4 pr-1", children: [
       pinnedChannels.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-text-tertiary", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(NavigationMenuLabel, { className: "flex items-center gap-1.5 py-1 font-semibold", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Pin, { className: "h-3 w-3" }),
           "Pinned"
         ] }),
-        pinnedChannels.map((c) => renderSidebarItem(c))
+        /* @__PURE__ */ jsxRuntimeExports.jsx(NavigationMenuList, { children: pinnedChannels.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsx(NavigationMenuItem, { children: renderSidebarItem(c) }, c.id)) })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-text-tertiary", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(NavigationMenuLabel, { className: "flex items-center gap-1.5 py-1 font-semibold", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Hash, { className: "h-3 w-3" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "flex-1", children: "Channels" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -32284,10 +32268,10 @@ function ChatSidebar() {
             }
           )
         ] }),
-        channelList.map((c) => renderSidebarItem(c, { showDelete: true }))
+        /* @__PURE__ */ jsxRuntimeExports.jsx(NavigationMenuList, { children: channelList.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsx(NavigationMenuItem, { children: renderSidebarItem(c, { showDelete: true }) }, c.id)) })
       ] }),
       peopleDMs.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-text-tertiary", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(NavigationMenuLabel, { className: "flex items-center gap-1.5 py-1 font-semibold", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(User, { className: "h-3 w-3" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "flex-1", children: "People" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -32302,10 +32286,10 @@ function ChatSidebar() {
             }
           )
         ] }),
-        peopleDMs.map((c) => renderSidebarItem(c))
+        /* @__PURE__ */ jsxRuntimeExports.jsx(NavigationMenuList, { children: peopleDMs.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsx(NavigationMenuItem, { children: renderSidebarItem(c) }, c.id)) })
       ] }),
       agentDMs.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-text-tertiary", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(NavigationMenuLabel, { className: "flex items-center gap-1.5 py-1 font-semibold", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Bot, { className: "h-3 w-3" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "flex-1", children: "Agents" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -32320,7 +32304,7 @@ function ChatSidebar() {
             }
           )
         ] }),
-        agentDMs.map((c) => renderSidebarItem(c))
+        /* @__PURE__ */ jsxRuntimeExports.jsx(NavigationMenuList, { children: agentDMs.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsx(NavigationMenuItem, { children: renderSidebarItem(c) }, c.id)) })
       ] })
     ] }) }),
     menu && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
@@ -32373,45 +32357,20 @@ function ChatSidebar() {
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(InvitePeopleDialog, { open: inviteOpen, onOpenChange: setInviteOpen }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(CreateAgentDialog, { open: createAgentOpen, onOpenChange: setCreateAgentOpen }),
-    deleteTarget && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed inset-0 z-50 flex items-center justify-center", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "button",
-        {
-          type: "button",
-          className: "absolute inset-0 bg-black/50",
-          onClick: () => setDeleteTarget(null),
-          "aria-label": "Close delete channel dialog"
-        }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative w-[360px] rounded-xl border border-border bg-background p-5 shadow-xl", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-base font-semibold", children: [
-          "Delete #",
-          deleteTarget.name,
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open: deleteTarget != null, onOpenChange: (open) => !open && setDeleteTarget(null), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { size: "sm", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogHeader, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogTitle, { children: [
+          "Delete ",
+          deleteTarget ? `#${deleteTarget.name}` : "channel",
           "?"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground mt-2", children: "This will permanently delete the channel and all its messages. This action cannot be undone." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-end gap-2 mt-5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              type: "button",
-              onClick: () => setDeleteTarget(null),
-              className: "h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors",
-              children: "Cancel"
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              type: "button",
-              onClick: handleDeleteConfirm,
-              className: "h-8 px-4 rounded-md text-sm font-medium bg-destructive text-white hover:bg-destructive/90 transition-colors",
-              children: "Delete"
-            }
-          )
-        ] })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogDescription, { children: "This will permanently delete the channel and all its messages. This action cannot be undone." })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", size: "sm", onClick: () => setDeleteTarget(null), children: "Cancel" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "destructive", size: "sm", onClick: handleDeleteConfirm, children: "Delete" })
       ] })
-    ] })
+    ] }) })
   ] });
 }
 const useRuntimesStore = create((set) => ({
@@ -33855,6 +33814,252 @@ function OnboardingFlow() {
     ) })
   ] });
 }
+function MentionPicker({
+  members,
+  query,
+  onSelect,
+  onClose
+}) {
+  const filtered = members.filter((m) => {
+    const resolved = resolveRef(m);
+    if (!resolved) return false;
+    return resolved.name.toLowerCase().includes(query.toLowerCase());
+  });
+  if (filtered.length === 0) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Card,
+      {
+        variant: "outline",
+        padding: "none",
+        className: "absolute bottom-full left-0 mb-1 w-64 overflow-hidden border-border bg-popover p-2 shadow-dropdown",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-2 py-1.5 text-xs text-text-secondary", children: "No matches" })
+      }
+    );
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Card,
+    {
+      variant: "outline",
+      padding: "none",
+      className: "absolute bottom-full left-0 mb-1 w-64 overflow-hidden border-border bg-popover shadow-dropdown",
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx(ScrollArea, { className: "max-h-64 p-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: filtered.map((m) => {
+        const resolved = resolveRef(m);
+        if (!resolved) return null;
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          InteractiveRow,
+          {
+            tone: "subtle",
+            className: "items-center gap-2 rounded-lg px-2.5 py-2",
+            onClick: () => {
+              onSelect(m, resolved.name);
+              onClose();
+            },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(InteractiveRowLeading, { children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: resolved.avatar, alt: "", className: "h-5 w-5 rounded-full" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(InteractiveRowContent, { className: "truncate text-left text-sm text-text-primary", children: resolved.name }),
+              resolved.isAgent ? /* @__PURE__ */ jsxRuntimeExports.jsx(InteractiveRowTrailing, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { variant: "accent", size: "xs", className: "gap-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Bot, { className: "size-3" }),
+                "Agent"
+              ] }) }) : null
+            ]
+          },
+          `${m.kind}-${m.id}`
+        );
+      }) }) })
+    }
+  );
+}
+const MIN_HEIGHT = 36;
+const MAX_HEIGHT = 150;
+function MessageInput({
+  channelId,
+  isDmWithAgent,
+  channel
+}) {
+  const [text, setText] = reactExports.useState("");
+  const [showMentions, setShowMentions] = reactExports.useState(false);
+  const [mentionQuery, setMentionQuery] = reactExports.useState("");
+  const [isFocused, setIsFocused] = reactExports.useState(false);
+  const textareaRef = reactExports.useRef(null);
+  const addMessage = useChatStore((s) => s.addMessage);
+  const updateMessage = useChatStore((s) => s.updateMessage);
+  const pendingDraft = useChatStore((s) => s.pendingDraft);
+  const setPendingDraft = useChatStore((s) => s.setPendingDraft);
+  reactExports.useEffect(() => {
+    if (pendingDraft) {
+      setText(pendingDraft);
+      setPendingDraft(null);
+      textareaRef.current?.focus();
+    }
+  }, [pendingDraft, setPendingDraft]);
+  const adjustHeight = reactExports.useCallback((textarea) => {
+    if (!textarea) return;
+    textarea.style.height = "auto";
+    textarea.style.height = `${Math.max(MIN_HEIGHT, Math.min(textarea.scrollHeight, MAX_HEIGHT))}px`;
+  }, []);
+  reactExports.useLayoutEffect(() => {
+    adjustHeight(textareaRef.current);
+  }, [text, adjustHeight]);
+  const simulateAgentReply = reactExports.useCallback(
+    (agentRef) => {
+      const fullContent = getRandomAgentResponse();
+      const msgId = `msg-${Date.now()}-agent`;
+      const tokens = fullContent.split(/(?<=\s)|(?=\s)/);
+      setTimeout(() => {
+        addMessage(channelId, {
+          id: msgId,
+          channelId,
+          sender: agentRef,
+          content: "",
+          mentions: [],
+          reactions: [],
+          createdAt: Date.now(),
+          isStreaming: true
+        });
+        let idx = 0;
+        const tick = () => {
+          const chunk = Math.floor(Math.random() * 2) + 1;
+          idx = Math.min(idx + chunk, tokens.length);
+          updateMessage(channelId, msgId, {
+            content: tokens.slice(0, idx).join("")
+          });
+          if (idx >= tokens.length) {
+            updateMessage(channelId, msgId, { isStreaming: false });
+          } else {
+            setTimeout(tick, 25 + Math.random() * 35);
+          }
+        };
+        setTimeout(tick, 80);
+      }, 400);
+    },
+    [channelId, addMessage, updateMessage]
+  );
+  const handleSend = () => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    const mentionedAgents = [];
+    const mentionPattern = /@(\w+)/g;
+    let match = mentionPattern.exec(trimmed);
+    while (match) {
+      const [, mentionName] = match;
+      const agent = mockAgents.find((a) => a.name.toLowerCase() === mentionName.toLowerCase());
+      if (agent) {
+        mentionedAgents.push({ kind: "agent", id: agent.id });
+      }
+      match = mentionPattern.exec(trimmed);
+    }
+    const userMsg = {
+      id: `msg-${Date.now()}`,
+      channelId,
+      sender: { kind: "user", id: "u-1" },
+      content: trimmed,
+      mentions: mentionedAgents,
+      reactions: [],
+      createdAt: Date.now()
+    };
+    addMessage(channelId, userMsg);
+    setText("");
+    setShowMentions(false);
+    if (isDmWithAgent) {
+      const agentMember = channel.members.find((m) => m.kind === "agent");
+      if (agentMember) simulateAgentReply(agentMember);
+    } else if (mentionedAgents.length > 0) {
+      for (const ref of mentionedAgents) {
+        simulateAgentReply(ref);
+      }
+    }
+    adjustHeight(textareaRef.current);
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+  const handleChange = (e) => {
+    const val = e.target.value;
+    setText(val);
+    const textarea = e.target;
+    const cursorPos = textarea.selectionStart;
+    const textBeforeCursor = val.slice(0, cursorPos);
+    const atMatch = textBeforeCursor.match(/@(\w*)$/);
+    if (atMatch) {
+      setShowMentions(true);
+      setMentionQuery(atMatch[1]);
+    } else {
+      setShowMentions(false);
+    }
+  };
+  const handleMentionSelect = (_ref, name) => {
+    const cursorPos = textareaRef.current?.selectionStart ?? text.length;
+    const textBeforeCursor = text.slice(0, cursorPos);
+    const atIndex = textBeforeCursor.lastIndexOf("@");
+    const before = text.slice(0, atIndex);
+    const after = text.slice(cursorPos);
+    setText(`${before}@${name} ${after}`);
+    setShowMentions(false);
+    textareaRef.current?.focus();
+  };
+  const hasText = text.trim().length > 0;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative px-4 pb-4", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: cn(
+          "transition-all duration-200 ease-out",
+          showMentions ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
+        ),
+        children: showMentions && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          MentionPicker,
+          {
+            members: channel.members,
+            query: mentionQuery,
+            onSelect: handleMentionSelect,
+            onClose: () => setShowMentions(false)
+          }
+        )
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: cn(
+          "message-input-container flex items-end gap-2 rounded-xl border p-2 transition-all duration-200 ease-out",
+          isFocused ? "border-ring/50 bg-background shadow-[0_0_0_1px_var(--color-ring)/0.15]" : "border-input bg-background"
+        ),
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "textarea",
+            {
+              ref: textareaRef,
+              value: text,
+              onChange: handleChange,
+              onKeyDown: handleKeyDown,
+              onFocus: () => setIsFocused(true),
+              onBlur: () => setIsFocused(false),
+              placeholder: channel.type === "dm" ? `Message ${channel.name}...` : "Message channel...",
+              rows: 1,
+              className: "message-textarea flex-1 resize-none bg-transparent text-sm placeholder:text-muted-foreground focus:outline-none px-2 py-1.5"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              type: "button",
+              onClick: handleSend,
+              disabled: !hasText,
+              className: cn(
+                "message-send-btn h-8 w-8 shrink-0 rounded-lg p-0 transition-all duration-200 ease-out",
+                hasText ? "bg-accent text-accent-fg hover:bg-accent-hover" : "bg-surface-2 text-text-muted hover:bg-surface-2"
+              ),
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUp, { className: "h-4 w-4" })
+            }
+          )
+        ]
+      }
+    )
+  ] });
+}
 function formatRelativeTime(timestamp) {
   const diff = Date.now() - timestamp;
   const seconds = Math.floor(diff / 1e3);
@@ -34738,223 +34943,6 @@ function MessageList({ channelId, channel }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx(ContentDetailOverlay, { block: expandedBlock, onClose: closeExpanded })
   ] });
 }
-function MentionPicker({ members, query, onSelect, onClose }) {
-  const filtered = members.filter((m) => {
-    const resolved = resolveRef(m);
-    if (!resolved) return false;
-    return resolved.name.toLowerCase().includes(query.toLowerCase());
-  });
-  if (filtered.length === 0) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute bottom-full left-0 mb-1 w-64 rounded-lg border border-border bg-popover p-2 shadow-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-2 py-1.5 text-xs text-muted-foreground", children: "No matches" }) });
-  }
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute bottom-full left-0 mb-1 w-64 rounded-lg border border-border bg-popover shadow-lg overflow-hidden", children: filtered.map((m) => {
-    const resolved = resolveRef(m);
-    if (!resolved) return null;
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "button",
-      {
-        onClick: () => {
-          onSelect(m, resolved.name);
-          onClose();
-        },
-        className: "flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent transition-colors",
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: resolved.avatar, alt: "", className: "h-5 w-5 rounded-full" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "flex-1 text-left truncate", children: resolved.name }),
-          resolved.isAgent && /* @__PURE__ */ jsxRuntimeExports.jsx(Bot, { className: "h-3.5 w-3.5 text-slark-agent" })
-        ]
-      },
-      `${m.kind}-${m.id}`
-    );
-  }) });
-}
-const MIN_HEIGHT = 36;
-const MAX_HEIGHT = 150;
-function MessageInput({
-  channelId,
-  isDmWithAgent,
-  channel
-}) {
-  const [text, setText] = reactExports.useState("");
-  const [showMentions, setShowMentions] = reactExports.useState(false);
-  const [mentionQuery, setMentionQuery] = reactExports.useState("");
-  const [isFocused, setIsFocused] = reactExports.useState(false);
-  const textareaRef = reactExports.useRef(null);
-  const addMessage = useChatStore((s) => s.addMessage);
-  const updateMessage = useChatStore((s) => s.updateMessage);
-  const pendingDraft = useChatStore((s) => s.pendingDraft);
-  const setPendingDraft = useChatStore((s) => s.setPendingDraft);
-  reactExports.useEffect(() => {
-    if (pendingDraft) {
-      setText(pendingDraft);
-      setPendingDraft(null);
-      textareaRef.current?.focus();
-    }
-  }, [pendingDraft, setPendingDraft]);
-  const adjustHeight = reactExports.useCallback((textarea) => {
-    if (!textarea) return;
-    textarea.style.height = "auto";
-    textarea.style.height = `${Math.max(MIN_HEIGHT, Math.min(textarea.scrollHeight, MAX_HEIGHT))}px`;
-  }, []);
-  reactExports.useLayoutEffect(() => {
-    adjustHeight(textareaRef.current);
-  }, [text, adjustHeight]);
-  const simulateAgentReply = reactExports.useCallback(
-    (agentRef) => {
-      const fullContent = getRandomAgentResponse();
-      const msgId = `msg-${Date.now()}-agent`;
-      const tokens = fullContent.split(/(?<=\s)|(?=\s)/);
-      setTimeout(() => {
-        addMessage(channelId, {
-          id: msgId,
-          channelId,
-          sender: agentRef,
-          content: "",
-          mentions: [],
-          reactions: [],
-          createdAt: Date.now(),
-          isStreaming: true
-        });
-        let idx = 0;
-        const tick = () => {
-          const chunk = Math.floor(Math.random() * 2) + 1;
-          idx = Math.min(idx + chunk, tokens.length);
-          updateMessage(channelId, msgId, {
-            content: tokens.slice(0, idx).join("")
-          });
-          if (idx >= tokens.length) {
-            updateMessage(channelId, msgId, { isStreaming: false });
-          } else {
-            setTimeout(tick, 25 + Math.random() * 35);
-          }
-        };
-        setTimeout(tick, 80);
-      }, 400);
-    },
-    [channelId, addMessage, updateMessage]
-  );
-  const handleSend = () => {
-    const trimmed = text.trim();
-    if (!trimmed) return;
-    const mentionedAgents = [];
-    const mentionPattern = /@(\w+)/g;
-    let match = null;
-    while ((match = mentionPattern.exec(trimmed)) !== null) {
-      const agent = mockAgents.find((a) => a.name.toLowerCase() === match[1].toLowerCase());
-      if (agent) {
-        mentionedAgents.push({ kind: "agent", id: agent.id });
-      }
-    }
-    const userMsg = {
-      id: `msg-${Date.now()}`,
-      channelId,
-      sender: { kind: "user", id: "u-1" },
-      content: trimmed,
-      mentions: mentionedAgents,
-      reactions: [],
-      createdAt: Date.now()
-    };
-    addMessage(channelId, userMsg);
-    setText("");
-    setShowMentions(false);
-    if (isDmWithAgent) {
-      const agentMember = channel.members.find((m) => m.kind === "agent");
-      if (agentMember) simulateAgentReply(agentMember);
-    } else if (mentionedAgents.length > 0) {
-      mentionedAgents.forEach((ref) => simulateAgentReply(ref));
-    }
-    adjustHeight(textareaRef.current);
-  };
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
-  const handleChange = (e) => {
-    const val = e.target.value;
-    setText(val);
-    const textarea = e.target;
-    const cursorPos = textarea.selectionStart;
-    const textBeforeCursor = val.slice(0, cursorPos);
-    const atMatch = textBeforeCursor.match(/@(\w*)$/);
-    if (atMatch) {
-      setShowMentions(true);
-      setMentionQuery(atMatch[1]);
-    } else {
-      setShowMentions(false);
-    }
-  };
-  const handleMentionSelect = (_ref, name) => {
-    const cursorPos = textareaRef.current?.selectionStart ?? text.length;
-    const textBeforeCursor = text.slice(0, cursorPos);
-    const atIndex = textBeforeCursor.lastIndexOf("@");
-    const before = text.slice(0, atIndex);
-    const after = text.slice(cursorPos);
-    setText(`${before}@${name} ${after}`);
-    setShowMentions(false);
-    textareaRef.current?.focus();
-  };
-  const hasText = text.trim().length > 0;
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative px-4 pb-4", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "div",
-      {
-        className: cn(
-          "transition-all duration-200 ease-out",
-          showMentions ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
-        ),
-        children: showMentions && /* @__PURE__ */ jsxRuntimeExports.jsx(
-          MentionPicker,
-          {
-            members: channel.members,
-            query: mentionQuery,
-            onSelect: handleMentionSelect,
-            onClose: () => setShowMentions(false)
-          }
-        )
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "div",
-      {
-        className: cn(
-          "message-input-container flex items-end gap-2 rounded-xl border p-2 transition-all duration-200 ease-out",
-          isFocused ? "border-ring/50 bg-background shadow-[0_0_0_1px_var(--color-ring)/0.15]" : "border-input bg-background"
-        ),
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "textarea",
-            {
-              ref: textareaRef,
-              value: text,
-              onChange: handleChange,
-              onKeyDown: handleKeyDown,
-              onFocus: () => setIsFocused(true),
-              onBlur: () => setIsFocused(false),
-              placeholder: channel.type === "dm" ? `Message ${channel.name}...` : "Message channel...",
-              rows: 1,
-              className: "message-textarea flex-1 resize-none bg-transparent text-sm placeholder:text-muted-foreground focus:outline-none px-2 py-1.5"
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              onClick: handleSend,
-              disabled: !hasText,
-              className: cn(
-                "message-send-btn flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
-                "transition-all duration-200 ease-out",
-                hasText ? "bg-foreground text-background hover:bg-foreground/90" : "bg-secondary text-muted-foreground"
-              ),
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUp, { className: "h-4 w-4" })
-            }
-          )
-        ]
-      }
-    )
-  ] });
-}
 function ChatView() {
   const { channelId } = useParams();
   const channels = useChatStore((s) => s.channels);
@@ -35032,10 +35020,11 @@ function ChatView() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex h-full flex-col", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(TitleBarSpacer, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 px-4 h-12 border-b border-border shrink-0", children: [
-      channel.type === "channel" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Hash, { className: "h-4 w-4 text-muted-foreground" }) : otherResolved?.isAgent ? /* @__PURE__ */ jsxRuntimeExports.jsx(Bot, { className: "h-4 w-4 text-slark-agent" }) : null,
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-sm", children: channel.type === "dm" ? otherResolved?.name ?? channel.name : channel.name }),
-      channel.description && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground ml-2", children: channel.description }),
-      channel.type === "channel" && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "ml-auto text-xs text-muted-foreground", children: [
+      channel.type === "channel" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Hash, { className: "h-4 w-4 text-text-tertiary" }) : otherResolved?.isAgent ? /* @__PURE__ */ jsxRuntimeExports.jsx(Bot, { className: "h-4 w-4 text-slark-agent" }) : null,
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-sm font-semibold text-text-primary", children: channel.type === "dm" ? otherResolved?.name ?? channel.name : channel.name }),
+      channel.description && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 truncate text-xs text-text-secondary", children: channel.description }),
+      channel.type === "dm" && otherResolved?.isAgent ? /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "accent", size: "xs", className: "ml-auto", children: "Agent" }) : null,
+      channel.type === "channel" && /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { variant: "outline", size: "xs", className: "ml-auto", children: [
         channel.members.length,
         " members"
       ] })

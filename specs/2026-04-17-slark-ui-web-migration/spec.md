@@ -552,6 +552,25 @@ ui-web 当前没有明确等价的 chat composer 组件，因此本次：
 3. 若该依赖在 Slark 中已无直接使用，再从 `apps/slark/package.json` 删除
 4. 删除不再使用的本地 primitive / overlay 实现
 
+### 本轮清理结果（Iteration 9）
+
+- `apps/slark/src/renderer/src` 已确认**没有**本地 `cn()` 实现；当前统一只从 `@nexu-design/ui-web` 导入 `cn`
+- `apps/slark/src/renderer/src` 已确认**没有**直接 import `@radix-ui/*`
+- `apps/slark/package.json` 中已删除 Slark 不再直接消费的 `@radix-ui/*`、`clsx`、`tailwind-merge`、`class-variance-authority` 依赖
+- `src/renderer/src/app/globals.css` 保留为 app-specific globals，仅留下：
+  - Electron drag/no-drag 区域样式
+  - composer textarea 高度过渡样式
+  - WebKit scrollbar 外观
+- 本轮未发现需要继续删除的本地 primitive 系统；现有保留实现主要属于复杂业务视图，而不是重复基础组件
+
+### 当前仍保留的 ui-web gap / follow-up
+
+- chat composer：`MessageInput.tsx` 仍需要 autosize、mention insertion、enter-send、draft injection，`ui-web` 暂无可直接承接的 composer pattern
+- message body / content blocks：`MessageList.tsx` 与 `ContentBlocks.tsx` 仍承载 rich content、reaction、streaming、连续消息布局，`ui-web` 暂无对应消息级富内容 primitives
+- content detail overlay：`ContentDetailOverlay.tsx` 仍包含 image lightbox、code viewer、diff viewer；`ui-web` 只有容器型 overlay，没有对应 viewer primitives
+- runtimes analytics：`RuntimesView.tsx` 中 donut chart、activity heatmap、analytics table 仍属 dashboard 级视图，`ui-web` 暂无现成承接物
+- email preview：`InviteEmailPreview.tsx` 继续保留独立 email-safe markup，不应为了统一外观强行迁入 app-shell primitives
+
 ---
 
 ## 建议执行顺序
