@@ -119,7 +119,7 @@ export function ChatSidebar(): React.ReactElement {
         className={cn(
           "group/item relative flex items-center gap-2 w-full pl-3 pr-2 py-[5px] text-[13px] transition-colors",
           isActive
-            ? "bg-nav-active text-white font-semibold"
+            ? "bg-nav-active text-nav-active-fg font-semibold"
             : unread
               ? "text-nav-fg hover:bg-nav-hover"
               : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
@@ -136,7 +136,7 @@ export function ChatSidebar(): React.ReactElement {
         {unread ? (
           <span
             className={cn(
-              "ml-auto flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-nexu-primary text-white text-[10px] font-semibold px-1.5",
+              "ml-auto flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand-primary text-accent-fg text-[10px] font-semibold px-1.5",
               opts?.showDelete && "group-hover/item:hidden",
             )}
           >

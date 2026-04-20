@@ -67,7 +67,7 @@ export function Sidebar(): React.ReactElement {
     : "nexu.app";
 
   return (
-    <UiSidebar className="w-64 border-r-0 bg-nav text-nav-fg shadow-[inset_-1px_0_0_rgba(0,0,0,0.2)]">
+    <UiSidebar className="w-64 border-r border-nav-border bg-nav text-nav-fg shadow-none">
       <TitleBarSpacer className="h-[38px]" />
 
       <SidebarHeader className="no-drag px-3 pb-2">
@@ -95,7 +95,7 @@ export function Sidebar(): React.ReactElement {
                 {workspace?.avatar ? (
                   <img src={workspace.avatar} alt="" className="h-10 w-10 shrink-0 rounded-lg" />
                 ) : (
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-nexu-primary/80 to-nexu-primary font-bold text-white">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-nexu-primary/80 to-nexu-primary font-bold text-accent-fg">
                     {workspaceInitial}
                   </div>
                 )}
@@ -188,7 +188,7 @@ function SettingsSidebar(): React.ReactElement {
                 <NavigationMenuButton
                   active={isActive}
                   onClick={() => navigate(path)}
-                  className="rounded-md px-2.5 py-1.5 text-sm data-[active=true]:bg-nav-active data-[active=true]:text-white hover:bg-nav-hover hover:text-nav-fg"
+                  className="rounded-md px-2.5 py-1.5 text-sm text-nav-muted data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg hover:bg-nav-hover hover:text-nav-fg"
                 >
                   <Icon className="h-4 w-4 shrink-0" />
                   <span>{label}</span>

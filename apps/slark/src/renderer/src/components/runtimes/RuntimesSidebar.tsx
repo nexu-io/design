@@ -122,7 +122,9 @@ export function RuntimesSidebar(): React.ReactElement {
           onClick={() => setTab("mine")}
           className={cn(
             "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
-            tab === "mine" ? "bg-nav-active text-white" : "text-nav-muted hover:text-nav-fg",
+            tab === "mine"
+              ? "bg-nav-active text-nav-active-fg"
+              : "text-nav-muted hover:text-nav-fg",
           )}
         >
           {t("runtimes.mine")}
@@ -131,7 +133,7 @@ export function RuntimesSidebar(): React.ReactElement {
           onClick={() => setTab("all")}
           className={cn(
             "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
-            tab === "all" ? "bg-nav-active text-white" : "text-nav-muted hover:text-nav-fg",
+            tab === "all" ? "bg-nav-active text-nav-active-fg" : "text-nav-muted hover:text-nav-fg",
           )}
         >
           {t("runtimes.all")}
@@ -149,7 +151,7 @@ export function RuntimesSidebar(): React.ReactElement {
               className={cn(
                 "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
                 selectedRuntimeId === rt.id
-                  ? "bg-nav-active text-white"
+                  ? "bg-nav-active text-nav-active-fg"
                   : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
               )}
             >
@@ -216,7 +218,7 @@ export function RuntimesSidebar(): React.ReactElement {
                     </div>
                     <button
                       onClick={() => handleAddDetected(d)}
-                      className="shrink-0 px-2 py-0.5 text-xs font-medium rounded-md bg-nav-active text-white hover:opacity-90"
+                      className="shrink-0 rounded-md bg-nav-active px-2 py-0.5 text-xs font-medium text-nav-active-fg hover:opacity-90"
                     >
                       {t("runtimes.add")}
                     </button>

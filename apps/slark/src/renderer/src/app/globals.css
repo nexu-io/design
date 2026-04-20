@@ -13,15 +13,18 @@
   --slark-color-nexu-busy: oklch(0.7 0.2 30);
   --slark-color-nexu-offline: oklch(0.55 0 0);
 
-  --slark-color-nav: oklch(0.96 0.02 230);
-  --slark-color-nav-surface: oklch(0.82 0.1 230);
-  --slark-color-nav-hover: oklch(0.91 0.04 230);
-  --slark-color-nav-active: oklch(0.5 0.16 255);
-  --slark-color-nav-fg: oklch(0.25 0.03 260);
-  --slark-color-nav-muted: oklch(0.5 0.02 260);
-  --slark-color-nav-border: oklch(0.88 0.03 230);
-  --slark-color-nav-input: oklch(0.92 0.03 230);
-  --slark-color-nav-ring: oklch(0.62 0.14 230);
+  --slark-color-nav: var(--color-surface-1);
+  --slark-color-nav-surface: var(--color-surface-2);
+  --slark-color-nav-hover: var(--color-surface-2);
+  --slark-color-nav-active: var(--color-brand-primary);
+  --slark-color-nav-active-fg: var(--color-accent-fg);
+  --slark-color-nav-active-soft: color-mix(in srgb, var(--color-accent-fg) 18%, transparent);
+  --slark-color-nav-active-muted: color-mix(in srgb, var(--color-accent-fg) 78%, transparent);
+  --slark-color-nav-fg: var(--color-text-heading);
+  --slark-color-nav-muted: var(--color-text-secondary);
+  --slark-color-nav-border: var(--color-border-subtle);
+  --slark-color-nav-input: var(--color-surface-2);
+  --slark-color-nav-ring: var(--color-brand-primary);
 }
 
 @theme inline {
@@ -36,6 +39,9 @@
   --color-nav-surface: var(--slark-color-nav-surface);
   --color-nav-hover: var(--slark-color-nav-hover);
   --color-nav-active: var(--slark-color-nav-active);
+  --color-nav-active-fg: var(--slark-color-nav-active-fg);
+  --color-nav-active-soft: var(--slark-color-nav-active-soft);
+  --color-nav-active-muted: var(--slark-color-nav-active-muted);
   --color-nav-fg: var(--slark-color-nav-fg);
   --color-nav-muted: var(--slark-color-nav-muted);
   --color-nav-border: var(--slark-color-nav-border);

@@ -44,19 +44,19 @@ export function ActivityBar(): React.ReactElement {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <UiActivityBar className="w-14 border-r-0 bg-nav-surface py-0 text-white">
+    <UiActivityBar className="w-14 border-r-0 bg-nav-surface py-0 text-nav-fg">
       <TitleBarSpacer className="mb-3 h-[38px]" />
 
       <ActivityBarHeader className="mb-4 w-10 border-b-0 pb-0">
         <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
           <DropdownMenuTrigger asChild>
             <ActivityBarItem
-              className="no-drag size-10 overflow-hidden rounded-xl p-0 text-white hover:bg-white/10 hover:text-white"
+              className="no-drag size-10 overflow-hidden rounded-xl p-0 text-nav-fg hover:bg-nav-hover hover:text-nav-fg"
               title={workspace?.name ?? "Nexu"}
             >
               <Avatar className="size-10 rounded-xl">
                 <AvatarImage src={workspace?.avatar} alt={workspace?.name ?? "Workspace"} />
-                <AvatarFallback className="rounded-xl bg-gradient-to-br from-nexu-primary/80 to-nexu-primary text-sm font-bold text-white">
+                <AvatarFallback className="rounded-xl bg-gradient-to-br from-nexu-primary/80 to-nexu-primary text-sm font-bold text-accent-fg">
                   {(workspace?.name ?? "S").charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
@@ -75,7 +75,7 @@ export function ActivityBar(): React.ReactElement {
                 >
                   <Avatar className="size-10 rounded-lg">
                     <AvatarImage src={ws.avatar} alt={ws.name} />
-                    <AvatarFallback className="rounded-lg bg-gradient-to-br from-nexu-primary/80 to-nexu-primary text-sm font-bold text-white">
+                    <AvatarFallback className="rounded-lg bg-gradient-to-br from-nexu-primary/80 to-nexu-primary text-sm font-bold text-accent-fg">
                       {ws.name.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
@@ -143,11 +143,11 @@ export function ActivityBar(): React.ReactElement {
               key={path}
               active={isActive}
               onClick={() => navigate(path)}
-              className="no-drag size-10 rounded-xl text-white/75 hover:bg-white/15 hover:text-white data-[active=true]:bg-white/25 data-[active=true]:text-white"
+              className="no-drag size-10 rounded-xl text-nav-muted hover:bg-nav-hover hover:text-nav-fg data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg"
               title={t(labelKey)}
             >
               {isActive ? (
-                <ActivityBarIndicator className="left-[-8px] inset-y-2 w-[3px] bg-white" />
+                <ActivityBarIndicator className="left-[-8px] inset-y-2 w-[3px] bg-nav-active-fg" />
               ) : null}
               <Icon className="size-[19px]" />
             </ActivityBarItem>
@@ -159,11 +159,11 @@ export function ActivityBar(): React.ReactElement {
         <ActivityBarItem
           active={location.pathname.startsWith("/settings")}
           onClick={() => navigate("/settings")}
-          className="no-drag size-10 rounded-xl text-white/75 hover:bg-white/15 hover:text-white data-[active=true]:bg-white/25 data-[active=true]:text-white"
+          className="no-drag size-10 rounded-xl text-nav-muted hover:bg-nav-hover hover:text-nav-fg data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg"
           title={t("section.settings")}
         >
           {location.pathname.startsWith("/settings") ? (
-            <ActivityBarIndicator className="left-[-8px] inset-y-2 w-[3px] bg-white" />
+            <ActivityBarIndicator className="left-[-8px] inset-y-2 w-[3px] bg-nav-active-fg" />
           ) : null}
           <Settings className="size-[19px]" />
         </ActivityBarItem>

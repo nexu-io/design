@@ -1,9 +1,27 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nexu</title>
+    <script>
+      ;(() => {
+        const storageKey = 'nexu-theme'
+        const darkMediaQuery = '(prefers-color-scheme: dark)'
+        const stored = window.localStorage.getItem(storageKey)
+        const theme = stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'dark'
+        const resolvedTheme =
+          theme === 'system'
+            ? window.matchMedia?.(darkMediaQuery).matches
+              ? 'dark'
+              : 'light'
+            : theme
+
+        document.documentElement.dataset.theme = theme
+        document.documentElement.style.colorScheme = resolvedTheme
+        document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
+      })()
+    </script>
   </head>
   <body class="bg-background text-foreground antialiased">
     <div id="root"></div>

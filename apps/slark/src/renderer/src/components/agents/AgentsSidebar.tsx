@@ -142,7 +142,7 @@ export function AgentsSidebar(): React.ReactElement {
                 className={cn(
                   "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
                   memberId === user.id
-                    ? "bg-nav-active text-white"
+                    ? "bg-nav-active text-nav-active-fg"
                     : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
                 )}
               >
@@ -155,7 +155,7 @@ export function AgentsSidebar(): React.ReactElement {
                         className={cn(
                           "text-[9px] font-semibold uppercase tracking-wide px-1 py-px rounded shrink-0",
                           memberId === user.id
-                            ? "text-white/80 bg-white/15"
+                            ? "text-nav-active-fg bg-nav-active-soft"
                             : "text-nav-muted bg-nav-hover",
                         )}
                       >
@@ -166,7 +166,7 @@ export function AgentsSidebar(): React.ReactElement {
                   <div
                     className={cn(
                       "text-xs truncate",
-                      memberId === user.id ? "text-white/75" : "text-nav-muted",
+                      memberId === user.id ? "text-nav-active-muted" : "text-nav-muted",
                     )}
                   >
                     {user.email}
@@ -193,7 +193,7 @@ export function AgentsSidebar(): React.ReactElement {
                 className={cn(
                   "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
                   memberId === agent.id
-                    ? "bg-nav-active text-white"
+                    ? "bg-nav-active text-nav-active-fg"
                     : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
                 )}
               >
@@ -203,7 +203,7 @@ export function AgentsSidebar(): React.ReactElement {
                   <div
                     className={cn(
                       "text-xs truncate",
-                      memberId === agent.id ? "text-white/75" : "text-nav-muted",
+                      memberId === agent.id ? "text-nav-active-muted" : "text-nav-muted",
                     )}
                   >
                     {agent.description}

@@ -9,7 +9,7 @@ const Tabs = TabsPrimitive.Root;
 const tabsListVariants = cva("inline-flex items-center", {
   variants: {
     variant: {
-      default: "gap-1 rounded-lg bg-surface-2 p-1 text-muted-foreground",
+      default: "gap-1 rounded-lg bg-surface-2 p-1 text-text-secondary",
       /** Dense row (toolbars, reward rows). Matches `ToggleGroup` `variant="compact"`. */
       compact:
         "gap-0.5 rounded-[6px] border border-border bg-surface-2/50 p-0.5 text-muted-foreground",
@@ -26,7 +26,7 @@ const tabsTriggerVariants = cva(
     variants: {
       variant: {
         default:
-          "rounded-md px-3 py-1.5 data-[state=active]:bg-white data-[state=active]:text-foreground",
+          "rounded-md px-3 py-1.5 text-text-secondary hover:text-text-primary data-[state=active]:bg-surface-0 data-[state=active]:text-text-heading data-[state=active]:shadow-sm",
         compact:
           "h-6 min-h-6 rounded-[4px] border border-transparent bg-transparent px-2.5 py-0 text-sm leading-none text-text-secondary hover:bg-surface-1/70 hover:text-text-primary data-[state=active]:border-transparent data-[state=active]:bg-surface-0 data-[state=active]:text-text-primary data-[state=active]:shadow-sm",
       },

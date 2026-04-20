@@ -1,18 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  Building2,
-  Check,
-  Languages,
-  Mail,
-  Monitor,
-  Moon,
-  Palette,
-  Send,
-  Sun,
-  Trash2,
-  User,
-} from 'lucide-react';
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { Check, Languages, Mail, Monitor, Moon, Send, Sun, Trash2 } from "lucide-react";
 
 import {
   Avatar,
@@ -35,26 +23,21 @@ import {
   SelectTrigger,
   SelectValue,
   Spinner,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@nexu-design/ui-web';
+} from "@nexu-design/ui-web";
 
-import { WindowChrome } from '@/components/layout/WindowChrome';
-import { mockUsers } from '@/mock/data';
-import { LOCALES, useLocaleStore, type Locale } from '@/stores/locale';
-import { useThemeStore } from '@/stores/theme';
-import { useWorkspaceStore } from '@/stores/workspace';
+import { WindowChrome } from "@/components/layout/WindowChrome";
+import { mockUsers } from "@/mock/data";
+import { LOCALES, useLocaleStore, type Locale } from "@/stores/locale";
+import { useThemeStore } from "@/stores/theme";
+import { useWorkspaceStore } from "@/stores/workspace";
 
 interface PendingInvite {
   email: string;
-  status: 'pending' | 'sending' | 'sent';
+  status: "pending" | "sending" | "sent";
 }
 
 export function SettingsView(): React.ReactElement {
   const location = useLocation();
-  const navigate = useNavigate();
   const { theme, setTheme } = useThemeStore();
   const locale = useLocaleStore((s) => s.locale);
   const setLocale = useLocaleStore((s) => s.setLocale);
@@ -62,9 +45,9 @@ export function SettingsView(): React.ReactElement {
   const currentUserId = useWorkspaceStore((s) => s.currentUserId);
   const currentUser = mockUsers.filter((user) => user.id === currentUserId)[0] ?? mockUsers[0];
 
-  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteEmail, setInviteEmail] = useState("");
   const [pendingInvites, setPendingInvites] = useState<PendingInvite[]>([]);
-  const [emailError, setEmailError] = useState('');
+  const [emailError, setEmailError] = useState("");
   const errorTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(() => {
@@ -75,11 +58,12 @@ export function SettingsView(): React.ReactElement {
     };
   }, []);
 
-  const activeTab = location.pathname.slice(0, 20) === '/settings/appearance'
-    ? 'appearance'
-    : location.pathname.slice(0, 17) === '/settings/profile'
-      ? 'profile'
-      : 'workspace';
+  const activeTab =
+    location.pathname.slice(0, 20) === "/settings/appearance"
+      ? "appearance"
+      : location.pathname.slice(0, 17) === "/settings/profile"
+        ? "profile"
+        : "workspace";
 
   const isValidEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -88,46 +72,46 @@ export function SettingsView(): React.ReactElement {
     if (errorTimerRef.current) {
       clearTimeout(errorTimerRef.current);
     }
-    errorTimerRef.current = setTimeout(() => setEmailError(''), 3000);
+    errorTimerRef.current = setTimeout(() => setEmailError(""), 3000);
   };
 
   const handleInvite = (): void => {
     const email = inviteEmail.trim();
     if (!email) return;
     if (!isValidEmail(email)) {
-      showError('Please enter a valid email address');
+      showError("Please enter a valid email address");
       return;
     }
     if (pendingInvites.some((invite) => invite.email === email)) {
-      showError('This email has already been invited');
+      showError("This email has already been invited");
       return;
     }
 
-    setEmailError('');
-    setPendingInvites((prev) => [...prev, { email, status: 'sending' }]);
-    setInviteEmail('');
+    setEmailError("");
+    setPendingInvites((prev) => [...prev, { email, status: "sending" }]);
+    setInviteEmail("");
 
     setTimeout(() => {
       setPendingInvites((prev) =>
-        prev.map((invite) => (invite.email === email ? { ...invite, status: 'sent' } : invite)),
+        prev.map((invite) => (invite.email === email ? { ...invite, status: "sent" } : invite)),
       );
     }, 1200);
   };
 
   const headerCopy =
-    activeTab === 'workspace'
+    activeTab === "workspace"
       ? {
-          title: 'Workspace settings',
-          description: 'Manage your workspace name, member invites, and destructive actions.',
+          title: "Workspace settings",
+          description: "Manage your workspace name, member invites, and destructive actions.",
         }
-      : activeTab === 'appearance'
+      : activeTab === "appearance"
         ? {
-            title: 'Appearance',
-            description: 'Choose the theme and display language used across Slark.',
+            title: "Appearance",
+            description: "Choose the theme and display language used across Slark.",
           }
         : {
-            title: 'Profile',
-            description: 'Update your personal details and avatar settings.',
+            title: "Profile",
+            description: "Update your personal details and avatar settings.",
           };
 
   return (
@@ -135,44 +119,13 @@ export function SettingsView(): React.ReactElement {
       <div className="mx-auto max-w-[800px] px-4 pt-2 pb-6 sm:px-6 sm:pb-8">
         <WindowChrome className="h-10" />
 
-        <PageHeader
-          density="shell"
-          title={headerCopy.title}
-          description={headerCopy.description}
-        />
+        <PageHeader density="shell" title={headerCopy.title} description={headerCopy.description} />
 
-        <Tabs
-          value={activeTab}
-          onValueChange={(value) => {
-            navigate(
-              value === 'workspace'
-                ? '/settings'
-                : value === 'appearance'
-                  ? '/settings/appearance'
-                  : '/settings/profile',
-            );
-          }}
-          className="space-y-4"
-        >
-          <TabsList>
-            <TabsTrigger value="workspace">
-              <Building2 className="size-3.5" />
-              Workspace
-            </TabsTrigger>
-            <TabsTrigger value="appearance">
-              <Palette className="size-3.5" />
-              Appearance
-            </TabsTrigger>
-            <TabsTrigger value="profile">
-              <User className="size-3.5" />
-              Profile
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="workspace" className="mt-0">
+        <div className="space-y-4">
+          {activeTab === "workspace" ? (
             <WorkspaceTab
-              workspaceName={workspace?.name ?? ''}
-              canDelete={currentUser.role === 'owner'}
+              workspaceName={workspace?.name ?? ""}
+              canDelete={currentUser.role === "owner"}
               inviteEmail={inviteEmail}
               setInviteEmail={setInviteEmail}
               emailError={emailError}
@@ -180,21 +133,26 @@ export function SettingsView(): React.ReactElement {
               pendingInvites={pendingInvites}
               handleInvite={handleInvite}
             />
-          </TabsContent>
+          ) : null}
 
-          <TabsContent value="appearance" className="mt-0">
-            <AppearanceTab theme={theme} setTheme={setTheme} locale={locale} setLocale={setLocale} />
-          </TabsContent>
+          {activeTab === "appearance" ? (
+            <AppearanceTab
+              theme={theme}
+              setTheme={setTheme}
+              locale={locale}
+              setLocale={setLocale}
+            />
+          ) : null}
 
-          <TabsContent value="profile" className="mt-0">
+          {activeTab === "profile" ? (
             <ProfileTab
               name={currentUser.name}
               email={currentUser.email}
               avatar={currentUser.avatar}
               initials={currentUser.name.slice(0, 2).toUpperCase()}
             />
-          </TabsContent>
-        </Tabs>
+          ) : null}
+        </div>
       </div>
     </div>
   );
@@ -241,7 +199,7 @@ function WorkspaceTab({
             label="Invite members"
             invalid={!!emailError}
             error={emailError || undefined}
-            description={!emailError && inviteEmail.trim() ? 'Press Enter to invite' : undefined}
+            description={!emailError && inviteEmail.trim() ? "Press Enter to invite" : undefined}
           >
             <FormFieldControl>
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -251,11 +209,11 @@ function WorkspaceTab({
                   onChange={(e) => {
                     setInviteEmail(e.target.value);
                     if (emailError) {
-                      setEmailError('');
+                      setEmailError("");
                     }
                   }}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
+                    if (e.key === "Enter") {
                       e.preventDefault();
                       handleInvite();
                     }
@@ -290,15 +248,15 @@ function WorkspaceTab({
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[13px] text-text-primary">{invite.email}</div>
                     <div className="text-[11px] text-text-muted">
-                      {invite.status === 'sending' ? 'Sending invite...' : null}
-                      {invite.status === 'sent' ? 'Invitation sent' : null}
-                      {invite.status === 'pending' ? 'Pending' : null}
+                      {invite.status === "sending" ? "Sending invite..." : null}
+                      {invite.status === "sent" ? "Invitation sent" : null}
+                      {invite.status === "pending" ? "Pending" : null}
                     </div>
                   </div>
-                  {invite.status === 'sending' ? (
+                  {invite.status === "sending" ? (
                     <Spinner className="size-4 text-text-muted" />
                   ) : null}
-                  {invite.status === 'sent' ? (
+                  {invite.status === "sent" ? (
                     <Check className="size-4 text-[var(--color-success)]" strokeWidth={3} />
                   ) : null}
                 </div>
@@ -319,7 +277,7 @@ function WorkspaceTab({
           <CardContent>
             <ConfirmDialog
               title="Delete workspace"
-              description={`This will permanently delete ${workspaceName || 'this workspace'}. This action cannot be undone.`}
+              description={`This will permanently delete ${workspaceName || "this workspace"}. This action cannot be undone.`}
               confirmLabel="Delete workspace"
               cancelLabel="Cancel"
               confirmVariant="destructive"
@@ -342,13 +300,18 @@ function WorkspaceTab({
 }
 
 interface AppearanceTabProps {
-  theme: 'light' | 'dark' | 'system';
-  setTheme: (theme: 'light' | 'dark' | 'system') => void;
+  theme: "light" | "dark" | "system";
+  setTheme: (theme: "light" | "dark" | "system") => void;
   locale: Locale;
   setLocale: (locale: Locale) => void;
 }
 
-function AppearanceTab({ theme, setTheme, locale, setLocale }: AppearanceTabProps): React.ReactElement {
+function AppearanceTab({
+  theme,
+  setTheme,
+  locale,
+  setLocale,
+}: AppearanceTabProps): React.ReactElement {
   return (
     <section className="space-y-4">
       <Card variant="outline" padding="lg">
@@ -358,14 +321,14 @@ function AppearanceTab({ theme, setTheme, locale, setLocale }: AppearanceTabProp
         </CardHeader>
         <CardContent className="grid gap-2 sm:grid-cols-3">
           {[
-            { id: 'light' as const, label: 'Light', Icon: Sun },
-            { id: 'dark' as const, label: 'Dark', Icon: Moon },
-            { id: 'system' as const, label: 'System', Icon: Monitor },
+            { id: "light" as const, label: "Light", Icon: Sun },
+            { id: "dark" as const, label: "Dark", Icon: Moon },
+            { id: "system" as const, label: "System", Icon: Monitor },
           ].map(({ id, label, Icon }) => (
             <Button
               key={id}
               type="button"
-              variant={theme === id ? 'default' : 'outline'}
+              variant={theme === id ? "default" : "outline"}
               size="sm"
               leadingIcon={<Icon className="size-3.5" />}
               onClick={() => setTheme(id)}
@@ -426,7 +389,9 @@ function ProfileTab({ name, email, avatar, initials }: ProfileTabProps): React.R
     <Card variant="outline" padding="lg">
       <CardHeader>
         <CardTitle className="text-[16px] text-text-heading">Personal profile</CardTitle>
-        <CardDescription>Update how your identity appears to the rest of the workspace.</CardDescription>
+        <CardDescription>
+          Update how your identity appears to the rest of the workspace.
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
         <div className="flex items-center gap-4">
@@ -468,7 +433,9 @@ function SettingsRow({
     <div className="flex items-start justify-between gap-4 px-4 py-3.5">
       <div className="min-w-0 flex-1">
         <div className="text-[13px] font-medium text-text-heading">{title}</div>
-        {description ? <div className="mt-0.5 text-[12px] text-text-muted">{description}</div> : null}
+        {description ? (
+          <div className="mt-0.5 text-[12px] text-text-muted">{description}</div>
+        ) : null}
       </div>
       <div className="shrink-0">{control}</div>
     </div>
