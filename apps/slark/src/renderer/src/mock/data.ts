@@ -246,8 +246,8 @@ const agent2Ref: MemberRef = { kind: "agent", id: "a-2" };
 export const mockChannels: Channel[] = [
   {
     id: "ch-welcome",
-    name: "welcome",
-    description: "Welcome to Nexu! Say hi to your team and agents.",
+    name: "Welcome to Nexu!",
+    description: "",
     type: "channel",
     members: [user1Ref, user2Ref, user3Ref, agent1Ref, agent2Ref],
     lastMessageAt: Date.now() - 60000,
