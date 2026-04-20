@@ -7,11 +7,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": [
-    "nexu",
-    "@nexu-design/demo",
-    "@nexu-design/storybook",
-    "@nexu-design/cloud-demo",
-    "@nexu-design/demo-pages"
-  ]
+  "ignore": []
 }

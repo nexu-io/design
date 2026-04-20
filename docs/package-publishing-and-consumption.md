@@ -75,9 +75,9 @@ Choose the affected package(s), select the semver bump type, and write a short s
 
 Rules of thumb:
 
-- **Only `ui-web` changes** → add a changeset for `@nexu-design/ui-web`.
-- **Token/CSS contract changes** → add a changeset for `@nexu-design/tokens`.
-- **Tokens change that affects ui-web consumption, styling, or compatibility** → add changesets for both packages.
+- **Only `ui-web` changes** → add a changeset for `@nexu-design/ui-web`; linked versioning will keep the public package versions coordinated.
+- **Token/CSS contract changes** → add a changeset for `@nexu-design/tokens`; if consumers will feel the change through `ui-web`, call that out in the summary.
+- **Tokens change that affects ui-web consumption, styling, or compatibility** → prefer changesets for both packages so the release notes stay explicit.
 - **Breaking change** → use `major` and include migration notes.
 
 #### What the workflow does
@@ -85,13 +85,13 @@ Rules of thumb:
 - installs dependencies with pnpm
 - requires a manual `workflow_dispatch` run with `action=version` to create or update the version PR
 - applies version bumps and internal dependency updates in that PR
-- publishes only when versioned package manifests land on `main` or when `action=publish` is run manually
+- publishes only when the `chore: version packages` PR lands on `main` or when `action=publish` is run manually
 - runs `pnpm release:check` before publishing
-- protects publish through the `npm-publish` GitHub environment
+- can be paired with an optional GitHub Environment approval gate if you want manual publish approvals
 
 #### First release bootstrap
 
-The first npm release for each package must be done manually because the packages do not exist on npm yet.
+This section is only for the one-time initial package creation flow. If the packages already exist on npm, skip it.
 
 1. Run:
 

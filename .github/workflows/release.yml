@@ -63,9 +63,6 @@ jobs:
     name: Publish packages
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event.inputs.action == 'publish')
     runs-on: ubuntu-latest
-    environment:
-      name: npm-publish
-      url: https://www.npmjs.com/org/nexu-design
     permissions:
       contents: write
       pull-requests: write
@@ -75,7 +72,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 1
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -93,13 +90,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Detect version-package merge
+      - name: Detect version PR merge
         id: release_artifacts
         if: github.event_name == 'push'
         run: |
-          CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
+          COMMIT_MESSAGE="$(git log -1 --pretty=%B)"
 
-          if printf '%s\n' "$CHANGED_FILES" | grep -Eq '^packages/(tokens|ui-web)/package\.json$'; then
+          if printf '%s\n' "$COMMIT_MESSAGE" | grep -Fq 'chore: version packages'; then
             echo "should_publish=true" >> "$GITHUB_OUTPUT"
           else
             echo "should_publish=false" >> "$GITHUB_OUTPUT"
