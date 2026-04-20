@@ -15,7 +15,8 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronRight,
-  Copy,
+  Circle,
+  FileCode2,
   GitPullRequestArrow,
   Loader2,
   ShieldQuestion,
@@ -24,11 +25,26 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+/**
+ * Content-block props.
+ *
+ * Two "expansion" callbacks live side-by-side on purpose:
+ *
+ * - `onExpand` routes heavy/ephemeral content (code, diff, image) into a
+ *   fullscreen modal overlay. The reader briefly leaves the chat context
+ *   to inspect a payload and then returns.
+ *
+ * - `onTopicOpen` routes *topic cards* into the persistent right-side
+ *   detail panel. A topic is a tracked thread, not a blob to preview, so
+ *   it stays in-flow next to the message list and pushes the chat
+ *   (never overlays). These are semantically different interactions and
+ *   must not be multiplexed through the same callback.
+ */
 interface ContentBlockRendererProps {
   block: ContentBlock;
-  isMe: boolean;
   onApprovalAction?: (id: string, action: "approved" | "rejected") => void;
   onExpand?: (block: ContentBlock) => void;
+  onTopicOpen?: (block: Extract<ContentBlock, { type: "topic" }>) => void;
 }
 
 function formatFileSize(bytes: number): string {
@@ -157,9 +173,14 @@ function VoiceBlock({
 
 function TopicBlock({
   block,
-}: { block: Extract<ContentBlock, { type: "topic" }> }): React.ReactElement {
+  onOpen,
+}: {
+  block: Extract<ContentBlock, { type: "topic" }>;
+  onOpen?: () => void;
+}): React.ReactElement {
   return (
     <TopicCard
+      className="max-w-[640px]"
       title={block.title}
       author={block.author}
       status={block.status}
@@ -167,6 +188,7 @@ function TopicBlock({
       replies={block.replies}
       participants={block.participants}
       preview={block.preview}
+      onClick={onOpen}
       assignee={
         block.assignee
           ? {
@@ -180,90 +202,67 @@ function TopicBlock({
   );
 }
 
-const CODE_PREVIEW_LINES = 8;
+/**
+ * Collapsed one-line row shared by code + diff blocks.
+ *
+ * Chat keeps to a minimal, Cursor-style affordance — a single pill that names
+ * the artifact and hints at its weight; clicking opens the full content in the
+ * overlay. Long code dumps are never inlined into the message stream because
+ * they break the reading rhythm for everyone not actively reviewing the code.
+ */
+function CollapsedContentRow({
+  icon,
+  primary,
+  meta,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  primary: React.ReactNode;
+  meta?: React.ReactNode;
+  onClick?: () => void;
+}): React.ReactElement {
+  const interactive = typeof onClick === "function";
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={!interactive}
+      className={cn(
+        "flex w-full max-w-[640px] items-center gap-2.5 rounded-lg border border-border-subtle bg-surface-1 px-3 py-2 text-left transition-colors",
+        interactive && "cursor-pointer hover:bg-surface-2",
+      )}
+    >
+      <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-surface-2 text-text-muted">
+        {icon}
+      </span>
+      <span className="min-w-0 flex-1 truncate font-mono text-[12px] text-text-heading">
+        {primary}
+      </span>
+      {meta ? (
+        <span className="shrink-0 text-[11px] text-text-muted tabular-nums">{meta}</span>
+      ) : null}
+    </button>
+  );
+}
 
 function CodeBlock({
   block,
-  isMe,
   onExpand,
 }: {
   block: Extract<ContentBlock, { type: "code" }>;
-  isMe: boolean;
   onExpand?: () => void;
 }): React.ReactElement {
-  const [copied, setCopied] = useState(false);
-  const lines = block.code.split("\n");
-  const isTruncated = lines.length > CODE_PREVIEW_LINES;
-  const previewCode = isTruncated ? lines.slice(0, CODE_PREVIEW_LINES).join("\n") : block.code;
-
-  const handleCopy = (e: React.MouseEvent): void => {
-    e.stopPropagation();
-    navigator.clipboard.writeText(block.code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const lineCount = block.code.split("\n").length;
+  const primary = block.filename ?? `${block.language ?? "code"} snippet`;
+  const meta = `${lineCount} line${lineCount === 1 ? "" : "s"}`;
 
   return (
-    <div
-      className={cn(
-        "relative rounded-xl overflow-hidden min-w-[280px] max-w-[480px]",
-        isMe ? "bg-black/30" : "bg-[#0d1117]",
-        onExpand && "cursor-pointer",
-      )}
+    <CollapsedContentRow
+      icon={<FileCode2 className="size-3.5" />}
+      primary={primary}
+      meta={meta}
       onClick={onExpand}
-      role={onExpand ? "button" : undefined}
-      tabIndex={onExpand ? 0 : undefined}
-      onKeyDown={
-        onExpand
-          ? (e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onExpand();
-              }
-            }
-          : undefined
-      }
-    >
-      <div className="flex items-center justify-between h-8 px-3 bg-white/[0.03] border-b border-white/[0.05]">
-        <div className="flex items-center gap-2 min-w-0">
-          {block.filename && (
-            <span className="text-[11px] text-white/40 font-mono truncate">{block.filename}</span>
-          )}
-          {block.language && !block.filename && (
-            <span className="text-[11px] text-white/40 font-mono">{block.language}</span>
-          )}
-          {block.language && block.filename && (
-            <span className="text-[10px] text-white/20 font-mono">{block.language}</span>
-          )}
-        </div>
-        <div className="flex items-center gap-1 shrink-0 ml-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={handleCopy}
-            className={cn(
-              "h-auto px-0 py-0 flex items-center gap-1 text-[11px] transition-colors",
-              copied ? "text-green-400" : "text-white/25 hover:text-white/60",
-            )}
-          >
-            {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-            {copied ? "Copied" : "Copy"}
-          </Button>
-          {isTruncated && (
-            <span className="text-[10px] text-white/20 ml-1">{lines.length} lines</span>
-          )}
-        </div>
-      </div>
-      <pre className="p-3 overflow-x-auto">
-        <code className="text-[12px] font-mono text-white/80 leading-[1.65]">{previewCode}</code>
-      </pre>
-      {isTruncated && (
-        <div className="flex items-center justify-center h-7 bg-gradient-to-t from-[#0d1117] via-[#0d1117]/95 to-transparent -mt-4 relative z-10">
-          <span className="text-[11px] text-white/30">Click to see all {lines.length} lines</span>
-        </div>
-      )}
-    </div>
+    />
   );
 }
 
@@ -273,28 +272,28 @@ function ActionCard({
   return (
     <div
       className={cn(
-        "flex items-start gap-3 w-[320px] px-3.5 py-3 rounded-xl border transition-colors",
-        block.status === "running" && "border-blue-500/15 bg-blue-500/[0.04]",
-        block.status === "success" && "border-green-500/15 bg-green-500/[0.04]",
-        block.status === "failed" && "border-red-500/15 bg-red-500/[0.04]",
+        "flex w-full max-w-[640px] items-start gap-3 rounded-xl border bg-surface-1 px-3.5 py-3 transition-colors",
+        block.status === "running" && "border-info/25 bg-info-subtle/40",
+        block.status === "success" && "border-success/25 bg-success-subtle/40",
+        block.status === "failed" && "border-error/25 bg-error-subtle/40",
       )}
     >
       <div className="mt-0.5 shrink-0">
-        {block.status === "running" && <Loader2 className="h-4 w-4 text-blue-400 animate-spin" />}
-        {block.status === "success" && <CheckCircle2 className="h-4 w-4 text-green-400" />}
-        {block.status === "failed" && <XCircle className="h-4 w-4 text-red-400" />}
+        {block.status === "running" && <Loader2 className="size-4 animate-spin text-info" />}
+        {block.status === "success" && <CheckCircle2 className="size-4 text-success" />}
+        {block.status === "failed" && <XCircle className="size-4 text-error" />}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[13px] font-medium leading-snug">{block.title}</p>
+        <p className="text-[13px] font-medium leading-snug text-text-heading">{block.title}</p>
         {block.description && (
-          <p className="text-[12px] text-muted-foreground/70 mt-0.5 leading-relaxed">
+          <p className="mt-0.5 text-[12px] leading-relaxed text-text-secondary">
             {block.description}
           </p>
         )}
         {block.tool && (
-          <div className="flex items-center gap-1.5 mt-2">
-            <Terminal className="h-3 w-3 text-muted-foreground/40" />
-            <span className="text-[10px] font-mono text-muted-foreground/50">{block.tool}</span>
+          <div className="mt-2 flex items-center gap-1.5">
+            <Terminal className="size-3 text-text-muted" />
+            <span className="font-mono text-[10px] text-text-muted">{block.tool}</span>
           </div>
         )}
       </div>
@@ -308,39 +307,37 @@ function ToolResultBlock({
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="w-[360px] rounded-xl overflow-hidden border border-white/[0.06]">
-      <Button
-        variant="ghost"
-        size="sm"
+    <div className="w-full max-w-[640px] overflow-hidden rounded-lg border border-border-subtle bg-surface-1">
+      <button
+        type="button"
         onClick={() => setExpanded(!expanded)}
-        className={cn(
-          "h-auto flex items-center gap-2.5 w-full px-3.5 py-2.5 text-left justify-start transition-colors rounded-none",
-          "bg-white/[0.03] hover:bg-white/[0.06]",
-        )}
+        className="flex w-full items-center gap-2.5 px-3 py-2 text-left transition-colors hover:bg-surface-2"
       >
-        <div className="shrink-0">
-          {expanded ? (
-            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground/50" />
-          ) : (
-            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50" />
-          )}
-        </div>
-        <Terminal className="h-3.5 w-3.5 text-muted-foreground/40 shrink-0" />
-        <span className="text-[12px] font-mono font-medium truncate flex-1">{block.tool}</span>
+        <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-surface-2 text-text-muted">
+          <Terminal className="size-3.5" />
+        </span>
+        <span className="min-w-0 flex-1 truncate font-mono text-[12px] text-text-heading">
+          {block.tool}
+        </span>
         {block.status === "success" ? (
-          <CheckCircle2 className="h-3.5 w-3.5 text-green-400/70 shrink-0" />
+          <CheckCircle2 className="size-3.5 shrink-0 text-success" />
         ) : (
-          <XCircle className="h-3.5 w-3.5 text-red-400/70 shrink-0" />
+          <XCircle className="size-3.5 shrink-0 text-error" />
         )}
-      </Button>
+        {expanded ? (
+          <ChevronDown className="size-3.5 shrink-0 text-text-muted" />
+        ) : (
+          <ChevronRight className="size-3.5 shrink-0 text-text-muted" />
+        )}
+      </button>
       {expanded && (
-        <div className="bg-[#0d1117] border-t border-white/[0.04]">
+        <div className="border-t border-border-subtle bg-[#0d1117]">
           {block.input && (
             <div className="px-3.5 pt-3 pb-2">
-              <p className="text-[10px] uppercase tracking-widest text-white/20 mb-1.5 font-medium">
+              <p className="mb-1.5 font-medium text-[10px] uppercase tracking-widest text-white/20">
                 Input
               </p>
-              <pre className="text-[11px] font-mono text-white/50 whitespace-pre-wrap break-words leading-relaxed">
+              <pre className="whitespace-pre-wrap break-words font-mono text-[11px] leading-relaxed text-white/50">
                 {block.input}
               </pre>
             </div>
@@ -348,13 +345,13 @@ function ToolResultBlock({
           <div
             className={cn(
               "px-3.5 pb-3",
-              block.input ? "pt-1 border-t border-white/[0.04]" : "pt-3",
+              block.input ? "border-t border-white/[0.04] pt-1" : "pt-3",
             )}
           >
-            <p className="text-[10px] uppercase tracking-widest text-white/20 mb-1.5 font-medium">
+            <p className="mb-1.5 font-medium text-[10px] uppercase tracking-widest text-white/20">
               Output
             </p>
-            <pre className="text-[11px] font-mono text-white/70 whitespace-pre-wrap break-words leading-relaxed">
+            <pre className="whitespace-pre-wrap break-words font-mono text-[11px] leading-relaxed text-white/70">
               {block.output}
             </pre>
           </div>
@@ -364,75 +361,22 @@ function ToolResultBlock({
   );
 }
 
-const DIFF_PREVIEW_LINES = 10;
-
 function DiffBlock({
   block,
   onExpand,
 }: { block: Extract<ContentBlock, { type: "diff" }>; onExpand?: () => void }): React.ReactElement {
-  const lines = block.content.split("\n");
-  const isTruncated = lines.length > DIFF_PREVIEW_LINES;
-  const previewLines = isTruncated ? lines.slice(0, DIFF_PREVIEW_LINES) : lines;
-  const previewEntries = createIndexedItems(previewLines, (line) => line);
-
   return (
-    <div
-      className={cn(
-        "w-[420px] rounded-xl overflow-hidden border border-white/[0.06]",
-        onExpand && "cursor-pointer",
-      )}
-      onClick={onExpand}
-      role={onExpand ? "button" : undefined}
-      tabIndex={onExpand ? 0 : undefined}
-      onKeyDown={
-        onExpand
-          ? (e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onExpand();
-              }
-            }
-          : undefined
+    <CollapsedContentRow
+      icon={<GitPullRequestArrow className="size-3.5" />}
+      primary={block.filename}
+      meta={
+        <span className="inline-flex items-center gap-1.5">
+          <span className="text-success">+{block.additions}</span>
+          <span className="text-error">-{block.deletions}</span>
+        </span>
       }
-    >
-      <div className="flex items-center justify-between h-9 px-3.5 bg-white/[0.03] border-b border-white/[0.04]">
-        <div className="flex items-center gap-2 min-w-0">
-          <GitPullRequestArrow className="h-3.5 w-3.5 text-muted-foreground/40 shrink-0" />
-          <span className="text-[12px] font-mono font-medium truncate">{block.filename}</span>
-        </div>
-        <div className="flex items-center gap-2.5 text-[11px] font-mono shrink-0 ml-3">
-          <span className="text-green-400/80">+{block.additions}</span>
-          <span className="text-red-400/80">-{block.deletions}</span>
-        </div>
-      </div>
-      <div className="bg-[#0d1117] overflow-x-auto">
-        {previewEntries.map(({ key, value: line }) => {
-          const isAdd = line.startsWith("+");
-          const isDel = line.startsWith("-");
-          const isHunk = line.startsWith("@@");
-
-          return (
-            <div
-              key={key}
-              className={cn(
-                "px-3.5 text-[11px] font-mono leading-[22px] min-h-[22px] border-l-2",
-                isAdd && "bg-green-500/[0.07] text-green-300/80 border-green-500/40",
-                isDel && "bg-red-500/[0.07] text-red-300/80 border-red-500/40",
-                isHunk && "bg-blue-500/[0.05] text-blue-300/60 border-blue-500/30",
-                !isAdd && !isDel && !isHunk && "text-white/40 border-transparent",
-              )}
-            >
-              {line || "\u00a0"}
-            </div>
-          );
-        })}
-      </div>
-      {isTruncated && (
-        <div className="flex items-center justify-center h-7 bg-[#0d1117] border-t border-white/[0.04]">
-          <span className="text-[11px] text-white/30">Click to see all {lines.length} lines</span>
-        </div>
-      )}
-    </div>
+      onClick={onExpand}
+    />
   );
 }
 
@@ -446,60 +390,62 @@ function ApprovalBlock({
   return (
     <div
       className={cn(
-        "w-[340px] rounded-xl border px-4 py-3.5",
-        block.status === "pending" && "border-amber-500/15 bg-amber-500/[0.04]",
-        block.status === "approved" && "border-green-500/15 bg-green-500/[0.04]",
-        block.status === "rejected" && "border-red-500/15 bg-red-500/[0.04]",
+        "w-full max-w-[640px] rounded-xl border bg-surface-1 px-4 py-3.5",
+        block.status === "pending" && "border-warning/25 bg-warning-subtle/40",
+        block.status === "approved" && "border-success/25 bg-success-subtle/40",
+        block.status === "rejected" && "border-error/25 bg-error-subtle/40",
       )}
     >
       <div className="flex items-start gap-2.5">
         <ShieldQuestion
           className={cn(
-            "h-[18px] w-[18px] mt-0.5 shrink-0",
-            block.status === "pending" && "text-amber-400",
-            block.status === "approved" && "text-green-400",
-            block.status === "rejected" && "text-red-400",
+            "mt-0.5 size-[18px] shrink-0",
+            block.status === "pending" && "text-warning",
+            block.status === "approved" && "text-success",
+            block.status === "rejected" && "text-error",
           )}
         />
         <div className="min-w-0 flex-1">
-          <p className="text-[13px] font-semibold leading-snug">{block.title}</p>
+          <p className="text-[13px] font-semibold leading-snug text-text-heading">{block.title}</p>
           {block.description && (
-            <p className="text-[12px] text-muted-foreground/60 mt-1 leading-relaxed">
+            <p className="mt-1 text-[12px] leading-relaxed text-text-secondary">
               {block.description}
             </p>
           )}
         </div>
       </div>
 
-      <div className="mt-3 pt-3 border-t border-white/[0.06]">
+      <div className="mt-3 border-t border-border-subtle pt-3">
         {block.status === "pending" && (
           <div className="flex gap-2">
             <Button
+              size="sm"
               onClick={() => onAction?.(block.id, "approved")}
-              className="flex-1 h-8 rounded-lg text-[12px] font-medium bg-green-600/90 text-white hover:bg-green-600"
+              leadingIcon={<CheckCircle2 className="size-3.5" />}
+              className="flex-1"
             >
-              <CheckCircle2 className="h-3.5 w-3.5" />
               Approve
             </Button>
             <Button
+              size="sm"
               variant="outline"
               onClick={() => onAction?.(block.id, "rejected")}
-              className="flex-1 h-8 rounded-lg text-[12px] font-medium bg-white/[0.06] text-muted-foreground hover:bg-red-600/80 hover:text-white"
+              leadingIcon={<XCircle className="size-3.5" />}
+              className="flex-1 hover:border-destructive/30 hover:bg-destructive/5 hover:text-destructive"
             >
-              <XCircle className="h-3.5 w-3.5" />
               Reject
             </Button>
           </div>
         )}
         {block.status === "approved" && (
-          <div className="flex items-center gap-1.5 text-[12px] font-medium text-green-400">
-            <CheckCircle2 className="h-3.5 w-3.5" />
+          <div className="flex items-center gap-1.5 text-[12px] font-medium text-success">
+            <CheckCircle2 className="size-3.5" />
             Approved
           </div>
         )}
         {block.status === "rejected" && (
-          <div className="flex items-center gap-1.5 text-[12px] font-medium text-red-400">
-            <XCircle className="h-3.5 w-3.5" />
+          <div className="flex items-center gap-1.5 text-[12px] font-medium text-error">
+            <XCircle className="size-3.5" />
             Rejected
           </div>
         )}
@@ -511,63 +457,78 @@ function ApprovalBlock({
 function ProgressBlock({
   block,
 }: { block: Extract<ContentBlock, { type: "progress" }> }): React.ReactElement {
-  const pct = Math.round((block.current / block.total) * 100);
-  const isDone = pct >= 100;
+  const isDone = block.current >= block.total;
   const indexedSteps = block.steps
     ? createIndexedItems(block.steps, (step) => `${step.label}-${step.status}`)
     : [];
 
   return (
-    <div className="w-[340px] rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3.5">
-      <div className="flex items-center justify-between mb-3">
-        <p className="text-[13px] font-medium">{block.title}</p>
+    <div className="w-full max-w-[640px] rounded-xl border border-border-subtle bg-surface-1 px-4 py-3.5">
+      {/*
+       * Header — title + compact "X of Y" counter instead of a percentage bar.
+       * Rendering progress as a list of checklist-style steps (Cursor style)
+       * makes the individual substeps the primary readout; a duplicate bar or
+       * big percentage competes with that. The counter keeps completion
+       * legible at a glance without an extra color surface.
+       */}
+      <div className="flex items-center justify-between">
+        <p className="text-[13px] font-medium text-text-heading">{block.title}</p>
         <span
           className={cn(
-            "text-[11px] font-mono font-medium",
-            isDone ? "text-green-400" : "text-muted-foreground/60",
+            "font-mono text-[11px] font-medium tabular-nums",
+            isDone ? "text-success" : "text-text-muted",
           )}
         >
-          {pct}%
+          {block.current} / {block.total}
         </span>
       </div>
 
-      <div className="h-[6px] rounded-full bg-white/[0.06] overflow-hidden">
-        <div
-          className={cn(
-            "h-full rounded-full transition-all duration-700 ease-out",
-            isDone ? "bg-green-500" : "bg-blue-500",
-          )}
-          style={{ width: `${Math.min(pct, 100)}%` }}
-        />
-      </div>
-
       {block.steps && block.steps.length > 0 && (
-        <div className="mt-3.5 pt-3 border-t border-white/[0.04]">
-          <div className="flex flex-col gap-1.5">
-            {indexedSteps.map(({ key, value: step }) => (
-              <div key={key} className="flex items-center gap-2.5">
-                <div
-                  className={cn(
-                    "h-[7px] w-[7px] rounded-full shrink-0 ring-2",
-                    step.status === "done" && "bg-green-400 ring-green-400/20",
-                    step.status === "active" && "bg-blue-400 ring-blue-400/20 animate-pulse",
-                    step.status === "pending" && "bg-white/10 ring-white/[0.04]",
-                  )}
+        <ul className="mt-3 flex flex-col gap-3">
+          {indexedSteps.map(({ key, value: step }) => (
+            <li key={key} className="flex items-center gap-2.5">
+              {/*
+               * Monochrome step icons (Cursor style) — no status colors here
+               * because the label styling (strikethrough + muted / bold /
+               * tertiary) already communicates state. Keeps the card quiet in
+               * a busy chat feed.
+               * - done:    Check glyph, muted
+               * - active:  spinner, heading color
+               * - pending: empty circle, tertiary color
+               */}
+              {step.status === "done" && (
+                <Check
+                  aria-hidden="true"
+                  strokeWidth={2.75}
+                  className="size-3.5 shrink-0 text-text-muted"
                 />
-                <span
-                  className={cn(
-                    "text-[12px] leading-none",
-                    step.status === "done" && "text-muted-foreground/60 line-through",
-                    step.status === "active" && "text-foreground font-medium",
-                    step.status === "pending" && "text-muted-foreground/30",
-                  )}
-                >
-                  {step.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+              )}
+              {step.status === "active" && (
+                <Loader2
+                  aria-hidden="true"
+                  className="size-3.5 shrink-0 animate-spin text-text-heading"
+                />
+              )}
+              {step.status === "pending" && (
+                <Circle
+                  aria-hidden="true"
+                  strokeWidth={1.5}
+                  className="size-3.5 shrink-0 text-text-tertiary"
+                />
+              )}
+              <span
+                className={cn(
+                  "text-[12px] leading-none",
+                  step.status === "done" && "text-text-muted line-through",
+                  step.status === "active" && "font-medium text-text-heading",
+                  step.status === "pending" && "text-text-tertiary",
+                )}
+              >
+                {step.label}
+              </span>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
@@ -575,9 +536,9 @@ function ProgressBlock({
 
 export function ContentBlockRenderer({
   block,
-  isMe,
   onApprovalAction,
   onExpand,
+  onTopicOpen,
 }: ContentBlockRendererProps): React.ReactElement {
   const handleExpand = (): void => onExpand?.(block);
 
@@ -593,7 +554,7 @@ export function ContentBlockRenderer({
     case "file":
       return <FileBlock block={block} />;
     case "code":
-      return <CodeBlock block={block} isMe={isMe} onExpand={handleExpand} />;
+      return <CodeBlock block={block} onExpand={handleExpand} />;
     case "action":
       return <ActionCard block={block} />;
     case "tool-result":
@@ -605,6 +566,8 @@ export function ContentBlockRenderer({
     case "progress":
       return <ProgressBlock block={block} />;
     case "topic":
-      return <TopicBlock block={block} />;
+      return (
+        <TopicBlock block={block} onOpen={onTopicOpen ? () => onTopicOpen(block) : undefined} />
+      );
   }
 }

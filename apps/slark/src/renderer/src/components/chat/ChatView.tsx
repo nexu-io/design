@@ -1,17 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AtSign, Bot, FolderOpen, Globe, MessageSquare, Sparkles, Users } from "lucide-react";
-import { EmptyState, Tabs, TabsContent, TabsList, TabsTrigger } from "@nexu-design/ui-web";
+import { EmptyState, Tabs, TabsContent, TabsList, TabsTrigger, cn } from "@nexu-design/ui-web";
 
 import { useT } from "@/i18n";
 import { useChatStore } from "@/stores/chat";
 import { useWorkspaceStore } from "@/stores/workspace";
 import { useAgentsStore } from "@/stores/agents";
 import { mockMessages, mockChannels, resolveRef, getNexuIntroResponse } from "@/mock/data";
+import type { ContentBlock } from "@/types";
 import { WindowChrome } from "@/components/layout/WindowChrome";
 import { MessageList } from "./MessageList";
 import { MessageInput } from "./MessageInput";
 import { AddMembersDialog } from "./AddMembersDialog";
+import { TopicDetailPanel } from "./TopicDetailPanel";
+
+type TopicBlock = Extract<ContentBlock, { type: "topic" }>;
+
+const TOPIC_PANEL_WIDTH = 380;
 
 export function ChatView(): React.ReactElement {
   const t = useT();
@@ -22,6 +28,48 @@ export function ChatView(): React.ReactElement {
   const welcomeFired = useRef(false);
   const loadedChannels = useRef(new Set<string>());
   const [addMembersOpen, setAddMembersOpen] = useState(false);
+  /*
+   * Right-side topic panel state.
+   *
+   * We track two values (not one) so the close animation has something to
+   * render while it collapses: `activeTopic` is the content; `topicPanelOpen`
+   * is the visibility flag that drives the width transition. When the user
+   * closes, we flip `topicPanelOpen` to false immediately (panel slides out)
+   * but keep `activeTopic` until the transition ends so the tabs don't
+   * flash empty. Switching from one topic to another updates `activeTopic`
+   * while keeping the panel open — no close/reopen shimmer.
+   */
+  const [activeTopic, setActiveTopic] = useState<TopicBlock | null>(null);
+  const [topicPanelOpen, setTopicPanelOpen] = useState(false);
+
+  const handleTopicOpen = useCallback((block: TopicBlock) => {
+    setActiveTopic(block);
+    setTopicPanelOpen(true);
+  }, []);
+
+  const handleTopicClose = useCallback(() => {
+    setTopicPanelOpen(false);
+  }, []);
+
+  const handleTopicPanelTransitionEnd = useCallback(
+    (event: React.TransitionEvent<HTMLDivElement>) => {
+      // Drop topic content only after the collapse animation fully completes
+      // so inner tabs + body don't reflow mid-transition.
+      if (event.propertyName === "width" && !topicPanelOpen) {
+        setActiveTopic(null);
+      }
+    },
+    [topicPanelOpen],
+  );
+
+  // Channel change resets topic panel — a topic from channel A shouldn't
+  // linger when the user navigates to channel B. channelId is the trigger,
+  // not a value consumed inside the effect.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: channelId is intentionally listed as the trigger; the effect body only calls setters.
+  useEffect(() => {
+    setActiveTopic(null);
+    setTopicPanelOpen(false);
+  }, [channelId]);
 
   useEffect(() => {
     if (!channelId) return;
@@ -197,9 +245,34 @@ export function ChatView(): React.ReactElement {
             </TabsList>
           </div>
 
-          <TabsContent value="messages" className="mt-0 flex min-h-0 flex-1 flex-col">
-            <MessageList channelId={channelId} channel={channel} />
-            <MessageInput channelId={channelId} isDmWithAgent={isDmWithAgent} channel={channel} />
+          <TabsContent value="messages" className="mt-0 flex min-h-0 flex-1 flex-row">
+            {/*
+              Split layout for the Messages tab:
+              - Left column (flex-1): the scrollable message list + input.
+              - Right column: TopicDetailPanel in a width-animated wrapper.
+                Uses a plain <div> instead of ResizablePanel because we need
+                a CSS width transition (200ms ease-standard) for the
+                "push, don't overlay" interaction; ResizablePanel just
+                snaps width. The outer wrapper does the animation, the
+                inner DetailPanel (width: 100%) renders into whatever width
+                the wrapper is currently at.
+              Only shown for channel-type; DMs keep the old single-pane
+              layout below and do not surface topic content blocks.
+            */}
+            <div className="flex min-w-0 flex-1 flex-col">
+              <MessageList channelId={channelId} channel={channel} onTopicOpen={handleTopicOpen} />
+              <MessageInput channelId={channelId} isDmWithAgent={isDmWithAgent} channel={channel} />
+            </div>
+            <div
+              aria-hidden={!topicPanelOpen}
+              onTransitionEnd={handleTopicPanelTransitionEnd}
+              className={cn(
+                "shrink-0 overflow-hidden transition-[width] duration-200 ease-[cubic-bezier(0.2,0,0,1)]",
+              )}
+              style={{ width: topicPanelOpen ? TOPIC_PANEL_WIDTH : 0 }}
+            >
+              {activeTopic && <TopicDetailPanel topic={activeTopic} onClose={handleTopicClose} />}
+            </div>
           </TabsContent>
 
           <TabsContent value="files" className="mt-0 flex-1 overflow-y-auto">

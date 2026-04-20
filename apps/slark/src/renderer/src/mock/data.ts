@@ -308,6 +308,29 @@ const MIN = 60 * 1000;
 export const mockMessages: Record<string, Message[]> = {
   "ch-showcase": [
     {
+      id: "sc-0-join",
+      channelId: "ch-showcase",
+      sender: user1Ref,
+      content: "",
+      mentions: [],
+      reactions: [],
+      createdAt: NOW - 26 * 60 * MIN,
+      system: {
+        kind: "join",
+        members: [user2Ref, user3Ref, agent1Ref, agent2Ref],
+      },
+    },
+    {
+      id: "sc-0-kickoff",
+      channelId: "ch-showcase",
+      sender: user1Ref,
+      content:
+        "Spinning up a reference channel with every chat surface the library ships. Poke around and react where something feels off.",
+      mentions: [],
+      reactions: [{ emoji: "👋", users: ["u-2", "u-3"] }],
+      createdAt: NOW - 25 * 60 * MIN,
+    },
+    {
       id: "sc-1",
       channelId: "ch-showcase",
       sender: user1Ref,
@@ -574,6 +597,16 @@ export const mockMessages: Record<string, Message[]> = {
       mentions: [],
       reactions: [],
       createdAt: NOW - 20 * MIN,
+    },
+    {
+      id: "sc-13b-ping",
+      channelId: "ch-showcase",
+      sender: user2Ref,
+      content:
+        "@Alice Chen eyes on the approval when you're free — graphs look clean but want a second read.",
+      mentions: [user1Ref],
+      reactions: [],
+      createdAt: NOW - 17 * MIN,
     },
     {
       id: "sc-14",
