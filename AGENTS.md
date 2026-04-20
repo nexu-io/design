@@ -114,8 +114,9 @@
 - First-time package creation on npm must be done manually with `npm publish --access public`.
 - Publish `@nexu-design/tokens` before `@nexu-design/ui-web` for the initial manual release.
 - After the first manual publish, configure npm trusted publishing for both packages against `.github/workflows/release.yml`.
-- Pushes to `main` with pending changesets create or update a `chore: version packages` PR.
-- Merging that PR publishes any unpublished public packages to npm.
+- Releases are triggered manually from the `Release packages` GitHub Actions workflow on `main`.
+- Running that workflow with pending changesets creates or updates a `chore: version packages` PR.
+- Running that workflow again after merging the version PR publishes any unpublished public packages to npm.
 - `apps/demo` and `apps/storybook` are ignored by Changesets and should not receive release entries.
 - Keep the workflow filename stable if npm trusted publishing is configured against it.
 
@@ -123,8 +124,9 @@
 1. Run `pnpm changeset` for each consumer-visible package change.
 2. Commit the generated `.changeset/*.md` file(s).
 3. Open and merge the feature PR into `main`.
-4. Review and merge the generated `chore: version packages` PR.
-5. Let GitHub Actions publish the new package versions from `.github/workflows/release.yml`.
+4. Manually run the `Release packages` workflow on `main` to create or update the `chore: version packages` PR.
+5. Review and merge the generated `chore: version packages` PR.
+6. Manually run the `Release packages` workflow on `main` again to publish from `.github/workflows/release.yml`.
 
 ## Formatting rules
 - Formatter is Biome (`biome.json`).
