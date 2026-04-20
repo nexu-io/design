@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Plus, Search, Users as UsersIcon, Bot, UserPlus } from "lucide-react";
-import { cn } from "@/lib/utils";
+
+import { Button, Input, cn } from "@nexu-design/ui-web";
+
 import { useT } from "@/i18n";
 import { useAgentsStore } from "@/stores/agents";
 import { mockAgents, mockAgentTemplates, mockUsers } from "@/mock/data";
@@ -68,54 +70,59 @@ export function AgentsSidebar(): React.ReactElement {
     <div className="flex flex-col h-full">
       <div className="px-3 pb-2 space-y-2">
         <div className="relative" ref={addMenuRef}>
-          <button
+          <Button
             onClick={() => setShowAddMenu((v) => !v)}
-            className="flex items-center gap-2 w-full h-8 px-3 rounded-md text-sm bg-nav-hover text-nav-fg hover:bg-nav-border transition-colors"
+            variant="ghost"
+            size="sm"
+            className="h-8 w-full justify-start rounded-md bg-nav-hover text-nav-fg hover:bg-nav-border hover:text-nav-fg"
+            leadingIcon={<Plus className="h-3.5 w-3.5" />}
           >
-            <Plus className="h-3.5 w-3.5" />
             {t("team.addMember")}
-          </button>
+          </Button>
 
           {showAddMenu && (
             <div className="absolute top-9 left-0 right-0 z-50 rounded-lg border border-border bg-popover text-foreground shadow-lg overflow-hidden p-1">
-              <button
+              <Button
                 onClick={() => {
                   setShowAddMenu(false);
                   setShowInvite(true);
                 }}
-                className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-md text-xs hover:bg-accent transition-colors text-left"
+                variant="ghost"
+                size="inline"
+                className="h-auto w-full justify-start rounded-md px-2.5 py-2 text-xs text-left text-foreground hover:bg-accent hover:text-foreground"
+                leadingIcon={<UserPlus className="h-3.5 w-3.5 shrink-0" />}
               >
-                <UserPlus className="h-3.5 w-3.5 shrink-0" />
                 <span className="flex-1">{t("team.invitePerson")}</span>
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => {
                   setShowAddMenu(false);
                   if (!atAgentLimit) setShowCreateAgent(true);
                 }}
                 disabled={atAgentLimit}
                 title={atAgentLimit ? `${agents.length}/10` : undefined}
-                className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-md text-xs hover:bg-accent transition-colors text-left disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
+                variant="ghost"
+                size="inline"
+                className="h-auto w-full justify-start rounded-md px-2.5 py-2 text-xs text-left text-foreground hover:bg-accent hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
+                leadingIcon={<Bot className="h-3.5 w-3.5 shrink-0" />}
               >
-                <Bot className="h-3.5 w-3.5 shrink-0" />
                 <span className="flex-1">{t("team.createAgent")}</span>
                 {atAgentLimit && (
                   <span className="text-[10px] text-muted-foreground">{agents.length}/10</span>
                 )}
-              </button>
+              </Button>
             </div>
           )}
         </div>
 
-        <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-nav-muted" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={t("team.searchPlaceholder")}
-            className="w-full h-8 rounded-md bg-nav-input text-nav-fg pl-8 pr-3 text-[13px] placeholder:text-nav-muted focus:outline-none focus:ring-1 focus:ring-nav-ring"
-          />
-        </div>
+        <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={t("team.searchPlaceholder")}
+          leadingIcon={<Search className="h-3.5 w-3.5 text-nav-muted" />}
+          className="h-8 border-transparent bg-nav-input text-nav-fg shadow-none focus-within:border-transparent focus-within:ring-1 focus-within:ring-nav-ring"
+          inputClassName="text-[13px] placeholder:text-nav-muted"
+        />
       </div>
 
       <div className="flex-1 overflow-y-auto px-2 space-y-3">

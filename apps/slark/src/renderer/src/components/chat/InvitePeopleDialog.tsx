@@ -1,5 +1,23 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { X, Mail, Send, Check, Eye, Link2, Copy } from "lucide-react";
+import { Mail, Send, Check, Eye, Link2, Copy } from "lucide-react";
+import {
+  Badge,
+  Button,
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  FormField,
+  FormFieldControl,
+  Input,
+  InteractiveRow,
+  InteractiveRowContent,
+  InteractiveRowLeading,
+  InteractiveRowTrailing,
+} from "@nexu-design/ui-web";
 import { useT } from "@/i18n";
 import { InviteEmailPreview } from "@/components/invite/InviteEmailPreview";
 
@@ -19,7 +37,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function InvitePeopleDialog({
   open,
   onOpenChange,
-}: InvitePeopleDialogProps): React.ReactElement | null {
+}: InvitePeopleDialogProps): React.ReactElement {
   const t = useT();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -45,10 +63,8 @@ export function InvitePeopleDialog({
   };
 
   useEffect(() => {
-    if (open) requestAnimationFrame(() => inputRef.current?.focus());
-  }, [open]);
-
-  if (!open) return null;
+    if (open && !previewEmail) requestAnimationFrame(() => inputRef.current?.focus());
+  }, [open, previewEmail]);
 
   const generateToken = (): string =>
     Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
@@ -89,28 +105,26 @@ export function InvitePeopleDialog({
   const previewInvite = invites.find((i) => i.email === previewEmail);
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      onClick={handleClose}
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen) {
+          handleClose();
+          return;
+        }
+        onOpenChange(nextOpen);
+      }}
     >
-      <div
-        className={`rounded-xl border border-border bg-background text-foreground p-0 shadow-xl transition-all ${previewEmail ? "w-[860px]" : "w-[460px]"}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between px-5 pt-5 pb-1">
-          <h2 className="text-base font-semibold text-foreground">
+      <DialogContent size="md" className={previewEmail ? "max-w-[860px]" : "max-w-[460px]"}>
+        <DialogHeader>
+          <DialogTitle>
             {previewEmail ? t("invitePeople.emailPreview") : t("invitePeople.title")}
-          </h2>
-          <button
-            onClick={previewEmail ? () => setPreviewEmail(null) : handleClose}
-            className="flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
+          </DialogTitle>
+          {!previewEmail ? <DialogDescription>{t("invitePeople.intro")}</DialogDescription> : null}
+        </DialogHeader>
 
         {previewEmail && previewInvite ? (
-          <div className="px-5 py-4 space-y-3">
+          <DialogBody className="space-y-3">
             <div className="text-xs text-muted-foreground space-y-1 px-1">
               <div>
                 <span className="font-medium text-foreground">{t("invitePeople.to")}</span>{" "}
@@ -132,24 +146,13 @@ export function InvitePeopleDialog({
                 inviteLink={`${window.location.origin}/invite/${previewInvite.token}`}
               />
             </div>
-            <div className="flex justify-end">
-              <button
-                onClick={() => setPreviewEmail(null)}
-                className="h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors"
-              >
-                {t("common.back")}
-              </button>
-            </div>
-          </div>
+          </DialogBody>
         ) : (
-          <>
-            <div className="px-5 py-4 space-y-4">
-              <p className="text-sm text-muted-foreground">{t("invitePeople.intro")}</p>
-
+          <DialogBody className="space-y-4">
+            <FormField label={t("invitePeople.title")} invalid={Boolean(error)} error={error}>
               <div className="flex items-center gap-2">
-                <div className="relative flex-1">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                  <input
+                <FormFieldControl className="flex-1">
+                  <Input
                     ref={inputRef}
                     type="email"
                     value={email}
@@ -162,95 +165,107 @@ export function InvitePeopleDialog({
                       if (e.key === "Escape") handleClose();
                     }}
                     placeholder={t("workspace.invitePlaceholder")}
-                    className="w-full h-9 rounded-md border border-input bg-background pl-9 pr-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                    leadingIcon={<Mail className="h-3.5 w-3.5 text-muted-foreground" />}
+                    invalid={Boolean(error)}
                   />
-                </div>
-                <button
+                </FormFieldControl>
+                <Button
                   onClick={handleInvite}
-                  className="flex items-center gap-1.5 h-9 px-3 rounded-md text-sm font-medium bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                  className="h-9 shrink-0"
+                  size="sm"
+                  leadingIcon={<Send className="h-3.5 w-3.5" />}
                 >
-                  <Send className="h-3.5 w-3.5" />
                   {t("common.send")}
-                </button>
+                </Button>
               </div>
+            </FormField>
 
-              {error && <p className="text-xs text-destructive-foreground">{error}</p>}
-
-              <div className="flex items-center gap-2 rounded-lg border border-dashed border-border bg-secondary/40 px-3 py-2.5">
-                <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-muted-foreground mb-0.5">
-                    {t("onboarding.shareInviteLink")}
-                  </div>
-                  <div className="text-xs font-mono text-foreground truncate">{inviteLinkUrl}</div>
+            <div className="flex items-center gap-2 rounded-lg border border-dashed border-border bg-secondary/40 px-3 py-2.5">
+              <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="text-xs text-muted-foreground mb-0.5">
+                  {t("onboarding.shareInviteLink")}
                 </div>
-                <button
-                  onClick={handleCopyLink}
-                  className="flex items-center gap-1.5 h-7 px-2.5 rounded-md text-xs font-medium border border-border bg-background text-foreground hover:bg-accent transition-colors shrink-0"
-                >
-                  {linkCopied ? (
-                    <>
-                      <Check className="h-3 w-3 text-nexu-online" />
-                      {t("common.copied")}
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-3 w-3" />
-                      {t("common.copy")}
-                    </>
-                  )}
-                </button>
+                <div className="text-xs font-mono text-foreground truncate">{inviteLinkUrl}</div>
               </div>
+              <Button
+                onClick={handleCopyLink}
+                variant="outline"
+                size="xs"
+                className="h-7 shrink-0"
+                leadingIcon={
+                  linkCopied ? (
+                    <Check className="h-3 w-3 text-nexu-online" />
+                  ) : (
+                    <Copy className="h-3 w-3" />
+                  )
+                }
+              >
+                {linkCopied ? t("common.copied") : t("common.copy")}
+              </Button>
+            </div>
 
-              {invites.length > 0 && (
-                <div className="space-y-2">
-                  {invites.map((inv) => (
-                    <div
-                      key={inv.email}
-                      className="group flex items-center gap-3 rounded-lg border border-dashed border-border p-2.5"
-                    >
+            {invites.length > 0 && (
+              <div className="space-y-2">
+                {invites.map((inv) => (
+                  <InteractiveRow
+                    key={inv.email}
+                    tone="subtle"
+                    className="rounded-lg border border-dashed border-border px-2.5 py-2"
+                  >
+                    <InteractiveRowLeading>
                       <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent shrink-0">
                         <Mail className="h-3 w-3 text-muted-foreground" />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm truncate">{inv.email}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {inv.status === "sending"
-                            ? t("invitePeople.sending")
-                            : t("invitePeople.sent")}
-                        </div>
-                      </div>
+                    </InteractiveRowLeading>
+                    <InteractiveRowContent>
+                      <div className="text-sm truncate">{inv.email}</div>
+                      {inv.status === "sending" ? (
+                        <Badge variant="secondary" size="xs" className="mt-1">
+                          {t("invitePeople.sending")}
+                        </Badge>
+                      ) : (
+                        <Badge variant="success" size="xs" className="mt-1">
+                          {t("invitePeople.sent")}
+                        </Badge>
+                      )}
+                    </InteractiveRowContent>
+                    <InteractiveRowTrailing className="flex items-center gap-1">
                       {inv.status === "sending" ? (
                         <div className="h-4 w-4 rounded-full border-2 border-muted-foreground border-t-transparent animate-spin shrink-0" />
                       ) : (
-                        <div className="flex items-center gap-1">
-                          <button
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
                             onClick={() => setPreviewEmail(inv.email)}
-                            className="hidden group-hover:flex items-center justify-center h-6 w-6 rounded hover:bg-accent transition-colors"
                             title={t("invitePeople.previewEmail")}
                           >
                             <Eye className="h-3.5 w-3.5 text-muted-foreground" />
-                          </button>
+                          </Button>
                           <Check className="h-4 w-4 text-nexu-online shrink-0" />
-                        </div>
+                        </>
                       )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="flex justify-end px-5 pb-5">
-              <button
-                onClick={handleClose}
-                className="h-8 px-3 rounded-md text-sm border border-border text-foreground hover:bg-accent transition-colors"
-              >
-                {t("common.done")}
-              </button>
-            </div>
-          </>
+                    </InteractiveRowTrailing>
+                  </InteractiveRow>
+                ))}
+              </div>
+            )}
+          </DialogBody>
         )}
-      </div>
-    </div>
+
+        <DialogFooter>
+          {previewEmail && previewInvite ? (
+            <Button variant="outline" onClick={() => setPreviewEmail(null)}>
+              {t("common.back")}
+            </Button>
+          ) : (
+            <Button variant="outline" onClick={handleClose}>
+              {t("common.done")}
+            </Button>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
