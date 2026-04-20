@@ -191,7 +191,7 @@ export function ChatSidebar(): React.ReactElement {
               <Pin className="h-3 w-3" />
               <span className="flex-1">{t("chat.pinned")}</span>
             </div>
-            {pinnedChannels.map((c) => renderRow(c))}
+            <div className="space-y-0.5">{pinnedChannels.map((c) => renderRow(c))}</div>
           </div>
         )}
 
@@ -214,7 +214,9 @@ export function ChatSidebar(): React.ReactElement {
               <Plus className="h-3 w-3" />
             </Button>
           </div>
-          {channelList.map((c) => renderRow(c, { showDelete: true }))}
+          <div className="space-y-0.5">
+            {channelList.map((c) => renderRow(c, { showDelete: true }))}
+          </div>
         </div>
       </div>
 
