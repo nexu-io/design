@@ -118,6 +118,7 @@
 - Pushes to `main` do not create version PRs; they only run the publish path of `.github/workflows/release.yml`.
 - Merging the version PR triggers the publish path on `main` and publishes any unpublished public packages to npm.
 - `workflow_dispatch` remains available as a manual retry path if a release run needs to be re-executed.
+- The manual `Release packages` workflow includes an `action` input: use `version` to create/update the version PR and `publish` only for manual publish retries or exceptional recovery.
 - `apps/demo` and `apps/storybook` are ignored by Changesets and should not receive release entries.
 - Keep the workflow filename stable if npm trusted publishing is configured against it.
 
