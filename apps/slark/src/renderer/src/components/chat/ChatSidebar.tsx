@@ -125,7 +125,7 @@ export function ChatSidebar(): React.ReactElement {
           size="inline"
           onClick={() => handleSelect(c.id)}
           className={cn(
-            "flex items-center gap-2 w-full rounded-md pl-2 pr-2 py-[3px] text-[13px] transition-colors",
+            "flex items-center gap-2 w-full rounded-md pl-2 pr-2 py-[5px] text-[13px] transition-colors",
             isActive
               ? "bg-nav-active text-nav-active-fg font-semibold"
               : unread
@@ -134,17 +134,17 @@ export function ChatSidebar(): React.ReactElement {
           )}
         >
           {isChannel ? (
-            <Globe className="h-4 w-4 shrink-0 opacity-90" />
+            <Globe className="h-3.5 w-3.5 shrink-0 opacity-90" />
           ) : resolved ? (
-            <img src={resolved.avatar} alt="" className="h-4 w-4 rounded-full shrink-0" />
+            <img src={resolved.avatar} alt="" className="h-3.5 w-3.5 rounded-full shrink-0" />
           ) : (
-            <Hash className="h-4 w-4 shrink-0" />
+            <Hash className="h-3.5 w-3.5 shrink-0" />
           )}
           <span className="truncate flex-1 text-left">{label}</span>
           {unread ? (
             <span
               className={cn(
-                "ml-auto flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand-primary text-accent-fg text-[10px] font-semibold px-1.5",
+                "ml-auto flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-primary text-accent-fg text-[10px] font-semibold px-1",
                 opts?.showDelete && "group-hover/item:hidden",
               )}
             >
@@ -221,8 +221,8 @@ export function ChatSidebar(): React.ReactElement {
             size="inline"
             onClick={() => !atLimit && setCreateOpen(true)}
             disabled={atLimit}
-            leadingIcon={<Plus className="h-4 w-4 shrink-0" />}
-            className="h-auto w-full justify-start rounded-md pl-2 pr-2 py-[3px] text-[13px] font-normal text-nav-muted hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+            leadingIcon={<Plus className="h-3.5 w-3.5 shrink-0" />}
+            className="h-auto w-full justify-start rounded-md pl-2 pr-2 py-[5px] text-[13px] font-normal text-nav-muted hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
           >
             <span>{t("chat.addChannels")}</span>
           </Button>
