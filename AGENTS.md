@@ -114,8 +114,11 @@
 - First-time package creation on npm must be done manually with `npm publish --access public`.
 - Publish `@nexu-design/tokens` before `@nexu-design/ui-web` for the initial manual release.
 - After the first manual publish, configure npm trusted publishing for both packages against `.github/workflows/release.yml`.
-- Pushes to `main` with pending changesets create or update a `chore: version packages` PR.
-- Merging that PR publishes any unpublished public packages to npm.
+- Manually running the `Release packages` GitHub Actions workflow creates or updates a `chore: version packages` PR when pending changesets exist on `main`.
+- Pushes to `main` do not create version PRs; they only run the publish path of `.github/workflows/release.yml`.
+- Merging the version PR triggers the publish path on `main` and publishes any unpublished public packages to npm.
+- `workflow_dispatch` remains available as a manual retry path if a release run needs to be re-executed.
+- The manual `Release packages` workflow includes an `action` input: use `version` to create/update the version PR and `publish` only for manual publish retries or exceptional recovery.
 - `apps/demo` and `apps/storybook` are ignored by Changesets and should not receive release entries.
 - Keep the workflow filename stable if npm trusted publishing is configured against it.
 
@@ -123,8 +126,9 @@
 1. Run `pnpm changeset` for each consumer-visible package change.
 2. Commit the generated `.changeset/*.md` file(s).
 3. Open and merge the feature PR into `main`.
-4. Review and merge the generated `chore: version packages` PR.
-5. Let GitHub Actions publish the new package versions from `.github/workflows/release.yml`.
+4. Manually run the `Release packages` workflow on `main` to create or update the `chore: version packages` PR.
+5. Review and merge the generated `chore: version packages` PR.
+6. Let the merge to `main` trigger `.github/workflows/release.yml` and publish the release automatically.
 
 ## Formatting rules
 - Formatter is Biome (`biome.json`).

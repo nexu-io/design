@@ -4,12 +4,25 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Release action to run
+        required: true
+        type: choice
+        default: version
+        options:
+          - version
+          - publish
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   release:
     name: Version or publish packages
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -38,12 +51,24 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Create release PR or publish
+      - name: Run release readiness checks
+        if: github.event_name == 'push' || github.event.inputs.action == 'publish'
+        run: pnpm release:check
+
+      - name: Create release PR
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'version'
         uses: changesets/action@v1
         with:
           commit: 'chore: version packages'
           title: 'chore: version packages'
           version: pnpm version:packages
-          publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish packages
+        if: github.event_name == 'push' || github.event.inputs.action == 'publish'
+        run: pnpm release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: 'true'
