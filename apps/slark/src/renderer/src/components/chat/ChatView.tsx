@@ -111,7 +111,7 @@ export function ChatView(): React.ReactElement {
   const otherResolved = otherMember ? resolveRef(otherMember) : undefined;
 
   return (
-    <div className="flex h-full flex-col bg-background">
+    <div className="flex h-full flex-col bg-surface-1">
       <WindowChrome className="flex h-[52px] items-center gap-2 border-b border-border px-4 pt-2">
         <button
           type="button"

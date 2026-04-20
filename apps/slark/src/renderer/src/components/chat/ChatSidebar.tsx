@@ -125,7 +125,7 @@ export function ChatSidebar(): React.ReactElement {
           size="inline"
           onClick={() => handleSelect(c.id)}
           className={cn(
-            "flex items-center gap-2 w-full pl-3 pr-2 py-[5px] text-[13px] transition-colors",
+            "flex items-center gap-2 w-full rounded-md pl-2 pr-2 py-[3px] text-[13px] transition-colors",
             isActive
               ? "bg-nav-active text-nav-active-fg font-semibold"
               : unread
@@ -184,10 +184,10 @@ export function ChatSidebar(): React.ReactElement {
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto pb-2 space-y-1">
+      <div className="flex-1 overflow-y-auto px-2 pb-2">
         {pinnedChannels.length > 0 && (
           <div>
-            <div className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
+            <div className="flex items-center gap-1.5 px-2 pt-3 pb-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
               <Pin className="h-3 w-3" />
               <span className="flex-1">{t("chat.pinned")}</span>
             </div>
@@ -196,7 +196,7 @@ export function ChatSidebar(): React.ReactElement {
         )}
 
         <div>
-          <div className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 px-2 pt-3 pb-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
             <span className="flex-1">{t("chat.channels")}</span>
             <Button
               type="button"
@@ -222,7 +222,7 @@ export function ChatSidebar(): React.ReactElement {
             onClick={() => !atLimit && setCreateOpen(true)}
             disabled={atLimit}
             leadingIcon={<Plus className="h-4 w-4 shrink-0" />}
-            className="h-auto w-full justify-start rounded-none px-0 pl-3 pr-2 py-[5px] text-[13px] font-normal text-nav-muted hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+            className="h-auto w-full justify-start rounded-md pl-2 pr-2 py-[3px] text-[13px] font-normal text-nav-muted hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
           >
             <span>{t("chat.addChannels")}</span>
           </Button>
