@@ -1,28 +1,30 @@
+import { Button, cn } from "@nexu-design/ui-web";
+import {
+  ArrowRight,
+  Bot,
+  Box,
+  Code,
+  Cpu,
+  ExternalLink,
+  MousePointer,
+  Play,
+  RefreshCw,
+  RotateCw,
+  Sparkles,
+  Square,
+  Terminal,
+  Trash2,
+  Wifi,
+  Zap,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { ElementType, ReactElement, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Terminal,
-  MousePointer,
-  Code,
-  Cpu,
-  Box,
-  Sparkles,
-  Trash2,
-  Wifi,
-  RefreshCw,
-  ArrowRight,
-  Zap,
-  Bot,
-  Play,
-  Square,
-  RotateCw,
-  ExternalLink,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useT, type TranslationKey } from "@/i18n";
-import { useRuntimesStore } from "@/stores/runtimes";
+
+import { WindowChrome } from "@/components/layout/WindowChrome";
+import { type TranslationKey, useT } from "@/i18n";
 import { useAgentsStore } from "@/stores/agents";
+import { useRuntimesStore } from "@/stores/runtimes";
 import type { Runtime } from "@/types";
 
 const typeIcons: Record<Runtime["type"], ElementType> = {
@@ -263,7 +265,7 @@ const runtimeDataMap: Record<string, RuntimeData> = {
 };
 
 runtimeDataMap["claude-code"] = runtimeDataMap["rt-1"];
-runtimeDataMap["opencode"] = runtimeDataMap["rt-2"];
+runtimeDataMap.opencode = runtimeDataMap["rt-2"];
 runtimeDataMap["gemini-cli"] = runtimeDataMap["rt-5"];
 
 const defaultData: RuntimeData = {
@@ -339,7 +341,7 @@ export function RuntimesView(): ReactElement {
   if (!rt) {
     return (
       <div className="flex h-full flex-col">
-        <div className="drag-region h-10 shrink-0" />
+        <WindowChrome className="h-10" />
         <div className="flex flex-1 items-center justify-center">
           <div className="flex flex-col items-center gap-3 text-muted-foreground">
             <Wifi className="h-10 w-10" />
@@ -358,7 +360,7 @@ export function RuntimesView(): ReactElement {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="drag-region h-10 shrink-0" />
+      <WindowChrome className="h-10" />
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-6 pb-8 space-y-6">
           <div className="flex items-center justify-between">
@@ -373,34 +375,46 @@ export function RuntimesView(): ReactElement {
               <div className="flex items-center gap-1 ml-1">
                 {rt.status === "connected" ? (
                   <>
-                    <button
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
                       title={t("runtimes.stopRuntime")}
                       className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                     >
                       <Square className="h-3 w-3" />
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
                       title={t("runtimes.restartRuntime")}
                       className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                     >
                       <RotateCw className="h-3.5 w-3.5" />
-                    </button>
+                    </Button>
                   </>
                 ) : (
-                  <button
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
                     title={t("runtimes.startRuntime")}
                     className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-nexu-online hover:bg-nexu-online/10 transition-colors"
                   >
                     <Play className="h-3.5 w-3.5" />
-                  </button>
+                  </Button>
                 )}
               </div>
-              <button
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
                 title={t("runtimes.deleteRuntime")}
                 className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/10 transition-colors"
               >
                 <Trash2 className="h-3.5 w-3.5" />
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -415,19 +429,29 @@ export function RuntimesView(): ReactElement {
                     <span className="font-medium">{ver}</span>
                     <ArrowRight className="h-3 w-3 text-muted-foreground" />
                     <span className="font-mono text-nexu-online">v1.1.0</span>
-                    <button className="ml-1 h-6 px-2 rounded border border-border text-[11px] font-medium hover:bg-accent transition-colors">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="ml-1 h-6 px-2 text-[11px] font-medium hover:bg-accent transition-colors"
+                    >
                       {t("runtimes.update")}
-                    </button>
+                    </Button>
                   </div>
                 ) : (
                   <span className="font-medium">{ver}</span>
                 )}
               </InfoRow>
             </div>
-            <button className="h-8 px-3 rounded-md border border-border text-xs font-medium flex items-center gap-1.5 hover:bg-accent transition-colors">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-8 px-3 text-xs font-medium flex items-center gap-1.5 hover:bg-accent transition-colors"
+            >
               <RefreshCw className="h-3.5 w-3.5" />
               {t("runtimes.testConnection")}
-            </button>
+            </Button>
           </section>
 
           <section className="rounded-xl border border-border p-4">
@@ -444,8 +468,11 @@ export function RuntimesView(): ReactElement {
               return (
                 <div className="space-y-1">
                   {linked.map((agent) => (
-                    <button
+                    <Button
                       key={agent.id}
+                      type="button"
+                      variant="ghost"
+                      size="inline"
                       onClick={() => {
                         navigate("/agents");
                         setTimeout(() => useAgentsStore.getState().selectAgent(agent.id), 50);
@@ -473,7 +500,7 @@ export function RuntimesView(): ReactElement {
                           agent.status === "offline" && "bg-nexu-offline",
                         )}
                       />
-                    </button>
+                    </Button>
                   ))}
                 </div>
               );
@@ -485,8 +512,11 @@ export function RuntimesView(): ReactElement {
               <p className="text-sm font-semibold">{t("runtimes.tokenUsage")}</p>
               <div className="flex items-center rounded-lg border border-border p-0.5">
                 {usagePeriods.map((p) => (
-                  <button
+                  <Button
                     key={p}
+                    type="button"
+                    variant="ghost"
+                    size="inline"
                     onClick={() => setPeriod(p)}
                     className={cn(
                       "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
@@ -496,7 +526,7 @@ export function RuntimesView(): ReactElement {
                     )}
                   >
                     {p}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -557,9 +587,9 @@ export function RuntimesView(): ReactElement {
             <p className="text-sm font-semibold mb-3">{t("runtimes.activity")}</p>
             <div className="flex gap-1.5">
               <div className="flex flex-col justify-between pr-0.5 py-[1px]">
-                {weekLabels.map((w, i) => (
+                {weekLabels.map((w) => (
                   <span
-                    key={i}
+                    key={w}
                     className="text-[9px] text-muted-foreground leading-none h-[12px] flex items-center"
                   >
                     {w}
@@ -568,9 +598,9 @@ export function RuntimesView(): ReactElement {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex mb-1">
-                  {heatmapMonths.map((m, i) => (
+                  {heatmapMonths.map((m) => (
                     <span
-                      key={i}
+                      key={m}
                       className="text-[9px] text-muted-foreground"
                       style={{ width: `${100 / heatmapMonths.length}%` }}
                     >
@@ -582,16 +612,19 @@ export function RuntimesView(): ReactElement {
                   className="grid grid-rows-7 grid-flow-col gap-[3px]"
                   style={{ gridTemplateColumns: `repeat(${HEATMAP_WEEKS}, 1fr)` }}
                 >
-                  {heatmap.map((level, i) => (
-                    <div key={i} className={cn("aspect-square rounded-sm", heatmapLevels[level])} />
+                  {heatmap.map((level, index) => (
+                    <div
+                      key={`heatmap-${index}-${level}`}
+                      className={cn("aspect-square rounded-sm", heatmapLevels[level])}
+                    />
                   ))}
                 </div>
               </div>
             </div>
             <div className="flex items-center justify-end gap-1 mt-2">
               <span className="text-[9px] text-muted-foreground mr-1">{t("runtimes.less")}</span>
-              {heatmapLevels.map((cls, i) => (
-                <div key={i} className={cn("w-[10px] h-[10px] rounded-sm", cls)} />
+              {heatmapLevels.map((cls) => (
+                <div key={cls} className={cn("w-[10px] h-[10px] rounded-sm", cls)} />
               ))}
               <span className="text-[9px] text-muted-foreground ml-1">{t("runtimes.more")}</span>
             </div>
@@ -679,7 +712,7 @@ function EmptyRuntimesGuide(): ReactElement {
   const t = useT();
   return (
     <div className="flex h-full flex-col">
-      <div className="drag-region h-10 shrink-0" />
+      <WindowChrome className="h-10" />
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-6 pb-10">
           <div className="flex flex-col items-center text-center gap-3 pt-6 pb-8">
@@ -797,14 +830,21 @@ function DonutChart({
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
-        {segments.map((seg, i) => {
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        className="-rotate-90"
+        aria-label={`${label} ${sublabel}`}
+      >
+        <title>{`${label} ${sublabel}`}</title>
+        {segments.map((seg) => {
           const d = (seg.percent / 100) * circ;
           const cur = off;
           off += d;
           return (
             <circle
-              key={i}
+              key={`${seg.color}-${seg.percent}`}
               cx={size / 2}
               cy={size / 2}
               r={r}

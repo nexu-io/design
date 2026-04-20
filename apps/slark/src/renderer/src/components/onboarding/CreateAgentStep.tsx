@@ -1,7 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Rocket, ChevronDown, Check, Plus, Search } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ArrowLeft, Rocket, Plus, Search } from "lucide-react";
+import {
+  Button,
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  FormField,
+  FormFieldControl,
+  Input,
+  InteractiveRow,
+  InteractiveRowContent,
+  InteractiveRowLeading,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Textarea,
+  cn,
+} from "@nexu-design/ui-web";
 import { useWorkspaceStore } from "@/stores/workspace";
 import { useAgentsStore } from "@/stores/agents";
 import { useRuntimesStore } from "@/stores/runtimes";
@@ -24,7 +46,7 @@ export function CreateAgentStep(): React.ReactElement {
   const [agentName, setAgentName] = useState("");
   const [description, setDescription] = useState("");
   const [runtimeId, setRuntimeId] = useState<string | null>(null);
-  const [runtimeOpen, setRuntimeOpen] = useState(false);
+  const [showDiscardDialog, setShowDiscardDialog] = useState(false);
 
   const handleSelectTemplate = (tpl: AgentTemplate): void => {
     setSelectedTemplate(tpl);
@@ -34,13 +56,6 @@ export function CreateAgentStep(): React.ReactElement {
     if (firstConnected) setRuntimeId(firstConnected.id);
     setPhase("settings");
   };
-
-  useEffect(() => {
-    if (!runtimeOpen) return;
-    const handleClick = (): void => setRuntimeOpen(false);
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
-  }, [runtimeOpen]);
 
   const handleSkip = (): void => {
     completeOnboarding();
@@ -62,7 +77,8 @@ export function CreateAgentStep(): React.ReactElement {
       ? description !== selectedTemplate.description
       : description !== "";
     if (nameChanged || descChanged) {
-      if (!window.confirm("Your changes will be lost. Go back to templates?")) return;
+      setShowDiscardDialog(true);
+      return;
     }
     setPhase("templates");
   };
@@ -97,7 +113,6 @@ export function CreateAgentStep(): React.ReactElement {
     navigate("/chat/ch-welcome");
   };
 
-  const selectedRuntime = runtimeId ? runtimes.find((r) => r.id === runtimeId) : null;
   const connectedRuntimes = runtimes.filter((r) => r.status === "connected");
 
   if (phase === "templates") {
@@ -109,37 +124,35 @@ export function CreateAgentStep(): React.ReactElement {
         </div>
         <div className="grid grid-cols-2 gap-3 w-full">
           {mockAgentTemplates.map((tpl) => (
-            <button
+            <InteractiveRow
               key={tpl.id}
               onClick={() => handleSelectTemplate(tpl)}
-              className={cn(
-                "flex items-start gap-3 p-4 rounded-xl border transition-all text-left",
-                "border-border hover:border-muted-foreground/50 hover:bg-accent/50",
-              )}
+              tone="subtle"
+              className="items-start rounded-xl border border-border px-3 py-3"
             >
-              <img src={tpl.avatar} alt="" className="h-10 w-10 rounded-lg shrink-0" />
-              <div className="min-w-0">
+              <InteractiveRowLeading>
+                <img src={tpl.avatar} alt="" className="h-10 w-10 rounded-lg shrink-0" />
+              </InteractiveRowLeading>
+              <InteractiveRowContent>
                 <div className="font-medium text-sm">{tpl.name}</div>
                 <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
                   {tpl.description}
                 </div>
-              </div>
-            </button>
+              </InteractiveRowContent>
+            </InteractiveRow>
           ))}
         </div>
-        <button
+        <Button
           onClick={handleBlankAgent}
-          className="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-border hover:border-muted-foreground/50 hover:bg-accent/50 transition-all text-muted-foreground"
+          variant="outline"
+          className="h-11 w-full border-dashed text-muted-foreground"
+          leadingIcon={<Plus className="h-4 w-4" />}
         >
-          <Plus className="h-4 w-4" />
           <span className="text-sm font-medium">Start from scratch</span>
-        </button>
-        <button
-          onClick={handleSkip}
-          className="h-10 px-5 rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors mt-2"
-        >
+        </Button>
+        <Button onClick={handleSkip} variant="ghost" className="mt-2">
           Skip for now
-        </button>
+        </Button>
       </div>
     );
   }
@@ -162,130 +175,124 @@ export function CreateAgentStep(): React.ReactElement {
           </div>
         )}
 
-        <div>
-          <label className="text-sm font-medium mb-1.5 block">Agent Name</label>
-          <input
-            type="text"
-            value={agentName}
-            onChange={(e) => setAgentName(e.target.value)}
-            placeholder="e.g. CodeBot"
-            className="w-full h-10 rounded-lg border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-            autoFocus
-          />
-        </div>
+        <FormField label="Agent Name">
+          <FormFieldControl>
+            <Input
+              type="text"
+              value={agentName}
+              onChange={(e) => setAgentName(e.target.value)}
+              placeholder="e.g. CodeBot"
+              autoFocus
+            />
+          </FormFieldControl>
+        </FormField>
 
-        <div>
-          <label className="text-sm font-medium mb-1.5 block">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="What does this agent do?"
-            rows={3}
-            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
-          />
-        </div>
+        <FormField label="Description">
+          <FormFieldControl>
+            <Textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="What does this agent do?"
+              rows={3}
+            />
+          </FormFieldControl>
+        </FormField>
 
-        <div>
-          <label className="text-sm font-medium mb-1.5 block">Runtime</label>
-          <div className="relative">
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setRuntimeOpen((v) => !v);
+        <FormField label="Runtime">
+          <FormFieldControl>
+            <Select
+              value={runtimeId ?? undefined}
+              onValueChange={(value) => {
+                setRuntimeId(value);
               }}
-              className={cn(
-                "w-full h-10 rounded-lg border bg-background px-3 text-sm text-left flex items-center justify-between transition-colors",
-                runtimeOpen
-                  ? "border-ring ring-2 ring-ring"
-                  : "border-input hover:border-muted-foreground/50",
-              )}
+              disabled={connectedRuntimes.length === 0}
             >
-              {selectedRuntime ? (
-                <div className="flex items-center gap-2 min-w-0">
-                  <div
-                    className={cn(
-                      "h-2 w-2 rounded-full shrink-0",
-                      selectedRuntime.status === "connected" ? "bg-nexu-online" : "bg-nexu-offline",
-                    )}
-                  />
-                  <span className="truncate">{selectedRuntime.name}</span>
-                </div>
-              ) : (
-                <span className="text-muted-foreground">
-                  {connectedRuntimes.length > 0 ? "Select a runtime" : "No runtime connected"}
-                </span>
-              )}
-              <ChevronDown
-                className={cn(
-                  "h-4 w-4 text-muted-foreground shrink-0 transition-transform",
-                  runtimeOpen && "rotate-180",
-                )}
-              />
-            </button>
-
-            {runtimeOpen && connectedRuntimes.length > 0 && (
-              <div className="absolute z-10 top-full left-0 right-0 mt-1 rounded-lg border border-border bg-background shadow-lg py-1 max-h-48 overflow-y-auto">
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={
+                    connectedRuntimes.length > 0 ? "Select a runtime" : "No runtime connected"
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
                 {connectedRuntimes.map((rt) => (
-                  <button
-                    key={rt.id}
-                    onClick={() => {
-                      setRuntimeId(rt.id);
-                      setRuntimeOpen(false);
-                    }}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-accent transition-colors"
-                  >
-                    <div
-                      className={cn(
-                        "h-2 w-2 rounded-full shrink-0",
-                        rt.status === "connected" ? "bg-nexu-online" : "bg-nexu-offline",
-                      )}
-                    />
-                    <span className="flex-1 truncate">{rt.name}</span>
-                    {rt.version && (
-                      <span className="text-xs text-muted-foreground">v{rt.version}</span>
-                    )}
-                    {runtimeId === rt.id && (
-                      <Check className="h-3.5 w-3.5 text-foreground shrink-0" />
-                    )}
-                  </button>
+                  <SelectItem key={rt.id} value={rt.id}>
+                    <span className="flex w-full items-center gap-2">
+                      <span
+                        className={cn(
+                          "h-2 w-2 rounded-full shrink-0",
+                          rt.status === "connected" ? "bg-nexu-online" : "bg-nexu-offline",
+                        )}
+                      />
+                      <span className="truncate">{rt.name}</span>
+                      {rt.version ? (
+                        <span className="text-xs text-muted-foreground">v{rt.version}</span>
+                      ) : null}
+                    </span>
+                  </SelectItem>
                 ))}
-              </div>
-            )}
-          </div>
+              </SelectContent>
+            </Select>
+          </FormFieldControl>
           {connectedRuntimes.length === 0 && (
-            <p className="text-[11px] text-muted-foreground mt-1.5 flex items-center gap-1.5">
+            <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
               No runtimes detected.
-              <button
-                type="button"
+              <Button
                 onClick={handleDetectRuntimes}
-                className="inline-flex items-center gap-1 text-foreground underline underline-offset-2 hover:no-underline transition-colors"
+                type="button"
+                variant="link"
+                size="inline"
+                className="h-auto text-foreground"
               >
                 <Search className="h-3 w-3" />
                 Scan now
-              </button>
+              </Button>
             </p>
           )}
-        </div>
+        </FormField>
       </div>
 
       <div className="flex items-center gap-3 mt-4">
-        <button
+        <Button
           onClick={handleBackToTemplates}
-          className="flex items-center gap-1.5 h-10 px-5 rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors"
+          variant="ghost"
+          leadingIcon={<ArrowLeft className="h-4 w-4" />}
         >
-          <ArrowLeft className="h-4 w-4" />
           Back to templates
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={handleCreate}
           disabled={!agentName.trim()}
-          className="flex items-center gap-2 h-10 px-5 rounded-lg bg-foreground text-background text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-foreground/90 transition-colors"
+          leadingIcon={<Rocket className="h-4 w-4" />}
         >
-          <Rocket className="h-4 w-4" />
           Create Agent
-        </button>
+        </Button>
       </div>
+
+      <Dialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
+        <DialogContent size="sm">
+          <DialogHeader>
+            <DialogTitle>Discard changes?</DialogTitle>
+            <DialogDescription>
+              Your edits to this agent draft will be lost if you go back to templates.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogBody />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDiscardDialog(false)}>
+              Keep editing
+            </Button>
+            <Button
+              onClick={() => {
+                setShowDiscardDialog(false);
+                setPhase("templates");
+              }}
+            >
+              Discard and go back
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

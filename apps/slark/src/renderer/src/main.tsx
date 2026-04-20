@@ -1,23 +1,45 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
-import { App } from "@/app/App";
-import { useThemeStore } from "@/stores/theme";
-import "@/app/globals.css";
 
-function ThemeInit(): null {
-  const theme = useThemeStore((s) => s.theme);
-  useEffect(() => {
-    const isDark =
-      theme === "dark" ||
-      (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    document.documentElement.classList.toggle("dark", isDark);
+import { ThemeRoot } from "@nexu-design/ui-web";
+
+import { App } from "@/app/App";
+import "@/app/globals.css";
+import { syncDocumentTheme, useThemeStore } from "@/stores/theme";
+
+function Root(): React.ReactElement {
+  const theme = useThemeStore((state) => state.theme);
+
+  React.useEffect(() => {
+    syncDocumentTheme(theme);
+
+    if (theme !== "system" || typeof window.matchMedia !== "function") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = () => syncDocumentTheme("system");
+
+    mediaQuery.addEventListener("change", handleChange);
+
+    return () => mediaQuery.removeEventListener("change", handleChange);
   }, [theme]);
-  return null;
+
+  return (
+    <ThemeRoot theme={theme} className="contents">
+      <App />
+    </ThemeRoot>
+  );
 }
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+const rootElement = document.getElementById("root");
+
+if (!rootElement) {
+  throw new Error("Root element #root not found");
+}
+
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <ThemeInit />
-    <App />
+    <Root />
   </React.StrictMode>,
 );

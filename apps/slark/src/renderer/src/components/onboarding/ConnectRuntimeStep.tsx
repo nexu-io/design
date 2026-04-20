@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Button, cn } from "@nexu-design/ui-web";
 import {
+  AlertTriangle,
   ArrowRight,
   Check,
-  X,
-  Loader2,
-  Search,
-  AlertTriangle,
   ExternalLink,
+  Loader2,
   RefreshCw,
+  Search,
+  X,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { useRuntimesStore } from "@/stores/runtimes";
 import type { Runtime } from "@/types";
 
@@ -187,7 +188,7 @@ export function ConnectRuntimeStep(): React.ReactElement {
       timers.forEach(clearTimeout);
       clearTimeout(doneTimer);
     };
-  }, []);
+  }, [devSimulateNone]);
 
   useEffect(() => {
     if (phase === "done") {
@@ -299,10 +300,12 @@ export function ConnectRuntimeStep(): React.ReactElement {
             const isWorking = detected && !error;
             const brand = RUNTIME_BRANDS[type];
             return (
-              <button
+              <Button
+                type="button"
                 key={type}
                 onClick={() => phase === "done" && toggleSelect(type)}
                 disabled={phase === "scanning" || !isWorking}
+                variant="ghost"
                 className={cn(
                   "flex flex-col items-start gap-2 p-4 rounded-xl border transition-all text-left relative min-h-[120px]",
                   isWorking && isSelected
@@ -343,29 +346,34 @@ export function ConnectRuntimeStep(): React.ReactElement {
                 {phase === "done" && !detected && (
                   <div className="text-[11px] text-muted-foreground">Not found</div>
                 )}
-              </button>
+              </Button>
             );
           })}
         </div>
       )}
 
       <div className="flex items-center gap-3 mt-4">
-        <button
+        <Button
+          type="button"
           onClick={() => navigate("/onboarding/agent")}
+          variant="ghost"
           className="h-10 px-5 rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           Skip for now
-        </button>
+        </Button>
         {showTutorial ? (
-          <button
+          <Button
+            type="button"
             onClick={() => window.location.reload()}
+            variant="default"
             className="flex items-center gap-2 h-10 px-5 rounded-lg bg-foreground text-background text-sm font-medium hover:bg-foreground/90 transition-colors"
           >
             <RefreshCw className="h-4 w-4" />
             Rescan
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
+            type="button"
             onClick={() => {
               const selectedRuntimes: Runtime[] = runtimes
                 .filter((r) => r.detected && !r.error && selected.has(r.type))
@@ -382,11 +390,12 @@ export function ConnectRuntimeStep(): React.ReactElement {
               navigate("/onboarding/agent");
             }}
             disabled={phase === "scanning" || selected.size === 0}
+            variant="default"
             className="flex items-center gap-2 h-10 px-5 rounded-lg bg-foreground text-background text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-foreground/90 transition-colors"
           >
             Continue with {selected.size} runtime{selected.size !== 1 ? "s" : ""}
             <ArrowRight className="h-4 w-4" />
-          </button>
+          </Button>
         )}
       </div>
     </div>

@@ -7,11 +7,11 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
-    "postinstall": "electron-builder install-app-deps",
-    "build:unpack": "npm run build && electron-builder --dir",
-    "build:mac": "npm run build && electron-builder --mac",
-    "build:win": "npm run build && electron-builder --win",
-    "build:linux": "npm run build && electron-builder --linux"
+    "install-app-deps": "electron-builder install-app-deps",
+    "build:unpack": "pnpm run build && pnpm run install-app-deps && electron-builder --dir",
+    "build:mac": "pnpm run build && pnpm run install-app-deps && electron-builder --mac",
+    "build:win": "pnpm run build && pnpm run install-app-deps && electron-builder --win",
+    "build:linux": "pnpm run build && pnpm run install-app-deps && electron-builder --linux"
   },
   "dependencies": {
     "@nexu-design/tokens": "workspace:*",
@@ -37,6 +37,7 @@
   "devDependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
+    "@types/node": "^24.10.1",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",

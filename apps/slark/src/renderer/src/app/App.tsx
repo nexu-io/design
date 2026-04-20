@@ -1,5 +1,6 @@
 import { Component, type ReactNode, type ErrorInfo } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
+import { Button } from "@nexu-design/ui-web";
 import { useT, translate } from "@/i18n";
 import { useLocaleStore } from "@/stores/locale";
 import { useWorkspaceStore } from "@/stores/workspace";
@@ -49,12 +50,12 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
             {"\n\n"}
             {this.state.error.stack}
           </pre>
-          <button
+          <Button
+            type="button"
+            variant="outline"
             onClick={() => this.setState({ error: null })}
             style={{
               marginTop: 16,
-              padding: "8px 16px",
-              cursor: "pointer",
               background: "#333",
               color: "#fff",
               border: "1px solid #555",
@@ -62,7 +63,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
             }}
           >
             {translate(useLocaleStore.getState().locale, "app.retry")}
-          </button>
+          </Button>
         </div>
       );
     }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Bot, Hash, LogIn, Sparkles, UserPlus, Pencil } from "lucide-react";
-import { ChatMessage, EventNotice, Mention } from "@nexu-design/ui-web";
+import { Button, ChatMessage, EventNotice, Mention } from "@nexu-design/ui-web";
 import type { ChatSender } from "@nexu-design/ui-web";
 import { useChatStore } from "@/stores/chat";
 import { useWorkspaceStore } from "@/stores/workspace";
@@ -70,13 +70,16 @@ function toSender(msg: Message): ChatSender | undefined {
  */
 function renderContent(content: string): React.ReactNode {
   const parts = content.split(/(```[\s\S]*?```|`[^`]+`|\*\*[^*]+\*\*|@[\w-]+)/g);
-  return parts.map((part, i) => {
+  let offset = 0;
+  return parts.map((part) => {
+    const key = `${offset}-${part}`;
+    offset += part.length;
     if (!part) return null;
     if (part.startsWith("```") && part.endsWith("```")) {
       const code = part.slice(3, -3).replace(/^\w+\n/, "");
       return (
         <pre
-          key={i}
+          key={key}
           className="my-2 overflow-x-auto rounded-lg bg-surface-2 p-3 text-[12px] font-mono"
         >
           <code>{code}</code>
@@ -85,19 +88,28 @@ function renderContent(content: string): React.ReactNode {
     }
     if (part.startsWith("`") && part.endsWith("`")) {
       return (
-        <code key={i} className="rounded-sm bg-surface-2 px-1 py-[1px] font-mono text-[12px]">
+        <code key={key} className="rounded-sm bg-surface-2 px-1 py-[1px] font-mono text-[12px]">
           {part.slice(1, -1)}
         </code>
       );
     }
     if (part.startsWith("**") && part.endsWith("**")) {
-      return <strong key={i}>{part.slice(2, -2)}</strong>;
+      return <strong key={key}>{part.slice(2, -2)}</strong>;
     }
     if (/^@[\w-]+$/.test(part)) {
-      return <Mention key={i} name={part.slice(1)} />;
+      return <Mention key={key} name={part.slice(1)} />;
     }
-    return <span key={i}>{part}</span>;
+    return <span key={key}>{part}</span>;
   });
+}
+
+function isPresent<T>(value: T | null | undefined): value is T {
+  return value != null;
+}
+
+function blockKey(block: ContentBlock): string {
+  const maybeId = (block as { id?: unknown }).id;
+  return typeof maybeId === "string" ? maybeId : JSON.stringify(block);
 }
 
 interface MessageListProps {
@@ -135,7 +147,7 @@ function ChannelEmptyState({ channel }: { channel: Channel }): React.ReactElemen
   const channelAgents = channel.members
     .filter((m) => m.kind === "agent")
     .map((m) => agents.find((a) => a.id === m.id))
-    .filter(Boolean);
+    .filter(isPresent);
 
   const handleQuickAction = (text: string): void => {
     setPendingDraft(text);
@@ -167,20 +179,22 @@ function ChannelEmptyState({ channel }: { channel: Channel }): React.ReactElemen
               : `This is the very beginning of the #${channel.name} channel. Add a description to let others know what it's for.`}
           </p>
           <div className="flex flex-wrap items-center gap-1.5">
-            <button
+            <Button
               type="button"
+              variant="outline"
               className="inline-flex h-7 items-center gap-1.5 rounded-md border border-border px-2.5 text-xs font-medium text-text-primary transition-colors hover:bg-surface-2"
             >
               <UserPlus className="h-3.5 w-3.5" />
               Add people
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="outline"
               className="inline-flex h-7 items-center gap-1.5 rounded-md border border-border px-2.5 text-xs font-medium text-text-muted transition-colors hover:bg-surface-2 hover:text-text-primary"
             >
               <Pencil className="h-3.5 w-3.5" />
               Edit description
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -192,22 +206,22 @@ function ChannelEmptyState({ channel }: { channel: Channel }): React.ReactElemen
             </div>
             <div className="space-y-2">
               {channelAgents.map((agent) => (
-                <div key={agent!.id} className="flex items-start gap-3">
+                <div key={agent.id} className="flex items-start gap-3">
                   <img
-                    src={agent!.avatar}
-                    alt={agent!.name}
+                    src={agent.avatar}
+                    alt={agent.name}
                     className="mt-0.5 h-8 w-8 shrink-0 rounded-full"
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-sm font-semibold">{agent!.name}</span>
+                      <span className="text-sm font-semibold">{agent.name}</span>
                       <span className="inline-flex items-center gap-1 rounded-[4px] bg-success-subtle px-1.5 py-[1px] text-[10px] font-medium leading-tight text-success">
                         <Bot className="h-2.5 w-2.5" />
                         Agent
                       </span>
                     </div>
                     <p className="mt-0.5 line-clamp-2 text-xs text-text-muted">
-                      {agent!.description}
+                      {agent.description}
                     </p>
                   </div>
                 </div>
@@ -216,16 +230,17 @@ function ChannelEmptyState({ channel }: { channel: Channel }): React.ReactElemen
 
             <div className="flex flex-wrap gap-1.5 pt-0.5">
               {channelAgents.slice(0, 3).map((agent) => {
-                const prompts = getQuickPrompts(agent!.name, agent!.templateId);
-                return prompts.map((prompt, i) => (
-                  <button
-                    key={`${agent!.id}-${i}`}
+                const prompts = getQuickPrompts(agent.name, agent.templateId);
+                return prompts.map((prompt) => (
+                  <Button
+                    key={`${agent.id}-${prompt}`}
                     type="button"
+                    variant="outline"
                     onClick={() => handleQuickAction(prompt)}
                     className="rounded-md border border-border-subtle bg-surface-1 px-2.5 py-1 text-xs text-text-muted transition-colors hover:border-border hover:text-text-primary"
                   >
                     {prompt}
-                  </button>
+                  </Button>
                 ));
               })}
             </div>
@@ -256,7 +271,7 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
   const updateMessage = useChatStore((s) => s.updateMessage);
   const currentUserId = useWorkspaceStore((s) => s.currentUserId) ?? CURRENT_USER_ID;
   const bottomRef = useRef<HTMLDivElement>(null);
-  const lastMsg = messages[messages.length - 1];
+  const lastMessageId = messages[messages.length - 1]?.id;
   const [expandedBlock, setExpandedBlock] = useState<ContentBlock | null>(null);
   const closeExpanded = useCallback(() => setExpandedBlock(null), []);
 
@@ -274,8 +289,9 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
   };
 
   useEffect(() => {
+    if (!lastMessageId) return;
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages.length, lastMsg?.content]);
+  }, [lastMessageId]);
 
   if (messages.length === 0) {
     if (channel?.type === "dm") {
@@ -360,9 +376,9 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
               reactions={reactions.length > 0 ? reactions : undefined}
               blocks={
                 msg.blocks && msg.blocks.length > 0
-                  ? msg.blocks.map((block, bi) => (
+                  ? msg.blocks.map((block) => (
                       <ContentBlockRenderer
-                        key={bi}
+                        key={blockKey(block)}
                         block={block}
                         isMe={msg.sender.id === currentUserId}
                         onApprovalAction={(aid, action) =>

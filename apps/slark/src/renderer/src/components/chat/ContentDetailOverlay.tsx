@@ -1,11 +1,33 @@
-import { useState, useEffect } from "react";
-import { X, Copy, Check, GitPullRequestArrow, Maximize2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Button, cn } from "@nexu-design/ui-web";
+import { Check, Copy, GitPullRequestArrow, Maximize2, X } from "lucide-react";
+import { useEffect, useState } from "react";
+
 import type { ContentBlock } from "@/types";
 
 interface ContentDetailOverlayProps {
   block: ContentBlock | null;
   onClose: () => void;
+}
+
+interface LineEntry {
+  key: string;
+  line: string;
+  lineNumber: number;
+}
+
+function createLineEntries(lines: string[]): LineEntry[] {
+  const occurrences = new Map<string, number>();
+  const entries: LineEntry[] = [];
+  let lineNumber = 0;
+
+  for (const line of lines) {
+    lineNumber += 1;
+    const count = (occurrences.get(line) ?? 0) + 1;
+    occurrences.set(line, count);
+    entries.push({ key: `${line}:${count}`, line, lineNumber });
+  }
+
+  return entries;
 }
 
 export function ContentDetailOverlay({
@@ -46,15 +68,17 @@ function ImageLightbox({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-      onClick={onClose}
+      onMouseDown={onClose}
     >
-      <button
+      <Button
+        variant="ghost"
+        size="icon-sm"
         onClick={onClose}
-        className="absolute top-4 right-4 flex items-center justify-center h-9 w-9 rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-colors"
+        className="absolute top-4 right-4 h-9 w-9 rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
       >
         <X className="h-5 w-5" />
-      </button>
-      <div className="max-w-[90vw] max-h-[85vh] p-4" onClick={(e) => e.stopPropagation()}>
+      </Button>
+      <div className="max-w-[90vw] max-h-[85vh] p-4" onMouseDown={(e) => e.stopPropagation()}>
         <img
           src={url}
           alt={alt ?? ""}
@@ -74,7 +98,7 @@ function CodeDetailView({
   onClose: () => void;
 }): React.ReactElement {
   const [copied, setCopied] = useState(false);
-  const lines = block.code.split("\n");
+  const lineEntries = createLineEntries(block.code.split("\n"));
 
   const handleCopy = (): void => {
     navigator.clipboard.writeText(block.code);
@@ -85,11 +109,11 @@ function CodeDetailView({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
-      onClick={onClose}
+      onMouseDown={onClose}
     >
       <div
         className="w-[min(720px,90vw)] max-h-[85vh] rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0d1117] shadow-2xl flex flex-col"
-        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between h-11 px-4 bg-white/[0.03] border-b border-white/[0.06] shrink-0">
           <div className="flex items-center gap-3 min-w-0">
@@ -103,7 +127,9 @@ function CodeDetailView({
             )}
           </div>
           <div className="flex items-center gap-1 shrink-0 ml-3">
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={handleCopy}
               className={cn(
                 "flex items-center gap-1.5 h-7 px-2.5 rounded-md text-[12px] transition-colors",
@@ -114,23 +140,25 @@ function CodeDetailView({
             >
               {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
               {copied ? "Copied" : "Copy"}
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon-sm"
               onClick={onClose}
-              className="flex items-center justify-center h-7 w-7 rounded-md text-white/30 hover:text-white/60 hover:bg-white/[0.05] transition-colors"
+              className="h-7 w-7 text-white/30 hover:text-white/60 hover:bg-white/[0.05]"
             >
               <X className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         </div>
 
         <div className="flex-1 overflow-auto">
           <table className="w-full border-collapse">
             <tbody>
-              {lines.map((line, i) => (
-                <tr key={i} className="hover:bg-white/[0.02]">
+              {lineEntries.map(({ key, line, lineNumber }) => (
+                <tr key={key} className="hover:bg-white/[0.02]">
                   <td className="w-[1%] whitespace-nowrap px-4 py-0 text-right text-[12px] font-mono text-white/15 select-none align-top leading-[22px]">
-                    {i + 1}
+                    {lineNumber}
                   </td>
                   <td className="px-4 py-0 text-[12px] font-mono text-white/80 leading-[22px] whitespace-pre">
                     {line || "\u00a0"}
@@ -142,7 +170,7 @@ function CodeDetailView({
         </div>
 
         <div className="flex items-center justify-between h-8 px-4 bg-white/[0.02] border-t border-white/[0.04] shrink-0">
-          <span className="text-[11px] text-white/20 font-mono">{lines.length} lines</span>
+          <span className="text-[11px] text-white/20 font-mono">{lineEntries.length} lines</span>
         </div>
       </div>
     </div>
@@ -156,16 +184,16 @@ function DiffDetailView({
   block: Extract<ContentBlock, { type: "diff" }>;
   onClose: () => void;
 }): React.ReactElement {
-  const lines = block.content.split("\n");
+  const lineEntries = createLineEntries(block.content.split("\n"));
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
-      onClick={onClose}
+      onMouseDown={onClose}
     >
       <div
         className="w-[min(720px,90vw)] max-h-[85vh] rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0d1117] shadow-2xl flex flex-col"
-        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between h-11 px-4 bg-white/[0.03] border-b border-white/[0.06] shrink-0">
           <div className="flex items-center gap-3 min-w-0">
@@ -176,25 +204,27 @@ function DiffDetailView({
               <span className="text-red-400/70">-{block.deletions}</span>
             </div>
           </div>
-          <button
+          <Button
+            variant="ghost"
+            size="icon-sm"
             onClick={onClose}
-            className="flex items-center justify-center h-7 w-7 rounded-md text-white/30 hover:text-white/60 hover:bg-white/[0.05] transition-colors shrink-0 ml-3"
+            className="h-7 w-7 text-white/30 hover:text-white/60 hover:bg-white/[0.05] shrink-0 ml-3"
           >
             <X className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
 
         <div className="flex-1 overflow-auto">
           <table className="w-full border-collapse">
             <tbody>
-              {lines.map((line, i) => {
+              {lineEntries.map(({ key, line, lineNumber }) => {
                 const isAdd = line.startsWith("+");
                 const isDel = line.startsWith("-");
                 const isHunk = line.startsWith("@@");
 
                 return (
                   <tr
-                    key={i}
+                    key={key}
                     className={cn(
                       isAdd && "bg-green-500/[0.07]",
                       isDel && "bg-red-500/[0.07]",
@@ -211,7 +241,7 @@ function DiffDetailView({
                         !isAdd && !isDel && !isHunk && "text-white/10 border-white/[0.04]",
                       )}
                     >
-                      {i + 1}
+                      {lineNumber}
                     </td>
                     <td
                       className={cn(
@@ -232,7 +262,7 @@ function DiffDetailView({
         </div>
 
         <div className="flex items-center justify-between h-8 px-4 bg-white/[0.02] border-t border-white/[0.04] shrink-0">
-          <span className="text-[11px] text-white/20 font-mono">{lines.length} lines</span>
+          <span className="text-[11px] text-white/20 font-mono">{lineEntries.length} lines</span>
         </div>
       </div>
     </div>

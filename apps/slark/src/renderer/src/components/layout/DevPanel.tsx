@@ -1,24 +1,25 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Button, cn } from "@nexu-design/ui-web";
 import {
-  Settings2,
   ChevronDown,
   ChevronUp,
-  RotateCcw,
+  GripVertical,
+  Layers,
   LogIn,
   LogOut,
+  RotateCcw,
+  Search,
+  SearchX,
+  Settings2,
   UserCog,
   Zap,
   ZapOff,
-  Search,
-  SearchX,
-  GripVertical,
-  Layers,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useWorkspaceStore } from "@/stores/workspace";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import { mockRuntimes, mockUsers } from "@/mock/data";
 import { useRuntimesStore } from "@/stores/runtimes";
-import { mockUsers, mockRuntimes } from "@/mock/data";
+import { useWorkspaceStore } from "@/stores/workspace";
 
 type AppState = "welcome" | "onboarding" | "app";
 
@@ -162,7 +163,10 @@ export function DevPanel(): React.ReactElement {
         )}
       >
         <GripVertical className="h-3.5 w-3.5 opacity-70" />
-        <button
+        <Button
+          type="button"
+          variant="ghost"
+          size="inline"
           data-no-drag
           onClick={() => !dragging && setOpen(true)}
           className="flex items-center gap-1.5"
@@ -170,7 +174,7 @@ export function DevPanel(): React.ReactElement {
           <Settings2 className="h-3.5 w-3.5" />
           Dev
           <ChevronUp className="h-3 w-3" />
-        </button>
+        </Button>
       </div>
     );
   }
@@ -194,13 +198,16 @@ export function DevPanel(): React.ReactElement {
           <GripVertical className="h-3.5 w-3.5 opacity-60" />
           Dev Controls
         </span>
-        <button
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
           data-no-drag
           onClick={() => setOpen(false)}
           className="text-muted-foreground hover:text-foreground transition-colors"
         >
           <ChevronDown className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
 
       <div className="p-3 space-y-3">
@@ -210,8 +217,11 @@ export function DevPanel(): React.ReactElement {
           </div>
           <div className="space-y-1">
             {states.map(({ id, label, icon: Icon }) => (
-              <button
+              <Button
                 key={id}
+                type="button"
+                variant="ghost"
+                size="inline"
                 onClick={() => jumpTo(id)}
                 className={cn(
                   "flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-xs transition-colors",
@@ -225,7 +235,7 @@ export function DevPanel(): React.ReactElement {
                 {currentState === id && (
                   <div className="ml-auto h-1.5 w-1.5 rounded-full bg-nexu-primary" />
                 )}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -239,8 +249,11 @@ export function DevPanel(): React.ReactElement {
           </div>
           <div className="space-y-1">
             {mockUsers.map((user) => (
-              <button
+              <Button
                 key={user.id}
+                type="button"
+                variant="ghost"
+                size="inline"
                 onClick={() => setCurrentUser(user.id)}
                 className={cn(
                   "flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-xs transition-colors",
@@ -261,7 +274,7 @@ export function DevPanel(): React.ReactElement {
                 >
                   {user.role}
                 </span>
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -272,7 +285,10 @@ export function DevPanel(): React.ReactElement {
           <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
             Runtimes
           </div>
-          <button
+          <Button
+            type="button"
+            variant="ghost"
+            size="inline"
             onClick={() => {
               if (hasRuntimes) {
                 setRuntimes([]);
@@ -291,8 +307,11 @@ export function DevPanel(): React.ReactElement {
           >
             {hasRuntimes ? <ZapOff className="h-3.5 w-3.5" /> : <Zap className="h-3.5 w-3.5" />}
             {hasRuntimes ? `Clear runtimes (${runtimes.length})` : "Simulate no runtimes"}
-          </button>
-          <button
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="inline"
             onClick={() => setDevSimulateNoDetection(!devSimulateNoDetection)}
             className={cn(
               "flex items-center gap-2 w-full px-2.5 py-1.5 mt-1 rounded-md text-xs transition-colors",
@@ -307,7 +326,7 @@ export function DevPanel(): React.ReactElement {
               <Search className="h-3.5 w-3.5" />
             )}
             {devSimulateNoDetection ? "Detection disabled" : "Simulate no detection"}
-          </button>
+          </Button>
         </div>
 
         <div className="h-px bg-border" />
@@ -317,7 +336,10 @@ export function DevPanel(): React.ReactElement {
             <Layers className="h-3 w-3" />
             Workspaces
           </div>
-          <button
+          <Button
+            type="button"
+            variant="ghost"
+            size="inline"
             onClick={fillWorkspacesToLimit}
             disabled={workspacesAtLimit}
             className={cn(
@@ -332,12 +354,15 @@ export function DevPanel(): React.ReactElement {
               {workspacesAtLimit ? "At workspace limit" : "Fill to 5 workspaces"}
             </span>
             <span className="text-[10px] opacity-80">{workspaces.length}/5</span>
-          </button>
+          </Button>
         </div>
 
         <div className="h-px bg-border" />
 
-        <button
+        <Button
+          type="button"
+          variant="ghost"
+          size="inline"
           onClick={() => {
             reset();
             navigate("/");
@@ -346,7 +371,7 @@ export function DevPanel(): React.ReactElement {
         >
           <RotateCcw className="h-3.5 w-3.5" />
           Reset All State
-        </button>
+        </Button>
       </div>
     </div>
   );

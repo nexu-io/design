@@ -1,11 +1,35 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-import { Hash, X, ArrowLeft, Search, Check, Bot } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, Bot, Check, Hash, Search, Users } from "lucide-react";
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Badge,
+  Button,
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  EmptyState,
+  FormField,
+  FormFieldControl,
+  Input,
+  InteractiveRow,
+  InteractiveRowContent,
+  InteractiveRowLeading,
+  InteractiveRowTrailing,
+  cn,
+} from "@nexu-design/ui-web";
+
 import { useT } from "@/i18n";
-import { useChatStore } from "@/stores/chat";
+import { mockAgents, mockUsers } from "@/mock/data";
 import { useAgentsStore } from "@/stores/agents";
-import { mockUsers, mockAgents } from "@/mock/data";
+import { useChatStore } from "@/stores/chat";
 import type { Channel, MemberRef } from "@/types";
-import { cn } from "@/lib/utils";
 
 interface CreateChannelDialogProps {
   open: boolean;
@@ -19,99 +43,102 @@ export function CreateChannelDialog({
   open,
   onOpenChange,
   onCreated,
-}: CreateChannelDialogProps): React.ReactElement | null {
+}: CreateChannelDialogProps): React.ReactElement {
   const t = useT();
   const addChannel = useChatStore((s) => s.addChannel);
   const storeAgents = useAgentsStore((s) => s.agents);
-  // Fallback to mockAgents if the agents store hasn't been hydrated yet —
-  // Create Channel can be opened before the Agents tab has mounted.
   const agents = storeAgents.length > 0 ? storeAgents : mockAgents;
 
   const [step, setStep] = useState<Step>("details");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [query, setQuery] = useState("");
-  const [selectedUserIds, setSelectedUserIds] = useState<Set<string>>(
-    () => new Set(mockUsers.map((u) => u.id)),
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>(() =>
+    mockUsers.map((user) => user.id),
   );
-  const [selectedAgentIds, setSelectedAgentIds] = useState<Set<string>>(new Set());
-  const inputRef = useRef<HTMLInputElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
+  const [selectedAgentIds, setSelectedAgentIds] = useState<string[]>([]);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!open) return;
+
     setStep("details");
     setName("");
     setDescription("");
     setQuery("");
-    setSelectedUserIds(new Set(mockUsers.map((u) => u.id)));
-    setSelectedAgentIds(new Set(agents.map((a) => a.id)));
-    requestAnimationFrame(() => inputRef.current?.focus());
+    setSelectedUserIds(mockUsers.map((user) => user.id));
+    setSelectedAgentIds(agents.map((agent) => agent.id));
+
+    requestAnimationFrame(() => nameInputRef.current?.focus());
   }, [open, agents]);
 
   useEffect(() => {
-    if (step === "members") {
-      requestAnimationFrame(() => searchRef.current?.focus());
-    }
+    if (step !== "members") return;
+    requestAnimationFrame(() => searchInputRef.current?.focus());
   }, [step]);
 
   const filteredUsers = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return mockUsers;
+    const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) return mockUsers;
+
     return mockUsers.filter(
-      (u) => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q),
+      (user) =>
+        user.name.toLowerCase().indexOf(normalizedQuery) !== -1 ||
+        user.email.toLowerCase().indexOf(normalizedQuery) !== -1,
     );
   }, [query]);
 
   const filteredAgents = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return agents;
-    return agents.filter(
-      (a) => a.name.toLowerCase().includes(q) || (a.description ?? "").toLowerCase().includes(q),
-    );
-  }, [query, agents]);
+    const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) return agents;
 
-  if (!open) return null;
+    return agents.filter(
+      (agent) =>
+        agent.name.toLowerCase().indexOf(normalizedQuery) !== -1 ||
+        (agent.description ?? "").toLowerCase().indexOf(normalizedQuery) !== -1,
+    );
+  }, [agents, query]);
 
   const toggleUser = (id: string): void => {
     setSelectedUserIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
+      if (prev.indexOf(id) !== -1) {
+        return prev.filter((userId) => userId !== id);
+      }
+
+      return prev.concat(id);
     });
   };
 
   const toggleAgent = (id: string): void => {
     setSelectedAgentIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
+      if (prev.indexOf(id) !== -1) {
+        return prev.filter((agentId) => agentId !== id);
+      }
+
+      return prev.concat(id);
     });
   };
 
-  const totalSelected = selectedUserIds.size + selectedAgentIds.size;
+  const totalSelected = selectedUserIds.length + selectedAgentIds.length;
 
   const handleNext = (): void => {
     if (!name.trim()) return;
     setStep("members");
   };
 
-  const handleBack = (): void => setStep("details");
-
   const handleCreate = (): void => {
-    const trimmed = name.trim().toLowerCase().replace(/\s+/g, "-");
-    if (!trimmed) return;
+    const trimmedName = name.trim().toLowerCase().replace(/\s+/g, "-");
+    if (!trimmedName) return;
 
     const members: MemberRef[] = [
-      ...Array.from(selectedUserIds).map((id): MemberRef => ({ kind: "user", id })),
-      ...Array.from(selectedAgentIds).map((id): MemberRef => ({ kind: "agent", id })),
+      ...selectedUserIds.map((id): MemberRef => ({ kind: "user", id })),
+      ...selectedAgentIds.map((id): MemberRef => ({ kind: "agent", id })),
     ];
 
     const channel: Channel = {
       id: `ch-${Date.now()}`,
-      name: trimmed,
+      name: trimmedName,
       description: description.trim() || undefined,
       type: "channel",
       members,
@@ -120,255 +147,242 @@ export function CreateChannelDialog({
       createdAt: Date.now(),
     };
 
-    const id = channel.id;
     addChannel(channel);
     onOpenChange(false);
-    setTimeout(() => onCreated?.(id), 0);
+    setTimeout(() => onCreated?.(channel.id), 0);
   };
 
-  const handleDetailsKeyDown = (e: React.KeyboardEvent): void => {
-    if (e.key === "Enter" && !e.shiftKey && name.trim()) {
-      e.preventDefault();
+  const handleDetailsKeyDown = (event: React.KeyboardEvent): void => {
+    if (event.key === "Enter" && !event.shiftKey && name.trim()) {
+      event.preventDefault();
       handleNext();
     }
-    if (e.key === "Escape") onOpenChange(false);
   };
 
-  const handleOverlayClick = (e: React.MouseEvent): void => {
-    if (e.target === e.currentTarget) onOpenChange(false);
-  };
+  const subtitle =
+    step === "details"
+      ? `${t("createChannel.stepOfTwo", { step: "1" })}${t("createChannel.detailsSuffix")}`
+      : `${t("createChannel.stepOfTwo", { step: "2" })}${
+          totalSelected === 1
+            ? t("createChannel.membersSuffix", { count: String(totalSelected) })
+            : t("createChannel.membersSuffixPlural", { count: String(totalSelected) })
+        }`;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      onClick={handleOverlayClick}
-      onKeyDown={(e) => {
-        if (e.key === "Escape") onOpenChange(false);
-      }}
-    >
-      <div className="w-[440px] rounded-xl border border-border bg-background text-foreground p-0 shadow-xl overflow-hidden">
-        <div className="flex items-center justify-between px-5 pt-5 pb-1">
-          <div className="flex items-center gap-2">
-            {step === "members" && (
-              <button
-                onClick={handleBack}
-                className="flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                title={t("common.back")}
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </button>
-            )}
-            <h2 className="text-base font-semibold text-foreground">
-              {step === "details" ? t("createChannel.title") : t("createChannel.addMembers")}
-            </h2>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent size="md">
+        <DialogHeader>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-2">
+              {step === "members" ? (
+                <Button variant="ghost" size="icon-sm" onClick={() => setStep("details")}>
+                  <ArrowLeft className="size-4" />
+                </Button>
+              ) : null}
+              <div className="space-y-1">
+                <DialogTitle>
+                  {step === "details" ? t("createChannel.title") : t("createChannel.addMembers")}
+                </DialogTitle>
+                <DialogDescription>{subtitle}</DialogDescription>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5 pt-1">
+              <div className="h-1.5 w-12 rounded-full bg-accent" />
+              <div
+                className={cn(
+                  "h-1.5 w-12 rounded-full transition-colors",
+                  step === "members" ? "bg-accent" : "bg-surface-3",
+                )}
+              />
+            </div>
           </div>
-          <button
-            onClick={() => onOpenChange(false)}
-            className="flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
+        </DialogHeader>
 
-        {/* Step indicator */}
-        <div className="px-5 pt-2 pb-1">
-          <div className="flex items-center gap-1.5">
-            <div className={cn("h-1 flex-1 rounded-full transition-colors", "bg-foreground")} />
-            <div
-              className={cn(
-                "h-1 flex-1 rounded-full transition-colors",
-                step === "members" ? "bg-foreground" : "bg-secondary",
-              )}
-            />
-          </div>
-          <p className="mt-2 text-xs text-muted-foreground">
-            {t("createChannel.stepOfTwo", { step: String(step === "details" ? 1 : 2) })}
-            {step === "details"
-              ? t("createChannel.detailsSuffix")
-              : totalSelected === 1
-                ? t("createChannel.membersSuffix", { count: String(totalSelected) })
-                : t("createChannel.membersSuffixPlural", { count: String(totalSelected) })}
-          </p>
-        </div>
-
-        {step === "details" ? (
-          <>
-            <div className="px-5 py-4 space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium">{t("createChannel.nameLabel")}</label>
-                <div className="relative">
-                  <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                  <input
-                    ref={inputRef}
+        <DialogBody>
+          {step === "details" ? (
+            <div className="space-y-4">
+              <FormField label={t("createChannel.nameLabel")}>
+                <FormFieldControl>
+                  <Input
+                    ref={nameInputRef}
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(event) => setName(event.target.value)}
                     onKeyDown={handleDetailsKeyDown}
                     placeholder={t("createChannel.namePlaceholder")}
-                    className="w-full h-9 rounded-md border border-input bg-background pl-9 pr-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                    leadingIcon={<Hash className="size-4" />}
                   />
-                </div>
-              </div>
+                </FormFieldControl>
+              </FormField>
 
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium">
-                  {t("createChannel.descLabel")}{" "}
-                  <span className="text-muted-foreground font-normal">
-                    {t("createChannel.optional")}
+              <FormField
+                label={
+                  <span>
+                    {t("createChannel.descLabel")}{" "}
+                    <span className="font-normal text-text-muted">
+                      {t("createChannel.optional")}
+                    </span>
                   </span>
-                </label>
-                <input
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  onKeyDown={handleDetailsKeyDown}
-                  placeholder={t("createChannel.descPlaceholder")}
-                  className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                />
-              </div>
-            </div>
-
-            <div className="flex justify-end gap-2 px-5 pb-5">
-              <button
-                onClick={() => onOpenChange(false)}
-                className="h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors"
+                }
               >
-                {t("common.cancel")}
-              </button>
-              <button
-                onClick={handleNext}
-                disabled={!name.trim()}
-                className="h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:pointer-events-none transition-colors"
-              >
-                {t("common.next")}
-              </button>
+                <FormFieldControl>
+                  <Input
+                    value={description}
+                    onChange={(event) => setDescription(event.target.value)}
+                    onKeyDown={handleDetailsKeyDown}
+                    placeholder={t("createChannel.descPlaceholder")}
+                  />
+                </FormFieldControl>
+              </FormField>
             </div>
-          </>
-        ) : (
-          <>
-            <div className="px-5 py-3 space-y-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                <input
-                  ref={searchRef}
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder={t("createChannel.searchPlaceholder")}
-                  className="w-full h-9 rounded-md border border-input bg-background pl-9 pr-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                />
-              </div>
+          ) : (
+            <div className="space-y-4">
+              <FormField label="Find members">
+                <FormFieldControl>
+                  <Input
+                    ref={searchInputRef}
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder={t("createChannel.searchPlaceholder")}
+                    leadingIcon={<Search className="size-4" />}
+                  />
+                </FormFieldControl>
+              </FormField>
 
-              <div className="max-h-[320px] overflow-y-auto -mx-1 px-1">
+              <div className="max-h-[360px] space-y-4 overflow-y-auto pr-1">
                 {filteredUsers.length === 0 && filteredAgents.length === 0 ? (
-                  <div className="py-10 text-center text-sm text-muted-foreground">
-                    {t("common.noMatches")}
-                  </div>
+                  <EmptyState
+                    title={t("common.noMatches")}
+                    description="Try a different search to find people or agents to add."
+                    icon={<Users className="size-6" />}
+                    className="border-border-subtle"
+                  />
                 ) : (
-                  <div className="space-y-0.5">
-                    {filteredUsers.map((u) => {
-                      const selected = selectedUserIds.has(u.id);
-                      return (
-                        <button
-                          key={`u-${u.id}`}
-                          onClick={() => toggleUser(u.id)}
-                          className={cn(
-                            "w-full flex items-center gap-3 px-2 py-1.5 rounded-md text-left transition-colors",
-                            selected ? "bg-accent/60" : "hover:bg-accent",
-                          )}
-                        >
-                          <img
-                            src={u.avatar}
-                            alt={u.name}
-                            className="h-7 w-7 rounded-full bg-secondary shrink-0"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <div className="text-sm truncate">{u.name}</div>
-                            <div className="text-xs text-muted-foreground truncate">{u.email}</div>
-                          </div>
-                          <div
-                            className={cn(
-                              "flex items-center justify-center h-5 w-5 rounded border transition-colors shrink-0",
-                              selected
-                                ? "bg-foreground border-foreground text-background"
-                                : "border-input",
-                            )}
+                  <>
+                    <SelectionSection label="People" count={filteredUsers.length}>
+                      {filteredUsers.map((user) => {
+                        const selected = selectedUserIds.indexOf(user.id) !== -1;
+                        return (
+                          <InteractiveRow
+                            key={`user-${user.id}`}
+                            selected={selected}
+                            tone="subtle"
+                            onClick={() => toggleUser(user.id)}
+                            className="px-3 py-2"
                           >
-                            {selected && <Check className="h-3.5 w-3.5" />}
-                          </div>
-                        </button>
-                      );
-                    })}
+                            <InteractiveRowLeading>
+                              <Avatar className="size-8">
+                                <AvatarImage src={user.avatar} alt={user.name} />
+                                <AvatarFallback>
+                                  {user.name.slice(0, 2).toUpperCase()}
+                                </AvatarFallback>
+                              </Avatar>
+                            </InteractiveRowLeading>
+                            <InteractiveRowContent>
+                              <div className="text-[13px] font-medium text-text-heading">
+                                {user.name}
+                              </div>
+                              <div className="text-[11px] text-text-muted">{user.email}</div>
+                            </InteractiveRowContent>
+                            <InteractiveRowTrailing>
+                              {selected ? (
+                                <Check className="size-4 text-text-heading" strokeWidth={3} />
+                              ) : null}
+                            </InteractiveRowTrailing>
+                          </InteractiveRow>
+                        );
+                      })}
+                    </SelectionSection>
 
-                    {filteredAgents.map((a) => {
-                      const selected = selectedAgentIds.has(a.id);
-                      return (
-                        <button
-                          key={`a-${a.id}`}
-                          onClick={() => toggleAgent(a.id)}
-                          className={cn(
-                            "w-full flex items-center gap-3 px-2 py-1.5 rounded-md text-left transition-colors",
-                            selected ? "bg-accent/60" : "hover:bg-accent",
-                          )}
-                        >
-                          <div className="relative h-7 w-7 shrink-0">
-                            {a.avatar ? (
-                              <img
-                                src={a.avatar}
-                                alt={a.name}
-                                className="h-7 w-7 rounded-md bg-secondary"
-                              />
-                            ) : (
-                              <div className="h-7 w-7 rounded-md bg-secondary flex items-center justify-center">
-                                <Bot className="h-3.5 w-3.5 text-muted-foreground" />
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-sm truncate">{a.name}</span>
-                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-nexu-agent/15 text-nexu-agent font-medium shrink-0">
-                                {t("createChannel.agentBadge")}
-                              </span>
-                            </div>
-                            {a.description && (
-                              <div className="text-xs text-muted-foreground truncate">
-                                {a.description}
-                              </div>
-                            )}
-                          </div>
-                          <div
-                            className={cn(
-                              "flex items-center justify-center h-5 w-5 rounded border transition-colors shrink-0",
-                              selected
-                                ? "bg-foreground border-foreground text-background"
-                                : "border-input",
-                            )}
+                    <SelectionSection label="Agents" count={filteredAgents.length}>
+                      {filteredAgents.map((agent) => {
+                        const selected = selectedAgentIds.indexOf(agent.id) !== -1;
+                        return (
+                          <InteractiveRow
+                            key={`agent-${agent.id}`}
+                            selected={selected}
+                            tone="subtle"
+                            onClick={() => toggleAgent(agent.id)}
+                            className="px-3 py-2"
                           >
-                            {selected && <Check className="h-3.5 w-3.5" />}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
+                            <InteractiveRowLeading>
+                              {agent.avatar ? (
+                                <img
+                                  src={agent.avatar}
+                                  alt={agent.name}
+                                  className="size-8 rounded-lg"
+                                />
+                              ) : (
+                                <div className="flex size-8 items-center justify-center rounded-lg bg-surface-2">
+                                  <Bot className="size-4 text-text-muted" />
+                                </div>
+                              )}
+                            </InteractiveRowLeading>
+                            <InteractiveRowContent>
+                              <div className="flex items-center gap-2">
+                                <span className="text-[13px] font-medium text-text-heading">
+                                  {agent.name}
+                                </span>
+                                <Badge variant="accent" size="xs">
+                                  {t("createChannel.agentBadge")}
+                                </Badge>
+                              </div>
+                              {agent.description ? (
+                                <div className="text-[11px] text-text-muted">
+                                  {agent.description}
+                                </div>
+                              ) : null}
+                            </InteractiveRowContent>
+                            <InteractiveRowTrailing>
+                              {selected ? (
+                                <Check className="size-4 text-text-heading" strokeWidth={3} />
+                              ) : null}
+                            </InteractiveRowTrailing>
+                          </InteractiveRow>
+                        );
+                      })}
+                    </SelectionSection>
+                  </>
                 )}
               </div>
             </div>
+          )}
+        </DialogBody>
 
-            <div className="flex items-center justify-between gap-2 px-5 pb-5 pt-1">
-              <button
-                onClick={handleBack}
-                className="h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors"
-              >
-                {t("common.back")}
-              </button>
-              <button
-                onClick={handleCreate}
-                className="h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:bg-foreground/90 transition-colors"
-              >
-                {t("createChannel.createCta")}
-              </button>
-            </div>
-          </>
-        )}
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            {t("common.cancel")}
+          </Button>
+          {step === "details" ? (
+            <Button onClick={handleNext} disabled={!name.trim()}>
+              {t("common.next")}
+            </Button>
+          ) : (
+            <Button onClick={handleCreate}>{t("createChannel.createCta")}</Button>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function SelectionSection({
+  label,
+  count,
+  children,
+}: {
+  label: string;
+  count: number;
+  children: React.ReactNode;
+}): React.ReactElement {
+  return (
+    <section className="space-y-2">
+      <div className="flex items-center justify-between">
+        <h3 className="text-[12px] font-semibold uppercase tracking-wide text-text-muted">
+          {label}
+        </h3>
+        <span className="text-[11px] text-text-muted">{count}</span>
       </div>
-    </div>
+      <div className="space-y-1">{children}</div>
+    </section>
   );
 }

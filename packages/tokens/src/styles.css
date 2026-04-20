@@ -252,6 +252,7 @@
   --color-ring: hsl(var(--ring));
   --color-link: hsl(var(--link));
   --color-error: hsl(var(--error));
+  --color-danger: var(--color-danger);
   --color-error-foreground: hsl(var(--error-foreground));
   --color-info: hsl(var(--info));
   --color-info-foreground: hsl(var(--info-foreground));
@@ -268,6 +269,7 @@
   --color-accent-fg: var(--color-accent-fg);
   --color-accent-hover: var(--color-accent-hover);
   --color-error-subtle: var(--color-error-subtle);
+  --color-danger-subtle: var(--color-danger-subtle);
   --color-success-subtle: var(--color-success-subtle);
   --color-warning-subtle: var(--color-warning-subtle);
   --color-info-subtle: var(--color-info-subtle);

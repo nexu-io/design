@@ -1,12 +1,12 @@
-import { useState, useRef, useCallback, useLayoutEffect, useEffect } from "react";
+import { Button, cn } from "@nexu-design/ui-web";
 import { Paperclip, Send } from "lucide-react";
-import { Button } from "@nexu-design/ui-web";
-import { cn } from "@/lib/utils";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+
 import { useT } from "@/i18n";
-import { useChatStore } from "@/stores/chat";
 import { getRandomAgentResponse, mockAgents } from "@/mock/data";
+import { useChatStore } from "@/stores/chat";
+import type { Channel, MemberRef, Message } from "@/types";
 import { MentionPicker } from "./MentionPicker";
-import type { Channel, Message, MemberRef } from "@/types";
 
 interface MessageInputProps {
   channelId: string;
@@ -49,7 +49,7 @@ export function MessageInput({
 
   useLayoutEffect(() => {
     adjustHeight(textareaRef.current);
-  }, [text, adjustHeight]);
+  }, [adjustHeight]);
 
   const simulateAgentReply = useCallback(
     (agentRef: MemberRef) => {
@@ -94,12 +94,16 @@ export function MessageInput({
 
     const mentionedAgents: MemberRef[] = [];
     const mentionPattern = /@(\w+)/g;
-    let match: RegExpExecArray | null = null;
-    while ((match = mentionPattern.exec(trimmed)) !== null) {
-      const agent = mockAgents.find((a) => a.name.toLowerCase() === match![1].toLowerCase());
+    let match = mentionPattern.exec(trimmed);
+    while (match) {
+      const mentionName = match[1]?.toLowerCase();
+      const agent = mentionName
+        ? mockAgents.find((a) => a.name.toLowerCase() === mentionName)
+        : undefined;
       if (agent) {
         mentionedAgents.push({ kind: "agent", id: agent.id });
       }
+      match = mentionPattern.exec(trimmed);
     }
 
     const userMsg: Message = {
@@ -119,7 +123,9 @@ export function MessageInput({
       const agentMember = channel.members.find((m) => m.kind === "agent");
       if (agentMember) simulateAgentReply(agentMember);
     } else if (mentionedAgents.length > 0) {
-      mentionedAgents.forEach((ref) => simulateAgentReply(ref));
+      for (const ref of mentionedAgents) {
+        simulateAgentReply(ref);
+      }
     }
 
     adjustHeight(textareaRef.current);
@@ -137,6 +143,7 @@ export function MessageInput({
     setText(val);
 
     const textarea = e.target;
+    adjustHeight(textarea);
     const cursorPos = textarea.selectionStart;
     const textBeforeCursor = val.slice(0, cursorPos);
     const atMatch = textBeforeCursor.match(/@(\w*)$/);

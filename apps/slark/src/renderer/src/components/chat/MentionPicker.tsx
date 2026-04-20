@@ -1,3 +1,4 @@
+import { Button } from "@nexu-design/ui-web";
 import { Bot } from "lucide-react";
 import { resolveRef } from "@/mock/data";
 import type { MemberRef } from "@/types";
@@ -35,8 +36,11 @@ export function MentionPicker({
         const resolved = resolveRef(m);
         if (!resolved) return null;
         return (
-          <button
+          <Button
             key={`${m.kind}-${m.id}`}
+            type="button"
+            variant="ghost"
+            size="inline"
             onClick={() => {
               onSelect(m, resolved.name);
               onClose();
@@ -46,7 +50,7 @@ export function MentionPicker({
             <img src={resolved.avatar} alt="" className="h-5 w-5 rounded-full" />
             <span className="flex-1 text-left truncate">{resolved.name}</span>
             {resolved.isAgent && <Bot className="h-3.5 w-3.5 text-nexu-agent" />}
-          </button>
+          </Button>
         );
       })}
     </div>

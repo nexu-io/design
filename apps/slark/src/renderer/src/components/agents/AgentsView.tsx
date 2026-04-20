@@ -1,9 +1,11 @@
-import { useParams } from "react-router-dom";
+import { cn } from "@nexu-design/ui-web";
 import { Bot } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useParams } from "react-router-dom";
+
+import { WindowChrome } from "@/components/layout/WindowChrome";
 import { useT } from "@/i18n";
-import { useAgentsStore } from "@/stores/agents";
 import { mockRuntimes } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
 import { AgentDetail } from "./AgentDetail";
 
 export function AgentsView(): React.ReactElement {
@@ -35,7 +37,7 @@ export function AgentsView(): React.ReactElement {
 
   return (
     <div className="p-6">
-      <div className="drag-region h-10" />
+      <WindowChrome className="h-10" />
       <h1 className="text-xl font-semibold mb-6">{t("agents.agentsTitle")}</h1>
       <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
         {agents.map((agent) => {

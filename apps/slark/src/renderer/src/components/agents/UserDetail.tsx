@@ -1,10 +1,12 @@
+import { cn } from "@nexu-design/ui-web";
+import { Hash, Mail, MessageSquare } from "lucide-react";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Hash, MessageSquare, Mail } from "lucide-react";
-import { cn } from "@/lib/utils";
+
+import { WindowChrome } from "@/components/layout/WindowChrome";
 import { useT } from "@/i18n";
 import { useChatStore } from "@/stores/chat";
-import type { User, Channel } from "@/types";
+import type { Channel, User } from "@/types";
 
 interface UserDetailProps {
   user: User;
@@ -75,7 +77,7 @@ export function UserDetail({ user }: UserDetailProps): React.ReactElement {
 
   return (
     <div className="flex flex-col h-full overflow-y-auto">
-      <div className="drag-region h-10 shrink-0" />
+      <WindowChrome className="h-10" />
 
       <div className="px-6 pb-4 flex items-start justify-between gap-4">
         <div className="flex items-center gap-4 min-w-0">
@@ -102,6 +104,7 @@ export function UserDetail({ user }: UserDetailProps): React.ReactElement {
         </div>
         {user.id !== "u-1" && (
           <button
+            type="button"
             onClick={handleMessage}
             className="flex items-center gap-1.5 h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors shrink-0"
           >
@@ -144,6 +147,7 @@ export function UserDetail({ user }: UserDetailProps): React.ReactElement {
             <div className="rounded-lg border border-border divide-y divide-border">
               {userChannels.map((c) => (
                 <button
+                  type="button"
                   key={c.id}
                   onClick={() => navigate(`/chat/${c.id}`)}
                   className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-accent/50 transition-colors"

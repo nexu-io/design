@@ -1,27 +1,28 @@
-import { useState } from "react";
+import type { ContentBlock } from "@/types";
 import {
-  Copy,
-  Check,
-  Loader2,
-  CheckCircle2,
-  XCircle,
-  ChevronRight,
-  ChevronDown,
-  Terminal,
-  GitPullRequestArrow,
-  ShieldQuestion,
-} from "lucide-react";
-import {
+  Button,
   FileAttachment,
   ImageAttachment,
   ImageGallery,
   TopicCard,
   VideoAttachment,
   VoiceMessage,
+  cn,
 } from "@nexu-design/ui-web";
 import type { FileAttachmentKind } from "@nexu-design/ui-web";
-import { cn } from "@/lib/utils";
-import type { ContentBlock } from "@/types";
+import {
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
+  Copy,
+  GitPullRequestArrow,
+  Loader2,
+  ShieldQuestion,
+  Terminal,
+  XCircle,
+} from "lucide-react";
+import { useState } from "react";
 
 interface ContentBlockRendererProps {
   block: ContentBlock;
@@ -55,6 +56,28 @@ function fileExtension(name: string): string | undefined {
   const idx = name.lastIndexOf(".");
   if (idx <= 0 || idx === name.length - 1) return undefined;
   return name.slice(idx + 1).toLowerCase();
+}
+
+interface IndexedItem<T> {
+  key: string;
+  value: T;
+  lineNumber: number;
+}
+
+function createIndexedItems<T>(items: T[], keyOf: (item: T) => string): IndexedItem<T>[] {
+  const occurrences = new Map<string, number>();
+  const indexed: IndexedItem<T>[] = [];
+  let lineNumber = 0;
+
+  for (const item of items) {
+    lineNumber += 1;
+    const base = keyOf(item);
+    const count = (occurrences.get(base) ?? 0) + 1;
+    occurrences.set(base, count);
+    indexed.push({ key: `${base}:${count}`, value: item, lineNumber });
+  }
+
+  return indexed;
 }
 
 function ImageBlock({
@@ -188,6 +211,18 @@ function CodeBlock({
         onExpand && "cursor-pointer",
       )}
       onClick={onExpand}
+      role={onExpand ? "button" : undefined}
+      tabIndex={onExpand ? 0 : undefined}
+      onKeyDown={
+        onExpand
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onExpand();
+              }
+            }
+          : undefined
+      }
     >
       <div className="flex items-center justify-between h-8 px-3 bg-white/[0.03] border-b border-white/[0.05]">
         <div className="flex items-center gap-2 min-w-0">
@@ -202,16 +237,19 @@ function CodeBlock({
           )}
         </div>
         <div className="flex items-center gap-1 shrink-0 ml-3">
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
+            onMouseDown={(e) => e.stopPropagation()}
             onClick={handleCopy}
             className={cn(
-              "flex items-center gap-1 text-[11px] transition-colors",
+              "h-auto px-0 py-0 flex items-center gap-1 text-[11px] transition-colors",
               copied ? "text-green-400" : "text-white/25 hover:text-white/60",
             )}
           >
             {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
             {copied ? "Copied" : "Copy"}
-          </button>
+          </Button>
           {isTruncated && (
             <span className="text-[10px] text-white/20 ml-1">{lines.length} lines</span>
           )}
@@ -271,10 +309,12 @@ function ToolResultBlock({
 
   return (
     <div className="w-[360px] rounded-xl overflow-hidden border border-white/[0.06]">
-      <button
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={() => setExpanded(!expanded)}
         className={cn(
-          "flex items-center gap-2.5 w-full px-3.5 py-2.5 text-left transition-colors",
+          "h-auto flex items-center gap-2.5 w-full px-3.5 py-2.5 text-left justify-start transition-colors rounded-none",
           "bg-white/[0.03] hover:bg-white/[0.06]",
         )}
       >
@@ -292,7 +332,7 @@ function ToolResultBlock({
         ) : (
           <XCircle className="h-3.5 w-3.5 text-red-400/70 shrink-0" />
         )}
-      </button>
+      </Button>
       {expanded && (
         <div className="bg-[#0d1117] border-t border-white/[0.04]">
           {block.input && (
@@ -333,6 +373,7 @@ function DiffBlock({
   const lines = block.content.split("\n");
   const isTruncated = lines.length > DIFF_PREVIEW_LINES;
   const previewLines = isTruncated ? lines.slice(0, DIFF_PREVIEW_LINES) : lines;
+  const previewEntries = createIndexedItems(previewLines, (line) => line);
 
   return (
     <div
@@ -341,6 +382,18 @@ function DiffBlock({
         onExpand && "cursor-pointer",
       )}
       onClick={onExpand}
+      role={onExpand ? "button" : undefined}
+      tabIndex={onExpand ? 0 : undefined}
+      onKeyDown={
+        onExpand
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onExpand();
+              }
+            }
+          : undefined
+      }
     >
       <div className="flex items-center justify-between h-9 px-3.5 bg-white/[0.03] border-b border-white/[0.04]">
         <div className="flex items-center gap-2 min-w-0">
@@ -353,14 +406,14 @@ function DiffBlock({
         </div>
       </div>
       <div className="bg-[#0d1117] overflow-x-auto">
-        {previewLines.map((line, i) => {
+        {previewEntries.map(({ key, value: line }) => {
           const isAdd = line.startsWith("+");
           const isDel = line.startsWith("-");
           const isHunk = line.startsWith("@@");
 
           return (
             <div
-              key={i}
+              key={key}
               className={cn(
                 "px-3.5 text-[11px] font-mono leading-[22px] min-h-[22px] border-l-2",
                 isAdd && "bg-green-500/[0.07] text-green-300/80 border-green-500/40",
@@ -421,20 +474,21 @@ function ApprovalBlock({
       <div className="mt-3 pt-3 border-t border-white/[0.06]">
         {block.status === "pending" && (
           <div className="flex gap-2">
-            <button
+            <Button
               onClick={() => onAction?.(block.id, "approved")}
-              className="flex-1 flex items-center justify-center gap-1.5 h-8 rounded-lg text-[12px] font-medium bg-green-600/90 text-white hover:bg-green-600 transition-colors"
+              className="flex-1 h-8 rounded-lg text-[12px] font-medium bg-green-600/90 text-white hover:bg-green-600"
             >
               <CheckCircle2 className="h-3.5 w-3.5" />
               Approve
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outline"
               onClick={() => onAction?.(block.id, "rejected")}
-              className="flex-1 flex items-center justify-center gap-1.5 h-8 rounded-lg text-[12px] font-medium bg-white/[0.06] text-muted-foreground hover:bg-red-600/80 hover:text-white transition-colors"
+              className="flex-1 h-8 rounded-lg text-[12px] font-medium bg-white/[0.06] text-muted-foreground hover:bg-red-600/80 hover:text-white"
             >
               <XCircle className="h-3.5 w-3.5" />
               Reject
-            </button>
+            </Button>
           </div>
         )}
         {block.status === "approved" && (
@@ -459,6 +513,9 @@ function ProgressBlock({
 }: { block: Extract<ContentBlock, { type: "progress" }> }): React.ReactElement {
   const pct = Math.round((block.current / block.total) * 100);
   const isDone = pct >= 100;
+  const indexedSteps = block.steps
+    ? createIndexedItems(block.steps, (step) => `${step.label}-${step.status}`)
+    : [];
 
   return (
     <div className="w-[340px] rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3.5">
@@ -487,8 +544,8 @@ function ProgressBlock({
       {block.steps && block.steps.length > 0 && (
         <div className="mt-3.5 pt-3 border-t border-white/[0.04]">
           <div className="flex flex-col gap-1.5">
-            {block.steps.map((step, i) => (
-              <div key={i} className="flex items-center gap-2.5">
+            {indexedSteps.map(({ key, value: step }) => (
+              <div key={key} className="flex items-center gap-2.5">
                 <div
                   className={cn(
                     "h-[7px] w-[7px] rounded-full shrink-0 ring-2",
