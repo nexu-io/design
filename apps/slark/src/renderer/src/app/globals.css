@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "@nexu-design/tokens/styles.css";
+@source "../../../../../../packages/ui-web/src/**/*.{ts,tsx}";
+@source "../../../../../../packages/ui-web/dist/**/*.js";
 
 @custom-variant dark (&:is(.dark *));
 

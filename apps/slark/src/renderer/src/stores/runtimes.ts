@@ -1,19 +1,19 @@
-import { create } from 'zustand'
-import type { Runtime } from '@/types'
+import { create } from "zustand";
+import type { Runtime } from "@/types";
 
 interface RuntimesState {
-  runtimes: Runtime[]
-  selectedRuntimeId: string | null
-  devSimulateNone: boolean
-  devSimulateNoDetection: boolean
+  runtimes: Runtime[];
+  selectedRuntimeId: string | null;
+  devSimulateNone: boolean;
+  devSimulateNoDetection: boolean;
 
-  setRuntimes: (runtimes: Runtime[]) => void
-  addRuntime: (runtime: Runtime) => void
-  updateRuntime: (id: string, updates: Partial<Runtime>) => void
-  removeRuntime: (id: string) => void
-  selectRuntime: (id: string | null) => void
-  setDevSimulateNone: (v: boolean) => void
-  setDevSimulateNoDetection: (v: boolean) => void
+  setRuntimes: (runtimes: Runtime[]) => void;
+  addRuntime: (runtime: Runtime) => void;
+  updateRuntime: (id: string, updates: Partial<Runtime>) => void;
+  removeRuntime: (id: string) => void;
+  selectRuntime: (id: string | null) => void;
+  setDevSimulateNone: (v: boolean) => void;
+  setDevSimulateNoDetection: (v: boolean) => void;
 }
 
 export const useRuntimesStore = create<RuntimesState>((set) => ({
@@ -28,8 +28,8 @@ export const useRuntimesStore = create<RuntimesState>((set) => ({
   addRuntime: (runtime) => set((s) => ({ runtimes: [...s.runtimes, runtime] })),
   updateRuntime: (id, updates) =>
     set((s) => ({
-      runtimes: s.runtimes.map((r) => (r.id === id ? { ...r, ...updates } : r))
+      runtimes: s.runtimes.map((r) => (r.id === id ? { ...r, ...updates } : r)),
     })),
   removeRuntime: (id) => set((s) => ({ runtimes: s.runtimes.filter((r) => r.id !== id) })),
-  selectRuntime: (id) => set({ selectedRuntimeId: id })
-}))
+  selectRuntime: (id) => set({ selectedRuntimeId: id }),
+}));

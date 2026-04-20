@@ -1,22 +1,22 @@
-import { create } from 'zustand'
-import type { Channel, Message } from '@/types'
+import { create } from "zustand";
+import type { Channel, Message } from "@/types";
 
 interface ChatState {
-  channels: Channel[]
-  activeChannelId: string | null
-  messages: Record<string, Message[]>
-  pendingDraft: string | null
-  pinnedIds: string[]
+  channels: Channel[];
+  activeChannelId: string | null;
+  messages: Record<string, Message[]>;
+  pendingDraft: string | null;
+  pinnedIds: string[];
 
-  setChannels: (channels: Channel[]) => void
-  setActiveChannel: (id: string) => void
-  addChannel: (channel: Channel) => void
-  updateChannel: (channelId: string, updates: Partial<Channel>) => void
-  removeChannel: (channelId: string) => void
-  addMessage: (channelId: string, message: Message) => void
-  updateMessage: (channelId: string, messageId: string, updates: Partial<Message>) => void
-  setPendingDraft: (text: string | null) => void
-  togglePin: (channelId: string) => void
+  setChannels: (channels: Channel[]) => void;
+  setActiveChannel: (id: string) => void;
+  addChannel: (channel: Channel) => void;
+  updateChannel: (channelId: string, updates: Partial<Channel>) => void;
+  removeChannel: (channelId: string) => void;
+  addMessage: (channelId: string, message: Message) => void;
+  updateMessage: (channelId: string, messageId: string, updates: Partial<Message>) => void;
+  setPendingDraft: (text: string | null) => void;
+  togglePin: (channelId: string) => void;
 }
 
 export const useChatStore = create<ChatState>((set) => ({
@@ -34,24 +34,22 @@ export const useChatStore = create<ChatState>((set) => ({
 
   updateChannel: (channelId, updates) =>
     set((s) => ({
-      channels: s.channels.map((c) => (c.id === channelId ? { ...c, ...updates } : c))
+      channels: s.channels.map((c) => (c.id === channelId ? { ...c, ...updates } : c)),
     })),
 
   removeChannel: (channelId) =>
     set((s) => ({
       channels: s.channels.filter((c) => c.id !== channelId),
       activeChannelId: s.activeChannelId === channelId ? null : s.activeChannelId,
-      messages: Object.fromEntries(
-        Object.entries(s.messages).filter(([id]) => id !== channelId)
-      )
+      messages: Object.fromEntries(Object.entries(s.messages).filter(([id]) => id !== channelId)),
     })),
 
   addMessage: (channelId, message) =>
     set((state) => ({
       messages: {
         ...state.messages,
-        [channelId]: [...(state.messages[channelId] ?? []), message]
-      }
+        [channelId]: [...(state.messages[channelId] ?? []), message],
+      },
     })),
 
   updateMessage: (channelId, messageId, updates) =>
@@ -59,9 +57,9 @@ export const useChatStore = create<ChatState>((set) => ({
       messages: {
         ...state.messages,
         [channelId]: (state.messages[channelId] ?? []).map((msg) =>
-          msg.id === messageId ? { ...msg, ...updates } : msg
-        )
-      }
+          msg.id === messageId ? { ...msg, ...updates } : msg,
+        ),
+      },
     })),
 
   setPendingDraft: (text) => set({ pendingDraft: text }),
@@ -70,6 +68,6 @@ export const useChatStore = create<ChatState>((set) => ({
     set((s) => ({
       pinnedIds: s.pinnedIds.includes(channelId)
         ? s.pinnedIds.filter((id) => id !== channelId)
-        : [...s.pinnedIds, channelId]
-    }))
-}))
+        : [...s.pinnedIds, channelId],
+    })),
+}));

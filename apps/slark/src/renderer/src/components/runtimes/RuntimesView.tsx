@@ -1,189 +1,339 @@
-import { useEffect, useMemo, useState } from 'react'
-import type { ElementType, ReactElement, ReactNode } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useState } from "react";
+import type { ElementType, ReactElement, ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  Terminal, MousePointer, Code, Cpu, Box, Sparkles,
-  Trash2, Wifi, RefreshCw, ArrowRight, Zap,
-  Bot, Play, Square, RotateCw, ExternalLink
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useT, type TranslationKey } from '@/i18n'
-import { useRuntimesStore } from '@/stores/runtimes'
-import { useAgentsStore } from '@/stores/agents'
-import type { Runtime } from '@/types'
+  Terminal,
+  MousePointer,
+  Code,
+  Cpu,
+  Box,
+  Sparkles,
+  Trash2,
+  Wifi,
+  RefreshCw,
+  ArrowRight,
+  Zap,
+  Bot,
+  Play,
+  Square,
+  RotateCw,
+  ExternalLink,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useT, type TranslationKey } from "@/i18n";
+import { useRuntimesStore } from "@/stores/runtimes";
+import { useAgentsStore } from "@/stores/agents";
+import type { Runtime } from "@/types";
 
-const typeIcons: Record<Runtime['type'], ElementType> = {
-  'claude-code': Terminal, cursor: MousePointer, opencode: Code,
-  hermes: Cpu, codex: Box, 'gemini-cli': Sparkles
+const typeIcons: Record<Runtime["type"], ElementType> = {
+  "claude-code": Terminal,
+  cursor: MousePointer,
+  opencode: Code,
+  hermes: Cpu,
+  codex: Box,
+  "gemini-cli": Sparkles,
+};
+
+const providerLabels: Record<Runtime["type"], string> = {
+  "claude-code": "Anthropic",
+  cursor: "Cursor",
+  opencode: "OpenCode",
+  codex: "OpenAI",
+  "gemini-cli": "Google",
+  hermes: "Local",
+};
+
+const statusLabelKeys: Record<Runtime["status"], TranslationKey> = {
+  connected: "runtimes.statusOnline",
+  disconnected: "runtimes.statusOffline",
+  error: "runtimes.statusError",
+};
+
+const usagePeriods = ["7d", "30d", "90d"] as const;
+type UsagePeriod = (typeof usagePeriods)[number];
+
+interface UsageStats {
+  input: string;
+  output: string;
+  cacheRead: string;
+  cacheWrite: string;
+  cost: string;
 }
-
-const providerLabels: Record<Runtime['type'], string> = {
-  'claude-code': 'Anthropic', cursor: 'Cursor', opencode: 'OpenCode',
-  codex: 'OpenAI', 'gemini-cli': 'Google', hermes: 'Local'
+interface ModelRow {
+  model: string;
+  tokens: string;
+  cost: string;
+  color: string;
 }
-
-const statusLabelKeys: Record<Runtime['status'], TranslationKey> = {
-  connected: 'runtimes.statusOnline',
-  disconnected: 'runtimes.statusOffline',
-  error: 'runtimes.statusError'
-}
-
-const usagePeriods = ['7d', '30d', '90d'] as const
-type UsagePeriod = (typeof usagePeriods)[number]
-
-interface UsageStats { input: string; output: string; cacheRead: string; cacheWrite: string; cost: string }
-interface ModelRow { model: string; tokens: string; cost: string; color: string }
 interface RuntimeData {
-  usage: Record<UsagePeriod, UsageStats>
-  dailyDates: string[]
-  dailyTokens: number[]
-  dailyCosts: number[]
-  models: ModelRow[]
-  totalTokens: string
-  donutSegments: { percent: number; color: string }[]
-  hourlyData: number[]
-  createdAt: string
-  updatedAt: string
+  usage: Record<UsagePeriod, UsageStats>;
+  dailyDates: string[];
+  dailyTokens: number[];
+  dailyCosts: number[];
+  models: ModelRow[];
+  totalTokens: string;
+  donutSegments: { percent: number; color: string }[];
+  hourlyData: number[];
+  createdAt: string;
+  updatedAt: string;
 }
-
-
 
 const runtimeDataMap: Record<string, RuntimeData> = {
-  'rt-1': {
+  "rt-1": {
     usage: {
-      '7d':  { input: '22.1K',  output: '280K', cacheRead: '95.2M',  cacheWrite: '8.1M',  cost: '$3.82' },
-      '30d': { input: '110.5K', output: '1.3M', cacheRead: '413.4M', cacheWrite: '34.7M', cost: '$16.57' },
-      '90d': { input: '298K',   output: '3.8M', cacheRead: '1.1B',   cacheWrite: '89.2M', cost: '$42.30' }
+      "7d": {
+        input: "22.1K",
+        output: "280K",
+        cacheRead: "95.2M",
+        cacheWrite: "8.1M",
+        cost: "$3.82",
+      },
+      "30d": {
+        input: "110.5K",
+        output: "1.3M",
+        cacheRead: "413.4M",
+        cacheWrite: "34.7M",
+        cost: "$16.57",
+      },
+      "90d": {
+        input: "298K",
+        output: "3.8M",
+        cacheRead: "1.1B",
+        cacheWrite: "89.2M",
+        cost: "$42.30",
+      },
     },
-    dailyDates:  ['3/29', '3/30', '4/1', '4/2', '4/10', '4/11', '4/12', '4/13', '4/14', '4/15', '4/16'],
+    dailyDates: [
+      "3/29",
+      "3/30",
+      "4/1",
+      "4/2",
+      "4/10",
+      "4/11",
+      "4/12",
+      "4/13",
+      "4/14",
+      "4/15",
+      "4/16",
+    ],
     dailyTokens: [12, 8, 0, 5, 18, 35, 80, 120, 280, 350, 410],
-    dailyCosts:  [0.8, 0.5, 0, 0.3, 1.2, 2.1, 4.5, 5.8, 6.2, 6.8, 8.1],
-    totalTokens: '449.5M',
+    dailyCosts: [0.8, 0.5, 0, 0.3, 1.2, 2.1, 4.5, 5.8, 6.2, 6.8, 8.1],
+    totalTokens: "449.5M",
     donutSegments: [
-      { percent: 74.7, color: 'text-foreground' },
-      { percent: 20.4, color: 'text-muted-foreground' },
-      { percent: 2.5,  color: 'text-nexu-primary' },
-      { percent: 2.0,  color: 'text-nexu-agent' },
-      { percent: 0.4,  color: 'text-nexu-runtime' }
+      { percent: 74.7, color: "text-foreground" },
+      { percent: 20.4, color: "text-muted-foreground" },
+      { percent: 2.5, color: "text-nexu-primary" },
+      { percent: 2.0, color: "text-nexu-agent" },
+      { percent: 0.4, color: "text-nexu-runtime" },
     ],
     models: [
-      { model: 'anthropic/claude-4.6-opus-20260205',  tokens: '335.7M', cost: '',       color: 'bg-foreground' },
-      { model: 'anthropic/claude-4.6-sonnet-20260217', tokens: '91.8M',  cost: '',       color: 'bg-muted-foreground' },
-      { model: 'claude-opus-4-6',                      tokens: '11.4M',  cost: '$11.22', color: 'bg-nexu-primary' },
-      { model: 'claude-sonnet-4-6',                    tokens: '8.8M',   cost: '$5.01',  color: 'bg-nexu-agent' },
-      { model: 'claude-haiku-4-5-20251001',            tokens: '1.8M',   cost: '$0.35',  color: 'bg-nexu-runtime' }
+      {
+        model: "anthropic/claude-4.6-opus-20260205",
+        tokens: "335.7M",
+        cost: "",
+        color: "bg-foreground",
+      },
+      {
+        model: "anthropic/claude-4.6-sonnet-20260217",
+        tokens: "91.8M",
+        cost: "",
+        color: "bg-muted-foreground",
+      },
+      { model: "claude-opus-4-6", tokens: "11.4M", cost: "$11.22", color: "bg-nexu-primary" },
+      { model: "claude-sonnet-4-6", tokens: "8.8M", cost: "$5.01", color: "bg-nexu-agent" },
+      {
+        model: "claude-haiku-4-5-20251001",
+        tokens: "1.8M",
+        cost: "$0.35",
+        color: "bg-nexu-runtime",
+      },
     ],
     hourlyData: [0, 0, 0, 0, 0, 1, 2, 5, 12, 18, 22, 15, 8, 10, 14, 20, 16, 11, 6, 3, 2, 1, 0, 0],
-    createdAt: '4/16/2026, 10:27:33 AM',
-    updatedAt: '4/16/2026, 2:29:58 PM'
+    createdAt: "4/16/2026, 10:27:33 AM",
+    updatedAt: "4/16/2026, 2:29:58 PM",
   },
-  'rt-2': {
+  "rt-2": {
     usage: {
-      '7d':  { input: '8.4K',  output: '92K',  cacheRead: '31.5M',  cacheWrite: '2.8M',  cost: '$1.05' },
-      '30d': { input: '41.2K', output: '480K', cacheRead: '152.1M', cacheWrite: '12.3M', cost: '$5.20' },
-      '90d': { input: '105K',  output: '1.2M', cacheRead: '390M',   cacheWrite: '28.1M', cost: '$13.80' }
+      "7d": { input: "8.4K", output: "92K", cacheRead: "31.5M", cacheWrite: "2.8M", cost: "$1.05" },
+      "30d": {
+        input: "41.2K",
+        output: "480K",
+        cacheRead: "152.1M",
+        cacheWrite: "12.3M",
+        cost: "$5.20",
+      },
+      "90d": {
+        input: "105K",
+        output: "1.2M",
+        cacheRead: "390M",
+        cacheWrite: "28.1M",
+        cost: "$13.80",
+      },
     },
-    dailyDates:  ['3/29', '3/30', '4/1', '4/2', '4/10', '4/11', '4/12', '4/13', '4/14', '4/15', '4/16'],
+    dailyDates: [
+      "3/29",
+      "3/30",
+      "4/1",
+      "4/2",
+      "4/10",
+      "4/11",
+      "4/12",
+      "4/13",
+      "4/14",
+      "4/15",
+      "4/16",
+    ],
     dailyTokens: [5, 3, 2, 0, 8, 12, 20, 35, 55, 42, 60],
-    dailyCosts:  [0.2, 0.1, 0.1, 0, 0.4, 0.6, 1.0, 1.5, 2.2, 1.8, 2.5],
-    totalTokens: '152.8M',
+    dailyCosts: [0.2, 0.1, 0.1, 0, 0.4, 0.6, 1.0, 1.5, 2.2, 1.8, 2.5],
+    totalTokens: "152.8M",
     donutSegments: [
-      { percent: 62.0, color: 'text-foreground' },
-      { percent: 28.0, color: 'text-muted-foreground' },
-      { percent: 6.5,  color: 'text-nexu-primary' },
-      { percent: 2.5,  color: 'text-nexu-agent' },
-      { percent: 1.0,  color: 'text-nexu-runtime' }
+      { percent: 62.0, color: "text-foreground" },
+      { percent: 28.0, color: "text-muted-foreground" },
+      { percent: 6.5, color: "text-nexu-primary" },
+      { percent: 2.5, color: "text-nexu-agent" },
+      { percent: 1.0, color: "text-nexu-runtime" },
     ],
     models: [
-      { model: 'anthropic/claude-4.6-sonnet-20260217', tokens: '94.7M',  cost: '$3.20', color: 'bg-foreground' },
-      { model: 'openai/gpt-4.1',                       tokens: '42.8M',  cost: '$1.05', color: 'bg-muted-foreground' },
-      { model: 'anthropic/claude-4.6-opus-20260205',   tokens: '9.9M',   cost: '$0.68', color: 'bg-nexu-primary' },
-      { model: 'openai/o3',                             tokens: '3.8M',   cost: '$0.22', color: 'bg-nexu-agent' },
-      { model: 'google/gemini-2.5-flash',               tokens: '1.6M',   cost: '$0.05', color: 'bg-nexu-runtime' }
+      {
+        model: "anthropic/claude-4.6-sonnet-20260217",
+        tokens: "94.7M",
+        cost: "$3.20",
+        color: "bg-foreground",
+      },
+      { model: "openai/gpt-4.1", tokens: "42.8M", cost: "$1.05", color: "bg-muted-foreground" },
+      {
+        model: "anthropic/claude-4.6-opus-20260205",
+        tokens: "9.9M",
+        cost: "$0.68",
+        color: "bg-nexu-primary",
+      },
+      { model: "openai/o3", tokens: "3.8M", cost: "$0.22", color: "bg-nexu-agent" },
+      { model: "google/gemini-2.5-flash", tokens: "1.6M", cost: "$0.05", color: "bg-nexu-runtime" },
     ],
     hourlyData: [0, 0, 0, 0, 1, 2, 4, 8, 10, 15, 18, 12, 6, 8, 11, 14, 10, 7, 4, 2, 1, 0, 0, 0],
-    createdAt: '3/20/2026, 3:15:00 PM',
-    updatedAt: '4/16/2026, 1:45:22 PM'
+    createdAt: "3/20/2026, 3:15:00 PM",
+    updatedAt: "4/16/2026, 1:45:22 PM",
   },
-  'rt-5': {
+  "rt-5": {
     usage: {
-      '7d':  { input: '3.2K',  output: '45K',  cacheRead: '12.1M',  cacheWrite: '1.1M',  cost: '$0.42' },
-      '30d': { input: '18.5K', output: '210K', cacheRead: '68.4M',  cacheWrite: '5.8M',  cost: '$2.15' },
-      '90d': { input: '52K',   output: '580K', cacheRead: '175M',   cacheWrite: '14.2M', cost: '$5.90' }
+      "7d": { input: "3.2K", output: "45K", cacheRead: "12.1M", cacheWrite: "1.1M", cost: "$0.42" },
+      "30d": {
+        input: "18.5K",
+        output: "210K",
+        cacheRead: "68.4M",
+        cacheWrite: "5.8M",
+        cost: "$2.15",
+      },
+      "90d": {
+        input: "52K",
+        output: "580K",
+        cacheRead: "175M",
+        cacheWrite: "14.2M",
+        cost: "$5.90",
+      },
     },
-    dailyDates:  ['3/29', '3/30', '4/1', '4/2', '4/10', '4/11', '4/12', '4/13', '4/14', '4/15', '4/16'],
+    dailyDates: [
+      "3/29",
+      "3/30",
+      "4/1",
+      "4/2",
+      "4/10",
+      "4/11",
+      "4/12",
+      "4/13",
+      "4/14",
+      "4/15",
+      "4/16",
+    ],
     dailyTokens: [0, 0, 3, 1, 5, 8, 15, 22, 18, 30, 25],
-    dailyCosts:  [0, 0, 0.05, 0.02, 0.15, 0.25, 0.45, 0.7, 0.55, 0.9, 0.75],
-    totalTokens: '68.8M',
+    dailyCosts: [0, 0, 0.05, 0.02, 0.15, 0.25, 0.45, 0.7, 0.55, 0.9, 0.75],
+    totalTokens: "68.8M",
     donutSegments: [
-      { percent: 85.0, color: 'text-foreground' },
-      { percent: 15.0, color: 'text-muted-foreground' }
+      { percent: 85.0, color: "text-foreground" },
+      { percent: 15.0, color: "text-muted-foreground" },
     ],
     models: [
-      { model: 'gemini-2.5-pro', tokens: '58.5M', cost: '$1.80', color: 'bg-foreground' },
-      { model: 'gemini-2.5-flash', tokens: '10.3M', cost: '$0.35', color: 'bg-muted-foreground' }
+      { model: "gemini-2.5-pro", tokens: "58.5M", cost: "$1.80", color: "bg-foreground" },
+      { model: "gemini-2.5-flash", tokens: "10.3M", cost: "$0.35", color: "bg-muted-foreground" },
     ],
     hourlyData: [0, 0, 0, 0, 0, 0, 1, 3, 6, 9, 12, 8, 5, 6, 8, 10, 7, 4, 2, 1, 0, 0, 0, 0],
-    createdAt: '4/5/2026, 9:10:00 AM',
-    updatedAt: '4/16/2026, 11:30:05 AM'
-  }
-}
+    createdAt: "4/5/2026, 9:10:00 AM",
+    updatedAt: "4/16/2026, 11:30:05 AM",
+  },
+};
 
-runtimeDataMap['claude-code'] = runtimeDataMap['rt-1']
-runtimeDataMap['opencode'] = runtimeDataMap['rt-2']
-runtimeDataMap['gemini-cli'] = runtimeDataMap['rt-5']
+runtimeDataMap["claude-code"] = runtimeDataMap["rt-1"];
+runtimeDataMap["opencode"] = runtimeDataMap["rt-2"];
+runtimeDataMap["gemini-cli"] = runtimeDataMap["rt-5"];
 
 const defaultData: RuntimeData = {
   usage: {
-    '7d':  { input: '0', output: '0', cacheRead: '0', cacheWrite: '0', cost: '$0' },
-    '30d': { input: '0', output: '0', cacheRead: '0', cacheWrite: '0', cost: '$0' },
-    '90d': { input: '0', output: '0', cacheRead: '0', cacheWrite: '0', cost: '$0' }
+    "7d": { input: "0", output: "0", cacheRead: "0", cacheWrite: "0", cost: "$0" },
+    "30d": { input: "0", output: "0", cacheRead: "0", cacheWrite: "0", cost: "$0" },
+    "90d": { input: "0", output: "0", cacheRead: "0", cacheWrite: "0", cost: "$0" },
   },
-  dailyDates: [], dailyTokens: [], dailyCosts: [],
-  totalTokens: '0', donutSegments: [], models: [],
+  dailyDates: [],
+  dailyTokens: [],
+  dailyCosts: [],
+  totalTokens: "0",
+  donutSegments: [],
+  models: [],
   hourlyData: [],
-  createdAt: '—', updatedAt: '—'
-}
+  createdAt: "—",
+  updatedAt: "—",
+};
 
-const HEATMAP_WEEKS = 40
-const heatmapLevels = ['bg-secondary', 'bg-nexu-online/20', 'bg-nexu-online/40', 'bg-nexu-online/60', 'bg-nexu-online']
-const weekLabels = ['Mon', '', 'Wed', '', 'Fri', '', '']
-const heatmapMonths = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr']
+const HEATMAP_WEEKS = 40;
+const heatmapLevels = [
+  "bg-secondary",
+  "bg-nexu-online/20",
+  "bg-nexu-online/40",
+  "bg-nexu-online/60",
+  "bg-nexu-online",
+];
+const weekLabels = ["Mon", "", "Wed", "", "Fri", "", ""];
+const heatmapMonths = ["Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"];
 
 function hash(s: string): number {
-  return Array.from(s).reduce((h, c, i) => (h * 31 + c.charCodeAt(0) + i * 17) % 9973, 7)
+  return Array.from(s).reduce((h, c, i) => (h * 31 + c.charCodeAt(0) + i * 17) % 9973, 7);
 }
 
-function getLastSeen(status: Runtime['status'], t: (key: TranslationKey, vars?: Record<string, string>) => string): string {
-  if (status === 'connected') return t('runtimes.justNow')
-  if (status === 'error') return '14 min ago'
-  return '2 hours ago'
+function getLastSeen(
+  status: Runtime["status"],
+  t: (key: TranslationKey, vars?: Record<string, string>) => string,
+): string {
+  if (status === "connected") return t("runtimes.justNow");
+  if (status === "error") return "14 min ago";
+  return "2 hours ago";
 }
 
 function getData(rt: Runtime): RuntimeData {
-  return runtimeDataMap[rt.id] ?? runtimeDataMap[rt.type] ?? defaultData
+  return runtimeDataMap[rt.id] ?? runtimeDataMap[rt.type] ?? defaultData;
 }
 
 export function RuntimesView(): ReactElement {
-  const t = useT()
-  const navigate = useNavigate()
-  const { runtimes, selectedRuntimeId, selectRuntime } = useRuntimesStore()
-  const agents = useAgentsStore((s) => s.agents)
-  const [period, setPeriod] = useState<UsagePeriod>('30d')
+  const t = useT();
+  const navigate = useNavigate();
+  const { runtimes, selectedRuntimeId, selectRuntime } = useRuntimesStore();
+  const agents = useAgentsStore((s) => s.agents);
+  const [period, setPeriod] = useState<UsagePeriod>("30d");
 
   useEffect(() => {
-    if (runtimes.length > 0 && !selectedRuntimeId) selectRuntime(runtimes[0].id)
-  }, [runtimes, selectedRuntimeId, selectRuntime])
+    if (runtimes.length > 0 && !selectedRuntimeId) selectRuntime(runtimes[0].id);
+  }, [runtimes, selectedRuntimeId, selectRuntime]);
 
-  const rt = selectedRuntimeId ? runtimes.find((r) => r.id === selectedRuntimeId) ?? null : null
+  const rt = selectedRuntimeId ? (runtimes.find((r) => r.id === selectedRuntimeId) ?? null) : null;
 
   const heatmap = useMemo(() => {
-    if (!rt) return []
-    return Array.from({ length: HEATMAP_WEEKS * 7 }, (_, i) => hash(`${rt.id}-${i}`) % heatmapLevels.length)
-  }, [rt])
+    if (!rt) return [];
+    return Array.from(
+      { length: HEATMAP_WEEKS * 7 },
+      (_, i) => hash(`${rt.id}-${i}`) % heatmapLevels.length,
+    );
+  }, [rt]);
 
   if (runtimes.length === 0) {
-    return <EmptyRuntimesGuide />
+    return <EmptyRuntimesGuide />;
   }
 
   if (!rt) {
@@ -193,25 +343,24 @@ export function RuntimesView(): ReactElement {
         <div className="flex flex-1 items-center justify-center">
           <div className="flex flex-col items-center gap-3 text-muted-foreground">
             <Wifi className="h-10 w-10" />
-            <p className="text-lg font-medium">{t('runtimes.selectRuntime')}</p>
+            <p className="text-lg font-medium">{t("runtimes.selectRuntime")}</p>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  const Icon = typeIcons[rt.type]
-  const ver = rt.version ? `v${rt.version}` : t('runtimes.notInstalled')
-  const hasUpdate = rt.type === 'claude-code' && rt.version
-  const data = getData(rt)
-  const usage = data.usage[period]
+  const Icon = typeIcons[rt.type];
+  const ver = rt.version ? `v${rt.version}` : t("runtimes.notInstalled");
+  const hasUpdate = rt.type === "claude-code" && rt.version;
+  const data = getData(rt);
+  const usage = data.usage[period];
 
   return (
     <div className="flex h-full flex-col">
       <div className="drag-region h-10 shrink-0" />
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-6 pb-8 space-y-6">
-
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent">
@@ -222,16 +371,16 @@ export function RuntimesView(): ReactElement {
             <div className="flex items-center gap-2">
               <StatusBadge status={rt.status} />
               <div className="flex items-center gap-1 ml-1">
-                {rt.status === 'connected' ? (
+                {rt.status === "connected" ? (
                   <>
                     <button
-                      title={t('runtimes.stopRuntime')}
+                      title={t("runtimes.stopRuntime")}
                       className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                     >
                       <Square className="h-3 w-3" />
                     </button>
                     <button
-                      title={t('runtimes.restartRuntime')}
+                      title={t("runtimes.restartRuntime")}
                       className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                     >
                       <RotateCw className="h-3.5 w-3.5" />
@@ -239,7 +388,7 @@ export function RuntimesView(): ReactElement {
                   </>
                 ) : (
                   <button
-                    title={t('runtimes.startRuntime')}
+                    title={t("runtimes.startRuntime")}
                     className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-nexu-online hover:bg-nexu-online/10 transition-colors"
                   >
                     <Play className="h-3.5 w-3.5" />
@@ -247,7 +396,7 @@ export function RuntimesView(): ReactElement {
                 )}
               </div>
               <button
-                title={t('runtimes.deleteRuntime')}
+                title={t("runtimes.deleteRuntime")}
                 className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/10 transition-colors"
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -257,17 +406,17 @@ export function RuntimesView(): ReactElement {
 
           <section className="rounded-xl border border-border p-4 text-sm space-y-3">
             <div className="grid grid-cols-2 gap-x-8 gap-y-3">
-              <InfoRow label={t('runtimes.provider')} value={providerLabels[rt.type]} />
-              <InfoRow label={t('runtimes.lastSeen')} value={getLastSeen(rt.status, t)} />
-              <InfoRow label={t('runtimes.device')} value={`localhost · ${ver} (${rt.name})`} />
-              <InfoRow label={t('runtimes.cliVersion')}>
+              <InfoRow label={t("runtimes.provider")} value={providerLabels[rt.type]} />
+              <InfoRow label={t("runtimes.lastSeen")} value={getLastSeen(rt.status, t)} />
+              <InfoRow label={t("runtimes.device")} value={`localhost · ${ver} (${rt.name})`} />
+              <InfoRow label={t("runtimes.cliVersion")}>
                 {hasUpdate ? (
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{ver}</span>
                     <ArrowRight className="h-3 w-3 text-muted-foreground" />
                     <span className="font-mono text-nexu-online">v1.1.0</span>
                     <button className="ml-1 h-6 px-2 rounded border border-border text-[11px] font-medium hover:bg-accent transition-colors">
-                      {t('runtimes.update')}
+                      {t("runtimes.update")}
                     </button>
                   </div>
                 ) : (
@@ -277,16 +426,20 @@ export function RuntimesView(): ReactElement {
             </div>
             <button className="h-8 px-3 rounded-md border border-border text-xs font-medium flex items-center gap-1.5 hover:bg-accent transition-colors">
               <RefreshCw className="h-3.5 w-3.5" />
-              {t('runtimes.testConnection')}
+              {t("runtimes.testConnection")}
             </button>
-           </section>
+          </section>
 
           <section className="rounded-xl border border-border p-4">
-            <p className="text-sm font-semibold mb-3">{t('runtimes.linkedAgents')}</p>
+            <p className="text-sm font-semibold mb-3">{t("runtimes.linkedAgents")}</p>
             {(() => {
-              const linked = agents.filter((a) => a.runtimeId === rt.id)
+              const linked = agents.filter((a) => a.runtimeId === rt.id);
               if (linked.length === 0) {
-                return <p className="text-sm text-muted-foreground text-center py-4">{t('runtimes.noAgentsUsing')}</p>
+                return (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    {t("runtimes.noAgentsUsing")}
+                  </p>
+                );
               }
               return (
                 <div className="space-y-1">
@@ -294,8 +447,8 @@ export function RuntimesView(): ReactElement {
                     <button
                       key={agent.id}
                       onClick={() => {
-                        navigate('/agents')
-                        setTimeout(() => useAgentsStore.getState().selectAgent(agent.id), 50)
+                        navigate("/agents");
+                        setTimeout(() => useAgentsStore.getState().selectAgent(agent.id), 50);
                       }}
                       className="flex items-center gap-3 w-full px-3 py-2 rounded-lg hover:bg-accent transition-colors text-left"
                     >
@@ -308,32 +461,38 @@ export function RuntimesView(): ReactElement {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium truncate">{agent.name}</p>
-                        <p className="text-xs text-muted-foreground truncate">{agent.description}</p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {agent.description}
+                        </p>
                       </div>
-                      <span className={cn(
-                        'h-2 w-2 rounded-full shrink-0',
-                        agent.status === 'online' && 'bg-nexu-online',
-                        agent.status === 'busy' && 'bg-nexu-busy',
-                        agent.status === 'offline' && 'bg-nexu-offline'
-                      )} />
+                      <span
+                        className={cn(
+                          "h-2 w-2 rounded-full shrink-0",
+                          agent.status === "online" && "bg-nexu-online",
+                          agent.status === "busy" && "bg-nexu-busy",
+                          agent.status === "offline" && "bg-nexu-offline",
+                        )}
+                      />
                     </button>
                   ))}
                 </div>
-              )
+              );
             })()}
           </section>
 
           <section className="rounded-xl border border-border p-4">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-semibold">{t('runtimes.tokenUsage')}</p>
+              <p className="text-sm font-semibold">{t("runtimes.tokenUsage")}</p>
               <div className="flex items-center rounded-lg border border-border p-0.5">
                 {usagePeriods.map((p) => (
                   <button
                     key={p}
                     onClick={() => setPeriod(p)}
                     className={cn(
-                      'px-2.5 py-1 rounded-md text-xs font-medium transition-colors',
-                      period === p ? 'bg-foreground text-background' : 'text-muted-foreground hover:text-foreground'
+                      "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                      period === p
+                        ? "bg-foreground text-background"
+                        : "text-muted-foreground hover:text-foreground",
                     )}
                   >
                     {p}
@@ -343,150 +502,181 @@ export function RuntimesView(): ReactElement {
             </div>
 
             <div className="grid grid-cols-4 gap-3 mb-3">
-              <StatCard label={t('runtimes.input')} value={usage.input} />
-              <StatCard label={t('runtimes.output')} value={usage.output} />
-              <StatCard label={t('runtimes.cacheRead')} value={usage.cacheRead} />
-              <StatCard label={t('runtimes.cacheWrite')} value={usage.cacheWrite} />
+              <StatCard label={t("runtimes.input")} value={usage.input} />
+              <StatCard label={t("runtimes.output")} value={usage.output} />
+              <StatCard label={t("runtimes.cacheRead")} value={usage.cacheRead} />
+              <StatCard label={t("runtimes.cacheWrite")} value={usage.cacheWrite} />
             </div>
             <p className="text-sm text-muted-foreground mb-5">
-              {t('runtimes.estimatedCost', { period })} <span className="font-semibold text-foreground">{usage.cost}</span>
+              {t("runtimes.estimatedCost", { period })}{" "}
+              <span className="font-semibold text-foreground">{usage.cost}</span>
             </p>
 
             <div className="border-t border-border pt-4 mb-4">
-              <p className="text-xs font-medium text-muted-foreground mb-3">{t('runtimes.byModel')}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-3">
+                {t("runtimes.byModel")}
+              </p>
             </div>
             {data.models.length > 0 ? (
               <>
                 <div className="flex flex-col items-center mb-5">
-                  <DonutChart segments={data.donutSegments} label={data.totalTokens} sublabel={t('runtimes.tokens')} />
+                  <DonutChart
+                    segments={data.donutSegments}
+                    label={data.totalTokens}
+                    sublabel={t("runtimes.tokens")}
+                  />
                 </div>
                 <div className="space-y-0">
                   {data.models.map((row) => (
-                    <div key={row.model} className="flex items-center gap-2 py-1.5 border-b border-border/40 last:border-0">
-                      <span className={cn('h-2.5 w-2.5 rounded-sm shrink-0', row.color)} />
-                      <span className="font-mono text-xs text-muted-foreground truncate flex-1">{row.model}</span>
+                    <div
+                      key={row.model}
+                      className="flex items-center gap-2 py-1.5 border-b border-border/40 last:border-0"
+                    >
+                      <span className={cn("h-2.5 w-2.5 rounded-sm shrink-0", row.color)} />
+                      <span className="font-mono text-xs text-muted-foreground truncate flex-1">
+                        {row.model}
+                      </span>
                       <span className="text-sm font-medium shrink-0">{row.tokens}</span>
-                      {row.cost && <span className="text-xs text-muted-foreground shrink-0 w-14 text-right">{row.cost}</span>}
+                      {row.cost && (
+                        <span className="text-xs text-muted-foreground shrink-0 w-14 text-right">
+                          {row.cost}
+                        </span>
+                      )}
                     </div>
                   ))}
                 </div>
               </>
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">{t('runtimes.noModelData')}</p>
+              <p className="text-sm text-muted-foreground text-center py-4">
+                {t("runtimes.noModelData")}
+              </p>
             )}
           </section>
 
           <section className="rounded-xl border border-border p-4">
-            <p className="text-sm font-semibold mb-3">{t('runtimes.activity')}</p>
+            <p className="text-sm font-semibold mb-3">{t("runtimes.activity")}</p>
             <div className="flex gap-1.5">
               <div className="flex flex-col justify-between pr-0.5 py-[1px]">
                 {weekLabels.map((w, i) => (
-                  <span key={i} className="text-[9px] text-muted-foreground leading-none h-[12px] flex items-center">{w}</span>
+                  <span
+                    key={i}
+                    className="text-[9px] text-muted-foreground leading-none h-[12px] flex items-center"
+                  >
+                    {w}
+                  </span>
                 ))}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex mb-1">
                   {heatmapMonths.map((m, i) => (
-                    <span key={i} className="text-[9px] text-muted-foreground" style={{ width: `${100 / heatmapMonths.length}%` }}>{m}</span>
+                    <span
+                      key={i}
+                      className="text-[9px] text-muted-foreground"
+                      style={{ width: `${100 / heatmapMonths.length}%` }}
+                    >
+                      {m}
+                    </span>
                   ))}
                 </div>
-                <div className="grid grid-rows-7 grid-flow-col gap-[3px]" style={{ gridTemplateColumns: `repeat(${HEATMAP_WEEKS}, 1fr)` }}>
+                <div
+                  className="grid grid-rows-7 grid-flow-col gap-[3px]"
+                  style={{ gridTemplateColumns: `repeat(${HEATMAP_WEEKS}, 1fr)` }}
+                >
                   {heatmap.map((level, i) => (
-                    <div key={i} className={cn('aspect-square rounded-sm', heatmapLevels[level])} />
+                    <div key={i} className={cn("aspect-square rounded-sm", heatmapLevels[level])} />
                   ))}
                 </div>
               </div>
             </div>
             <div className="flex items-center justify-end gap-1 mt-2">
-              <span className="text-[9px] text-muted-foreground mr-1">{t('runtimes.less')}</span>
+              <span className="text-[9px] text-muted-foreground mr-1">{t("runtimes.less")}</span>
               {heatmapLevels.map((cls, i) => (
-                <div key={i} className={cn('w-[10px] h-[10px] rounded-sm', cls)} />
+                <div key={i} className={cn("w-[10px] h-[10px] rounded-sm", cls)} />
               ))}
-              <span className="text-[9px] text-muted-foreground ml-1">{t('runtimes.more')}</span>
+              <span className="text-[9px] text-muted-foreground ml-1">{t("runtimes.more")}</span>
             </div>
           </section>
 
           <section className="rounded-xl border border-border p-4">
             <div className="grid grid-cols-2 gap-x-8 text-sm">
               <div>
-                <span className="text-muted-foreground">{t('runtimes.created')}</span>
+                <span className="text-muted-foreground">{t("runtimes.created")}</span>
                 <p className="mt-0.5 font-medium">{data.createdAt}</p>
               </div>
               <div>
-                <span className="text-muted-foreground">{t('runtimes.updated')}</span>
+                <span className="text-muted-foreground">{t("runtimes.updated")}</span>
                 <p className="mt-0.5 font-medium">{data.updatedAt}</p>
               </div>
             </div>
           </section>
-
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 interface InstallGuide {
-  type: Runtime['type'] | 'openclaw' | 'pi'
-  name: string
-  desc: string
-  install: string
-  docsUrl: string
-  docsLabel: string
+  type: Runtime["type"] | "openclaw" | "pi";
+  name: string;
+  desc: string;
+  install: string;
+  docsUrl: string;
+  docsLabel: string;
 }
 
 const installGuides: InstallGuide[] = [
   {
-    type: 'claude-code',
-    name: 'Claude Code',
+    type: "claude-code",
+    name: "Claude Code",
     desc: "Anthropic's coding agent",
-    install: 'npm install -g @anthropic-ai/claude-code',
-    docsUrl: 'https://docs.claude.com/en/docs/claude-code/overview',
-    docsLabel: 'docs.claude.com'
+    install: "npm install -g @anthropic-ai/claude-code",
+    docsUrl: "https://docs.claude.com/en/docs/claude-code/overview",
+    docsLabel: "docs.claude.com",
   },
   {
-    type: 'cursor',
-    name: 'Cursor',
-    desc: 'AI-first code editor',
-    install: 'Download the desktop app',
-    docsUrl: 'https://docs.cursor.com/get-started/installation',
-    docsLabel: 'docs.cursor.com'
+    type: "cursor",
+    name: "Cursor",
+    desc: "AI-first code editor",
+    install: "Download the desktop app",
+    docsUrl: "https://docs.cursor.com/get-started/installation",
+    docsLabel: "docs.cursor.com",
   },
   {
-    type: 'opencode',
-    name: 'OpenCode',
-    desc: 'Open-source coding agent',
-    install: 'npm install -g opencode-ai',
-    docsUrl: 'https://opencode.ai/docs',
-    docsLabel: 'opencode.ai/docs'
+    type: "opencode",
+    name: "OpenCode",
+    desc: "Open-source coding agent",
+    install: "npm install -g opencode-ai",
+    docsUrl: "https://opencode.ai/docs",
+    docsLabel: "opencode.ai/docs",
   },
   {
-    type: 'codex',
-    name: 'Codex',
-    desc: 'OpenAI coding agent',
-    install: 'npm install -g @openai/codex',
-    docsUrl: 'https://github.com/openai/codex#installation',
-    docsLabel: 'github.com/openai/codex'
+    type: "codex",
+    name: "Codex",
+    desc: "OpenAI coding agent",
+    install: "npm install -g @openai/codex",
+    docsUrl: "https://github.com/openai/codex#installation",
+    docsLabel: "github.com/openai/codex",
   },
   {
-    type: 'gemini-cli',
-    name: 'Gemini CLI',
+    type: "gemini-cli",
+    name: "Gemini CLI",
     desc: "Google's AI coding agent",
-    install: 'npm install -g @google/gemini-cli',
-    docsUrl: 'https://github.com/google-gemini/gemini-cli#quickstart',
-    docsLabel: 'github.com/google-gemini/gemini-cli'
+    install: "npm install -g @google/gemini-cli",
+    docsUrl: "https://github.com/google-gemini/gemini-cli#quickstart",
+    docsLabel: "github.com/google-gemini/gemini-cli",
   },
   {
-    type: 'hermes',
-    name: 'Hermes',
-    desc: 'Local LLM runtime',
-    install: 'brew install hermes',
-    docsUrl: 'https://ollama.com/download',
-    docsLabel: 'ollama.com/download'
-  }
-]
+    type: "hermes",
+    name: "Hermes",
+    desc: "Local LLM runtime",
+    install: "brew install hermes",
+    docsUrl: "https://ollama.com/download",
+    docsLabel: "ollama.com/download",
+  },
+];
 
 function EmptyRuntimesGuide(): ReactElement {
-  const t = useT()
+  const t = useT();
   return (
     <div className="flex h-full flex-col">
       <div className="drag-region h-10 shrink-0" />
@@ -496,15 +686,13 @@ function EmptyRuntimesGuide(): ReactElement {
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent">
               <Zap className="h-6 w-6" />
             </div>
-            <h1 className="text-xl font-semibold">{t('runtimes.emptyTitle')}</h1>
-            <p className="text-sm text-muted-foreground max-w-md">
-              {t('runtimes.emptyDesc')}
-            </p>
+            <h1 className="text-xl font-semibold">{t("runtimes.emptyTitle")}</h1>
+            <p className="text-sm text-muted-foreground max-w-md">{t("runtimes.emptyDesc")}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {installGuides.map((g) => {
-              const Icon = typeIcons[g.type as Runtime['type']] ?? Terminal
+              const Icon = typeIcons[g.type as Runtime["type"]] ?? Terminal;
               return (
                 <a
                   key={g.type}
@@ -527,32 +715,36 @@ function EmptyRuntimesGuide(): ReactElement {
                     {g.install}
                   </code>
                   <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                    <span>{t('runtimes.installationGuide')}</span>
+                    <span>{t("runtimes.installationGuide")}</span>
                     <span className="font-medium text-foreground/80 group-hover:text-foreground truncate">
                       {g.docsLabel}
                     </span>
                   </div>
                 </a>
-              )
+              );
             })}
           </div>
 
           <p className="text-center text-xs text-muted-foreground mt-8">
-            {t('runtimes.autoDetectHint')}
+            {t("runtimes.autoDetectHint")}
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-function InfoRow({ label, value, children }: { label: string; value?: string; children?: ReactNode }): ReactElement {
+function InfoRow({
+  label,
+  value,
+  children,
+}: { label: string; value?: string; children?: ReactNode }): ReactElement {
   return (
     <div className="flex justify-between items-start py-1.5 border-b border-border/40">
       <span className="text-muted-foreground">{label}</span>
       <div className="text-right font-medium">{children ?? value}</div>
     </div>
-  )
+  );
 }
 
 function StatCard({ label, value }: { label: string; value: string }): ReactElement {
@@ -561,54 +753,69 @@ function StatCard({ label, value }: { label: string; value: string }): ReactElem
       <p className="text-xs text-muted-foreground">{label}</p>
       <p className="mt-1 text-lg font-semibold">{value}</p>
     </div>
-  )
+  );
 }
 
-function StatusBadge({ status }: { status: Runtime['status'] }): ReactElement {
-  const t = useT()
+function StatusBadge({ status }: { status: Runtime["status"] }): ReactElement {
+  const t = useT();
   return (
-    <div className={cn(
-      'flex items-center gap-1.5 text-xs font-medium',
-      status === 'connected' && 'text-nexu-online',
-      status === 'disconnected' && 'text-muted-foreground',
-      status === 'error' && 'text-destructive'
-    )}>
-      <span className={cn(
-        'h-2 w-2 rounded-full',
-        status === 'connected' && 'bg-nexu-online',
-        status === 'disconnected' && 'bg-nexu-offline',
-        status === 'error' && 'bg-destructive'
-      )} />
+    <div
+      className={cn(
+        "flex items-center gap-1.5 text-xs font-medium",
+        status === "connected" && "text-nexu-online",
+        status === "disconnected" && "text-muted-foreground",
+        status === "error" && "text-destructive",
+      )}
+    >
+      <span
+        className={cn(
+          "h-2 w-2 rounded-full",
+          status === "connected" && "bg-nexu-online",
+          status === "disconnected" && "bg-nexu-offline",
+          status === "error" && "bg-destructive",
+        )}
+      />
       {t(statusLabelKeys[status])}
     </div>
-  )
+  );
 }
 
-function DonutChart({ segments, label, sublabel }: { segments: { percent: number; color: string }[]; label: string; sublabel: string }): ReactElement {
-  const size = 140
-  const stroke = 20
-  const r = (size - stroke) / 2
-  const circ = 2 * Math.PI * r
-  let off = 0
+function DonutChart({
+  segments,
+  label,
+  sublabel,
+}: {
+  segments: { percent: number; color: string }[];
+  label: string;
+  sublabel: string;
+}): ReactElement {
+  const size = 140;
+  const stroke = 20;
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+  let off = 0;
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
         {segments.map((seg, i) => {
-          const d = (seg.percent / 100) * circ
-          const cur = off
-          off += d
+          const d = (seg.percent / 100) * circ;
+          const cur = off;
+          off += d;
           return (
             <circle
               key={i}
-              cx={size / 2} cy={size / 2} r={r}
-              fill="none" stroke="currentColor"
+              cx={size / 2}
+              cy={size / 2}
+              r={r}
+              fill="none"
+              stroke="currentColor"
               strokeWidth={stroke}
               strokeDasharray={`${d} ${circ - d}`}
               strokeDashoffset={-cur}
               className={seg.color}
             />
-          )
+          );
         })}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -616,5 +823,5 @@ function DonutChart({ segments, label, sublabel }: { segments: { percent: number
         <span className="text-[10px] text-muted-foreground">{sublabel}</span>
       </div>
     </div>
-  )
+  );
 }
