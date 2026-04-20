@@ -639,6 +639,51 @@ export const mockMessages: Record<string, Message[]> = {
             isAgent: true,
             accent: "var(--color-brand-primary)",
           },
+          thread: [
+            {
+              id: "topic-1-r1",
+              author: "Bob Kim",
+              initials: "BL",
+              createdAtLabel: "11 min ago",
+              text: "I caught this in the gateway logs — burst of 500s every 90s, all from the EU pods. Looks like the jitter window collapsed to zero under load.",
+            },
+            {
+              id: "topic-1-r2",
+              author: "Charlie Park",
+              initials: "CP",
+              createdAtLabel: "9 min ago",
+              text: "Confirming — same pattern in Datadog. Attaching the dashboard so everyone's looking at the same slice.",
+              link: {
+                url: "https://app.datadoghq.com/dashboard/billing-retry-storm",
+                title: "Billing · retry storm (EU pods)",
+                description: "P99 latency + 5xx rate grouped by region for the last 24h.",
+                host: "app.datadoghq.com",
+              },
+            },
+            {
+              id: "topic-1-r3",
+              author: "Coder",
+              initials: "CD",
+              isAgent: true,
+              accent: "var(--color-brand-primary)",
+              createdAtLabel: "6 min ago",
+              text: "Drafted a retry helper that caps jitter at 50ms and respects the shared rate-limiter budget. Needs eyes on the policy before I wire it in.",
+              link: {
+                url: "https://github.com/nexu-io/billing/pull/482",
+                title: "billing#482 · introduce jitter-aware retry helper",
+                description:
+                  "Adds capped exponential backoff with decorrelated jitter. Gated behind BILLING_RETRY_V2.",
+                host: "github.com",
+              },
+            },
+            {
+              id: "topic-1-r4",
+              author: "Alice Chen",
+              initials: "AC",
+              createdAtLabel: "2 min ago",
+              text: "Policy looks right. Let's ship it behind the flag today and roll to 10% EU tomorrow.",
+            },
+          ],
         },
         {
           type: "topic",
@@ -650,6 +695,42 @@ export const mockMessages: Record<string, Message[]> = {
           replies: 6,
           participants: ["BL", "CP", "AC", "DR", "CD", "MN", "KL"],
           preview: "Eight variants explored; narrowing to three finalists for Thursday's review.",
+          thread: [
+            {
+              id: "topic-2-r1",
+              author: "Bob Kim",
+              initials: "BL",
+              createdAtLabel: "18 min ago",
+              text: "Dropping the three finalists for the hero. Leaning toward V2 — the gallery grid breathes more.",
+              image: {
+                url: "https://images.unsplash.com/photo-1559028012-481c04fa702d?auto=format&fit=crop&w=880&q=70",
+                alt: "Landing page hero variant exploration",
+                width: 320,
+                height: 200,
+              },
+            },
+            {
+              id: "topic-2-r2",
+              author: "Diana Ramos",
+              initials: "DR",
+              createdAtLabel: "15 min ago",
+              text: "+1 on V2. Agree the grid needs air. Pulled a reference that nails the density we're after.",
+              link: {
+                url: "https://linear.app/nexu/issue/DES-142",
+                title: "DES-142 · hero + gallery density reference",
+                description:
+                  "Research bundle + annotated comps from the last round of usability calls.",
+                host: "linear.app",
+              },
+            },
+            {
+              id: "topic-2-r3",
+              author: "Alice Chen",
+              initials: "AC",
+              createdAtLabel: "12 min ago",
+              text: "Works for me. Let's lock V2 and get copy in by Thursday.",
+            },
+          ],
         },
         {
           type: "topic",
@@ -661,6 +742,36 @@ export const mockMessages: Record<string, Message[]> = {
           replies: 3,
           participants: ["CP", "AC"],
           preview: "All services rotated. Ephemeral tokens now mandatory for internal RPC.",
+          thread: [
+            {
+              id: "topic-3-r1",
+              author: "Charlie Park",
+              initials: "CP",
+              createdAtLabel: "1 h ago",
+              text: "Rotation wrapped at 04:12 UTC. All services on the new key; legacy tokens revoked.",
+            },
+            {
+              id: "topic-3-r2",
+              author: "Charlie Park",
+              initials: "CP",
+              createdAtLabel: "58 min ago",
+              text: "Post-rotation report is up — summary of what changed and the new ephemeral-token policy.",
+              link: {
+                url: "https://notion.so/nexu/auth-rotation-q2-report",
+                title: "Auth rotation — Q2 post-rotation report",
+                description:
+                  "Timeline, services touched, and the new ephemeral-token policy for internal RPC.",
+                host: "notion.so",
+              },
+            },
+            {
+              id: "topic-3-r3",
+              author: "Alice Chen",
+              initials: "AC",
+              createdAtLabel: "52 min ago",
+              text: "Nice work. Closing this one out.",
+            },
+          ],
         },
         {
           type: "topic",

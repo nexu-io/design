@@ -146,7 +146,28 @@ export type ContentBlock =
       participants: string[];
       preview?: string;
       assignee?: { name: string; isAgent?: boolean; accent?: string };
+      /**
+       * Conversation under this topic — the reply thread shown in the right-
+       * side TopicDetailPanel. Optional because not every topic ships with
+       * canned replies (new topics just show an empty thread state). The
+       * shape is pre-baked for mocks: `createdAtLabel` is already the
+       * display string ("2 min ago") instead of a timestamp, since this
+       * mock data doesn't drive any time-sensitive logic.
+       */
+      thread?: TopicThreadMessage[];
     };
+
+export interface TopicThreadMessage {
+  id: string;
+  author: string;
+  initials: string;
+  isAgent?: boolean;
+  accent?: string;
+  createdAtLabel: string;
+  text?: string;
+  image?: { url: string; alt?: string; width?: number; height?: number };
+  link?: { url: string; title: string; description?: string; host?: string };
+}
 
 export interface Message {
   id: string;
