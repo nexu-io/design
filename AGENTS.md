@@ -204,7 +204,7 @@
   - Scroll container: `px-2` (8px horizontal) so selected/hover rounded fills float 8px from the sidebar edge — **never** let the fill hug the panel wall.
   - Row gap: **0** — do not use `space-y-1` / `gap-1` between rows; the rounded selected/hover background already provides visual separation. Extra gap breaks the rows into disconnected pills.
   - Row radius: `rounded-md` (8px) — `rounded-lg` (12px) looks pill-like inside narrow (≤240px) sidebars.
-  - Row padding: `pl-2 pr-2 py-[5px]` with 13px text + 14px icon (`h-3.5 w-3.5`) yields a ~28px row height — matches Slack's breathing room without feeling loose. Use a 14px icon (not 16px) so the icon doesn't dominate 13px label text in narrow sidebars.
+  - Row padding: `pl-2 pr-2 py-2` (8px vertical) with `gap-2.5` between icon and label, 13px text + 14px icon (`h-3.5 w-3.5`) yields a ~32px row height — comfortable breathing room without feeling floppy, matches Discord density. Use a 14px icon (not 16px) so the icon doesn't dominate 13px label text in narrow sidebars.
   - Unread / count badge: `h-4 min-w-4 rounded-full text-[10px] px-1` — keep it compact (16px) so it doesn't visually push row content or make rows feel crowded. Avoid the larger 18px badge inside a compact nav list.
   - Section header: `px-2 pt-3 pb-1` — aligns with the row container padding; `pt-3` (12px) gives breathing room between sections.
   - Apply the same paddings (`rounded-md pl-2 pr-2 py-[3px]`) to affordance rows at the bottom of a section (e.g. "Add channels", "New thread") so they stay visually part of the same list.

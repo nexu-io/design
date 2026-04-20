@@ -125,7 +125,7 @@ export function ChatSidebar(): React.ReactElement {
           size="inline"
           onClick={() => handleSelect(c.id)}
           className={cn(
-            "flex items-center gap-2 w-full rounded-md pl-2 pr-2 py-[5px] text-[13px] transition-colors",
+            "flex items-center gap-2.5 w-full rounded-md pl-2 pr-2 py-2 text-[13px] transition-colors",
             isActive
               ? "bg-nav-active text-nav-active-fg font-semibold"
               : unread
