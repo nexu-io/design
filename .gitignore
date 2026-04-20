@@ -8,3 +8,8 @@ debug-storybook.log
 .ralph/
 .opencode/
 apps/slark/out/
+
+# Local design notes / scratchpads (personal, not shipped)
+competitive-analysis.md
+.claude/
+.cursor/
