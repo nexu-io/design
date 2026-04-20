@@ -13,7 +13,7 @@ import type {
 
 export const mockWorkspace: Workspace = {
   id: "ws-1",
-  name: "Acme Engineering",
+  name: "星云工程",
   avatar: undefined,
   createdAt: Date.now() - 86400000 * 30,
 };
@@ -246,8 +246,8 @@ const agent2Ref: MemberRef = { kind: "agent", id: "a-2" };
 export const mockChannels: Channel[] = [
   {
     id: "ch-welcome",
-    name: "welcome",
-    description: "Welcome to Nexu! Say hi to your team and agents.",
+    name: "欢迎",
+    description: "欢迎加入 Nexu!向你的队友和智能体打个招呼吧。",
     type: "channel",
     members: [user1Ref, user2Ref, user3Ref, agent1Ref, agent2Ref],
     lastMessageAt: Date.now() - 60000,
@@ -256,8 +256,8 @@ export const mockChannels: Channel[] = [
   },
   {
     id: "ch-showcase",
-    name: "design-showcase",
-    description: "Every message surface the component library ships, in one feed.",
+    name: "设计展示",
+    description: "组件库提供的每一种消息形态,都集中在这条频道里。",
     type: "channel",
     members: [user1Ref, user2Ref, user3Ref, agent1Ref, agent2Ref],
     lastMessageAt: Date.now() - 45000,
@@ -284,7 +284,7 @@ export const mockChannels: Channel[] = [
   },
   {
     id: "dm-agent-1",
-    name: "CodeBot",
+    name: "代码助手",
     type: "dm",
     members: [user1Ref, agent1Ref],
     lastMessageAt: Date.now() - 180000,
@@ -293,7 +293,7 @@ export const mockChannels: Channel[] = [
   },
   {
     id: "dm-agent-2",
-    name: "DesignReviewer",
+    name: "设计评审",
     type: "dm",
     members: [user1Ref, agent2Ref],
     lastMessageAt: Date.now() - 3600000,
