@@ -16,10 +16,16 @@
   --slark-color-nav: var(--color-surface-1);
   --slark-color-nav-surface: var(--color-surface-2);
   --slark-color-nav-hover: var(--color-surface-2);
-  --slark-color-nav-active: var(--color-brand-primary);
-  --slark-color-nav-active-fg: var(--color-accent-fg);
-  --slark-color-nav-active-soft: color-mix(in srgb, var(--color-accent-fg) 18%, transparent);
-  --slark-color-nav-active-muted: color-mix(in srgb, var(--color-accent-fg) 78%, transparent);
+  /*
+   * Selected navigation row uses the brand-subtle wash pattern from AGENTS.md
+   * (same pair as Plus tier badge): pale brand background + brand-primary text.
+   * Avoids using --color-brand-primary as a large fill, which the design system
+   * reserves for links, focus rings, accented badges, and brand emphasis.
+   */
+  --slark-color-nav-active: var(--color-brand-subtle);
+  --slark-color-nav-active-fg: var(--color-brand-primary);
+  --slark-color-nav-active-soft: color-mix(in srgb, var(--color-brand-primary) 18%, transparent);
+  --slark-color-nav-active-muted: color-mix(in srgb, var(--color-brand-primary) 78%, transparent);
   --slark-color-nav-fg: var(--color-text-heading);
   --slark-color-nav-muted: var(--color-text-secondary);
   --slark-color-nav-border: var(--color-border-subtle);

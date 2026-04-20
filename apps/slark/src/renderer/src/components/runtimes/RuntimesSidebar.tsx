@@ -234,10 +234,9 @@ export function RuntimesSidebar(): React.ReactElement {
                     </div>
                     <Button
                       type="button"
-                      variant="ghost"
-                      size="inline"
+                      size="xs"
                       onClick={() => handleAddDetected(d)}
-                      className="shrink-0 rounded-md bg-nav-active px-2 py-0.5 text-xs font-medium text-nav-active-fg hover:opacity-90"
+                      className="shrink-0"
                     >
                       {t("runtimes.add")}
                     </Button>
