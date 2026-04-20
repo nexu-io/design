@@ -17,15 +17,17 @@
   --slark-color-nav-surface: var(--color-surface-2);
   --slark-color-nav-hover: var(--color-surface-2);
   /*
-   * Selected navigation row uses the brand-subtle wash pattern from AGENTS.md
-   * (same pair as Plus tier badge): pale brand background + brand-primary text.
-   * Avoids using --color-brand-primary as a large fill, which the design system
-   * reserves for links, focus rings, accented badges, and brand emphasis.
+   * Selected navigation row follows the restrained Slack / Cursor pattern:
+   * a neutral surface-3 fill (one step darker than hover's surface-2) plus
+   * text-heading (near-black) text and font-semibold weight. No brand color
+   * and no filled accent — per AGENTS.md, --color-brand-primary is reserved
+   * for links / focus rings / accented badges, and --color-accent is reserved
+   * for primary interactive surfaces like filled buttons.
    */
-  --slark-color-nav-active: var(--color-brand-subtle);
-  --slark-color-nav-active-fg: var(--color-brand-primary);
-  --slark-color-nav-active-soft: color-mix(in srgb, var(--color-brand-primary) 18%, transparent);
-  --slark-color-nav-active-muted: color-mix(in srgb, var(--color-brand-primary) 78%, transparent);
+  --slark-color-nav-active: var(--color-surface-3);
+  --slark-color-nav-active-fg: var(--color-text-heading);
+  --slark-color-nav-active-soft: color-mix(in srgb, var(--color-text-heading) 18%, transparent);
+  --slark-color-nav-active-muted: color-mix(in srgb, var(--color-text-heading) 78%, transparent);
   --slark-color-nav-fg: var(--color-text-heading);
   --slark-color-nav-muted: var(--color-text-secondary);
   --slark-color-nav-border: var(--color-border-subtle);

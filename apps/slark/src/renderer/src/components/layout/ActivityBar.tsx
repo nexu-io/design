@@ -3,7 +3,6 @@ import {
   ActivityBarContent,
   ActivityBarFooter,
   ActivityBarHeader,
-  ActivityBarIndicator,
   ActivityBarItem,
   Avatar,
   AvatarFallback,
@@ -146,9 +145,6 @@ export function ActivityBar(): React.ReactElement {
               className="no-drag size-10 rounded-xl text-nav-muted hover:bg-nav-hover hover:text-nav-fg data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg"
               title={t(labelKey)}
             >
-              {isActive ? (
-                <ActivityBarIndicator className="left-[-8px] inset-y-2 w-[3px] bg-nav-active-fg" />
-              ) : null}
               <Icon className="size-[19px]" />
             </ActivityBarItem>
           );
@@ -162,9 +158,6 @@ export function ActivityBar(): React.ReactElement {
           className="no-drag size-10 rounded-xl text-nav-muted hover:bg-nav-hover hover:text-nav-fg data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg"
           title={t("section.settings")}
         >
-          {location.pathname.startsWith("/settings") ? (
-            <ActivityBarIndicator className="left-[-8px] inset-y-2 w-[3px] bg-nav-active-fg" />
-          ) : null}
           <Settings className="size-[19px]" />
         </ActivityBarItem>
       </ActivityBarFooter>
