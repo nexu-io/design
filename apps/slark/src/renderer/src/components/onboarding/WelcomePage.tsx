@@ -1,16 +1,4 @@
-import {
-  Alert,
-  AlertDescription,
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Input,
-  TextLink,
-  cn,
-} from "@nexu-design/ui-web";
+import { Alert, AlertDescription, Button, Input, TextLink, cn } from "@nexu-design/ui-web";
 import { AlertCircle, ArrowLeft, ArrowRight, Github, Lock, Mail, ShieldCheck } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -399,27 +387,23 @@ export function WelcomePage(): React.ReactElement {
   };
 
   return (
-    <SlarkAuthFrame hideFooter>
-      <Card
-        variant="static"
-        padding="lg"
-        className="rounded-2xl border-border bg-surface-1 shadow-card"
-      >
-        <CardHeader className="text-center">
-          <CardTitle className="text-[20px] leading-tight text-text-heading">
+    <SlarkAuthFrame hideBranding hideFooter>
+      <div className="px-2">
+        <div className="text-center">
+          <h1 className="text-[20px] leading-tight text-text-heading font-semibold">
             {panelTitle}
-          </CardTitle>
+          </h1>
           {panelDescription ? (
-            <CardDescription className="text-[13px] leading-relaxed text-text-secondary">
+            <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">
               {panelDescription}
-            </CardDescription>
+            </p>
           ) : null}
-        </CardHeader>
+        </div>
 
-        <CardContent className={cn(view === "buttons" ? "mt-8" : "mt-6")}>
+        <div className={cn(view === "buttons" ? "mt-8" : "mt-6")}>
           {view === "buttons" ? renderButtonsView() : renderEmailFlow()}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </SlarkAuthFrame>
   );
 }
