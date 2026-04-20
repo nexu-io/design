@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Bot, Check, Hash, Search, Users } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, Bot, Check, Hash, Search, Users } from "lucide-react";
 
 import {
   Avatar,
@@ -23,13 +23,13 @@ import {
   InteractiveRowLeading,
   InteractiveRowTrailing,
   cn,
-} from '@nexu-design/ui-web';
+} from "@nexu-design/ui-web";
 
-import { useT } from '@/i18n';
-import { mockAgents, mockUsers } from '@/mock/data';
-import { useAgentsStore } from '@/stores/agents';
-import { useChatStore } from '@/stores/chat';
-import type { Channel, MemberRef } from '@/types';
+import { useT } from "@/i18n";
+import { mockAgents, mockUsers } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
+import { useChatStore } from "@/stores/chat";
+import type { Channel, MemberRef } from "@/types";
 
 interface CreateChannelDialogProps {
   open: boolean;
@@ -37,7 +37,7 @@ interface CreateChannelDialogProps {
   onCreated?: (channelId: string) => void;
 }
 
-type Step = 'details' | 'members';
+type Step = "details" | "members";
 
 export function CreateChannelDialog({
   open,
@@ -49,10 +49,10 @@ export function CreateChannelDialog({
   const storeAgents = useAgentsStore((s) => s.agents);
   const agents = storeAgents.length > 0 ? storeAgents : mockAgents;
 
-  const [step, setStep] = useState<Step>('details');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [query, setQuery] = useState('');
+  const [step, setStep] = useState<Step>("details");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [query, setQuery] = useState("");
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>(() =>
     mockUsers.map((user) => user.id),
   );
@@ -63,10 +63,10 @@ export function CreateChannelDialog({
   useEffect(() => {
     if (!open) return;
 
-    setStep('details');
-    setName('');
-    setDescription('');
-    setQuery('');
+    setStep("details");
+    setName("");
+    setDescription("");
+    setQuery("");
     setSelectedUserIds(mockUsers.map((user) => user.id));
     setSelectedAgentIds(agents.map((agent) => agent.id));
 
@@ -74,7 +74,7 @@ export function CreateChannelDialog({
   }, [open, agents]);
 
   useEffect(() => {
-    if (step !== 'members') return;
+    if (step !== "members") return;
     requestAnimationFrame(() => searchInputRef.current?.focus());
   }, [step]);
 
@@ -96,7 +96,7 @@ export function CreateChannelDialog({
     return agents.filter(
       (agent) =>
         agent.name.toLowerCase().indexOf(normalizedQuery) !== -1 ||
-        (agent.description ?? '').toLowerCase().indexOf(normalizedQuery) !== -1,
+        (agent.description ?? "").toLowerCase().indexOf(normalizedQuery) !== -1,
     );
   }, [agents, query]);
 
@@ -124,23 +124,23 @@ export function CreateChannelDialog({
 
   const handleNext = (): void => {
     if (!name.trim()) return;
-    setStep('members');
+    setStep("members");
   };
 
   const handleCreate = (): void => {
-    const trimmedName = name.trim().toLowerCase().replace(/\s+/g, '-');
+    const trimmedName = name.trim().toLowerCase().replace(/\s+/g, "-");
     if (!trimmedName) return;
 
     const members: MemberRef[] = [
-      ...selectedUserIds.map((id): MemberRef => ({ kind: 'user', id })),
-      ...selectedAgentIds.map((id): MemberRef => ({ kind: 'agent', id })),
+      ...selectedUserIds.map((id): MemberRef => ({ kind: "user", id })),
+      ...selectedAgentIds.map((id): MemberRef => ({ kind: "agent", id })),
     ];
 
     const channel: Channel = {
       id: `ch-${Date.now()}`,
       name: trimmedName,
       description: description.trim() || undefined,
-      type: 'channel',
+      type: "channel",
       members,
       lastMessageAt: Date.now(),
       unreadCount: 0,
@@ -153,19 +153,19 @@ export function CreateChannelDialog({
   };
 
   const handleDetailsKeyDown = (event: React.KeyboardEvent): void => {
-    if (event.key === 'Enter' && !event.shiftKey && name.trim()) {
+    if (event.key === "Enter" && !event.shiftKey && name.trim()) {
       event.preventDefault();
       handleNext();
     }
   };
 
   const subtitle =
-    step === 'details'
-      ? `${t('createChannel.stepOfTwo', { step: '1' })}${t('createChannel.detailsSuffix')}`
-      : `${t('createChannel.stepOfTwo', { step: '2' })}${
+    step === "details"
+      ? `${t("createChannel.stepOfTwo", { step: "1" })}${t("createChannel.detailsSuffix")}`
+      : `${t("createChannel.stepOfTwo", { step: "2" })}${
           totalSelected === 1
-            ? t('createChannel.membersSuffix', { count: String(totalSelected) })
-            : t('createChannel.membersSuffixPlural', { count: String(totalSelected) })
+            ? t("createChannel.membersSuffix", { count: String(totalSelected) })
+            : t("createChannel.membersSuffixPlural", { count: String(totalSelected) })
         }`;
 
   return (
@@ -174,14 +174,14 @@ export function CreateChannelDialog({
         <DialogHeader>
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-2">
-              {step === 'members' ? (
-                <Button variant="ghost" size="icon-sm" onClick={() => setStep('details')}>
+              {step === "members" ? (
+                <Button variant="ghost" size="icon-sm" onClick={() => setStep("details")}>
                   <ArrowLeft className="size-4" />
                 </Button>
               ) : null}
               <div className="space-y-1">
                 <DialogTitle>
-                  {step === 'details' ? t('createChannel.title') : t('createChannel.addMembers')}
+                  {step === "details" ? t("createChannel.title") : t("createChannel.addMembers")}
                 </DialogTitle>
                 <DialogDescription>{subtitle}</DialogDescription>
               </div>
@@ -190,8 +190,8 @@ export function CreateChannelDialog({
               <div className="h-1.5 w-12 rounded-full bg-accent" />
               <div
                 className={cn(
-                  'h-1.5 w-12 rounded-full transition-colors',
-                  step === 'members' ? 'bg-accent' : 'bg-surface-3',
+                  "h-1.5 w-12 rounded-full transition-colors",
+                  step === "members" ? "bg-accent" : "bg-surface-3",
                 )}
               />
             </div>
@@ -199,16 +199,16 @@ export function CreateChannelDialog({
         </DialogHeader>
 
         <DialogBody>
-          {step === 'details' ? (
+          {step === "details" ? (
             <div className="space-y-4">
-              <FormField label={t('createChannel.nameLabel')}>
+              <FormField label={t("createChannel.nameLabel")}>
                 <FormFieldControl>
                   <Input
                     ref={nameInputRef}
                     value={name}
                     onChange={(event) => setName(event.target.value)}
                     onKeyDown={handleDetailsKeyDown}
-                    placeholder={t('createChannel.namePlaceholder')}
+                    placeholder={t("createChannel.namePlaceholder")}
                     leadingIcon={<Hash className="size-4" />}
                   />
                 </FormFieldControl>
@@ -217,8 +217,10 @@ export function CreateChannelDialog({
               <FormField
                 label={
                   <span>
-                    {t('createChannel.descLabel')}{' '}
-                    <span className="font-normal text-text-muted">{t('createChannel.optional')}</span>
+                    {t("createChannel.descLabel")}{" "}
+                    <span className="font-normal text-text-muted">
+                      {t("createChannel.optional")}
+                    </span>
                   </span>
                 }
               >
@@ -227,7 +229,7 @@ export function CreateChannelDialog({
                     value={description}
                     onChange={(event) => setDescription(event.target.value)}
                     onKeyDown={handleDetailsKeyDown}
-                    placeholder={t('createChannel.descPlaceholder')}
+                    placeholder={t("createChannel.descPlaceholder")}
                   />
                 </FormFieldControl>
               </FormField>
@@ -240,7 +242,7 @@ export function CreateChannelDialog({
                     ref={searchInputRef}
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
-                    placeholder={t('createChannel.searchPlaceholder')}
+                    placeholder={t("createChannel.searchPlaceholder")}
                     leadingIcon={<Search className="size-4" />}
                   />
                 </FormFieldControl>
@@ -249,7 +251,7 @@ export function CreateChannelDialog({
               <div className="max-h-[360px] space-y-4 overflow-y-auto pr-1">
                 {filteredUsers.length === 0 && filteredAgents.length === 0 ? (
                   <EmptyState
-                    title={t('common.noMatches')}
+                    title={t("common.noMatches")}
                     description="Try a different search to find people or agents to add."
                     icon={<Users className="size-6" />}
                     className="border-border-subtle"
@@ -270,11 +272,15 @@ export function CreateChannelDialog({
                             <InteractiveRowLeading>
                               <Avatar className="size-8">
                                 <AvatarImage src={user.avatar} alt={user.name} />
-                                <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+                                <AvatarFallback>
+                                  {user.name.slice(0, 2).toUpperCase()}
+                                </AvatarFallback>
                               </Avatar>
                             </InteractiveRowLeading>
                             <InteractiveRowContent>
-                              <div className="text-[13px] font-medium text-text-heading">{user.name}</div>
+                              <div className="text-[13px] font-medium text-text-heading">
+                                {user.name}
+                              </div>
                               <div className="text-[11px] text-text-muted">{user.email}</div>
                             </InteractiveRowContent>
                             <InteractiveRowTrailing>
@@ -300,7 +306,11 @@ export function CreateChannelDialog({
                           >
                             <InteractiveRowLeading>
                               {agent.avatar ? (
-                                <img src={agent.avatar} alt={agent.name} className="size-8 rounded-lg" />
+                                <img
+                                  src={agent.avatar}
+                                  alt={agent.name}
+                                  className="size-8 rounded-lg"
+                                />
                               ) : (
                                 <div className="flex size-8 items-center justify-center rounded-lg bg-surface-2">
                                   <Bot className="size-4 text-text-muted" />
@@ -313,11 +323,13 @@ export function CreateChannelDialog({
                                   {agent.name}
                                 </span>
                                 <Badge variant="accent" size="xs">
-                                  {t('createChannel.agentBadge')}
+                                  {t("createChannel.agentBadge")}
                                 </Badge>
                               </div>
                               {agent.description ? (
-                                <div className="text-[11px] text-text-muted">{agent.description}</div>
+                                <div className="text-[11px] text-text-muted">
+                                  {agent.description}
+                                </div>
                               ) : null}
                             </InteractiveRowContent>
                             <InteractiveRowTrailing>
@@ -338,14 +350,14 @@ export function CreateChannelDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('common.cancel')}
+            {t("common.cancel")}
           </Button>
-          {step === 'details' ? (
+          {step === "details" ? (
             <Button onClick={handleNext} disabled={!name.trim()}>
-              {t('common.next')}
+              {t("common.next")}
             </Button>
           ) : (
-            <Button onClick={handleCreate}>{t('createChannel.createCta')}</Button>
+            <Button onClick={handleCreate}>{t("createChannel.createCta")}</Button>
           )}
         </DialogFooter>
       </DialogContent>
@@ -365,7 +377,9 @@ function SelectionSection({
   return (
     <section className="space-y-2">
       <div className="flex items-center justify-between">
-        <h3 className="text-[12px] font-semibold uppercase tracking-wide text-text-muted">{label}</h3>
+        <h3 className="text-[12px] font-semibold uppercase tracking-wide text-text-muted">
+          {label}
+        </h3>
         <span className="text-[11px] text-text-muted">{count}</span>
       </div>
       <div className="space-y-1">{children}</div>

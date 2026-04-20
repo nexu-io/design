@@ -1,6 +1,15 @@
-import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Copy, FileText, MessageSquare, MoreHorizontal, Settings, Trash2, Wrench, Zap } from 'lucide-react';
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Copy,
+  FileText,
+  MessageSquare,
+  MoreHorizontal,
+  Settings,
+  Trash2,
+  Wrench,
+  Zap,
+} from "lucide-react";
 
 import {
   Button,
@@ -25,16 +34,16 @@ import {
   TabsTrigger,
   Textarea,
   cn,
-} from '@nexu-design/ui-web';
+} from "@nexu-design/ui-web";
 
-import { WindowChrome } from '@/components/layout/WindowChrome';
-import { useT } from '@/i18n';
-import { mockRuntimes } from '@/mock/data';
-import { useAgentsStore } from '@/stores/agents';
-import { useChatStore } from '@/stores/chat';
-import type { Agent, Channel } from '@/types';
+import { WindowChrome } from "@/components/layout/WindowChrome";
+import { useT } from "@/i18n";
+import { mockRuntimes } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
+import { useChatStore } from "@/stores/chat";
+import type { Agent, Channel } from "@/types";
 
-import { RuntimePicker } from './RuntimePicker';
+import { RuntimePicker } from "./RuntimePicker";
 
 interface AgentDetailProps {
   agent: Agent;
@@ -55,12 +64,12 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
 
   const dmChannelId = useMemo(() => {
     for (const channel of channels) {
-      if (channel.type !== 'dm') {
+      if (channel.type !== "dm") {
         continue;
       }
 
       for (const member of channel.members) {
-        if (member.kind === 'agent' && member.id === agent.id) {
+        if (member.kind === "agent" && member.id === agent.id) {
           return channel.id;
         }
       }
@@ -78,10 +87,10 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
     const newDm: Channel = {
       id: `dm-${agent.id}`,
       name: agent.name,
-      type: 'dm',
+      type: "dm",
       members: [
-        { kind: 'user', id: 'u-1' },
-        { kind: 'agent', id: agent.id },
+        { kind: "user", id: "u-1" },
+        { kind: "agent", id: agent.id },
       ],
       lastMessageAt: Date.now(),
       unreadCount: 0,
@@ -104,10 +113,10 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
     const duplicateChannel: Channel = {
       id: `dm-${duplicateId}`,
       name: `${agent.name} (copy)`,
-      type: 'dm',
+      type: "dm",
       members: [
-        { kind: 'user', id: 'u-1' },
-        { kind: 'agent', id: duplicateId },
+        { kind: "user", id: "u-1" },
+        { kind: "agent", id: duplicateId },
       ],
       lastMessageAt: Date.now(),
       unreadCount: 0,
@@ -120,7 +129,7 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
 
   const handleDelete = (): void => {
     removeAgent(agent.id);
-    navigate('/agents');
+    navigate("/agents");
   };
 
   return (
@@ -134,8 +143,12 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
           description={agent.description}
           actions={
             <>
-              <Button size="sm" leadingIcon={<MessageSquare className="size-3.5" />} onClick={handleSendMessage}>
-                {t('agent.message')}
+              <Button
+                size="sm"
+                leadingIcon={<MessageSquare className="size-3.5" />}
+                onClick={handleSendMessage}
+              >
+                {t("agent.message")}
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -146,12 +159,12 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
                 <DropdownMenuContent align="end" className="min-w-[180px]">
                   <DropdownMenuItem onClick={handleDuplicate}>
                     <Copy className="size-4 text-text-muted" />
-                    {t('agent.duplicate')}
+                    {t("agent.duplicate")}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleDelete} className="text-destructive">
                     <Trash2 className="size-4" />
-                    {t('agent.delete')}
+                    {t("agent.delete")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -163,18 +176,18 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
           <div className="flex flex-wrap items-center gap-2">
             <span
               className={cn(
-                'inline-flex items-center gap-1',
-                agent.status === 'online' && 'text-[var(--color-success)]',
-                agent.status === 'busy' && 'text-[var(--color-warning)]',
-                agent.status === 'offline' && 'text-text-muted',
+                "inline-flex items-center gap-1",
+                agent.status === "online" && "text-[var(--color-success)]",
+                agent.status === "busy" && "text-[var(--color-warning)]",
+                agent.status === "offline" && "text-text-muted",
               )}
             >
               <span className="size-1.5 rounded-full bg-current" />
-              {agent.status === 'online'
-                ? t('agent.online')
-                : agent.status === 'busy'
-                  ? t('agent.busy')
-                  : t('agent.offline')}
+              {agent.status === "online"
+                ? t("agent.online")
+                : agent.status === "busy"
+                  ? t("agent.busy")
+                  : t("agent.offline")}
             </span>
             {runtime ? (
               <span className="inline-flex items-center gap-1 text-text-muted">
@@ -189,15 +202,15 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
           <TabsList>
             <TabsTrigger value="instructions">
               <FileText className="size-3.5" />
-              {t('agent.tabInstructions')}
+              {t("agent.tabInstructions")}
             </TabsTrigger>
             <TabsTrigger value="skills">
               <Wrench className="size-3.5" />
-              {t('agent.tabSkills')}
+              {t("agent.tabSkills")}
             </TabsTrigger>
             <TabsTrigger value="settings">
               <Settings className="size-3.5" />
-              {t('agent.tabSettings')}
+              {t("agent.tabSettings")}
             </TabsTrigger>
           </TabsList>
 
@@ -235,14 +248,13 @@ function InstructionsTab({
   return (
     <Card variant="outline" padding="lg">
       <CardHeader>
-        <CardTitle className="text-[16px] text-text-heading">{t('agent.instructionsTitle')}</CardTitle>
-        <CardDescription>{t('agent.instructionsDesc')}</CardDescription>
+        <CardTitle className="text-[16px] text-text-heading">
+          {t("agent.instructionsTitle")}
+        </CardTitle>
+        <CardDescription>{t("agent.instructionsDesc")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <FormField
-          label="System prompt"
-          description={t('agent.instructionsPlaceholder')}
-        >
+        <FormField label="System prompt" description={t("agent.instructionsPlaceholder")}>
           <FormFieldControl>
             <Textarea
               value={prompt}
@@ -254,10 +266,10 @@ function InstructionsTab({
 
         <div className="flex items-center justify-between gap-3">
           <span className="text-[11px] text-text-muted">
-            {t('agent.charactersCount', { count: String(prompt.length) })}
+            {t("agent.charactersCount", { count: String(prompt.length) })}
           </span>
           <Button onClick={() => onSave(prompt)} disabled={!isDirty}>
-            {t('common.save')}
+            {t("common.save")}
           </Button>
         </div>
       </CardContent>
@@ -271,14 +283,17 @@ function SkillsTab({ agent }: { agent: Agent }): React.ReactElement {
   return (
     <Card variant="outline" padding="lg">
       <CardHeader>
-        <CardTitle className="text-[16px] text-text-heading">{t('agent.skillsTitle')}</CardTitle>
-        <CardDescription>{t('agent.skillsDesc')}</CardDescription>
+        <CardTitle className="text-[16px] text-text-heading">{t("agent.skillsTitle")}</CardTitle>
+        <CardDescription>{t("agent.skillsDesc")}</CardDescription>
       </CardHeader>
       <CardContent>
         {agent.skills.length > 0 ? (
           <div className="space-y-2">
             {agent.skills.map((skill) => (
-              <div key={skill.id} className="flex items-start gap-3 rounded-xl border border-border px-3 py-3">
+              <div
+                key={skill.id}
+                className="flex items-start gap-3 rounded-xl border border-border px-3 py-3"
+              >
                 <div className="shrink-0">
                   <div className="flex size-9 items-center justify-center rounded-lg bg-surface-2">
                     <Wrench className="size-4 text-text-muted" />
@@ -293,8 +308,8 @@ function SkillsTab({ agent }: { agent: Agent }): React.ReactElement {
           </div>
         ) : (
           <EmptyState
-            title={t('agent.noSkills')}
-            description={t('agent.noSkillsHint')}
+            title={t("agent.noSkills")}
+            description={t("agent.noSkillsHint")}
             icon={<Wrench className="size-7" />}
             className="border-border-subtle"
           />
@@ -343,28 +358,33 @@ function SettingsTab({
   return (
     <Card variant="outline" padding="lg">
       <CardHeader>
-        <CardTitle className="text-[16px] text-text-heading">{t('agent.settingsTitle')}</CardTitle>
-        <CardDescription>{t('agent.settingsDesc')}</CardDescription>
+        <CardTitle className="text-[16px] text-text-heading">{t("agent.settingsTitle")}</CardTitle>
+        <CardDescription>{t("agent.settingsDesc")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <FormField label={t('agent.avatar')}>
+        <FormField label={t("agent.avatar")}>
           <FormFieldControl>
             <div className="flex items-center gap-3">
               <img src={avatar} alt="" className="size-12 rounded-xl" />
-              <Button variant="outline" size="sm" className="text-text-primary" onClick={handleRandomizeAvatar}>
-                {t('agent.randomize')}
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-text-primary"
+                onClick={handleRandomizeAvatar}
+              >
+                {t("agent.randomize")}
               </Button>
             </div>
           </FormFieldControl>
         </FormField>
 
-        <FormField label={t('agent.name')}>
+        <FormField label={t("agent.name")}>
           <FormFieldControl>
             <Input value={name} onChange={(event) => setName(event.target.value)} />
           </FormFieldControl>
         </FormField>
 
-        <FormField label={t('agent.description')}>
+        <FormField label={t("agent.description")}>
           <FormFieldControl>
             <Textarea
               value={description}
@@ -375,7 +395,7 @@ function SettingsTab({
           </FormFieldControl>
         </FormField>
 
-        <FormField label={t('agent.runtime')}>
+        <FormField label={t("agent.runtime")}>
           <FormFieldControl>
             <RuntimePicker value={runtimeId} onChange={setRuntimeId} />
           </FormFieldControl>
@@ -383,7 +403,7 @@ function SettingsTab({
 
         <div className="flex justify-end">
           <Button onClick={handleSave} disabled={!isDirty || !name.trim()}>
-            {t('common.saveChanges')}
+            {t("common.saveChanges")}
           </Button>
         </div>
       </CardContent>

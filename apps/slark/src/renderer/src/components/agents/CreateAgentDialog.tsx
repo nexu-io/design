@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Check, Sparkles, Zap } from 'lucide-react';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Check, Sparkles, Zap } from "lucide-react";
 
 import {
   Button,
@@ -19,15 +19,15 @@ import {
   InteractiveRowLeading,
   InteractiveRowTrailing,
   cn,
-} from '@nexu-design/ui-web';
+} from "@nexu-design/ui-web";
 
-import { useT } from '@/i18n';
-import { mockSkills } from '@/mock/data';
-import { useAgentsStore } from '@/stores/agents';
-import { useChatStore } from '@/stores/chat';
-import type { Agent, AgentTemplate, Channel } from '@/types';
+import { useT } from "@/i18n";
+import { mockSkills } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
+import { useChatStore } from "@/stores/chat";
+import type { Agent, AgentTemplate, Channel } from "@/types";
 
-import { RuntimePicker } from './RuntimePicker';
+import { RuntimePicker } from "./RuntimePicker";
 
 interface CreateAgentDialogProps {
   open: boolean;
@@ -45,14 +45,14 @@ export function CreateAgentDialog({
   const selectAgent = useAgentsStore((s) => s.selectAgent);
   const addChannel = useChatStore((s) => s.addChannel);
   const [selectedTemplate, setSelectedTemplate] = useState<AgentTemplate | null>(null);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [runtimeId, setRuntimeId] = useState<string | null>(null);
 
   const reset = (): void => {
     setSelectedTemplate(null);
-    setName('');
-    setDescription('');
+    setName("");
+    setDescription("");
     setRuntimeId(null);
   };
 
@@ -66,7 +66,7 @@ export function CreateAgentDialog({
     const trimmedName = name.trim();
     if (!trimmedName) return;
 
-    const templateSkills: Agent['skills'] = [];
+    const templateSkills: Agent["skills"] = [];
     for (const skillId of selectedTemplate?.defaultSkills ?? []) {
       const matchedSkill = mockSkills.filter((skill) => skill.id === skillId)[0];
       if (matchedSkill) {
@@ -84,11 +84,11 @@ export function CreateAgentDialog({
       description: description.trim(),
       systemPrompt:
         selectedTemplate?.defaultPrompt ?? `You are ${trimmedName}, a helpful AI assistant.`,
-      status: 'online',
+      status: "online",
       skills: templateSkills,
       runtimeId,
       templateId: selectedTemplate?.id ?? null,
-      createdBy: 'u-1',
+      createdBy: "u-1",
       createdAt: Date.now(),
     };
 
@@ -97,10 +97,10 @@ export function CreateAgentDialog({
     const dmChannel: Channel = {
       id: `dm-${agentId}`,
       name: trimmedName,
-      type: 'dm',
+      type: "dm",
       members: [
-        { kind: 'user', id: 'u-1' },
-        { kind: 'agent', id: agentId },
+        { kind: "user", id: "u-1" },
+        { kind: "agent", id: agentId },
       ],
       lastMessageAt: Date.now(),
       unreadCount: 0,
@@ -115,7 +115,7 @@ export function CreateAgentDialog({
   };
 
   const handleKeyDown = (event: React.KeyboardEvent): void => {
-    if (event.key === 'Enter' && !event.shiftKey && name.trim()) {
+    if (event.key === "Enter" && !event.shiftKey && name.trim()) {
       event.preventDefault();
       handleCreate();
     }
@@ -133,7 +133,7 @@ export function CreateAgentDialog({
     >
       <DialogContent size="md">
         <DialogHeader>
-          <DialogTitle>{t('createAgent.title')}</DialogTitle>
+          <DialogTitle>{t("createAgent.title")}</DialogTitle>
           <DialogDescription>
             Start from a template or configure the core details for a brand new agent.
           </DialogDescription>
@@ -143,7 +143,7 @@ export function CreateAgentDialog({
           <div className="space-y-4">
             {templates.length > 0 ? (
               <FormField
-                label={t('createAgent.template')}
+                label={t("createAgent.template")}
                 description="Templates prefill the name, description, and default prompt."
               >
                 <FormFieldControl>
@@ -180,25 +180,25 @@ export function CreateAgentDialog({
               </FormField>
             ) : null}
 
-            <FormField label={t('agent.name')}>
+            <FormField label={t("agent.name")}>
               <FormFieldControl>
                 <Input
                   autoFocus
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder={t('createAgent.namePlaceholder')}
+                  placeholder={t("createAgent.namePlaceholder")}
                 />
               </FormFieldControl>
             </FormField>
 
-            <FormField label={t('agent.description')}>
+            <FormField label={t("agent.description")}>
               <FormFieldControl>
                 <Input
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder={t('createAgent.descPlaceholder')}
+                  placeholder={t("createAgent.descPlaceholder")}
                 />
               </FormFieldControl>
             </FormField>
@@ -207,7 +207,7 @@ export function CreateAgentDialog({
               label={
                 <span className="inline-flex items-center gap-1.5">
                   <Zap className="size-3.5" />
-                  {t('agent.runtime')}
+                  {t("agent.runtime")}
                 </span>
               }
               description="Connect a runtime now or leave it empty and configure it later."
@@ -220,12 +220,13 @@ export function CreateAgentDialog({
             {selectedTemplate ? (
               <div
                 className={cn(
-                  'flex items-start gap-2 rounded-xl border border-border bg-surface-1 px-3 py-2',
+                  "flex items-start gap-2 rounded-xl border border-border bg-surface-1 px-3 py-2",
                 )}
               >
                 <Sparkles className="mt-0.5 size-4 text-text-muted" />
                 <p className="text-[12px] text-text-muted">
-                  {selectedTemplate.name} will seed the system prompt and default skills for this agent.
+                  {selectedTemplate.name} will seed the system prompt and default skills for this
+                  agent.
                 </p>
               </div>
             ) : null}
@@ -234,10 +235,10 @@ export function CreateAgentDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('common.cancel')}
+            {t("common.cancel")}
           </Button>
           <Button onClick={handleCreate} disabled={!name.trim()}>
-            {t('common.create')}
+            {t("common.create")}
           </Button>
         </DialogFooter>
       </DialogContent>
