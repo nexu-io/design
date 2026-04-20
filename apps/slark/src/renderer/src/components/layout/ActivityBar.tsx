@@ -1,11 +1,27 @@
-import { useState, useRef, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { MessageSquare, Users, Zap, Settings, Plus, LogOut, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {
+  ActivityBar as UiActivityBar,
+  ActivityBarContent,
+  ActivityBarFooter,
+  ActivityBarHeader,
+  ActivityBarIndicator,
+  ActivityBarItem,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@nexu-design/ui-web";
+import { Check, LogOut, MessageSquare, Plus, Settings, Users, Zap } from "lucide-react";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import { useT, type TranslationKey } from "@/i18n";
 import { useWorkspaceStore } from "@/stores/workspace";
 
-import { WindowChrome } from "./WindowChrome";
+import { TitleBarSpacer } from "./WindowChrome";
 
 const navItems: { icon: typeof MessageSquare; path: string; labelKey: TranslationKey }[] = [
   { icon: MessageSquare, path: "/chat", labelKey: "section.chat" },
@@ -13,163 +29,145 @@ const navItems: { icon: typeof MessageSquare; path: string; labelKey: Translatio
   { icon: Zap, path: "/runtimes", labelKey: "section.runtimes" },
 ];
 
+function getWorkspaceSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 export function ActivityBar(): React.ReactElement {
   const navigate = useNavigate();
   const location = useLocation();
   const t = useT();
   const { workspace, workspaces, switchWorkspace, reset } = useWorkspaceStore();
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent): void => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    if (menuOpen) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [menuOpen]);
 
   return (
-    <div className="flex flex-col items-center w-[56px] bg-nav-surface shrink-0">
-      <WindowChrome className={cn("h-[38px] w-full", menuOpen && "pointer-events-none")} />
+    <UiActivityBar className="w-14 border-r-0 bg-nav-surface py-0 text-white">
+      <TitleBarSpacer className="mb-3 h-[38px]" />
 
-      <div className="relative mb-3" ref={menuRef}>
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="no-drag flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden ring-1 ring-white/10 hover:ring-white/30 transition-all"
-          title={workspace?.name ?? "Nexu"}
-        >
-          {workspace?.avatar ? (
-            <img src={workspace.avatar} alt="" className="h-10 w-10 rounded-xl" />
-          ) : (
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-nexu-primary/80 to-nexu-primary text-white font-bold text-base">
-              {(workspace?.name ?? "S").charAt(0).toUpperCase()}
-            </div>
-          )}
-        </button>
+      <ActivityBarHeader className="mb-4 w-10 border-b-0 pb-0">
+        <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+          <DropdownMenuTrigger asChild>
+            <ActivityBarItem
+              className="no-drag size-10 overflow-hidden rounded-xl p-0 text-white hover:bg-white/10 hover:text-white"
+              title={workspace?.name ?? "Nexu"}
+            >
+              <Avatar className="size-10 rounded-xl">
+                <AvatarImage src={workspace?.avatar} alt={workspace?.name ?? "Workspace"} />
+                <AvatarFallback className="rounded-xl bg-gradient-to-br from-nexu-primary/80 to-nexu-primary text-sm font-bold text-white">
+                  {(workspace?.name ?? "S").charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </ActivityBarItem>
+          </DropdownMenuTrigger>
 
-        {menuOpen && (
-          <>
-            <div className="no-drag fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-            <div className="absolute top-0 left-[60px] z-50 w-[320px] rounded-2xl border border-border bg-popover text-popover-foreground shadow-2xl overflow-hidden py-1.5">
-              {workspaces.map((ws, idx) => {
-                const isActive = ws.id === workspace?.id;
-                const slug = ws.name
-                  .toLowerCase()
-                  .replace(/[^a-z0-9]+/g, "-")
-                  .replace(/^-|-$/g, "");
-                return (
-                  <button
-                    key={ws.id}
-                    onClick={() => {
-                      switchWorkspace(ws.id);
-                      setMenuOpen(false);
-                    }}
-                    className="flex items-center gap-3 w-full px-2.5 py-2 rounded-lg hover:bg-accent transition-colors mx-1"
-                  >
-                    <div className="relative shrink-0">
-                      {ws.avatar ? (
-                        <img src={ws.avatar} alt="" className="h-10 w-10 rounded-lg" />
-                      ) : (
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-nexu-primary/80 to-nexu-primary text-white font-bold text-base">
-                          {ws.name.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                      {isActive && (
-                        <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-nexu-online ring-2 ring-popover" />
-                      )}
+          <DropdownMenuContent align="start" side="right" className="no-drag w-72 rounded-2xl">
+            {workspaces.map((ws, idx) => {
+              const isActive = ws.id === workspace?.id;
+
+              return (
+                <DropdownMenuItem
+                  key={ws.id}
+                  onClick={() => switchWorkspace(ws.id)}
+                  className="gap-3 rounded-lg px-2.5 py-2"
+                >
+                  <Avatar className="size-10 rounded-lg">
+                    <AvatarImage src={ws.avatar} alt={ws.name} />
+                    <AvatarFallback className="rounded-lg bg-gradient-to-br from-nexu-primary/80 to-nexu-primary text-sm font-bold text-white">
+                      {ws.name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
+                      <span className="truncate">{ws.name}</span>
+                      {isActive ? <Check className="size-3.5 shrink-0 text-nexu-primary" /> : null}
                     </div>
-                    <div className="flex-1 min-w-0 text-left">
-                      <div className="text-sm font-semibold text-foreground truncate flex items-center gap-1.5">
-                        {ws.name}
-                        {isActive && <Check className="h-3.5 w-3.5 text-nexu-primary shrink-0" />}
-                      </div>
-                      <div className="text-xs text-muted-foreground truncate">{slug}.nexu.app</div>
+                    <div className="truncate text-xs text-muted-foreground">
+                      {getWorkspaceSlug(ws.name)}.nexu.app
                     </div>
-                    {idx < 9 && (
-                      <span className="text-xs text-muted-foreground shrink-0 tracking-wider">
-                        ⌘{idx + 1}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
+                  </div>
+                  {idx < 9 ? (
+                    <span className="shrink-0 text-xs tracking-wider text-muted-foreground">
+                      ⌘{idx + 1}
+                    </span>
+                  ) : null}
+                </DropdownMenuItem>
+              );
+            })}
 
-              <button
-                onClick={() => setMenuOpen(false)}
-                disabled={workspaces.length >= 5}
-                title={workspaces.length >= 5 ? "Workspace limit reached (5 max)" : undefined}
-                className="flex items-center gap-3 w-full px-2.5 py-2 rounded-lg hover:bg-accent transition-colors mx-1 disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-secondary/40 shrink-0">
-                  <Plus className="h-4 w-4 text-muted-foreground" />
-                </div>
-                <span className="flex-1 text-left text-sm text-foreground">
-                  {t("workspace.addWorkspace")}
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              disabled={workspaces.length >= 5}
+              title={workspaces.length >= 5 ? "Workspace limit reached (5 max)" : undefined}
+              className="gap-3 rounded-lg px-2.5 py-2"
+              onClick={() => setMenuOpen(false)}
+            >
+              <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-secondary/40">
+                <Plus className="size-4 text-muted-foreground" />
+              </div>
+              <span className="flex-1 text-left text-sm text-foreground">
+                {t("workspace.addWorkspace")}
+              </span>
+              {workspaces.length >= 5 ? (
+                <span className="shrink-0 text-[10px] text-muted-foreground">
+                  {workspaces.length}/5
                 </span>
-                {workspaces.length >= 5 && (
-                  <span className="text-[10px] text-muted-foreground shrink-0">
-                    {workspaces.length}/5
-                  </span>
-                )}
-              </button>
+              ) : null}
+            </DropdownMenuItem>
 
-              <div className="h-px bg-border my-1.5 mx-2" />
+            <DropdownMenuSeparator />
 
-              <button
-                onClick={() => {
-                  setMenuOpen(false);
-                  reset();
-                  navigate("/");
-                }}
-                className="flex items-center gap-2.5 w-full px-3 py-1.5 rounded-lg text-xs text-destructive-foreground hover:bg-destructive/10 transition-colors mx-1"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                {t("workspace.logOut")}
-              </button>
-            </div>
-          </>
-        )}
-      </div>
+            <DropdownMenuItem
+              onClick={() => {
+                reset();
+                navigate("/");
+              }}
+              className="gap-2.5 rounded-lg px-3 py-2 text-destructive focus:text-destructive"
+            >
+              <LogOut className="size-3.5" />
+              {t("workspace.logOut")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </ActivityBarHeader>
 
-      <div className="flex flex-col items-center gap-1.5 flex-1">
+      <ActivityBarContent className="gap-1.5">
         {navItems.map(({ icon: Icon, path, labelKey }) => {
           const isActive = location.pathname.startsWith(path);
+
           return (
-            <button
+            <ActivityBarItem
               key={path}
+              active={isActive}
               onClick={() => navigate(path)}
-              className={cn(
-                "no-drag relative flex items-center justify-center w-10 h-10 rounded-xl transition-colors",
-                isActive
-                  ? "bg-white/25 text-white"
-                  : "text-white/75 hover:text-white hover:bg-white/15",
-              )}
+              className="no-drag size-10 rounded-xl text-white/75 hover:bg-white/15 hover:text-white data-[active=true]:bg-white/25 data-[active=true]:text-white"
               title={t(labelKey)}
             >
-              <Icon className="w-[19px] h-[19px]" />
-              {isActive && (
-                <span className="absolute -left-2.5 top-2 bottom-2 w-[3px] rounded-r-full bg-nav-fg" />
-              )}
-            </button>
+              {isActive ? (
+                <ActivityBarIndicator className="left-[-8px] inset-y-2 w-[3px] bg-white" />
+              ) : null}
+              <Icon className="size-[19px]" />
+            </ActivityBarItem>
           );
         })}
-      </div>
+      </ActivityBarContent>
 
-      <button
-        onClick={() => navigate("/settings")}
-        className={cn(
-          "no-drag flex items-center justify-center w-10 h-10 rounded-xl transition-colors mb-3",
-          location.pathname.startsWith("/settings")
-            ? "bg-white/25 text-white"
-            : "text-white/75 hover:text-white hover:bg-white/15",
-        )}
-        title="Settings"
-      >
-        <Settings className="w-[19px] h-[19px]" />
-      </button>
-    </div>
+      <ActivityBarFooter className="w-10 border-t-0 pb-3 pt-0">
+        <ActivityBarItem
+          active={location.pathname.startsWith("/settings")}
+          onClick={() => navigate("/settings")}
+          className="no-drag size-10 rounded-xl text-white/75 hover:bg-white/15 hover:text-white data-[active=true]:bg-white/25 data-[active=true]:text-white"
+          title={t("section.settings")}
+        >
+          {location.pathname.startsWith("/settings") ? (
+            <ActivityBarIndicator className="left-[-8px] inset-y-2 w-[3px] bg-white" />
+          ) : null}
+          <Settings className="size-[19px]" />
+        </ActivityBarItem>
+      </ActivityBarFooter>
+    </UiActivityBar>
   );
 }

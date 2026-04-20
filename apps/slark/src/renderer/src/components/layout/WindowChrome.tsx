@@ -11,3 +11,23 @@ export const WindowChrome = React.forwardRef<HTMLDivElement, WindowChromeProps>(
 );
 
 WindowChrome.displayName = "WindowChrome";
+
+export function TitleBarSpacer({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>): React.ReactElement {
+  return <WindowChrome aria-hidden="true" className={cn("h-10 w-full", className)} {...props} />;
+}
+
+export function TitleBarDragRegion({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>): React.ReactElement {
+  return (
+    <WindowChrome
+      aria-hidden="true"
+      className={cn("absolute inset-x-0 top-0 z-20 h-10 w-full", className)}
+      {...props}
+    />
+  );
+}

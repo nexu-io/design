@@ -1,12 +1,28 @@
-import { useState, useRef, useEffect } from "react";
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  TextLink,
+  cn,
+} from "@nexu-design/ui-web";
+import { AlertCircle, ArrowLeft, ArrowRight, Github, Lock, Mail, ShieldCheck } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Github, Mail, ArrowRight, ArrowLeft, Lock, ShieldCheck } from "lucide-react";
-import { cn } from "@/lib/utils";
+
 import { useT } from "@/i18n";
+
+import { SlarkAuthFrame } from "./slark-auth-frame";
 
 function GoogleIcon({ className }: { className?: string }): React.ReactElement {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none">
+      <title>Google</title>
       <path
         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
         fill="#4285F4"
@@ -39,6 +55,8 @@ export function WelcomePage(): React.ReactElement {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
   const codeRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const login = (): void => {
@@ -56,11 +74,27 @@ export function WelcomePage(): React.ReactElement {
   };
 
   useEffect(() => {
-    if (emailStep === "verify" && code.every((d) => d !== "")) {
+    if (emailStep === "verify" && code.every((digit) => digit !== "")) {
       const timer = setTimeout(() => setEmailStep("password"), 300);
       return () => clearTimeout(timer);
     }
   }, [code, emailStep]);
+
+  useEffect(() => {
+    if (view !== "email") return;
+
+    if (emailStep === "email") {
+      emailInputRef.current?.focus();
+      return;
+    }
+
+    if (emailStep === "verify") {
+      codeRefs.current[0]?.focus();
+      return;
+    }
+
+    passwordInputRef.current?.focus();
+  }, [view, emailStep]);
 
   const handleEmailSubmit = (): void => {
     const trimmed = email.trim();
@@ -74,34 +108,38 @@ export function WelcomePage(): React.ReactElement {
   };
 
   const handleCodeChange = (index: number, value: string): void => {
-    if (value.length > 1) value = value.slice(-1);
-    if (value && !/^\d$/.test(value)) return;
+    let nextValue = value;
+    if (nextValue.length > 1) nextValue = nextValue.slice(-1);
+    if (nextValue && !/^\d$/.test(nextValue)) return;
+
     const next = [...code];
-    next[index] = value;
+    next[index] = nextValue;
     setCode(next);
     setError("");
-    if (value && index < 5) {
+
+    if (nextValue && index < 5) {
       codeRefs.current[index + 1]?.focus();
     }
   };
 
-  const handleCodeKeyDown = (index: number, e: React.KeyboardEvent): void => {
-    if (e.key === "Backspace" && !code[index] && index > 0) {
+  const handleCodeKeyDown = (index: number, event: React.KeyboardEvent): void => {
+    if (event.key === "Backspace" && !code[index] && index > 0) {
       codeRefs.current[index - 1]?.focus();
     }
   };
 
-  const handleCodePaste = (e: React.ClipboardEvent): void => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+  const handleCodePaste = (event: React.ClipboardEvent): void => {
+    event.preventDefault();
+    const pasted = event.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
     if (!pasted) return;
+
     const next = [...code];
-    for (let i = 0; i < 6; i++) {
-      next[i] = pasted[i] ?? "";
+    for (let index = 0; index < 6; index += 1) {
+      next[index] = pasted[index] ?? "";
     }
+
     setCode(next);
-    const focusIdx = Math.min(pasted.length, 5);
-    codeRefs.current[focusIdx]?.focus();
+    codeRefs.current[Math.min(pasted.length, 5)]?.focus();
   };
 
   const handlePasswordSubmit = (): void => {
@@ -109,262 +147,279 @@ export function WelcomePage(): React.ReactElement {
       setError(t("onboarding.passwordTooShort"));
       return;
     }
+
     if (password !== confirmPassword) {
       setError(t("onboarding.passwordsMismatch"));
       return;
     }
+
     setError("");
     login();
+  };
+
+  const panelTitle =
+    view === "buttons"
+      ? "Sign in to Slark"
+      : emailStep === "email"
+        ? t("onboarding.continueWithEmail")
+        : emailStep === "verify"
+          ? t("onboarding.codeSent")
+          : t("onboarding.createAccount");
+
+  const panelDescription =
+    view === "buttons"
+      ? t("onboarding.appSubtitle")
+      : emailStep === "email"
+        ? t("onboarding.enterEmail")
+        : emailStep === "verify"
+          ? null
+          : t("onboarding.setPasswordFor");
+
+  const renderButtonsView = (): React.ReactElement => (
+    <div className="space-y-4">
+      <div className="space-y-2.5">
+        <Button className="w-full justify-center" size="md" onClick={login}>
+          <Github className="size-[18px]" />
+          {t("onboarding.continueWithGithub")}
+        </Button>
+        <Button variant="outline" className="w-full justify-center" size="md" onClick={login}>
+          <GoogleIcon className="-ml-0.5 size-[18px]" />
+          {t("onboarding.continueWithGoogle")}
+        </Button>
+        <Button
+          variant="outline"
+          className="w-full justify-center"
+          size="md"
+          onClick={() => setView("email")}
+        >
+          <Mail className="size-[18px]" />
+          {t("onboarding.continueWithEmail")}
+        </Button>
+      </div>
+
+      <p className="px-2 text-center text-[11px] leading-relaxed text-text-tertiary">
+        By continuing, you agree to our{" "}
+        <TextLink href="#" variant="muted" size="xs">
+          {t("invite.terms")}
+        </TextLink>{" "}
+        and{" "}
+        <TextLink href="#" variant="muted" size="xs">
+          {t("invite.privacy")}
+        </TextLink>
+        .
+      </p>
+    </div>
+  );
+
+  const renderBackButton = (onClick: () => void, label: string): React.ReactElement => (
+    <Button
+      variant="ghost"
+      size="sm"
+      className="mx-auto"
+      onClick={onClick}
+      leadingIcon={<ArrowLeft size={14} />}
+    >
+      {label}
+    </Button>
+  );
+
+  const renderError = (): React.ReactElement | null => {
+    if (!error) return null;
+
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="size-4" />
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
   };
 
   const renderEmailFlow = (): React.ReactElement => {
     if (emailStep === "email") {
       return (
-        <>
-          <p className="text-sm text-muted-foreground text-center">{t("onboarding.enterEmail")}</p>
-          <div>
-            <div
-              className={cn(
-                "flex items-center gap-2 h-11 rounded-lg border bg-background px-3 transition-shadow focus-within:ring-2",
-                error
-                  ? "border-destructive focus-within:ring-destructive/30"
-                  : "border-input focus-within:ring-ring",
-              )}
-            >
-              <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setError("");
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    handleEmailSubmit();
-                  }
-                }}
-                placeholder={t("onboarding.emailPlaceholder")}
-                className="flex-1 h-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-                autoFocus
-              />
-            </div>
-            {error && <p className="text-[11px] text-destructive mt-1.5">{error}</p>}
-          </div>
-          <button
+        <div className="space-y-3">
+          <Input
+            ref={emailInputRef}
+            type="email"
+            value={email}
+            invalid={!!error}
+            leadingIcon={<Mail className="size-4" />}
+            placeholder={t("onboarding.emailPlaceholder")}
+            onChange={(event) => {
+              setEmail(event.target.value);
+              setError("");
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                handleEmailSubmit();
+              }
+            }}
+          />
+
+          {renderError()}
+
+          <Button
+            className="w-full justify-center"
             onClick={handleEmailSubmit}
             disabled={!email.trim()}
-            className="flex items-center justify-center gap-2 h-11 rounded-lg font-medium transition-colors bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:cursor-not-allowed"
+            trailingIcon={<ArrowRight size={16} />}
           >
             {t("onboarding.sendCode")}
-            <ArrowRight className="h-4 w-4" />
-          </button>
-          <button
-            onClick={resetEmail}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <span className="flex items-center gap-1 justify-center">
-              <ArrowLeft className="h-3.5 w-3.5" /> {t("common.back")}
-            </span>
-          </button>
-        </>
+          </Button>
+          {renderBackButton(resetEmail, t("common.back"))}
+        </div>
       );
     }
 
     if (emailStep === "verify") {
       return (
-        <>
+        <div className="space-y-5">
           <div className="text-center">
-            <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-accent mx-auto mb-3">
-              <ShieldCheck className="h-5 w-5 text-muted-foreground" />
+            <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
+              <ShieldCheck className="size-5" />
             </div>
-            <p className="text-sm text-muted-foreground">{t("onboarding.codeSent")}</p>
-            <p className="text-sm font-medium mt-0.5">{email}</p>
+            <p className="text-[13px] leading-relaxed text-text-secondary">
+              {t("onboarding.codeSent")}
+            </p>
+            <p className="mt-0.5 text-[13px] font-semibold text-text-primary">{email}</p>
           </div>
-          <div>
-            <div className="flex items-center justify-center gap-2">
-              {code.map((digit, i) => (
+
+          <div className="space-y-2">
+            <fieldset
+              className="flex items-center justify-center gap-1.5"
+              aria-label="Verification code"
+            >
+              {code.map((digit, index) => (
                 <input
-                  key={i}
-                  ref={(el) => {
-                    codeRefs.current[i] = el;
+                  key={index}
+                  ref={(element) => {
+                    codeRefs.current[index] = element;
                   }}
                   type="text"
                   inputMode="numeric"
                   maxLength={1}
+                  aria-label={`Digit ${index + 1} of 6`}
                   value={digit}
-                  onChange={(e) => handleCodeChange(i, e.target.value)}
-                  onKeyDown={(e) => handleCodeKeyDown(i, e)}
-                  onPaste={i === 0 ? handleCodePaste : undefined}
+                  onChange={(event) => handleCodeChange(index, event.target.value)}
+                  onKeyDown={(event) => handleCodeKeyDown(index, event)}
+                  onPaste={index === 0 ? handleCodePaste : undefined}
                   className={cn(
-                    "w-10 h-12 rounded-lg border bg-background text-center text-lg font-semibold focus:outline-none focus:ring-2 transition-shadow",
+                    "h-11 w-10 rounded-lg border bg-surface-0 text-center text-[17px] font-semibold text-text-primary outline-none transition-colors",
                     error
-                      ? "border-destructive focus:ring-destructive/30"
-                      : "border-input focus:ring-ring",
+                      ? "border-destructive focus:border-destructive focus:ring-2 focus:ring-destructive/20"
+                      : "border-input focus:border-accent focus:ring-2 focus:ring-accent/20",
                   )}
-                  autoFocus={i === 0}
                 />
               ))}
-            </div>
-            {error && <p className="text-[11px] text-destructive mt-2 text-center">{error}</p>}
+            </fieldset>
+
+            {renderError()}
           </div>
-          <button
-            onClick={() => {
-              if (code.some((d) => d === "")) {
-                setError(t("onboarding.enterFullCode"));
-                return;
-              }
-              setError("");
-              setEmailStep("password");
-            }}
-            disabled={code.some((d) => d === "")}
-            className="flex items-center justify-center gap-2 h-11 rounded-lg font-medium transition-colors bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            {t("onboarding.verify")}
-            <ArrowRight className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => {
+
+          <div className="space-y-3">
+            <Button
+              className="w-full justify-center"
+              disabled={code.some((digit) => digit === "")}
+              trailingIcon={<ArrowRight size={16} />}
+              onClick={() => {
+                if (code.some((digit) => digit === "")) {
+                  setError(t("onboarding.enterFullCode"));
+                  return;
+                }
+
+                setError("");
+                setEmailStep("password");
+              }}
+            >
+              {t("onboarding.verify")}
+            </Button>
+            {renderBackButton(() => {
               setEmailStep("email");
               setCode(["", "", "", "", "", ""]);
               setError("");
-            }}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <span className="flex items-center gap-1 justify-center">
-              <ArrowLeft className="h-3.5 w-3.5" /> {t("onboarding.changeEmail")}
-            </span>
-          </button>
-        </>
+            }, t("onboarding.changeEmail"))}
+          </div>
+        </div>
       );
     }
 
     return (
-      <>
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground">
-            {t("onboarding.setPasswordFor")}{" "}
-            <span className="font-medium text-foreground">{email}</span>
-          </p>
+      <div className="space-y-3">
+        <div className="space-y-2">
+          <Input
+            ref={passwordInputRef}
+            type="password"
+            value={password}
+            invalid={!!error && !error.includes("match")}
+            leadingIcon={<Lock className="size-4" />}
+            placeholder={t("onboarding.passwordPlaceholder")}
+            onChange={(event) => {
+              setPassword(event.target.value);
+              setError("");
+            }}
+          />
+          <Input
+            type="password"
+            value={confirmPassword}
+            invalid={!!error && error.includes("match")}
+            leadingIcon={<Lock className="size-4" />}
+            placeholder={t("onboarding.confirmPasswordPlaceholder")}
+            onChange={(event) => {
+              setConfirmPassword(event.target.value);
+              setError("");
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                handlePasswordSubmit();
+              }
+            }}
+          />
+
+          {renderError()}
         </div>
-        <div className="space-y-3">
-          <div
-            className={cn(
-              "flex items-center gap-2 h-11 rounded-lg border bg-background px-3 transition-shadow focus-within:ring-2",
-              error
-                ? "border-destructive focus-within:ring-destructive/30"
-                : "border-input focus-within:ring-ring",
-            )}
-          >
-            <Lock className="h-4 w-4 text-muted-foreground shrink-0" />
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setError("");
-              }}
-              placeholder={t("onboarding.passwordPlaceholder")}
-              className="flex-1 h-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-              autoFocus
-            />
-          </div>
-          <div
-            className={cn(
-              "flex items-center gap-2 h-11 rounded-lg border bg-background px-3 transition-shadow focus-within:ring-2",
-              error && error.includes("match")
-                ? "border-destructive focus-within:ring-destructive/30"
-                : "border-input focus-within:ring-ring",
-            )}
-          >
-            <Lock className="h-4 w-4 text-muted-foreground shrink-0" />
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => {
-                setConfirmPassword(e.target.value);
-                setError("");
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handlePasswordSubmit();
-                }
-              }}
-              placeholder={t("onboarding.confirmPasswordPlaceholder")}
-              className="flex-1 h-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-            />
-          </div>
-          {error && <p className="text-[11px] text-destructive">{error}</p>}
-        </div>
-        <button
+
+        <Button
+          className="w-full justify-center"
           onClick={handlePasswordSubmit}
           disabled={!password || !confirmPassword}
-          className="flex items-center justify-center gap-2 h-11 rounded-lg font-medium transition-colors bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:cursor-not-allowed"
+          trailingIcon={<ArrowRight size={16} />}
         >
           {t("onboarding.createAccount")}
-          <ArrowRight className="h-4 w-4" />
-        </button>
-        <button
-          onClick={() => {
-            setEmailStep("verify");
-            setPassword("");
-            setConfirmPassword("");
-            setError("");
-          }}
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <span className="flex items-center gap-1 justify-center">
-            <ArrowLeft className="h-3.5 w-3.5" /> {t("common.back")}
-          </span>
-        </button>
-      </>
+        </Button>
+        {renderBackButton(() => {
+          setEmailStep("verify");
+          setPassword("");
+          setConfirmPassword("");
+          setError("");
+        }, t("common.back"))}
+      </div>
     );
   };
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-background">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_oklch(0.85_0.05_260)_0%,_transparent_70%)] dark:bg-[radial-gradient(ellipse_at_center,_oklch(0.25_0.05_260)_0%,_transparent_70%)] opacity-40" />
-      <div className="relative z-10 flex flex-col items-center gap-8 px-8">
-        <h1 className="text-4xl font-bold tracking-tight">Nexu</h1>
-        <p className="text-sm text-muted-foreground/70 font-medium tracking-wide uppercase">
-          {t("onboarding.appTagline")}
-        </p>
-        <p className="text-lg text-muted-foreground max-w-md text-center -mt-4">
-          {t("onboarding.appSubtitle")}
-        </p>
+    <SlarkAuthFrame hideFooter>
+      <Card
+        variant="static"
+        padding="lg"
+        className="rounded-2xl border-border bg-surface-1 shadow-card"
+      >
+        <CardHeader className="text-center">
+          <CardTitle className="text-[20px] leading-tight text-text-heading">
+            {panelTitle}
+          </CardTitle>
+          {panelDescription ? (
+            <CardDescription className="text-[13px] leading-relaxed text-text-secondary">
+              {panelDescription}
+            </CardDescription>
+          ) : null}
+        </CardHeader>
 
-        <div className="flex flex-col gap-3 w-80 mt-4">
-          {view === "buttons" ? (
-            <>
-              <button
-                onClick={login}
-                className="flex items-center justify-center gap-3 h-11 rounded-lg font-medium transition-colors border border-border bg-background text-foreground hover:bg-accent"
-              >
-                <GoogleIcon className="h-4 w-4" />
-                {t("onboarding.continueWithGoogle")}
-              </button>
-              <button
-                onClick={login}
-                className="flex items-center justify-center gap-3 h-11 rounded-lg font-medium transition-colors bg-[#24292f] text-white hover:bg-[#24292f]/90"
-              >
-                <Github className="h-4 w-4" />
-                {t("onboarding.continueWithGithub")}
-              </button>
-              <button
-                onClick={() => setView("email")}
-                className="flex items-center justify-center gap-3 h-11 rounded-lg font-medium transition-colors bg-secondary text-secondary-foreground hover:bg-secondary/80"
-              >
-                <Mail className="h-4 w-4" />
-                {t("onboarding.continueWithEmail")}
-              </button>
-            </>
-          ) : (
-            renderEmailFlow()
-          )}
-        </div>
-      </div>
-    </div>
+        <CardContent className={cn(view === "buttons" ? "mt-8" : "mt-6")}>
+          {view === "buttons" ? renderButtonsView() : renderEmailFlow()}
+        </CardContent>
+      </Card>
+    </SlarkAuthFrame>
   );
 }
