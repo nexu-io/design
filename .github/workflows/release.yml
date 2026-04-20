@@ -72,7 +72,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -94,9 +94,10 @@ jobs:
         id: release_artifacts
         if: github.event_name == 'push'
         run: |
-          COMMIT_MESSAGE="$(git log -1 --pretty=%B)"
+          PUSH_RANGE="${{ github.event.before }}..${{ github.sha }}"
+          COMMIT_SUBJECTS="$(git log --format=%s "$PUSH_RANGE")"
 
-          if printf '%s\n' "$COMMIT_MESSAGE" | grep -Fq 'chore: version packages'; then
+          if printf '%s\n' "$COMMIT_SUBJECTS" | grep -Eq '^chore: version packages$'; then
             echo "should_publish=true" >> "$GITHUB_OUTPUT"
           else
             echo "should_publish=false" >> "$GITHUB_OUTPUT"
