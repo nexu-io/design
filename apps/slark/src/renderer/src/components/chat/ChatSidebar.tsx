@@ -1,117 +1,114 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Hash, Globe, Search, Plus, X, Pin, PinOff } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useT } from '@/i18n'
-import { useChatStore } from '@/stores/chat'
-import { mockChannels, resolveRef } from '@/mock/data'
-import { CreateChannelDialog } from './CreateChannelDialog'
-import type { Channel } from '@/types'
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Hash, Globe, Search, Plus, X, Pin, PinOff } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useT } from "@/i18n";
+import { useChatStore } from "@/stores/chat";
+import { mockChannels, resolveRef } from "@/mock/data";
+import { CreateChannelDialog } from "./CreateChannelDialog";
+import type { Channel } from "@/types";
 
 interface ContextMenuState {
-  x: number
-  y: number
-  channel: Channel
+  x: number;
+  y: number;
+  channel: Channel;
 }
 
 function useContextMenu(): {
-  menu: ContextMenuState | null
-  open: (e: React.MouseEvent, channel: Channel) => void
-  close: () => void
+  menu: ContextMenuState | null;
+  open: (e: React.MouseEvent, channel: Channel) => void;
+  close: () => void;
 } {
-  const [menu, setMenu] = useState<ContextMenuState | null>(null)
-  const close = (): void => setMenu(null)
+  const [menu, setMenu] = useState<ContextMenuState | null>(null);
+  const close = (): void => setMenu(null);
 
   useEffect(() => {
-    if (!menu) return
-    const handler = (): void => close()
-    document.addEventListener('click', handler)
-    return () => document.removeEventListener('click', handler)
-  }, [menu])
+    if (!menu) return;
+    const handler = (): void => close();
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
+  }, [menu]);
 
   const open = (e: React.MouseEvent, channel: Channel): void => {
-    e.preventDefault()
-    setMenu({ x: e.clientX, y: e.clientY, channel })
-  }
+    e.preventDefault();
+    setMenu({ x: e.clientX, y: e.clientY, channel });
+  };
 
-  return { menu, open, close }
+  return { menu, open, close };
 }
 
 export function ChatSidebar(): React.ReactElement {
-  const t = useT()
-  const navigate = useNavigate()
-  const { channelId } = useParams()
-  const channels = useChatStore((s) => s.channels)
-  const setChannels = useChatStore((s) => s.setChannels)
-  const setActiveChannel = useChatStore((s) => s.setActiveChannel)
-  const removeChannel = useChatStore((s) => s.removeChannel)
-  const pinnedIds = useChatStore((s) => s.pinnedIds)
-  const togglePin = useChatStore((s) => s.togglePin)
-  const [search, setSearch] = useState('')
-  const [createOpen, setCreateOpen] = useState(false)
-  const [deleteTarget, setDeleteTarget] = useState<Channel | null>(null)
-  const { menu, open: openCtx, close: closeCtx } = useContextMenu()
+  const t = useT();
+  const navigate = useNavigate();
+  const { channelId } = useParams();
+  const channels = useChatStore((s) => s.channels);
+  const setChannels = useChatStore((s) => s.setChannels);
+  const setActiveChannel = useChatStore((s) => s.setActiveChannel);
+  const removeChannel = useChatStore((s) => s.removeChannel);
+  const pinnedIds = useChatStore((s) => s.pinnedIds);
+  const togglePin = useChatStore((s) => s.togglePin);
+  const [search, setSearch] = useState("");
+  const [createOpen, setCreateOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Channel | null>(null);
+  const { menu, open: openCtx, close: closeCtx } = useContextMenu();
 
   useEffect(() => {
-    if (channels.length === 0) setChannels(mockChannels)
-  }, [channels.length, setChannels])
+    if (channels.length === 0) setChannels(mockChannels);
+  }, [channels.length, setChannels]);
 
   const handleSelect = (id: string): void => {
-    setActiveChannel(id)
-    navigate(`/chat/${id}`)
-  }
+    setActiveChannel(id);
+    navigate(`/chat/${id}`);
+  };
 
   const handleDeleteClick = (e: React.MouseEvent, ch: Channel): void => {
-    e.stopPropagation()
-    setDeleteTarget(ch)
-  }
+    e.stopPropagation();
+    setDeleteTarget(ch);
+  };
 
   const handleDeleteConfirm = (): void => {
-    if (!deleteTarget) return
-    const remaining = channels.filter((c) => c.id !== deleteTarget.id)
-    removeChannel(deleteTarget.id)
+    if (!deleteTarget) return;
+    const remaining = channels.filter((c) => c.id !== deleteTarget.id);
+    removeChannel(deleteTarget.id);
 
     if (channelId === deleteTarget.id) {
-      const next = remaining.find((c) => c.type === 'channel') ?? remaining[0]
+      const next = remaining.find((c) => c.type === "channel") ?? remaining[0];
       if (next) {
-        setActiveChannel(next.id)
-        navigate(`/chat/${next.id}`)
+        setActiveChannel(next.id);
+        navigate(`/chat/${next.id}`);
       } else {
-        navigate('/chat')
+        navigate("/chat");
       }
     }
-    setDeleteTarget(null)
-  }
+    setDeleteTarget(null);
+  };
 
   const filterBySearch = (c: Channel): boolean => {
-    if (!search) return true
-    const q = search.toLowerCase()
-    if (c.name.toLowerCase().includes(q)) return true
-    const other = c.members.find((m) => m.id !== 'u-1')
-    const resolved = other ? resolveRef(other) : undefined
-    return resolved?.name.toLowerCase().includes(q) ?? false
-  }
+    if (!search) return true;
+    const q = search.toLowerCase();
+    if (c.name.toLowerCase().includes(q)) return true;
+    const other = c.members.find((m) => m.id !== "u-1");
+    const resolved = other ? resolveRef(other) : undefined;
+    return resolved?.name.toLowerCase().includes(q) ?? false;
+  };
 
-  const pinnedSet = new Set(pinnedIds)
+  const pinnedSet = new Set(pinnedIds);
 
   const pinnedChannels = pinnedIds
     .map((id) => channels.find((c) => c.id === id))
-    .filter((c): c is Channel => c != null && filterBySearch(c))
+    .filter((c): c is Channel => c != null && filterBySearch(c));
 
   const channelList = channels.filter(
-    (c) => c.type === 'channel' && !pinnedSet.has(c.id) && filterBySearch(c)
-  )
+    (c) => c.type === "channel" && !pinnedSet.has(c.id) && filterBySearch(c),
+  );
 
-  const renderRow = (
-    c: Channel,
-    opts?: { showDelete?: boolean }
-  ): React.ReactElement => {
-    const isActive = channelId === c.id
-    const isChannel = c.type === 'channel'
-    const otherMember = !isChannel ? c.members.find((m) => m.id !== 'u-1') : undefined
-    const resolved = otherMember ? resolveRef(otherMember) : undefined
-    const label = isChannel ? c.name : resolved?.name ?? c.name
-    const unread = c.unreadCount > 0
+  const renderRow = (c: Channel, opts?: { showDelete?: boolean }): React.ReactElement => {
+    const isActive = channelId === c.id;
+    const isChannel = c.type === "channel";
+    const otherMember = !isChannel ? c.members.find((m) => m.id !== "u-1") : undefined;
+    const resolved = otherMember ? resolveRef(otherMember) : undefined;
+    const label = isChannel ? c.name : (resolved?.name ?? c.name);
+    const unread = c.unreadCount > 0;
 
     return (
       <button
@@ -119,12 +116,12 @@ export function ChatSidebar(): React.ReactElement {
         onClick={() => handleSelect(c.id)}
         onContextMenu={(e) => openCtx(e, c)}
         className={cn(
-          'group/item relative flex items-center gap-2 w-full pl-3 pr-2 py-[5px] text-[13px] transition-colors',
+          "group/item relative flex items-center gap-2 w-full pl-3 pr-2 py-[5px] text-[13px] transition-colors",
           isActive
-            ? 'bg-nav-active text-white font-semibold'
+            ? "bg-nav-active text-white font-semibold"
             : unread
-              ? 'text-nav-fg hover:bg-nav-hover'
-              : 'text-nav-muted hover:bg-nav-hover hover:text-nav-fg'
+              ? "text-nav-fg hover:bg-nav-hover"
+              : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
         )}
       >
         {isChannel ? (
@@ -136,10 +133,12 @@ export function ChatSidebar(): React.ReactElement {
         )}
         <span className="truncate flex-1 text-left">{label}</span>
         {unread ? (
-          <span className={cn(
-            'ml-auto flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-nexu-primary text-white text-[10px] font-semibold px-1.5',
-            opts?.showDelete && 'group-hover/item:hidden'
-          )}>
+          <span
+            className={cn(
+              "ml-auto flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-nexu-primary text-white text-[10px] font-semibold px-1.5",
+              opts?.showDelete && "group-hover/item:hidden",
+            )}
+          >
             {c.unreadCount}
           </span>
         ) : null}
@@ -149,17 +148,17 @@ export function ChatSidebar(): React.ReactElement {
             tabIndex={-1}
             onClick={(e) => handleDeleteClick(e, c)}
             className="ml-auto hidden h-5 w-5 items-center justify-center rounded hover:bg-nav-hover text-nav-muted hover:text-nav-fg transition-colors group-hover/item:flex"
-            title={t('chat.deleteChannel')}
+            title={t("chat.deleteChannel")}
           >
             <X className="h-3 w-3" />
           </span>
         )}
       </button>
-    )
-  }
+    );
+  };
 
-  const channelCount = channels.filter((c) => c.type === 'channel').length
-  const atLimit = channelCount >= 20
+  const channelCount = channels.filter((c) => c.type === "channel").length;
+  const atLimit = channelCount >= 20;
 
   return (
     <div className="flex flex-col h-full">
@@ -169,7 +168,7 @@ export function ChatSidebar(): React.ReactElement {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder={t('chat.search')}
+            placeholder={t("chat.search")}
             className="w-full h-8 rounded-md bg-nav-input text-nav-fg pl-8 pr-3 text-[13px] placeholder:text-nav-muted focus:outline-none focus:ring-1 focus:ring-nav-ring"
           />
         </div>
@@ -180,7 +179,7 @@ export function ChatSidebar(): React.ReactElement {
           <div>
             <div className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
               <Pin className="h-3 w-3" />
-              <span className="flex-1">{t('chat.pinned')}</span>
+              <span className="flex-1">{t("chat.pinned")}</span>
             </div>
             {pinnedChannels.map((c) => renderRow(c))}
           </div>
@@ -188,12 +187,16 @@ export function ChatSidebar(): React.ReactElement {
 
         <div>
           <div className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
-            <span className="flex-1">{t('chat.channels')}</span>
+            <span className="flex-1">{t("chat.channels")}</span>
             <button
               onClick={() => setCreateOpen(true)}
               disabled={atLimit}
               className="flex items-center justify-center h-4 w-4 rounded hover:bg-nav-hover hover:text-nav-fg transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
-              title={atLimit ? t('chat.channelLimitReached', { count: String(channelCount) }) : t('chat.createChannel')}
+              title={
+                atLimit
+                  ? t("chat.channelLimitReached", { count: String(channelCount) })
+                  : t("chat.createChannel")
+              }
             >
               <Plus className="h-3 w-3" />
             </button>
@@ -205,17 +208,19 @@ export function ChatSidebar(): React.ReactElement {
             className="flex items-center gap-2 w-full pl-3 pr-2 py-[5px] text-[13px] text-nav-muted hover:bg-nav-hover hover:text-nav-fg transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
           >
             <Plus className="h-4 w-4 shrink-0" />
-            <span>{t('chat.addChannels')}</span>
+            <span>{t("chat.addChannels")}</span>
           </button>
         </div>
-
       </div>
 
       {menu && (
         <div
           className="fixed inset-0 z-50"
           onClick={closeCtx}
-          onContextMenu={(e) => { e.preventDefault(); closeCtx() }}
+          onContextMenu={(e) => {
+            e.preventDefault();
+            closeCtx();
+          }}
         >
           <div
             style={{ left: menu.x, top: menu.y }}
@@ -223,20 +228,20 @@ export function ChatSidebar(): React.ReactElement {
           >
             <button
               onClick={() => {
-                togglePin(menu.channel.id)
-                closeCtx()
+                togglePin(menu.channel.id);
+                closeCtx();
               }}
               className="flex items-center gap-2 w-full px-3 py-1.5 text-sm text-left hover:bg-accent transition-colors"
             >
               {pinnedSet.has(menu.channel.id) ? (
                 <>
                   <PinOff className="h-3.5 w-3.5" />
-                  {t('chat.unpin')}
+                  {t("chat.unpin")}
                 </>
               ) : (
                 <>
                   <Pin className="h-3.5 w-3.5" />
-                  {t('chat.pinToTop')}
+                  {t("chat.pinToTop")}
                 </>
               )}
             </button>
@@ -259,27 +264,27 @@ export function ChatSidebar(): React.ReactElement {
             className="w-[360px] rounded-xl border border-border bg-background text-foreground p-5 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-base font-semibold">{t('chat.deleteChannelTitle', { name: deleteTarget.name })}</h3>
-            <p className="text-sm text-muted-foreground mt-2">
-              {t('chat.deleteChannelDesc')}
-            </p>
+            <h3 className="text-base font-semibold">
+              {t("chat.deleteChannelTitle", { name: deleteTarget.name })}
+            </h3>
+            <p className="text-sm text-muted-foreground mt-2">{t("chat.deleteChannelDesc")}</p>
             <div className="flex justify-end gap-2 mt-5">
               <button
                 onClick={() => setDeleteTarget(null)}
                 className="h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors"
               >
-                {t('common.cancel')}
+                {t("common.cancel")}
               </button>
               <button
                 onClick={handleDeleteConfirm}
                 className="h-8 px-4 rounded-md text-sm font-medium bg-destructive text-white hover:bg-destructive/90 transition-colors"
               >
-                {t('common.delete')}
+                {t("common.delete")}
               </button>
             </div>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-import { Outlet } from 'react-router-dom'
-import { ActivityBar } from './ActivityBar'
-import { Sidebar } from './Sidebar'
+import { Outlet } from "react-router-dom";
+import { ActivityBar } from "./ActivityBar";
+import { Sidebar } from "./Sidebar";
 
 export function AppLayout(): React.ReactElement {
   return (
@@ -11,5 +11,5 @@ export function AppLayout(): React.ReactElement {
         <Outlet />
       </main>
     </div>
-  )
+  );
 }

@@ -1,57 +1,68 @@
-import { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import * as Tabs from '@radix-ui/react-tabs'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { Bot, Zap, Wrench, MessageSquare, MoreHorizontal, FileText, Settings, Trash2, Copy } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useT } from '@/i18n'
-import { useChatStore } from '@/stores/chat'
-import { useAgentsStore } from '@/stores/agents'
-import { mockRuntimes } from '@/mock/data'
-import { RuntimePicker } from './RuntimePicker'
-import type { Agent, Channel } from '@/types'
+import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import * as Tabs from "@radix-ui/react-tabs";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import {
+  Bot,
+  Zap,
+  Wrench,
+  MessageSquare,
+  MoreHorizontal,
+  FileText,
+  Settings,
+  Trash2,
+  Copy,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useT } from "@/i18n";
+import { useChatStore } from "@/stores/chat";
+import { useAgentsStore } from "@/stores/agents";
+import { mockRuntimes } from "@/mock/data";
+import { RuntimePicker } from "./RuntimePicker";
+import type { Agent, Channel } from "@/types";
 
 interface AgentDetailProps {
-  agent: Agent
+  agent: Agent;
 }
 
 export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
-  const t = useT()
-  const navigate = useNavigate()
-  const channels = useChatStore((s) => s.channels)
-  const addChannel = useChatStore((s) => s.addChannel)
-  const addAgent = useAgentsStore((s) => s.addAgent)
-  const updateAgent = useAgentsStore((s) => s.updateAgent)
-  const removeAgent = useAgentsStore((s) => s.removeAgent)
+  const t = useT();
+  const navigate = useNavigate();
+  const channels = useChatStore((s) => s.channels);
+  const addChannel = useChatStore((s) => s.addChannel);
+  const addAgent = useAgentsStore((s) => s.addAgent);
+  const updateAgent = useAgentsStore((s) => s.updateAgent);
+  const removeAgent = useAgentsStore((s) => s.removeAgent);
 
-  const runtime = agent.runtimeId
-    ? mockRuntimes.find((r) => r.id === agent.runtimeId)
-    : undefined
+  const runtime = agent.runtimeId ? mockRuntimes.find((r) => r.id === agent.runtimeId) : undefined;
 
   const dmChannelId = useMemo(() => {
     const dm = channels.find(
-      (c) => c.type === 'dm' && c.members.some((m) => m.kind === 'agent' && m.id === agent.id)
-    )
-    return dm?.id
-  }, [channels, agent.id])
+      (c) => c.type === "dm" && c.members.some((m) => m.kind === "agent" && m.id === agent.id),
+    );
+    return dm?.id;
+  }, [channels, agent.id]);
 
   const handleSendMessage = (): void => {
     if (dmChannelId) {
-      navigate(`/chat/${dmChannelId}`)
-      return
+      navigate(`/chat/${dmChannelId}`);
+      return;
     }
     const newDm: Channel = {
       id: `dm-${agent.id}`,
       name: agent.name,
-      type: 'dm',
-      members: [{ kind: 'user', id: 'u-1' }, { kind: 'agent', id: agent.id }],
+      type: "dm",
+      members: [
+        { kind: "user", id: "u-1" },
+        { kind: "agent", id: agent.id },
+      ],
       lastMessageAt: Date.now(),
       unreadCount: 0,
-      createdAt: Date.now()
-    }
-    addChannel(newDm)
-    navigate(`/chat/${newDm.id}`)
-  }
+      createdAt: Date.now(),
+    };
+    addChannel(newDm);
+    navigate(`/chat/${newDm.id}`);
+  };
 
   return (
     <div className="flex h-full flex-col">
@@ -60,14 +71,20 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
       <div className="flex items-center gap-3 px-5 h-12 border-b border-border shrink-0">
         <Bot className="h-4 w-4 text-muted-foreground shrink-0" />
         <span className="font-semibold text-sm">{agent.name}</span>
-        <div className={cn(
-          'flex items-center gap-1 text-xs',
-          agent.status === 'online' && 'text-nexu-online',
-          agent.status === 'busy' && 'text-nexu-busy',
-          agent.status === 'offline' && 'text-muted-foreground'
-        )}>
+        <div
+          className={cn(
+            "flex items-center gap-1 text-xs",
+            agent.status === "online" && "text-nexu-online",
+            agent.status === "busy" && "text-nexu-busy",
+            agent.status === "offline" && "text-muted-foreground",
+          )}
+        >
           <div className="h-1.5 w-1.5 rounded-full bg-current" />
-          {agent.status === 'online' ? t('agent.online') : agent.status === 'busy' ? t('agent.busy') : t('agent.offline')}
+          {agent.status === "online"
+            ? t("agent.online")
+            : agent.status === "busy"
+              ? t("agent.busy")
+              : t("agent.offline")}
         </div>
         {runtime && (
           <>
@@ -84,7 +101,7 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
             className="flex items-center gap-1.5 h-7 px-2.5 rounded-md text-xs font-medium border border-border hover:bg-accent transition-colors"
           >
             <MessageSquare className="h-3 w-3" />
-            {t('agent.message')}
+            {t("agent.message")}
           </button>
           <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
@@ -100,31 +117,43 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
               >
                 <DropdownMenu.Item
                   onClick={() => {
-                    const dupId = `a-${Date.now()}`
-                    addAgent({ ...agent, id: dupId, name: `${agent.name} (copy)`, createdAt: Date.now() })
+                    const dupId = `a-${Date.now()}`;
+                    addAgent({
+                      ...agent,
+                      id: dupId,
+                      name: `${agent.name} (copy)`,
+                      createdAt: Date.now(),
+                    });
                     const dmCh: Channel = {
-                      id: `dm-${dupId}`, name: `${agent.name} (copy)`, type: 'dm',
-                      members: [{ kind: 'user', id: 'u-1' }, { kind: 'agent', id: dupId }],
-                      lastMessageAt: Date.now(), unreadCount: 0, createdAt: Date.now()
-                    }
-                    addChannel(dmCh)
-                    navigate(`/agents/${dupId}`)
+                      id: `dm-${dupId}`,
+                      name: `${agent.name} (copy)`,
+                      type: "dm",
+                      members: [
+                        { kind: "user", id: "u-1" },
+                        { kind: "agent", id: dupId },
+                      ],
+                      lastMessageAt: Date.now(),
+                      unreadCount: 0,
+                      createdAt: Date.now(),
+                    };
+                    addChannel(dmCh);
+                    navigate(`/agents/${dupId}`);
                   }}
                   className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm cursor-pointer outline-none hover:bg-accent transition-colors"
                 >
                   <Copy className="h-3.5 w-3.5 text-muted-foreground" />
-                  {t('agent.duplicate')}
+                  {t("agent.duplicate")}
                 </DropdownMenu.Item>
                 <DropdownMenu.Separator className="my-1 h-px bg-border" />
                 <DropdownMenu.Item
                   onClick={() => {
-                    removeAgent(agent.id)
-                    navigate('/agents')
+                    removeAgent(agent.id);
+                    navigate("/agents");
                   }}
                   className="flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm cursor-pointer outline-none text-destructive-foreground hover:bg-destructive/10 transition-colors"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                  {t('agent.delete')}
+                  {t("agent.delete")}
                 </DropdownMenu.Item>
               </DropdownMenu.Content>
             </DropdownMenu.Portal>
@@ -134,13 +163,28 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
 
       <Tabs.Root defaultValue="instructions" className="flex-1 flex flex-col min-h-0">
         <Tabs.List className="flex items-center gap-1 px-5 h-10 border-b border-border shrink-0">
-          <TabTrigger value="instructions" icon={<FileText className="h-3.5 w-3.5" />} label={t('agent.tabInstructions')} />
-          <TabTrigger value="skills" icon={<Wrench className="h-3.5 w-3.5" />} label={t('agent.tabSkills')} />
-          <TabTrigger value="settings" icon={<Settings className="h-3.5 w-3.5" />} label={t('agent.tabSettings')} />
+          <TabTrigger
+            value="instructions"
+            icon={<FileText className="h-3.5 w-3.5" />}
+            label={t("agent.tabInstructions")}
+          />
+          <TabTrigger
+            value="skills"
+            icon={<Wrench className="h-3.5 w-3.5" />}
+            label={t("agent.tabSkills")}
+          />
+          <TabTrigger
+            value="settings"
+            icon={<Settings className="h-3.5 w-3.5" />}
+            label={t("agent.tabSettings")}
+          />
         </Tabs.List>
 
         <Tabs.Content value="instructions" className="flex-1 overflow-y-auto outline-none">
-          <InstructionsTab agent={agent} onSave={(prompt) => updateAgent(agent.id, { systemPrompt: prompt })} />
+          <InstructionsTab
+            agent={agent}
+            onSave={(prompt) => updateAgent(agent.id, { systemPrompt: prompt })}
+          />
         </Tabs.Content>
 
         <Tabs.Content value="skills" className="flex-1 overflow-y-auto outline-none">
@@ -152,10 +196,14 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
         </Tabs.Content>
       </Tabs.Root>
     </div>
-  )
+  );
 }
 
-function TabTrigger({ value, icon, label }: { value: string; icon: React.ReactNode; label: string }): React.ReactElement {
+function TabTrigger({
+  value,
+  icon,
+  label,
+}: { value: string; icon: React.ReactNode; label: string }): React.ReactElement {
   return (
     <Tabs.Trigger
       value={value}
@@ -164,51 +212,54 @@ function TabTrigger({ value, icon, label }: { value: string; icon: React.ReactNo
       {icon}
       {label}
     </Tabs.Trigger>
-  )
+  );
 }
 
-function InstructionsTab({ agent, onSave }: { agent: Agent; onSave: (prompt: string) => void }): React.ReactElement {
-  const t = useT()
-  const [prompt, setPrompt] = useState(agent.systemPrompt)
-  const isDirty = prompt !== agent.systemPrompt
+function InstructionsTab({
+  agent,
+  onSave,
+}: { agent: Agent; onSave: (prompt: string) => void }): React.ReactElement {
+  const t = useT();
+  const [prompt, setPrompt] = useState(agent.systemPrompt);
+  const isDirty = prompt !== agent.systemPrompt;
 
   return (
     <div className="p-6 max-w-3xl">
       <div className="flex items-start justify-between mb-1">
         <div>
-          <h3 className="text-sm font-semibold">{t('agent.instructionsTitle')}</h3>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {t('agent.instructionsDesc')}
-          </p>
+          <h3 className="text-sm font-semibold">{t("agent.instructionsTitle")}</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">{t("agent.instructionsDesc")}</p>
         </div>
       </div>
       <textarea
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
         className="w-full mt-3 rounded-lg border border-input bg-background p-4 text-sm font-mono leading-relaxed placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring resize-y min-h-[200px]"
-        placeholder={t('agent.instructionsPlaceholder')}
+        placeholder={t("agent.instructionsPlaceholder")}
       />
       <div className="flex items-center justify-between mt-2">
-        <span className="text-xs text-muted-foreground">{t('agent.charactersCount', { count: String(prompt.length) })}</span>
+        <span className="text-xs text-muted-foreground">
+          {t("agent.charactersCount", { count: String(prompt.length) })}
+        </span>
         <button
           onClick={() => onSave(prompt)}
           disabled={!isDirty}
           className="flex items-center gap-1.5 h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:pointer-events-none transition-colors"
         >
-          {t('common.save')}
+          {t("common.save")}
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 function SkillsTab({ agent }: { agent: Agent }): React.ReactElement {
-  const t = useT()
+  const t = useT();
   return (
     <div className="p-6 max-w-3xl">
       <div className="mb-4">
-        <h3 className="text-sm font-semibold">{t('agent.skillsTitle')}</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">{t('agent.skillsDesc')}</p>
+        <h3 className="text-sm font-semibold">{t("agent.skillsTitle")}</h3>
+        <p className="text-xs text-muted-foreground mt-0.5">{t("agent.skillsDesc")}</p>
       </div>
 
       {agent.skills.length > 0 ? (
@@ -228,44 +279,51 @@ function SkillsTab({ agent }: { agent: Agent }): React.ReactElement {
       ) : (
         <div className="rounded-lg border border-border border-dashed p-8 flex flex-col items-center gap-2 text-center">
           <Wrench className="h-8 w-8 text-muted-foreground" />
-          <p className="text-sm font-medium text-muted-foreground">{t('agent.noSkills')}</p>
-          <p className="text-xs text-muted-foreground">{t('agent.noSkillsHint')}</p>
+          <p className="text-sm font-medium text-muted-foreground">{t("agent.noSkills")}</p>
+          <p className="text-xs text-muted-foreground">{t("agent.noSkillsHint")}</p>
         </div>
       )}
     </div>
-  )
+  );
 }
 
-function SettingsTab({ agent, onUpdate }: { agent: Agent; onUpdate: (updates: Partial<Agent>) => void }): React.ReactElement {
-  const t = useT()
-  const [name, setName] = useState(agent.name)
-  const [description, setDescription] = useState(agent.description)
-  const [runtimeId, setRuntimeId] = useState<string | null>(agent.runtimeId)
-  const [avatar, setAvatar] = useState(agent.avatar)
+function SettingsTab({
+  agent,
+  onUpdate,
+}: { agent: Agent; onUpdate: (updates: Partial<Agent>) => void }): React.ReactElement {
+  const t = useT();
+  const [name, setName] = useState(agent.name);
+  const [description, setDescription] = useState(agent.description);
+  const [runtimeId, setRuntimeId] = useState<string | null>(agent.runtimeId);
+  const [avatar, setAvatar] = useState(agent.avatar);
 
-  const isDirty = name !== agent.name || description !== agent.description || runtimeId !== agent.runtimeId || avatar !== agent.avatar
+  const isDirty =
+    name !== agent.name ||
+    description !== agent.description ||
+    runtimeId !== agent.runtimeId ||
+    avatar !== agent.avatar;
 
   const handleSave = (): void => {
-    const trimmed = name.trim()
-    if (!trimmed) return
-    onUpdate({ name: trimmed, description: description.trim(), runtimeId, avatar })
-  }
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    onUpdate({ name: trimmed, description: description.trim(), runtimeId, avatar });
+  };
 
   const handleRandomizeAvatar = (): void => {
-    const seed = Math.random().toString(36).slice(2, 8)
-    setAvatar(`https://api.dicebear.com/9.x/bottts/svg?seed=${seed}`)
-  }
+    const seed = Math.random().toString(36).slice(2, 8);
+    setAvatar(`https://api.dicebear.com/9.x/bottts/svg?seed=${seed}`);
+  };
 
   return (
     <div className="p-6 max-w-3xl space-y-6">
       <div>
-        <h3 className="text-sm font-semibold">{t('agent.settingsTitle')}</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">{t('agent.settingsDesc')}</p>
+        <h3 className="text-sm font-semibold">{t("agent.settingsTitle")}</h3>
+        <p className="text-xs text-muted-foreground mt-0.5">{t("agent.settingsDesc")}</p>
       </div>
 
       <div className="space-y-4">
         <div className="space-y-1.5">
-          <label className="text-sm font-medium">{t('agent.avatar')}</label>
+          <label className="text-sm font-medium">{t("agent.avatar")}</label>
           <div className="flex items-center gap-3">
             <img src={avatar} alt="" className="h-12 w-12 rounded-xl" />
             <button
@@ -273,13 +331,13 @@ function SettingsTab({ agent, onUpdate }: { agent: Agent; onUpdate: (updates: Pa
               onClick={handleRandomizeAvatar}
               className="h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors"
             >
-              {t('agent.randomize')}
+              {t("agent.randomize")}
             </button>
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm font-medium">{t('agent.name')}</label>
+          <label className="text-sm font-medium">{t("agent.name")}</label>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -288,7 +346,7 @@ function SettingsTab({ agent, onUpdate }: { agent: Agent; onUpdate: (updates: Pa
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm font-medium">{t('agent.description')}</label>
+          <label className="text-sm font-medium">{t("agent.description")}</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -298,7 +356,7 @@ function SettingsTab({ agent, onUpdate }: { agent: Agent; onUpdate: (updates: Pa
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm font-medium">{t('agent.runtime')}</label>
+          <label className="text-sm font-medium">{t("agent.runtime")}</label>
           <RuntimePicker value={runtimeId} onChange={setRuntimeId} />
         </div>
       </div>
@@ -308,10 +366,8 @@ function SettingsTab({ agent, onUpdate }: { agent: Agent; onUpdate: (updates: Pa
         disabled={!isDirty || !name.trim()}
         className="flex items-center gap-1.5 h-8 px-4 rounded-md text-sm font-medium bg-foreground text-background hover:bg-foreground/90 disabled:opacity-40 disabled:pointer-events-none transition-colors"
       >
-        {t('common.saveChanges')}
+        {t("common.saveChanges")}
       </button>
     </div>
-  )
+  );
 }
-
-

@@ -9,7 +9,7 @@ const inputShellVariants = cva(
     variants: {
       size: {
         sm: "min-h-8 px-2.5 text-sm",
-        md: "min-h-9 px-3 text-base",
+        md: "min-h-10 px-3 text-base",
         lg: "min-h-11 px-3.5 text-lg",
       },
       invalid: {

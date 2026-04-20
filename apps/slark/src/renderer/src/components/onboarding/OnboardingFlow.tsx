@@ -1,19 +1,19 @@
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
-import { Check } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { CreateWorkspaceStep } from './CreateWorkspaceStep'
-import { ConnectRuntimeStep } from './ConnectRuntimeStep'
-import { CreateAgentStep } from './CreateAgentStep'
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { CreateWorkspaceStep } from "./CreateWorkspaceStep";
+import { ConnectRuntimeStep } from "./ConnectRuntimeStep";
+import { CreateAgentStep } from "./CreateAgentStep";
 
 const steps = [
-  { path: 'workspace', label: 'Workspace' },
-  { path: 'runtime', label: 'Runtime' },
-  { path: 'agent', label: 'Agent' }
-] as const
+  { path: "workspace", label: "Workspace" },
+  { path: "runtime", label: "Runtime" },
+  { path: "agent", label: "Agent" },
+] as const;
 
 export function OnboardingFlow(): React.ReactElement {
-  const location = useLocation()
-  const currentStep = steps.findIndex((s) => location.pathname.includes(s.path))
+  const location = useLocation();
+  const currentStep = steps.findIndex((s) => location.pathname.includes(s.path));
 
   return (
     <div className="flex h-screen w-screen flex-col items-center bg-background">
@@ -23,18 +23,18 @@ export function OnboardingFlow(): React.ReactElement {
           <div key={step.path} className="flex items-center gap-2">
             <div
               className={cn(
-                'flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors',
+                "flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors",
                 i <= currentStep
-                  ? 'bg-foreground text-background'
-                  : 'bg-secondary text-muted-foreground'
+                  ? "bg-foreground text-background"
+                  : "bg-secondary text-muted-foreground",
               )}
             >
               {i < currentStep ? <Check className="h-4 w-4" /> : i + 1}
             </div>
             <span
               className={cn(
-                'text-sm font-medium',
-                i <= currentStep ? 'text-foreground' : 'text-muted-foreground'
+                "text-sm font-medium",
+                i <= currentStep ? "text-foreground" : "text-muted-foreground",
               )}
             >
               {step.label}
@@ -52,5 +52,5 @@ export function OnboardingFlow(): React.ReactElement {
         </Routes>
       </div>
     </div>
-  )
+  );
 }
