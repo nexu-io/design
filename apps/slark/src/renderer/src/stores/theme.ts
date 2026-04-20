@@ -1,34 +1,24 @@
 import { create } from "zustand";
 
-type Theme = "light" | "dark" | "system";
+export type Theme = "light" | "dark" | "system";
 
 interface ThemeState {
   theme: Theme;
   setTheme: (theme: Theme) => void;
 }
 
-const applyTheme = (theme: Theme): void => {
-  const isDark =
-    theme === "dark" ||
-    (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  document.documentElement.classList.toggle("dark", isDark);
+const THEME_STORAGE_KEY = "nexu-theme";
+
+const getInitialTheme = (): Theme => {
+  const stored = localStorage.getItem(THEME_STORAGE_KEY);
+
+  return stored === "light" || stored === "dark" || stored === "system" ? stored : "dark";
 };
 
-export const useThemeStore = create<ThemeState>((set) => {
-  const stored = localStorage.getItem("nexu-theme") as Theme | null;
-  const initial: Theme = stored ?? "dark";
-
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
-    const current = useThemeStore.getState().theme;
-    if (current === "system") applyTheme("system");
-  });
-
-  return {
-    theme: initial,
-    setTheme: (theme) => {
-      localStorage.setItem("nexu-theme", theme);
-      applyTheme(theme);
-      set({ theme });
-    },
-  };
-});
+export const useThemeStore = create<ThemeState>((set) => ({
+  theme: getInitialTheme(),
+  setTheme: (theme) => {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    set({ theme });
+  },
+}));

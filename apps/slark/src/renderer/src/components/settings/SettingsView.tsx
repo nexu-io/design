@@ -27,6 +27,7 @@ import {
   cn,
 } from "@nexu-design/ui-web";
 
+import { WindowChrome } from "@/components/layout/WindowChrome";
 import { mockUsers } from "@/mock/data";
 import { LOCALES, useLocaleStore, type Locale } from "@/stores/locale";
 import { useThemeStore } from "@/stores/theme";
@@ -92,7 +93,7 @@ export function SettingsView(): React.ReactElement {
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-[800px] px-4 pt-2 pb-6 sm:px-6 sm:pb-8">
-        <div className="drag-region h-10" />
+        <WindowChrome className="h-10" />
 
         {activeTab === "workspace" && (
           <WorkspaceTab

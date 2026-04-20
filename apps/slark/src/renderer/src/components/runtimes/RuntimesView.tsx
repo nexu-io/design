@@ -19,6 +19,7 @@ import {
   RotateCw,
   ExternalLink,
 } from "lucide-react";
+import { WindowChrome } from "@/components/layout/WindowChrome";
 import { cn } from "@/lib/utils";
 import { useT, type TranslationKey } from "@/i18n";
 import { useRuntimesStore } from "@/stores/runtimes";
@@ -339,7 +340,7 @@ export function RuntimesView(): ReactElement {
   if (!rt) {
     return (
       <div className="flex h-full flex-col">
-        <div className="drag-region h-10 shrink-0" />
+        <WindowChrome className="h-10" />
         <div className="flex flex-1 items-center justify-center">
           <div className="flex flex-col items-center gap-3 text-muted-foreground">
             <Wifi className="h-10 w-10" />
@@ -358,7 +359,7 @@ export function RuntimesView(): ReactElement {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="drag-region h-10 shrink-0" />
+      <WindowChrome className="h-10" />
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-6 pb-8 space-y-6">
           <div className="flex items-center justify-between">
@@ -679,7 +680,7 @@ function EmptyRuntimesGuide(): ReactElement {
   const t = useT();
   return (
     <div className="flex h-full flex-col">
-      <div className="drag-region h-10 shrink-0" />
+      <WindowChrome className="h-10" />
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-6 pb-10">
           <div className="flex flex-col items-center text-center gap-3 pt-6 pb-8">

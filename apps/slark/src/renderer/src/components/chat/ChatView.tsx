@@ -6,6 +6,7 @@ import { useChatStore } from "@/stores/chat";
 import { useWorkspaceStore } from "@/stores/workspace";
 import { useAgentsStore } from "@/stores/agents";
 import { mockMessages, mockChannels, resolveRef, getNexuIntroResponse } from "@/mock/data";
+import { WindowChrome } from "@/components/layout/WindowChrome";
 import { MessageList } from "./MessageList";
 import { MessageInput } from "./MessageInput";
 import { AddMembersDialog } from "./AddMembersDialog";
@@ -109,8 +110,11 @@ export function ChatView(): React.ReactElement {
 
   return (
     <div className="flex h-full flex-col bg-background">
-      <div className="drag-region flex items-center gap-2 px-4 pt-2 h-[52px] border-b border-border shrink-0">
-        <button className="no-drag flex items-center gap-1.5 rounded-md px-1.5 py-1 -ml-1.5 hover:bg-accent transition-colors text-left min-w-0">
+      <WindowChrome className="flex h-[52px] items-center gap-2 border-b border-border px-4 pt-2">
+        <button
+          type="button"
+          className="no-drag flex items-center gap-1.5 rounded-md px-1.5 py-1 -ml-1.5 hover:bg-accent transition-colors text-left min-w-0"
+        >
           {channel.type === "channel" ? (
             <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
           ) : otherResolved?.isAgent ? (
@@ -131,6 +135,7 @@ export function ChatView(): React.ReactElement {
 
         {channel.type === "channel" && (
           <button
+            type="button"
             onClick={() => setAddMembersOpen(true)}
             className="no-drag ml-auto flex items-center gap-1.5 h-7 px-2 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors shrink-0"
             title={t("chat.addPeopleOrAgents")}
@@ -139,7 +144,7 @@ export function ChatView(): React.ReactElement {
             <span>{channel.members.length}</span>
           </button>
         )}
-      </div>
+      </WindowChrome>
       <MessageList channelId={channelId} channel={channel} />
       <MessageInput channelId={channelId} isDmWithAgent={isDmWithAgent} channel={channel} />
       {channel.type === "channel" && (

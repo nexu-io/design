@@ -1,23 +1,24 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
-import { App } from "@/app/App";
-import { useThemeStore } from "@/stores/theme";
-import "@/app/globals.css";
 
-function ThemeInit(): null {
-  const theme = useThemeStore((s) => s.theme);
-  useEffect(() => {
-    const isDark =
-      theme === "dark" ||
-      (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    document.documentElement.classList.toggle("dark", isDark);
-  }, [theme]);
-  return null;
+import { ThemeRoot } from "@nexu-design/ui-web";
+
+import { App } from "@/app/App";
+import "@/app/globals.css";
+import { useThemeStore } from "@/stores/theme";
+
+function Root(): React.ReactElement {
+  const theme = useThemeStore((state) => state.theme);
+
+  return (
+    <ThemeRoot theme={theme} className="contents">
+      <App />
+    </ThemeRoot>
+  );
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ThemeInit />
-    <App />
+    <Root />
   </React.StrictMode>,
 );

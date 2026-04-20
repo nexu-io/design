@@ -17,6 +17,8 @@ import { InvitePeopleDialog } from "@/components/chat/InvitePeopleDialog";
 import { useWorkspaceStore } from "@/stores/workspace";
 import { useT, type TranslationKey } from "@/i18n";
 
+import { WindowChrome } from "./WindowChrome";
+
 const sections: { path: string; labelKey: TranslationKey }[] = [
   { path: "/chat", labelKey: "section.chat" },
   { path: "/agents", labelKey: "section.team" },
@@ -62,11 +64,12 @@ export function Sidebar(): React.ReactElement {
 
   return (
     <div className="flex flex-col w-64 bg-nav text-nav-fg shadow-[inset_-1px_0_0_rgba(0,0,0,0.2)]">
-      <div className="drag-region h-[38px] shrink-0" />
+      <WindowChrome className="h-[38px]" />
       <div className="no-drag px-3 pb-2">
         {location.pathname.startsWith("/chat") && (
           <div className="relative" ref={menuRef}>
             <button
+              type="button"
               onClick={() => setMenuOpen((v) => !v)}
               className="flex items-center gap-1.5 w-full rounded-md px-1.5 py-1 hover:bg-nav-hover transition-colors"
             >
@@ -103,6 +106,7 @@ export function Sidebar(): React.ReactElement {
 
                 <div className="p-1.5">
                   <button
+                    type="button"
                     onClick={() => {
                       setMenuOpen(false);
                       setShowInvite(true);
@@ -117,6 +121,7 @@ export function Sidebar(): React.ReactElement {
                     </span>
                   </button>
                   <button
+                    type="button"
                     onClick={() => {
                       setMenuOpen(false);
                       navigate("/settings");
@@ -130,6 +135,7 @@ export function Sidebar(): React.ReactElement {
 
                 <div className="border-t border-border p-1.5">
                   <button
+                    type="button"
                     onClick={() => {
                       setMenuOpen(false);
                       reset();
@@ -178,6 +184,7 @@ function SettingsSidebar(): React.ReactElement {
         const isActive = exact ? location.pathname === path : location.pathname.startsWith(path);
         return (
           <button
+            type="button"
             key={path}
             onClick={() => navigate(path)}
             className={cn(

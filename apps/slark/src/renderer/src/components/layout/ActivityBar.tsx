@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { useT, type TranslationKey } from "@/i18n";
 import { useWorkspaceStore } from "@/stores/workspace";
 
+import { WindowChrome } from "./WindowChrome";
+
 const navItems: { icon: typeof MessageSquare; path: string; labelKey: TranslationKey }[] = [
   { icon: MessageSquare, path: "/chat", labelKey: "section.chat" },
   { icon: Users, path: "/agents", labelKey: "section.team" },
@@ -31,7 +33,7 @@ export function ActivityBar(): React.ReactElement {
 
   return (
     <div className="flex flex-col items-center w-[56px] bg-nav-surface shrink-0">
-      <div className={cn("h-[38px] w-full shrink-0", !menuOpen && "drag-region")} />
+      <WindowChrome className={cn("h-[38px] w-full", menuOpen && "pointer-events-none")} />
 
       <div className="relative mb-3" ref={menuRef}>
         <button
