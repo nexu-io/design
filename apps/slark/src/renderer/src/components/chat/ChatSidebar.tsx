@@ -173,13 +173,13 @@ export function ChatSidebar(): React.ReactElement {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-3 pb-2">
+      <div className="px-2 pb-2">
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={t("chat.search")}
           leadingIcon={<Search className="h-3.5 w-3.5 text-nav-muted" />}
-          className="h-8 border-transparent bg-nav-input text-nav-fg shadow-none focus-within:border-transparent focus-within:ring-1 focus-within:ring-nav-ring"
+          className="h-8 border-border-subtle bg-nav-input text-nav-fg shadow-none focus-within:border-transparent focus-within:ring-1 focus-within:ring-nav-ring"
           inputClassName="text-[13px] placeholder:text-nav-muted"
         />
       </div>
