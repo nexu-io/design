@@ -187,17 +187,17 @@ export function ChatSidebar(): React.ReactElement {
       <div className="flex-1 overflow-y-auto px-2 pb-2">
         {pinnedChannels.length > 0 && (
           <div>
-            <div className="flex items-center gap-1.5 px-2 pt-3 pb-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
+            <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
               <Pin className="h-3 w-3" />
-              <span className="flex-1">{t("chat.pinned")}</span>
+              <span className="flex-1">Pinned</span>
             </div>
             <div className="space-y-0.5">{pinnedChannels.map((c) => renderRow(c))}</div>
           </div>
         )}
 
         <div>
-          <div className="flex items-center gap-1.5 px-2 pt-3 pb-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
-            <span className="flex-1">{t("chat.channels")}</span>
+          <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
+            <span className="flex-1">Channels</span>
             <Button
               type="button"
               variant="ghost"
