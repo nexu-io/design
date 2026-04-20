@@ -215,17 +215,6 @@ export function ChatSidebar(): React.ReactElement {
             </Button>
           </div>
           {channelList.map((c) => renderRow(c, { showDelete: true }))}
-          <Button
-            type="button"
-            variant="ghost"
-            size="inline"
-            onClick={() => !atLimit && setCreateOpen(true)}
-            disabled={atLimit}
-            leadingIcon={<Plus className="h-3.5 w-3.5 shrink-0" />}
-            className="h-auto w-full justify-start rounded-md pl-2 pr-2 py-[5px] text-[13px] font-normal text-nav-muted hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
-          >
-            <span>{t("chat.addChannels")}</span>
-          </Button>
         </div>
       </div>
 
