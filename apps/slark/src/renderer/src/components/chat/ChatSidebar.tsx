@@ -187,8 +187,8 @@ export function ChatSidebar(): React.ReactElement {
       <div className="flex-1 overflow-y-auto px-2 pb-2">
         {pinnedChannels.length > 0 && (
           <div>
-            <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
-              <Pin className="h-3 w-3" />
+            <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+              <Pin className="h-3.5 w-3.5" />
               <span className="flex-1">Pinned</span>
             </div>
             <div className="space-y-0.5">{pinnedChannels.map((c) => renderRow(c))}</div>
@@ -196,7 +196,7 @@ export function ChatSidebar(): React.ReactElement {
         )}
 
         <div>
-          <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
             <span className="flex-1">Channels</span>
             <Button
               type="button"
@@ -204,14 +204,14 @@ export function ChatSidebar(): React.ReactElement {
               size="icon-sm"
               onClick={() => setCreateOpen(true)}
               disabled={atLimit}
-              className="h-4 w-4 rounded p-0 text-nav-muted hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+              className="h-6 w-6 rounded-md p-0 text-nav-muted hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
               title={
                 atLimit
                   ? t("chat.channelLimitReached", { count: String(channelCount) })
                   : t("chat.createChannel")
               }
             >
-              <Plus className="h-3 w-3" />
+              <Plus className="h-3.5 w-3.5" />
             </Button>
           </div>
           <div className="space-y-0.5">
