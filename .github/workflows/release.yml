@@ -20,14 +20,13 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  release:
-    name: Version or publish packages
-    if: github.ref == 'refs/heads/main'
+  create-release-pr:
+    name: Create release PR
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'version' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-      id-token: write
 
     steps:
       - name: Checkout
@@ -51,12 +50,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run release readiness checks
-        if: github.event_name == 'push' || github.event.inputs.action == 'publish'
-        run: pnpm release:check
-
       - name: Create release PR
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'version'
         uses: changesets/action@v1
         with:
           commit: 'chore: version packages'
@@ -65,8 +59,62 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  publish:
+    name: Publish packages
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event.inputs.action == 'publish')
+    runs-on: ubuntu-latest
+    environment:
+      name: npm-publish
+      url: https://www.npmjs.com/org/nexu-design
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.16.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Detect version-package merge
+        id: release_artifacts
+        if: github.event_name == 'push'
+        run: |
+          CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
+
+          if printf '%s\n' "$CHANGED_FILES" | grep -Eq '^packages/(tokens|ui-web)/package\.json$'; then
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip publish on non-release pushes
+        if: github.event_name == 'push' && steps.release_artifacts.outputs.should_publish != 'true'
+        run: echo 'No versioned package changes detected; skipping publish.'
+
+      - name: Run release readiness checks
+        if: github.event_name == 'workflow_dispatch' || steps.release_artifacts.outputs.should_publish == 'true'
+        run: pnpm release:check
+
       - name: Publish packages
-        if: github.event_name == 'push' || github.event.inputs.action == 'publish'
+        if: github.event_name == 'workflow_dispatch' || steps.release_artifacts.outputs.should_publish == 'true'
         run: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

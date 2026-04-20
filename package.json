@@ -24,6 +24,7 @@
     "build:electron": "pnpm --filter @nexu-design/demo dist",
     "build:packages": "pnpm --filter @nexu-design/tokens build && pnpm --filter @nexu-design/ui-web build",
     "changeset": "changeset",
+    "changeset:status": "changeset status --since=origin/main",
     "format": "biome format --write .",
     "format:check": "biome format .",
     "biome:check": "biome check .",

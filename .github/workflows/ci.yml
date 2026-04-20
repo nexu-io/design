@@ -30,6 +30,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Require changeset for package changes
+        if: github.event_name == 'pull_request'
+        run: |
+          CHANGED_FILES="$(git diff --name-only origin/${{ github.base_ref }}...HEAD)"
+
+          if printf '%s\n' "$CHANGED_FILES" | grep -Eq '^packages/(tokens|ui-web)/'; then
+            if ! printf '%s\n' "$CHANGED_FILES" | grep -Eq '^\.changeset/.+\.md$'; then
+              echo "Changes to packages/tokens or packages/ui-web require a changeset file."
+              exit 1
+            fi
+          fi
+
       - name: Run format check
         run: pnpm format:check
 

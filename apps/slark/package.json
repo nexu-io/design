@@ -1,5 +1,6 @@
 {
   "name": "nexu",
+  "private": true,
   "version": "0.1.0",
   "description": "AI-native team IM desktop app",
   "main": "./out/main/index.js",

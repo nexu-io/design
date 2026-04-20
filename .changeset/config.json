@@ -3,9 +3,15 @@
   "changelog": false,
   "commit": false,
   "fixed": [],
-  "linked": [],
+  "linked": [["@nexu-design/tokens", "@nexu-design/ui-web"]],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["@nexu-design/demo", "@nexu-design/storybook"]
+  "ignore": [
+    "nexu",
+    "@nexu-design/demo",
+    "@nexu-design/storybook",
+    "@nexu-design/cloud-demo",
+    "@nexu-design/demo-pages"
+  ]
 }

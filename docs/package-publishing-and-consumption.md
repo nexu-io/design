@@ -56,6 +56,13 @@ Use npm trusted publishing for this repository instead of a long-lived `NPM_TOKE
 2. Keep the workflow file name stable: `.github/workflows/release.yml`.
 3. Publish from GitHub Actions on a GitHub-hosted runner.
 
+#### Release model
+
+- Use Changesets for every consumer-visible change.
+- Treat `@nexu-design/tokens` as the upstream contract for `@nexu-design/ui-web`.
+- Keep `@nexu-design/tokens` and `@nexu-design/ui-web` in a linked Changesets group so version bumps stay coordinated.
+- Do not publish directly from feature PR merges. First create a version PR, then publish only after that PR lands on `main`.
+
 #### Authoring a release
 
 For any consumer-visible package change, add a changeset from the repo root:
@@ -66,14 +73,37 @@ pnpm changeset
 
 Choose the affected package(s), select the semver bump type, and write a short summary.
 
+Rules of thumb:
+
+- **Only `ui-web` changes** → add a changeset for `@nexu-design/ui-web`.
+- **Token/CSS contract changes** → add a changeset for `@nexu-design/tokens`.
+- **Tokens change that affects ui-web consumption, styling, or compatibility** → add changesets for both packages.
+- **Breaking change** → use `major` and include migration notes.
+
 #### What the workflow does
 
 - installs dependencies with pnpm
-- runs on pushes to `main`
-- creates or updates a version PR when unreleased changesets are present
+- requires a manual `workflow_dispatch` run with `action=version` to create or update the version PR
 - applies version bumps and internal dependency updates in that PR
-- publishes all unpublished public packages after the version PR is merged
+- publishes only when versioned package manifests land on `main` or when `action=publish` is run manually
 - runs `pnpm release:check` before publishing
+- protects publish through the `npm-publish` GitHub environment
+
+#### First release bootstrap
+
+The first npm release for each package must be done manually because the packages do not exist on npm yet.
+
+1. Run:
+
+   ```bash
+   pnpm release:check
+   pnpm build:packages
+   ```
+
+2. Publish `@nexu-design/tokens` manually first.
+3. Confirm it is installable from npm.
+4. Publish `@nexu-design/ui-web` manually second.
+5. After both exist on npm, configure trusted publishing for `.github/workflows/release.yml`.
 
 #### Local release checks
 
@@ -85,8 +115,9 @@ pnpm release:check
 
 1. Add a changeset for each consumer-visible change.
 2. Merge changesets into `main`.
-3. Review and merge the generated `chore: version packages` PR.
-4. Let the release workflow publish the new npm versions.
+3. Trigger **Release packages** with `action=version`.
+4. Review and merge the generated `chore: version packages` PR.
+5. Let the merge to `main` trigger the publish path, or run `action=publish` manually for recovery.
 
 ## Versioning + release notes expectations
 
@@ -98,6 +129,12 @@ pnpm release:check
   - **What changed** (consumer-visible)
   - **Migration impact** (if any)
   - **Any required CSS/theme updates**
+
+## Hotfix and rollback
+
+- For a bad published release, prefer a new patch release over unpublishing.
+- Flow: revert or fix on a hotfix branch → add a patch changeset → merge → create a new version PR → publish.
+- If a published version should not be used, deprecate it on npm rather than removing it.
 
 ## Validation commands
 
