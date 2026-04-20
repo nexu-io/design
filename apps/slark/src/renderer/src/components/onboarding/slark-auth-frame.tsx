@@ -1,10 +1,9 @@
 import type * as React from "react";
 
-import { AuthShell, BrandRail } from "@nexu-design/ui-web";
+import { AuthShell, BrandRail, cn } from "@nexu-design/ui-web";
 import { Bot, MessageSquare, Sparkles } from "lucide-react";
 
 import { TitleBarDragRegion } from "@/components/layout/WindowChrome";
-import { cn } from "@/lib/utils";
 
 interface SlarkAuthFrameProps {
   children: React.ReactNode;

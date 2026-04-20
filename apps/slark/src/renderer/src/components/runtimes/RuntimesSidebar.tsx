@@ -1,10 +1,11 @@
+import { cn } from "@nexu-design/ui-web";
+import { Box, Code, Cpu, MousePointer, RefreshCw, Sparkles, Terminal } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Terminal, MousePointer, Code, Cpu, Box, Sparkles, RefreshCw } from "lucide-react";
-import { cn } from "@/lib/utils";
+
 import { useT } from "@/i18n";
+import { mockUsers } from "@/mock/data";
 import { useRuntimesStore } from "@/stores/runtimes";
 import { useWorkspaceStore } from "@/stores/workspace";
-import { mockUsers } from "@/mock/data";
 import type { Runtime } from "@/types";
 
 interface DetectedRuntime {

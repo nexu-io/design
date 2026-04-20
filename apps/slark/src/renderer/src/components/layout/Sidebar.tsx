@@ -9,12 +9,11 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
   ScrollArea,
-  Sidebar as UiSidebar,
   SidebarContent,
   SidebarHeader,
+  Sidebar as UiSidebar,
+  cn,
 } from "@nexu-design/ui-web";
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import {
   Building2,
   ChevronDown,
@@ -24,13 +23,14 @@ import {
   User,
   UserPlus,
 } from "lucide-react";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { AgentsSidebar } from "@/components/agents/AgentsSidebar";
 import { ChatSidebar } from "@/components/chat/ChatSidebar";
 import { InvitePeopleDialog } from "@/components/chat/InvitePeopleDialog";
-import { useT, type TranslationKey } from "@/i18n";
-import { cn } from "@/lib/utils";
 import { RuntimesSidebar } from "@/components/runtimes/RuntimesSidebar";
+import { type TranslationKey, useT } from "@/i18n";
 import { useWorkspaceStore } from "@/stores/workspace";
 
 import { TitleBarSpacer } from "./WindowChrome";

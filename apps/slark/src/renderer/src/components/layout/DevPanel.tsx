@@ -1,24 +1,25 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { cn } from "@nexu-design/ui-web";
 import {
-  Settings2,
   ChevronDown,
   ChevronUp,
-  RotateCcw,
+  GripVertical,
+  Layers,
   LogIn,
   LogOut,
+  RotateCcw,
+  Search,
+  SearchX,
+  Settings2,
   UserCog,
   Zap,
   ZapOff,
-  Search,
-  SearchX,
-  GripVertical,
-  Layers,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useWorkspaceStore } from "@/stores/workspace";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import { mockRuntimes, mockUsers } from "@/mock/data";
 import { useRuntimesStore } from "@/stores/runtimes";
-import { mockUsers, mockRuntimes } from "@/mock/data";
+import { useWorkspaceStore } from "@/stores/workspace";
 
 type AppState = "welcome" | "onboarding" | "app";
 

@@ -1,16 +1,4 @@
-import { useState } from "react";
-import {
-  Copy,
-  Check,
-  Loader2,
-  CheckCircle2,
-  XCircle,
-  ChevronRight,
-  ChevronDown,
-  Terminal,
-  GitPullRequestArrow,
-  ShieldQuestion,
-} from "lucide-react";
+import type { ContentBlock } from "@/types";
 import {
   FileAttachment,
   ImageAttachment,
@@ -18,10 +6,22 @@ import {
   TopicCard,
   VideoAttachment,
   VoiceMessage,
+  cn,
 } from "@nexu-design/ui-web";
 import type { FileAttachmentKind } from "@nexu-design/ui-web";
-import { cn } from "@/lib/utils";
-import type { ContentBlock } from "@/types";
+import {
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
+  Copy,
+  GitPullRequestArrow,
+  Loader2,
+  ShieldQuestion,
+  Terminal,
+  XCircle,
+} from "lucide-react";
+import { useState } from "react";
 
 interface ContentBlockRendererProps {
   block: ContentBlock;

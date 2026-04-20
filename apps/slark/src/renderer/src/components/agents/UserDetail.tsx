@@ -1,11 +1,12 @@
+import { cn } from "@nexu-design/ui-web";
+import { Hash, Mail, MessageSquare } from "lucide-react";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Hash, MessageSquare, Mail } from "lucide-react";
+
 import { WindowChrome } from "@/components/layout/WindowChrome";
-import { cn } from "@/lib/utils";
 import { useT } from "@/i18n";
 import { useChatStore } from "@/stores/chat";
-import type { User, Channel } from "@/types";
+import type { Channel, User } from "@/types";
 
 interface UserDetailProps {
   user: User;

@@ -1,29 +1,30 @@
+import { cn } from "@nexu-design/ui-web";
+import {
+  ArrowRight,
+  Bot,
+  Box,
+  Code,
+  Cpu,
+  ExternalLink,
+  MousePointer,
+  Play,
+  RefreshCw,
+  RotateCw,
+  Sparkles,
+  Square,
+  Terminal,
+  Trash2,
+  Wifi,
+  Zap,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { ElementType, ReactElement, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Terminal,
-  MousePointer,
-  Code,
-  Cpu,
-  Box,
-  Sparkles,
-  Trash2,
-  Wifi,
-  RefreshCw,
-  ArrowRight,
-  Zap,
-  Bot,
-  Play,
-  Square,
-  RotateCw,
-  ExternalLink,
-} from "lucide-react";
+
 import { WindowChrome } from "@/components/layout/WindowChrome";
-import { cn } from "@/lib/utils";
-import { useT, type TranslationKey } from "@/i18n";
-import { useRuntimesStore } from "@/stores/runtimes";
+import { type TranslationKey, useT } from "@/i18n";
 import { useAgentsStore } from "@/stores/agents";
+import { useRuntimesStore } from "@/stores/runtimes";
 import type { Runtime } from "@/types";
 
 const typeIcons: Record<Runtime["type"], ElementType> = {

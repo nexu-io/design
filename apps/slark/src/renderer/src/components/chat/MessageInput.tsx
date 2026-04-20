@@ -1,12 +1,12 @@
-import { useState, useRef, useCallback, useLayoutEffect, useEffect } from "react";
+import { Button, cn } from "@nexu-design/ui-web";
 import { Paperclip, Send } from "lucide-react";
-import { Button } from "@nexu-design/ui-web";
-import { cn } from "@/lib/utils";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+
 import { useT } from "@/i18n";
-import { useChatStore } from "@/stores/chat";
 import { getRandomAgentResponse, mockAgents } from "@/mock/data";
+import { useChatStore } from "@/stores/chat";
+import type { Channel, MemberRef, Message } from "@/types";
 import { MentionPicker } from "./MentionPicker";
-import type { Channel, Message, MemberRef } from "@/types";
 
 interface MessageInputProps {
   channelId: string;

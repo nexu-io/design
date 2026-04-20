@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
-import { X, Copy, Check, GitPullRequestArrow, Maximize2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@nexu-design/ui-web";
+import { Check, Copy, GitPullRequestArrow, Maximize2, X } from "lucide-react";
+import { useEffect, useState } from "react";
+
 import type { ContentBlock } from "@/types";
 
 interface ContentDetailOverlayProps {
