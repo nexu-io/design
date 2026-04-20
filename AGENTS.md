@@ -319,6 +319,15 @@
 - Elevation should increase with z-index: page content → cards → popovers → modals.
 - Match `border-radius` to context: `--radius-md` for controls, `--radius-lg` for cards, `--radius-xl` for large panels.
 
+### Frosted glass (translucent surfaces)
+- Use the frosted-glass pattern for **chrome that floats over content** — sticky nav bars, activity bars, floating toasts/popovers — not for regular content panels.
+- Canonical recipe: `bg-surface-0/85 backdrop-blur-md border border-border` (stacked nav/landing) or `bg-surface-1/80 backdrop-blur-md border border-border-subtle` (sidebar/activity bar). Preserve the panel's native surface tone by using that surface at 70–90% alpha instead of switching to a different color.
+- Alpha range: **70–92%**. Below 70% the chrome loses legibility; above 92% it reads as solid and the translucency is pointless.
+- Always pair translucency with `backdrop-blur-md` (medium blur). Heavier blurs (`backdrop-blur-xl`) are reserved for over-modal overlays and command palettes. Lighter blurs (`backdrop-blur-sm`) look muddy.
+- Always add a subtle border (`border-border-subtle` for in-app chrome, `border-border` for landing-page chrome) — without a border, translucent surfaces bleed into neighbors and lose their edge.
+- In Electron apps the effect is strongest when `BrowserWindow` has `vibrancy: "sidebar"` (macOS) so the blur can reach the desktop. Without vibrancy the classes still render fine but the blur only affects in-window content behind the chrome — keep the classes anyway so the treatment light-up automatically if vibrancy is added later.
+- Do **not** apply this pattern to content panels (chat body, page cards, settings forms). Those are content-bearing surfaces and should stay fully opaque so text remains maximally readable.
+
 ## Accessibility and UX expectations
 - Accessibility is actively tested with `vitest-axe`.
 - Prefer semantic roles and label associations that work with Testing Library queries.
