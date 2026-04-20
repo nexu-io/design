@@ -30,7 +30,9 @@ export function ChatView(): React.ReactElement {
       channelId === "ch-welcome" && !!useWorkspaceStore.getState().pendingWelcomeAgentId;
     if (!loadedChannels.current.has(channelId) && mockMessages[channelId] && !skipMock) {
       loadedChannels.current.add(channelId);
-      mockMessages[channelId].forEach((msg) => addMessage(channelId, msg));
+      for (const msg of mockMessages[channelId]) {
+        addMessage(channelId, msg);
+      }
     }
   }, [channelId, addMessage]);
 

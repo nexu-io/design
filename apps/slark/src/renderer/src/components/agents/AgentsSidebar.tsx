@@ -136,8 +136,11 @@ export function AgentsSidebar(): React.ReactElement {
               </span>
             </div>
             {filteredUsers.map((user) => (
-              <button
+              <Button
                 key={user.id}
+                type="button"
+                variant="ghost"
+                size="inline"
                 onClick={() => handleSelectUser(user)}
                 className={cn(
                   "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
@@ -172,7 +175,7 @@ export function AgentsSidebar(): React.ReactElement {
                     {user.email}
                   </div>
                 </div>
-              </button>
+              </Button>
             ))}
           </div>
         )}
@@ -187,8 +190,11 @@ export function AgentsSidebar(): React.ReactElement {
               </span>
             </div>
             {filteredAgents.map((agent) => (
-              <button
+              <Button
                 key={agent.id}
+                type="button"
+                variant="ghost"
+                size="inline"
                 onClick={() => handleSelectAgent(agent)}
                 className={cn(
                   "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
@@ -209,7 +215,7 @@ export function AgentsSidebar(): React.ReactElement {
                     {agent.description}
                   </div>
                 </div>
-              </button>
+              </Button>
             ))}
           </div>
         )}

@@ -49,7 +49,7 @@ export function MessageInput({
 
   useLayoutEffect(() => {
     adjustHeight(textareaRef.current);
-  }, [text, adjustHeight]);
+  }, [adjustHeight]);
 
   const simulateAgentReply = useCallback(
     (agentRef: MemberRef) => {
@@ -94,12 +94,16 @@ export function MessageInput({
 
     const mentionedAgents: MemberRef[] = [];
     const mentionPattern = /@(\w+)/g;
-    let match: RegExpExecArray | null = null;
-    while ((match = mentionPattern.exec(trimmed)) !== null) {
-      const agent = mockAgents.find((a) => a.name.toLowerCase() === match![1].toLowerCase());
+    let match = mentionPattern.exec(trimmed);
+    while (match) {
+      const mentionName = match[1]?.toLowerCase();
+      const agent = mentionName
+        ? mockAgents.find((a) => a.name.toLowerCase() === mentionName)
+        : undefined;
       if (agent) {
         mentionedAgents.push({ kind: "agent", id: agent.id });
       }
+      match = mentionPattern.exec(trimmed);
     }
 
     const userMsg: Message = {
@@ -119,7 +123,9 @@ export function MessageInput({
       const agentMember = channel.members.find((m) => m.kind === "agent");
       if (agentMember) simulateAgentReply(agentMember);
     } else if (mentionedAgents.length > 0) {
-      mentionedAgents.forEach((ref) => simulateAgentReply(ref));
+      for (const ref of mentionedAgents) {
+        simulateAgentReply(ref);
+      }
     }
 
     adjustHeight(textareaRef.current);
@@ -137,6 +143,7 @@ export function MessageInput({
     setText(val);
 
     const textarea = e.target;
+    adjustHeight(textarea);
     const cursorPos = textarea.selectionStart;
     const textBeforeCursor = val.slice(0, cursorPos);
     const atMatch = textBeforeCursor.match(/@(\w*)$/);

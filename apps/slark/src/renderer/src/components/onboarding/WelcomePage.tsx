@@ -278,28 +278,30 @@ export function WelcomePage(): React.ReactElement {
               className="flex items-center justify-center gap-1.5"
               aria-label="Verification code"
             >
-              {code.map((digit, index) => (
-                <input
-                  key={index}
-                  ref={(element) => {
-                    codeRefs.current[index] = element;
-                  }}
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={1}
-                  aria-label={`Digit ${index + 1} of 6`}
-                  value={digit}
-                  onChange={(event) => handleCodeChange(index, event.target.value)}
-                  onKeyDown={(event) => handleCodeKeyDown(index, event)}
-                  onPaste={index === 0 ? handleCodePaste : undefined}
-                  className={cn(
-                    "h-11 w-10 rounded-lg border bg-surface-0 text-center text-[17px] font-semibold text-text-primary outline-none transition-colors",
-                    error
-                      ? "border-destructive focus:border-destructive focus:ring-2 focus:ring-destructive/20"
-                      : "border-input focus:border-accent focus:ring-2 focus:ring-accent/20",
-                  )}
-                />
-              ))}
+              {(["slot-1", "slot-2", "slot-3", "slot-4", "slot-5", "slot-6"] as const).map(
+                (slotKey, index) => (
+                  <input
+                    key={slotKey}
+                    ref={(element) => {
+                      codeRefs.current[index] = element;
+                    }}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    aria-label={`Digit ${index + 1} of 6`}
+                    value={digit}
+                    onChange={(event) => handleCodeChange(index, event.target.value)}
+                    onKeyDown={(event) => handleCodeKeyDown(index, event)}
+                    onPaste={index === 0 ? handleCodePaste : undefined}
+                    className={cn(
+                      "h-11 w-10 rounded-lg border bg-surface-0 text-center text-[17px] font-semibold text-text-primary outline-none transition-colors",
+                      error
+                        ? "border-destructive focus:border-destructive focus:ring-2 focus:ring-destructive/20"
+                        : "border-input focus:border-accent focus:ring-2 focus:ring-accent/20",
+                    )}
+                  />
+                ),
+              )}
             </fieldset>
 
             {renderError()}

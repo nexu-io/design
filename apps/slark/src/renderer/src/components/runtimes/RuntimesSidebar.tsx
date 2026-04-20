@@ -1,6 +1,6 @@
-import { cn } from "@nexu-design/ui-web";
+import { Button, cn } from "@nexu-design/ui-web";
 import { Box, Code, Cpu, MousePointer, RefreshCw, Sparkles, Terminal } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useT } from "@/i18n";
 import { mockUsers } from "@/mock/data";
@@ -62,31 +62,35 @@ export function RuntimesSidebar(): React.ReactElement {
   const [detected, setDetected] = useState<DetectedRuntime[]>([]);
   const scanTimersRef = useRef<number[]>([]);
 
-  const runScan = (): void => {
-    scanTimersRef.current.forEach((t) => clearTimeout(t));
+  const runScan = useCallback((): void => {
+    for (const timer of scanTimersRef.current) {
+      clearTimeout(timer);
+    }
     scanTimersRef.current = [];
     setScanning(true);
     setDetected([]);
     const pool = devSimulateNoDetection ? [] : MOCK_DETECTION_POOL;
-    pool.forEach((rt, i) => {
+    for (const [index, runtime] of pool.entries()) {
       const t = window.setTimeout(
         () => {
-          setDetected((prev) => [...prev, rt]);
+          setDetected((prev) => [...prev, runtime]);
         },
-        400 + i * 250,
+        400 + index * 250,
       );
       scanTimersRef.current.push(t);
-    });
+    }
     const done = window.setTimeout(() => setScanning(false), 400 + pool.length * 250 + 200);
     scanTimersRef.current.push(done);
-  };
+  }, [devSimulateNoDetection]);
 
   useEffect(() => {
     runScan();
     return () => {
-      scanTimersRef.current.forEach((t) => clearTimeout(t));
+      for (const timer of scanTimersRef.current) {
+        clearTimeout(timer);
+      }
     };
-  }, [devSimulateNoDetection]);
+  }, [runScan]);
 
   const onlineCount = runtimes.filter((r) => r.status === "connected").length;
   const filtered = tab === "mine" ? runtimes.filter((r) => r.ownerId === currentUserId) : runtimes;
@@ -118,7 +122,10 @@ export function RuntimesSidebar(): React.ReactElement {
       </div>
 
       <div className="px-3 pb-2 flex items-center gap-1">
-        <button
+        <Button
+          type="button"
+          variant="ghost"
+          size="inline"
           onClick={() => setTab("mine")}
           className={cn(
             "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
@@ -128,8 +135,11 @@ export function RuntimesSidebar(): React.ReactElement {
           )}
         >
           {t("runtimes.mine")}
-        </button>
-        <button
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="inline"
           onClick={() => setTab("all")}
           className={cn(
             "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
@@ -137,7 +147,7 @@ export function RuntimesSidebar(): React.ReactElement {
           )}
         >
           {t("runtimes.all")}
-        </button>
+        </Button>
       </div>
 
       <div className="flex-1 overflow-y-auto px-2 pb-3">
@@ -145,8 +155,11 @@ export function RuntimesSidebar(): React.ReactElement {
           const Icon = typeIcons[rt.type];
           const ownerUser = tab === "all" ? mockUsers.find((u) => u.id === rt.ownerId) : null;
           return (
-            <button
+            <Button
               key={rt.id}
+              type="button"
+              variant="ghost"
+              size="inline"
               onClick={() => selectRuntime(rt.id)}
               className={cn(
                 "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
@@ -175,7 +188,7 @@ export function RuntimesSidebar(): React.ReactElement {
                   rt.status === "error" && "bg-destructive",
                 )}
               />
-            </button>
+            </Button>
           );
         })}
 
@@ -189,13 +202,16 @@ export function RuntimesSidebar(): React.ReactElement {
                 {scanning && <RefreshCw className="h-3 w-3 text-nav-muted animate-spin" />}
               </div>
               {!scanning && (
-                <button
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
                   onClick={runScan}
                   className="text-nav-muted hover:text-nav-fg"
                   title={t("runtimes.rescan")}
                 >
                   <RefreshCw className="h-3 w-3" />
-                </button>
+                </Button>
               )}
             </div>
 
@@ -216,12 +232,15 @@ export function RuntimesSidebar(): React.ReactElement {
                         v{d.version} · {d.path}
                       </div>
                     </div>
-                    <button
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="inline"
                       onClick={() => handleAddDetected(d)}
                       className="shrink-0 rounded-md bg-nav-active px-2 py-0.5 text-xs font-medium text-nav-active-fg hover:opacity-90"
                     >
                       {t("runtimes.add")}
-                    </button>
+                    </Button>
                   </div>
                 );
               })

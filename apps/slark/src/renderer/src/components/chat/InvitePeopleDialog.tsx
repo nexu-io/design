@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Mail, Send, Check, Eye, Link2, Copy } from "lucide-react";
 import {
   Badge,
@@ -44,12 +44,11 @@ export function InvitePeopleDialog({
   const [invites, setInvites] = useState<PendingInvite[]>([]);
   const [previewEmail, setPreviewEmail] = useState<string | null>(null);
   const [linkCopied, setLinkCopied] = useState(false);
+  const [inviteToken, setInviteToken] = useState(
+    () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36),
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const inviteToken = useMemo(
-    () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36),
-    [open],
-  );
   const inviteLinkUrl = `${window.location.origin}/invite/${inviteToken}`;
 
   const handleCopyLink = async (): Promise<void> => {
@@ -65,6 +64,12 @@ export function InvitePeopleDialog({
   useEffect(() => {
     if (open && !previewEmail) requestAnimationFrame(() => inputRef.current?.focus());
   }, [open, previewEmail]);
+
+  useEffect(() => {
+    if (open) {
+      setInviteToken(Math.random().toString(36).slice(2, 10) + Date.now().toString(36));
+    }
+  }, [open]);
 
   const generateToken = (): string =>
     Math.random().toString(36).slice(2, 10) + Date.now().toString(36);

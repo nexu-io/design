@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Rocket, Plus, X } from "lucide-react";
 
@@ -9,18 +9,20 @@ import { useWorkspaceStore } from "@/stores/workspace";
 export function InviteTeamStep(): React.ReactElement {
   const navigate = useNavigate();
   const completeOnboarding = useWorkspaceStore((s) => s.completeOnboarding);
-  const [emails, setEmails] = useState([""]);
+  const nextEmailIdRef = useRef(1);
+  const [emails, setEmails] = useState([{ id: "email-0", value: "" }]);
 
   const addEmail = (): void => {
-    setEmails((prev) => [...prev, ""]);
+    const nextId = `email-${nextEmailIdRef.current++}`;
+    setEmails((prev) => [...prev, { id: nextId, value: "" }]);
   };
 
-  const removeEmail = (index: number): void => {
-    setEmails((prev) => prev.filter((_, i) => i !== index));
+  const removeEmail = (id: string): void => {
+    setEmails((prev) => prev.filter((email) => email.id !== id));
   };
 
-  const updateEmail = (index: number, value: string): void => {
-    setEmails((prev) => prev.map((e, i) => (i === index ? value : e)));
+  const updateEmail = (id: string, value: string): void => {
+    setEmails((prev) => prev.map((email) => (email.id === id ? { ...email, value } : email)));
   };
 
   const handleGetStarted = (): void => {
@@ -35,18 +37,18 @@ export function InviteTeamStep(): React.ReactElement {
         <p className="text-muted-foreground mt-2">Collaboration is better together</p>
       </div>
       <div className="flex flex-col gap-2 w-80">
-        {emails.map((email, i) => (
-          <div key={i} className="flex items-center gap-2">
+        {emails.map((email) => (
+          <div key={email.id} className="flex items-center gap-2">
             <Input
               type="email"
-              value={email}
-              onChange={(e) => updateEmail(i, e.target.value)}
+              value={email.value}
+              onChange={(e) => updateEmail(email.id, e.target.value)}
               placeholder="colleague@company.com"
               className="flex-1"
             />
             {emails.length > 1 && (
               <Button
-                onClick={() => removeEmail(i)}
+                onClick={() => removeEmail(email.id)}
                 variant="ghost"
                 size="icon"
                 className="h-10 w-10 text-muted-foreground hover:text-foreground"

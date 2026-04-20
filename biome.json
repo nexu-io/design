@@ -21,6 +21,9 @@
     "indentWidth": 2,
     "lineWidth": 100
   },
+  "organizeImports": {
+    "enabled": false
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "double",

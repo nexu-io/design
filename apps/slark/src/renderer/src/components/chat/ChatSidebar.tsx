@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Hash, Globe, Search, Plus, X, Pin, PinOff } from "lucide-react";
 import { Button, ConfirmDialog, Input, cn } from "@nexu-design/ui-web";
@@ -21,14 +21,16 @@ function useContextMenu(): {
   close: () => void;
 } {
   const [menu, setMenu] = useState<ContextMenuState | null>(null);
-  const close = (): void => setMenu(null);
+  const close = useCallback((): void => {
+    setMenu(null);
+  }, []);
 
   useEffect(() => {
     if (!menu) return;
     const handler = (): void => close();
     document.addEventListener("click", handler);
     return () => document.removeEventListener("click", handler);
-  }, [menu]);
+  }, [menu, close]);
 
   const open = (e: React.MouseEvent, channel: Channel): void => {
     e.preventDefault();
@@ -112,49 +114,57 @@ export function ChatSidebar(): React.ReactElement {
     const unread = c.unreadCount > 0;
 
     return (
-      <button
+      <div
         key={c.id}
-        onClick={() => handleSelect(c.id)}
         onContextMenu={(e) => openCtx(e, c)}
-        className={cn(
-          "group/item relative flex items-center gap-2 w-full pl-3 pr-2 py-[5px] text-[13px] transition-colors",
-          isActive
-            ? "bg-nav-active text-nav-active-fg font-semibold"
-            : unread
-              ? "text-nav-fg hover:bg-nav-hover"
-              : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
-        )}
+        className={cn("group/item relative w-full")}
       >
-        {isChannel ? (
-          <Globe className="h-4 w-4 shrink-0 opacity-90" />
-        ) : resolved ? (
-          <img src={resolved.avatar} alt="" className="h-4 w-4 rounded-full shrink-0" />
-        ) : (
-          <Hash className="h-4 w-4 shrink-0" />
-        )}
-        <span className="truncate flex-1 text-left">{label}</span>
-        {unread ? (
-          <span
-            className={cn(
-              "ml-auto flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand-primary text-accent-fg text-[10px] font-semibold px-1.5",
-              opts?.showDelete && "group-hover/item:hidden",
-            )}
-          >
-            {c.unreadCount}
-          </span>
-        ) : null}
+        <Button
+          type="button"
+          variant="ghost"
+          size="inline"
+          onClick={() => handleSelect(c.id)}
+          className={cn(
+            "flex items-center gap-2 w-full pl-3 pr-2 py-[5px] text-[13px] transition-colors",
+            isActive
+              ? "bg-nav-active text-nav-active-fg font-semibold"
+              : unread
+                ? "text-nav-fg hover:bg-nav-hover"
+                : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
+          )}
+        >
+          {isChannel ? (
+            <Globe className="h-4 w-4 shrink-0 opacity-90" />
+          ) : resolved ? (
+            <img src={resolved.avatar} alt="" className="h-4 w-4 rounded-full shrink-0" />
+          ) : (
+            <Hash className="h-4 w-4 shrink-0" />
+          )}
+          <span className="truncate flex-1 text-left">{label}</span>
+          {unread ? (
+            <span
+              className={cn(
+                "ml-auto flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand-primary text-accent-fg text-[10px] font-semibold px-1.5",
+                opts?.showDelete && "group-hover/item:hidden",
+              )}
+            >
+              {c.unreadCount}
+            </span>
+          ) : null}
+        </Button>
         {opts?.showDelete && (
-          <span
-            role="button"
-            tabIndex={-1}
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
             onClick={(e) => handleDeleteClick(e, c)}
-            className="ml-auto hidden h-5 w-5 items-center justify-center rounded hover:bg-nav-hover text-nav-muted hover:text-nav-fg transition-colors group-hover/item:flex"
+            className="absolute right-2 top-1/2 ml-auto hidden h-5 w-5 -translate-y-1/2 items-center justify-center rounded hover:bg-nav-hover text-nav-muted hover:text-nav-fg transition-colors group-hover/item:flex"
             title={t("chat.deleteChannel")}
           >
             <X className="h-3 w-3" />
-          </span>
+          </Button>
         )}
-      </button>
+      </div>
     );
   };
 
@@ -222,7 +232,7 @@ export function ChatSidebar(): React.ReactElement {
       {menu && (
         <div
           className="fixed inset-0 z-50"
-          onClick={closeCtx}
+          onMouseDown={closeCtx}
           onContextMenu={(e) => {
             e.preventDefault();
             closeCtx();
@@ -232,7 +242,10 @@ export function ChatSidebar(): React.ReactElement {
             style={{ left: menu.x, top: menu.y }}
             className="absolute z-50 w-44 rounded-lg border border-border bg-popover text-foreground shadow-lg overflow-hidden py-1"
           >
-            <button
+            <Button
+              type="button"
+              variant="ghost"
+              size="inline"
               onClick={() => {
                 togglePin(menu.channel.id);
                 closeCtx();
@@ -250,7 +263,7 @@ export function ChatSidebar(): React.ReactElement {
                   {t("chat.pinToTop")}
                 </>
               )}
-            </button>
+            </Button>
           </div>
         </div>
       )}

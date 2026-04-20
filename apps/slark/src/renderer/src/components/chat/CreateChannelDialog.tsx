@@ -104,9 +104,9 @@ export function CreateChannelDialog({
     setSelectedUserIds((prev) => {
       if (prev.indexOf(id) !== -1) {
         return prev.filter((userId) => userId !== id);
-      } else {
-        return prev.concat(id);
       }
+
+      return prev.concat(id);
     });
   };
 
@@ -114,9 +114,9 @@ export function CreateChannelDialog({
     setSelectedAgentIds((prev) => {
       if (prev.indexOf(id) !== -1) {
         return prev.filter((agentId) => agentId !== id);
-      } else {
-        return prev.concat(id);
       }
+
+      return prev.concat(id);
     });
   };
 
