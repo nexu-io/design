@@ -56,17 +56,10 @@
     "directories": {
       "output": "release"
     },
-    "files": [
-      "dist/**/*",
-      "dist-electron/**/*",
-      "package.json"
-    ],
+    "files": ["dist/**/*", "dist-electron/**/*", "package.json"],
     "mac": {
       "icon": "src-tauri/icons/icon.icns",
-      "target": [
-        "dmg",
-        "zip"
-      ],
+      "target": ["dmg", "zip"],
       "artifactName": "nexu-demo-${version}-${arch}.${ext}"
     },
     "win": {
@@ -74,9 +67,7 @@
       "target": [
         {
           "target": "nsis",
-          "arch": [
-            "x64"
-          ]
+          "arch": ["x64"]
         }
       ],
       "artifactName": "nexu-demo-${version}-${arch}.${ext}"
