@@ -510,9 +510,18 @@ function ProgressBlock({
                 />
               )}
               {step.status === "pending" && (
+                /*
+                 * Dashed ring for "not yet started" steps (Cursor style). The
+                 * dashed outline reads as "placeholder / outline of a future
+                 * step" — distinct from a solid ring which can look like
+                 * "selectable / actionable". `strokeDasharray` is set via
+                 * inline style because lucide forwards style → the <svg>, and
+                 * SVG stroke-dasharray inherits down to the child <circle>.
+                 */
                 <Circle
                   aria-hidden="true"
-                  strokeWidth={1.5}
+                  strokeWidth={1.75}
+                  style={{ strokeDasharray: "2 2" }}
                   className="size-3.5 shrink-0 text-text-tertiary"
                 />
               )}
