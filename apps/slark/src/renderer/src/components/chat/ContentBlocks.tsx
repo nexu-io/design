@@ -417,15 +417,14 @@ function ApprovalBlock({
 
       <div className="mt-3 border-t border-border-subtle pt-3">
         {block.status === "pending" && (
+          /*
+           * Reject (secondary/outline) on the left, Approve (primary) on the
+           * right — follows the design-system rule that confirm / primary
+           * actions trail on the right in horizontal groups. Both keep
+           * flex-1 so the row still reads as "pick one of two equal paths"
+           * rather than a weighted CTA with a tucked-away cancel.
+           */
           <div className="flex gap-2">
-            <Button
-              size="sm"
-              onClick={() => onAction?.(block.id, "approved")}
-              leadingIcon={<CheckCircle2 className="size-3.5" />}
-              className="flex-1"
-            >
-              Approve
-            </Button>
             <Button
               size="sm"
               variant="outline"
@@ -434,6 +433,14 @@ function ApprovalBlock({
               className="flex-1 hover:border-destructive/30 hover:bg-destructive/5 hover:text-destructive"
             >
               Reject
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => onAction?.(block.id, "approved")}
+              leadingIcon={<CheckCircle2 className="size-3.5" />}
+              className="flex-1"
+            >
+              Approve
             </Button>
           </div>
         )}
