@@ -81,12 +81,12 @@ describe("logo primitives", () => {
 
     expect(screen.getByAltText("claude-code")).toBeInTheDocument();
     expect(screen.getByAltText("codex")).toBeInTheDocument();
-    expect(screen.getByAltText("cursor")).toBeInTheDocument();
-    expect(screen.getByAltText("opencode")).toBeInTheDocument();
     expect(screen.getByAltText("gemini-cli")).toBeInTheDocument();
     expect(screen.getByAltText("openclaw")).toBeInTheDocument();
-    expect(screen.getByAltText("pi")).toBeInTheDocument();
-    expect(screen.getByAltText("hermes")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "cursor" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "opencode" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "pi" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "hermes" })).toBeInTheDocument();
   });
 
   it("has no accessibility violations", async () => {

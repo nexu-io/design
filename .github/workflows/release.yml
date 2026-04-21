@@ -50,15 +50,53 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check for pending changesets
+        id: changesets
+        run: |
+          has_changesets=false
+
+          for file in .changeset/*.md; do
+            if [ -f "$file" ] && [ "$(basename "$file")" != 'README.md' ]; then
+              has_changesets=true
+              break
+            fi
+          done
+
+          echo "has_changesets=$has_changesets" >> "$GITHUB_OUTPUT"
+
+      - name: Skip version PR when no changesets exist
+        if: steps.changesets.outputs.has_changesets != 'true'
+        run: echo 'No pending changesets; skipping version PR creation.'
+
+      - name: Apply version bumps
+        if: steps.changesets.outputs.has_changesets == 'true'
+        run: pnpm version:packages
+
+      - name: Format versioned files
+        if: steps.changesets.outputs.has_changesets == 'true'
+        run: |
+          mapfile -t changed_files < <(git diff --name-only --diff-filter=AM)
+
+          if [ ${#changed_files[@]} -eq 0 ]; then
+            echo 'No versioned files changed; skipping formatting.'
+            exit 0
+          fi
+
+          pnpm exec biome format --write "${changed_files[@]}"
+
       - name: Create release PR
-        uses: changesets/action@v1
+        if: steps.changesets.outputs.has_changesets == 'true'
+        uses: peter-evans/create-pull-request@v8
         with:
-          commit: 'chore: version packages'
+          base: main
+          branch: changeset-release/main
+          commit-message: 'chore: version packages'
           title: 'chore: version packages'
-          version: pnpm version:packages
-          createGithubReleases: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            ## Summary
+            - apply pending Changesets version bumps for publishable packages
+            - update workspace package versions and the pnpm lockfile for release
+          delete-branch: false
 
   publish:
     name: Publish packages

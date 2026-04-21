@@ -64,6 +64,7 @@ Accepted changeset entries are `.changeset/*.md` files, excluding `.changeset/RE
 
 - creates or updates the version PR only when manually dispatched with `action=version`
 - applies version bumps and internal dependency updates in that PR
+- keeps package-level changelog generation disabled; version PR creation does not depend on `packages/*/CHANGELOG.md`
 - publishes only when the version PR lands on `main`, or when `action=publish` is run manually
 - runs `pnpm release:check` before publishing
 
