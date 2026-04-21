@@ -6,6 +6,10 @@
   "linked": [["@nexu-design/tokens", "@nexu-design/ui-web"]],
   "access": "public",
   "baseBranch": "main",
+  "privatePackages": {
+    "version": false,
+    "tag": false
+  },
   "updateInternalDependencies": "patch",
   "ignore": []
 }
