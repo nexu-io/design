@@ -107,7 +107,7 @@ export function SettingsView(): React.ReactElement {
       : activeTab === "appearance"
         ? {
             title: "Appearance",
-            description: "Choose the theme and display language used across Slark.",
+            description: "Choose the theme and display language used across Nexu.",
           }
         : {
             title: "Profile",

@@ -5,9 +5,77 @@ type Dict = Record<string, string>;
 const en = {
   // Sections
   "section.chat": "Chat",
+  "section.issues": "Issues",
   "section.team": "Team",
   "section.runtimes": "Runtimes",
+  "section.routines": "Routines",
   "section.settings": "Settings",
+
+  // Routines
+  "routines.title": "Routines",
+  "routines.newRoutine": "New routine",
+  "routines.searchPlaceholder": "Search routines",
+  "routines.emptyTitle": "No routines yet",
+  "routines.emptyDesc":
+    "Routines run your agents on a schedule, in response to events, or via API. Create one to automate repetitive work.",
+  "routines.createFirst": "Create your first routine",
+  "routines.selectRoutine": "Select a routine",
+  "routines.count": "{count} routines",
+  "routines.statusActive": "Active",
+  "routines.statusPaused": "Paused",
+  "routines.statusError": "Error",
+  "routines.pause": "Pause",
+  "routines.resume": "Resume",
+  "routines.runNow": "Run now",
+  "routines.delete": "Delete routine",
+  "routines.agent": "Agent",
+  "routines.noAgent": "No agent",
+  "routines.createAgentForRoutine": "Create a new agent",
+  "routines.trigger": "Trigger",
+  "routines.triggerSchedule": "Schedule",
+  "routines.triggerScheduleDesc": "Run on a recurring cron schedule",
+  "routines.triggerGithub": "GitHub event",
+  "routines.triggerGithubDesc": "Run when a GitHub webhook event fires",
+  "routines.triggerGithubNeedRepo": "Select a repository first",
+  "routines.triggerApi": "API",
+  "routines.triggerApiDesc": "Trigger from your own code by sending a POST request",
+  "routines.triggerConnector": "Connector event",
+  "routines.triggerConnectorDesc": "Run when a connected app sends an event",
+  "routines.connectors": "Connectors",
+  "routines.connectorsHint":
+    "All connected integrations are included by default. Remove any you don't need for this task.",
+  "routines.connectorsWarning":
+    "The agent can use all tools from these connectors — including writes — without asking for permission during runs. Remove any you don't want the agent to access.",
+  "routines.addConnector": "Add connector",
+  "routines.permissions": "Permissions",
+  "routines.lastRun": "Last run",
+  "routines.nextRun": "Next run",
+  "routines.nextRunInline": "Next run: {when}",
+  "routines.never": "Never",
+  "routines.repeats": "Repeats",
+  "routines.instructions": "Instructions",
+  "routines.runs": "Runs",
+  "routines.runManual": "MANUAL",
+  "routines.runScheduled": "SCHEDULED",
+  "routines.runStarted": "Workflow run started",
+  "routines.backToAll": "All",
+  "routines.edit": "Edit",
+  "routines.runsDaily": "Runs daily at {time}",
+  "routines.runsWeekdays": "Runs weekdays at {time}",
+  "routines.runsCustomCron": "Runs on cron {cron}",
+  "routines.triggerGithubDetail": "On {event} in {repo}",
+  "routines.triggerApiDetail": "Triggered via API",
+  "routines.triggerConnectorDetail": "Triggered by {service}",
+  "routines.noRuns": "No runs yet",
+  "routines.createRoutineTitle": "New routine",
+  "routines.namePlaceholder": "e.g., Daily code review",
+  "routines.descPlaceholder": "Describe what the agent should do in each run",
+  "routines.cronPlaceholder": "0 9 * * 1-5",
+  "routines.cronHint": "Cron expression",
+  "routines.repoPlaceholder": "owner/repo",
+  "routines.selectAgent": "Select an agent",
+  "routines.selectRepo": "Select a repository",
+  "routines.noAgentsHint": "You don't have any agents yet.",
 
   // Team page
   "team.title": "Team",
@@ -115,6 +183,7 @@ const en = {
   "chat.addPeopleOrAgents": "Add people or agents",
   "chat.messagePerson": "Message {name}...",
   "chat.messageChannel": "Message channel...",
+  "chat.replyInTopic": "Reply in topic…",
 
   // Create channel dialog
   "createChannel.title": "Create Channel",
@@ -318,9 +387,74 @@ const en = {
 
 const zhCN: Dict = {
   "section.chat": "聊天",
+  "section.issues": "议题",
   "section.team": "团队",
   "section.runtimes": "运行环境",
+  "section.routines": "例行任务",
   "section.settings": "设置",
+
+  "routines.title": "例行任务",
+  "routines.newRoutine": "新建例行任务",
+  "routines.searchPlaceholder": "搜索例行任务",
+  "routines.emptyTitle": "还没有例行任务",
+  "routines.emptyDesc": "例行任务可以按计划、事件或 API 触发 Agent 运行，帮你自动化重复工作。",
+  "routines.createFirst": "创建第一个例行任务",
+  "routines.selectRoutine": "选择一个例行任务",
+  "routines.count": "{count} 个例行任务",
+  "routines.statusActive": "运行中",
+  "routines.statusPaused": "已暂停",
+  "routines.statusError": "错误",
+  "routines.pause": "暂停",
+  "routines.resume": "恢复",
+  "routines.runNow": "立即运行",
+  "routines.delete": "删除例行任务",
+  "routines.agent": "执行 Agent",
+  "routines.noAgent": "未选择",
+  "routines.createAgentForRoutine": "创建一个新 Agent",
+  "routines.trigger": "触发器",
+  "routines.triggerSchedule": "定时",
+  "routines.triggerScheduleDesc": "按 cron 表达式周期运行",
+  "routines.triggerGithub": "GitHub 事件",
+  "routines.triggerGithubDesc": "GitHub Webhook 事件触发",
+  "routines.triggerGithubNeedRepo": "请先选择一个仓库",
+  "routines.triggerApi": "API",
+  "routines.triggerApiDesc": "通过发送 POST 请求从你的代码触发",
+  "routines.triggerConnector": "Connector 事件",
+  "routines.triggerConnectorDesc": "已连接应用的事件触发",
+  "routines.connectors": "Connectors",
+  "routines.connectorsHint": "默认包含所有已连接的集成。不需要的可以移除。",
+  "routines.connectorsWarning":
+    "Agent 可以在执行期间使用这些 Connector 的全部工具（包括写操作），且不会再次确认权限。请移除不希望授权的项。",
+  "routines.addConnector": "添加 Connector",
+  "routines.permissions": "权限",
+  "routines.lastRun": "上次运行",
+  "routines.nextRun": "下次运行",
+  "routines.nextRunInline": "下次运行：{when}",
+  "routines.never": "从未运行",
+  "routines.repeats": "重复",
+  "routines.instructions": "指令",
+  "routines.runs": "运行记录",
+  "routines.runManual": "手动",
+  "routines.runScheduled": "计划",
+  "routines.runStarted": "已启动运行",
+  "routines.backToAll": "全部",
+  "routines.edit": "编辑",
+  "routines.runsDaily": "每天 {time} 运行",
+  "routines.runsWeekdays": "工作日 {time} 运行",
+  "routines.runsCustomCron": "按 cron 运行 {cron}",
+  "routines.triggerGithubDetail": "当 {repo} 触发 {event} 时",
+  "routines.triggerApiDetail": "通过 API 触发",
+  "routines.triggerConnectorDetail": "由 {service} 触发",
+  "routines.noRuns": "暂无运行记录",
+  "routines.createRoutineTitle": "新建例行任务",
+  "routines.namePlaceholder": "例如：每日代码评审",
+  "routines.descPlaceholder": "描述每次运行时 Agent 应该做什么",
+  "routines.cronPlaceholder": "0 9 * * 1-5",
+  "routines.cronHint": "Cron 表达式",
+  "routines.repoPlaceholder": "owner/repo",
+  "routines.selectAgent": "选择一个 Agent",
+  "routines.selectRepo": "选择一个仓库",
+  "routines.noAgentsHint": "你还没有任何 Agent。",
 
   "team.title": "团队",
   "team.people": "成员",
@@ -416,6 +550,7 @@ const zhCN: Dict = {
   "chat.addPeopleOrAgents": "添加成员或智能体",
   "chat.messagePerson": "发送消息给 {name}...",
   "chat.messageChannel": "发送频道消息...",
+  "chat.replyInTopic": "在话题中回复…",
 
   "createChannel.title": "创建频道",
   "createChannel.addMembers": "添加成员",
@@ -607,6 +742,7 @@ const zhCN: Dict = {
 
 const zhTW: Dict = {
   "section.chat": "聊天",
+  "section.issues": "議題",
   "section.team": "團隊",
   "section.runtimes": "執行環境",
   "section.settings": "設定",
@@ -874,6 +1010,7 @@ const zhTW: Dict = {
 
 const ja: Dict = {
   "section.chat": "チャット",
+  "section.issues": "課題",
   "section.team": "チーム",
   "section.runtimes": "ランタイム",
   "section.settings": "設定",
@@ -1145,6 +1282,7 @@ const ja: Dict = {
 
 const ko: Dict = {
   "section.chat": "채팅",
+  "section.issues": "이슈",
   "section.team": "팀",
   "section.runtimes": "런타임",
   "section.settings": "설정",
@@ -1414,6 +1552,7 @@ const ko: Dict = {
 
 const es: Dict = {
   "section.chat": "Chat",
+  "section.issues": "Incidencias",
   "section.team": "Equipo",
   "section.runtimes": "Entornos",
   "section.settings": "Ajustes",
@@ -1479,6 +1618,7 @@ const es: Dict = {
 
 const fr: Dict = {
   "section.chat": "Discussion",
+  "section.issues": "Sujets",
   "section.team": "Équipe",
   "section.runtimes": "Environnements",
   "section.settings": "Paramètres",
@@ -1544,6 +1684,7 @@ const fr: Dict = {
 
 const de: Dict = {
   "section.chat": "Chat",
+  "section.issues": "Vorgänge",
   "section.team": "Team",
   "section.runtimes": "Runtimes",
   "section.settings": "Einstellungen",
@@ -1609,6 +1750,7 @@ const de: Dict = {
 
 const ptBR: Dict = {
   "section.chat": "Conversas",
+  "section.issues": "Questões",
   "section.team": "Equipe",
   "section.runtimes": "Ambientes",
   "section.settings": "Configurações",
@@ -1674,6 +1816,7 @@ const ptBR: Dict = {
 
 const ru: Dict = {
   "section.chat": "Чат",
+  "section.issues": "Задачи",
   "section.team": "Команда",
   "section.runtimes": "Среды",
   "section.settings": "Настройки",
@@ -1739,6 +1882,7 @@ const ru: Dict = {
 
 const it: Dict = {
   "section.chat": "Chat",
+  "section.issues": "Issue",
   "section.team": "Team",
   "section.runtimes": "Runtime",
   "section.settings": "Impostazioni",
@@ -1804,6 +1948,7 @@ const it: Dict = {
 
 const vi: Dict = {
   "section.chat": "Trò chuyện",
+  "section.issues": "Vấn đề",
   "section.team": "Nhóm",
   "section.runtimes": "Môi trường",
   "section.settings": "Cài đặt",

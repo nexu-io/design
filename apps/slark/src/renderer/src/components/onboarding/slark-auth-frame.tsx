@@ -40,12 +40,12 @@ function SlarkBrandRail(): React.ReactElement {
             <Sparkles className="size-4" />
           </div>
           <div>
-            <div className="text-lg font-semibold tracking-tight">Slark</div>
+            <div className="text-lg font-semibold tracking-tight">Nexu</div>
             <div className="text-[11px] text-white/58">Desktop-first workspace</div>
           </div>
         </div>
       }
-      logoLabel="Slark"
+      logoLabel="Nexu"
       title={
         <h1
           className="max-w-[460px] text-[40px] leading-[0.98] tracking-tight text-white sm:text-[48px]"

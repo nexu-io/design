@@ -147,7 +147,7 @@ export function WelcomePage(): React.ReactElement {
 
   const panelTitle =
     view === "buttons"
-      ? "Sign in to Slark"
+      ? "Sign in to Nexu"
       : emailStep === "email"
         ? t("onboarding.continueWithEmail")
         : emailStep === "verify"

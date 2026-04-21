@@ -1,14 +1,25 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Bot, Hash, LogIn, Sparkles, UserPlus, Pencil } from "lucide-react";
+import {
+  Bot,
+  Hash,
+  LogIn,
+  Sparkles,
+  UserPlus,
+  Pencil,
+  MessageSquarePlus,
+  CircleDot,
+  ArrowRight,
+} from "lucide-react";
 import { Button, ChatMessage, EventNotice, Mention } from "@nexu-design/ui-web";
 import type { ChatSender } from "@nexu-design/ui-web";
 import { useChatStore } from "@/stores/chat";
 import { useWorkspaceStore } from "@/stores/workspace";
 import { useAgentsStore } from "@/stores/agents";
+import { useTopicsStore } from "@/stores/topics";
 import { resolveRef } from "@/mock/data";
 import { ContentBlockRenderer } from "./ContentBlocks";
 import { ContentDetailOverlay } from "./ContentDetailOverlay";
-import type { Channel, ContentBlock, Message } from "@/types";
+import type { Agent, Channel, ContentBlock, Message } from "@/types";
 
 const CURRENT_USER_ID = "u-1";
 const CONSECUTIVE_WINDOW_MS = 5 * 60 * 1000;
@@ -119,12 +130,32 @@ interface MessageListProps {
 
 const EMPTY_MESSAGES: never[] = [];
 
+function getAgentSuggestions(agent: Agent): string[] {
+  const fromSkills: string[] = [];
+  for (const s of agent.skills.slice(0, 3)) {
+    fromSkills.push(`Can you help me with ${s.name.toLowerCase()}?`);
+  }
+  const generic = [
+    `Hi ${agent.name}, what can you help me with?`,
+    `${agent.name}, show me an example of what you can do.`,
+    `Give me a quick overview of your capabilities.`,
+  ];
+  const combined = [...fromSkills, ...generic];
+  return combined.slice(0, 3);
+}
+
 function DMEmptyState({ channel }: { channel: Channel }): React.ReactElement {
   const otherMember = channel.members.find((m) => m.id !== CURRENT_USER_ID);
   const resolved = otherMember ? resolveRef(otherMember) : undefined;
+  const agents = useAgentsStore((s) => s.agents);
+  const setPendingDraft = useChatStore((s) => s.setPendingDraft);
+
+  const agent =
+    otherMember?.kind === "agent" ? agents.find((a) => a.id === otherMember.id) : undefined;
+  const suggestions = agent ? getAgentSuggestions(agent) : [];
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="flex flex-1 flex-col overflow-y-auto">
       <div className="mx-auto flex max-w-lg flex-col items-center space-y-3 px-6 py-16">
         {resolved && (
           <img src={resolved.avatar} alt={resolved.name} className="h-20 w-20 rounded-full" />
@@ -135,7 +166,28 @@ function DMEmptyState({ channel }: { channel: Channel }): React.ReactElement {
             ? `This is the beginning of your conversation with ${resolved.name}.`
             : `This is the beginning of your direct message history with ${resolved?.name ?? channel.name}.`}
         </p>
+        {agent?.description ? (
+          <p className="text-center text-xs text-text-tertiary">{agent.description}</p>
+        ) : null}
       </div>
+      {suggestions.length > 0 ? (
+        <div className="mt-auto px-4 pb-3">
+          <div className="mx-auto flex max-w-3xl flex-wrap justify-center gap-2">
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => setPendingDraft(s)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface-0 px-3 py-1.5 text-[12px] text-text-primary shadow-sm transition-colors hover:bg-surface-2"
+                title="Click to use this as a draft"
+              >
+                <Sparkles className="size-3 text-brand-primary" />
+                <span className="max-w-[320px] truncate">{s}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -269,11 +321,38 @@ function getQuickPrompts(name: string, templateId: string | null): string[] {
 export function MessageList({ channelId, channel }: MessageListProps): React.ReactElement {
   const messages = useChatStore((s) => s.messages[channelId] ?? EMPTY_MESSAGES);
   const updateMessage = useChatStore((s) => s.updateMessage);
+  const convertToTopic = useChatStore((s) => s.convertToTopic);
+  const convertToIssue = useChatStore((s) => s.convertToIssue);
+  const topics = useTopicsStore((s) => s.topics);
+  const setActiveTopic = useTopicsStore((s) => s.setActiveTopic);
   const currentUserId = useWorkspaceStore((s) => s.currentUserId) ?? CURRENT_USER_ID;
   const bottomRef = useRef<HTMLDivElement>(null);
   const lastMessageId = messages[messages.length - 1]?.id;
   const [expandedBlock, setExpandedBlock] = useState<ContentBlock | null>(null);
   const closeExpanded = useCallback(() => setExpandedBlock(null), []);
+
+  const handleStartTopic = useCallback(
+    (msgId: string) => {
+      const topicId = convertToTopic(channelId, msgId);
+      if (topicId) setActiveTopic(topicId);
+    },
+    [channelId, convertToTopic, setActiveTopic],
+  );
+
+  const handleConvertToIssue = useCallback(
+    (msgId: string) => {
+      const topicId = convertToIssue(channelId, msgId);
+      if (topicId) setActiveTopic(topicId);
+    },
+    [channelId, convertToIssue, setActiveTopic],
+  );
+
+  const handleOpenTopic = useCallback(
+    (topicId: string) => {
+      setActiveTopic(topicId);
+    },
+    [setActiveTopic],
+  );
 
   const handleApproval = (
     msgId: string,
@@ -362,6 +441,10 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
           reacted: r.users.includes(currentUserId),
         }));
 
+        const derivedTopic = msg.derivedTopicId ? topics[msg.derivedTopicId] : undefined;
+        const isIssue = !!derivedTopic?.issue;
+        const mentionsAgent = msg.mentions.some((m) => m.kind === "agent");
+
         return (
           <div key={msg.id}>
             {showDateSeparator && (
@@ -369,36 +452,86 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
                 {formatDateLabel(msg.createdAt)}
               </EventNotice>
             )}
-            <ChatMessage
-              sender={sender}
-              time={formatClock(msg.createdAt)}
-              compact={isConsecutive}
-              reactions={reactions.length > 0 ? reactions : undefined}
-              blocks={
-                msg.blocks && msg.blocks.length > 0
-                  ? msg.blocks.map((block) => (
-                      <ContentBlockRenderer
-                        key={blockKey(block)}
-                        block={block}
-                        isMe={msg.sender.id === currentUserId}
-                        onApprovalAction={(aid, action) =>
-                          handleApproval(msg.id, msg.blocks, aid, action)
-                        }
-                        onExpand={setExpandedBlock}
-                      />
-                    ))
-                  : undefined
-              }
-            >
-              {msg.content ? (
-                <>
-                  {renderContent(msg.content)}
-                  {msg.isStreaming && (
-                    <span className="ml-0.5 inline-block h-4 w-1.5 animate-pulse bg-current align-middle opacity-60" />
-                  )}
-                </>
+            <div className="group relative">
+              <ChatMessage
+                sender={sender}
+                time={formatClock(msg.createdAt)}
+                compact={isConsecutive}
+                reactions={reactions.length > 0 ? reactions : undefined}
+                blocks={
+                  msg.blocks && msg.blocks.length > 0
+                    ? msg.blocks.map((block) => (
+                        <ContentBlockRenderer
+                          key={blockKey(block)}
+                          block={block}
+                          isMe={msg.sender.id === currentUserId}
+                          onApprovalAction={(aid, action) =>
+                            handleApproval(msg.id, msg.blocks, aid, action)
+                          }
+                          onExpand={setExpandedBlock}
+                        />
+                      ))
+                    : undefined
+                }
+              >
+                {msg.content ? (
+                  <>
+                    {renderContent(msg.content)}
+                    {msg.isStreaming && (
+                      <span className="ml-0.5 inline-block h-4 w-1.5 animate-pulse bg-current align-middle opacity-60" />
+                    )}
+                  </>
+                ) : null}
+              </ChatMessage>
+              {derivedTopic ? (
+                <div className="pl-[60px] pr-4 pb-1">
+                  <button
+                    type="button"
+                    onClick={() => handleOpenTopic(derivedTopic.id)}
+                    className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-border-subtle bg-surface-2/60 px-2 py-1 text-[11px] font-medium text-text-muted transition-colors hover:border-border hover:text-text-primary"
+                  >
+                    {isIssue ? (
+                      <CircleDot className="size-3 shrink-0 text-brand-primary" />
+                    ) : (
+                      <MessageSquarePlus className="size-3 shrink-0" />
+                    )}
+                    <span className="truncate">
+                      {isIssue ? "Issue" : "Topic"} · {derivedTopic.title}
+                    </span>
+                    <ArrowRight className="size-3 shrink-0 opacity-60" />
+                  </button>
+                </div>
               ) : null}
-            </ChatMessage>
+              {!msg.isStreaming && (
+                <div
+                  className="pointer-events-none absolute right-3 top-1 z-10 flex items-center gap-0.5 rounded-md border border-border-subtle bg-surface-0 px-0.5 py-0.5 opacity-0 shadow-sm transition-opacity group-hover:pointer-events-auto group-hover:opacity-100"
+                >
+                  {!derivedTopic && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      title="Start topic"
+                      onClick={() => handleStartTopic(msg.id)}
+                    >
+                      <MessageSquarePlus className="size-3.5" />
+                    </Button>
+                  )}
+                  {!isIssue && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      title={mentionsAgent ? "Convert to Issue" : "Mark as Issue"}
+                      onClick={() => handleConvertToIssue(msg.id)}
+                      className={mentionsAgent ? "text-brand-primary" : undefined}
+                    >
+                      <CircleDot className="size-3.5" />
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         );
       })}

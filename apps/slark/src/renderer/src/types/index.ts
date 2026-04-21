@@ -57,6 +57,47 @@ export interface Skill {
   config: Record<string, unknown>;
 }
 
+export type ConnectorService = "figma" | "linear" | "notion" | "slack" | "github" | "gmail";
+
+export interface Connector {
+  service: ConnectorService;
+  name: string;
+  connected: boolean;
+}
+
+export type RoutineTriggerKind = "schedule" | "github" | "api" | "connector";
+
+export interface RoutineTrigger {
+  kind: RoutineTriggerKind;
+  cron?: string;
+  githubRepo?: string;
+  githubEvent?: "push" | "pull_request" | "issues" | "release";
+  connectorService?: ConnectorService;
+  connectorEvent?: string;
+}
+
+export interface RoutineRun {
+  id: string;
+  startedAt: number;
+  kind: "scheduled" | "manual";
+  status: "running" | "success" | "error";
+}
+
+export interface Routine {
+  id: string;
+  name: string;
+  description: string;
+  agentId: string | null;
+  trigger: RoutineTrigger;
+  connectors: ConnectorService[];
+  status: "active" | "paused" | "error";
+  lastRunAt?: number;
+  nextRunAt?: number;
+  runs?: RoutineRun[];
+  createdBy: string;
+  createdAt: number;
+}
+
 export interface Runtime {
   id: string;
   name: string;
@@ -162,9 +203,29 @@ export interface Message {
     kind: "join";
     members: MemberRef[];
   };
+  derivedTopicId?: string;
 }
 
 export interface Reaction {
   emoji: string;
   users: string[];
+}
+
+export type IssueStatus = "todo" | "in_progress" | "in_review" | "blocked" | "done";
+
+export interface IssueMeta {
+  status: IssueStatus;
+  assigneeAgentId?: string;
+  labels?: string[];
+  createdAt: number;
+}
+
+export interface Topic {
+  id: string;
+  rootChannelId: string;
+  rootMessageId: string;
+  title: string;
+  createdAt: number;
+  participants: MemberRef[];
+  issue?: IssueMeta;
 }
