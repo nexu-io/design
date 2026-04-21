@@ -1,14 +1,13 @@
-import { Button, cn } from "@nexu-design/ui-web";
+import { Button, Switch, cn } from "@nexu-design/ui-web";
 import {
-  Bot,
-  Clock,
-  Github,
-  Pause,
+  ChevronLeft,
+  CircleCheck,
+  CircleX,
+  Loader2,
+  Pencil,
   Play,
-  Plug,
   Plus,
   Trash2,
-  Webhook,
   Workflow,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -17,76 +16,114 @@ import { useNavigate } from "react-router-dom";
 
 import { WindowChrome } from "@/components/layout/WindowChrome";
 import { type TranslationKey, useT } from "@/i18n";
-import { useAgentsStore } from "@/stores/agents";
 import { useRoutinesStore } from "@/stores/routines";
-import type { Routine, RoutineTriggerKind } from "@/types";
+import type { Routine, RoutineRun, RoutineTrigger } from "@/types";
 
+import { ConnectorBadge } from "./ConnectorBadge";
 import { CreateRoutineDialog } from "./CreateRoutineDialog";
 
-const triggerIcons: Record<RoutineTriggerKind, React.ElementType> = {
-  schedule: Clock,
-  github: Github,
-  api: Webhook,
-  connector: Plug,
-};
+function pad2(n: number): string {
+  return n < 10 ? `0${n}` : String(n);
+}
 
-const connectorLabels: Record<string, string> = {
-  figma: "Figma",
-  linear: "Linear",
-  notion: "Notion",
-  slack: "Slack",
-  github: "GitHub",
-  gmail: "Gmail",
-};
+function formatTimeOfDay(hour: number, min: number): string {
+  const h12 = hour % 12 === 0 ? 12 : hour % 12;
+  const ampm = hour < 12 ? "AM" : "PM";
+  return `${h12}:${pad2(min)} ${ampm}`;
+}
 
-const connectorColors: Record<string, string> = {
-  figma: "bg-[#F24E1E]",
-  linear: "bg-[#5E6AD2]",
-  notion: "bg-foreground",
-  slack: "bg-[#4A154B]",
-  github: "bg-foreground",
-  gmail: "bg-[#EA4335]",
-};
+type TFn = (key: TranslationKey, vars?: Record<string, string>) => string;
 
-function formatRelative(ts?: number, never?: string): string {
-  if (!ts) return never ?? "—";
-  const diff = ts - Date.now();
-  const abs = Math.abs(diff);
-  const mins = Math.round(abs / 60000);
-  if (mins < 60) return diff < 0 ? `${mins} min ago` : `in ${mins} min`;
-  const hours = Math.round(mins / 60);
-  if (hours < 24) return diff < 0 ? `${hours}h ago` : `in ${hours}h`;
-  const days = Math.round(hours / 24);
-  return diff < 0 ? `${days}d ago` : `in ${days}d`;
+function describeSchedule(trigger: RoutineTrigger, t: TFn): string {
+  if (trigger.kind !== "schedule" || !trigger.cron) return t("routines.triggerSchedule");
+  const parts = trigger.cron.trim().split(/\s+/);
+  if (parts.length !== 5) return t("routines.runsCustomCron", { cron: trigger.cron });
+  const [minRaw, hourRaw, dom, mon, dow] = parts;
+  const min = Number(minRaw);
+  const hour = Number(hourRaw);
+  if (Number.isNaN(min) || Number.isNaN(hour)) {
+    return t("routines.runsCustomCron", { cron: trigger.cron });
+  }
+  const time = formatTimeOfDay(hour, min);
+  if (dom === "*" && mon === "*" && dow === "*") {
+    return t("routines.runsDaily", { time });
+  }
+  if (dom === "*" && mon === "*" && dow === "1-5") {
+    return t("routines.runsWeekdays", { time });
+  }
+  return t("routines.runsCustomCron", { cron: trigger.cron });
+}
+
+function describeTrigger(r: Routine, t: TFn): string {
+  if (r.trigger.kind === "schedule") return describeSchedule(r.trigger, t);
+  if (r.trigger.kind === "github") {
+    return t("routines.triggerGithubDetail", {
+      repo: r.trigger.githubRepo ?? "—",
+      event: r.trigger.githubEvent ?? "event",
+    });
+  }
+  if (r.trigger.kind === "api") return t("routines.triggerApiDetail");
+  return t("routines.triggerConnectorDetail", {
+    service: r.trigger.connectorService ?? "connector",
+  });
+}
+
+function formatNextRun(ts?: number): string {
+  if (!ts) return "—";
+  const d = new Date(ts);
+  const now = new Date();
+  const sameDay = d.toDateString() === now.toDateString();
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  const isTomorrow = d.toDateString() === tomorrow.toDateString();
+  const time = formatTimeOfDay(d.getHours(), d.getMinutes());
+  if (sameDay) return `Today at ${time}`;
+  if (isTomorrow) return `Tomorrow at ${time}`;
+  return `${d.toLocaleDateString(undefined, { month: "short", day: "numeric" })} at ${time}`;
+}
+
+function formatRunStartedAt(ts: number): string {
+  const d = new Date(ts);
+  const now = new Date();
+  const sameDay = d.toDateString() === now.toDateString();
+  const time = formatTimeOfDay(d.getHours(), d.getMinutes());
+  if (sameDay) return `Today at ${time}`;
+  return `${d.toLocaleDateString(undefined, { month: "short", day: "numeric" })} at ${time}`;
 }
 
 export function RoutinesView(): ReactElement {
   const t = useT();
   const navigate = useNavigate();
-  const { routines, selectedRoutineId, selectRoutine, toggleRoutine, removeRoutine } =
+  const { routines, selectedRoutineId, selectRoutine, toggleRoutine, removeRoutine, runNow } =
     useRoutinesStore();
-  const agents = useAgentsStore((s) => s.agents);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
 
   useEffect(() => {
     if (routines.length > 0 && !selectedRoutineId) selectRoutine(routines[0].id);
   }, [routines, selectedRoutineId, selectRoutine]);
+
+  useEffect(() => {
+    if (!toastOpen) return;
+    const timeout = setTimeout(() => setToastOpen(false), 3000);
+    return () => clearTimeout(timeout);
+  }, [toastOpen]);
 
   if (routines.length === 0) {
     return (
       <div className="flex h-full flex-col">
         <WindowChrome className="h-10" />
         <div className="flex-1 overflow-y-auto">
-          <div className="max-w-2xl mx-auto px-6 pt-16 pb-10 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-accent mb-3">
+          <div className="mx-auto max-w-2xl px-6 pt-16 pb-10 text-center">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-accent">
               <Workflow className="h-6 w-6" />
             </div>
-            <h1 className="text-xl font-semibold mb-2">{t("routines.emptyTitle")}</h1>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6">
+            <h1 className="mb-2 text-xl font-semibold">{t("routines.emptyTitle")}</h1>
+            <p className="mx-auto mb-6 max-w-md text-sm text-muted-foreground">
               {t("routines.emptyDesc")}
             </p>
             <Button type="button" onClick={() => setDialogOpen(true)}>
-              <Plus className="h-4 w-4 mr-1.5" />
+              <Plus className="mr-1.5 h-4 w-4" />
               {t("routines.createFirst")}
             </Button>
           </div>
@@ -102,140 +139,160 @@ export function RoutinesView(): ReactElement {
     return (
       <div className="flex h-full flex-col">
         <WindowChrome className="h-10" />
-        <div className="flex-1 flex items-center justify-center text-muted-foreground">
+        <div className="flex flex-1 items-center justify-center text-muted-foreground">
           <p className="text-sm">{t("routines.selectRoutine")}</p>
         </div>
       </div>
     );
   }
 
-  const Icon = triggerIcons[r.trigger.kind];
-  const agent = agents.find((a) => a.id === r.agentId);
+  const isActive = r.status === "active";
+  const runs = r.runs ?? [];
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="relative flex h-full flex-col">
       <WindowChrome className="h-10" />
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-4xl mx-auto px-6 pb-8 space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent shrink-0">
-                <Icon className="h-5 w-5" />
-              </div>
-              <div className="min-w-0">
-                <h1 className="text-xl font-semibold truncate">{r.name}</h1>
-                {r.description && (
-                  <p className="text-sm text-muted-foreground truncate">{r.description}</p>
-                )}
+        <div className="mx-auto max-w-3xl px-8 pt-4 pb-16">
+          <button
+            type="button"
+            onClick={() => {
+              selectRoutine(null);
+              navigate("/routines");
+            }}
+            className="mb-6 inline-flex items-center gap-0.5 text-sm text-muted-foreground hover:text-foreground"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            {t("routines.backToAll")}
+          </button>
+
+          <div className="mb-8 flex items-start justify-between gap-6">
+            <div className="min-w-0 flex-1">
+              <h1 className="mb-3 truncate text-3xl font-semibold tracking-tight">{r.name}</h1>
+              <div className="flex flex-wrap items-center gap-3">
+                <Switch
+                  checked={isActive}
+                  onCheckedChange={() => toggleRoutine(r.id)}
+                  aria-label={isActive ? t("routines.pause") : t("routines.resume")}
+                />
+                <StatusPill status={r.status} />
+                {isActive && r.nextRunAt ? (
+                  <span className="text-sm text-muted-foreground">
+                    {t("routines.nextRunInline", { when: formatNextRun(r.nextRunAt) })}
+                  </span>
+                ) : null}
               </div>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <StatusBadge status={r.status} />
+
+            <div className="flex shrink-0 items-center gap-1">
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 size="icon"
-                onClick={() => toggleRoutine(r.id)}
-                title={r.status === "active" ? t("routines.pause") : t("routines.resume")}
-                className="h-8 w-8"
-              >
-                {r.status === "active" ? (
-                  <Pause className="h-3.5 w-3.5" />
-                ) : (
-                  <Play className="h-3.5 w-3.5" />
-                )}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onClick={() => {
-                  removeRoutine(r.id);
-                }}
-                title={t("routines.delete")}
-                className="h-8 w-8 text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/10"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </Button>
-              <Button
-                type="button"
+                className="h-9 w-9 text-muted-foreground hover:text-foreground"
+                title={t("routines.edit")}
                 onClick={() => setDialogOpen(true)}
-                size="sm"
-                className="h-8 px-3"
               >
-                <Plus className="h-3.5 w-3.5 mr-1" />
-                {t("routines.newRoutine")}
+                <Pencil className="h-4 w-4" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 text-muted-foreground hover:text-destructive"
+                title={t("routines.delete")}
+                onClick={() => removeRoutine(r.id)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+              <Button
+                type="button"
+                className="ml-1 h-9 px-3.5"
+                onClick={() => {
+                  runNow(r.id);
+                  setToastOpen(true);
+                }}
+              >
+                <Play className="mr-1.5 h-3.5 w-3.5 fill-current" />
+                {t("routines.runNow")}
               </Button>
             </div>
           </div>
 
-          <section className="rounded-xl border border-border p-4 text-sm space-y-3">
-            <div className="grid grid-cols-2 gap-x-8 gap-y-3">
-              <InfoRow label={t("routines.trigger")} value={formatTrigger(r, t)} />
-              <InfoRow label={t("routines.agent")}>
-                {agent ? (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="inline"
-                    onClick={() => navigate(`/agents/${agent.id}`)}
-                    className="flex items-center gap-2 hover:text-foreground"
-                  >
-                    {agent.avatar ? (
-                      <img src={agent.avatar} alt="" className="h-5 w-5 rounded" />
-                    ) : (
-                      <Bot className="h-4 w-4" />
-                    )}
-                    <span className="font-medium">{agent.name}</span>
-                  </Button>
-                ) : (
-                  <span className="text-muted-foreground">{t("routines.noAgent")}</span>
-                )}
-              </InfoRow>
-              <InfoRow
-                label={t("routines.lastRun")}
-                value={formatRelative(r.lastRunAt, t("routines.never"))}
-              />
-              <InfoRow label={t("routines.nextRun")} value={formatRelative(r.nextRunAt, "—")} />
-            </div>
-          </section>
+          <div className="space-y-8">
+            <Section title={t("routines.repeats")}>
+              <p className="text-base">{describeTrigger(r, t)}</p>
+            </Section>
 
-          <section className="rounded-xl border border-border p-4">
-            <p className="text-sm font-semibold mb-3">{t("routines.connectors")}</p>
-            {r.connectors.length === 0 ? (
-              <p className="text-sm text-muted-foreground">—</p>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {r.connectors.map((c) => (
-                  <div
-                    key={c}
-                    className="flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs"
-                  >
-                    <span
-                      className={cn("h-2.5 w-2.5 rounded-sm", connectorColors[c] ?? "bg-accent")}
-                    />
-                    <span>{connectorLabels[c] ?? c}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
+            <Section title={t("routines.connectors")}>
+              {r.connectors.length === 0 ? (
+                <p className="text-sm text-muted-foreground">—</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {r.connectors.map((c) => (
+                    <ConnectorBadge key={c} service={c} />
+                  ))}
+                </div>
+              )}
+            </Section>
+
+            {r.description ? (
+              <Section title={t("routines.instructions")}>
+                <div className="rounded-lg bg-accent/50 px-4 py-3 text-sm leading-relaxed">
+                  {r.description}
+                </div>
+              </Section>
+            ) : null}
+
+            <Section title={t("routines.runs")}>
+              {runs.length === 0 ? (
+                <p className="text-sm text-muted-foreground">{t("routines.noRuns")}</p>
+              ) : (
+                <ul className="space-y-1">
+                  {runs.map((run) => (
+                    <RunRow key={run.id} run={run} />
+                  ))}
+                </ul>
+              )}
+            </Section>
+          </div>
         </div>
       </div>
+
+      {toastOpen ? (
+        <div className="pointer-events-none absolute right-6 top-4 z-50">
+          <div className="pointer-events-auto flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm shadow-md">
+            <span className="flex h-4 w-4 items-center justify-center rounded-full border border-muted-foreground/40 text-[10px] text-muted-foreground">
+              i
+            </span>
+            <span>{t("routines.runStarted")}</span>
+            <button
+              type="button"
+              onClick={() => setToastOpen(false)}
+              className="ml-2 text-muted-foreground hover:text-foreground"
+              aria-label="dismiss"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       <CreateRoutineDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </div>
   );
 }
 
-function formatTrigger(r: Routine, t: (key: TranslationKey) => string): string {
-  if (r.trigger.kind === "schedule") return r.trigger.cron ?? t("routines.triggerSchedule");
-  if (r.trigger.kind === "github")
-    return `${r.trigger.githubRepo ?? ""} · ${r.trigger.githubEvent ?? ""}`.trim();
-  if (r.trigger.kind === "api") return t("routines.triggerApi");
-  return r.trigger.connectorService ?? t("routines.triggerConnector");
+function Section({ title, children }: { title: string; children: React.ReactNode }): ReactElement {
+  return (
+    <section>
+      <h3 className="mb-2 text-sm font-medium text-muted-foreground">{title}</h3>
+      {children}
+    </section>
+  );
 }
 
-function StatusBadge({ status }: { status: Routine["status"] }): ReactElement {
+function StatusPill({ status }: { status: Routine["status"] }): ReactElement {
   const t = useT();
   const label =
     status === "active"
@@ -246,17 +303,17 @@ function StatusBadge({ status }: { status: Routine["status"] }): ReactElement {
   return (
     <div
       className={cn(
-        "flex items-center gap-1.5 text-xs font-medium",
-        status === "active" && "text-nexu-online",
-        status === "paused" && "text-muted-foreground",
-        status === "error" && "text-destructive",
+        "inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium",
+        status === "active" && "bg-nexu-online/15 text-nexu-online",
+        status === "paused" && "bg-muted text-muted-foreground",
+        status === "error" && "bg-destructive/10 text-destructive",
       )}
     >
       <span
         className={cn(
-          "h-2 w-2 rounded-full",
+          "h-1.5 w-1.5 rounded-full",
           status === "active" && "bg-nexu-online",
-          status === "paused" && "bg-nexu-offline",
+          status === "paused" && "bg-muted-foreground",
           status === "error" && "bg-destructive",
         )}
       />
@@ -265,19 +322,22 @@ function StatusBadge({ status }: { status: Routine["status"] }): ReactElement {
   );
 }
 
-function InfoRow({
-  label,
-  value,
-  children,
-}: {
-  label: string;
-  value?: string;
-  children?: React.ReactNode;
-}): ReactElement {
+function RunRow({ run }: { run: RoutineRun }): ReactElement {
+  const t = useT();
   return (
-    <div className="flex justify-between items-start py-1.5 border-b border-border/40">
-      <span className="text-muted-foreground">{label}</span>
-      <div className="text-right font-medium">{children ?? value}</div>
-    </div>
+    <li className="flex items-center gap-3 rounded-md px-2 py-2 hover:bg-accent/40">
+      <RunStatusIcon status={run.status} />
+      <span className="text-sm">{formatRunStartedAt(run.startedAt)}</span>
+      <span className="rounded-sm bg-muted px-1.5 py-0.5 text-[10px] font-semibold tracking-wider text-muted-foreground">
+        {run.kind === "manual" ? t("routines.runManual") : t("routines.runScheduled")}
+      </span>
+    </li>
   );
+}
+
+function RunStatusIcon({ status }: { status: RoutineRun["status"] }): ReactElement {
+  if (status === "running")
+    return <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />;
+  if (status === "success") return <CircleCheck className="h-4 w-4 text-nexu-online" />;
+  return <CircleX className="h-4 w-4 text-destructive" />;
 }

@@ -76,6 +76,13 @@ export interface RoutineTrigger {
   connectorEvent?: string;
 }
 
+export interface RoutineRun {
+  id: string;
+  startedAt: number;
+  kind: "scheduled" | "manual";
+  status: "running" | "success" | "error";
+}
+
 export interface Routine {
   id: string;
   name: string;
@@ -86,6 +93,7 @@ export interface Routine {
   status: "active" | "paused" | "error";
   lastRunAt?: number;
   nextRunAt?: number;
+  runs?: RoutineRun[];
   createdBy: string;
   createdAt: number;
 }

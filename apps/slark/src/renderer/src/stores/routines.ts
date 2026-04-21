@@ -12,6 +12,14 @@ const seedRoutines: Routine[] = [
     status: "active",
     lastRunAt: Date.now() - 1000 * 60 * 60 * 3,
     nextRunAt: Date.now() + 1000 * 60 * 60 * 21,
+    runs: [
+      {
+        id: "run-1",
+        startedAt: Date.now() - 1000 * 60 * 60 * 3,
+        kind: "scheduled",
+        status: "success",
+      },
+    ],
     createdBy: "u-1",
     createdAt: Date.now() - 1000 * 60 * 60 * 24 * 14,
   },
@@ -42,6 +50,7 @@ interface RoutinesState {
   removeRoutine: (id: string) => void;
   selectRoutine: (id: string | null) => void;
   toggleRoutine: (id: string) => void;
+  runNow: (id: string) => void;
 }
 
 export const useRoutinesStore = create<RoutinesState>((set) => ({
@@ -60,6 +69,26 @@ export const useRoutinesStore = create<RoutinesState>((set) => ({
     set((s) => ({
       routines: s.routines.map((r) =>
         r.id === id ? { ...r, status: r.status === "active" ? "paused" : "active" } : r,
+      ),
+    })),
+  runNow: (id) =>
+    set((s) => ({
+      routines: s.routines.map((r) =>
+        r.id === id
+          ? {
+              ...r,
+              lastRunAt: Date.now(),
+              runs: [
+                {
+                  id: `run-${Date.now()}`,
+                  startedAt: Date.now(),
+                  kind: "manual",
+                  status: "running",
+                },
+                ...(r.runs ?? []),
+              ],
+            }
+          : r,
       ),
     })),
 }));
