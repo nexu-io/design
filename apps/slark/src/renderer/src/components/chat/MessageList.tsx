@@ -362,6 +362,11 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
           reacted: r.users.includes(currentUserId),
         }));
 
+        // Highlight the row when *I* am @mentioned. ChatMessage `highlighted`
+        // renders a subtle row-level tint — that's the design-system's built-in
+        // "this concerns you" affordance, separate from the unread badge.
+        const mentionsMe = msg.mentions.some((m) => m.id === currentUserId);
+
         return (
           <div key={msg.id}>
             {showDateSeparator && (
@@ -373,6 +378,7 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
               sender={sender}
               time={formatClock(msg.createdAt)}
               compact={isConsecutive}
+              highlighted={mentionsMe}
               reactions={reactions.length > 0 ? reactions : undefined}
               blocks={
                 msg.blocks && msg.blocks.length > 0
@@ -380,7 +386,6 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
                       <ContentBlockRenderer
                         key={blockKey(block)}
                         block={block}
-                        isMe={msg.sender.id === currentUserId}
                         onApprovalAction={(aid, action) =>
                           handleApproval(msg.id, msg.blocks, aid, action)
                         }

@@ -4,10 +4,10 @@ import { Sidebar } from "./Sidebar";
 
 export function AppLayout(): React.ReactElement {
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-background">
+    <div className="flex h-screen w-screen overflow-hidden">
       <ActivityBar />
       <Sidebar />
-      <main className="flex-1 min-w-0">
+      <main className="flex-1 min-w-0 bg-surface-1">
         <Outlet />
       </main>
     </div>

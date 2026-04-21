@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { MessageSquare, Bot, UserPlus, Globe, AtSign } from "lucide-react";
+import { AtSign, Bot, Globe, MessageSquare, Users } from "lucide-react";
+
 import { useT } from "@/i18n";
 import { useChatStore } from "@/stores/chat";
 import { useWorkspaceStore } from "@/stores/workspace";
@@ -110,12 +111,26 @@ export function ChatView(): React.ReactElement {
     channel.type === "dm" ? channel.members.find((m) => m.id !== "u-1") : undefined;
   const otherResolved = otherMember ? resolveRef(otherMember) : undefined;
 
+  /*
+   * Phase 1 chat header is a single flat bar — no Messages / Files / Artifacts
+   * tabs, no right-side topic detail panel. Both features live on
+   * `feature/chat-tabs-and-topic-panel` and will return in a later release.
+   *
+   * Header contract still in effect:
+   * - Neutral hover fill on the title + members chip (`hover:bg-surface-2`),
+   *   never `bg-accent` (near-black) which would flood the row with brand
+   *   color on mouseover.
+   * - Channels surface a members chip (Users icon + count) inline right
+   *   after the title; clicking opens the add-members dialog. Descriptions
+   *   are deliberately not rendered in the header — if a channel needs
+   *   description context, surface it in the body, not the chrome.
+   */
   return (
-    <div className="flex h-full flex-col bg-background">
+    <div className="flex h-full flex-col bg-surface-1">
       <WindowChrome className="flex h-[52px] items-center gap-2 border-b border-border px-4 pt-2">
         <button
           type="button"
-          className="no-drag flex items-center gap-1.5 rounded-md px-1.5 py-1 -ml-1.5 hover:bg-accent transition-colors text-left min-w-0"
+          className="no-drag flex items-center gap-1.5 rounded-md px-1.5 py-1 -ml-1.5 hover:bg-surface-2 transition-colors text-left min-w-0"
         >
           {channel.type === "channel" ? (
             <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -131,24 +146,22 @@ export function ChatView(): React.ReactElement {
           </h2>
         </button>
 
-        {channel.description && (
-          <span className="text-xs text-muted-foreground truncate">{channel.description}</span>
-        )}
-
         {channel.type === "channel" && (
           <button
             type="button"
             onClick={() => setAddMembersOpen(true)}
-            className="no-drag ml-auto flex items-center gap-1.5 h-7 px-2 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors shrink-0"
-            title={t("chat.addPeopleOrAgents")}
+            className="no-drag flex items-center gap-1 h-6 px-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-surface-2 transition-colors shrink-0"
+            title="Members"
           >
-            <UserPlus className="h-3.5 w-3.5" />
+            <Users className="h-3.5 w-3.5" />
             <span>{channel.members.length}</span>
           </button>
         )}
       </WindowChrome>
+
       <MessageList channelId={channelId} channel={channel} />
       <MessageInput channelId={channelId} isDmWithAgent={isDmWithAgent} channel={channel} />
+
       {channel.type === "channel" && (
         <AddMembersDialog
           open={addMembersOpen}

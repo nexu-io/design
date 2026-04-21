@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { WindowChrome } from "@/components/layout/WindowChrome";
-import { useT } from "@/i18n";
+import { presenceDotClass, presenceLabel } from "@/lib/user-presence";
 import { useChatStore } from "@/stores/chat";
 import type { Channel, User } from "@/types";
 
@@ -13,7 +13,6 @@ interface UserDetailProps {
 }
 
 export function UserDetail({ user }: UserDetailProps): React.ReactElement {
-  const t = useT();
   const navigate = useNavigate();
   const channels = useChatStore((s) => s.channels);
   const addChannel = useChatStore((s) => s.addChannel);
@@ -59,106 +58,117 @@ export function UserDetail({ user }: UserDetailProps): React.ReactElement {
     navigate(`/chat/${newDm.id}`);
   };
 
-  const statusLabel =
-    user.status === "online"
-      ? t("team.status.online")
-      : user.status === "away"
-        ? t("team.status.away")
-        : user.status === "dnd"
-          ? t("team.status.dnd")
-          : t("team.status.offline");
-
-  const statusDot =
-    user.status === "online"
-      ? "bg-nexu-online"
-      : user.status === "away" || user.status === "dnd"
-        ? "bg-nexu-busy"
-        : "bg-nexu-offline";
+  /* Presence uses the shared helpers from `lib/user-presence` — every
+     surface (sidebar row, profile header, mention cards…) reads the
+     same dot color + label for a given status so the standard stays
+     consistent across the app. */
+  const statusLabel = presenceLabel(user.status);
+  const statusDot = presenceDotClass(user.status);
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto">
-      <WindowChrome className="h-10" />
+    /* Canonical workspace content-panel layout (AGENTS.md):
+       outer scroll region + inner 800px-capped centered wrapper with
+       shared horizontal padding. Matches SettingsView so profile and
+       settings panels line up to the same gutters instead of one
+       stretching edge-to-edge and the other being centered. */
+    <div className="h-full overflow-y-auto">
+      <div className="mx-auto max-w-[800px] px-4 pt-2 pb-6 sm:px-6 sm:pb-8">
+        <WindowChrome className="h-10" />
 
-      <div className="px-6 pb-4 flex items-start justify-between gap-4">
-        <div className="flex items-center gap-4 min-w-0">
-          <div className="relative shrink-0">
-            <img src={user.avatar} alt="" className="h-14 w-14 rounded-full" />
-            <div
-              className={cn(
-                "absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-background",
-                statusDot,
-              )}
+        {/* Profile header plays the PageHeader role for this panel.
+            `pb-6` mirrors the density="shell" spec so the gap down to
+            the first section card matches other workspace panels. */}
+        <div className="pb-6 flex items-start justify-between gap-4">
+          <div className="flex items-center gap-4 min-w-0">
+            {/* Avatar is now a clean portrait — the presence dot used
+                to sit in the bottom-right but moved below the name
+                (see below) so the status can be read alongside a
+                text label without cluttering the photo. */}
+            <img
+              src={user.avatar}
+              alt=""
+              className="h-14 w-14 shrink-0 rounded-full ring-1 ring-inset ring-black/5"
             />
-          </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg font-semibold truncate">{user.name}</h1>
-              {user.role === "owner" && (
-                <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground px-1.5 py-0.5 rounded bg-muted">
-                  {t("team.role.owner")}
-                </span>
-              )}
-            </div>
-            <div className="text-xs text-muted-foreground">{statusLabel}</div>
-          </div>
-        </div>
-        {user.id !== "u-1" && (
-          <button
-            type="button"
-            onClick={handleMessage}
-            className="flex items-center gap-1.5 h-8 px-3 rounded-md text-sm border border-border hover:bg-accent transition-colors shrink-0"
-          >
-            <MessageSquare className="h-3.5 w-3.5" />
-            {t("team.directMessage")}
-          </button>
-        )}
-      </div>
-
-      <div className="px-6 space-y-6">
-        <section>
-          <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            {t("team.userProfile")}
-          </h2>
-          <div className="rounded-lg border border-border p-4 space-y-3">
-            <div className="flex items-center gap-3 text-sm">
-              <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-              <span className="text-muted-foreground w-24 shrink-0">Email</span>
-              <span className="truncate">{user.email}</span>
-            </div>
-            <div className="flex items-center gap-3 text-sm">
-              <span className="h-4 w-4 shrink-0" />
-              <span className="text-muted-foreground w-24 shrink-0">
-                {user.role === "owner" ? t("team.role.owner") : t("team.role.member")}
-              </span>
-              <span className="capitalize">{user.role}</span>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg font-semibold truncate">{user.name}</h1>
+                {user.role === "owner" && (
+                  /* Owner = link-blue emphasis (brand primary on brand-subtle
+                     wash) so the role reads as an accent, not disabled text. */
+                  <span className="text-[10px] font-semibold uppercase tracking-wide text-brand-primary bg-brand-subtle px-1.5 py-0.5 rounded">
+                    Owner
+                  </span>
+                )}
+              </div>
+              {/* Presence line: dot + label, directly under the name. The
+                  dot keeps a `role="status"` + `aria-label` so assistive
+                  tech still reads the state even when paired with text. */}
+              <div className="mt-1 flex items-center gap-1.5">
+                <span
+                  role="status"
+                  aria-label={statusLabel}
+                  className={cn("h-2 w-2 rounded-full", statusDot)}
+                />
+                <span className="text-xs text-text-tertiary">{statusLabel}</span>
+              </div>
             </div>
           </div>
-        </section>
-
-        <section>
-          <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            {t("team.userChannels")}
-          </h2>
-          {userChannels.length === 0 ? (
-            <div className="rounded-lg border border-border p-6 text-center text-sm text-muted-foreground">
-              —
-            </div>
-          ) : (
-            <div className="rounded-lg border border-border divide-y divide-border">
-              {userChannels.map((c) => (
-                <button
-                  type="button"
-                  key={c.id}
-                  onClick={() => navigate(`/chat/${c.id}`)}
-                  className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-accent/50 transition-colors"
-                >
-                  <Hash className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                  <span className="truncate">{c.name}</span>
-                </button>
-              ))}
-            </div>
+          {user.id !== "u-1" && (
+            <button
+              type="button"
+              onClick={handleMessage}
+              className="flex items-center gap-1.5 h-8 px-3 rounded-md text-sm border border-border hover:bg-surface-2 transition-colors shrink-0"
+            >
+              <MessageSquare className="h-3.5 w-3.5" />
+              Direct message
+            </button>
           )}
-        </section>
+        </div>
+
+        <div className="space-y-6">
+          <section>
+            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+              Profile
+            </h2>
+            <div className="rounded-lg border border-border p-4 space-y-3">
+              <div className="flex items-center gap-3 text-sm">
+                <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
+                <span className="text-muted-foreground w-24 shrink-0">Email</span>
+                <span className="truncate">{user.email}</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm">
+                <span className="h-4 w-4 shrink-0" />
+                <span className="text-muted-foreground w-24 shrink-0">Role</span>
+                <span className="capitalize">{user.role}</span>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+              Channels
+            </h2>
+            {userChannels.length === 0 ? (
+              <div className="rounded-lg border border-border p-6 text-center text-sm text-muted-foreground">
+                —
+              </div>
+            ) : (
+              <div className="rounded-lg border border-border divide-y divide-border">
+                {userChannels.map((c) => (
+                  <button
+                    type="button"
+                    key={c.id}
+                    onClick={() => navigate(`/chat/${c.id}`)}
+                    className="flex items-center gap-2 w-full px-4 py-2.5 text-sm hover:bg-surface-2 transition-colors"
+                  >
+                    <Hash className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                    <span className="truncate">{c.name}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
       </div>
     </div>
   );

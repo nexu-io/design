@@ -136,6 +136,20 @@ export type ContentBlock =
       steps?: { label: string; status: "done" | "active" | "pending" }[];
     }
   | {
+      /**
+       * Agent work-run: a single collapsible module that wraps a sequence of
+       * work artifacts (code, diffs, actions, tool results, progress) produced
+       * by one agent as it executes a task. Default render shows only the
+       * last/current step; earlier steps collapse behind a "Show N earlier
+       * steps" toggle so the chat stays quiet. Approval / review blocks are
+       * intentionally NOT allowed inside a run — they need their own card
+       * outside this container so they still interrupt the reader.
+       */
+      type: "agent-run";
+      id: string;
+      steps: AgentRunStep[];
+    }
+  | {
       type: "topic";
       id: string;
       title: string;
@@ -146,7 +160,50 @@ export type ContentBlock =
       participants: string[];
       preview?: string;
       assignee?: { name: string; isAgent?: boolean; accent?: string };
+      /**
+       * Conversation under this topic — the reply thread that will be
+       * surfaced in the right-side topic detail panel (deferred to a later
+       * release on `feature/chat-tabs-and-topic-panel`). Kept on the type
+       * today so mock data stays valid and the feature branch merges
+       * cleanly. The shape is pre-baked for mocks: `createdAtLabel` is
+       * already the display string ("2 min ago") instead of a timestamp,
+       * since this mock data doesn't drive any time-sensitive logic.
+       */
+      thread?: TopicThreadMessage[];
     };
+
+/**
+ * One item inside an `agent-run` block. Each step wraps a work artifact
+ * (code / diff / action / tool-result / progress) and optionally a short
+ * description rendered above it — typically the lead-in sentence the agent
+ * would otherwise say in chat ("On it…", "Wiring it into the billing client…").
+ * We intentionally narrow the block union here so callers can't smuggle
+ * approval or topic cards inside a run; those belong at the message level.
+ */
+export interface AgentRunStep {
+  id: string;
+  description?: string;
+  block: Extract<
+    ContentBlock,
+    | { type: "code" }
+    | { type: "diff" }
+    | { type: "action" }
+    | { type: "tool-result" }
+    | { type: "progress" }
+  >;
+}
+
+export interface TopicThreadMessage {
+  id: string;
+  author: string;
+  initials: string;
+  isAgent?: boolean;
+  accent?: string;
+  createdAtLabel: string;
+  text?: string;
+  image?: { url: string; alt?: string; width?: number; height?: number };
+  link?: { url: string; title: string; description?: string; host?: string };
+}
 
 export interface Message {
   id: string;

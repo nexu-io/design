@@ -47,7 +47,7 @@ export function AgentsView(): React.ReactElement {
           return (
             <div
               key={agent.id}
-              className="rounded-xl border border-border p-4 hover:bg-accent/30 transition-colors"
+              className="rounded-xl border border-border p-4 hover:bg-surface-2 transition-colors"
             >
               <div className="flex items-start gap-3">
                 <img src={agent.avatar} alt="" className="h-10 w-10 rounded-xl" />

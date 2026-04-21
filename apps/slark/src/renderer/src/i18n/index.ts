@@ -100,7 +100,6 @@ const en = {
   "chat.pinned": "Pinned",
   "chat.channels": "Channels",
   "chat.directMessages": "Direct Messages",
-  "chat.addChannels": "Add channels",
   "chat.inviteMembers": "Invite Members",
   "chat.createChannel": "Create channel",
   "chat.channelLimitReached": "Channel limit reached ({count}/20)",
