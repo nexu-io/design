@@ -30,8 +30,13 @@ const buttonVariants = cva(
         md: "h-10 rounded-xl px-4 py-2 font-semibold",
         lg: "h-12 rounded-xl px-6 text-lg font-semibold shadow-sm hover:shadow-lg hover:shadow-accent/20",
         inline: "h-auto px-0",
-        icon: "size-10 p-0",
-        "icon-sm": "size-6 p-0",
+        /* Icon sizes pin `rounded-md` (8px) — the base `rounded-lg`
+           (12px per tokens) would land at exactly half the `icon-sm`
+           width (24px) and render a perfect circle on hover. Controls
+           live at `--radius-md` per the design spec; only cards / panels
+           use the larger `rounded-lg` radius. */
+        icon: "size-10 rounded-md p-0",
+        "icon-sm": "size-6 rounded-md p-0",
       },
     },
     defaultVariants: {
