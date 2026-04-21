@@ -4,12 +4,13 @@ import * as React from "react";
 import { cn } from "../lib/cn";
 
 /**
- * A synthetic waveform used when the caller does not supply one; stable heights
- * so the visual rhythm is consistent across renders. Values are tuned for a
- * compact `h-5` (20px) bar container — keep custom waveforms in roughly the
- * 2–16 range to avoid overflowing the row.
+ * A synthetic waveform used when the caller does not supply one. The waveform
+ * is intentionally decorative — stable heights, low visual weight — so it
+ * reads as "there is audio here" without competing with the message text.
+ * Values are tuned for a compact `h-4` (16px) bar container; keep custom
+ * waveforms in roughly the 1–10 range to avoid overflowing the row.
  */
-const DEFAULT_WAVEFORM = [2, 4, 6, 9, 5, 8, 12, 14, 11, 7, 9, 13, 12, 5, 8, 4, 9, 7, 3, 5];
+const DEFAULT_WAVEFORM = [1, 2, 3, 5, 3, 4, 6, 7, 6, 4, 5, 7, 6, 3, 4, 2, 5, 4, 2, 3];
 
 export interface VoiceMessageProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Formatted duration label, e.g. "0:24". */
@@ -83,7 +84,7 @@ export const VoiceMessage = React.forwardRef<HTMLDivElement, VoiceMessageProps>(
               <Play className="ml-0.5 size-3.5 fill-current" />
             </button>
             <div
-              className="flex h-5 flex-1 items-center gap-[2px]"
+              className="flex h-4 flex-1 items-center gap-[2px]"
               aria-hidden
               data-slot="voice-message-waveform"
             >
@@ -91,10 +92,10 @@ export const VoiceMessage = React.forwardRef<HTMLDivElement, VoiceMessageProps>(
                 <span
                   key={`${index}-${height}`}
                   className={cn(
-                    "w-[3px] rounded-full",
-                    state === "playing" ? "bg-text-primary" : "bg-text-muted",
+                    "w-[2px] rounded-full",
+                    state === "playing" ? "bg-text-secondary" : "bg-text-muted",
                   )}
-                  style={{ height: `${height + 3}px` }}
+                  style={{ height: `${height + 2}px` }}
                 />
               ))}
             </div>
