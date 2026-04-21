@@ -72,6 +72,10 @@ jobs:
         if: steps.changesets.outputs.has_changesets == 'true'
         run: pnpm version:packages
 
+      - name: Format versioned files
+        if: steps.changesets.outputs.has_changesets == 'true'
+        run: pnpm format
+
       - name: Create release PR
         if: steps.changesets.outputs.has_changesets == 'true'
         uses: peter-evans/create-pull-request@v8
