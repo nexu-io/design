@@ -22,9 +22,15 @@ body,
   --slark-color-nexu-primary: oklch(0.65 0.2 260);
   --slark-color-nexu-agent: oklch(0.7 0.18 160);
   --slark-color-nexu-runtime: oklch(0.75 0.15 55);
+  /* User presence tokens — the app standardises on three states:
+     online (green), away (yellow, also used for DND), offline (gray).
+     `nexu-busy` stays around for legacy / agent-status call sites that
+     want a warmer "working / DND" hue; new code should prefer one of
+     the three user-presence tokens above. */
   --slark-color-nexu-online: oklch(0.72 0.19 145);
+  --slark-color-nexu-away: oklch(0.82 0.16 90);
   --slark-color-nexu-busy: oklch(0.7 0.2 30);
-  --slark-color-nexu-offline: oklch(0.55 0 0);
+  --slark-color-nexu-offline: oklch(0.65 0 0);
 
   --slark-color-nav: var(--color-surface-1);
   --slark-color-nav-surface: var(--color-surface-2);
@@ -53,6 +59,7 @@ body,
   --color-nexu-agent: var(--slark-color-nexu-agent);
   --color-nexu-runtime: var(--slark-color-nexu-runtime);
   --color-nexu-online: var(--slark-color-nexu-online);
+  --color-nexu-away: var(--slark-color-nexu-away);
   --color-nexu-busy: var(--slark-color-nexu-busy);
   --color-nexu-offline: var(--slark-color-nexu-offline);
 
