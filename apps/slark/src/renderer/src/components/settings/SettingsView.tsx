@@ -182,12 +182,11 @@ function WorkspaceTab({
   return (
     <section className="space-y-4">
       <Card variant="outline" padding="lg">
-        <CardHeader>
-          <CardTitle className="text-[16px] text-text-heading">Workspace details</CardTitle>
-          <CardDescription>
-            Keep your workspace identity up to date and invite teammates into the shared space.
-          </CardDescription>
-        </CardHeader>
+        {/* The card-level "Workspace details" header + description was
+            dropped — the PageHeader already reads "Workspace settings"
+            and the form fields below are self-describing. Repeating a
+            second heading inside the very next card just pushed the
+            actual inputs down with no added information. */}
         <CardContent className="space-y-5">
           <FormField label="Workspace name">
             <FormFieldControl>

@@ -1,8 +1,7 @@
 import { Button, cn } from "@nexu-design/ui-web";
-import { Paperclip, Send } from "lucide-react";
+import { ArrowUp, Paperclip, Square } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { useT } from "@/i18n";
 import { getRandomAgentResponse, mockAgents } from "@/mock/data";
 import { useChatStore } from "@/stores/chat";
 import type { Channel, MemberRef, Message } from "@/types";
@@ -14,6 +13,12 @@ interface MessageInputProps {
   channel: Channel;
 }
 
+/*
+ * Match the line-box so the placeholder appears vertically centered at rest.
+ * 13px text × 1.5 line-height ≈ 20px; doubled 8px vertical padding = 36px
+ * total, which becomes the textarea's collapsed height without any extra
+ * space above or below the caret.
+ */
 const MIN_HEIGHT = 36;
 const MAX_HEIGHT = 150;
 
@@ -22,7 +27,6 @@ export function MessageInput({
   isDmWithAgent,
   channel,
 }: MessageInputProps): React.ReactElement {
-  const t = useT();
   const [text, setText] = useState("");
   const [showMentions, setShowMentions] = useState(false);
   const [mentionQuery, setMentionQuery] = useState("");
@@ -32,6 +36,14 @@ export function MessageInput({
   const updateMessage = useChatStore((s) => s.updateMessage);
   const pendingDraft = useChatStore((s) => s.pendingDraft);
   const setPendingDraft = useChatStore((s) => s.setPendingDraft);
+
+  /*
+   * Any in-flight agent reply in this channel flips the composer button
+   * from "send" to "stop" (Cursor-style). Selecting on the derived boolean
+   * avoids re-rendering the composer on every token tick — we only care
+   * about the transition true→false.
+   */
+  const isStreaming = useChatStore((s) => (s.messages[channelId] ?? []).some((m) => m.isStreaming));
 
   useEffect(() => {
     if (pendingDraft) {
@@ -71,6 +83,15 @@ export function MessageInput({
 
         let idx = 0;
         const tick = (): void => {
+          /*
+           * Cooperative cancellation: the "stop" button flips this message's
+           * isStreaming to false externally. Each tick re-reads the store
+           * and bails early if the flag has flipped, so further tokens
+           * stop being appended.
+           */
+          const current = useChatStore.getState().messages[channelId]?.find((m) => m.id === msgId);
+          if (!current?.isStreaming) return;
+
           const chunk = Math.floor(Math.random() * 2) + 1;
           idx = Math.min(idx + chunk, tokens.length);
           updateMessage(channelId, msgId, {
@@ -131,6 +152,17 @@ export function MessageInput({
     adjustHeight(textareaRef.current);
   };
 
+  const handleStop = (): void => {
+    // Flip every streaming message in this channel to done; each token-tick
+    // worker will notice on its next iteration and exit (see `tick` above).
+    const messages = useChatStore.getState().messages[channelId] ?? [];
+    for (const msg of messages) {
+      if (msg.isStreaming) {
+        updateMessage(channelId, msg.id, { isStreaming: false });
+      }
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent): void => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -167,6 +199,9 @@ export function MessageInput({
   };
 
   const hasText = text.trim().length > 0;
+  const sendEnabled = hasText || isStreaming;
+  const placeholder =
+    channel.type === "dm" ? `Message ${channel.name}` : `Message #${channel.name}`;
 
   return (
     <div className="relative px-4 pb-4">
@@ -190,7 +225,7 @@ export function MessageInput({
 
       <div
         className={cn(
-          "flex items-center gap-1 rounded-lg border bg-surface-0 px-2 py-1 transition-colors",
+          "flex items-center gap-2 rounded-lg border bg-surface-0 px-2 py-1 transition-colors",
           isFocused ? "border-accent ring-2 ring-accent/20" : "border-input",
         )}
       >
@@ -201,29 +236,54 @@ export function MessageInput({
           onKeyDown={handleKeyDown}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          placeholder={
-            channel.type === "dm"
-              ? t("chat.messagePerson", { name: channel.name })
-              : t("chat.messageChannel")
-          }
+          placeholder={placeholder}
           rows={1}
-          className="flex-1 resize-none bg-transparent px-1.5 py-1.5 text-[13px] leading-[1.5] text-text-primary placeholder:text-text-muted focus:outline-none"
+          /*
+           * py-2 matches the 20px line-box so the placeholder sits visually
+           * centered in a 36px collapsed composer. Earlier py-1.5 made the
+           * placeholder float above center because the line-box was shorter
+           * than the min-height. Left/right stay at px-1.5 for a subtle
+           * inset against the border.
+           */
+          className="flex-1 resize-none bg-transparent px-1.5 py-2 text-[13px] leading-[1.5] text-text-primary placeholder:text-text-muted focus:outline-none"
         />
-        <div className="flex shrink-0 items-center gap-0.5">
+        <div className="flex shrink-0 items-center gap-2">
           <Button type="button" variant="ghost" size="icon-sm" aria-label="Attach" title="Attach">
             <Paperclip className="size-4" />
           </Button>
-          <Button
+          {/*
+           * Send / Stop button — Cursor-style single affordance that flips
+           * icon + handler based on whether an agent reply is currently
+           * streaming. Three visual states:
+           *   - disabled (no text, nothing streaming): surface-3 fill, muted
+           *     arrow — reads as "nothing to send".
+           *   - enabled (has text):              accent (near-black) fill, white arrow up.
+           *   - streaming:                       accent fill, white stop square.
+           * All three use the same circular 28px footprint so the composer
+           * baseline never shifts when the state changes.
+           */}
+          <button
             type="button"
-            variant="ghost"
-            size="icon-sm"
-            onClick={handleSend}
-            disabled={!hasText}
-            aria-label="Send"
-            className={cn(hasText && "text-brand-primary hover:text-brand-primary")}
+            onClick={isStreaming ? handleStop : handleSend}
+            disabled={!sendEnabled}
+            aria-label={isStreaming ? "Stop generating" : "Send"}
+            title={isStreaming ? "Stop generating" : "Send"}
+            className={cn(
+              "flex size-7 shrink-0 items-center justify-center rounded-full transition-colors",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+              /* Near-black primary fill — matches Button's `default` variant.
+                 Reserve the teal `--accent` for links / focus, never primary CTA. */
+              sendEnabled
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                : "bg-surface-3 text-text-muted cursor-not-allowed",
+            )}
           >
-            <Send className="size-4" />
-          </Button>
+            {isStreaming ? (
+              <Square className="size-3 fill-current" strokeWidth={0} />
+            ) : (
+              <ArrowUp className="size-4" strokeWidth={2.5} />
+            )}
+          </button>
         </div>
       </div>
     </div>

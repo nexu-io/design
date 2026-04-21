@@ -85,7 +85,18 @@ export const TopicCard = React.forwardRef<HTMLButtonElement, TopicCardProps>(
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           archived
             ? "border-border-subtle bg-surface-1 opacity-70 hover:opacity-100"
-            : "border-border bg-surface-1 hover:border-border-hover hover:shadow-sm",
+            : [
+                // Topics are one visual tier above chat messages. A light
+                // brand-tinted border (no fill) signals "persistent thread
+                // worth tracking" without competing with the status pill
+                // inside — the pill (active / needs-review / blocked / done)
+                // is what carries semantic color, and flooding every card
+                // with a brand wash dilutes that signal. Hover deepens the
+                // border and lifts the card via shadow + a neutral surface-1
+                // fill so the affordance is unmistakable.
+                "border-brand-primary/20 bg-surface-1",
+                "hover:border-brand-primary/40 hover:shadow-sm",
+              ],
           className,
         )}
         {...rest}

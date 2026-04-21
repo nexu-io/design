@@ -144,7 +144,11 @@ export function Sidebar(): React.ReactElement {
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : currentSection ? (
+        ) : currentSection && !location.pathname.startsWith("/runtimes") ? (
+          /* The runtimes panel owns its own header row (label + online
+             count on a single line) so we skip the generic label here
+             — otherwise the label sits at a different indent than the
+             content below it. */
           <div className="mt-1 px-1.5 text-[11px] font-medium uppercase tracking-wider text-nav-muted">
             {t(currentSection.labelKey)}
           </div>

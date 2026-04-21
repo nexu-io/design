@@ -87,8 +87,8 @@ export function App(): React.ReactElement {
         ) : (
           <Routes>
             <Route element={<AppLayout />}>
-              <Route path="/" element={<Navigate to="/chat/ch-welcome" replace />} />
-              <Route path="/chat" element={<Navigate to="/chat/ch-welcome" replace />} />
+              <Route path="/" element={<Navigate to="/chat/ch-showcase" replace />} />
+              <Route path="/chat" element={<Navigate to="/chat/ch-showcase" replace />} />
               <Route path="/chat/:channelId" element={<ChatView />} />
               <Route path="/agents" element={<AgentsView />} />
               <Route path="/agents/:memberId" element={<MemberDetailRoute />} />
@@ -98,7 +98,7 @@ export function App(): React.ReactElement {
               <Route path="/settings/profile" element={<SettingsView />} />
             </Route>
             <Route path="/invite/:token" element={<InviteLandingPage />} />
-            <Route path="*" element={<Navigate to="/chat/ch-welcome" replace />} />
+            <Route path="*" element={<Navigate to="/chat/ch-showcase" replace />} />
           </Routes>
         )}
         <DevPanel />

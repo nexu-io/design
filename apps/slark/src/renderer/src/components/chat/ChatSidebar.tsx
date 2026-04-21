@@ -125,7 +125,7 @@ export function ChatSidebar(): React.ReactElement {
           size="inline"
           onClick={() => handleSelect(c.id)}
           className={cn(
-            "flex items-center gap-2 w-full pl-3 pr-2 py-[5px] text-[13px] transition-colors",
+            "flex items-center gap-2.5 w-full rounded-md pl-2 pr-2 py-2 text-[13px] transition-colors",
             isActive
               ? "bg-nav-active text-nav-active-fg font-semibold"
               : unread
@@ -134,17 +134,17 @@ export function ChatSidebar(): React.ReactElement {
           )}
         >
           {isChannel ? (
-            <Globe className="h-4 w-4 shrink-0 opacity-90" />
+            <Globe className="h-3.5 w-3.5 shrink-0 opacity-90" />
           ) : resolved ? (
-            <img src={resolved.avatar} alt="" className="h-4 w-4 rounded-full shrink-0" />
+            <img src={resolved.avatar} alt="" className="h-3.5 w-3.5 rounded-full shrink-0" />
           ) : (
-            <Hash className="h-4 w-4 shrink-0" />
+            <Hash className="h-3.5 w-3.5 shrink-0" />
           )}
           <span className="truncate flex-1 text-left">{label}</span>
           {unread ? (
             <span
               className={cn(
-                "ml-auto flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand-primary text-accent-fg text-[10px] font-semibold px-1.5",
+                "ml-auto flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-primary text-accent-fg text-[10px] font-semibold px-1",
                 opts?.showDelete && "group-hover/item:hidden",
               )}
             >
@@ -173,59 +173,50 @@ export function ChatSidebar(): React.ReactElement {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-3 pb-2">
+      <div className="px-2 pb-2">
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={t("chat.search")}
           leadingIcon={<Search className="h-3.5 w-3.5 text-nav-muted" />}
-          className="h-8 border-transparent bg-nav-input text-nav-fg shadow-none focus-within:border-transparent focus-within:ring-1 focus-within:ring-nav-ring"
+          className="h-8 border-border-subtle bg-nav-input text-nav-fg shadow-none focus-within:border-transparent focus-within:ring-1 focus-within:ring-nav-ring"
           inputClassName="text-[13px] placeholder:text-nav-muted"
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto pb-2 space-y-1">
+      <div className="flex-1 overflow-y-auto px-2 pb-2">
         {pinnedChannels.length > 0 && (
           <div>
-            <div className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
-              <Pin className="h-3 w-3" />
-              <span className="flex-1">{t("chat.pinned")}</span>
+            <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+              <Pin className="h-3.5 w-3.5" />
+              <span className="flex-1">Pinned</span>
             </div>
-            {pinnedChannels.map((c) => renderRow(c))}
+            <div className="space-y-0.5">{pinnedChannels.map((c) => renderRow(c))}</div>
           </div>
         )}
 
         <div>
-          <div className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
-            <span className="flex-1">{t("chat.channels")}</span>
+          <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+            <span className="flex-1">Channels</span>
             <Button
               type="button"
               variant="ghost"
               size="icon-sm"
               onClick={() => setCreateOpen(true)}
               disabled={atLimit}
-              className="h-4 w-4 rounded p-0 text-nav-muted hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+              className="h-6 w-6 rounded-md p-0 text-nav-muted hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
               title={
                 atLimit
                   ? t("chat.channelLimitReached", { count: String(channelCount) })
                   : t("chat.createChannel")
               }
             >
-              <Plus className="h-3 w-3" />
+              <Plus className="h-3.5 w-3.5" />
             </Button>
           </div>
-          {channelList.map((c) => renderRow(c, { showDelete: true }))}
-          <Button
-            type="button"
-            variant="ghost"
-            size="inline"
-            onClick={() => !atLimit && setCreateOpen(true)}
-            disabled={atLimit}
-            leadingIcon={<Plus className="h-4 w-4 shrink-0" />}
-            className="h-auto w-full justify-start rounded-none px-0 pl-3 pr-2 py-[5px] text-[13px] font-normal text-nav-muted hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
-          >
-            <span>{t("chat.addChannels")}</span>
-          </Button>
+          <div className="space-y-0.5">
+            {channelList.map((c) => renderRow(c, { showDelete: true }))}
+          </div>
         </div>
       </div>
 
@@ -250,7 +241,7 @@ export function ChatSidebar(): React.ReactElement {
                 togglePin(menu.channel.id);
                 closeCtx();
               }}
-              className="flex items-center gap-2 w-full px-3 py-1.5 text-sm text-left hover:bg-accent transition-colors"
+              className="flex items-center gap-2 w-full px-3 py-1.5 text-sm text-left hover:bg-surface-2 transition-colors"
             >
               {pinnedSet.has(menu.channel.id) ? (
                 <>
@@ -279,14 +270,10 @@ export function ChatSidebar(): React.ReactElement {
         onOpenChange={(open) => {
           if (!open) setDeleteTarget(null);
         }}
-        title={
-          deleteTarget
-            ? t("chat.deleteChannelTitle", { name: deleteTarget.name })
-            : t("chat.deleteChannel")
-        }
-        description={t("chat.deleteChannelDesc")}
-        confirmLabel={t("common.delete")}
-        cancelLabel={t("common.cancel")}
+        title={deleteTarget ? `Delete #${deleteTarget.name}?` : "Delete channel"}
+        description="This will permanently delete the channel and all its messages. This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
         confirmVariant="destructive"
         onConfirm={handleDeleteConfirm}
       />
