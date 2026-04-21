@@ -13,6 +13,7 @@ import { ChatView } from "@/components/chat/ChatView";
 import { AgentsView } from "@/components/agents/AgentsView";
 import { AgentDetail } from "@/components/agents/AgentDetail";
 import { UserDetail } from "@/components/agents/UserDetail";
+import { RoutinesView } from "@/components/routines/RoutinesView";
 import { RuntimesView } from "@/components/runtimes/RuntimesView";
 import { SettingsView } from "@/components/settings/SettingsView";
 import { InviteLandingPage } from "@/components/invite/InviteLandingPage";
@@ -93,6 +94,8 @@ export function App(): React.ReactElement {
               <Route path="/agents" element={<AgentsView />} />
               <Route path="/agents/:memberId" element={<MemberDetailRoute />} />
               <Route path="/runtimes" element={<RuntimesView />} />
+              <Route path="/routines" element={<RoutinesView />} />
+              <Route path="/routines/:routineId" element={<RoutinesView />} />
               <Route path="/settings" element={<SettingsView />} />
               <Route path="/settings/appearance" element={<SettingsView />} />
               <Route path="/settings/profile" element={<SettingsView />} />
