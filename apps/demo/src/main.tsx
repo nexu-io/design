@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, HashRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
+import { AppErrorBoundary } from "./app/app-error-boundary";
 
 configureOpenExternal(async (url) => {
   try {
@@ -35,13 +36,15 @@ const Router = shouldUseHashRouter() ? HashRouter : BrowserRouter;
 
 createRoot(root).render(
   <StrictMode>
-    <Router>
-      <LocaleProvider>
-        <TooltipProvider delayDuration={300} skipDelayDuration={100}>
-          <App />
-          <Toaster position="top-center" />
-        </TooltipProvider>
-      </LocaleProvider>
-    </Router>
+    <AppErrorBoundary>
+      <Router>
+        <LocaleProvider>
+          <TooltipProvider delayDuration={300} skipDelayDuration={100}>
+            <App />
+            <Toaster position="top-center" />
+          </TooltipProvider>
+        </LocaleProvider>
+      </Router>
+    </AppErrorBoundary>
   </StrictMode>,
 );
