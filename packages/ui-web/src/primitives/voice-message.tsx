@@ -1,13 +1,15 @@
-import { Captions, Play, Volume2 } from "lucide-react";
+import { ChevronDown, Play, Volume2 } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "../lib/cn";
 
 /**
  * A synthetic waveform used when the caller does not supply one; stable heights
- * so the visual rhythm is consistent across renders.
+ * so the visual rhythm is consistent across renders. Values are tuned for a
+ * compact `h-5` (20px) bar container — keep custom waveforms in roughly the
+ * 2–16 range to avoid overflowing the row.
  */
-const DEFAULT_WAVEFORM = [3, 6, 10, 14, 8, 12, 18, 22, 16, 10, 14, 20, 18, 8, 12, 6, 14, 10, 4, 8];
+const DEFAULT_WAVEFORM = [2, 4, 6, 9, 5, 8, 12, 14, 11, 7, 9, 13, 12, 5, 8, 4, 9, 7, 3, 5];
 
 export interface VoiceMessageProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Formatted duration label, e.g. "0:24". */
@@ -60,68 +62,73 @@ export const VoiceMessage = React.forwardRef<HTMLDivElement, VoiceMessageProps>(
       <div
         ref={ref}
         data-slot="voice-message"
-        className={cn(
-          "group/voice flex w-[360px] max-w-full flex-col gap-2 rounded-lg border border-border bg-surface-1 px-3 py-2.5",
-          className,
-        )}
+        className={cn("flex w-[360px] max-w-full flex-col items-start gap-1.5", className)}
         {...props}
       >
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={onPlay}
-            aria-label={state === "playing" ? "Pause voice note" : "Play voice note"}
-            className={cn(
-              "flex size-8 shrink-0 items-center justify-center rounded-full transition-colors",
-              "bg-surface-2 text-text-primary hover:bg-accent hover:text-accent-fg",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-            )}
-          >
-            <Play className="ml-0.5 size-3.5 fill-current" />
-          </button>
-          <div
-            className="flex h-7 flex-1 items-end gap-[2px]"
-            aria-hidden
-            data-slot="voice-message-waveform"
-          >
-            {waveform.map((height, index) => (
-              <span
-                key={`${index}-${height}`}
-                className={cn(
-                  "w-[3px] rounded-full",
-                  state === "playing" ? "bg-text-primary" : "bg-text-muted",
-                )}
-                style={{ height: `${height + 6}px` }}
-              />
-            ))}
-          </div>
-          {hasTranscript ? (
+        <div
+          data-slot="voice-message-card"
+          className="w-full rounded-lg border border-border bg-surface-1 px-3 py-2.5"
+        >
+          <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => setTranscriptOpen((prev) => !prev)}
-              aria-label={toggleLabel}
-              aria-expanded={transcriptOpen}
-              data-slot="voice-message-transcript-toggle"
+              onClick={onPlay}
+              aria-label={state === "playing" ? "Pause voice note" : "Play voice note"}
               className={cn(
-                "flex size-6 shrink-0 items-center justify-center rounded-md transition-all",
-                "focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
-                transcriptOpen
-                  ? "bg-surface-2 text-text-primary opacity-100"
-                  : "text-text-muted opacity-0 hover:bg-surface-2 hover:text-text-primary group-hover/voice:opacity-100",
+                "flex size-8 shrink-0 items-center justify-center rounded-full transition-transform duration-200",
+                "bg-surface-2 text-text-primary hover:scale-110",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
               )}
             >
-              <Captions className="size-3.5" />
+              <Play className="ml-0.5 size-3.5 fill-current" />
             </button>
+            <div
+              className="flex h-5 flex-1 items-center gap-[2px]"
+              aria-hidden
+              data-slot="voice-message-waveform"
+            >
+              {waveform.map((height, index) => (
+                <span
+                  key={`${index}-${height}`}
+                  className={cn(
+                    "w-[3px] rounded-full",
+                    state === "playing" ? "bg-text-primary" : "bg-text-muted",
+                  )}
+                  style={{ height: `${height + 3}px` }}
+                />
+              ))}
+            </div>
+            <span className="shrink-0 font-mono text-[11px] tabular-nums text-text-secondary">
+              {duration}
+            </span>
+          </div>
+          {hasTranscript && transcriptOpen ? (
+            <p className="mt-2 border-t border-border-subtle pt-2 text-[12px] leading-relaxed text-text-secondary">
+              <Volume2 className="mr-1 inline-block size-3 align-[-1px] text-text-muted" />
+              {transcript}
+            </p>
           ) : null}
-          <span className="shrink-0 font-mono text-[11px] tabular-nums text-text-secondary">
-            {duration}
-          </span>
         </div>
-        {hasTranscript && transcriptOpen ? (
-          <p className="border-t border-border-subtle pt-2 text-[12px] leading-relaxed text-text-secondary">
-            <Volume2 className="mr-1 inline-block size-3 align-[-1px] text-text-muted" />
-            {transcript}
-          </p>
+        {hasTranscript ? (
+          <button
+            type="button"
+            onClick={() => setTranscriptOpen((prev) => !prev)}
+            aria-expanded={transcriptOpen}
+            data-slot="voice-message-transcript-toggle"
+            className={cn(
+              "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-text-secondary transition-colors",
+              "hover:bg-surface-2 hover:text-text-primary",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+            )}
+          >
+            <ChevronDown
+              className={cn(
+                "size-3 transition-transform duration-200",
+                transcriptOpen ? "rotate-180" : "rotate-0",
+              )}
+            />
+            {toggleLabel}
+          </button>
         ) : null}
       </div>
     );
