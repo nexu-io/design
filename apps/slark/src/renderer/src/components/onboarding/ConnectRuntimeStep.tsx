@@ -1,4 +1,4 @@
-import { Button, cn } from "@nexu-design/ui-web";
+import { Button, RuntimeLogo, cn } from "@nexu-design/ui-web";
 import {
   AlertTriangle,
   ArrowRight,
@@ -98,17 +98,6 @@ interface DetectedRuntime {
   path?: string;
   error?: string;
 }
-
-const RUNTIME_BRANDS: Record<string, { label: string; color: string }> = {
-  "claude-code": { label: ">_", color: "#B45309" },
-  cursor: { label: "▸", color: "#171717" },
-  opencode: { label: "</>", color: "#059669" },
-  codex: { label: "◎", color: "#0369A1" },
-  "gemini-cli": { label: "✦", color: "#4285F4" },
-  hermes: { label: "H", color: "#EA580C" },
-  openclaw: { label: "⊞", color: "#7C3AED" },
-  pi: { label: "π", color: "#DB2777" },
-};
 
 const SCAN_DURATION = 3500;
 const STAGGER_DELAY = 400;
@@ -263,7 +252,6 @@ export function ConnectRuntimeStep(): React.ReactElement {
       {showTutorial && (
         <div className="grid grid-cols-4 gap-2.5 w-full max-w-2xl">
           {INSTALL_GUIDES.map((g) => {
-            const brand = RUNTIME_BRANDS[g.type];
             return (
               <a
                 key={g.type}
@@ -273,11 +261,8 @@ export function ConnectRuntimeStep(): React.ReactElement {
                 className="group flex flex-col gap-1.5 p-3 rounded-xl border border-border hover:border-muted-foreground/50 hover:bg-surface-2 transition-all text-left"
               >
                 <div className="flex items-center justify-between w-full">
-                  <div
-                    className="h-6 w-6 rounded-md flex items-center justify-center text-[10px] font-bold text-white shrink-0"
-                    style={{ backgroundColor: brand?.color ?? "#666" }}
-                  >
-                    {brand?.label ?? "?"}
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-border bg-surface-1">
+                    <RuntimeLogo runtime={g.type} size={14} className="text-text-heading" />
                   </div>
                   <ExternalLink className="h-3 w-3 text-muted-foreground opacity-60 group-hover:opacity-100 transition-opacity" />
                 </div>
@@ -298,7 +283,6 @@ export function ConnectRuntimeStep(): React.ReactElement {
             const isScanning = phase === "scanning" && !detected;
             const isError = detected && !!error;
             const isWorking = detected && !error;
-            const brand = RUNTIME_BRANDS[type];
             return (
               <Button
                 type="button"
@@ -318,11 +302,12 @@ export function ConnectRuntimeStep(): React.ReactElement {
                 )}
               >
                 <div className="flex items-center justify-between w-full">
-                  <div
-                    className="h-6 w-6 rounded-md flex items-center justify-center text-[10px] font-bold text-white shrink-0"
-                    style={{ backgroundColor: brand?.color ?? "#666" }}
-                  >
-                    {brand?.label ?? "?"}
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-border bg-surface-1">
+                    <RuntimeLogo
+                      runtime={type}
+                      size={14}
+                      className={cn(!detected ? "text-text-muted opacity-60" : "text-text-heading")}
+                    />
                   </div>
                   {isWorking && <Check className="h-3 w-3 text-nexu-online" />}
                   {isError && <AlertTriangle className="h-3 w-3 text-amber-500" />}
