@@ -22,7 +22,7 @@ concurrency:
 jobs:
   create-release-pr:
     name: Create release PR
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'version'
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'version' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -76,8 +76,8 @@ jobs:
         if: steps.changesets.outputs.has_changesets == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
-          base: ${{ github.ref_name }}
-          branch: changeset-release/${{ github.ref_name }}
+          base: main
+          branch: changeset-release/main
           commit-message: 'chore: version packages'
           title: 'chore: version packages'
           body: |
