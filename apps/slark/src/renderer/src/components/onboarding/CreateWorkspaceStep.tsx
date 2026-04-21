@@ -9,7 +9,7 @@ import {
   TextLink,
 } from "@nexu-design/ui-web";
 import { ArrowRight, Building2, Check, Loader2, LogIn } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { mockAgentTemplates, mockRuntimes } from "@/mock/data";
@@ -46,8 +46,6 @@ export function CreateWorkspaceStep(): React.ReactElement {
   }, [devSimulateNone, setGlobalRuntimes]);
 
   const detectedRuntimes = globalRuntimes.filter((r) => r.status === "connected");
-  const detectedSummary = useMemo(() => summarizeDetected(detectedRuntimes), [detectedRuntimes]);
-
   const canContinue = Boolean(name.trim()) && !scanning && !submitting;
 
   const handleContinue = (): void => {
@@ -77,9 +75,11 @@ export function CreateWorkspaceStep(): React.ReactElement {
       </div>
 
       <div className="text-center">
-        <h2 className="text-[22px] font-semibold text-text-heading">Name your workspace</h2>
+        <h2 className="text-[22px] font-semibold text-text-heading">
+          What should we call your team?
+        </h2>
         <p className="mt-1.5 text-[13px] text-text-secondary">
-          One step to get in. Invite teammates and pick agents from inside.
+          One step to get in. Invite teammates and agents from inside.
         </p>
       </div>
 
@@ -96,13 +96,11 @@ export function CreateWorkspaceStep(): React.ReactElement {
                   handleContinue();
                 }
               }}
-              placeholder="e.g. Acme Engineering"
+              placeholder="e.g. Design Ops AI Crew · My Digital Teammates"
               autoFocus
             />
           </FormFieldControl>
         </FormField>
-
-        <RuntimeScanRow scanning={scanning} summary={detectedSummary} runtimes={detectedRuntimes} />
 
         <div className="flex items-center justify-center gap-1.5 text-sm text-text-muted">
           <LogIn className="size-3" />
@@ -113,96 +111,87 @@ export function CreateWorkspaceStep(): React.ReactElement {
         </div>
       </div>
 
-      <Button
-        size="lg"
-        onClick={handleContinue}
-        disabled={!canContinue}
-        trailingIcon={<ArrowRight size={18} />}
-      >
-        Continue
-      </Button>
-
-      <p className="text-[11px] text-text-muted">~15 seconds to your first message.</p>
+      <div className="flex flex-col items-center gap-2">
+        <p className="text-[11px] text-text-muted">~15 seconds to your first message.</p>
+        <Button
+          size="lg"
+          onClick={handleContinue}
+          disabled={!canContinue}
+          trailingIcon={<ArrowRight size={18} />}
+        >
+          Continue
+        </Button>
+        <RuntimeStatusLight scanning={scanning} runtimes={detectedRuntimes} />
+      </div>
     </div>
   );
 }
 
-function RuntimeScanRow({
+function RuntimeStatusLight({
   scanning,
-  summary,
   runtimes,
 }: {
   scanning: boolean;
-  summary: string;
   runtimes: Runtime[];
 }): React.ReactElement {
   if (scanning) {
     return (
-      <div className="flex items-center gap-2 rounded-lg bg-surface-1 px-3 py-2.5">
-        <Loader2 className="size-3.5 shrink-0 animate-spin text-text-muted" />
-        <span className="text-sm text-text-secondary">Scanning your system for runtimes…</span>
-      </div>
+      <span className="inline-flex items-center gap-1.5 text-[11px] text-text-muted">
+        <Loader2 className="size-2.5 animate-spin" aria-hidden />
+        Scanning runtimes…
+      </span>
     );
   }
 
   if (runtimes.length === 0) {
     return (
-      <div className="flex items-center gap-2 rounded-lg bg-surface-1 px-3 py-2.5">
-        <span className="size-3.5 shrink-0 rounded-full border border-border" />
-        <span className="text-sm text-text-secondary">
-          No runtimes detected — you can install one after sign-in.
-        </span>
-      </div>
+      <span className="inline-flex items-center gap-1.5 text-[11px] text-text-muted">
+        <span className="size-1.5 rounded-full bg-text-muted/50" aria-hidden />
+        No runtimes yet — install one after sign-in.
+      </span>
     );
   }
 
-  return (
-    <div className="flex items-center gap-2 rounded-lg bg-surface-1 px-3 py-2.5">
-      <Check className="size-3.5 shrink-0 text-success" strokeWidth={3} />
-      <span className="flex-1 truncate text-sm text-text-secondary">{summary}</span>
-      <Popover>
-        <PopoverTrigger asChild>
-          <TextLink href="#" size="xs" className="shrink-0 text-sm">
-            Details
-          </TextLink>
-        </PopoverTrigger>
-        <PopoverContent align="end" className="w-[280px] p-0">
-          <div className="border-b border-border-subtle px-3 py-2">
-            <div className="text-[12px] font-semibold text-text-heading">Detected runtimes</div>
-            <div className="text-[11px] text-text-muted">
-              {runtimes.length} runtime{runtimes.length === 1 ? "" : "s"} ready
-            </div>
-          </div>
-          <ul className="max-h-[260px] divide-y divide-border-subtle overflow-y-auto">
-            {runtimes.map((rt) => (
-              <li key={rt.id} className="flex items-center gap-2 px-3 py-2">
-                <Check className="size-3 shrink-0 text-success" strokeWidth={3} />
-                <div className="min-w-0 flex-1">
-                  <div className="truncate text-[12px] font-medium text-text-primary">
-                    {rt.name}
-                  </div>
-                  {rt.version ? (
-                    <div className="truncate text-[11px] text-text-muted">v{rt.version}</div>
-                  ) : null}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
-}
-
-function summarizeDetected(runtimes: Runtime[]): string {
   const count = runtimes.length;
-  if (count === 0) return "";
-  const names = runtimes
-    .slice(0, 3)
-    .map((r) => r.name.replace(/\s*\(Local\)$/, ""))
-    .join(", ");
-  const rest = count > 3 ? ` +${count - 3} more` : "";
-  return `Detected ${count} runtime${count === 1 ? "" : "s"} on this Mac — ${names}${rest}`;
+  const label = `${count} runtime${count === 1 ? "" : "s"} ready`;
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex items-center gap-1.5 rounded-full px-1 text-[11px] text-text-muted transition-colors hover:text-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)]/30"
+          aria-label={`${label} — click to see details`}
+        >
+          <span className="size-1.5 rounded-full bg-success" aria-hidden />
+          {label}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="center" className="w-[280px] p-0">
+        <div className="border-b border-border-subtle px-3 py-2">
+          <div className="text-[12px] font-semibold text-text-heading">Detected runtimes</div>
+          <div className="text-[11px] text-text-muted">
+            Picked up in the background while you named the team
+          </div>
+        </div>
+        <ul className="max-h-[260px] divide-y divide-border-subtle overflow-y-auto">
+          {runtimes.map((rt) => (
+            <li key={rt.id} className="flex items-center gap-2 px-3 py-2">
+              <Check className="size-3 shrink-0 text-success" strokeWidth={3} />
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-[12px] font-medium text-text-primary">
+                  {rt.name.replace(/\s*\(Local\)$/, "")}
+                </div>
+                {rt.version ? (
+                  <div className="truncate text-[11px] text-text-muted">v{rt.version}</div>
+                ) : null}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </PopoverContent>
+    </Popover>
+  );
 }
 
 function mountDefaultAgent(runtimes: Runtime[], addAgent: (agent: Agent) => void): string | null {
