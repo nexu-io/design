@@ -51,7 +51,7 @@ export function AuthShell({
 
       <div
         className={cn(
-          "relative flex flex-1 flex-col overflow-hidden bg-surface-0",
+          "relative flex flex-1 flex-col overflow-y-auto bg-surface-0 [scrollbar-gutter:stable]",
           rail && "rounded-l-[12px]",
           contentClassName,
         )}

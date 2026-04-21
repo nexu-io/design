@@ -31,6 +31,7 @@ export interface FormFieldProps {
   invalid?: boolean;
   orientation?: "vertical" | "horizontal";
   className?: string;
+  labelClassName?: string;
   children: React.ReactNode;
 }
 
@@ -52,6 +53,7 @@ export function FormField({
   invalid = false,
   orientation = "vertical",
   className,
+  labelClassName,
   children,
 }: FormFieldProps) {
   const reactId = React.useId();
@@ -69,7 +71,11 @@ export function FormField({
           className,
         )}
       >
-        {label ? <FormFieldLabel required={required}>{label}</FormFieldLabel> : null}
+        {label ? (
+          <FormFieldLabel required={required} className={labelClassName}>
+            {label}
+          </FormFieldLabel>
+        ) : null}
         <div className="grid gap-2">
           <FormFieldControl>{children}</FormFieldControl>
           {description ? <FormFieldDescription>{description}</FormFieldDescription> : null}
