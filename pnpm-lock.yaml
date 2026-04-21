@@ -350,7 +350,7 @@ importers:
   packages/ui-web:
     dependencies:
       '@nexu-design/tokens':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.0.1
         version: link:../tokens
       '@radix-ui/react-avatar':
         specifier: ^1.1.10
