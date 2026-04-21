@@ -133,6 +133,36 @@ function ImageLogo({
   );
 }
 
+function MaskLogo({
+  src,
+  alt,
+  size,
+  className,
+  title,
+  ...props
+}: LogoProps & { src: string; alt: string }) {
+  return (
+    <LogoFrame size={size} className={className} title={title} {...props}>
+      <span
+        aria-label={title ?? alt}
+        role="img"
+        className="size-full"
+        style={{
+          backgroundColor: "currentColor",
+          WebkitMaskImage: `url("${src}")`,
+          maskImage: `url("${src}")`,
+          WebkitMaskPosition: "center",
+          maskPosition: "center",
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskSize: "contain",
+          maskSize: "contain",
+        }}
+      />
+    </LogoFrame>
+  );
+}
+
 const PROVIDER_ICON_ALIASES: Record<string, string> = {
   anthropic: "anthropic",
   "amazon-bedrock": "bedrock",
@@ -517,6 +547,12 @@ export function RuntimeLogo({ runtime, ...props }: LogoProps & { runtime: Runtim
   const modelIconKeyByRuntime: Partial<
     Record<string, keyof typeof CANONICAL_MODEL_ICON_DATA_URIS>
   > = {};
+  const monochromeRuntimeIconKeys = new Set<keyof typeof CANONICAL_RUNTIME_ICON_DATA_URIS>([
+    "cursor",
+    "inflection",
+    "nousresearch",
+    "opencode",
+  ]);
 
   const directIconKey = directIconKeyByRuntime[normalizedRuntime];
   const modelIconKey = modelIconKeyByRuntime[normalizedRuntime];
@@ -528,7 +564,13 @@ export function RuntimeLogo({ runtime, ...props }: LogoProps & { runtime: Runtim
       : null;
 
   if (src) {
-    return <ImageLogo src={src} alt={normalizedRuntime || runtime} {...props} />;
+    const alt = normalizedRuntime || runtime;
+
+    if (directIconKey && monochromeRuntimeIconKeys.has(directIconKey)) {
+      return <MaskLogo src={src} alt={alt} {...props} />;
+    }
+
+    return <ImageLogo src={src} alt={alt} {...props} />;
   }
 
   return (
