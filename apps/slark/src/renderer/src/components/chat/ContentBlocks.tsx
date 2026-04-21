@@ -1,4 +1,4 @@
-import type { ContentBlock } from "@/types";
+import type { AgentRunStep, ContentBlock } from "@/types";
 import {
   Button,
   FileAttachment,
@@ -534,6 +534,113 @@ function ProgressBlock({
   );
 }
 
+/**
+ * Renders a single work step (description + block) inside an agent-run.
+ * Kept local because the "step" concept only exists for agent-run grouping —
+ * promoting it to ContentBlockRenderer would widen the block union unnecessarily.
+ */
+function AgentRunStepRenderer({
+  step,
+  onExpand,
+}: {
+  step: AgentRunStep;
+  onExpand?: (block: ContentBlock) => void;
+}): React.ReactElement {
+  const handleExpand = (): void => onExpand?.(step.block);
+  let rendered: React.ReactElement;
+  switch (step.block.type) {
+    case "code":
+      rendered = <CodeBlock block={step.block} onExpand={handleExpand} />;
+      break;
+    case "diff":
+      rendered = <DiffBlock block={step.block} onExpand={handleExpand} />;
+      break;
+    case "action":
+      rendered = <ActionCard block={step.block} />;
+      break;
+    case "tool-result":
+      rendered = <ToolResultBlock block={step.block} />;
+      break;
+    case "progress":
+      rendered = <ProgressBlock block={step.block} />;
+      break;
+  }
+  return (
+    <div className="space-y-1.5">
+      {step.description ? (
+        <p className="text-[13px] leading-relaxed text-text-primary">{step.description}</p>
+      ) : null}
+      {rendered}
+    </div>
+  );
+}
+
+/**
+ * Agent-run container — consolidates a sequence of work artifacts produced by
+ * one agent into a single collapsible module so the chat stays quiet. Default
+ * view shows only the LAST step (the one currently in flight) expanded; the
+ * completed steps that led up to it live behind a "Show N earlier steps"
+ * toggle so readers who skimmed past earlier can still audit the trail.
+ *
+ * Approval / review blocks deliberately live OUTSIDE this container (see the
+ * `AgentRunStep["block"]` type — approval is not allowed in the narrowed
+ * union). That separation is load-bearing: a run summarizes what the agent
+ * did, an approval demands human attention, and folding the two together
+ * would hide the ask.
+ */
+function AgentRunBlock({
+  block,
+  onExpand,
+}: {
+  block: Extract<ContentBlock, { type: "agent-run" }>;
+  onExpand?: (block: ContentBlock) => void;
+}): React.ReactElement {
+  const [showEarlier, setShowEarlier] = useState(false);
+  const steps = block.steps;
+  const earlier = steps.slice(0, -1);
+  const current = steps[steps.length - 1];
+
+  return (
+    <div
+      data-slot="agent-run"
+      className="w-full max-w-[640px] rounded-xl border border-border-subtle bg-surface-1 p-3"
+    >
+      {earlier.length > 0 ? (
+        <div className="mb-3">
+          <button
+            type="button"
+            onClick={() => setShowEarlier((prev) => !prev)}
+            aria-expanded={showEarlier}
+            className={cn(
+              "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-text-secondary transition-colors",
+              "hover:bg-surface-2 hover:text-text-primary",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+            )}
+          >
+            <ChevronRight
+              className={cn(
+                "size-3 transition-transform duration-200",
+                showEarlier ? "rotate-90" : "rotate-0",
+              )}
+            />
+            {showEarlier
+              ? "Hide earlier steps"
+              : `Show ${earlier.length} earlier step${earlier.length > 1 ? "s" : ""}`}
+          </button>
+          {showEarlier ? (
+            <div className="mt-2 space-y-3 border-l-2 border-border-subtle pl-3">
+              {earlier.map((step) => (
+                <AgentRunStepRenderer key={step.id} step={step} onExpand={onExpand} />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+      {current ? <AgentRunStepRenderer step={current} onExpand={onExpand} /> : null}
+    </div>
+  );
+}
+
 export function ContentBlockRenderer({
   block,
   onApprovalAction,
@@ -565,6 +672,8 @@ export function ContentBlockRenderer({
       return <ApprovalBlock block={block} onAction={onApprovalAction} />;
     case "progress":
       return <ProgressBlock block={block} />;
+    case "agent-run":
+      return <AgentRunBlock block={block} onExpand={onExpand} />;
     case "topic":
       return (
         <TopicBlock block={block} onOpen={onTopicOpen ? () => onTopicOpen(block) : undefined} />

@@ -483,101 +483,90 @@ export const mockMessages: Record<string, Message[]> = {
       createdAt: NOW - 32 * MIN,
     },
     {
-      id: "sc-8",
+      /*
+       * Coder agent's work run — five sequential artifacts (code, diff,
+       * action, tool-result, progress) folded into a single `agent-run`
+       * block. The renderer shows the LAST step expanded ("Staging rollout"
+       * progress, still in flight) and tucks the four completed steps
+       * behind a "Show earlier steps" toggle so the chat stays quiet. The
+       * approval card that follows lives in its own message (sc-13) on
+       * purpose — it still needs to interrupt the reader.
+       */
+      id: "sc-agent-run-1",
       channelId: "ch-showcase",
       sender: agent1Ref,
-      content: "On it. Here's a first pass that honours the jitter policy from the spec:",
+      content: "",
       blocks: [
         {
-          type: "code",
-          language: "typescript",
-          filename: "retry.ts",
-          code: "export function exponentialBackoff(attempt: number, base = 200): number {\n  const ceiling = Math.min(base * 2 ** attempt, 30_000)\n  const jitter = Math.random() * ceiling * 0.2\n  return Math.floor(ceiling - jitter)\n}\n\nexport async function withRetry<T>(\n  fn: () => Promise<T>,\n  opts: { max?: number; base?: number } = {},\n): Promise<T> {\n  const { max = 5, base = 200 } = opts\n  let lastErr: unknown\n  for (let i = 0; i < max; i++) {\n    try {\n      return await fn()\n    } catch (err) {\n      lastErr = err\n      await sleep(exponentialBackoff(i, base))\n    }\n  }\n  throw lastErr\n}",
+          type: "agent-run",
+          id: "run-billing-retry",
+          steps: [
+            {
+              id: "step-retry-ts",
+              description:
+                "On it. Here's a first pass that honours the jitter policy from the spec:",
+              block: {
+                type: "code",
+                language: "typescript",
+                filename: "retry.ts",
+                code: "export function exponentialBackoff(attempt: number, base = 200): number {\n  const ceiling = Math.min(base * 2 ** attempt, 30_000)\n  const jitter = Math.random() * ceiling * 0.2\n  return Math.floor(ceiling - jitter)\n}\n\nexport async function withRetry<T>(\n  fn: () => Promise<T>,\n  opts: { max?: number; base?: number } = {},\n): Promise<T> {\n  const { max = 5, base = 200 } = opts\n  let lastErr: unknown\n  for (let i = 0; i < max; i++) {\n    try {\n      return await fn()\n    } catch (err) {\n      lastErr = err\n      await sleep(exponentialBackoff(i, base))\n    }\n  }\n  throw lastErr\n}",
+              },
+            },
+            {
+              id: "step-client-diff",
+              description: "Wiring it into the billing client. Here's the minimal diff:",
+              block: {
+                type: "diff",
+                filename: "src/billing/client.ts",
+                content:
+                  '@@ -14,9 +14,13 @@\n import { httpPost } from "../http"\n+import { withRetry } from "./retry"\n \n export async function chargeCustomer(id: string, amount: number) {\n-  const res = await httpPost(`/billing/${id}/charge`, { amount })\n+  const res = await withRetry(\n+    () => httpPost(`/billing/${id}/charge`, { amount }),\n+    { max: 5, base: 250 },\n+  )\n   if (!res.ok) throw new BillingError(res)\n   return res.json()\n }',
+                additions: 5,
+                deletions: 1,
+              },
+            },
+            {
+              id: "step-run-tests",
+              block: {
+                type: "action",
+                title: "Running unit tests for billing client",
+                description: "pnpm --filter billing test --changed",
+                status: "success",
+                tool: "pnpm-test",
+              },
+            },
+            {
+              id: "step-test-result",
+              block: {
+                type: "tool-result",
+                tool: "pnpm-test",
+                input: "pnpm --filter billing test --changed",
+                output:
+                  "PASS  src/billing/retry.test.ts\n  exponentialBackoff\n    ✓ grows exponentially (8 ms)\n    ✓ caps at 30s ceiling (3 ms)\n    ✓ applies ±20% jitter (12 ms)\n  withRetry\n    ✓ retries on transient failure (42 ms)\n    ✓ throws after max attempts (38 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       5 passed, 5 total\nTime:        0.87 s",
+                status: "success",
+              },
+            },
+            {
+              id: "step-rollout",
+              block: {
+                type: "progress",
+                title: "Staging rollout",
+                current: 3,
+                total: 5,
+                steps: [
+                  { label: "Build artifact", status: "done" },
+                  { label: "Push image", status: "done" },
+                  { label: "Canary 10%", status: "done" },
+                  { label: "Ramp to 50%", status: "active" },
+                  { label: "Promote to 100%", status: "pending" },
+                ],
+              },
+            },
+          ],
         },
       ],
       mentions: [],
       reactions: [{ emoji: "👍", users: ["u-2", "u-1"] }],
       createdAt: NOW - 30 * MIN,
-    },
-    {
-      id: "sc-9",
-      channelId: "ch-showcase",
-      sender: agent1Ref,
-      content: "Wiring it into the billing client. Here's the minimal diff:",
-      blocks: [
-        {
-          type: "diff",
-          filename: "src/billing/client.ts",
-          content:
-            '@@ -14,9 +14,13 @@\n import { httpPost } from "../http"\n+import { withRetry } from "./retry"\n \n export async function chargeCustomer(id: string, amount: number) {\n-  const res = await httpPost(`/billing/${id}/charge`, { amount })\n+  const res = await withRetry(\n+    () => httpPost(`/billing/${id}/charge`, { amount }),\n+    { max: 5, base: 250 },\n+  )\n   if (!res.ok) throw new BillingError(res)\n   return res.json()\n }',
-          additions: 5,
-          deletions: 1,
-        },
-      ],
-      mentions: [],
-      reactions: [],
-      createdAt: NOW - 28 * MIN,
-    },
-    {
-      id: "sc-10",
-      channelId: "ch-showcase",
-      sender: agent1Ref,
-      content: "",
-      blocks: [
-        {
-          type: "action",
-          title: "Running unit tests for billing client",
-          description: "pnpm --filter billing test --changed",
-          status: "running",
-          tool: "pnpm-test",
-        },
-      ],
-      mentions: [],
-      reactions: [],
-      createdAt: NOW - 26 * MIN,
-    },
-    {
-      id: "sc-11",
-      channelId: "ch-showcase",
-      sender: agent1Ref,
-      content: "",
-      blocks: [
-        {
-          type: "tool-result",
-          tool: "pnpm-test",
-          input: "pnpm --filter billing test --changed",
-          output:
-            "PASS  src/billing/retry.test.ts\n  exponentialBackoff\n    ✓ grows exponentially (8 ms)\n    ✓ caps at 30s ceiling (3 ms)\n    ✓ applies ±20% jitter (12 ms)\n  withRetry\n    ✓ retries on transient failure (42 ms)\n    ✓ throws after max attempts (38 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       5 passed, 5 total\nTime:        0.87 s",
-          status: "success",
-        },
-      ],
-      mentions: [],
-      reactions: [{ emoji: "✅", users: ["u-1"] }],
-      createdAt: NOW - 25 * MIN,
-    },
-    {
-      id: "sc-12",
-      channelId: "ch-showcase",
-      sender: agent1Ref,
-      content: "",
-      blocks: [
-        {
-          type: "progress",
-          title: "Staging rollout",
-          current: 3,
-          total: 5,
-          steps: [
-            { label: "Build artifact", status: "done" },
-            { label: "Push image", status: "done" },
-            { label: "Canary 10%", status: "done" },
-            { label: "Ramp to 50%", status: "active" },
-            { label: "Promote to 100%", status: "pending" },
-          ],
-        },
-      ],
-      mentions: [],
-      reactions: [],
-      createdAt: NOW - 22 * MIN,
     },
     {
       id: "sc-13",

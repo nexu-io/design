@@ -136,6 +136,20 @@ export type ContentBlock =
       steps?: { label: string; status: "done" | "active" | "pending" }[];
     }
   | {
+      /**
+       * Agent work-run: a single collapsible module that wraps a sequence of
+       * work artifacts (code, diffs, actions, tool results, progress) produced
+       * by one agent as it executes a task. Default render shows only the
+       * last/current step; earlier steps collapse behind a "Show N earlier
+       * steps" toggle so the chat stays quiet. Approval / review blocks are
+       * intentionally NOT allowed inside a run — they need their own card
+       * outside this container so they still interrupt the reader.
+       */
+      type: "agent-run";
+      id: string;
+      steps: AgentRunStep[];
+    }
+  | {
       type: "topic";
       id: string;
       title: string;
@@ -156,6 +170,27 @@ export type ContentBlock =
        */
       thread?: TopicThreadMessage[];
     };
+
+/**
+ * One item inside an `agent-run` block. Each step wraps a work artifact
+ * (code / diff / action / tool-result / progress) and optionally a short
+ * description rendered above it — typically the lead-in sentence the agent
+ * would otherwise say in chat ("On it…", "Wiring it into the billing client…").
+ * We intentionally narrow the block union here so callers can't smuggle
+ * approval or topic cards inside a run; those belong at the message level.
+ */
+export interface AgentRunStep {
+  id: string;
+  description?: string;
+  block: Extract<
+    ContentBlock,
+    | { type: "code" }
+    | { type: "diff" }
+    | { type: "action" }
+    | { type: "tool-result" }
+    | { type: "progress" }
+  >;
+}
 
 export interface TopicThreadMessage {
   id: string;
