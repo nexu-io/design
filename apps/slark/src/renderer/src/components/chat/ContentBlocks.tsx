@@ -603,7 +603,16 @@ function AgentRunBlock({
   return (
     <div
       data-slot="agent-run"
-      className="w-full max-w-[640px] rounded-xl border border-border-subtle bg-surface-1 p-3"
+      /*
+       * Outer shell uses `bg-surface-2` (the secondary/hover tone) instead of
+       * surface-1 so the run reads as a distinct "container" against the
+       * white chat background, and the nested work artifacts — which ARE
+       * surface-1 + border — visibly sit *inside* it. No border here on
+       * purpose: the tonal step from chat bg → surface-2 is the boundary,
+       * an additional stroke would collide with each inner card's own
+       * border and create the "double frame" effect.
+       */
+      className="w-full max-w-[640px] rounded-xl bg-surface-2 p-3"
     >
       {earlier.length > 0 ? (
         <div className="mb-3">
@@ -613,7 +622,9 @@ function AgentRunBlock({
             aria-expanded={showEarlier}
             className={cn(
               "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-text-secondary transition-colors",
-              "hover:bg-surface-2 hover:text-text-primary",
+              // Hover steps up to surface-3 because the shell itself already sits on surface-2 —
+              // using hover:bg-surface-2 would disappear into the background.
+              "hover:bg-surface-3 hover:text-text-primary",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
             )}
           >
