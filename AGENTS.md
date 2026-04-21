@@ -286,7 +286,7 @@
   | `error` / `error-subtle` | Validation errors, failures, destructive emphasis |
   | `info` / `info-subtle` | Informational callouts, tips, neutral highlights |
 - **Brand color** (`--color-brand-primary`) — links, focus rings, accented badges, brand emphasis. Do not use for status.
-- **Accent color** (`--color-accent`) — primary interactive surfaces (filled buttons, toggles). Use `--color-accent-fg` for text on accent backgrounds.
+- **Accent color** (`--color-accent`) — primary interactive surfaces (filled buttons, toggles). Use `--color-accent-fg` for text on accent backgrounds. **Never use `bg-accent` / `hover:bg-accent` (or `/50`, `/40`, `/30` opacity variants) as a hover background on outline buttons, ghost buttons, list rows, menu items, or cards** — `--color-accent` is near-black in light mode and produces a heavy, filled affordance that reads as the primary action. Neutral hover fills must use `hover:bg-surface-2`; dropdown/menu rows must use `rounded-lg hover:bg-surface-2`; destructive-intent hover must use `hover:bg-destructive/10 hover:text-destructive` (see "Button variant selection").
 - **Neutral text colors** — follow the hierarchy in "Typography hierarchy" above; never use raw hex/rgb.
 - **Surface colors** — use the numbered scale in order: `surface-0` (page bg) → `surface-1` (cards) → `surface-2` (hover/secondary) → `surface-3` (dividers/tertiary). Do not skip levels.
 - Do not mix semantic colors for decoration; they must convey meaning.

@@ -227,7 +227,7 @@ export function DevPanel(): React.ReactElement {
                   "flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-xs transition-colors",
                   currentState === id
                     ? "bg-nexu-primary/15 text-nexu-primary font-medium"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                    : "text-muted-foreground hover:bg-surface-2 hover:text-foreground",
                 )}
               >
                 <Icon className="h-3.5 w-3.5" />
@@ -259,7 +259,7 @@ export function DevPanel(): React.ReactElement {
                   "flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-xs transition-colors",
                   currentUserId === user.id
                     ? "bg-accent text-foreground font-medium"
-                    : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+                    : "text-muted-foreground hover:bg-surface-2 hover:text-foreground",
                 )}
               >
                 <img src={user.avatar} alt="" className="h-4 w-4 rounded-full" />
@@ -301,7 +301,7 @@ export function DevPanel(): React.ReactElement {
             className={cn(
               "flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-xs transition-colors",
               hasRuntimes
-                ? "text-muted-foreground hover:bg-accent hover:text-foreground"
+                ? "text-muted-foreground hover:bg-surface-2 hover:text-foreground"
                 : "bg-nexu-primary/15 text-nexu-primary font-medium",
             )}
           >
@@ -317,7 +317,7 @@ export function DevPanel(): React.ReactElement {
               "flex items-center gap-2 w-full px-2.5 py-1.5 mt-1 rounded-md text-xs transition-colors",
               devSimulateNoDetection
                 ? "bg-nexu-primary/15 text-nexu-primary font-medium"
-                : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                : "text-muted-foreground hover:bg-surface-2 hover:text-foreground",
             )}
           >
             {devSimulateNoDetection ? (
@@ -346,7 +346,7 @@ export function DevPanel(): React.ReactElement {
               "flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-xs transition-colors",
               workspacesAtLimit
                 ? "bg-nexu-primary/15 text-nexu-primary font-medium cursor-not-allowed"
-                : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                : "text-muted-foreground hover:bg-surface-2 hover:text-foreground",
             )}
           >
             <Layers className="h-3.5 w-3.5" />

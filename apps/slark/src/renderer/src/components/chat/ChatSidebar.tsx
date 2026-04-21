@@ -241,7 +241,7 @@ export function ChatSidebar(): React.ReactElement {
                 togglePin(menu.channel.id);
                 closeCtx();
               }}
-              className="flex items-center gap-2 w-full px-3 py-1.5 text-sm text-left hover:bg-accent transition-colors"
+              className="flex items-center gap-2 w-full px-3 py-1.5 text-sm text-left hover:bg-surface-2 transition-colors"
             >
               {pinnedSet.has(menu.channel.id) ? (
                 <>

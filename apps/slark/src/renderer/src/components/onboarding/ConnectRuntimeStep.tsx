@@ -270,7 +270,7 @@ export function ConnectRuntimeStep(): React.ReactElement {
                 href={g.docsUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="group flex flex-col gap-1.5 p-3 rounded-xl border border-border hover:border-muted-foreground/50 hover:bg-accent/40 transition-all text-left"
+                className="group flex flex-col gap-1.5 p-3 rounded-xl border border-border hover:border-muted-foreground/50 hover:bg-surface-2 transition-all text-left"
               >
                 <div className="flex items-center justify-between w-full">
                   <div
