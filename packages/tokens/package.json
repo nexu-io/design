@@ -1,10 +1,13 @@
 {
   "name": "@nexu-design/tokens",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": false,
   "description": "Design tokens, theme variables, and shared CSS for Nexu UI packages",
   "license": "UNLICENSED",
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
