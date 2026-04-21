@@ -270,14 +270,10 @@ export function ChatSidebar(): React.ReactElement {
         onOpenChange={(open) => {
           if (!open) setDeleteTarget(null);
         }}
-        title={
-          deleteTarget
-            ? t("chat.deleteChannelTitle", { name: deleteTarget.name })
-            : t("chat.deleteChannel")
-        }
-        description={t("chat.deleteChannelDesc")}
-        confirmLabel={t("common.delete")}
-        cancelLabel={t("common.cancel")}
+        title={deleteTarget ? `Delete #${deleteTarget.name}?` : "Delete channel"}
+        description="This will permanently delete the channel and all its messages. This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
         confirmVariant="destructive"
         onConfirm={handleDeleteConfirm}
       />
