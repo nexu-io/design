@@ -148,45 +148,47 @@ export function RuntimesSidebar(): React.ReactElement {
       </div>
 
       <div className="flex-1 overflow-y-auto px-2 pb-3">
-        {filtered.map((rt) => {
-          const ownerUser = tab === "all" ? mockUsers.find((u) => u.id === rt.ownerId) : null;
-          return (
-            <Button
-              key={rt.id}
-              type="button"
-              variant="ghost"
-              size="inline"
-              onClick={() => selectRuntime(rt.id)}
-              className={cn(
-                "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
-                selectedRuntimeId === rt.id
-                  ? "bg-nav-active text-nav-active-fg"
-                  : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
-              )}
-            >
-              <RuntimeLogo runtime={rt.type} size={16} className="shrink-0" />
-              <div className="min-w-0 flex-1 text-left">
-                <div className="text-sm font-medium truncate">{rt.name}</div>
-                {ownerUser ? (
-                  <div className="flex items-center gap-1 text-xs text-nav-muted">
-                    <img src={ownerUser.avatar} alt="" className="h-3 w-3 rounded-full" />
-                    <span className="truncate">{ownerUser.name}</span>
-                  </div>
-                ) : (
-                  <div className="text-xs text-nav-muted">{rt.type}</div>
-                )}
-              </div>
-              <div
+        <div className="space-y-0.5">
+          {filtered.map((rt) => {
+            const ownerUser = tab === "all" ? mockUsers.find((u) => u.id === rt.ownerId) : null;
+            return (
+              <Button
+                key={rt.id}
+                type="button"
+                variant="ghost"
+                size="inline"
+                onClick={() => selectRuntime(rt.id)}
                 className={cn(
-                  "h-2 w-2 rounded-full shrink-0",
-                  rt.status === "connected" && "bg-nexu-online",
-                  rt.status === "disconnected" && "bg-nexu-offline",
-                  rt.status === "error" && "bg-destructive",
+                  "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
+                  selectedRuntimeId === rt.id
+                    ? "bg-nav-active text-nav-active-fg"
+                    : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
                 )}
-              />
-            </Button>
-          );
-        })}
+              >
+                <RuntimeLogo runtime={rt.type} size={16} className="shrink-0" />
+                <div className="min-w-0 flex-1 text-left">
+                  <div className="text-sm font-medium truncate">{rt.name}</div>
+                  {ownerUser ? (
+                    <div className="flex items-center gap-1 text-xs text-nav-muted">
+                      <img src={ownerUser.avatar} alt="" className="h-3 w-3 rounded-full" />
+                      <span className="truncate">{ownerUser.name}</span>
+                    </div>
+                  ) : (
+                    <div className="text-xs text-nav-muted">{rt.type}</div>
+                  )}
+                </div>
+                <div
+                  className={cn(
+                    "h-2 w-2 rounded-full shrink-0",
+                    rt.status === "connected" && "bg-nexu-online",
+                    rt.status === "disconnected" && "bg-nexu-offline",
+                    rt.status === "error" && "bg-destructive",
+                  )}
+                />
+              </Button>
+            );
+          })}
+        </div>
 
         {(scanning || detectedNotAdded.length > 0) && (
           <div className="mt-3 pt-3 border-t border-nav-border">
@@ -198,7 +200,7 @@ export function RuntimesSidebar(): React.ReactElement {
                 button mounted on the right only when idle, which caused
                 the label and icon to jump horizontally on every rescan. */}
             <div className="flex items-center justify-between px-2 pb-1.5">
-              <span className="text-[10px] font-medium uppercase tracking-wide text-nav-muted">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-nav-muted">
                 Detected on this device
               </span>
               <Button
@@ -217,35 +219,37 @@ export function RuntimesSidebar(): React.ReactElement {
             {!scanning && detectedNotAdded.length === 0 ? (
               <p className="px-2 py-2 text-xs text-nav-muted/70">No new runtimes found.</p>
             ) : (
-              detectedNotAdded.map((d) => {
-                return (
-                  <div
-                    key={d.type}
-                    className="group flex items-center gap-2.5 w-full px-2 py-2 rounded-md text-nav-muted hover:bg-nav-hover"
-                  >
-                    <RuntimeLogo runtime={d.type} size={16} className="shrink-0" />
-                    <div className="min-w-0 flex-1 text-left">
-                      <div className="text-sm font-medium truncate text-nav-fg">{d.name}</div>
-                      <div className="text-xs font-normal text-text-tertiary truncate">
-                        v{d.version} · {d.path}
+              <div className="space-y-0.5">
+                {detectedNotAdded.map((d) => {
+                  return (
+                    <div
+                      key={d.type}
+                      className="group flex items-center gap-2.5 w-full px-2 py-2 rounded-md text-nav-muted hover:bg-nav-hover"
+                    >
+                      <RuntimeLogo runtime={d.type} size={16} className="shrink-0" />
+                      <div className="min-w-0 flex-1 text-left">
+                        <div className="text-sm font-medium truncate text-nav-fg">{d.name}</div>
+                        <div className="text-xs font-normal text-text-tertiary truncate">
+                          v{d.version} · {d.path}
+                        </div>
                       </div>
-                    </div>
-                    {/* `outline` is the canonical weight for secondary actions
+                      {/* `outline` is the canonical weight for secondary actions
                         (AGENTS.md). The primary black fill was too heavy for
                         a row-level affordance repeated 4 times in a narrow
                         sidebar and made the panel feel shouty. */}
-                    <Button
-                      type="button"
-                      size="xs"
-                      variant="outline"
-                      onClick={() => handleAddDetected(d)}
-                      className="shrink-0"
-                    >
-                      Add
-                    </Button>
-                  </div>
-                );
-              })
+                      <Button
+                        type="button"
+                        size="xs"
+                        variant="outline"
+                        onClick={() => handleAddDetected(d)}
+                        className="shrink-0"
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
             )}
           </div>
         )}

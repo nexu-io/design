@@ -195,6 +195,19 @@
 - When an icon looks visually smaller or larger than the text next to it, adjust the icon size rather than the text size.
 - Apply the same principle to inline icons in labels, badges, and navigation items.
 
+### Product copy localization
+- **Product-surface copy is hardcoded English, not routed through i18n.** This covers every UI string shipped to end users in the `apps/slark/src/renderer` product shell — dialog titles and buttons (e.g. `CreateChannelDialog`, `InvitePeopleDialog`), empty states, toasts, activity bar labels, chat header and composer labels, menu items, onboarding copy, workspace/agent/runtime panels, command palettes, etc. Write the English string inline; do not wrap with `useT(...)`, `t("...")`, or any i18n resolver. The product is English-first and mixed-locale UI creates a worse experience than a single clean language.
+- **Do not regress hardcoded English copy back through i18n.** If a PR touches a surface that previously used `useT` and is now inline English, that is intentional — do not "restore" the i18n wiring. Reviewers should not treat the absence of `useT` as a bug unless the same screen still has some `useT` calls (inconsistent mixing is the real regression).
+- **Exceptions — copy that should remain localized:**
+  - User-generated content (workspace names, channel names, agent display names, messages, descriptions the user typed) — never translate, never hardcode; render as-is.
+  - Mock / seed content for demos — keep in its authored language so demos feel authentic; do not auto-translate to English.
+  - Legal / policy text (Terms, Privacy, cookie banners) — route through i18n if the product is sold in multiple legal jurisdictions.
+  - Locale-sensitive formatting (dates, numbers, currencies, pluralization) — use `Intl.*` APIs, not hardcoded strings.
+- **Related narrower rules already codified** (do not weaken these — the general policy above extends them, it does not replace them):
+  - Decorative uppercase category labels (CHANNELS / PINNED / DIRECT MESSAGES) stay English with `uppercase tracking-wider` — see "Compact nav list density → Section header label language".
+  - Page-level navigation tab labels stay English — see the rule in the Tabs section.
+- **Shared component-library packages (`packages/ui-web`, `packages/tokens`) never hardcode product copy.** Library primitives (Button, Dialog, etc.) stay copy-free and receive labels via props — that pattern is unchanged.
+
 ### Layout conventions
 - **Workspace content-panel layout**: every page rendered inside the OpenClaw workspace sidebar (Settings, Skills, Home, Deployments, Schedule, Rewards, Channels…) must use a consistent inner content wrapper: outer `h-full overflow-y-auto`, inner `max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8`. Do not use `max-w-3xl`, `max-w-4xl`, or other ad-hoc values — all panels share the same max-width, horizontal padding, and top spacing so margins stay consistent across pages.
 - **Page header → content spacing**: `PageHeader` with `density="shell"` uses `pb-6` (24px) as bottom padding. This is the canonical gap between the title + subtitle block and whatever sits below it (tabs, content cards, etc.). All workspace panel pages must share this same spacing so the visual rhythm stays consistent. Do not override `pb-6` with ad-hoc margins or padding on the `PageHeader`; if a page needs tabs, place the `TabsList` directly after `PageHeader` — the header's built-in bottom padding provides the gap.

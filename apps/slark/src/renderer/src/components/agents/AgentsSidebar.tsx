@@ -136,120 +136,124 @@ export function AgentsSidebar(): React.ReactElement {
             {/* Section headers drop their leading icon — the uppercase
                 label already reads as a header and the icon was adding
                 visual noise in a narrow sidebar. */}
-            <div className="flex items-center gap-1.5 px-2 py-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
+            <div className="flex items-center gap-1.5 px-2 py-1 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
               <span className="flex-1">Members</span>
-              <span className="text-[10px] normal-case tracking-normal font-medium">
+              <span className="text-[11px] normal-case tracking-normal font-medium">
                 {filteredUsers.length}
               </span>
             </div>
-            {filteredUsers.map((user) => (
-              <Button
-                key={user.id}
-                type="button"
-                variant="ghost"
-                size="inline"
-                onClick={() => handleSelectUser(user)}
-                className={cn(
-                  "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
-                  memberId === user.id
-                    ? "bg-nav-active text-nav-active-fg"
-                    : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
-                )}
-              >
-                {/* Avatar + presence dot overlay. The ring keeps the photo
+            <div className="space-y-0.5">
+              {filteredUsers.map((user) => (
+                <Button
+                  key={user.id}
+                  type="button"
+                  variant="ghost"
+                  size="inline"
+                  onClick={() => handleSelectUser(user)}
+                  className={cn(
+                    "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
+                    memberId === user.id
+                      ? "bg-nav-active text-nav-active-fg"
+                      : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
+                  )}
+                >
+                  {/* Avatar + presence dot overlay. The ring keeps the photo
                     readable on surface hover fills; the small colored dot
                     in the bottom-right carries the member's live status
                     (online / away / offline) using the shared presence
                     palette. A `border-nav` ring on the dot cuts it out
                     cleanly from whichever avatar it's sitting on. */}
-                <span className="relative inline-block shrink-0">
-                  <img
-                    src={user.avatar}
-                    alt=""
-                    className="h-7 w-7 rounded-full ring-1 ring-inset ring-black/5"
-                  />
-                  <span
-                    role="status"
-                    aria-label={presenceLabel(user.status)}
-                    title={presenceLabel(user.status)}
-                    className={cn(
-                      "absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-nav",
-                      presenceDotClass(user.status),
-                    )}
-                  />
-                </span>
-                <div className="min-w-0 flex-1 text-left">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-sm font-medium truncate">{user.name}</span>
-                    {user.role === "owner" && (
-                      /* Owner tag always reads as a brand-accented label
+                  <span className="relative inline-block shrink-0">
+                    <img
+                      src={user.avatar}
+                      alt=""
+                      className="h-7 w-7 rounded-full ring-1 ring-inset ring-black/5"
+                    />
+                    <span
+                      role="status"
+                      aria-label={presenceLabel(user.status)}
+                      title={presenceLabel(user.status)}
+                      className={cn(
+                        "absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-nav",
+                        presenceDotClass(user.status),
+                      )}
+                    />
+                  </span>
+                  <div className="min-w-0 flex-1 text-left">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-sm font-medium truncate">{user.name}</span>
+                      {user.role === "owner" && (
+                        /* Owner tag always reads as a brand-accented label
                          (brand-primary on brand-subtle), selected row or
                          not — matches the larger Owner badge on the
                          profile detail header for visual consistency. */
-                      <span className="text-[9px] font-semibold uppercase tracking-wide text-brand-primary bg-brand-subtle px-1 py-px rounded shrink-0">
-                        Owner
-                      </span>
-                    )}
-                  </div>
-                  <div
-                    className={cn(
-                      /* `font-normal` overrides the Button primitive's default
+                        <span className="text-[9px] font-semibold uppercase tracking-wide text-brand-primary bg-brand-subtle px-1 py-px rounded shrink-0">
+                          Owner
+                        </span>
+                      )}
+                    </div>
+                    <div
+                      className={cn(
+                        /* `font-normal` overrides the Button primitive's default
                          `font-medium` so secondary meta (email, agent desc)
                          reads as body text, not a second heading.
                          `text-text-tertiary` is the lightest text token — used
                          here so email stays clearly subordinate to the name. */
-                      "text-xs font-normal truncate",
-                      memberId === user.id ? "text-nav-active-muted" : "text-text-tertiary",
-                    )}
-                  >
-                    {user.email}
+                        "text-xs font-normal truncate",
+                        memberId === user.id ? "text-nav-active-muted" : "text-text-tertiary",
+                      )}
+                    >
+                      {user.email}
+                    </div>
                   </div>
-                </div>
-              </Button>
-            ))}
+                </Button>
+              ))}
+            </div>
           </div>
         )}
 
         {filteredAgents.length > 0 && (
           <div>
-            <div className="flex items-center gap-1.5 px-2 py-1 text-[10px] font-semibold text-nav-muted uppercase tracking-wider">
+            <div className="flex items-center gap-1.5 px-2 py-1 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
               <span className="flex-1">Agents</span>
-              <span className="text-[10px] normal-case tracking-normal font-medium">
+              <span className="text-[11px] normal-case tracking-normal font-medium">
                 {filteredAgents.length}
               </span>
             </div>
-            {filteredAgents.map((agent) => (
-              <Button
-                key={agent.id}
-                type="button"
-                variant="ghost"
-                size="inline"
-                onClick={() => handleSelectAgent(agent)}
-                className={cn(
-                  "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
-                  memberId === agent.id
-                    ? "bg-nav-active text-nav-active-fg"
-                    : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
-                )}
-              >
-                <img
-                  src={agent.avatar}
-                  alt=""
-                  className="h-7 w-7 rounded-lg shrink-0 ring-1 ring-inset ring-black/5"
-                />
-                <div className="min-w-0 flex-1 text-left">
-                  <div className="text-sm font-medium truncate">{agent.name}</div>
-                  <div
-                    className={cn(
-                      "text-xs font-normal truncate",
-                      memberId === agent.id ? "text-nav-active-muted" : "text-text-tertiary",
-                    )}
-                  >
-                    {agent.description}
+            <div className="space-y-0.5">
+              {filteredAgents.map((agent) => (
+                <Button
+                  key={agent.id}
+                  type="button"
+                  variant="ghost"
+                  size="inline"
+                  onClick={() => handleSelectAgent(agent)}
+                  className={cn(
+                    "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
+                    memberId === agent.id
+                      ? "bg-nav-active text-nav-active-fg"
+                      : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
+                  )}
+                >
+                  <img
+                    src={agent.avatar}
+                    alt=""
+                    className="h-7 w-7 rounded-lg shrink-0 ring-1 ring-inset ring-black/5"
+                  />
+                  <div className="min-w-0 flex-1 text-left">
+                    <div className="text-sm font-medium truncate">{agent.name}</div>
+                    <div
+                      className={cn(
+                        "text-xs font-normal truncate",
+                        memberId === agent.id ? "text-nav-active-muted" : "text-text-tertiary",
+                      )}
+                    >
+                      {agent.description}
+                    </div>
                   </div>
-                </div>
-              </Button>
-            ))}
+                </Button>
+              ))}
+            </div>
           </div>
         )}
 
