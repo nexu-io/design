@@ -1,310 +1,232 @@
-import { useState, useRef, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowRight, Building2, Mail, Send, Check, Link2, Copy, LogIn } from "lucide-react";
 import {
-  Badge,
   Button,
   FormField,
   FormFieldControl,
   Input,
-  Tabs,
-  TabsList,
-  TabsTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  TextLink,
 } from "@nexu-design/ui-web";
-import { useT } from "@/i18n";
-import { useWorkspaceStore } from "@/stores/workspace";
+import { ArrowRight, Building2, Check, ChevronDown, Loader2, LogIn } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-type Mode = "create" | "join";
+import { mockAgentTemplates, mockRuntimes } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
+import { useRuntimesStore } from "@/stores/runtimes";
+import { useWorkspaceStore } from "@/stores/workspace";
+import type { Agent, Runtime } from "@/types";
+
+const SCAN_DURATION_MS = 600;
 
 export function CreateWorkspaceStep(): React.ReactElement {
-  const t = useT();
   const navigate = useNavigate();
   const setWorkspace = useWorkspaceStore((s) => s.setWorkspace);
   const completeOnboarding = useWorkspaceStore((s) => s.completeOnboarding);
+  const setPendingWelcomeAgent = useWorkspaceStore((s) => s.setPendingWelcomeAgent);
+  const setGlobalRuntimes = useRuntimesStore((s) => s.setRuntimes);
+  const globalRuntimes = useRuntimesStore((s) => s.runtimes);
+  const devSimulateNone = useRuntimesStore((s) => s.devSimulateNone);
+  const addAgent = useAgentsStore((s) => s.addAgent);
 
-  const [mode, setMode] = useState<Mode>("create");
-
-  // Create mode state
   const [name, setName] = useState("");
-  const [invitedEmails, setInvitedEmails] = useState<string[]>([]);
-  const [emailInput, setEmailInput] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [linkCopied, setLinkCopied] = useState(false);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const errorTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
-  const copyTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const [scanning, setScanning] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
-  // Join mode state
-  const [inviteLink, setInviteLink] = useState("");
-  const [joinError, setJoinError] = useState("");
-  const [joining, setJoining] = useState(false);
+  // Background runtime detection — runs implicitly while the user names the workspace.
+  useEffect(() => {
+    setScanning(true);
+    const timer = setTimeout(() => {
+      const detected = devSimulateNone ? [] : mockRuntimes.filter((r) => r.status === "connected");
+      setGlobalRuntimes(detected);
+      setScanning(false);
+    }, SCAN_DURATION_MS);
+    return () => clearTimeout(timer);
+  }, [devSimulateNone, setGlobalRuntimes]);
 
-  const inviteToken = useMemo(
-    () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36),
-    [],
-  );
-  const inviteLinkUrl = `${window.location.origin}/invite/${inviteToken}`;
-
-  const isValidEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const showError = (msg: string): void => {
-    setEmailError(msg);
-    if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
-    errorTimerRef.current = setTimeout(() => setEmailError(""), 3000);
-  };
-
-  const addEmail = (): void => {
-    const email = emailInput.trim();
-    if (!email) return;
-    if (!isValidEmail(email)) {
-      showError(t("workspace.invalidEmail"));
-      return;
-    }
-    if (invitedEmails.includes(email)) {
-      showError(t("onboarding.emailAlreadyAdded"));
-      return;
-    }
-    setInvitedEmails((prev) => [...prev, email]);
-    setEmailInput("");
-    setEmailError("");
-  };
-
-  const handleEmailKeyDown = (e: React.KeyboardEvent): void => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addEmail();
-    }
-  };
-
-  const handleCopyLink = async (): Promise<void> => {
-    try {
-      await navigator.clipboard.writeText(inviteLinkUrl);
-    } catch {
-      // fallback — ignore
-    }
-    setLinkCopied(true);
-    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
-    copyTimerRef.current = setTimeout(() => setLinkCopied(false), 2000);
-  };
+  const detectedRuntimes = globalRuntimes.filter((r) => r.status === "connected");
+  const canContinue = Boolean(name.trim()) && !scanning && !submitting;
 
   const handleContinue = (): void => {
-    if (!name.trim()) return;
+    if (!canContinue) return;
+    setSubmitting(true);
+
+    const workspaceName = name.trim();
     setWorkspace({
       id: `ws-${Date.now()}`,
-      name: name.trim(),
+      name: workspaceName,
       createdAt: Date.now(),
     });
-    navigate("/onboarding/runtime");
-  };
 
-  const handleJoin = (): void => {
-    const link = inviteLink.trim();
-    if (!link) {
-      setJoinError(t("onboarding.pasteInviteOrCode"));
-      return;
+    const welcomeAgentId = mountDefaultAgent(detectedRuntimes, addAgent);
+    if (welcomeAgentId) {
+      setPendingWelcomeAgent(welcomeAgentId);
     }
-    // Accept full URL or bare token
-    const tokenMatch = link.match(/invite\/([^/?#]+)/);
-    const token = tokenMatch ? tokenMatch[1] : link;
-    if (token.length < 4) {
-      setJoinError(t("onboarding.invalidInviteLink"));
-      return;
-    }
-    setJoinError("");
-    setJoining(true);
-    setTimeout(() => {
-      setWorkspace({
-        id: "ws-1",
-        name: "Acme Engineering",
-        avatar: "https://api.dicebear.com/9.x/identicon/svg?seed=acme&backgroundColor=6d28d9",
-        createdAt: Date.now(),
-      });
-      completeOnboarding();
-      setJoining(false);
-      navigate("/");
-    }, 1200);
+
+    completeOnboarding();
+    navigate("/chat/ch-welcome");
   };
 
   return (
-    <div className="flex flex-col items-center gap-6 pt-10">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent">
-        <Building2 className="h-7 w-7 text-muted-foreground" />
+    <div className="flex flex-col items-center gap-6 py-10">
+      <div className="flex size-14 items-center justify-center rounded-2xl bg-surface-2">
+        <Building2 className="size-7 text-text-secondary" />
       </div>
+
       <div className="text-center">
-        <h2 className="text-2xl font-semibold">
-          {mode === "create" ? t("onboarding.createWorkspace") : t("onboarding.joinWorkspace")}
+        <h2 className="text-[22px] font-semibold text-text-heading">
+          What should we call your team?
         </h2>
-        <p className="text-muted-foreground mt-2">
-          {mode === "create"
-            ? t("onboarding.createWorkspaceDesc")
-            : t("onboarding.joinWorkspaceDesc")}
+        <p className="mt-1.5 text-[13px] text-text-secondary">
+          One step to get in. Invite teammates and agents from inside.
         </p>
       </div>
 
-      <Tabs value={mode} onValueChange={(value) => setMode(value as Mode)}>
-        <TabsList>
-          <TabsTrigger value="create">
-            <Building2 className="h-3.5 w-3.5" />
-            {t("onboarding.createNew")}
-          </TabsTrigger>
-          <TabsTrigger value="join">
-            <LogIn className="h-3.5 w-3.5" />
-            {t("onboarding.joinExisting")}
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
+      <div className="w-full max-w-sm space-y-4">
+        <FormField label="Workspace name">
+          <FormFieldControl>
+            <Input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && canContinue) {
+                  e.preventDefault();
+                  handleContinue();
+                }
+              }}
+              placeholder="e.g. My Digital Teammates"
+              autoFocus
+            />
+          </FormFieldControl>
+        </FormField>
 
-      {mode === "create" ? (
-        <>
-          <div className="w-full max-w-sm space-y-5">
-            <FormField label={t("onboarding.workspaceName")}>
-              <FormFieldControl>
-                <Input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder={t("onboarding.workspaceNamePlaceholder")}
-                  autoFocus
-                />
-              </FormFieldControl>
-            </FormField>
+        <div className="flex items-center justify-center gap-1.5 text-sm text-text-muted">
+          <LogIn className="size-3" />
+          <span>Got an invite link?</span>
+          <TextLink href="#" size="xs" className="text-sm" onClick={handleNavigateToJoin(navigate)}>
+            Join a workspace
+          </TextLink>
+        </div>
+      </div>
 
-            <FormField
-              label={t("onboarding.inviteMembers")}
-              invalid={Boolean(emailError)}
-              error={emailError}
-            >
-              <div className="flex items-center gap-2">
-                <FormFieldControl className="flex-1">
-                  <Input
-                    ref={emailRef}
-                    type="email"
-                    value={emailInput}
-                    onChange={(e) => setEmailInput(e.target.value)}
-                    onKeyDown={handleEmailKeyDown}
-                    placeholder={t("workspace.invitePlaceholder")}
-                    leadingIcon={<Mail className="h-4 w-4 text-muted-foreground" />}
-                    invalid={Boolean(emailError)}
-                  />
-                </FormFieldControl>
-                <Button
-                  onClick={addEmail}
-                  disabled={!emailInput.trim()}
-                  size="sm"
-                  className="h-10 shrink-0"
-                  leadingIcon={<Send className="h-3.5 w-3.5" />}
-                >
-                  {t("workspace.invite")}
-                </Button>
-              </div>
+      <div className="flex flex-col items-center gap-2">
+        <p className="text-[11px] text-text-muted">~15 seconds to your first message.</p>
+        <Button
+          size="lg"
+          onClick={handleContinue}
+          disabled={!canContinue}
+          trailingIcon={<ArrowRight size={18} />}
+        >
+          Continue
+        </Button>
+      </div>
 
-              <div className="mt-3 flex items-center gap-2 rounded-lg border border-dashed border-border bg-secondary/40 px-3 py-2.5">
-                <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-muted-foreground mb-0.5">
-                    {t("onboarding.shareInviteLink")}
-                  </div>
-                  <div className="text-xs font-mono text-foreground truncate">{inviteLinkUrl}</div>
-                </div>
-                <Button
-                  onClick={handleCopyLink}
-                  variant="outline"
-                  size="xs"
-                  className="h-7 shrink-0"
-                  leadingIcon={
-                    linkCopied ? (
-                      <Check className="h-3 w-3 text-nexu-online" />
-                    ) : (
-                      <Copy className="h-3 w-3" />
-                    )
-                  }
-                >
-                  {linkCopied ? t("common.copied") : t("common.copy")}
-                </Button>
-              </div>
-
-              {invitedEmails.length > 0 && (
-                <div className="mt-3 space-y-1">
-                  {invitedEmails.map((email) => (
-                    <div
-                      key={email}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-border"
-                    >
-                      <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium truncate">{email}</div>
-                        <Badge variant="success" size="xs" className="mt-1">
-                          {t("onboarding.invitationSent")}
-                        </Badge>
-                      </div>
-                      <Check className="h-3.5 w-3.5 text-nexu-online shrink-0" />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </FormField>
-          </div>
-
-          <Button
-            onClick={handleContinue}
-            disabled={!name.trim()}
-            className="mt-2 h-11"
-            trailingIcon={<ArrowRight className="h-4 w-4" />}
-          >
-            {t("common.continue")}
-          </Button>
-        </>
-      ) : (
-        <>
-          <div className="w-full max-w-sm space-y-5">
-            <FormField
-              label={t("onboarding.inviteLink")}
-              invalid={Boolean(joinError)}
-              error={joinError}
-              description={t("onboarding.inviteHint")}
-            >
-              <FormFieldControl>
-                <Input
-                  type="text"
-                  value={inviteLink}
-                  onChange={(e) => {
-                    setInviteLink(e.target.value);
-                    setJoinError("");
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleJoin();
-                    }
-                  }}
-                  placeholder={t("onboarding.invitePlaceholderUrl")}
-                  leadingIcon={<Link2 className="h-4 w-4 text-muted-foreground" />}
-                  invalid={Boolean(joinError)}
-                  autoFocus
-                />
-              </FormFieldControl>
-            </FormField>
-          </div>
-
-          <Button
-            onClick={handleJoin}
-            disabled={!inviteLink.trim() || joining}
-            className="mt-2 h-11"
-          >
-            {joining ? (
-              <>
-                <div className="h-4 w-4 rounded-full border-2 border-background border-t-transparent animate-spin" />
-                {t("onboarding.joining")}
-              </>
-            ) : (
-              <>
-                {t("onboarding.joinWorkspaceCta")}
-                <ArrowRight className="h-4 w-4" />
-              </>
-            )}
-          </Button>
-        </>
-      )}
+      <div className="mt-4">
+        <RuntimeStatusLight scanning={scanning} runtimes={detectedRuntimes} />
+      </div>
     </div>
   );
+}
+
+function RuntimeStatusLight({
+  scanning,
+  runtimes,
+}: {
+  scanning: boolean;
+  runtimes: Runtime[];
+}): React.ReactElement {
+  if (scanning) {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-1 px-2.5 py-1 text-[11px] text-text-muted">
+        <Loader2 className="size-2.5 animate-spin" aria-hidden />
+        Scanning runtimes…
+      </span>
+    );
+  }
+
+  if (runtimes.length === 0) {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-1 px-2.5 py-1 text-[11px] text-text-muted">
+        <span className="size-1.5 rounded-full bg-text-muted/50" aria-hidden />
+        No runtimes yet — install one after sign-in.
+      </span>
+    );
+  }
+
+  const count = runtimes.length;
+  const label = `${count} runtime${count === 1 ? "" : "s"} ready`;
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-1 py-1 pl-2.5 pr-1.5 text-[11px] text-text-secondary transition-colors hover:border-border hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)]/30"
+          aria-label={`${label} — click to see details`}
+        >
+          <span className="size-1.5 rounded-full bg-success" aria-hidden />
+          <span>{label}</span>
+          <ChevronDown className="size-3 text-text-muted" aria-hidden />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="center" className="w-[280px] p-0">
+        <div className="border-b border-border-subtle px-3 py-2">
+          <div className="text-[12px] font-semibold text-text-heading">Detected runtimes</div>
+          <div className="text-[11px] text-text-muted">
+            Picked up in the background while you named the team
+          </div>
+        </div>
+        <ul className="max-h-[260px] divide-y divide-border-subtle overflow-y-auto">
+          {runtimes.map((rt) => (
+            <li key={rt.id} className="flex items-center gap-2 px-3 py-2">
+              <Check className="size-3 shrink-0 text-success" strokeWidth={3} />
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-[12px] font-medium text-text-primary">
+                  {rt.name.replace(/\s*\(Local\)$/, "")}
+                </div>
+                {rt.version ? (
+                  <div className="truncate text-[11px] text-text-muted">v{rt.version}</div>
+                ) : null}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function mountDefaultAgent(runtimes: Runtime[], addAgent: (agent: Agent) => void): string | null {
+  if (runtimes.length === 0) return null;
+
+  const template = mockAgentTemplates[0];
+  if (!template) return null;
+
+  const runtime = runtimes[0];
+  const agentId = `a-onboard-${Date.now()}`;
+  addAgent({
+    id: agentId,
+    name: template.name,
+    avatar: template.avatar,
+    description: template.description,
+    systemPrompt: template.defaultPrompt,
+    status: "online",
+    skills: [],
+    runtimeId: runtime.id,
+    templateId: template.id,
+    createdBy: "u-1",
+    createdAt: Date.now(),
+  });
+  return agentId;
+}
+
+function handleNavigateToJoin(
+  navigate: ReturnType<typeof useNavigate>,
+): (event: React.MouseEvent) => void {
+  return (event) => {
+    event.preventDefault();
+    navigate("/onboarding/join");
+  };
 }
