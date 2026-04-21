@@ -3,8 +3,10 @@ import { Paperclip, Send } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { useT } from "@/i18n";
-import { getRandomAgentResponse, mockAgents } from "@/mock/data";
+import { getRandomAgentResponse } from "@/mock/data";
+import { useAgentsStore } from "@/stores/agents";
 import { useChatStore } from "@/stores/chat";
+import { useTopicsStore } from "@/stores/topics";
 import type { Channel, MemberRef, Message } from "@/types";
 import { MentionPicker } from "./MentionPicker";
 
@@ -12,6 +14,8 @@ interface MessageInputProps {
   channelId: string;
   isDmWithAgent: boolean;
   channel: Channel;
+  /** When provided, the input posts to the given topic instead of the channel. */
+  topicId?: string;
 }
 
 const MIN_HEIGHT = 36;
@@ -21,6 +25,7 @@ export function MessageInput({
   channelId,
   isDmWithAgent,
   channel,
+  topicId,
 }: MessageInputProps): React.ReactElement {
   const t = useT();
   const [text, setText] = useState("");
@@ -28,18 +33,57 @@ export function MessageInput({
   const [mentionQuery, setMentionQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const addMessage = useChatStore((s) => s.addMessage);
-  const updateMessage = useChatStore((s) => s.updateMessage);
+  const addChannelMessage = useChatStore((s) => s.addMessage);
+  const updateChannelMessage = useChatStore((s) => s.updateMessage);
+  const addTopicMessage = useTopicsStore((s) => s.addTopicMessage);
+  const updateTopicMessage = useTopicsStore((s) => s.updateTopicMessage);
   const pendingDraft = useChatStore((s) => s.pendingDraft);
   const setPendingDraft = useChatStore((s) => s.setPendingDraft);
+  const allAgents = useAgentsStore((s) => s.agents);
+
+  // Mention pool = channel members + all workspace agents (user-created ones always available).
+  const mentionPool: MemberRef[] = (() => {
+    const seen = new Set<string>();
+    const out: MemberRef[] = [];
+    for (const m of channel.members) {
+      const key = `${m.kind}:${m.id}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(m);
+    }
+    for (const a of allAgents) {
+      const key = `agent:${a.id}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push({ kind: "agent", id: a.id });
+    }
+    return out;
+  })();
+
+  const addMessage = useCallback(
+    (msg: Message): void => {
+      if (topicId) addTopicMessage(topicId, msg);
+      else addChannelMessage(channelId, msg);
+    },
+    [topicId, addTopicMessage, addChannelMessage, channelId],
+  );
+
+  const updateMessage = useCallback(
+    (msgId: string, updates: Partial<Message>): void => {
+      if (topicId) updateTopicMessage(topicId, msgId, updates);
+      else updateChannelMessage(channelId, msgId, updates);
+    },
+    [topicId, updateTopicMessage, updateChannelMessage, channelId],
+  );
 
   useEffect(() => {
+    if (topicId) return;
     if (pendingDraft) {
       setText(pendingDraft);
       setPendingDraft(null);
       textareaRef.current?.focus();
     }
-  }, [pendingDraft, setPendingDraft]);
+  }, [pendingDraft, setPendingDraft, topicId]);
 
   const adjustHeight = useCallback((textarea: HTMLTextAreaElement | null) => {
     if (!textarea) return;
@@ -58,7 +102,7 @@ export function MessageInput({
       const tokens = fullContent.split(/(?<=\s)|(?=\s)/);
 
       setTimeout(() => {
-        addMessage(channelId, {
+        addMessage({
           id: msgId,
           channelId,
           sender: agentRef,
@@ -73,11 +117,11 @@ export function MessageInput({
         const tick = (): void => {
           const chunk = Math.floor(Math.random() * 2) + 1;
           idx = Math.min(idx + chunk, tokens.length);
-          updateMessage(channelId, msgId, {
+          updateMessage(msgId, {
             content: tokens.slice(0, idx).join(""),
           });
           if (idx >= tokens.length) {
-            updateMessage(channelId, msgId, { isStreaming: false });
+            updateMessage(msgId, { isStreaming: false });
           } else {
             setTimeout(tick, 25 + Math.random() * 35);
           }
@@ -98,7 +142,7 @@ export function MessageInput({
     while (match) {
       const mentionName = match[1]?.toLowerCase();
       const agent = mentionName
-        ? mockAgents.find((a) => a.name.toLowerCase() === mentionName)
+        ? allAgents.find((a) => a.name.toLowerCase() === mentionName)
         : undefined;
       if (agent) {
         mentionedAgents.push({ kind: "agent", id: agent.id });
@@ -115,11 +159,11 @@ export function MessageInput({
       reactions: [],
       createdAt: Date.now(),
     };
-    addMessage(channelId, userMsg);
+    addMessage(userMsg);
     setText("");
     setShowMentions(false);
 
-    if (isDmWithAgent) {
+    if (!topicId && isDmWithAgent) {
       const agentMember = channel.members.find((m) => m.kind === "agent");
       if (agentMember) simulateAgentReply(agentMember);
     } else if (mentionedAgents.length > 0) {
@@ -180,7 +224,7 @@ export function MessageInput({
       >
         {showMentions && (
           <MentionPicker
-            members={channel.members}
+            members={mentionPool}
             query={mentionQuery}
             onSelect={handleMentionSelect}
             onClose={() => setShowMentions(false)}
@@ -202,9 +246,11 @@ export function MessageInput({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={
-            channel.type === "dm"
-              ? t("chat.messagePerson", { name: channel.name })
-              : t("chat.messageChannel")
+            topicId
+              ? t("chat.replyInTopic")
+              : channel.type === "dm"
+                ? t("chat.messagePerson", { name: channel.name })
+                : t("chat.messageChannel")
           }
           rows={1}
           className="flex-1 resize-none bg-transparent px-1.5 py-1.5 text-[13px] leading-[1.5] text-text-primary placeholder:text-text-muted focus:outline-none"

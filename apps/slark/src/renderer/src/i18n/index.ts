@@ -5,6 +5,7 @@ type Dict = Record<string, string>;
 const en = {
   // Sections
   "section.chat": "Chat",
+  "section.issues": "Issues",
   "section.team": "Team",
   "section.runtimes": "Runtimes",
   "section.settings": "Settings",
@@ -115,6 +116,7 @@ const en = {
   "chat.addPeopleOrAgents": "Add people or agents",
   "chat.messagePerson": "Message {name}...",
   "chat.messageChannel": "Message channel...",
+  "chat.replyInTopic": "Reply in topic…",
 
   // Create channel dialog
   "createChannel.title": "Create Channel",
@@ -318,6 +320,7 @@ const en = {
 
 const zhCN: Dict = {
   "section.chat": "聊天",
+  "section.issues": "议题",
   "section.team": "团队",
   "section.runtimes": "运行环境",
   "section.settings": "设置",
@@ -416,6 +419,7 @@ const zhCN: Dict = {
   "chat.addPeopleOrAgents": "添加成员或智能体",
   "chat.messagePerson": "发送消息给 {name}...",
   "chat.messageChannel": "发送频道消息...",
+  "chat.replyInTopic": "在话题中回复…",
 
   "createChannel.title": "创建频道",
   "createChannel.addMembers": "添加成员",
@@ -607,6 +611,7 @@ const zhCN: Dict = {
 
 const zhTW: Dict = {
   "section.chat": "聊天",
+  "section.issues": "議題",
   "section.team": "團隊",
   "section.runtimes": "執行環境",
   "section.settings": "設定",
@@ -874,6 +879,7 @@ const zhTW: Dict = {
 
 const ja: Dict = {
   "section.chat": "チャット",
+  "section.issues": "課題",
   "section.team": "チーム",
   "section.runtimes": "ランタイム",
   "section.settings": "設定",
@@ -1145,6 +1151,7 @@ const ja: Dict = {
 
 const ko: Dict = {
   "section.chat": "채팅",
+  "section.issues": "이슈",
   "section.team": "팀",
   "section.runtimes": "런타임",
   "section.settings": "설정",
@@ -1414,6 +1421,7 @@ const ko: Dict = {
 
 const es: Dict = {
   "section.chat": "Chat",
+  "section.issues": "Incidencias",
   "section.team": "Equipo",
   "section.runtimes": "Entornos",
   "section.settings": "Ajustes",
@@ -1479,6 +1487,7 @@ const es: Dict = {
 
 const fr: Dict = {
   "section.chat": "Discussion",
+  "section.issues": "Sujets",
   "section.team": "Équipe",
   "section.runtimes": "Environnements",
   "section.settings": "Paramètres",
@@ -1544,6 +1553,7 @@ const fr: Dict = {
 
 const de: Dict = {
   "section.chat": "Chat",
+  "section.issues": "Vorgänge",
   "section.team": "Team",
   "section.runtimes": "Runtimes",
   "section.settings": "Einstellungen",
@@ -1609,6 +1619,7 @@ const de: Dict = {
 
 const ptBR: Dict = {
   "section.chat": "Conversas",
+  "section.issues": "Questões",
   "section.team": "Equipe",
   "section.runtimes": "Ambientes",
   "section.settings": "Configurações",
@@ -1674,6 +1685,7 @@ const ptBR: Dict = {
 
 const ru: Dict = {
   "section.chat": "Чат",
+  "section.issues": "Задачи",
   "section.team": "Команда",
   "section.runtimes": "Среды",
   "section.settings": "Настройки",
@@ -1739,6 +1751,7 @@ const ru: Dict = {
 
 const it: Dict = {
   "section.chat": "Chat",
+  "section.issues": "Issue",
   "section.team": "Team",
   "section.runtimes": "Runtime",
   "section.settings": "Impostazioni",
@@ -1804,6 +1817,7 @@ const it: Dict = {
 
 const vi: Dict = {
   "section.chat": "Trò chuyện",
+  "section.issues": "Vấn đề",
   "section.team": "Nhóm",
   "section.runtimes": "Môi trường",
   "section.settings": "Cài đặt",

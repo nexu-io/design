@@ -14,17 +14,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@nexu-design/ui-web";
-import { Check, LogOut, MessageSquare, Plus, Settings, Users, Zap } from "lucide-react";
+import { Check, Inbox, LogOut, MessageSquare, Plus, Settings, Users, Zap } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useT, type TranslationKey } from "@/i18n";
 import { useWorkspaceStore } from "@/stores/workspace";
+import { useTopicsStore } from "@/stores/topics";
 
 import { TitleBarSpacer } from "./WindowChrome";
 
 const navItems: { icon: typeof MessageSquare; path: string; labelKey: TranslationKey }[] = [
   { icon: MessageSquare, path: "/chat", labelKey: "section.chat" },
+  { icon: Inbox, path: "/issues", labelKey: "section.issues" },
   { icon: Users, path: "/agents", labelKey: "section.team" },
   { icon: Zap, path: "/runtimes", labelKey: "section.runtimes" },
 ];
@@ -42,6 +44,20 @@ export function ActivityBar(): React.ReactElement {
   const t = useT();
   const { workspace, workspaces, switchWorkspace, reset } = useWorkspaceStore();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const inboxUnreadCount = useTopicsStore((s) => {
+    let count = 0;
+    for (const topic of Object.values(s.topics)) {
+      if (!topic.issue) continue;
+      const lastRead = s.readAt[topic.id] ?? 0;
+      const msgs = s.messages[topic.id] ?? [];
+      const hasUnread = msgs.some(
+        (m) => m.sender.id !== "u-1" && m.createdAt > lastRead,
+      );
+      if (hasUnread) count += 1;
+    }
+    return count;
+  });
 
   return (
     <UiActivityBar className="w-14 border-r-0 bg-nav-surface py-0 text-nav-fg">
@@ -137,19 +153,25 @@ export function ActivityBar(): React.ReactElement {
       <ActivityBarContent className="gap-1.5">
         {navItems.map(({ icon: Icon, path, labelKey }) => {
           const isActive = location.pathname.startsWith(path);
+          const showInboxBadge = path === "/issues" && inboxUnreadCount > 0;
 
           return (
             <ActivityBarItem
               key={path}
               active={isActive}
               onClick={() => navigate(path)}
-              className="no-drag size-10 rounded-xl text-nav-muted hover:bg-nav-hover hover:text-nav-fg data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg"
+              className="no-drag relative size-10 rounded-xl text-nav-muted hover:bg-nav-hover hover:text-nav-fg data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg"
               title={t(labelKey)}
             >
               {isActive ? (
                 <ActivityBarIndicator className="left-[-8px] inset-y-2 w-[3px] bg-nav-active-fg" />
               ) : null}
               <Icon className="size-[19px]" />
+              {showInboxBadge ? (
+                <span className="absolute -right-0.5 -top-0.5 flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-brand-primary px-1 text-[10px] font-semibold text-accent-fg">
+                  {inboxUnreadCount}
+                </span>
+              ) : null}
             </ActivityBarItem>
           );
         })}

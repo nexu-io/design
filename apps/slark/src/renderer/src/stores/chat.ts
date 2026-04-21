@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import type { Channel, Message } from "@/types";
+import type { Channel, IssueMeta, Message } from "@/types";
+import { useTopicsStore } from "./topics";
 
 interface ChatState {
   channels: Channel[];
@@ -7,6 +8,7 @@ interface ChatState {
   messages: Record<string, Message[]>;
   pendingDraft: string | null;
   pinnedIds: string[];
+  hiddenIds: string[];
 
   setChannels: (channels: Channel[]) => void;
   setActiveChannel: (id: string) => void;
@@ -17,14 +19,28 @@ interface ChatState {
   updateMessage: (channelId: string, messageId: string, updates: Partial<Message>) => void;
   setPendingDraft: (text: string | null) => void;
   togglePin: (channelId: string) => void;
+  toggleHide: (id: string) => void;
+  convertToTopic: (channelId: string, messageId: string, titleOverride?: string) => string | null;
+  convertToIssue: (
+    channelId: string,
+    messageId: string,
+    input?: { title?: string; assigneeAgentId?: string; labels?: string[] },
+  ) => string | null;
 }
 
-export const useChatStore = create<ChatState>((set) => ({
+function deriveTitleFromContent(content: string, fallback: string): string {
+  const stripped = content.replace(/\s+/g, " ").trim();
+  if (!stripped) return fallback;
+  return stripped.length > 60 ? `${stripped.slice(0, 60)}…` : stripped;
+}
+
+export const useChatStore = create<ChatState>((set, get) => ({
   channels: [],
   activeChannelId: null,
   messages: {},
   pendingDraft: null,
   pinnedIds: [],
+  hiddenIds: [],
 
   setChannels: (channels) => set({ channels }),
 
@@ -70,4 +86,82 @@ export const useChatStore = create<ChatState>((set) => ({
         ? s.pinnedIds.filter((id) => id !== channelId)
         : [...s.pinnedIds, channelId],
     })),
+
+  toggleHide: (id) =>
+    set((s) => ({
+      hiddenIds: s.hiddenIds.includes(id)
+        ? s.hiddenIds.filter((x) => x !== id)
+        : [...s.hiddenIds, id],
+    })),
+
+  convertToTopic: (channelId, messageId, titleOverride) => {
+    const rootMsg = get().messages[channelId]?.find((m: Message) => m.id === messageId);
+    if (!rootMsg) return null;
+    if (rootMsg.derivedTopicId) return rootMsg.derivedTopicId;
+
+    const participants = rootMsg.mentions.length
+      ? [rootMsg.sender, ...rootMsg.mentions]
+      : [rootMsg.sender];
+
+    const topicId = useTopicsStore.getState().createTopic({
+      rootChannelId: channelId,
+      rootMessageId: messageId,
+      title: titleOverride ?? deriveTitleFromContent(rootMsg.content, "Topic"),
+      participants,
+    });
+
+    set((s) => ({
+      messages: {
+        ...s.messages,
+        [channelId]: (s.messages[channelId] ?? []).map((m) =>
+          m.id === messageId ? { ...m, derivedTopicId: topicId } : m,
+        ),
+      },
+    }));
+
+    return topicId;
+  },
+
+  convertToIssue: (channelId, messageId, input) => {
+    const rootMsg = get().messages[channelId]?.find((m: Message) => m.id === messageId);
+    if (!rootMsg) return null;
+
+    const issueMeta: IssueMeta = {
+      status: "todo",
+      assigneeAgentId:
+        input?.assigneeAgentId ?? rootMsg.mentions.find((m) => m.kind === "agent")?.id,
+      labels: input?.labels,
+      createdAt: Date.now(),
+    };
+
+    const title = input?.title ?? deriveTitleFromContent(rootMsg.content, "Issue");
+
+    let topicId: string | null = rootMsg.derivedTopicId ?? null;
+    if (!topicId) {
+      const participants = rootMsg.mentions.length
+        ? [rootMsg.sender, ...rootMsg.mentions]
+        : [rootMsg.sender];
+      topicId = useTopicsStore.getState().createTopic({
+        rootChannelId: channelId,
+        rootMessageId: messageId,
+        title,
+        participants,
+        issue: issueMeta,
+      });
+      const newTopicId = topicId;
+      set((s) => ({
+        messages: {
+          ...s.messages,
+          [channelId]: (s.messages[channelId] ?? []).map((m) =>
+            m.id === messageId ? { ...m, derivedTopicId: newTopicId } : m,
+          ),
+        },
+      }));
+    } else {
+      useTopicsStore.getState().setIssueMeta(topicId, issueMeta);
+      useTopicsStore.getState().updateTopic(topicId, { title });
+    }
+
+    return topicId;
+  },
 }));

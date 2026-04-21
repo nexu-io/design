@@ -10,6 +10,7 @@ import { DevPanel } from "@/components/layout/DevPanel";
 import { WelcomePage } from "@/components/onboarding/WelcomePage";
 import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
 import { ChatView } from "@/components/chat/ChatView";
+import { IssuesView } from "@/components/issues/IssuesView";
 import { AgentsView } from "@/components/agents/AgentsView";
 import { AgentDetail } from "@/components/agents/AgentDetail";
 import { UserDetail } from "@/components/agents/UserDetail";
@@ -90,6 +91,7 @@ export function App(): React.ReactElement {
               <Route path="/" element={<Navigate to="/chat/ch-welcome" replace />} />
               <Route path="/chat" element={<Navigate to="/chat/ch-welcome" replace />} />
               <Route path="/chat/:channelId" element={<ChatView />} />
+              <Route path="/issues" element={<IssuesView />} />
               <Route path="/agents" element={<AgentsView />} />
               <Route path="/agents/:memberId" element={<MemberDetailRoute />} />
               <Route path="/runtimes" element={<RuntimesView />} />

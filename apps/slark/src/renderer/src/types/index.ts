@@ -162,9 +162,29 @@ export interface Message {
     kind: "join";
     members: MemberRef[];
   };
+  derivedTopicId?: string;
 }
 
 export interface Reaction {
   emoji: string;
   users: string[];
+}
+
+export type IssueStatus = "todo" | "in_progress" | "in_review" | "blocked" | "done";
+
+export interface IssueMeta {
+  status: IssueStatus;
+  assigneeAgentId?: string;
+  labels?: string[];
+  createdAt: number;
+}
+
+export interface Topic {
+  id: string;
+  rootChannelId: string;
+  rootMessageId: string;
+  title: string;
+  createdAt: number;
+  participants: MemberRef[];
+  issue?: IssueMeta;
 }

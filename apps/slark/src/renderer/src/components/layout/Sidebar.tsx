@@ -61,6 +61,8 @@ export function Sidebar(): React.ReactElement {
     return null;
   };
 
+  if (location.pathname.startsWith("/issues")) return <></>;
+
   const workspaceInitial = (workspace?.name ?? "N").charAt(0).toUpperCase();
   const workspaceHandle = workspace
     ? `${workspace.name.toLowerCase().replace(/\s+/g, "-")}.nexu.app`
