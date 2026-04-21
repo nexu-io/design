@@ -14,7 +14,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@nexu-design/ui-web";
-import { Check, Inbox, LogOut, MessageSquare, Plus, Settings, Users, Zap } from "lucide-react";
+import {
+  Check,
+  Inbox,
+  LogOut,
+  MessageSquare,
+  Plus,
+  Settings,
+  Users,
+  Workflow,
+  Zap,
+} from "lucide-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -29,6 +39,7 @@ const navItems: { icon: typeof MessageSquare; path: string; labelKey: Translatio
   { icon: Inbox, path: "/issues", labelKey: "section.issues" },
   { icon: Users, path: "/agents", labelKey: "section.team" },
   { icon: Zap, path: "/runtimes", labelKey: "section.runtimes" },
+  { icon: Workflow, path: "/routines", labelKey: "section.routines" },
 ];
 
 function getWorkspaceSlug(name: string): string {
