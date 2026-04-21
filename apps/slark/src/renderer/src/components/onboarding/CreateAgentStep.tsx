@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Rocket, Plus, Search } from "lucide-react";
+import { ArrowLeft, Plus, Search } from "lucide-react";
 import {
   Button,
   Dialog,
@@ -118,26 +118,38 @@ export function CreateAgentStep(): React.ReactElement {
   if (phase === "templates") {
     return (
       <div className="flex flex-col items-center gap-6 pt-8">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold">Create your first Agent</h2>
-          <p className="text-muted-foreground mt-2">Choose a template to get started</p>
+        <div className="text-center animate-in fade-in slide-in-from-bottom-2 duration-500">
+          <h2 className="text-xl font-semibold text-text-primary">Create your first Agent</h2>
+          <p className="mt-1 text-sm text-text-secondary">Choose a template to get started</p>
         </div>
         <div className="grid grid-cols-2 gap-3 w-full">
-          {mockAgentTemplates.map((tpl) => (
+          {mockAgentTemplates.map((tpl, i) => (
             <InteractiveRow
               key={tpl.id}
               onClick={() => handleSelectTemplate(tpl)}
               tone="subtle"
-              className="items-start rounded-xl border border-border px-3 py-3"
+              className={cn(
+                "group items-start rounded-xl border border-border px-3 py-3",
+                "transition-all duration-200 ease-out",
+                "hover:-translate-y-0.5 hover:shadow-[0_6px_20px_-10px_rgba(0,0,0,0.18),0_2px_6px_-2px_rgba(0,0,0,0.08)] hover:border-border-strong",
+                "animate-in fade-in slide-in-from-bottom-3",
+              )}
+              style={{
+                animationDuration: "420ms",
+                animationDelay: `${120 + i * 80}ms`,
+                animationFillMode: "both",
+              }}
             >
               <InteractiveRowLeading>
-                <img src={tpl.avatar} alt="" className="h-10 w-10 rounded-lg shrink-0" />
+                <img
+                  src={tpl.avatar}
+                  alt=""
+                  className="size-10 rounded-lg shrink-0 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-6"
+                />
               </InteractiveRowLeading>
               <InteractiveRowContent>
-                <div className="font-medium text-sm">{tpl.name}</div>
-                <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
-                  {tpl.description}
-                </div>
+                <div className="text-sm font-medium text-text-primary">{tpl.name}</div>
+                <div className="mt-0.5 line-clamp-2 text-xs text-text-muted">{tpl.description}</div>
               </InteractiveRowContent>
             </InteractiveRow>
           ))}
@@ -145,12 +157,19 @@ export function CreateAgentStep(): React.ReactElement {
         <Button
           onClick={handleBlankAgent}
           variant="outline"
-          className="h-11 w-full border-dashed text-muted-foreground"
-          leadingIcon={<Plus className="h-4 w-4" />}
+          className="w-full border-dashed shadow-none hover:shadow-none animate-in fade-in duration-500"
+          style={{ animationDelay: "460ms", animationFillMode: "both" }}
+          leadingIcon={<Plus className="size-4" />}
         >
-          <span className="text-sm font-medium">Start from scratch</span>
+          Start from scratch
         </Button>
-        <Button onClick={handleSkip} variant="ghost" className="mt-2">
+        <Button
+          onClick={handleSkip}
+          variant="ghost"
+          size="sm"
+          className="animate-in fade-in duration-500"
+          style={{ animationDelay: "540ms", animationFillMode: "both" }}
+        >
           Skip for now
         </Button>
       </div>
@@ -160,17 +179,19 @@ export function CreateAgentStep(): React.ReactElement {
   return (
     <div className="flex flex-col items-center gap-6 pt-8">
       <div className="text-center">
-        <h2 className="text-2xl font-semibold">Customize your Agent</h2>
-        <p className="text-muted-foreground mt-2">Set a name, description, and connect a runtime</p>
+        <h2 className="text-xl font-semibold text-text-primary">Customize your Agent</h2>
+        <p className="mt-1 text-sm text-text-secondary">
+          Set a name, description, and connect a runtime
+        </p>
       </div>
 
-      <div className="w-full max-w-md space-y-5">
+      <div className="w-full max-w-md space-y-4">
         {selectedTemplate && (
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-accent/50 border border-border">
-            <img src={selectedTemplate.avatar} alt="" className="h-10 w-10 rounded-lg shrink-0" />
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-surface-1 border border-border">
+            <img src={selectedTemplate.avatar} alt="" className="size-10 rounded-lg shrink-0" />
             <div className="min-w-0 flex-1">
-              <div className="text-xs text-muted-foreground">Based on template</div>
-              <div className="text-sm font-medium">{selectedTemplate.name}</div>
+              <div className="text-xs text-text-muted">Based on template</div>
+              <div className="text-sm font-medium text-text-primary">{selectedTemplate.name}</div>
             </div>
           </div>
         )}
@@ -220,13 +241,13 @@ export function CreateAgentStep(): React.ReactElement {
                     <span className="flex w-full items-center gap-2">
                       <span
                         className={cn(
-                          "h-2 w-2 rounded-full shrink-0",
-                          rt.status === "connected" ? "bg-nexu-online" : "bg-nexu-offline",
+                          "size-2 rounded-full shrink-0",
+                          rt.status === "connected" ? "bg-success" : "bg-surface-3",
                         )}
                       />
                       <span className="truncate">{rt.name}</span>
                       {rt.version ? (
-                        <span className="text-xs text-muted-foreground">v{rt.version}</span>
+                        <span className="text-xs text-text-muted">v{rt.version}</span>
                       ) : null}
                     </span>
                   </SelectItem>
@@ -235,16 +256,15 @@ export function CreateAgentStep(): React.ReactElement {
             </Select>
           </FormFieldControl>
           {connectedRuntimes.length === 0 && (
-            <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+            <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-text-muted">
               No runtimes detected.
               <Button
                 onClick={handleDetectRuntimes}
                 type="button"
                 variant="link"
                 size="inline"
-                className="h-auto text-foreground"
+                leadingIcon={<Search className="size-3" />}
               >
-                <Search className="h-3 w-3" />
                 Scan now
               </Button>
             </p>
@@ -252,20 +272,17 @@ export function CreateAgentStep(): React.ReactElement {
         </FormField>
       </div>
 
-      <div className="flex items-center gap-3 mt-4">
+      <div className="w-full max-w-md flex flex-col items-center gap-2 mt-2">
+        <Button onClick={handleCreate} disabled={!agentName.trim()} className="w-full">
+          Create Agent
+        </Button>
         <Button
           onClick={handleBackToTemplates}
           variant="ghost"
-          leadingIcon={<ArrowLeft className="h-4 w-4" />}
+          size="sm"
+          leadingIcon={<ArrowLeft className="size-3.5" />}
         >
           Back to templates
-        </Button>
-        <Button
-          onClick={handleCreate}
-          disabled={!agentName.trim()}
-          leadingIcon={<Rocket className="h-4 w-4" />}
-        >
-          Create Agent
         </Button>
       </div>
 

@@ -10,6 +10,14 @@ interface SlarkAuthFrameProps {
   contentInnerClassName?: string;
   hideBranding?: boolean;
   hideFooter?: boolean;
+  /**
+   * Vertical alignment of content within the shell.
+   * - "center" (default): vertically centered — good for single, short auth screens.
+   * - "top": anchored to top with a comfortable offset — use for multi-step flows
+   *   where content height varies (onboarding) so the upper elements don't shift
+   *   when the lower ones grow/shrink.
+   */
+  verticalAlign?: "center" | "top";
 }
 
 function SlarkAuthBackdrop(): React.ReactElement {
@@ -99,6 +107,7 @@ export function SlarkAuthFrame({
   contentInnerClassName,
   hideBranding = false,
   hideFooter = false,
+  verticalAlign = "center",
 }: SlarkAuthFrameProps): React.ReactElement {
   return (
     <div className="relative flex h-screen flex-col overflow-hidden bg-background">
@@ -108,10 +117,13 @@ export function SlarkAuthFrame({
           rail={hideBranding ? undefined : <SlarkBrandRail />}
           className="h-full min-h-full"
           contentBackdrop={<SlarkAuthBackdrop />}
-          contentContainerClassName="items-center p-0"
+          contentContainerClassName={cn(
+            "p-0",
+            verticalAlign === "top" ? "items-start pt-[10vh]" : "items-center",
+          )}
           contentInnerClassName={cn("mx-auto w-full max-w-[420px]", contentInnerClassName)}
         >
-          <div className="flex min-h-full flex-col justify-center px-5 py-8">
+          <div className="flex min-h-full flex-col px-5 pb-8">
             {children}
             {hideFooter ? null : (
               <div className="mt-8">
