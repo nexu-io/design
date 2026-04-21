@@ -97,7 +97,7 @@ jobs:
           PUSH_RANGE="${{ github.event.before }}..${{ github.sha }}"
           COMMIT_SUBJECTS="$(git log --format=%s "$PUSH_RANGE")"
 
-          if printf '%s\n' "$COMMIT_SUBJECTS" | grep -Eq '^chore: version packages$'; then
+          if printf '%s\n' "$COMMIT_SUBJECTS" | grep -Eq '^chore: version packages( \(#([0-9]+)\))?$'; then
             echo "should_publish=true" >> "$GITHUB_OUTPUT"
           else
             echo "should_publish=false" >> "$GITHUB_OUTPUT"
