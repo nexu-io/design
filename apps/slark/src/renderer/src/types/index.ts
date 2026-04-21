@@ -161,13 +161,12 @@ export type ContentBlock =
       preview?: string;
       assignee?: { name: string; isAgent?: boolean; accent?: string };
       /**
-       * Conversation under this topic — the reply thread that will be
-       * surfaced in the right-side topic detail panel (deferred to a later
-       * release on `feature/chat-tabs-and-topic-panel`). Kept on the type
-       * today so mock data stays valid and the feature branch merges
-       * cleanly. The shape is pre-baked for mocks: `createdAtLabel` is
-       * already the display string ("2 min ago") instead of a timestamp,
-       * since this mock data doesn't drive any time-sensitive logic.
+       * Conversation under this topic — the reply thread shown in the right-
+       * side TopicDetailPanel. Optional because not every topic ships with
+       * canned replies (new topics just show an empty thread state). The
+       * shape is pre-baked for mocks: `createdAtLabel` is already the
+       * display string ("2 min ago") instead of a timestamp, since this
+       * mock data doesn't drive any time-sensitive logic.
        */
       thread?: TopicThreadMessage[];
     };
