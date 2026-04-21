@@ -182,10 +182,15 @@ export const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
                   key={r.emoji}
                   data-reacted={r.reacted ? "" : undefined}
                   className={cn(
+                    // Monochrome pill. Reacted state carries the same surface-2
+                    // wash + border as the hover preview, so hovering an
+                    // un-reacted pill visually foreshadows what clicking will
+                    // do. Brand teal was over-weighting emoji reactions in the
+                    // feed — they'd read louder than the message itself.
                     "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] transition-colors",
                     r.reacted
-                      ? "border-brand-subtle bg-brand-subtle text-brand-primary"
-                      : "border-border-subtle bg-surface-1 text-text-secondary hover:border-border-hover hover:bg-brand-subtle hover:text-brand-primary",
+                      ? "border-border bg-surface-2 text-text-primary"
+                      : "border-border-subtle bg-surface-1 text-text-secondary hover:border-border hover:bg-surface-2 hover:text-text-primary",
                   )}
                 >
                   <span>{r.emoji}</span>
