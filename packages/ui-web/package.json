@@ -1,6 +1,6 @@
 {
   "name": "@nexu-design/ui-web",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": false,
   "description": "React primitives and patterns for building Nexu web interfaces",
   "license": "UNLICENSED",
@@ -24,7 +24,7 @@
     "react-dom": "^19.0.0"
   },
   "dependencies": {
-    "@nexu-design/tokens": "workspace:^0.1.0",
+    "@nexu-design/tokens": "workspace:^1.0.0",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-checkbox": "^1.3.2",
     "@radix-ui/react-dialog": "^1.1.14",
