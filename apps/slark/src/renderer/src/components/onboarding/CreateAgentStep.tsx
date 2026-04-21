@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Search } from "lucide-react";
+import { ArrowLeft, Check, Copy, Mail, Plus, Search, Send } from "lucide-react";
 import {
+  Badge,
   Button,
   Dialog,
   DialogBody,
@@ -47,6 +48,68 @@ export function CreateAgentStep(): React.ReactElement {
   const [description, setDescription] = useState("");
   const [runtimeId, setRuntimeId] = useState<string | null>(null);
   const [showDiscardDialog, setShowDiscardDialog] = useState(false);
+
+  // Invite teammates (moved here from Step 1). Kept optional — onboarding
+  // already requires workspace + runtime + first agent, so forcing an
+  // invite step earlier added friction without changing completion rate.
+  // At the last step the user has already seen the product shape, which
+  // is a better moment to ask "who should join you?".
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [invitedEmails, setInvitedEmails] = useState<string[]>([]);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const errorTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  const inviteToken = useMemo(
+    () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36),
+    [],
+  );
+  const inviteLinkUrl = `${window.location.origin}/invite/${inviteToken}`;
+
+  const isValidEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const showEmailError = (msg: string): void => {
+    setEmailError(msg);
+    if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+    errorTimerRef.current = setTimeout(() => setEmailError(""), 3000);
+  };
+
+  const addEmail = (): void => {
+    const email = emailInput.trim();
+    if (!email) return;
+    if (!isValidEmail(email)) {
+      showEmailError("Please enter a valid email address");
+      return;
+    }
+    if (invitedEmails.includes(email)) {
+      showEmailError("This email has already been added");
+      return;
+    }
+    setInvitedEmails((prev) => [...prev, email]);
+    setEmailInput("");
+    setEmailError("");
+  };
+
+  const handleEmailKeyDown = (e: React.KeyboardEvent): void => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addEmail();
+    }
+  };
+
+  const handleCopyInviteLink = async (): Promise<void> => {
+    try {
+      await navigator.clipboard.writeText(inviteLinkUrl);
+    } catch {
+      // fallback — ignore
+    }
+    setLinkCopied(true);
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => setLinkCopied(false), 2000);
+  };
 
   const handleSelectTemplate = (tpl: AgentTemplate): void => {
     setSelectedTemplate(tpl);
@@ -163,12 +226,105 @@ export function CreateAgentStep(): React.ReactElement {
         >
           Start from scratch
         </Button>
+
+        {/* Invite teammates — moved from Step 1 into this final step.
+            Rendered as a collapsible solid-bordered card so the affordance
+            visually matches "Start from scratch" above (both are outline
+            buttons of equal weight); the previous dashed border made this
+            read as an unfinished/placeholder region. */}
+        <div
+          className="w-full rounded-lg border border-border animate-in fade-in duration-500"
+          style={{ animationDelay: "520ms", animationFillMode: "both" }}
+        >
+          <button
+            type="button"
+            onClick={() => setInviteOpen((v) => !v)}
+            aria-expanded={inviteOpen}
+            // `h-10` matches the outline Button default height so this row
+            // lines up with `Start from scratch` above.
+            className="flex h-10 w-full items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-2/40"
+          >
+            <Plus className="size-3.5" />
+            Invite teammates
+            {invitedEmails.length > 0 ? (
+              <span className="ml-1 text-text-muted font-normal">· {invitedEmails.length}</span>
+            ) : null}
+          </button>
+
+          {inviteOpen ? (
+            <div className="space-y-3 px-3 pb-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1">
+                    <Input
+                      ref={emailRef}
+                      type="email"
+                      value={emailInput}
+                      onChange={(e) => setEmailInput(e.target.value)}
+                      onKeyDown={handleEmailKeyDown}
+                      placeholder="colleague@company.com"
+                      leadingIcon={<Mail className="size-4 text-text-muted" />}
+                      invalid={Boolean(emailError)}
+                    />
+                  </div>
+                  <Button
+                    onClick={addEmail}
+                    disabled={!emailInput.trim()}
+                    size="sm"
+                    leadingIcon={<Send className="size-3.5" />}
+                  >
+                    Invite
+                  </Button>
+                </div>
+                {emailError ? (
+                  <p className="mt-1.5 text-xs text-destructive">{emailError}</p>
+                ) : null}
+              </div>
+
+              <Button
+                onClick={handleCopyInviteLink}
+                variant="secondary"
+                size="sm"
+                className="w-full justify-center"
+                leadingIcon={
+                  linkCopied ? (
+                    <Check className="size-3.5 text-success" />
+                  ) : (
+                    <Copy className="size-3.5" />
+                  )
+                }
+              >
+                {linkCopied ? "Invite link copied" : "Share invite link"}
+              </Button>
+
+              {invitedEmails.length > 0 ? (
+                <div className="space-y-1">
+                  {invitedEmails.map((email) => (
+                    <div
+                      key={email}
+                      className="flex items-center gap-3 rounded-md bg-surface-1/60 px-2.5 py-2"
+                    >
+                      <Mail className="size-4 text-text-muted shrink-0" />
+                      <div className="flex-1 min-w-0 text-sm text-text-primary truncate">
+                        {email}
+                      </div>
+                      <Badge variant="success" size="xs">
+                        Sent
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+
         <Button
           onClick={handleSkip}
           variant="ghost"
           size="sm"
           className="animate-in fade-in duration-500"
-          style={{ animationDelay: "540ms", animationFillMode: "both" }}
+          style={{ animationDelay: "600ms", animationFillMode: "both" }}
         >
           Skip for now
         </Button>

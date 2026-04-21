@@ -10,10 +10,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@nexu-design/ui-web";
-import { Check, LogOut, MessageSquare, Plus, Settings, Users, Zap } from "lucide-react";
+import { Check, MessageSquare, Plus, Settings, Users, Zap } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -39,11 +38,11 @@ export function ActivityBar(): React.ReactElement {
   const navigate = useNavigate();
   const location = useLocation();
   const t = useT();
-  const { workspace, workspaces, switchWorkspace, reset } = useWorkspaceStore();
+  const { workspace, workspaces, switchWorkspace } = useWorkspaceStore();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <UiActivityBar className="w-14 border-r border-border-subtle bg-nav/80 backdrop-blur-md py-0 text-nav-fg">
+    <UiActivityBar surface="glass" className="w-14 border-r border-border-subtle py-0 text-nav-fg">
       <TitleBarSpacer className="mb-3 h-[38px]" />
 
       <ActivityBarHeader className="mb-4 w-10 border-b-0 pb-0">
@@ -119,24 +118,13 @@ export function ActivityBar(): React.ReactElement {
               ) : null}
             </DropdownMenuItem>
 
-            <DropdownMenuSeparator />
-
-            {/* Sign-out follows the destructive-intent hover rule in
-                `AGENTS.md`: resting state stays neutral dark text (so the
-                row doesn't shout at users every time they open the menu),
-                and destructive red only appears on hover / keyboard focus
-                to signal the irreversible action. The `LogOut` glyph uses
-                `currentColor` and inherits the same transition. */}
-            <DropdownMenuItem
-              onClick={() => {
-                reset();
-                navigate("/");
-              }}
-              className="gap-2.5 rounded-lg px-3 py-2 text-text-primary hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive"
-            >
-              <LogOut className="size-3.5" />
-              Sign out of Nexu
-            </DropdownMenuItem>
+            {/* Sign-out was intentionally removed from the workspace
+                switcher. This menu is a workspace picker — mixing a
+                destructive account action into it conflates "switch
+                tenant" with "leave the product", and users expect
+                sign-out to live in Settings / account UI. The picker
+                now ends on `Add workspace`, keeping the menu scoped to
+                workspace-level intents. */}
           </DropdownMenuContent>
         </DropdownMenu>
       </ActivityBarHeader>

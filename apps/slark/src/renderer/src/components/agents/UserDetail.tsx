@@ -1,5 +1,5 @@
 import { cn } from "@nexu-design/ui-web";
-import { Hash, Mail, MessageSquare } from "lucide-react";
+import { Hash, Mail, MessageSquare, Shield } from "lucide-react";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -130,15 +130,22 @@ export function UserDetail({ user }: UserDetailProps): React.ReactElement {
             <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
               Profile
             </h2>
+            {/* Profile rows: tight label column (`w-14` ≈ 56px) fits
+                "Email"/"Role" with just enough breathing room; the
+                previous `w-24` left ~50px of empty space between label
+                and value and made the pair feel disconnected. Every row
+                now also has a leading glyph — Role picked up `Shield`
+                to mirror the `Mail` pattern on Email, instead of the
+                empty spacer that silently held the column. */}
             <div className="rounded-lg border border-border p-4 space-y-3">
               <div className="flex items-center gap-3 text-sm">
                 <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-                <span className="text-muted-foreground w-24 shrink-0">Email</span>
+                <span className="text-muted-foreground w-14 shrink-0">Email</span>
                 <span className="truncate">{user.email}</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
-                <span className="h-4 w-4 shrink-0" />
-                <span className="text-muted-foreground w-24 shrink-0">Role</span>
+                <Shield className="h-4 w-4 text-muted-foreground shrink-0" />
+                <span className="text-muted-foreground w-14 shrink-0">Role</span>
                 <span className="capitalize">{user.role}</span>
               </div>
             </div>
