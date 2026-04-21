@@ -46,7 +46,7 @@ export const VoiceMessage = React.forwardRef<HTMLDivElement, VoiceMessageProps>(
         ref={ref}
         data-slot="voice-message"
         className={cn(
-          "flex w-[320px] max-w-full flex-col gap-2 rounded-lg border border-border bg-surface-1 px-3 py-2.5",
+          "flex w-[360px] max-w-full flex-col gap-2 rounded-lg border border-border bg-surface-1 px-3 py-2.5",
           className,
         )}
         {...props}

@@ -104,8 +104,8 @@ function ImageBlock({
     <ImageAttachment
       src={block.url}
       alt={block.alt ?? ""}
-      width={320}
-      height={200}
+      width={360}
+      height={220}
       onSelect={onExpand}
       caption={block.alt}
     />
