@@ -8,7 +8,19 @@ function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimi
   return (
     <AvatarPrimitive.Root
       data-slot="avatar"
-      className={cn("relative flex size-10 shrink-0 overflow-hidden rounded-full", className)}
+      // `ring-1` (box-shadow) over `border` intentionally:
+      //  - draws a 1px outline *outside* the element, so the image inside
+      //    isn't shrunk (user requirement: 描边在外侧).
+      //  - doesn't change the avatar's layout size.
+      //  - follows `rounded-full` so the ring is a perfect circle.
+      // Consumers that want a thicker contrast ring (e.g. stacked avatars on
+      // a colored backdrop) can still pass `border-*` via className and it
+      // will sit between the image and this outer ring.
+      className={cn(
+        "relative flex size-10 shrink-0 overflow-hidden rounded-full",
+        "ring-1 ring-[var(--color-border-subtle)]",
+        className,
+      )}
       {...props}
     />
   );

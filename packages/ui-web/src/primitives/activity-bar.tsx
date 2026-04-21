@@ -1,16 +1,44 @@
 import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 import { cn } from "../lib/cn";
 
-export function ActivityBar({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+/**
+ * `surface` controls the rail background:
+ *  - `solid` (default): opaque `bg-surface-1`, safe on any host.
+ *  - `glass`: a light frosted-glass wash (`bg-white/30 backdrop-saturate-150`)
+ *    designed to sit on top of a translucent host window. On macOS Electron
+ *    this gives a true frosted look when the host `BrowserWindow` opts into
+ *    `vibrancy: "sidebar"` (and locks `nativeTheme.themeSource = "light"` so
+ *    the native vibrancy always renders light). On web / non-vibrancy hosts
+ *    it degrades gracefully to a soft white tint — never dark.
+ */
+const activityBarVariants = cva(
+  "flex w-12 shrink-0 flex-col items-center border-r border-border py-2",
+  {
+    variants: {
+      surface: {
+        solid: "bg-surface-1",
+        glass: "bg-white/30 backdrop-saturate-150",
+      },
+    },
+    defaultVariants: {
+      surface: "solid",
+    },
+  },
+);
+
+export interface ActivityBarProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof activityBarVariants> {}
+
+export function ActivityBar({ className, surface, ...props }: ActivityBarProps) {
   return (
     <div
       data-slot="activity-bar"
-      className={cn(
-        "flex w-12 shrink-0 flex-col items-center border-r border-border bg-surface-1 py-2",
-        className,
-      )}
+      data-surface={surface ?? "solid"}
+      className={cn(activityBarVariants({ surface }), className)}
       {...props}
     />
   );

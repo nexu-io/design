@@ -3,11 +3,10 @@ import {
   AlertTriangle,
   ArrowRight,
   Check,
-  ExternalLink,
+  ChevronDown,
+  ArrowUpRight,
   Loader2,
   RefreshCw,
-  Search,
-  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -99,6 +98,16 @@ interface DetectedRuntime {
   error?: string;
 }
 
+const LOGO_OPTICAL_SCALE: Record<string, number> = {
+  codex: 1.45,
+  "gemini-cli": 1.25,
+  pi: 1.2,
+};
+
+function getLogoSize(base: number, type: string): number {
+  return Math.round(base * (LOGO_OPTICAL_SCALE[type] ?? 1));
+}
+
 const SCAN_DURATION = 3500;
 const STAGGER_DELAY = 400;
 
@@ -107,7 +116,6 @@ export function ConnectRuntimeStep(): React.ReactElement {
   const setGlobalRuntimes = useRuntimesStore((s) => s.setRuntimes);
   const devSimulateNone = useRuntimesStore((s) => s.devSimulateNone);
   const [phase, setPhase] = useState<"scanning" | "done">("scanning");
-  const [scanProgress, setScanProgress] = useState(0);
   const [runtimes, setRuntimes] = useState<DetectedRuntime[]>([
     { type: "claude-code", name: "Claude Code", desc: "Anthropic's coding agent", detected: false },
     { type: "cursor", name: "Cursor", desc: "AI-first code editor", detected: false },
@@ -121,12 +129,6 @@ export function ConnectRuntimeStep(): React.ReactElement {
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    const start = Date.now();
-    const progressInterval = setInterval(() => {
-      const elapsed = Date.now() - start;
-      setScanProgress(Math.min(elapsed / SCAN_DURATION, 1));
-    }, 50);
-
     const mockResults: { index: number; version: string; path: string; error?: string }[] =
       devSimulateNone
         ? []
@@ -149,8 +151,6 @@ export function ConnectRuntimeStep(): React.ReactElement {
       if (finished) return;
       finished = true;
       setPhase("done");
-      clearInterval(progressInterval);
-      setScanProgress(1);
     };
 
     const timers = mockResults.map(({ index, version, path, error }, i) =>
@@ -173,7 +173,6 @@ export function ConnectRuntimeStep(): React.ReactElement {
     const doneTimer = setTimeout(finishScan, SCAN_DURATION);
 
     return () => {
-      clearInterval(progressInterval);
       timers.forEach(clearTimeout);
       clearTimeout(doneTimer);
     };
@@ -197,192 +196,355 @@ export function ConnectRuntimeStep(): React.ReactElement {
     });
   };
 
+  const [showMore, setShowMore] = useState(false);
+
   const errorCount = runtimes.filter((r) => r.detected && r.error).length;
   const detectedCount = runtimes.filter((r) => r.detected).length;
   const showTutorial = phase === "done" && detectedCount === 0;
 
+  const readyRuntimes = runtimes.filter((r) => r.detected && !r.error);
+  const attentionRuntimes = runtimes.filter((r) => r.detected && !!r.error);
+  const notInstalled = runtimes.filter((r) => !r.detected);
+  const otherRuntimes = [...attentionRuntimes, ...notInstalled];
+
+  useEffect(() => {
+    if (phase === "done" && readyRuntimes.length === 0) {
+      setShowMore(true);
+    }
+  }, [phase, readyRuntimes.length]);
+
+  const goSkip = (): void => navigate("/onboarding/agent");
+  const goContinue = (): void => {
+    const selectedRuntimes: Runtime[] = runtimes
+      .filter((r) => r.detected && !r.error && selected.has(r.type))
+      .map((r) => ({
+        id: `rt-${r.type}`,
+        name: r.name,
+        type: r.type as Runtime["type"],
+        status: "connected" as const,
+        version: r.version,
+        config: r.path ? { path: r.path } : {},
+        ownerId: "u-1",
+      }));
+    setGlobalRuntimes(selectedRuntimes);
+    navigate("/onboarding/agent");
+  };
+
   return (
-    <div className={cn("flex flex-col items-center pt-6", showTutorial ? "gap-4" : "gap-6 pt-8")}>
+    <div className="flex flex-col items-center gap-6 pt-6">
       <div className="text-center max-w-lg">
-        <h2 className="text-2xl font-semibold">
+        <h2 className="text-xl font-semibold text-text-primary">
           {phase === "scanning"
-            ? "Detecting Runtimes..."
+            ? "Detecting runtimes…"
             : showTutorial
-              ? "No Runtimes Found"
-              : "Runtimes Detected"}
+              ? "No runtimes found"
+              : "Runtimes detected"}
         </h2>
-        <p className="text-muted-foreground mt-2">
-          {phase === "scanning"
-            ? "Scanning your system for installed AI runtimes"
-            : showTutorial
-              ? "Install a runtime below, then rescan."
-              : `Found ${detectedCount} runtime${detectedCount !== 1 ? "s" : ""} on your system${errorCount > 0 ? ` · ${errorCount} need attention` : ""}`}
-        </p>
-        {!showTutorial && (
-          <p className="text-xs text-muted-foreground/70 mt-3 leading-relaxed">
-            Runtimes power your Agents — each agent connects to a runtime to execute tasks.
-            <br />
-            Once set up, you can @mention agents in chat to assign work, just like messaging a
-            teammate.
+        {(phase === "scanning" || showTutorial) && (
+          <p className="mt-1 text-sm text-text-secondary">
+            {phase === "scanning"
+              ? "Scanning your system for installed AI runtimes"
+              : "Install a runtime below, then rescan."}
           </p>
         )}
       </div>
 
-      {!showTutorial && (
-        <div className="w-full max-w-2xl h-10">
-          {phase === "scanning" && (
-            <>
-              <div className="flex items-center gap-2 mb-3">
-                <Search className="h-4 w-4 text-muted-foreground animate-pulse" />
-                <span className="text-sm text-muted-foreground">
-                  Checking PATH and common install locations...
-                </span>
-              </div>
-              <div className="h-1 w-full rounded-full bg-secondary overflow-hidden">
-                <div
-                  className="h-full bg-foreground/60 rounded-full transition-all duration-100"
-                  style={{ width: `${scanProgress * 100}%` }}
-                />
-              </div>
-            </>
-          )}
-        </div>
+      {phase === "done" && !showTutorial && (
+        <StatusBar
+          readyCount={readyRuntimes.length}
+          attentionCount={errorCount}
+          totalCount={runtimes.length}
+          selectedCount={selected.size}
+        />
       )}
 
       {showTutorial && (
         <div className="grid grid-cols-4 gap-2.5 w-full max-w-2xl">
-          {INSTALL_GUIDES.map((g) => {
-            return (
-              <a
-                key={g.type}
-                href={g.docsUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="group flex flex-col gap-1.5 p-3 rounded-xl border border-border hover:border-muted-foreground/50 hover:bg-surface-2 transition-all text-left"
-              >
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-border bg-surface-1">
-                    <RuntimeLogo runtime={g.type} size={14} className="text-text-heading" />
-                  </div>
-                  <ExternalLink className="h-3 w-3 text-muted-foreground opacity-60 group-hover:opacity-100 transition-opacity" />
-                </div>
-                <div className="font-medium text-sm leading-tight">{g.name}</div>
-                <div className="text-[11px] text-muted-foreground truncate group-hover:text-foreground/80 transition-colors">
-                  {g.docsLabel}
-                </div>
-              </a>
-            );
-          })}
+          {INSTALL_GUIDES.map((g) => (
+            <a
+              key={g.type}
+              href={g.docsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="group flex flex-col gap-1.5 p-3 rounded-xl border border-border hover:border-border-hover hover:bg-surface-2 transition-all text-left"
+            >
+              <div className="flex items-center justify-between w-full">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-surface-1">
+                  <RuntimeLogo runtime={g.type} size={getLogoSize(16, g.type)} />
+                </span>
+                <ArrowUpRight className="size-3.5 text-text-primary" />
+              </div>
+              <div className="text-sm font-medium text-text-primary leading-tight">{g.name}</div>
+              <div className="text-[11px] text-text-muted truncate group-hover:text-text-secondary transition-colors">
+                {g.docsLabel}
+              </div>
+            </a>
+          ))}
         </div>
       )}
 
-      {!showTutorial && (
-        <div className="grid grid-cols-4 gap-3 w-full max-w-2xl">
-          {runtimes.map(({ type, name, desc, detected, version, path, error }) => {
-            const isSelected = selected.has(type);
-            const isScanning = phase === "scanning" && !detected;
-            const isError = detected && !!error;
-            const isWorking = detected && !error;
-            return (
-              <Button
-                type="button"
-                key={type}
-                onClick={() => phase === "done" && toggleSelect(type)}
-                disabled={phase === "scanning" || !isWorking}
-                variant="ghost"
-                className={cn(
-                  "flex flex-col items-start gap-2 p-4 rounded-xl border transition-all text-left relative min-h-[120px]",
-                  isWorking && isSelected
-                    ? "border-foreground bg-accent"
-                    : isWorking && !isSelected
-                      ? "border-border hover:border-muted-foreground/50"
-                      : isError
-                        ? "border-amber-500/40 bg-amber-500/5 opacity-80"
-                        : "border-border/50 opacity-50",
-                )}
-              >
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-border bg-surface-1">
-                    <RuntimeLogo
-                      runtime={type}
-                      size={14}
-                      className={cn(!detected ? "text-text-muted opacity-60" : "text-text-heading")}
-                    />
-                  </div>
-                  {isWorking && <Check className="h-3 w-3 text-nexu-online" />}
-                  {isError && <AlertTriangle className="h-3 w-3 text-amber-500" />}
-                  {phase === "done" && !detected && <X className="h-3 w-3 text-muted-foreground" />}
-                  {isScanning && <Loader2 className="h-3 w-3 text-muted-foreground animate-spin" />}
-                </div>
-                <div>
-                  <div className="font-medium text-sm">{name}</div>
-                  <div className="text-xs text-muted-foreground">{desc}</div>
-                </div>
-                {isWorking && (
-                  <div className="text-[11px] text-muted-foreground truncate w-full">
-                    v{version} · {path}
-                  </div>
-                )}
-                {isError && (
-                  <div className="text-[11px] text-amber-500 w-full leading-tight">
-                    v{version} · {error}
-                  </div>
-                )}
-                {phase === "done" && !detected && (
-                  <div className="text-[11px] text-muted-foreground">Not found</div>
-                )}
-              </Button>
-            );
-          })}
+      {phase === "scanning" && !showTutorial && (
+        <div className="grid grid-cols-3 gap-3 w-full max-w-2xl">
+          {runtimes.map((runtime) => (
+            <DetectedCard
+              key={runtime.type}
+              runtime={runtime}
+              phase={phase}
+              selected={selected}
+              onToggle={toggleSelect}
+            />
+          ))}
         </div>
       )}
 
-      <div className="flex items-center gap-3 mt-4">
-        <Button
-          type="button"
-          onClick={() => navigate("/onboarding/agent")}
-          variant="ghost"
-          className="h-10 px-5 rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Skip for now
-        </Button>
+      {phase === "done" && !showTutorial && (
+        <div className="w-full max-w-2xl flex flex-col gap-4">
+          {readyRuntimes.length > 0 && (
+            <div className="grid grid-cols-3 gap-3">
+              {readyRuntimes.map((runtime) => (
+                <DetectedCard
+                  key={runtime.type}
+                  runtime={runtime}
+                  phase={phase}
+                  selected={selected}
+                  onToggle={toggleSelect}
+                />
+              ))}
+            </div>
+          )}
+
+          {otherRuntimes.length > 0 && (
+            <div>
+              {readyRuntimes.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowMore((v) => !v)}
+                  aria-expanded={showMore}
+                  className="flex items-center gap-1.5 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
+                >
+                  <ChevronDown
+                    className={cn(
+                      "size-3.5 transition-transform",
+                      showMore ? "rotate-180" : "rotate-0",
+                    )}
+                  />
+                  {showMore ? "Hide" : "Show"} {otherRuntimes.length} other runtime
+                  {otherRuntimes.length !== 1 ? "s" : ""}
+                </button>
+              )}
+              {showMore && (
+                <div className={cn("grid grid-cols-3 gap-3", readyRuntimes.length > 0 && "mt-3")}>
+                  {otherRuntimes.map((runtime) => (
+                    <OtherRuntimeCard key={runtime.type} runtime={runtime} />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="flex flex-col items-center gap-2 mt-4">
         {showTutorial ? (
           <Button
             type="button"
             onClick={() => window.location.reload()}
-            variant="default"
-            className="flex items-center gap-2 h-10 px-5 rounded-lg bg-foreground text-background text-sm font-medium hover:bg-foreground/90 transition-colors"
+            className="min-w-[240px]"
+            leadingIcon={<RefreshCw className="size-4" />}
           >
-            <RefreshCw className="h-4 w-4" />
             Rescan
           </Button>
         ) : (
           <Button
             type="button"
-            onClick={() => {
-              const selectedRuntimes: Runtime[] = runtimes
-                .filter((r) => r.detected && !r.error && selected.has(r.type))
-                .map((r) => ({
-                  id: `rt-${r.type}`,
-                  name: r.name,
-                  type: r.type as Runtime["type"],
-                  status: "connected" as const,
-                  version: r.version,
-                  config: r.path ? { path: r.path } : {},
-                  ownerId: "u-1",
-                }));
-              setGlobalRuntimes(selectedRuntimes);
-              navigate("/onboarding/agent");
-            }}
+            onClick={goContinue}
             disabled={phase === "scanning" || selected.size === 0}
-            variant="default"
-            className="flex items-center gap-2 h-10 px-5 rounded-lg bg-foreground text-background text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-foreground/90 transition-colors"
+            className="min-w-[240px]"
+            trailingIcon={<ArrowRight className="size-4" />}
           >
             Continue with {selected.size} runtime{selected.size !== 1 ? "s" : ""}
-            <ArrowRight className="h-4 w-4" />
           </Button>
         )}
+        <Button type="button" onClick={goSkip} variant="ghost" size="sm">
+          Skip for now
+        </Button>
       </div>
     </div>
+  );
+}
+
+function StatusBar({
+  readyCount,
+  attentionCount,
+  totalCount,
+  selectedCount,
+}: {
+  readyCount: number;
+  attentionCount: number;
+  totalCount: number;
+  selectedCount: number;
+}): React.ReactElement {
+  const hasAttention = attentionCount > 0;
+  const allSelected = readyCount > 0 && selectedCount === readyCount;
+
+  const guidance = hasAttention
+    ? "Pick the ones you want, or resolve issues below to include more."
+    : readyCount === 0
+      ? "No runtimes can be used yet. Resolve issues below or skip for now."
+      : allSelected
+        ? "You're all set. Continue when ready."
+        : "Pick the runtimes you want to use, then continue.";
+
+  return (
+    <div className="w-full max-w-2xl flex items-center justify-between gap-4 rounded-lg border border-border bg-surface-1 px-4 py-2.5">
+      <div className="flex items-center gap-3">
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-text-primary">
+          <span
+            className={cn(
+              "inline-block size-1.5 rounded-full",
+              readyCount > 0 ? "bg-success" : "bg-border-strong",
+            )}
+          />
+          {readyCount}/{totalCount} ready
+        </span>
+        {hasAttention && (
+          <>
+            <span className="h-3 w-px bg-border" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-text-secondary">
+              <AlertTriangle className="size-3.5 text-text-muted" />
+              {attentionCount} need attention
+            </span>
+          </>
+        )}
+      </div>
+      <span className="text-xs text-text-secondary text-right">{guidance}</span>
+    </div>
+  );
+}
+
+function DetectedCard({
+  runtime,
+  phase,
+  selected,
+  onToggle,
+}: {
+  runtime: DetectedRuntime;
+  phase: "scanning" | "done";
+  selected: Set<string>;
+  onToggle: (type: string) => void;
+}): React.ReactElement {
+  const { type, name, desc, detected, version, error } = runtime;
+  const isSelected = selected.has(type);
+  const isScanning = phase === "scanning" && !detected;
+  const isError = detected && !!error;
+  const isWorking = detected && !error;
+
+  const base =
+    "group flex flex-col items-stretch gap-2 p-4 rounded-xl border bg-card text-left transition-[box-shadow,transform,border-color] duration-200 ease-out";
+
+  const stateClasses = (() => {
+    if (isWorking && isSelected) {
+      return "border-[var(--color-brand-primary)] shadow-refine";
+    }
+    if (isWorking) {
+      return "border-[var(--color-border-subtle)] shadow-rest hover:-translate-y-px hover:shadow-refine hover:border-[var(--color-border)] cursor-pointer";
+    }
+    if (isError) {
+      return "border-[var(--color-border-subtle)] shadow-rest";
+    }
+    return "border-[var(--color-border-subtle)] shadow-rest opacity-60";
+  })();
+
+  return (
+    <button
+      type="button"
+      onClick={() => phase === "done" && isWorking && onToggle(type)}
+      disabled={phase === "scanning" || !isWorking}
+      aria-pressed={isWorking ? isSelected : undefined}
+      className={cn(base, stateClasses, "disabled:cursor-default")}
+    >
+      <div className="flex items-center gap-2.5 w-full">
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-surface-1">
+          <RuntimeLogo runtime={type} size={getLogoSize(14, type)} />
+        </span>
+        <div className="flex-1 min-w-0 text-sm font-semibold text-text-heading truncate">
+          {name}
+        </div>
+        {isWorking && isSelected && (
+          <Check className="size-4 shrink-0 text-[var(--color-brand-primary)]" strokeWidth={3} />
+        )}
+        {isError && <AlertTriangle className="size-4 shrink-0 text-text-muted" />}
+        {isScanning && <Loader2 className="size-4 shrink-0 text-text-muted animate-spin" />}
+      </div>
+      <div className="text-xs text-text-muted truncate">{desc}</div>
+      {isWorking && (
+        <div className="text-[11px] text-text-muted truncate w-full font-mono">v{version}</div>
+      )}
+      {isError && (
+        <div
+          className="text-xs text-text-muted w-full leading-tight truncate"
+          title={`v${version} · ${error}`}
+        >
+          v{version} · {error}
+        </div>
+      )}
+    </button>
+  );
+}
+
+function OtherRuntimeCard({ runtime }: { runtime: DetectedRuntime }): React.ReactElement {
+  const { type, name, desc, detected, version, error } = runtime;
+  const hasError = detected && !!error;
+  const guide = INSTALL_GUIDES.find((g) => g.type === type);
+
+  const cardClasses =
+    "group flex flex-col items-stretch gap-2 p-4 rounded-xl border border-[var(--color-border-subtle)] bg-card text-left shadow-rest transition-[box-shadow,transform,border-color] duration-200 ease-out";
+
+  const errorLine = hasError ? `v${version} · ${error}` : "";
+
+  const content = (
+    <>
+      <div className="flex items-center gap-2.5 w-full">
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-surface-1">
+          <RuntimeLogo runtime={type} size={getLogoSize(14, type)} />
+        </span>
+        <div className="flex-1 min-w-0 text-sm font-semibold text-text-heading truncate">
+          {name}
+        </div>
+        {hasError ? (
+          <AlertTriangle className="size-4 shrink-0 text-text-muted" />
+        ) : (
+          <ArrowUpRight className="size-4 shrink-0 text-text-primary" />
+        )}
+      </div>
+      <div className="text-xs text-text-muted truncate">{desc}</div>
+      {hasError ? (
+        <div className="text-xs text-text-muted w-full leading-tight truncate" title={errorLine}>
+          {errorLine}
+        </div>
+      ) : (
+        <div className="text-xs font-medium text-[var(--color-brand-primary)] w-full leading-tight">
+          Install
+        </div>
+      )}
+    </>
+  );
+
+  if (hasError) {
+    return <div className={cardClasses}>{content}</div>;
+  }
+
+  return (
+    <a
+      href={guide?.docsUrl}
+      target="_blank"
+      rel="noreferrer"
+      className={cn(
+        cardClasses,
+        "hover:-translate-y-px hover:shadow-refine hover:border-[var(--color-border)] cursor-pointer",
+      )}
+    >
+      {content}
+    </a>
   );
 }

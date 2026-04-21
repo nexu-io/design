@@ -1,10 +1,17 @@
-import { app, shell, BrowserWindow } from "electron";
+import { app, shell, BrowserWindow, nativeTheme } from "electron";
 import { join } from "node:path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 
 const PROTOCOL = "nexu";
 
 app.disableHardwareAcceleration();
+
+// Lock the app's effective NSAppearance to light so macOS `sidebar` vibrancy
+// always renders as light frosted glass, regardless of the user's system-wide
+// dark/light setting. Without this, a user on macOS Dark Mode would see a
+// dark tinted vibrancy under the ActivityBar while our HTML paints light
+// content on the right, producing a split-mode look.
+nativeTheme.themeSource = "light";
 
 if (process.defaultApp) {
   if (process.argv.length >= 2) {
