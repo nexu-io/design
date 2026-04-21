@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -29,6 +31,21 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Require changeset for package changes
+        if: github.event_name == 'pull_request'
+        run: |
+          BASE="origin/${{ github.base_ref }}"
+          CHANGED_FILES="$(git diff --name-only "$BASE"...HEAD)"
+          ADDED_OR_MODIFIED="$(git diff --name-only --diff-filter=AM "$BASE"...HEAD)"
+          CHANGESET_FILES="$(printf '%s\n' "$ADDED_OR_MODIFIED" | grep -E '^\.changeset/.+\.md$' | grep -Ev '^\.changeset/README\.md$' || true)"
+
+          if printf '%s\n' "$CHANGED_FILES" | grep -Eq '^packages/(tokens|ui-web)/'; then
+            if [ -z "$CHANGESET_FILES" ]; then
+              echo "Changes to packages/tokens or packages/ui-web require a new or updated changeset entry."
+              exit 1
+            fi
+          fi
 
       - name: Run format check
         run: pnpm format:check

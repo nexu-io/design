@@ -39,65 +39,19 @@ Run package builds before consuming:
 pnpm --dir ../ui build:packages
 ```
 
-### 3) Automated npm release flow with Changesets
+### 3) Release workflow reference
 
-This repo now uses Changesets for package versioning and npm release automation.
+Release and Changesets guidance now lives in:
 
-Core files:
+- `docs/release-flow.md`
 
-- `.changeset/config.json`
-- `.github/workflows/release.yml`
+Use that document for:
 
-#### Recommended setup
-
-Use npm trusted publishing for this repository instead of a long-lived `NPM_TOKEN`:
-
-1. In npm package settings for both `@nexu-design/tokens` and `@nexu-design/ui-web`, add this repo/workflow as a trusted publisher.
-2. Keep the workflow file name stable: `.github/workflows/release.yml`.
-3. Publish from GitHub Actions on a GitHub-hosted runner.
-
-#### Authoring a release
-
-For any consumer-visible package change, add a changeset from the repo root:
-
-```bash
-pnpm changeset
-```
-
-Choose the affected package(s), select the semver bump type, and write a short summary.
-
-#### What the workflow does
-
-- installs dependencies with pnpm
-- runs on pushes to `main`
-- creates or updates a version PR when unreleased changesets are present
-- applies version bumps and internal dependency updates in that PR
-- publishes all unpublished public packages after the version PR is merged
-- runs `pnpm release:check` before publishing
-
-#### Local release checks
-
-```bash
-pnpm release:check
-```
-
-#### Release checklist
-
-1. Add a changeset for each consumer-visible change.
-2. Merge changesets into `main`.
-3. Review and merge the generated `chore: version packages` PR.
-4. Let the release workflow publish the new npm versions.
-
-## Versioning + release notes expectations
-
-- Use semver per package (`major.minor.patch`)
-- Bump `@nexu-design/tokens` when tokens/CSS contract changes
-- Bump `@nexu-design/ui-web` for component API or behavior changes
-- If `@nexu-design/ui-web` needs newer tokens, bump both and keep dependency aligned
-- Add concise release notes per version with:
-  - **What changed** (consumer-visible)
-  - **Migration impact** (if any)
-  - **Any required CSS/theme updates**
+- changeset authoring rules
+- version and publish workflow
+- release validation commands
+- hotfix and rollback guidance
+- release-summary skill usage
 
 ## Validation commands
 
