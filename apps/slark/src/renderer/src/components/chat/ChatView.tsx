@@ -1,23 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { AtSign, Bot, FolderOpen, Globe, MessageSquare, Sparkles, Users } from "lucide-react";
-import { EmptyState, Tabs, TabsContent, TabsList, TabsTrigger, cn } from "@nexu-design/ui-web";
+import { AtSign, Bot, Globe, MessageSquare, Users } from "lucide-react";
 
 import { useT } from "@/i18n";
 import { useChatStore } from "@/stores/chat";
 import { useWorkspaceStore } from "@/stores/workspace";
 import { useAgentsStore } from "@/stores/agents";
 import { mockMessages, mockChannels, resolveRef, getNexuIntroResponse } from "@/mock/data";
-import type { ContentBlock } from "@/types";
 import { WindowChrome } from "@/components/layout/WindowChrome";
 import { MessageList } from "./MessageList";
 import { MessageInput } from "./MessageInput";
 import { AddMembersDialog } from "./AddMembersDialog";
-import { TopicDetailPanel } from "./TopicDetailPanel";
-
-type TopicBlock = Extract<ContentBlock, { type: "topic" }>;
-
-const TOPIC_PANEL_WIDTH = 380;
 
 export function ChatView(): React.ReactElement {
   const t = useT();
@@ -28,48 +21,6 @@ export function ChatView(): React.ReactElement {
   const welcomeFired = useRef(false);
   const loadedChannels = useRef(new Set<string>());
   const [addMembersOpen, setAddMembersOpen] = useState(false);
-  /*
-   * Right-side topic panel state.
-   *
-   * We track two values (not one) so the close animation has something to
-   * render while it collapses: `activeTopic` is the content; `topicPanelOpen`
-   * is the visibility flag that drives the width transition. When the user
-   * closes, we flip `topicPanelOpen` to false immediately (panel slides out)
-   * but keep `activeTopic` until the transition ends so the tabs don't
-   * flash empty. Switching from one topic to another updates `activeTopic`
-   * while keeping the panel open — no close/reopen shimmer.
-   */
-  const [activeTopic, setActiveTopic] = useState<TopicBlock | null>(null);
-  const [topicPanelOpen, setTopicPanelOpen] = useState(false);
-
-  const handleTopicOpen = useCallback((block: TopicBlock) => {
-    setActiveTopic(block);
-    setTopicPanelOpen(true);
-  }, []);
-
-  const handleTopicClose = useCallback(() => {
-    setTopicPanelOpen(false);
-  }, []);
-
-  const handleTopicPanelTransitionEnd = useCallback(
-    (event: React.TransitionEvent<HTMLDivElement>) => {
-      // Drop topic content only after the collapse animation fully completes
-      // so inner tabs + body don't reflow mid-transition.
-      if (event.propertyName === "width" && !topicPanelOpen) {
-        setActiveTopic(null);
-      }
-    },
-    [topicPanelOpen],
-  );
-
-  // Channel change resets topic panel — a topic from channel A shouldn't
-  // linger when the user navigates to channel B. channelId is the trigger,
-  // not a value consumed inside the effect.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: channelId is intentionally listed as the trigger; the effect body only calls setters.
-  useEffect(() => {
-    setActiveTopic(null);
-    setTopicPanelOpen(false);
-  }, [channelId]);
 
   useEffect(() => {
     if (!channelId) return;
@@ -160,150 +111,56 @@ export function ChatView(): React.ReactElement {
     channel.type === "dm" ? channel.members.find((m) => m.id !== "u-1") : undefined;
   const otherResolved = otherMember ? resolveRef(otherMember) : undefined;
 
-  // DMs don't carry a roster / files / artifacts story the same way a channel does, so
-  // we keep the old single-pane layout for them and only show tabs for channels.
-  const showTabs = channel.type === "channel";
-
-  // Title-row content is reused by both the tabbed (channel) and DM layouts.
-  // - Hover fill uses surface-2 (neutral) — never bg-accent, which maps to teal
-  //   in Tailwind's color vars and would flood the row with brand color on hover.
-  // - Channels show a members chip (Users icon + count) inline right after the
-  //   title; it opens the add-members dialog. Descriptions are not rendered in
-  //   the header — if a channel needs description context, surface it elsewhere.
-  const headerRow = (
-    <>
-      <button
-        type="button"
-        className="no-drag flex items-center gap-1.5 rounded-md px-1.5 py-1 -ml-1.5 hover:bg-surface-2 transition-colors text-left min-w-0"
-      >
-        {channel.type === "channel" ? (
-          <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
-        ) : otherResolved?.isAgent ? (
-          <Bot className="h-4 w-4 text-nexu-agent shrink-0" />
-        ) : otherResolved ? (
-          <img src={otherResolved.avatar} alt="" className="h-5 w-5 rounded-full shrink-0" />
-        ) : (
-          <AtSign className="h-4 w-4 text-muted-foreground shrink-0" />
-        )}
-        <h2 className="font-semibold text-[15px] truncate">
-          {channel.type === "dm" ? (otherResolved?.name ?? channel.name) : channel.name}
-        </h2>
-      </button>
-
-      {channel.type === "channel" && (
-        <button
-          type="button"
-          onClick={() => setAddMembersOpen(true)}
-          className="no-drag flex items-center gap-1 h-6 px-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-surface-2 transition-colors shrink-0"
-          title="Members"
-        >
-          <Users className="h-3.5 w-3.5" />
-          <span>{channel.members.length}</span>
-        </button>
-      )}
-    </>
-  );
-
+  /*
+   * Phase 1 chat header is a single flat bar — no Messages / Files / Artifacts
+   * tabs, no right-side topic detail panel. Both features live on
+   * `feature/chat-tabs-and-topic-panel` and will return in a later release.
+   *
+   * Header contract still in effect:
+   * - Neutral hover fill on the title + members chip (`hover:bg-surface-2`),
+   *   never `bg-accent` (near-black) which would flood the row with brand
+   *   color on mouseover.
+   * - Channels surface a members chip (Users icon + count) inline right
+   *   after the title; clicking opens the add-members dialog. Descriptions
+   *   are deliberately not rendered in the header — if a channel needs
+   *   description context, surface it in the body, not the chrome.
+   */
   return (
     <div className="flex h-full flex-col bg-surface-1">
-      {showTabs ? (
-        <Tabs defaultValue="messages" className="flex h-full min-h-0 flex-col">
-          {/*
-            Unified chat header: title row + tabs row share one border-b block,
-            with no divider between them. Reads as a single chrome surface
-            instead of two stacked bars.
+      <WindowChrome className="flex h-[52px] items-center gap-2 border-b border-border px-4 pt-2">
+        <button
+          type="button"
+          className="no-drag flex items-center gap-1.5 rounded-md px-1.5 py-1 -ml-1.5 hover:bg-surface-2 transition-colors text-left min-w-0"
+        >
+          {channel.type === "channel" ? (
+            <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
+          ) : otherResolved?.isAgent ? (
+            <Bot className="h-4 w-4 text-nexu-agent shrink-0" />
+          ) : otherResolved ? (
+            <img src={otherResolved.avatar} alt="" className="h-5 w-5 rounded-full shrink-0" />
+          ) : (
+            <AtSign className="h-4 w-4 text-muted-foreground shrink-0" />
+          )}
+          <h2 className="font-semibold text-[15px] truncate">
+            {channel.type === "dm" ? (otherResolved?.name ?? channel.name) : channel.name}
+          </h2>
+        </button>
 
-            Tab labels are intentionally hardcoded English regardless of locale,
-            following the same convention as sidebar section headers
-            (CHANNELS / PINNED). Tabs are for orientation, not user content.
-          */}
-          <div className="border-b border-border px-4 pt-2 pb-1.5">
-            <WindowChrome className="flex h-9 items-center gap-2">{headerRow}</WindowChrome>
+        {channel.type === "channel" && (
+          <button
+            type="button"
+            onClick={() => setAddMembersOpen(true)}
+            className="no-drag flex items-center gap-1 h-6 px-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-surface-2 transition-colors shrink-0"
+            title="Members"
+          >
+            <Users className="h-3.5 w-3.5" />
+            <span>{channel.members.length}</span>
+          </button>
+        )}
+      </WindowChrome>
 
-            <TabsList className="mt-0.5 h-7 rounded-md p-0.5">
-              <TabsTrigger
-                value="messages"
-                className="h-6 gap-1 px-2 text-[12px] font-semibold leading-none"
-              >
-                <MessageSquare className="size-3" />
-                Messages
-              </TabsTrigger>
-              <TabsTrigger
-                value="files"
-                className="h-6 gap-1 px-2 text-[12px] font-semibold leading-none"
-              >
-                <FolderOpen className="size-3" />
-                Files
-              </TabsTrigger>
-              <TabsTrigger
-                value="artifacts"
-                className="h-6 gap-1 px-2 text-[12px] font-semibold leading-none"
-              >
-                <Sparkles className="size-3" />
-                Artifacts
-              </TabsTrigger>
-            </TabsList>
-          </div>
-
-          <TabsContent value="messages" className="mt-0 flex min-h-0 flex-1 flex-row">
-            {/*
-              Split layout for the Messages tab:
-              - Left column (flex-1): the scrollable message list + input.
-              - Right column: TopicDetailPanel in a width-animated wrapper.
-                Uses a plain <div> instead of ResizablePanel because we need
-                a CSS width transition (200ms ease-standard) for the
-                "push, don't overlay" interaction; ResizablePanel just
-                snaps width. The outer wrapper does the animation, the
-                inner DetailPanel (width: 100%) renders into whatever width
-                the wrapper is currently at.
-              Only shown for channel-type; DMs keep the old single-pane
-              layout below and do not surface topic content blocks.
-            */}
-            <div className="flex min-w-0 flex-1 flex-col">
-              <MessageList channelId={channelId} channel={channel} onTopicOpen={handleTopicOpen} />
-              <MessageInput channelId={channelId} isDmWithAgent={isDmWithAgent} channel={channel} />
-            </div>
-            <div
-              aria-hidden={!topicPanelOpen}
-              onTransitionEnd={handleTopicPanelTransitionEnd}
-              className={cn(
-                "shrink-0 overflow-hidden transition-[width] duration-200 ease-[cubic-bezier(0.2,0,0,1)]",
-              )}
-              style={{ width: topicPanelOpen ? TOPIC_PANEL_WIDTH : 0 }}
-            >
-              {activeTopic && <TopicDetailPanel topic={activeTopic} onClose={handleTopicClose} />}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="files" className="mt-0 flex-1 overflow-y-auto">
-            <div className="mx-auto max-w-[800px] px-4 pt-6 pb-6 sm:px-6 sm:pb-8">
-              <EmptyState
-                icon={<FolderOpen className="size-10" />}
-                title="Files"
-                description="No files shared in this channel yet."
-              />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="artifacts" className="mt-0 flex-1 overflow-y-auto">
-            <div className="mx-auto max-w-[800px] px-4 pt-6 pb-6 sm:px-6 sm:pb-8">
-              <EmptyState
-                icon={<Sparkles className="size-10" />}
-                title="Artifacts"
-                description="Agent artifacts will appear here as your team runs workflows."
-              />
-            </div>
-          </TabsContent>
-        </Tabs>
-      ) : (
-        <>
-          <WindowChrome className="flex h-[52px] items-center gap-2 border-b border-border px-4 pt-2">
-            {headerRow}
-          </WindowChrome>
-          <MessageList channelId={channelId} channel={channel} />
-          <MessageInput channelId={channelId} isDmWithAgent={isDmWithAgent} channel={channel} />
-        </>
-      )}
+      <MessageList channelId={channelId} channel={channel} />
+      <MessageInput channelId={channelId} isDmWithAgent={isDmWithAgent} channel={channel} />
 
       {channel.type === "channel" && (
         <AddMembersDialog

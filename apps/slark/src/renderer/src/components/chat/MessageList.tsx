@@ -115,12 +115,6 @@ function blockKey(block: ContentBlock): string {
 interface MessageListProps {
   channelId: string;
   channel?: Channel;
-  /**
-   * Invoked when the reader clicks a topic-card content block. Lifted here so
-   * ChatView can own the right-side detail-panel state and animate it in/out
-   * of the chat column (push layout, never overlay).
-   */
-  onTopicOpen?: (block: Extract<ContentBlock, { type: "topic" }>) => void;
 }
 
 const EMPTY_MESSAGES: never[] = [];
@@ -272,11 +266,7 @@ function getQuickPrompts(name: string, templateId: string | null): string[] {
   }
 }
 
-export function MessageList({
-  channelId,
-  channel,
-  onTopicOpen,
-}: MessageListProps): React.ReactElement {
+export function MessageList({ channelId, channel }: MessageListProps): React.ReactElement {
   const messages = useChatStore((s) => s.messages[channelId] ?? EMPTY_MESSAGES);
   const updateMessage = useChatStore((s) => s.updateMessage);
   const currentUserId = useWorkspaceStore((s) => s.currentUserId) ?? CURRENT_USER_ID;
@@ -400,7 +390,6 @@ export function MessageList({
                           handleApproval(msg.id, msg.blocks, aid, action)
                         }
                         onExpand={setExpandedBlock}
-                        onTopicOpen={onTopicOpen}
                       />
                     ))
                   : undefined

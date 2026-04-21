@@ -28,23 +28,18 @@ import { useState } from "react";
 /**
  * Content-block props.
  *
- * Two "expansion" callbacks live side-by-side on purpose:
+ * `onExpand` routes heavy/ephemeral content (code, diff, image) into a
+ * fullscreen modal overlay — the reader briefly leaves the chat context
+ * to inspect a payload and then returns.
  *
- * - `onExpand` routes heavy/ephemeral content (code, diff, image) into a
- *   fullscreen modal overlay. The reader briefly leaves the chat context
- *   to inspect a payload and then returns.
- *
- * - `onTopicOpen` routes *topic cards* into the persistent right-side
- *   detail panel. A topic is a tracked thread, not a blob to preview, so
- *   it stays in-flow next to the message list and pushes the chat
- *   (never overlays). These are semantically different interactions and
- *   must not be multiplexed through the same callback.
+ * The topic-click → right-side-panel interaction is deferred to a later
+ * release (see `feature/chat-tabs-and-topic-panel`); for now TopicBlock
+ * renders as a read-only display card.
  */
 interface ContentBlockRendererProps {
   block: ContentBlock;
   onApprovalAction?: (id: string, action: "approved" | "rejected") => void;
   onExpand?: (block: ContentBlock) => void;
-  onTopicOpen?: (block: Extract<ContentBlock, { type: "topic" }>) => void;
 }
 
 function formatFileSize(bytes: number): string {
@@ -672,7 +667,6 @@ export function ContentBlockRenderer({
   block,
   onApprovalAction,
   onExpand,
-  onTopicOpen,
 }: ContentBlockRendererProps): React.ReactElement {
   const handleExpand = (): void => onExpand?.(block);
 
@@ -702,8 +696,6 @@ export function ContentBlockRenderer({
     case "agent-run":
       return <AgentRunBlock block={block} onExpand={onExpand} />;
     case "topic":
-      return (
-        <TopicBlock block={block} onOpen={onTopicOpen ? () => onTopicOpen(block) : undefined} />
-      );
+      return <TopicBlock block={block} />;
   }
 }
