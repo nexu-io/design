@@ -104,10 +104,10 @@ export function CreateWorkspaceStep(): React.ReactElement {
 
         <RuntimeScanRow scanning={scanning} summary={detectedSummary} runtimes={detectedRuntimes} />
 
-        <div className="flex items-center justify-center gap-1.5 text-[12px] text-text-muted">
+        <div className="flex items-center justify-center gap-1.5 text-sm text-text-muted">
           <LogIn className="size-3" />
           <span>Got an invite link?</span>
-          <TextLink href="#" size="xs" onClick={handleNavigateToJoin(navigate)}>
+          <TextLink href="#" size="xs" className="text-sm" onClick={handleNavigateToJoin(navigate)}>
             Join a workspace
           </TextLink>
         </div>
@@ -140,7 +140,7 @@ function RuntimeScanRow({
     return (
       <div className="flex items-center gap-2 rounded-lg bg-surface-1 px-3 py-2.5">
         <Loader2 className="size-3.5 shrink-0 animate-spin text-text-muted" />
-        <span className="text-[12px] text-text-secondary">Scanning your system for runtimes…</span>
+        <span className="text-sm text-text-secondary">Scanning your system for runtimes…</span>
       </div>
     );
   }
@@ -149,7 +149,7 @@ function RuntimeScanRow({
     return (
       <div className="flex items-center gap-2 rounded-lg bg-surface-1 px-3 py-2.5">
         <span className="size-3.5 shrink-0 rounded-full border border-border" />
-        <span className="text-[12px] text-text-secondary">
+        <span className="text-sm text-text-secondary">
           No runtimes detected — you can install one after sign-in.
         </span>
       </div>
@@ -159,10 +159,10 @@ function RuntimeScanRow({
   return (
     <div className="flex items-center gap-2 rounded-lg bg-surface-1 px-3 py-2.5">
       <Check className="size-3.5 shrink-0 text-success" strokeWidth={3} />
-      <span className="flex-1 truncate text-[12px] text-text-secondary">{summary}</span>
+      <span className="flex-1 truncate text-sm text-text-secondary">{summary}</span>
       <Popover>
         <PopoverTrigger asChild>
-          <TextLink href="#" size="xs" className="shrink-0">
+          <TextLink href="#" size="xs" className="shrink-0 text-sm">
             Details
           </TextLink>
         </PopoverTrigger>
