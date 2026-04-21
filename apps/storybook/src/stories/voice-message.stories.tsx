@@ -56,6 +56,6 @@ export const Playing: Story = {
 
 export const CustomWaveform: Story = {
   args: {
-    waveform: [2, 3, 5, 7, 8, 9, 8, 7, 5, 3, 2, 3, 5, 7, 8, 9, 8, 7, 5, 3],
+    waveform: [1, 1, 2, 3, 3, 4, 3, 3, 2, 1, 1, 1, 2, 3, 3, 4, 3, 3, 2, 1],
   },
 };

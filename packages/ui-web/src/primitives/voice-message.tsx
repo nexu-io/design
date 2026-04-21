@@ -7,10 +7,10 @@ import { cn } from "../lib/cn";
  * A synthetic waveform used when the caller does not supply one. The waveform
  * is intentionally decorative — stable heights, low visual weight — so it
  * reads as "there is audio here" without competing with the message text.
- * Values are tuned for a compact `h-4` (16px) bar container; keep custom
- * waveforms in roughly the 1–10 range to avoid overflowing the row.
+ * Values are tuned for a compact `h-3` (12px) bar container; keep custom
+ * waveforms in roughly the 1–4 range (final render = value + 2 so max ≈ 6px).
  */
-const DEFAULT_WAVEFORM = [1, 2, 3, 5, 3, 4, 6, 7, 6, 4, 5, 7, 6, 3, 4, 2, 5, 4, 2, 3];
+const DEFAULT_WAVEFORM = [1, 1, 2, 3, 2, 2, 3, 4, 3, 2, 3, 4, 3, 2, 2, 1, 3, 2, 1, 2];
 
 export interface VoiceMessageProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Formatted duration label, e.g. "0:24". */
@@ -84,7 +84,7 @@ export const VoiceMessage = React.forwardRef<HTMLDivElement, VoiceMessageProps>(
               <Play className="ml-0.5 size-3.5 fill-current" />
             </button>
             <div
-              className="flex h-4 flex-1 items-center gap-[2px]"
+              className="flex h-3 flex-1 items-center gap-[2px]"
               aria-hidden
               data-slot="voice-message-waveform"
             >
