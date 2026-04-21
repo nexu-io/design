@@ -57,6 +57,39 @@ export interface Skill {
   config: Record<string, unknown>;
 }
 
+export type ConnectorService = "figma" | "linear" | "notion" | "slack" | "github" | "gmail";
+
+export interface Connector {
+  service: ConnectorService;
+  name: string;
+  connected: boolean;
+}
+
+export type RoutineTriggerKind = "schedule" | "github" | "api" | "connector";
+
+export interface RoutineTrigger {
+  kind: RoutineTriggerKind;
+  cron?: string;
+  githubRepo?: string;
+  githubEvent?: "push" | "pull_request" | "issues" | "release";
+  connectorService?: ConnectorService;
+  connectorEvent?: string;
+}
+
+export interface Routine {
+  id: string;
+  name: string;
+  description: string;
+  agentId: string | null;
+  trigger: RoutineTrigger;
+  connectors: ConnectorService[];
+  status: "active" | "paused" | "error";
+  lastRunAt?: number;
+  nextRunAt?: number;
+  createdBy: string;
+  createdAt: number;
+}
+
 export interface Runtime {
   id: string;
   name: string;
