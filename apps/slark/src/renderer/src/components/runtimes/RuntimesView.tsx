@@ -803,7 +803,9 @@ function EmptyRuntimesGuide(): ReactElement {
                     rel="noreferrer"
                     aria-label={`${g.name} installation guide`}
                     className="absolute inset-0 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  />
+                  >
+                    <span className="sr-only">Open {g.name} installation guide</span>
+                  </a>
                   {/* Non-interactive content opts out of pointer events so
                       the full card area (outside the copy control) routes
                       clicks through to the docs overlay above. */}
