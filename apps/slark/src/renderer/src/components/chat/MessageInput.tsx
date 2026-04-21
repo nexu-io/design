@@ -271,8 +271,10 @@ export function MessageInput({
             className={cn(
               "flex size-7 shrink-0 items-center justify-center rounded-full transition-colors",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+              /* Near-black primary fill — matches Button's `default` variant.
+                 Reserve the teal `--accent` for links / focus, never primary CTA. */
               sendEnabled
-                ? "bg-accent text-accent-fg hover:bg-accent-hover"
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
                 : "bg-surface-3 text-text-muted cursor-not-allowed",
             )}
           >
