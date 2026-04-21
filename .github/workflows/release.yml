@@ -74,7 +74,15 @@ jobs:
 
       - name: Format versioned files
         if: steps.changesets.outputs.has_changesets == 'true'
-        run: pnpm format
+        run: |
+          mapfile -t changed_files < <(git diff --name-only --diff-filter=AM)
+
+          if [ ${#changed_files[@]} -eq 0 ]; then
+            echo 'No versioned files changed; skipping formatting.'
+            exit 0
+          fi
+
+          pnpm exec biome format --write "${changed_files[@]}"
 
       - name: Create release PR
         if: steps.changesets.outputs.has_changesets == 'true'
