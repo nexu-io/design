@@ -8,7 +8,7 @@ import {
   PopoverTrigger,
   TextLink,
 } from "@nexu-design/ui-web";
-import { ArrowRight, Building2, Check, Loader2, LogIn } from "lucide-react";
+import { ArrowRight, Building2, Check, ChevronDown, Loader2, LogIn } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -96,7 +96,7 @@ export function CreateWorkspaceStep(): React.ReactElement {
                   handleContinue();
                 }
               }}
-              placeholder="e.g. Design Ops AI Crew · My Digital Teammates"
+              placeholder="e.g. My Digital Teammates"
               autoFocus
             />
           </FormFieldControl>
@@ -121,6 +121,9 @@ export function CreateWorkspaceStep(): React.ReactElement {
         >
           Continue
         </Button>
+      </div>
+
+      <div className="mt-4">
         <RuntimeStatusLight scanning={scanning} runtimes={detectedRuntimes} />
       </div>
     </div>
@@ -136,7 +139,7 @@ function RuntimeStatusLight({
 }): React.ReactElement {
   if (scanning) {
     return (
-      <span className="inline-flex items-center gap-1.5 text-[11px] text-text-muted">
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-1 px-2.5 py-1 text-[11px] text-text-muted">
         <Loader2 className="size-2.5 animate-spin" aria-hidden />
         Scanning runtimes…
       </span>
@@ -145,7 +148,7 @@ function RuntimeStatusLight({
 
   if (runtimes.length === 0) {
     return (
-      <span className="inline-flex items-center gap-1.5 text-[11px] text-text-muted">
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-1 px-2.5 py-1 text-[11px] text-text-muted">
         <span className="size-1.5 rounded-full bg-text-muted/50" aria-hidden />
         No runtimes yet — install one after sign-in.
       </span>
@@ -160,11 +163,12 @@ function RuntimeStatusLight({
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 rounded-full px-1 text-[11px] text-text-muted transition-colors hover:text-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)]/30"
+          className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-1 py-1 pl-2.5 pr-1.5 text-[11px] text-text-secondary transition-colors hover:border-border hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)]/30"
           aria-label={`${label} — click to see details`}
         >
           <span className="size-1.5 rounded-full bg-success" aria-hidden />
-          {label}
+          <span>{label}</span>
+          <ChevronDown className="size-3 text-text-muted" aria-hidden />
         </button>
       </PopoverTrigger>
       <PopoverContent align="center" className="w-[280px] p-0">
