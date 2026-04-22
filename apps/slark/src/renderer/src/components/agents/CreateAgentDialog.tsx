@@ -159,7 +159,11 @@ export function CreateAgentDialog({
                           className="px-3 py-2"
                         >
                           <InteractiveRowLeading>
-                            <img src={template.avatar} alt="" className="size-9 rounded-lg" />
+                            <img
+                              src={template.avatar}
+                              alt=""
+                              className="size-9 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+                            />
                           </InteractiveRowLeading>
                           <InteractiveRowContent>
                             <div className="text-[13px] font-medium text-text-heading">

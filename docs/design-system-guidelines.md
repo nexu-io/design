@@ -90,6 +90,14 @@ Use this doc for:
   - Attachment tier: `w-[360px] max-w-full` — use for `FileAttachment`, `ImageAttachment` (default `width={360} height={220}`), `VideoAttachment`, and `VoiceMessage`
   - `ImageGallery` is the explicit third-width exception: `max-w-[480px]` with a 3-column layout when needed
   - Do not introduce ad-hoc third-width tiers without an explicit reason.
+- **Avatar shape and hairline border**:
+  - **Human (user) and AI (agent) avatars are always circular (`rounded-full`).** Shape is a semantic signal — circles read as "who", squares read as "what". Mixing round users with square agents inside the same list makes agents look like apps rather than teammates.
+  - **Workspace / team / organization / integration icons** stay rounded-rectangular (`rounded-lg` for ≤ 40px, `rounded-xl` for larger). Those represent containers and tools, not beings.
+  - Canonical recipe for a resting bare `<img>` / `<div>` avatar: `rounded-full bg-secondary ring-1 ring-inset ring-black/5`.
+    - `ring-inset` is required — a non-inset 1px ring around a `rounded-full` image bleeds past the circular mask at the corners.
+    - `bg-secondary` is the fallback fill while remote avatars load, preventing a transparent circle on white surfaces.
+  - Exceptions: avatars wrapped in the `Avatar` primitive (the primitive already applies `ring-1 ring-[var(--color-border-subtle)]`, so do not double-ring); stacked/overlapping avatars use `ring-2 ring-surface-0` instead (thicker ring in the surface color draws the separating "gap"); tiny decorative avatars ≤ 20px omit the hairline ring (a 1px ring on a 16px circle swallows the image).
+  - Status dots / notification badges anchored to an avatar keep their own `border-2 border-nav` separator — independent of the avatar's hairline ring.
 - Primary action buttons default to the **right** side of their container; secondary/cancel actions sit to the left.
 - Use `DialogFooter` for dialogs; for standalone form sections use `<div className="flex justify-end gap-2">`.
 

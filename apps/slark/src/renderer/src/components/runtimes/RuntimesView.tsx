@@ -488,9 +488,9 @@ export function RuntimesView(): ReactElement {
                       }}
                       className="flex items-center gap-3 w-full px-3 py-2 rounded-lg hover:bg-surface-2 transition-colors text-left"
                     >
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-2 ring-1 ring-inset ring-black/5">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 ring-1 ring-inset ring-black/5">
                         {agent.avatar ? (
-                          <img src={agent.avatar} alt="" className="h-8 w-8 rounded-lg" />
+                          <img src={agent.avatar} alt="" className="h-8 w-8 rounded-full" />
                         ) : (
                           <Bot className="h-4 w-4 text-muted-foreground" />
                         )}

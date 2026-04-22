@@ -148,7 +148,7 @@ export function AddMembersDialog({
                           <img
                             src={u.avatar}
                             alt={u.name}
-                            className="h-7 w-7 rounded-full bg-secondary shrink-0"
+                            className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
                           />
                         </InteractiveRowLeading>
                         <InteractiveRowContent>
@@ -193,10 +193,10 @@ export function AddMembersDialog({
                             <img
                               src={a.avatar}
                               alt={a.name}
-                              className="h-7 w-7 rounded-md bg-secondary shrink-0"
+                              className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
                             />
                           ) : (
-                            <div className="h-7 w-7 rounded-md bg-secondary flex items-center justify-center shrink-0">
+                            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary ring-1 ring-inset ring-black/5">
                               <Bot className="h-3.5 w-3.5 text-muted-foreground" />
                             </div>
                           )}

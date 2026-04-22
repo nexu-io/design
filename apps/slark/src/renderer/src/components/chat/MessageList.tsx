@@ -210,7 +210,7 @@ function ChannelEmptyState({ channel }: { channel: Channel }): React.ReactElemen
                   <img
                     src={agent.avatar}
                     alt={agent.name}
-                    className="mt-0.5 h-8 w-8 shrink-0 rounded-full"
+                    className="mt-0.5 h-8 w-8 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">

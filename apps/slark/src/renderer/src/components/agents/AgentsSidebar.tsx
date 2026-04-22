@@ -238,7 +238,7 @@ export function AgentsSidebar(): React.ReactElement {
                   <img
                     src={agent.avatar}
                     alt=""
-                    className="h-7 w-7 rounded-lg shrink-0 ring-1 ring-inset ring-black/5"
+                    className="h-7 w-7 rounded-full shrink-0 bg-secondary ring-1 ring-inset ring-black/5"
                   />
                   <div className="min-w-0 flex-1 text-left">
                     <div className="text-sm font-medium truncate">{agent.name}</div>

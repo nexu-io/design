@@ -207,7 +207,7 @@ export function CreateAgentStep(): React.ReactElement {
                 <img
                   src={tpl.avatar}
                   alt=""
-                  className="size-10 rounded-lg shrink-0 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-6"
+                  className="size-10 rounded-full shrink-0 bg-secondary ring-1 ring-inset ring-black/5 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-6"
                 />
               </InteractiveRowLeading>
               <InteractiveRowContent>
@@ -344,7 +344,11 @@ export function CreateAgentStep(): React.ReactElement {
       <div className="w-full max-w-md space-y-4">
         {selectedTemplate && (
           <div className="flex items-center gap-3 p-3 rounded-xl bg-surface-1 border border-border">
-            <img src={selectedTemplate.avatar} alt="" className="size-10 rounded-lg shrink-0" />
+            <img
+              src={selectedTemplate.avatar}
+              alt=""
+              className="size-10 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+            />
             <div className="min-w-0 flex-1">
               <div className="text-xs text-text-muted">Based on template</div>
               <div className="text-sm font-medium text-text-primary">{selectedTemplate.name}</div>
