@@ -89,7 +89,7 @@ Notes:
 
 - npm trusted publishing is configured per package, not once per scope.
 - `.github/workflows/release.yml` must keep `id-token: write` on the publish job.
-- the publish job should run on a trusted-publishing-compatible runtime (`node-version: 24` in this repo) so npm meets the OIDC publishing baseline.
+- the publish job should run on a trusted-publishing-compatible runtime (`node-version: 24.15.0` in this repo) so npm meets the OIDC publishing baseline.
 - `repository.url` in each publishable package manifest must match `https://github.com/nexu-io/design`.
 - After trusted publishing is configured, the publish job does not need `NODE_AUTH_TOKEN` or `NPM_CONFIG_PROVENANCE`.
 
