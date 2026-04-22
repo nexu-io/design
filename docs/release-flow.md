@@ -90,6 +90,11 @@ This section is only for the one-time initial package creation flow. If the pack
 - Tokens package dry run: `pnpm release:check:tokens`
 - UI package dry run: `pnpm release:check:ui-web`
 
+For `@nexu-design/ui-web`, release validation must confirm that
+`packages/ui-web/dist/styles.css` is the compiled publish artifact. Do not publish if
+that file still contains raw Tailwind input directives such as `@source` or
+`@import "tailwindcss"`.
+
 ## Hotfix and rollback
 
 - Prefer a new patch release over unpublishing.

@@ -44,10 +44,11 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.542.0",
     "sonner": "^2.0.7",
-    "tailwindcss": "^4.2.0",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.2.0"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.2.4",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
@@ -55,13 +56,17 @@
     "@types/react-dom": "^19.1.9",
     "jsdom": "^26.1.0",
     "typescript": "^5.8.3",
-    "vitest-axe": "^0.1.0",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vitest-axe": "^0.1.0"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && cp src/styles.css dist/styles.css",
+    "build:tokens": "pnpm --filter @nexu-design/tokens build",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build:css": "pnpm run build:tokens && tailwindcss -i ./src/styles.css -o ./dist/styles.css",
+    "check:dist-css": "node ../../scripts/assert-ui-web-dist-css.mjs",
+    "build": "pnpm run build:types && pnpm run build:css && pnpm run check:dist-css",
     "clean": "rm -rf dist",
-    "pack:check": "pnpm run build && npm pack --dry-run",
+    "pack:check": "pnpm run build && pnpm run check:dist-css && npm pack --dry-run",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
