@@ -58,11 +58,7 @@ interface ChatState {
   togglePin: (channelId: string) => void;
 }
 
-function simulateDelivery(
-  channelId: string,
-  messageId: string,
-  options?: SimulateOptions,
-): void {
+function simulateDelivery(channelId: string, messageId: string, options?: SimulateOptions): void {
   const latency = SIMULATED_DELIVERY_MIN_MS + Math.random() * SIMULATED_DELIVERY_SPREAD_MS;
   setTimeout(() => {
     /*

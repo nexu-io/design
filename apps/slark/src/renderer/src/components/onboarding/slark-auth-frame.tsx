@@ -47,7 +47,6 @@ function SlarkBrandBackdrop(): React.ReactElement {
           its own alpha, so no blend mode or invert filter is needed. */}
       <video
         src={brandRailReveal}
-        aria-hidden="true"
         autoPlay
         muted
         playsInline

@@ -189,12 +189,7 @@ export function InvitePeopleDialog({
                 </div>
                 <div className="text-xs font-mono text-foreground truncate">{inviteLinkUrl}</div>
               </div>
-              <Button
-                onClick={handleCopyLink}
-                variant="outline"
-                size="xs"
-                className="h-7 shrink-0"
-              >
+              <Button onClick={handleCopyLink} variant="outline" size="xs" className="h-7 shrink-0">
                 {linkCopied ? t("common.copied") : t("common.copy")}
               </Button>
             </div>
@@ -229,10 +224,7 @@ export function InvitePeopleDialog({
                         >
                           <Eye className="size-3.5 text-text-muted" />
                         </Button>
-                        <Check
-                          className="size-4 text-[var(--color-success)]"
-                          strokeWidth={3}
-                        />
+                        <Check className="size-4 text-[var(--color-success)]" strokeWidth={3} />
                       </div>
                     )}
                   </div>

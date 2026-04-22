@@ -720,11 +720,7 @@ export function RuntimesView(): ReactElement {
         onOpenChange={(open) => {
           if (!open) setRuntimeToDelete(null);
         }}
-        title={
-          runtimeToDelete
-            ? `Delete "${runtimeToDelete.name}"?`
-            : "Delete runtime?"
-        }
+        title={runtimeToDelete ? `Delete "${runtimeToDelete.name}"?` : "Delete runtime?"}
         description="Agents still using this runtime will fall back to no runtime. This can't be undone."
         confirmLabel="Delete"
         onConfirm={handleConfirmDelete}

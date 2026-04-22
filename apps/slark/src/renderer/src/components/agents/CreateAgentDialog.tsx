@@ -203,10 +203,7 @@ export function CreateAgentDialog({
                                   </div>
                                 </div>
                                 {selected ? (
-                                  <Check
-                                    className="size-4 shrink-0 text-accent"
-                                    strokeWidth={3}
-                                  />
+                                  <Check className="size-4 shrink-0 text-accent" strokeWidth={3} />
                                 ) : null}
                               </button>
                             </TooltipTrigger>
