@@ -67,6 +67,31 @@ Accepted changeset entries are `.changeset/*.md` files, excluding `.changeset/RE
 - keeps package-level changelog generation disabled; version PR creation does not depend on `packages/*/CHANGELOG.md`
 - publishes only when the version PR lands on `main`, or when `action=publish` is run manually
 - runs `pnpm release:check` before publishing
+- requires publishable packages to declare `repository.url: "https://github.com/nexu-io/design"` so npm provenance validation passes
+
+## npm trusted publishing setup
+
+Use npm trusted publishing for both public packages instead of a long-lived `NPM_TOKEN`.
+
+Configure a trusted publisher entry in the npm package settings for each package:
+
+- `@nexu-design/tokens`
+- `@nexu-design/ui-web`
+
+For each package, set:
+
+- Provider: `GitHub Actions`
+- Repository owner: `nexu-io`
+- Repository name: `design`
+- Workflow file: `release.yml`
+
+Notes:
+
+- npm trusted publishing is configured per package, not once per scope.
+- `.github/workflows/release.yml` must keep `id-token: write` on the publish job.
+- the publish job should run on a trusted-publishing-compatible runtime (`node-version: 24.15.0` in this repo) so npm meets the OIDC publishing baseline.
+- `repository.url` in each publishable package manifest must match `https://github.com/nexu-io/design`.
+- After trusted publishing is configured, the publish job does not need `NODE_AUTH_TOKEN` or `NPM_CONFIG_PROVENANCE`.
 
 ## First release bootstrap
 

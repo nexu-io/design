@@ -4,6 +4,7 @@ import path from "node:path";
 const rootDir = new URL("..", import.meta.url);
 const workspaceDirs = ["apps", "packages"];
 const allowedPublicPackages = new Set(["@nexu-design/tokens", "@nexu-design/ui-web"]);
+const expectedRepositoryUrl = "https://github.com/nexu-io/design";
 
 async function readWorkspacePackages() {
   const packageFiles = [];
@@ -61,6 +62,18 @@ for (const packageName of allowedPublicPackages) {
 
   if (!pkg) {
     console.error(`Publishable package guard failed: missing ${packageName}`);
+    process.exit(1);
+  }
+
+  const repositoryUrl =
+    typeof pkg.packageJson.repository === "string"
+      ? pkg.packageJson.repository
+      : pkg.packageJson.repository?.url;
+
+  if (repositoryUrl !== expectedRepositoryUrl) {
+    console.error(
+      `Publishable package guard failed: ${packageName} must set repository.url to ${expectedRepositoryUrl} (found ${JSON.stringify(repositoryUrl)})`,
+    );
     process.exit(1);
   }
 }
