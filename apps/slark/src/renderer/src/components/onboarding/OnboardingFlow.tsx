@@ -1,7 +1,7 @@
 import { Stepper, StepperItem, StepperSeparator } from "@nexu-design/ui-web";
 import { Building2, PlugZap, UsersRound } from "lucide-react";
 import { Fragment } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import { ConnectRuntimeStep } from "./ConnectRuntimeStep";
 import { CreateAgentStep } from "./CreateAgentStep";
@@ -28,6 +28,7 @@ const steps = [
 
 export function OnboardingFlow(): React.ReactElement {
   const location = useLocation();
+  const navigate = useNavigate();
   const currentStep = Math.max(
     steps.findIndex((step) => location.pathname.includes(step.path)),
     0,
@@ -41,22 +42,28 @@ export function OnboardingFlow(): React.ReactElement {
       }
       hideBranding
       hideFooter
+      verticalAlign="top"
     >
       <div className="space-y-8">
         <Stepper>
-          {steps.map((step, index) => (
-            <Fragment key={step.path}>
-              <StepperItem
-                status={
-                  index < currentStep ? "completed" : index === currentStep ? "current" : "pending"
-                }
-                step={index + 1}
-                label={step.label}
-                icon={step.icon}
-              />
-              {index < steps.length - 1 ? <StepperSeparator active={index < currentStep} /> : null}
-            </Fragment>
-          ))}
+          {steps.map((step, index) => {
+            const isCompleted = index < currentStep;
+            return (
+              <Fragment key={step.path}>
+                <StepperItem
+                  status={isCompleted ? "completed" : index === currentStep ? "current" : "pending"}
+                  step={index + 1}
+                  label={step.label}
+                  icon={step.icon}
+                  onClick={isCompleted ? () => navigate(`/onboarding/${step.path}`) : undefined}
+                  title={isCompleted ? `Go back to ${step.label}` : undefined}
+                />
+                {index < steps.length - 1 ? (
+                  <StepperSeparator active={index < currentStep} />
+                ) : null}
+              </Fragment>
+            );
+          })}
         </Stepper>
 
         <Routes>

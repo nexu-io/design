@@ -2,6 +2,9 @@
   "name": "nexu-design",
   "private": true,
   "packageManager": "pnpm@10.16.1",
+  "engines": {
+    "node": "24.15.0"
+  },
   "pnpm": {
     "onlyBuiltDependencies": ["electron", "electron-winstaller", "esbuild"]
   },
@@ -24,17 +27,19 @@
     "build:electron": "pnpm --filter @nexu-design/demo dist",
     "build:packages": "pnpm --filter @nexu-design/tokens build && pnpm --filter @nexu-design/ui-web build",
     "changeset": "changeset",
+    "changeset:status": "changeset status --since=main",
     "format": "biome format --write .",
     "format:check": "biome format .",
     "biome:check": "biome check .",
     "check:interactive-typography": "node ./scripts/check-interactive-typography.mjs",
+    "check:publishable-packages": "node ./scripts/check-publishable-packages.mjs",
     "knip": "knip --config knip.json",
     "knip:production": "knip --config knip.json --production",
     "pack:check": "pnpm --filter @nexu-design/tokens pack:check && pnpm --filter @nexu-design/ui-web pack:check",
     "release:check:tokens": "pnpm --filter @nexu-design/tokens pack:check",
     "release:check:ui-web": "pnpm --filter @nexu-design/tokens build && pnpm --filter @nexu-design/ui-web pack:check",
-    "release:check": "pnpm build:packages && pnpm typecheck && pnpm test && pnpm pack:check",
-    "release": "pnpm release:check && changeset publish",
+    "release:check": "pnpm check:publishable-packages && pnpm build:packages && pnpm typecheck && pnpm test && pnpm pack:check",
+    "release": "pnpm check:publishable-packages && changeset publish",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
     "version:packages": "changeset version && pnpm install --lockfile-only",

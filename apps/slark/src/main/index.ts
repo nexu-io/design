@@ -1,10 +1,17 @@
-import { app, shell, BrowserWindow } from "electron";
+import { app, shell, BrowserWindow, nativeTheme } from "electron";
 import { join } from "node:path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 
 const PROTOCOL = "nexu";
 
 app.disableHardwareAcceleration();
+
+// Lock the app's effective NSAppearance to light so macOS `sidebar` vibrancy
+// always renders as light frosted glass, regardless of the user's system-wide
+// dark/light setting. Without this, a user on macOS Dark Mode would see a
+// dark tinted vibrancy under the ActivityBar while our HTML paints light
+// content on the right, producing a split-mode look.
+nativeTheme.themeSource = "light";
 
 if (process.defaultApp) {
   if (process.argv.length >= 2) {
@@ -36,6 +43,8 @@ function handleDeepLink(url: string): void {
 }
 
 function createWindow(): void {
+  const isMac = process.platform === "darwin";
+
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
@@ -44,7 +53,15 @@ function createWindow(): void {
     show: false,
     titleBarStyle: "hiddenInset",
     trafficLightPosition: { x: 16, y: 14 },
-    backgroundColor: "#09090b",
+    // On macOS we opt into native sidebar vibrancy so the ActivityBar and any
+    // translucent chrome can show real frosted-glass (blurs the desktop behind
+    // the window). `visualEffectState: "active"` keeps the blur active even when
+    // the window loses focus, matching the look of Slack / Cursor / Finder.
+    // Non-mac platforms fall back to a solid light background that matches
+    // --color-surface-0 so there's no black flash on startup.
+    ...(isMac
+      ? { vibrancy: "sidebar" as const, visualEffectState: "active" as const }
+      : { backgroundColor: "#fafafa" }),
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false,

@@ -246,8 +246,8 @@ const agent2Ref: MemberRef = { kind: "agent", id: "a-2" };
 export const mockChannels: Channel[] = [
   {
     id: "ch-welcome",
-    name: "welcome",
-    description: "Welcome to Nexu! Say hi to your team and agents.",
+    name: "Welcome to Nexu!",
+    description: "",
     type: "channel",
     members: [user1Ref, user2Ref, user3Ref, agent1Ref, agent2Ref],
     lastMessageAt: Date.now() - 60000,
@@ -307,6 +307,29 @@ const MIN = 60 * 1000;
 
 export const mockMessages: Record<string, Message[]> = {
   "ch-showcase": [
+    {
+      id: "sc-0-join",
+      channelId: "ch-showcase",
+      sender: user1Ref,
+      content: "",
+      mentions: [],
+      reactions: [],
+      createdAt: NOW - 26 * 60 * MIN,
+      system: {
+        kind: "join",
+        members: [user2Ref, user3Ref, agent1Ref, agent2Ref],
+      },
+    },
+    {
+      id: "sc-0-kickoff",
+      channelId: "ch-showcase",
+      sender: user1Ref,
+      content:
+        "Spinning up a reference channel with every chat surface the library ships. Poke around and react where something feels off.",
+      mentions: [],
+      reactions: [{ emoji: "👋", users: ["u-2", "u-3"] }],
+      createdAt: NOW - 25 * 60 * MIN,
+    },
     {
       id: "sc-1",
       channelId: "ch-showcase",
@@ -460,41 +483,90 @@ export const mockMessages: Record<string, Message[]> = {
       createdAt: NOW - 32 * MIN,
     },
     {
-      id: "sc-10",
+      /*
+       * Coder agent's work run — five sequential artifacts (code, diff,
+       * action, tool-result, progress) folded into a single `agent-run`
+       * block. The renderer shows the LAST step expanded ("Staging rollout"
+       * progress, still in flight) and tucks the four completed steps
+       * behind a "Show earlier steps" toggle so the chat stays quiet. The
+       * approval card that follows lives in its own message (sc-13) on
+       * purpose — it still needs to interrupt the reader.
+       */
+      id: "sc-agent-run-1",
       channelId: "ch-showcase",
       sender: agent1Ref,
       content: "",
       blocks: [
         {
-          type: "action",
-          title: "Running unit tests for billing client",
-          description: "pnpm --filter billing test --changed",
-          status: "running",
-          tool: "pnpm-test",
+          type: "agent-run",
+          id: "run-billing-retry",
+          steps: [
+            {
+              id: "step-retry-ts",
+              description:
+                "On it. Here's a first pass that honours the jitter policy from the spec:",
+              block: {
+                type: "code",
+                language: "typescript",
+                filename: "retry.ts",
+                code: "export function exponentialBackoff(attempt: number, base = 200): number {\n  const ceiling = Math.min(base * 2 ** attempt, 30_000)\n  const jitter = Math.random() * ceiling * 0.2\n  return Math.floor(ceiling - jitter)\n}\n\nexport async function withRetry<T>(\n  fn: () => Promise<T>,\n  opts: { max?: number; base?: number } = {},\n): Promise<T> {\n  const { max = 5, base = 200 } = opts\n  let lastErr: unknown\n  for (let i = 0; i < max; i++) {\n    try {\n      return await fn()\n    } catch (err) {\n      lastErr = err\n      await sleep(exponentialBackoff(i, base))\n    }\n  }\n  throw lastErr\n}",
+              },
+            },
+            {
+              id: "step-client-diff",
+              description: "Wiring it into the billing client. Here's the minimal diff:",
+              block: {
+                type: "diff",
+                filename: "src/billing/client.ts",
+                content:
+                  '@@ -14,9 +14,13 @@\n import { httpPost } from "../http"\n+import { withRetry } from "./retry"\n \n export async function chargeCustomer(id: string, amount: number) {\n-  const res = await httpPost(`/billing/${id}/charge`, { amount })\n+  const res = await withRetry(\n+    () => httpPost(`/billing/${id}/charge`, { amount }),\n+    { max: 5, base: 250 },\n+  )\n   if (!res.ok) throw new BillingError(res)\n   return res.json()\n }',
+                additions: 5,
+                deletions: 1,
+              },
+            },
+            {
+              id: "step-run-tests",
+              block: {
+                type: "action",
+                title: "Running unit tests for billing client",
+                description: "pnpm --filter billing test --changed",
+                status: "success",
+                tool: "pnpm-test",
+              },
+            },
+            {
+              id: "step-test-result",
+              block: {
+                type: "tool-result",
+                tool: "pnpm-test",
+                input: "pnpm --filter billing test --changed",
+                output:
+                  "PASS  src/billing/retry.test.ts\n  exponentialBackoff\n    ✓ grows exponentially (8 ms)\n    ✓ caps at 30s ceiling (3 ms)\n    ✓ applies ±20% jitter (12 ms)\n  withRetry\n    ✓ retries on transient failure (42 ms)\n    ✓ throws after max attempts (38 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       5 passed, 5 total\nTime:        0.87 s",
+                status: "success",
+              },
+            },
+            {
+              id: "step-rollout",
+              block: {
+                type: "progress",
+                title: "Staging rollout",
+                current: 3,
+                total: 5,
+                steps: [
+                  { label: "Build artifact", status: "done" },
+                  { label: "Push image", status: "done" },
+                  { label: "Canary 10%", status: "done" },
+                  { label: "Ramp to 50%", status: "active" },
+                  { label: "Promote to 100%", status: "pending" },
+                ],
+              },
+            },
+          ],
         },
       ],
       mentions: [],
-      reactions: [],
-      createdAt: NOW - 26 * MIN,
-    },
-    {
-      id: "sc-11",
-      channelId: "ch-showcase",
-      sender: agent1Ref,
-      content: "",
-      blocks: [
-        {
-          type: "tool-result",
-          tool: "pnpm-test",
-          input: "pnpm --filter billing test --changed",
-          output:
-            "PASS  src/billing/retry.test.ts\n  exponentialBackoff\n    ✓ grows exponentially (8 ms)\n    ✓ caps at 30s ceiling (3 ms)\n    ✓ applies ±20% jitter (12 ms)\n  withRetry\n    ✓ retries on transient failure (42 ms)\n    ✓ throws after max attempts (38 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       5 passed, 5 total\nTime:        0.87 s",
-          status: "success",
-        },
-      ],
-      mentions: [],
-      reactions: [{ emoji: "✅", users: ["u-1"] }],
-      createdAt: NOW - 25 * MIN,
+      reactions: [{ emoji: "👍", users: ["u-2", "u-1"] }],
+      createdAt: NOW - 30 * MIN,
     },
     {
       id: "sc-13",
@@ -516,6 +588,16 @@ export const mockMessages: Record<string, Message[]> = {
       createdAt: NOW - 20 * MIN,
     },
     {
+      id: "sc-13b-ping",
+      channelId: "ch-showcase",
+      sender: user2Ref,
+      content:
+        "@Alice Chen eyes on the approval when you're free — graphs look clean but want a second read.",
+      mentions: [user1Ref],
+      reactions: [],
+      createdAt: NOW - 17 * MIN,
+    },
+    {
       id: "sc-14",
       channelId: "ch-showcase",
       sender: user1Ref,
@@ -523,6 +605,190 @@ export const mockMessages: Record<string, Message[]> = {
       mentions: [],
       reactions: [],
       createdAt: NOW - 14 * MIN,
+    },
+    {
+      id: "sc-15",
+      channelId: "ch-showcase",
+      sender: user1Ref,
+      content: "",
+      blocks: [
+        {
+          type: "topic",
+          id: "topic-1",
+          title: "Billing retry storms — Q3 hardening",
+          author: "Alice Chen",
+          status: "needs-review",
+          lastActivity: "2 min ago",
+          replies: 14,
+          participants: ["AC", "BL", "CP", "CD"],
+          preview:
+            "Root cause looks like the new exponential-backoff config under the shared rate-limiter. Coder proposed a retry helper — need eyes on the jitter policy.",
+          assignee: {
+            name: "Coder",
+            isAgent: true,
+            accent: "var(--color-brand-primary)",
+          },
+          thread: [
+            {
+              id: "topic-1-r1",
+              author: "Bob Kim",
+              initials: "BL",
+              createdAtLabel: "11 min ago",
+              text: "I caught this in the gateway logs — burst of 500s every 90s, all from the EU pods. Looks like the jitter window collapsed to zero under load.",
+            },
+            {
+              id: "topic-1-r2",
+              author: "Charlie Park",
+              initials: "CP",
+              createdAtLabel: "9 min ago",
+              text: "Confirming — same pattern in Datadog. Attaching the dashboard so everyone's looking at the same slice.",
+              link: {
+                url: "https://app.datadoghq.com/dashboard/billing-retry-storm",
+                title: "Billing · retry storm (EU pods)",
+                description: "P99 latency + 5xx rate grouped by region for the last 24h.",
+                host: "app.datadoghq.com",
+              },
+            },
+            {
+              id: "topic-1-r3",
+              author: "Coder",
+              initials: "CD",
+              isAgent: true,
+              accent: "var(--color-brand-primary)",
+              createdAtLabel: "6 min ago",
+              text: "Drafted a retry helper that caps jitter at 50ms and respects the shared rate-limiter budget. Needs eyes on the policy before I wire it in.",
+              link: {
+                url: "https://github.com/nexu-io/billing/pull/482",
+                title: "billing#482 · introduce jitter-aware retry helper",
+                description:
+                  "Adds capped exponential backoff with decorrelated jitter. Gated behind BILLING_RETRY_V2.",
+                host: "github.com",
+              },
+            },
+            {
+              id: "topic-1-r4",
+              author: "Alice Chen",
+              initials: "AC",
+              createdAtLabel: "2 min ago",
+              text: "Policy looks right. Let's ship it behind the flag today and roll to 10% EU tomorrow.",
+            },
+          ],
+        },
+        {
+          type: "topic",
+          id: "topic-2",
+          title: "Landing redesign — hero + gallery",
+          author: "Bob Kim",
+          status: "active",
+          lastActivity: "12 min ago",
+          replies: 6,
+          participants: ["BL", "CP", "AC", "DR", "CD", "MN", "KL"],
+          preview: "Eight variants explored; narrowing to three finalists for Thursday's review.",
+          thread: [
+            {
+              id: "topic-2-r1",
+              author: "Bob Kim",
+              initials: "BL",
+              createdAtLabel: "18 min ago",
+              text: "Dropping the three finalists for the hero. Leaning toward V2 — the gallery grid breathes more.",
+              image: {
+                url: "https://images.unsplash.com/photo-1559028012-481c04fa702d?auto=format&fit=crop&w=880&q=70",
+                alt: "Landing page hero variant exploration",
+                width: 320,
+                height: 200,
+              },
+            },
+            {
+              id: "topic-2-r2",
+              author: "Diana Ramos",
+              initials: "DR",
+              createdAtLabel: "15 min ago",
+              text: "+1 on V2. Agree the grid needs air. Pulled a reference that nails the density we're after.",
+              link: {
+                url: "https://linear.app/nexu/issue/DES-142",
+                title: "DES-142 · hero + gallery density reference",
+                description:
+                  "Research bundle + annotated comps from the last round of usability calls.",
+                host: "linear.app",
+              },
+            },
+            {
+              id: "topic-2-r3",
+              author: "Alice Chen",
+              initials: "AC",
+              createdAtLabel: "12 min ago",
+              text: "Works for me. Let's lock V2 and get copy in by Thursday.",
+            },
+          ],
+        },
+        {
+          type: "topic",
+          id: "topic-3",
+          title: "Auth rotation — 24h complete",
+          author: "Charlie Park",
+          status: "done",
+          lastActivity: "1 h ago",
+          replies: 3,
+          participants: ["CP", "AC"],
+          preview: "All services rotated. Ephemeral tokens now mandatory for internal RPC.",
+          thread: [
+            {
+              id: "topic-3-r1",
+              author: "Charlie Park",
+              initials: "CP",
+              createdAtLabel: "1 h ago",
+              text: "Rotation wrapped at 04:12 UTC. All services on the new key; legacy tokens revoked.",
+            },
+            {
+              id: "topic-3-r2",
+              author: "Charlie Park",
+              initials: "CP",
+              createdAtLabel: "58 min ago",
+              text: "Post-rotation report is up — summary of what changed and the new ephemeral-token policy.",
+              link: {
+                url: "https://notion.so/nexu/auth-rotation-q2-report",
+                title: "Auth rotation — Q2 post-rotation report",
+                description:
+                  "Timeline, services touched, and the new ephemeral-token policy for internal RPC.",
+                host: "notion.so",
+              },
+            },
+            {
+              id: "topic-3-r3",
+              author: "Alice Chen",
+              initials: "AC",
+              createdAtLabel: "52 min ago",
+              text: "Nice work. Closing this one out.",
+            },
+          ],
+        },
+        {
+          type: "topic",
+          id: "topic-4",
+          title: "IndexedDB migration — blocked on Safari",
+          author: "Bob Kim",
+          status: "blocked",
+          lastActivity: "yesterday",
+          replies: 21,
+          participants: ["BL", "CP", "AC"],
+          preview:
+            "Safari 17.1 still throws QuotaExceeded on the dry-run — need a smaller chunk size before we can ship.",
+        },
+        {
+          type: "topic",
+          id: "topic-5",
+          title: "Onboarding copy — v1 specs (archived)",
+          author: "Alice Chen",
+          status: "archived",
+          lastActivity: "Mar 14",
+          replies: 8,
+          participants: ["AC", "DR"],
+          preview: "Superseded by the v2 plan tracked in #growth-experiments.",
+        },
+      ],
+      mentions: [],
+      reactions: [{ emoji: "📌", users: ["u-2", "u-3"] }],
+      createdAt: NOW - 12 * MIN,
     },
     {
       id: "sc-16",

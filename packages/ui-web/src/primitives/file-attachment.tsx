@@ -76,7 +76,7 @@ export const FileAttachment = React.forwardRef<HTMLButtonElement, FileAttachment
         type={type}
         data-slot="file-attachment"
         className={cn(
-          "group flex w-[340px] max-w-full items-center gap-3 rounded-lg border border-border bg-surface-1 px-3 py-2.5 text-left transition-colors",
+          "group flex w-[360px] max-w-full items-center gap-3 rounded-lg border border-border bg-surface-1 px-3 py-2.5 text-left transition-colors",
           "hover:border-border-hover hover:bg-surface-2",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           className,

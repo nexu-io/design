@@ -45,7 +45,7 @@ export function MentionPicker({
               onSelect(m, resolved.name);
               onClose();
             }}
-            className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent transition-colors"
+            className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-surface-2 transition-colors"
           >
             <img src={resolved.avatar} alt="" className="h-5 w-5 rounded-full" />
             <span className="flex-1 text-left truncate">{resolved.name}</span>

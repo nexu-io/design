@@ -3,9 +3,13 @@
   "changelog": false,
   "commit": false,
   "fixed": [],
-  "linked": [],
+  "linked": [["@nexu-design/tokens", "@nexu-design/ui-web"]],
   "access": "public",
   "baseBranch": "main",
+  "privatePackages": {
+    "version": false,
+    "tag": false
+  },
   "updateInternalDependencies": "patch",
-  "ignore": ["@nexu-design/demo", "@nexu-design/storybook"]
+  "ignore": []
 }

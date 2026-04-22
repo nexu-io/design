@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Voice-note attachment with a play button, stable waveform, duration, and optional transcript. The waveform is decorative by default and uses brand-subtle fills at rest.",
+          "Voice-note attachment with a play button, stable waveform, duration, and optional transcript. The transcript is hidden by default to keep the feed compact — a captions toggle appears on hover and expands the text inline. Pass `defaultTranscriptOpen` to start expanded.",
       },
     },
   },
@@ -29,6 +29,22 @@ export const WithTranscript: Story = {
     transcript:
       "We sized the SLO at 99.5 so we've got room, and I'd rather trip the breaker less often than page someone.",
   },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Hover the card to reveal the captions toggle (top-right of the waveform row), then click it to expand the transcript. Click again to collapse.",
+      },
+    },
+  },
+};
+
+export const TranscriptOpen: Story = {
+  args: {
+    transcript:
+      "Starts expanded via `defaultTranscriptOpen` — useful when the transcript is the primary content (e.g. in search results or accessibility-first contexts).",
+    defaultTranscriptOpen: true,
+  },
 };
 
 export const Playing: Story = {
@@ -40,6 +56,6 @@ export const Playing: Story = {
 
 export const CustomWaveform: Story = {
   args: {
-    waveform: [4, 8, 14, 18, 22, 24, 22, 18, 14, 8, 4, 8, 14, 18, 22, 24, 22, 18, 14, 8],
+    waveform: [1, 1, 2, 3, 3, 4, 3, 3, 2, 1, 1, 1, 2, 3, 3, 4, 3, 3, 2, 1],
   },
 };

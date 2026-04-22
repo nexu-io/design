@@ -1,40 +1,49 @@
-import { Button, cn } from "@nexu-design/ui-web";
+import { Button, RuntimeLogo, cn } from "@nexu-design/ui-web";
 import {
   ArrowRight,
+  ArrowUpRight,
   Bot,
-  Box,
-  Code,
-  Cpu,
-  ExternalLink,
-  MousePointer,
+  Check,
+  Copy,
   Play,
   RefreshCw,
   RotateCw,
-  Sparkles,
   Square,
-  Terminal,
   Trash2,
   Wifi,
   Zap,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import type { ElementType, ReactElement, ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { WindowChrome } from "@/components/layout/WindowChrome";
-import { type TranslationKey, useT } from "@/i18n";
 import { useAgentsStore } from "@/stores/agents";
 import { useRuntimesStore } from "@/stores/runtimes";
 import type { Runtime } from "@/types";
 
-const typeIcons: Record<Runtime["type"], ElementType> = {
-  "claude-code": Terminal,
-  cursor: MousePointer,
-  opencode: Code,
-  hermes: Cpu,
-  codex: Box,
-  "gemini-cli": Sparkles,
+/**
+ * Optical size multiplier for each runtime logo.
+ *
+ * All logos render inside a canonical surface tile (size-10 / size-12) with
+ * a target glyph size of ~50% of the tile. A few brand marks — notably
+ * Codex and Gemini CLI — ship with noticeable internal padding baked into
+ * their artwork, so rendering them at the same pixel size as the flush
+ * marks (Claude Code, Cursor, OpenCode) makes them look visibly smaller.
+ *
+ * The factor below is multiplied against the base glyph size so those
+ * padded marks occupy the same perceived area as the flush ones. Keep it
+ * close to `1` — anything over `1.5` starts clipping at the tile edge.
+ */
+const logoOpticalScale: Partial<Record<InstallGuide["type"], number>> = {
+  codex: 1.45,
+  "gemini-cli": 1.25,
+  pi: 1.2,
 };
+
+function getLogoSize(base: number, type: InstallGuide["type"]): number {
+  return Math.round(base * (logoOpticalScale[type] ?? 1));
+}
 
 const providerLabels: Record<Runtime["type"], string> = {
   "claude-code": "Anthropic",
@@ -43,12 +52,6 @@ const providerLabels: Record<Runtime["type"], string> = {
   codex: "OpenAI",
   "gemini-cli": "Google",
   hermes: "Local",
-};
-
-const statusLabelKeys: Record<Runtime["status"], TranslationKey> = {
-  connected: "runtimes.statusOnline",
-  disconnected: "runtimes.statusOffline",
-  error: "runtimes.statusError",
 };
 
 const usagePeriods = ["7d", "30d", "90d"] as const;
@@ -300,11 +303,8 @@ function hash(s: string): number {
   return Array.from(s).reduce((h, c, i) => (h * 31 + c.charCodeAt(0) + i * 17) % 9973, 7);
 }
 
-function getLastSeen(
-  status: Runtime["status"],
-  t: (key: TranslationKey, vars?: Record<string, string>) => string,
-): string {
-  if (status === "connected") return t("runtimes.justNow");
+function getLastSeen(status: Runtime["status"]): string {
+  if (status === "connected") return "Just now";
   if (status === "error") return "14 min ago";
   return "2 hours ago";
 }
@@ -314,7 +314,6 @@ function getData(rt: Runtime): RuntimeData {
 }
 
 export function RuntimesView(): ReactElement {
-  const t = useT();
   const navigate = useNavigate();
   const { runtimes, selectedRuntimeId, selectRuntime } = useRuntimesStore();
   const agents = useAgentsStore((s) => s.agents);
@@ -345,15 +344,14 @@ export function RuntimesView(): ReactElement {
         <div className="flex flex-1 items-center justify-center">
           <div className="flex flex-col items-center gap-3 text-muted-foreground">
             <Wifi className="h-10 w-10" />
-            <p className="text-lg font-medium">{t("runtimes.selectRuntime")}</p>
+            <p className="text-lg font-medium">Select a runtime</p>
           </div>
         </div>
       </div>
     );
   }
 
-  const Icon = typeIcons[rt.type];
-  const ver = rt.version ? `v${rt.version}` : t("runtimes.notInstalled");
+  const ver = rt.version ? `v${rt.version}` : "Not installed";
   const hasUpdate = rt.type === "claude-code" && rt.version;
   const data = getData(rt);
   const usage = data.usage[period];
@@ -365,9 +363,13 @@ export function RuntimesView(): ReactElement {
         <div className="max-w-4xl mx-auto px-6 pb-8 space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent">
-                <Icon className="h-5 w-5" />
-              </div>
+              {/* Canonical logo tile: fixed-size surface chip with a subtle
+                  border frames the brand glyph at ~half the container size,
+                  matching the `provider-settings` Storybook pattern in
+                  `apps/storybook/src/stories/provider-settings.stories.tsx`. */}
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl border border-border-subtle bg-surface-1">
+                <RuntimeLogo runtime={rt.type} size={getLogoSize(24, rt.type)} />
+              </span>
               <h1 className="text-xl font-semibold">{rt.name}</h1>
             </div>
             <div className="flex items-center gap-2">
@@ -375,12 +377,19 @@ export function RuntimesView(): ReactElement {
               <div className="flex items-center gap-1 ml-1">
                 {rt.status === "connected" ? (
                   <>
+                    {/* Outline icon buttons hover to the neutral surface
+                        chip (`hover:bg-surface-2`), NOT `hover:bg-accent`.
+                        `--color-accent` is reserved for primary filled
+                        affordances; using it as a hover state turns the
+                        whole row blue / near-black on mouseover and
+                        violates the "at most one accent-weighted action
+                        per group" rule in AGENTS.md. */}
                     <Button
                       type="button"
                       variant="outline"
                       size="icon"
-                      title={t("runtimes.stopRuntime")}
-                      className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                      title="Stop runtime"
+                      className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-surface-2 transition-colors"
                     >
                       <Square className="h-3 w-3" />
                     </Button>
@@ -388,8 +397,8 @@ export function RuntimesView(): ReactElement {
                       type="button"
                       variant="outline"
                       size="icon"
-                      title={t("runtimes.restartRuntime")}
-                      className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                      title="Restart runtime"
+                      className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-surface-2 transition-colors"
                     >
                       <RotateCw className="h-3.5 w-3.5" />
                     </Button>
@@ -399,7 +408,7 @@ export function RuntimesView(): ReactElement {
                     type="button"
                     variant="outline"
                     size="icon"
-                    title={t("runtimes.startRuntime")}
+                    title="Start runtime"
                     className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-nexu-online hover:bg-nexu-online/10 transition-colors"
                   >
                     <Play className="h-3.5 w-3.5" />
@@ -410,7 +419,7 @@ export function RuntimesView(): ReactElement {
                 type="button"
                 variant="outline"
                 size="icon"
-                title={t("runtimes.deleteRuntime")}
+                title="Delete runtime"
                 className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/10 transition-colors"
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -420,10 +429,10 @@ export function RuntimesView(): ReactElement {
 
           <section className="rounded-xl border border-border p-4 text-sm space-y-3">
             <div className="grid grid-cols-2 gap-x-8 gap-y-3">
-              <InfoRow label={t("runtimes.provider")} value={providerLabels[rt.type]} />
-              <InfoRow label={t("runtimes.lastSeen")} value={getLastSeen(rt.status, t)} />
-              <InfoRow label={t("runtimes.device")} value={`localhost · ${ver} (${rt.name})`} />
-              <InfoRow label={t("runtimes.cliVersion")}>
+              <InfoRow label="Provider" value={providerLabels[rt.type]} />
+              <InfoRow label="Last seen" value={getLastSeen(rt.status)} />
+              <InfoRow label="Device" value={`localhost · ${ver} (${rt.name})`} />
+              <InfoRow label="CLI version">
                 {hasUpdate ? (
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{ver}</span>
@@ -433,9 +442,9 @@ export function RuntimesView(): ReactElement {
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="ml-1 h-6 px-2 text-[11px] font-medium hover:bg-accent transition-colors"
+                      className="ml-1 h-6 px-2 text-[11px] font-medium hover:bg-surface-2 transition-colors"
                     >
-                      {t("runtimes.update")}
+                      Update
                     </Button>
                   </div>
                 ) : (
@@ -447,21 +456,21 @@ export function RuntimesView(): ReactElement {
               type="button"
               variant="outline"
               size="sm"
-              className="h-8 px-3 text-xs font-medium flex items-center gap-1.5 hover:bg-accent transition-colors"
+              className="h-8 px-3 text-xs font-medium flex items-center gap-1.5 hover:bg-surface-2 transition-colors"
             >
               <RefreshCw className="h-3.5 w-3.5" />
-              {t("runtimes.testConnection")}
+              Test connection
             </Button>
           </section>
 
           <section className="rounded-xl border border-border p-4">
-            <p className="text-sm font-semibold mb-3">{t("runtimes.linkedAgents")}</p>
+            <p className="text-sm font-semibold mb-3">Linked agents</p>
             {(() => {
               const linked = agents.filter((a) => a.runtimeId === rt.id);
               if (linked.length === 0) {
                 return (
                   <p className="text-sm text-muted-foreground text-center py-4">
-                    {t("runtimes.noAgentsUsing")}
+                    No agents use this runtime
                   </p>
                 );
               }
@@ -477,9 +486,9 @@ export function RuntimesView(): ReactElement {
                         navigate("/agents");
                         setTimeout(() => useAgentsStore.getState().selectAgent(agent.id), 50);
                       }}
-                      className="flex items-center gap-3 w-full px-3 py-2 rounded-lg hover:bg-accent transition-colors text-left"
+                      className="flex items-center gap-3 w-full px-3 py-2 rounded-lg hover:bg-surface-2 transition-colors text-left"
                     >
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-2 ring-1 ring-inset ring-black/5">
                         {agent.avatar ? (
                           <img src={agent.avatar} alt="" className="h-8 w-8 rounded-lg" />
                         ) : (
@@ -509,7 +518,7 @@ export function RuntimesView(): ReactElement {
 
           <section className="rounded-xl border border-border p-4">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-semibold">{t("runtimes.tokenUsage")}</p>
+              <p className="text-sm font-semibold">Token usage</p>
               <div className="flex items-center rounded-lg border border-border p-0.5">
                 {usagePeriods.map((p) => (
                   <Button
@@ -532,20 +541,18 @@ export function RuntimesView(): ReactElement {
             </div>
 
             <div className="grid grid-cols-4 gap-3 mb-3">
-              <StatCard label={t("runtimes.input")} value={usage.input} />
-              <StatCard label={t("runtimes.output")} value={usage.output} />
-              <StatCard label={t("runtimes.cacheRead")} value={usage.cacheRead} />
-              <StatCard label={t("runtimes.cacheWrite")} value={usage.cacheWrite} />
+              <StatCard label="Input" value={usage.input} />
+              <StatCard label="Output" value={usage.output} />
+              <StatCard label="Cache read" value={usage.cacheRead} />
+              <StatCard label="Cache write" value={usage.cacheWrite} />
             </div>
             <p className="text-sm text-muted-foreground mb-5">
-              {t("runtimes.estimatedCost", { period })}{" "}
+              Estimated cost ({period}):{" "}
               <span className="font-semibold text-foreground">{usage.cost}</span>
             </p>
 
             <div className="border-t border-border pt-4 mb-4">
-              <p className="text-xs font-medium text-muted-foreground mb-3">
-                {t("runtimes.byModel")}
-              </p>
+              <p className="text-xs font-medium text-muted-foreground mb-3">By model</p>
             </div>
             {data.models.length > 0 ? (
               <>
@@ -553,7 +560,7 @@ export function RuntimesView(): ReactElement {
                   <DonutChart
                     segments={data.donutSegments}
                     label={data.totalTokens}
-                    sublabel={t("runtimes.tokens")}
+                    sublabel="tokens"
                   />
                 </div>
                 <div className="space-y-0">
@@ -577,14 +584,12 @@ export function RuntimesView(): ReactElement {
                 </div>
               </>
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">
-                {t("runtimes.noModelData")}
-              </p>
+              <p className="text-sm text-muted-foreground text-center py-4">No model usage data</p>
             )}
           </section>
 
           <section className="rounded-xl border border-border p-4">
-            <p className="text-sm font-semibold mb-3">{t("runtimes.activity")}</p>
+            <p className="text-sm font-semibold mb-3">Activity</p>
             <div className="flex gap-1.5">
               <div className="flex flex-col justify-between pr-0.5 py-[1px]">
                 {weekLabels.map((w) => (
@@ -622,22 +627,22 @@ export function RuntimesView(): ReactElement {
               </div>
             </div>
             <div className="flex items-center justify-end gap-1 mt-2">
-              <span className="text-[9px] text-muted-foreground mr-1">{t("runtimes.less")}</span>
+              <span className="text-[9px] text-muted-foreground mr-1">Less</span>
               {heatmapLevels.map((cls) => (
                 <div key={cls} className={cn("w-[10px] h-[10px] rounded-sm", cls)} />
               ))}
-              <span className="text-[9px] text-muted-foreground ml-1">{t("runtimes.more")}</span>
+              <span className="text-[9px] text-muted-foreground ml-1">More</span>
             </div>
           </section>
 
           <section className="rounded-xl border border-border p-4">
             <div className="grid grid-cols-2 gap-x-8 text-sm">
               <div>
-                <span className="text-muted-foreground">{t("runtimes.created")}</span>
+                <span className="text-muted-foreground">Created</span>
                 <p className="mt-0.5 font-medium">{data.createdAt}</p>
               </div>
               <div>
-                <span className="text-muted-foreground">{t("runtimes.updated")}</span>
+                <span className="text-muted-foreground">Updated</span>
                 <p className="mt-0.5 font-medium">{data.updatedAt}</p>
               </div>
             </div>
@@ -708,58 +713,128 @@ const installGuides: InstallGuide[] = [
   },
 ];
 
+function InstallCommand({
+  command,
+  className,
+}: { command: string; className?: string }): ReactElement {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = (e: React.MouseEvent): void => {
+    /* The card routes bare clicks to a docs overlay `<a>` behind the
+       content. Prevent default to stop that navigation and stop
+       propagation so the parent's hover / link handling leaves this
+       button alone. */
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard
+      .writeText(command)
+      .then(() => {
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1500);
+      })
+      .catch(() => {
+        /* Clipboard permission denied or unavailable — silently ignore;
+           the user can still read and manually copy the command text. */
+      });
+  };
+
+  return (
+    <div
+      className={cn(
+        "group/cmd flex items-center gap-2 rounded-md bg-secondary/60 pl-2 pr-1 py-1",
+        className,
+      )}
+    >
+      <code className="font-mono text-[11px] text-muted-foreground truncate min-w-0 flex-1">
+        {command}
+      </code>
+      <button
+        type="button"
+        onClick={handleCopy}
+        aria-label={copied ? "Copied" : "Copy install command"}
+        title={copied ? "Copied" : "Copy command"}
+        className={cn(
+          "flex size-5 shrink-0 items-center justify-center rounded transition-colors",
+          copied
+            ? "text-success"
+            : "text-muted-foreground hover:text-foreground hover:bg-background",
+        )}
+      >
+        {copied ? <Check className="size-3" /> : <Copy className="size-3" />}
+      </button>
+    </div>
+  );
+}
+
 function EmptyRuntimesGuide(): ReactElement {
-  const t = useT();
   return (
     <div className="flex h-full flex-col">
       <WindowChrome className="h-10" />
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-6 pb-10">
           <div className="flex flex-col items-center text-center gap-3 pt-6 pb-8">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-2 text-text-primary ring-1 ring-inset ring-black/5">
               <Zap className="h-6 w-6" />
             </div>
-            <h1 className="text-xl font-semibold">{t("runtimes.emptyTitle")}</h1>
-            <p className="text-sm text-muted-foreground max-w-md">{t("runtimes.emptyDesc")}</p>
+            <h1 className="text-xl font-semibold">No runtimes installed</h1>
+            <p className="text-sm text-muted-foreground max-w-md">
+              Agents need a runtime to execute tasks. Install one of the supported runtimes below,
+              then return here to connect it.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {installGuides.map((g) => {
-              const Icon = typeIcons[g.type as Runtime["type"]] ?? Terminal;
               return (
-                <a
+                /* Card no longer wraps everything in a single `<a>`: the
+                   install command needs its own click-to-copy button, and
+                   nesting `<button>` inside `<a>` is invalid HTML. Instead
+                   the card is a `<div>` with an absolutely-positioned link
+                   overlay catching clicks on empty regions, while the
+                   copy button sits on its own `z-[1]` stacking context and
+                   intercepts its clicks before they reach the overlay. */
+                <div
                   key={g.type}
-                  href={g.docsUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group flex flex-col gap-3 p-4 rounded-xl border border-border hover:border-muted-foreground/50 hover:bg-accent/50 transition-colors"
+                  className="group relative flex flex-col gap-3 p-4 rounded-xl border border-border hover:border-muted-foreground/50 hover:bg-surface-2 transition-colors"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent">
-                      <Icon className="h-4 w-4" />
-                    </div>
+                  <a
+                    href={g.docsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`${g.name} installation guide`}
+                    className="absolute inset-0 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <span className="sr-only">Open {g.name} installation guide</span>
+                  </a>
+                  {/* Non-interactive content opts out of pointer events so
+                      the full card area (outside the copy control) routes
+                      clicks through to the docs overlay above. */}
+                  <div className="relative z-[1] flex items-start gap-3 pointer-events-none">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border-subtle bg-surface-1">
+                      <RuntimeLogo runtime={g.type} size={getLogoSize(20, g.type)} />
+                    </span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{g.name}</p>
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-sm font-medium truncate">{g.name}</p>
+                        <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+                      </div>
                       <p className="text-xs text-muted-foreground truncate">{g.desc}</p>
                     </div>
-                    <ExternalLink className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
-                  <code className="font-mono text-[11px] text-muted-foreground bg-secondary/60 rounded-md px-2 py-1.5 truncate">
-                    {g.install}
-                  </code>
-                  <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                    <span>{t("runtimes.installationGuide")}</span>
+                  <InstallCommand command={g.install} className="relative z-[1]" />
+                  <div className="relative z-[1] flex items-center gap-1 text-[11px] text-muted-foreground pointer-events-none">
+                    <span>Installation guide:</span>
                     <span className="font-medium text-foreground/80 group-hover:text-foreground truncate">
                       {g.docsLabel}
                     </span>
                   </div>
-                </a>
+                </div>
               );
             })}
           </div>
 
           <p className="text-center text-xs text-muted-foreground mt-8">
-            {t("runtimes.autoDetectHint")}
+            Already installed a runtime? Nexu will auto-detect it on next scan.
           </p>
         </div>
       </div>
@@ -789,8 +864,13 @@ function StatCard({ label, value }: { label: string; value: string }): ReactElem
   );
 }
 
+const statusLabels: Record<Runtime["status"], string> = {
+  connected: "Online",
+  disconnected: "Offline",
+  error: "Error",
+};
+
 function StatusBadge({ status }: { status: Runtime["status"] }): ReactElement {
-  const t = useT();
   return (
     <div
       className={cn(
@@ -808,7 +888,7 @@ function StatusBadge({ status }: { status: Runtime["status"] }): ReactElement {
           status === "error" && "bg-destructive",
         )}
       />
-      {t(statusLabelKeys[status])}
+      {statusLabels[status]}
     </div>
   );
 }

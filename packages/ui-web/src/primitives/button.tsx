@@ -11,12 +11,12 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-[var(--color-accent)] text-[var(--color-accent-fg,white)] shadow-sm hover:bg-[var(--color-accent-hover)] hover:shadow-md hover:shadow-accent/20",
+          "bg-[var(--color-accent)] text-[var(--color-accent-fg,white)] shadow-sm hover:bg-[var(--color-accent-hover)]",
         brand: "bg-primary text-primary-foreground hover:bg-primary/90",
         primary: "bg-primary text-primary-foreground hover:bg-primary/90",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         outline:
-          "border border-input bg-background text-foreground shadow-xs hover:border-foreground/15 hover:bg-foreground/[0.03] hover:text-foreground hover:shadow-sm",
+          "border border-input bg-background text-foreground shadow-xs hover:border-foreground/15 hover:bg-foreground/[0.03] hover:text-foreground",
         ghost:
           "text-[var(--color-text-muted)] hover:bg-surface-2 hover:text-[var(--color-text-secondary)]",
         soft: "bg-accent/10 text-accent hover:bg-accent/20",
@@ -28,10 +28,15 @@ const buttonVariants = cva(
         default: "h-9 px-4 py-2",
         sm: "h-8 px-3 text-sm font-semibold",
         md: "h-10 rounded-xl px-4 py-2 font-semibold",
-        lg: "h-12 rounded-xl px-6 text-lg font-semibold shadow-sm hover:shadow-lg hover:shadow-accent/20",
+        lg: "h-12 rounded-xl px-6 text-lg font-semibold shadow-sm",
         inline: "h-auto px-0",
-        icon: "size-10 p-0",
-        "icon-sm": "size-6 p-0",
+        /* Icon sizes pin `rounded-md` (8px) — the base `rounded-lg`
+           (12px per tokens) would land at exactly half the `icon-sm`
+           width (24px) and render a perfect circle on hover. Controls
+           live at `--radius-md` per the design spec; only cards / panels
+           use the larger `rounded-lg` radius. */
+        icon: "size-10 rounded-md p-0",
+        "icon-sm": "size-6 rounded-md p-0",
       },
     },
     defaultVariants: {

@@ -1,8 +1,9 @@
-import type { ContentBlock } from "@/types";
+import type { AgentRunStep, ContentBlock } from "@/types";
 import {
   FileAttachment,
   ImageAttachment,
   ImageGallery,
+  TopicCard,
   VideoAttachment,
   VoiceMessage,
   cn,
@@ -12,6 +13,9 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronRight,
+  Circle,
+  FileCode2,
+  GitPullRequestArrow,
   Loader2,
   MessageSquareReply,
   SendHorizontal,
@@ -25,6 +29,13 @@ export type ApprovalResult =
   | { kind: "choice"; choiceId: string; label: string }
   | { kind: "text"; text: string };
 
+/**
+ * Content-block props.
+ *
+ * `onExpand` routes heavy/ephemeral content (code, diff, image) into a
+ * fullscreen modal overlay — the reader briefly leaves the chat context
+ * to inspect a payload and then returns.
+ */
 interface ContentBlockRendererProps {
   block: ContentBlock;
   isMe: boolean;
@@ -94,8 +105,8 @@ function ImageBlock({
     <ImageAttachment
       src={block.url}
       alt={block.alt ?? ""}
-      width={320}
-      height={200}
+      width={360}
+      height={220}
       onSelect={onExpand}
       caption={block.alt}
     />
@@ -158,7 +169,108 @@ function VideoBlock({
 function VoiceBlock({
   block,
 }: { block: Extract<ContentBlock, { type: "voice" }> }): React.ReactElement {
-  return <VoiceMessage duration={block.duration} waveform={block.waveform} />;
+  return (
+    <VoiceMessage
+      duration={block.duration}
+      transcript={block.transcript}
+      waveform={block.waveform}
+    />
+  );
+}
+
+function TopicBlock({
+  block,
+  onOpen,
+}: {
+  block: Extract<ContentBlock, { type: "topic" }>;
+  onOpen?: () => void;
+}): React.ReactElement {
+  return (
+    <TopicCard
+      className="max-w-[640px]"
+      title={block.title}
+      author={block.author}
+      status={block.status}
+      lastActivity={block.lastActivity}
+      replies={block.replies}
+      participants={block.participants}
+      preview={block.preview}
+      onClick={onOpen}
+      assignee={
+        block.assignee
+          ? {
+              name: block.assignee.name,
+              isAgent: block.assignee.isAgent,
+              accent: block.assignee.accent,
+            }
+          : undefined
+      }
+    />
+  );
+}
+
+/**
+ * Collapsed one-line row shared by code + diff blocks.
+ *
+ * Chat keeps to a minimal, Cursor-style affordance — a single pill that names
+ * the artifact and hints at its weight; clicking opens the full content in the
+ * overlay. Long code dumps are never inlined into the message stream because
+ * they break the reading rhythm for everyone not actively reviewing the code.
+ */
+function CollapsedContentRow({
+  icon,
+  primary,
+  meta,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  primary: React.ReactNode;
+  meta?: React.ReactNode;
+  onClick?: () => void;
+}): React.ReactElement {
+  const interactive = typeof onClick === "function";
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={!interactive}
+      className={cn(
+        "flex w-full max-w-[640px] items-center gap-2.5 rounded-lg border border-border-subtle bg-surface-1 px-3 py-2 text-left transition-colors",
+        interactive && "cursor-pointer hover:bg-surface-2",
+      )}
+    >
+      <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-surface-2 text-text-muted">
+        {icon}
+      </span>
+      <span className="min-w-0 flex-1 truncate font-mono text-[12px] text-text-heading">
+        {primary}
+      </span>
+      {meta ? (
+        <span className="shrink-0 text-[11px] text-text-muted tabular-nums">{meta}</span>
+      ) : null}
+    </button>
+  );
+}
+
+function CodeBlock({
+  block,
+  onExpand,
+}: {
+  block: Extract<ContentBlock, { type: "code" }>;
+  onExpand?: () => void;
+}): React.ReactElement {
+  const lineCount = block.code.split("\n").length;
+  const primary = block.filename ?? `${block.language ?? "code"} snippet`;
+  const meta = `${lineCount} line${lineCount === 1 ? "" : "s"}`;
+
+  return (
+    <CollapsedContentRow
+      icon={<FileCode2 className="size-3.5" />}
+      primary={primary}
+      meta={meta}
+      onClick={onExpand}
+    />
+  );
 }
 
 function ActionCard({
@@ -246,6 +358,25 @@ function ToolResultBlock({
         </div>
       )}
     </div>
+  );
+}
+
+function DiffBlock({
+  block,
+  onExpand,
+}: { block: Extract<ContentBlock, { type: "diff" }>; onExpand?: () => void }): React.ReactElement {
+  return (
+    <CollapsedContentRow
+      icon={<GitPullRequestArrow className="size-3.5" />}
+      primary={block.filename}
+      meta={
+        <span className="inline-flex items-center gap-1.5">
+          <span className="text-success">+{block.additions}</span>
+          <span className="text-error">-{block.deletions}</span>
+        </span>
+      }
+      onClick={onExpand}
+    />
   );
 }
 
@@ -399,6 +530,185 @@ function ApprovalBlock({
   );
 }
 
+function ProgressBlock({
+  block,
+}: { block: Extract<ContentBlock, { type: "progress" }> }): React.ReactElement {
+  const isDone = block.current >= block.total;
+
+  return (
+    <div className="w-full max-w-[640px] rounded-xl border border-border-subtle bg-surface-1 px-4 py-3.5">
+      <div className="flex items-center justify-between">
+        <p className="text-[13px] font-medium text-text-heading">{block.title}</p>
+        <span
+          className={cn(
+            "font-mono text-[11px] font-medium tabular-nums",
+            isDone ? "text-success" : "text-text-muted",
+          )}
+        >
+          {block.current} / {block.total}
+        </span>
+      </div>
+
+      {block.steps && block.steps.length > 0 && (
+        <ul className="mt-3 flex flex-col gap-3">
+          {block.steps.map((step, idx) => (
+            <li key={`${step.label}-${idx}`} className="flex items-center gap-2.5">
+              {step.status === "done" && (
+                <CheckCircle2
+                  aria-hidden="true"
+                  className="size-3.5 shrink-0 text-text-muted"
+                />
+              )}
+              {step.status === "active" && (
+                <Loader2
+                  aria-hidden="true"
+                  className="size-3.5 shrink-0 animate-spin text-text-heading"
+                />
+              )}
+              {step.status === "pending" && (
+                <Circle
+                  aria-hidden="true"
+                  strokeWidth={1.75}
+                  style={{ strokeDasharray: "2 2" }}
+                  className="size-3.5 shrink-0 text-text-tertiary"
+                />
+              )}
+              <span
+                className={cn(
+                  "text-[12px] leading-none",
+                  step.status === "done" && "text-text-muted line-through",
+                  step.status === "active" && "font-medium text-text-heading",
+                  step.status === "pending" && "text-text-tertiary",
+                )}
+              >
+                {step.label}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Renders a single work step (description + block) inside an agent-run.
+ * Kept local because the "step" concept only exists for agent-run grouping —
+ * promoting it to ContentBlockRenderer would widen the block union unnecessarily.
+ */
+function AgentRunStepRenderer({
+  step,
+  onExpand,
+}: {
+  step: AgentRunStep;
+  onExpand?: (block: ContentBlock) => void;
+}): React.ReactElement {
+  const handleExpand = (): void => onExpand?.(step.block);
+  let rendered: React.ReactElement;
+  switch (step.block.type) {
+    case "code":
+      rendered = <CodeBlock block={step.block} onExpand={handleExpand} />;
+      break;
+    case "diff":
+      rendered = <DiffBlock block={step.block} onExpand={handleExpand} />;
+      break;
+    case "action":
+      rendered = <ActionCard block={step.block} />;
+      break;
+    case "tool-result":
+      rendered = <ToolResultBlock block={step.block} />;
+      break;
+    case "progress":
+      rendered = <ProgressBlock block={step.block} />;
+      break;
+  }
+  return (
+    <div className="space-y-1.5">
+      {step.description ? (
+        <p className="text-[13px] leading-relaxed text-text-primary">{step.description}</p>
+      ) : null}
+      {rendered}
+    </div>
+  );
+}
+
+/**
+ * Agent-run container — consolidates a sequence of work artifacts produced by
+ * one agent into a single collapsible module so the chat stays quiet. Default
+ * view shows only the LAST step (the one currently in flight) expanded; the
+ * completed steps that led up to it live behind a "Show N earlier steps"
+ * toggle so readers who skimmed past earlier can still audit the trail.
+ *
+ * Approval / review blocks deliberately live OUTSIDE this container (see the
+ * `AgentRunStep["block"]` type — approval is not allowed in the narrowed
+ * union). That separation is load-bearing: a run summarizes what the agent
+ * did, an approval demands human attention, and folding the two together
+ * would hide the ask.
+ */
+function AgentRunBlock({
+  block,
+  onExpand,
+}: {
+  block: Extract<ContentBlock, { type: "agent-run" }>;
+  onExpand?: (block: ContentBlock) => void;
+}): React.ReactElement {
+  const [showEarlier, setShowEarlier] = useState(false);
+  const steps = block.steps;
+  const earlier = steps.slice(0, -1);
+  const current = steps[steps.length - 1];
+
+  return (
+    <div
+      data-slot="agent-run"
+      /*
+       * Outer shell uses `bg-surface-2` (the secondary/hover tone) instead of
+       * surface-1 so the run reads as a distinct "container" against the
+       * white chat background, and the nested work artifacts — which ARE
+       * surface-1 + border — visibly sit *inside* it. No border here on
+       * purpose: the tonal step from chat bg → surface-2 is the boundary,
+       * an additional stroke would collide with each inner card's own
+       * border and create the "double frame" effect.
+       */
+      className="w-full max-w-[640px] rounded-xl bg-surface-2 p-3"
+    >
+      {earlier.length > 0 ? (
+        <div className="mb-3">
+          <button
+            type="button"
+            onClick={() => setShowEarlier((prev) => !prev)}
+            aria-expanded={showEarlier}
+            className={cn(
+              "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-text-secondary transition-colors",
+              // Hover steps up to surface-3 because the shell itself already sits on surface-2 —
+              // using hover:bg-surface-2 would disappear into the background.
+              "hover:bg-surface-3 hover:text-text-primary",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+            )}
+          >
+            <ChevronRight
+              className={cn(
+                "size-3 transition-transform duration-200",
+                showEarlier ? "rotate-90" : "rotate-0",
+              )}
+            />
+            {showEarlier
+              ? "Hide earlier steps"
+              : `Show ${earlier.length} earlier step${earlier.length > 1 ? "s" : ""}`}
+          </button>
+          {showEarlier ? (
+            <div className="mt-2 space-y-3 border-l-2 border-border-subtle pl-3">
+              {earlier.map((step) => (
+                <AgentRunStepRenderer key={step.id} step={step} onExpand={onExpand} />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+      {current ? <AgentRunStepRenderer step={current} onExpand={onExpand} /> : null}
+    </div>
+  );
+}
+
 export function ContentBlockRenderer({
   block,
   isMe: _isMe,
@@ -418,11 +728,21 @@ export function ContentBlockRenderer({
       return <VoiceBlock block={block} />;
     case "file":
       return <FileBlock block={block} />;
+    case "code":
+      return <CodeBlock block={block} onExpand={handleExpand} />;
+    case "diff":
+      return <DiffBlock block={block} onExpand={handleExpand} />;
     case "action":
       return <ActionCard block={block} />;
     case "tool-result":
       return <ToolResultBlock block={block} />;
     case "approval":
       return <ApprovalBlock block={block} onAction={onApprovalAction} />;
+    case "progress":
+      return <ProgressBlock block={block} />;
+    case "agent-run":
+      return <AgentRunBlock block={block} onExpand={onExpand} />;
+    case "topic":
+      return <TopicBlock block={block} />;
   }
 }

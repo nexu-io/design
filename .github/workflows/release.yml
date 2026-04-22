@@ -20,13 +20,90 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  release:
-    name: Version or publish packages
-    if: github.ref == 'refs/heads/main'
+  create-release-pr:
+    name: Create release PR
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'version' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.16.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check for pending changesets
+        id: changesets
+        run: |
+          has_changesets=false
+
+          for file in .changeset/*.md; do
+            if [ -f "$file" ] && [ "$(basename "$file")" != 'README.md' ]; then
+              has_changesets=true
+              break
+            fi
+          done
+
+          echo "has_changesets=$has_changesets" >> "$GITHUB_OUTPUT"
+
+      - name: Skip version PR when no changesets exist
+        if: steps.changesets.outputs.has_changesets != 'true'
+        run: echo 'No pending changesets; skipping version PR creation.'
+
+      - name: Apply version bumps
+        if: steps.changesets.outputs.has_changesets == 'true'
+        run: pnpm version:packages
+
+      - name: Format versioned files
+        if: steps.changesets.outputs.has_changesets == 'true'
+        run: |
+          mapfile -t changed_files < <(git diff --name-only --diff-filter=AM)
+
+          if [ ${#changed_files[@]} -eq 0 ]; then
+            echo 'No versioned files changed; skipping formatting.'
+            exit 0
+          fi
+
+          pnpm exec biome format --write "${changed_files[@]}"
+
+      - name: Create release PR
+        if: steps.changesets.outputs.has_changesets == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          base: main
+          branch: changeset-release/main
+          commit-message: 'chore: version packages'
+          title: 'chore: version packages'
+          body: |
+            ## Summary
+            - apply pending Changesets version bumps for publishable packages
+            - update workspace package versions and the pnpm lockfile for release
+          delete-branch: false
+
+  publish:
+    name: Publish packages
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event.inputs.action == 'publish')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
       id-token: write
 
     steps:
@@ -43,7 +120,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24.15.0
           registry-url: https://registry.npmjs.org
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
@@ -51,24 +128,29 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Detect version PR merge
+        id: release_artifacts
+        if: github.event_name == 'push'
+        run: |
+          PUSH_RANGE="${{ github.event.before }}..${{ github.sha }}"
+          COMMIT_SUBJECTS="$(git log --format=%s "$PUSH_RANGE")"
+
+          if printf '%s\n' "$COMMIT_SUBJECTS" | grep -Eq '^chore: version packages( \(#([0-9]+)\))?$'; then
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip publish on non-release pushes
+        if: github.event_name == 'push' && steps.release_artifacts.outputs.should_publish != 'true'
+        run: echo 'No versioned package changes detected; skipping publish.'
+
       - name: Run release readiness checks
-        if: github.event_name == 'push' || github.event.inputs.action == 'publish'
+        if: github.event_name == 'workflow_dispatch' || steps.release_artifacts.outputs.should_publish == 'true'
         run: pnpm release:check
 
-      - name: Create release PR
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'version'
-        uses: changesets/action@v1
-        with:
-          commit: 'chore: version packages'
-          title: 'chore: version packages'
-          version: pnpm version:packages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Publish packages
-        if: github.event_name == 'push' || github.event.inputs.action == 'publish'
+        if: github.event_name == 'workflow_dispatch' || steps.release_artifacts.outputs.should_publish == 'true'
         run: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: 'true'

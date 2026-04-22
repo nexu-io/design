@@ -3,7 +3,6 @@ import {
   ActivityBarContent,
   ActivityBarFooter,
   ActivityBarHeader,
-  ActivityBarIndicator,
   ActivityBarItem,
   Avatar,
   AvatarFallback,
@@ -11,7 +10,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@nexu-design/ui-web";
 import { Check, MessageSquare, Plus, Settings, Users, Zap } from "lucide-react";
@@ -44,7 +42,7 @@ export function ActivityBar(): React.ReactElement {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <UiActivityBar className="w-14 border-r-0 bg-nav-surface py-0 text-nav-fg">
+    <UiActivityBar surface="glass" className="w-14 border-r border-border-subtle py-0 text-nav-fg">
       <TitleBarSpacer className="mb-3 h-[38px]" />
 
       <ActivityBarHeader className="mb-4 w-10 border-b-0 pb-0">
@@ -97,8 +95,12 @@ export function ActivityBar(): React.ReactElement {
               );
             })}
 
-            <DropdownMenuSeparator />
-
+            {/* No separator here — `Add workspace` is a sibling affordance
+                to the workspace rows above (same row treatment, just with a
+                `+` tile instead of an avatar), so splitting them with a
+                divider implies a semantic break that doesn't exist. The
+                separator only appears before `Sign out` to fence off the
+                destructive action. */}
             <DropdownMenuItem
               disabled={workspaces.length >= 5}
               title={workspaces.length >= 5 ? "Workspace limit reached (5 max)" : undefined}
@@ -108,9 +110,7 @@ export function ActivityBar(): React.ReactElement {
               <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-secondary/40">
                 <Plus className="size-4 text-muted-foreground" />
               </div>
-              <span className="flex-1 text-left text-sm text-foreground">
-                {t("workspace.addWorkspace")}
-              </span>
+              <span className="flex-1 text-left text-sm text-foreground">Add workspace</span>
               {workspaces.length >= 5 ? (
                 <span className="shrink-0 text-[10px] text-muted-foreground">
                   {workspaces.length}/5
@@ -134,9 +134,6 @@ export function ActivityBar(): React.ReactElement {
               className="no-drag relative size-10 rounded-xl text-nav-muted hover:bg-nav-hover hover:text-nav-fg data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg"
               title={t(labelKey)}
             >
-              {isActive ? (
-                <ActivityBarIndicator className="left-[-8px] inset-y-2 w-[3px] bg-nav-active-fg" />
-              ) : null}
               <Icon className="size-[19px]" />
             </ActivityBarItem>
           );
@@ -150,9 +147,6 @@ export function ActivityBar(): React.ReactElement {
           className="no-drag size-10 rounded-xl text-nav-muted hover:bg-nav-hover hover:text-nav-fg data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg"
           title={t("section.settings")}
         >
-          {location.pathname.startsWith("/settings") ? (
-            <ActivityBarIndicator className="left-[-8px] inset-y-2 w-[3px] bg-nav-active-fg" />
-          ) : null}
           <Settings className="size-[19px]" />
         </ActivityBarItem>
       </ActivityBarFooter>

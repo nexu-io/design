@@ -34,22 +34,13 @@ interface LocaleState {
   setLocale: (locale: Locale) => void;
 }
 
+// English-first default: users who haven't explicitly picked a language start
+// in English. We intentionally do NOT auto-detect from `navigator.language` so
+// the out-of-the-box experience is consistent for everyone. Users can still
+// switch to any supported locale from Settings → Appearance → Language.
 const detectLocale = (): Locale => {
   const stored = localStorage.getItem("nexu-locale") as Locale | null;
   if (stored && LOCALES.some((l) => l.code === stored)) return stored;
-  const nav = (typeof navigator !== "undefined" && navigator.language) || "en";
-  const lower = nav.toLowerCase();
-  if (lower.startsWith("zh"))
-    return lower.includes("tw") || lower.includes("hk") ? "zh-TW" : "zh-CN";
-  if (lower.startsWith("ja")) return "ja";
-  if (lower.startsWith("ko")) return "ko";
-  if (lower.startsWith("es")) return "es";
-  if (lower.startsWith("fr")) return "fr";
-  if (lower.startsWith("de")) return "de";
-  if (lower.startsWith("pt")) return "pt-BR";
-  if (lower.startsWith("ru")) return "ru";
-  if (lower.startsWith("it")) return "it";
-  if (lower.startsWith("vi")) return "vi";
   return "en";
 };
 

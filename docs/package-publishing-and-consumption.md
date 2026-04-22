@@ -10,12 +10,34 @@ No publishing is performed by default.
 ## Current package strategy
 
 - Both packages now build to `dist/` using TypeScript emit (`.js` + `.d.ts`)
-- CSS is copied to `dist/styles.css`
+- `@nexu-design/ui-web` builds a precompiled `dist/styles.css` during package build
 - `package.json` `exports` point to `dist` artifacts
 - `files` is limited to publishable outputs (`dist`, `README.md`)
-- `pack:check` runs build + `pnpm pack --dry-run`
+- `@nexu-design/ui-web/styles.css` remains the public CSS entrypoint
+- `pack:check` runs build + publish-shape validation + `pnpm pack --dry-run`
 
-This keeps the setup minimal while making outputs consumable by non-workspace apps.
+This keeps the published outputs consumable by non-workspace apps without requiring
+consumers to re-run Tailwind against the `ui-web` source package.
+
+## `@nexu-design/ui-web` CSS contract
+
+Consumers should import:
+
+```ts
+import '@nexu-design/ui-web/styles.css'
+```
+
+That file is a compiled library stylesheet, not a raw Tailwind entry file. Consumers
+do not need to scan `@nexu-design/ui-web` with Tailwind `content` or Tailwind v4
+`@source` rules to get the component utility classes used by the published package.
+
+The release build blocks publishing if `packages/ui-web/dist/styles.css` looks like a
+raw Tailwind input file instead of a compiled asset.
+
+If an app also imports `@nexu-design/tokens/styles.css` separately, review the result
+for duplicate global CSS. The preferred consumption path is to treat
+`@nexu-design/ui-web/styles.css` as the single default stylesheet entry for `ui-web`
+components.
 
 ## Local consumption options
 
@@ -39,65 +61,25 @@ Run package builds before consuming:
 pnpm --dir ../ui build:packages
 ```
 
-### 3) Automated npm release flow with Changesets
+For `ui-web`, import the published stylesheet entry in the consuming app:
 
-This repo now uses Changesets for package versioning and npm release automation.
-
-Core files:
-
-- `.changeset/config.json`
-- `.github/workflows/release.yml`
-
-#### Recommended setup
-
-Use npm trusted publishing for this repository instead of a long-lived `NPM_TOKEN`:
-
-1. In npm package settings for both `@nexu-design/tokens` and `@nexu-design/ui-web`, add this repo/workflow as a trusted publisher.
-2. Keep the workflow file name stable: `.github/workflows/release.yml`.
-3. Publish from GitHub Actions on a GitHub-hosted runner.
-
-#### Authoring a release
-
-For any consumer-visible package change, add a changeset from the repo root:
-
-```bash
-pnpm changeset
+```ts
+import '@nexu-design/ui-web/styles.css'
 ```
 
-Choose the affected package(s), select the semver bump type, and write a short summary.
+### 3) Release workflow reference
 
-#### What the workflow does
+Release and Changesets guidance now lives in:
 
-- installs dependencies with pnpm
-- runs on pushes to `main`
-- creates or updates a version PR when unreleased changesets are present
-- applies version bumps and internal dependency updates in that PR
-- publishes all unpublished public packages after the version PR is merged
-- runs `pnpm release:check` before publishing
+- `docs/release-flow.md`
 
-#### Local release checks
+Use that document for:
 
-```bash
-pnpm release:check
-```
-
-#### Release checklist
-
-1. Add a changeset for each consumer-visible change.
-2. Merge changesets into `main`.
-3. Review and merge the generated `chore: version packages` PR.
-4. Let the release workflow publish the new npm versions.
-
-## Versioning + release notes expectations
-
-- Use semver per package (`major.minor.patch`)
-- Bump `@nexu-design/tokens` when tokens/CSS contract changes
-- Bump `@nexu-design/ui-web` for component API or behavior changes
-- If `@nexu-design/ui-web` needs newer tokens, bump both and keep dependency aligned
-- Add concise release notes per version with:
-  - **What changed** (consumer-visible)
-  - **Migration impact** (if any)
-  - **Any required CSS/theme updates**
+- changeset authoring rules
+- version and publish workflow
+- release validation commands
+- hotfix and rollback guidance
+- release-summary skill usage
 
 ## Validation commands
 
@@ -109,6 +91,9 @@ pnpm release:check
   - `pnpm release:check:tokens`
 - Package-focused ui-web release dry run:
   - `pnpm release:check:ui-web`
+
+`pnpm release:check:ui-web` verifies the publishable `ui-web` package shape, including
+the compiled `dist/styles.css` contract.
 
 ## Notes about `@nexu-design/tokens`
 

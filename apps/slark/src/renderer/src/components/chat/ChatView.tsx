@@ -12,6 +12,7 @@ import {
   Workflow,
 } from "lucide-react";
 import { cn } from "@nexu-design/ui-web";
+
 import { useT } from "@/i18n";
 import { useChatStore } from "@/stores/chat";
 import { useWorkspaceStore } from "@/stores/workspace";
@@ -221,6 +222,20 @@ export function ChatView(): React.ReactElement {
     );
   }
 
+  /*
+   * Phase 1 chat header is a single flat bar — no Messages / Files / Artifacts
+   * tabs, no right-side topic detail panel. Both features live on
+   * `feature/chat-tabs-and-topic-panel` and will return in a later release.
+   *
+   * Header contract still in effect:
+   * - Neutral hover fill on the title + members chip (`hover:bg-surface-2`),
+   *   never `bg-accent` (near-black) which would flood the row with brand
+   *   color on mouseover.
+   * - Channels surface a members chip (Users icon + count) inline right
+   *   after the title; clicking opens the add-members dialog. Descriptions
+   *   are deliberately not rendered in the header — if a channel needs
+   *   description context, surface it in the body, not the chrome.
+   */
   return (
     <div className="flex h-full bg-background">
       <div className="flex min-w-0 flex-1 flex-col">

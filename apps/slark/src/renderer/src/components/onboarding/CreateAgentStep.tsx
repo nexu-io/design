@@ -107,6 +107,7 @@ export function CreateAgentStep(): React.ReactElement {
     setInvitedEmails((prev) => prev.filter((e) => e !== email));
   };
 
+
   const handleEmailKeyDown = (e: React.KeyboardEvent): void => {
     if (e.key === "Enter") {
       e.preventDefault();

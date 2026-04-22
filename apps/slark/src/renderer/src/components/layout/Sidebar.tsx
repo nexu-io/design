@@ -109,44 +109,55 @@ export function Sidebar(): React.ReactElement {
                 </div>
               </div>
 
+              {/* Menu item font size pinned to 13px (body floor per AGENTS.md
+                  typography hierarchy). `text-xs` (11px) was sub-body and read
+                  as a footnote, making the menu feel de-emphasized.
+                  Strings are hard-coded English to match the ActivityBar
+                  workspace switcher — this menu is account-level chrome and
+                  stays English regardless of app locale. */}
               <div className="p-1.5">
                 <DropdownMenuItem
                   onClick={() => setShowInvite(true)}
-                  className="gap-2.5 rounded-md px-2.5 py-2 text-xs"
+                  className="gap-2.5 rounded-md px-2.5 py-2 text-[13px]"
                 >
                   <UserPlus className="h-3.5 w-3.5 shrink-0" />
-                  <span className="flex-1 truncate">
-                    {workspace?.name
-                      ? `Invite people to ${workspace.name}`
-                      : t("workspace.inviteMembers")}
-                  </span>
+                  <span className="flex-1 truncate">Invite people</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => navigate("/settings")}
-                  className="gap-2.5 rounded-md px-2.5 py-2 text-xs"
+                  className="gap-2.5 rounded-md px-2.5 py-2 text-[13px]"
                 >
                   <SettingsIcon className="h-3.5 w-3.5 shrink-0" />
-                  <span className="flex-1">{t("settings.workspace")}</span>
+                  <span className="flex-1">Workspace settings</span>
                 </DropdownMenuItem>
               </div>
 
               <DropdownMenuSeparator />
 
               <div className="p-1.5">
+                {/* Destructive-intent hover (AGENTS.md): the row stays
+                    neutral at rest so the menu doesn't shout "danger" every
+                    time it opens; the destructive red + subtle red wash only
+                    appear on hover / keyboard focus, signalling the
+                    irreversible action right before the user commits. */}
                 <DropdownMenuItem
                   onClick={() => {
                     reset();
                     navigate("/");
                   }}
-                  className="gap-2.5 rounded-md px-2.5 py-2 text-xs text-destructive focus:text-destructive"
+                  className="gap-2.5 rounded-md px-2.5 py-2 text-[13px] text-text-primary hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive"
                 >
                   <LogOut className="h-3.5 w-3.5 shrink-0" />
-                  <span className="flex-1">{t("workspace.logOut")}</span>
+                  <span className="flex-1">Sign out of Nexu</span>
                 </DropdownMenuItem>
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : currentSection ? (
+        ) : currentSection && !location.pathname.startsWith("/runtimes") ? (
+          /* The runtimes panel owns its own header row (label + online
+             count on a single line) so we skip the generic label here
+             — otherwise the label sits at a different indent than the
+             content below it. */
           <div className="mt-1 px-1.5 text-[11px] font-medium uppercase tracking-wider text-nav-muted">
             {t(currentSection.labelKey)}
           </div>

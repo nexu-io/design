@@ -289,7 +289,7 @@ export function WelcomePage(): React.ReactElement {
                     inputMode="numeric"
                     maxLength={1}
                     aria-label={`Digit ${index + 1} of 6`}
-                    value={digit}
+                    value={code[index] ?? ""}
                     onChange={(event) => handleCodeChange(index, event.target.value)}
                     onKeyDown={(event) => handleCodeKeyDown(index, event)}
                     onPaste={index === 0 ? handleCodePaste : undefined}
