@@ -34,6 +34,7 @@ export function MessageInput({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const addMessage = useChatStore((s) => s.addMessage);
   const updateMessage = useChatStore((s) => s.updateMessage);
+  const sendMessage = useChatStore((s) => s.sendMessage);
   const pendingDraft = useChatStore((s) => s.pendingDraft);
   const setPendingDraft = useChatStore((s) => s.setPendingDraft);
 
@@ -136,18 +137,28 @@ export function MessageInput({
       reactions: [],
       createdAt: Date.now(),
     };
-    addMessage(channelId, userMsg);
+
+    /*
+     * Kick off the simulated delivery. Agent replies are deferred until
+     * `onSent` fires so a failed send doesn't leave the agent awkwardly
+     * responding to a message the UI is simultaneously marking as
+     * undelivered. On `onFailed` we stay quiet — the retry affordance on
+     * the failed bubble is the single place to re-trigger delivery.
+     */
+    sendMessage(channelId, userMsg, {
+      onSent: () => {
+        if (isDmWithAgent) {
+          const agentMember = channel.members.find((m) => m.kind === "agent");
+          if (agentMember) simulateAgentReply(agentMember);
+        } else if (mentionedAgents.length > 0) {
+          for (const ref of mentionedAgents) {
+            simulateAgentReply(ref);
+          }
+        }
+      },
+    });
     setText("");
     setShowMentions(false);
-
-    if (isDmWithAgent) {
-      const agentMember = channel.members.find((m) => m.kind === "agent");
-      if (agentMember) simulateAgentReply(agentMember);
-    } else if (mentionedAgents.length > 0) {
-      for (const ref of mentionedAgents) {
-        simulateAgentReply(ref);
-      }
-    }
 
     adjustHeight(textareaRef.current);
   };
@@ -245,7 +256,7 @@ export function MessageInput({
            * than the min-height. Left/right stay at px-1.5 for a subtle
            * inset against the border.
            */
-          className="flex-1 resize-none bg-transparent px-1.5 py-2 text-[13px] leading-[1.5] text-text-primary placeholder:text-text-muted focus:outline-none"
+          className="flex-1 resize-none bg-transparent px-1.5 py-2 text-[13px] leading-[1.5] text-text-primary placeholder:text-text-muted/50 focus:outline-none"
         />
         <div className="flex shrink-0 items-center gap-2">
           <Button type="button" variant="ghost" size="icon-sm" aria-label="Attach" title="Attach">

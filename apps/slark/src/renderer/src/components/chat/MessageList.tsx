@@ -1,6 +1,16 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Bot, Hash, LogIn, Sparkles, UserPlus, Pencil } from "lucide-react";
-import { Button, ChatMessage, EventNotice, Mention } from "@nexu-design/ui-web";
+import {
+  Bot,
+  Clock,
+  Hash,
+  LogIn,
+  Pencil,
+  RotateCw,
+  Sparkles,
+  Trash2,
+  UserPlus,
+} from "lucide-react";
+import { Button, ChatMessage, EventNotice, Mention, cn } from "@nexu-design/ui-web";
 import type { ChatSender } from "@nexu-design/ui-web";
 import { useChatStore } from "@/stores/chat";
 import { useWorkspaceStore } from "@/stores/workspace";
@@ -269,6 +279,8 @@ function getQuickPrompts(name: string, templateId: string | null): string[] {
 export function MessageList({ channelId, channel }: MessageListProps): React.ReactElement {
   const messages = useChatStore((s) => s.messages[channelId] ?? EMPTY_MESSAGES);
   const updateMessage = useChatStore((s) => s.updateMessage);
+  const retryMessage = useChatStore((s) => s.retryMessage);
+  const removeMessage = useChatStore((s) => s.removeMessage);
   const currentUserId = useWorkspaceStore((s) => s.currentUserId) ?? CURRENT_USER_ID;
   const bottomRef = useRef<HTMLDivElement>(null);
   const lastMessageId = messages[messages.length - 1]?.id;
@@ -367,6 +379,34 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
         // "this concerns you" affordance, separate from the unread badge.
         const mentionsMe = msg.mentions.some((m) => m.id === currentUserId);
 
+        /*
+         * Delivery state (user messages only). `undefined` = historical/mock
+         * data loaded from seed, treat as "sent". Agent messages use the
+         * separate `isStreaming` track and never carry a deliveryStatus.
+         */
+        const deliveryStatus = msg.deliveryStatus;
+        const isSending = deliveryStatus === "sending";
+        const isFailed = deliveryStatus === "failed";
+
+        /*
+         * For failed bubbles the primary action (retry) is promoted into
+         * the inline status chip — the red refresh button rendered in the
+         * body. The hover toolbar keeps only the secondary `Delete`
+         * action so we don't duplicate retry affordances across two
+         * surfaces.
+         */
+        const rowActions = isFailed ? (
+          <button
+            type="button"
+            onClick={() => removeMessage(channelId, msg.id)}
+            aria-label="Delete message"
+            title="Delete"
+            className="inline-flex h-6 w-6 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-destructive/10 hover:text-destructive"
+          >
+            <Trash2 className="size-3.5" />
+          </button>
+        ) : undefined;
+
         return (
           <div key={msg.id}>
             {showDateSeparator && (
@@ -380,6 +420,16 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
               compact={isConsecutive}
               highlighted={mentionsMe}
               reactions={reactions.length > 0 ? reactions : undefined}
+              rowActions={rowActions}
+              /*
+               * Only sending bubbles get a row-level tweak (faded, so
+               * the optimistic row reads as tentative). Failed rows sit
+               * on the normal feed background — the red retry chip +
+               * "Not delivered" caption carry the signal on their own,
+               * and tinting the whole row was reading as louder than
+               * intended against our light canvas.
+               */
+              className={cn(isSending && "opacity-60")}
               blocks={
                 msg.blocks && msg.blocks.length > 0
                   ? msg.blocks.map((block) => (
@@ -400,6 +450,43 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
                   {renderContent(msg.content)}
                   {msg.isStreaming && (
                     <span className="ml-0.5 inline-block h-4 w-1.5 animate-pulse bg-current align-middle opacity-60" />
+                  )}
+                  {/*
+                   * Inline status glyph trailing the text. For sending
+                   * we keep a quiet muted clock — it's passive
+                   * information, nothing the user should act on. For
+                   * failed we promote the indicator into the primary
+                   * affordance: a filled-red chip with a refresh glyph
+                   * that *is* the retry button. This collapses "see
+                   * status" + "fix it" into one click, matching
+                   * iMessage / Telegram conventions.
+                   */}
+                  {isSending && (
+                    <Clock
+                      className="ml-1 inline-block size-3 translate-y-[1px] text-text-muted"
+                      aria-label="Sending"
+                    />
+                  )}
+                  {isFailed && (
+                    /*
+                     * The button sits in the free-flowing text body so
+                     * it shares the same baseline as the text glyphs.
+                     * `align-middle` lines the chip centre with the
+                     * font's mean-line (baseline + ½ x-height), which
+                     * for 13px body text lands ~2px below the visual
+                     * centre of lowercase glyphs; a 2px negative
+                     * Y-translate closes that gap without shifting
+                     * surrounding text.
+                     */
+                    <button
+                      type="button"
+                      onClick={() => retryMessage(channelId, msg.id)}
+                      aria-label="Retry send"
+                      title="Retry"
+                      className="ml-1.5 inline-flex size-4 -translate-y-[2px] items-center justify-center rounded-full bg-destructive align-middle text-white transition-transform hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-1 focus-visible:ring-offset-background"
+                    >
+                      <RotateCw className="size-2.5" strokeWidth={3} />
+                    </button>
                   )}
                 </>
               ) : null}
