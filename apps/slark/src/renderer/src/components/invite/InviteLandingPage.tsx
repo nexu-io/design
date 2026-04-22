@@ -9,7 +9,7 @@ import {
   CardTitle,
   cn,
 } from "@nexu-design/ui-web";
-import { AlertCircle, CheckCircle2, ExternalLink, Loader2, Users } from "lucide-react";
+import { AlertCircle, ArrowUpRight, CheckCircle2, Loader2, Users } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -82,12 +82,25 @@ export function InviteLandingPage(): React.ReactElement {
 
           {state === "idle" ? (
             <>
+              {/* Workspace destination chip — small annotation, serif
+                  typography for the name so it reads as a proper brand
+                  name rather than body copy. */}
+              <div className="mx-auto mb-2 inline-flex items-center gap-2 rounded-full border border-border bg-surface-2 px-2.5 py-1">
+                <img
+                  src={workspaceAvatar}
+                  alt=""
+                  className="h-5 w-5 rounded-md bg-secondary ring-1 ring-inset ring-black/5"
+                />
+                <span
+                  className="text-[13px] font-semibold leading-none tracking-tight text-text-heading"
+                  style={{ fontFamily: "var(--font-heading)" }}
+                >
+                  {workspaceName}
+                </span>
+              </div>
               <CardTitle className="text-[22px] font-semibold leading-tight tracking-tight text-text-heading">
                 {inviterName} invited you to join
               </CardTitle>
-              <CardDescription className="text-[13px] leading-relaxed text-text-secondary">
-                Accept the invitation to <strong>{workspaceName}</strong>.
-              </CardDescription>
             </>
           ) : null}
 
@@ -103,14 +116,9 @@ export function InviteLandingPage(): React.ReactElement {
           ) : null}
 
           {state === "joined" ? (
-            <>
-              <CardTitle className="text-[22px] font-semibold leading-tight tracking-tight text-text-heading">
-                You're in
-              </CardTitle>
-              <CardDescription className="text-[13px] leading-relaxed text-text-secondary">
-                Welcome to <strong>{workspaceName}</strong>
-              </CardDescription>
-            </>
+            <CardTitle className="text-[22px] font-semibold leading-tight tracking-tight text-text-heading">
+              Welcome to {workspaceName}
+            </CardTitle>
           ) : null}
 
           {state === "error" ? (
@@ -144,7 +152,7 @@ export function InviteLandingPage(): React.ReactElement {
               className="w-full justify-center"
               size="lg"
               onClick={handleTryDeepLink}
-              leadingIcon={<ExternalLink className="size-4" />}
+              trailingIcon={<ArrowUpRight className="size-4" />}
             >
               Open in Nexu App
             </Button>

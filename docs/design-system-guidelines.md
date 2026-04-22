@@ -55,6 +55,18 @@ Use this doc for:
 - When an icon looks visually smaller or larger than the text next to it, adjust the icon size rather than the text size.
 - Apply the same principle to inline icons in labels, badges, and navigation items.
 
+### Icon placement and semantics in buttons
+- **Leading icon (`leadingIcon`) identifies WHAT the action is.** Reserve it for _identity_ marks where the glyph answers "what am I about to do?": brand logos (`Github`, `Google`), resource categories (`Mail`, `Folder`), object types, state indicators (`Loader2` for loading). Leading icons sit on the left and feel like "label-for-the-verb".
+- **Trailing icon (`trailingIcon`) indicates DIRECTION or OUTCOME.** Use it for _motion_ glyphs where the icon answers "where is this going to take me?": next step (`ArrowRight`), external / deep-link jump (`ArrowUpRight`), disclosure (`ChevronRight`), submit commitments (optional). Trailing icons sit on the right and feel like "the arrow at the end of the path".
+- **Concrete rules:**
+  - "Open in X App" / "Launch X" / any deep-link or cross-context jump → **`trailingIcon={<ArrowUpRight />}`** on the right. Never use a boxed `ExternalLink` icon as a leading icon for a full-width CTA — it reads as a brand logo and puts a decorative glyph in the spot where a meaningful identity mark belongs.
+  - "Continue" / "Next" in a stepper → **`trailingIcon={<ArrowRight />}`** on the right.
+  - "Back" → **`leadingIcon={<ArrowLeft />}`** on the left (the arrow itself is the identity).
+  - "Sign in with GitHub" → **`leadingIcon={<Github />}`** on the left (GitHub logo identifies the provider).
+  - "Retry" / "Refresh" → **`leadingIcon={<RotateCcw />}`** on the left (the verb icon identifies the action).
+- **Never put both a leading AND a trailing icon on the same CTA** unless one is genuinely identity and the other is genuinely directional (extremely rare). Two icons usually indicates the designer couldn't decide — pick one.
+- **`ExternalLink` (the boxed square-with-arrow glyph) is for inline text links in prose**, not for full-width CTA buttons. Inside prose it sits immediately after the link text to warn "this opens elsewhere". Full-width CTAs that jump out should use `ArrowUpRight` instead — it's the universal "go outside" arrow and reads correctly in the trailing position.
+
 ### Layout conventions
 - **Workspace content-panel layout**: every page rendered inside the OpenClaw workspace sidebar (Settings, Skills, Home, Deployments, Schedule, Rewards, Channels…) must use a consistent inner content wrapper: outer `h-full overflow-y-auto`, inner `max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8`.
 - **Page header → content spacing**: `PageHeader` with `density="shell"` uses `pb-6` (24px) as bottom padding. Do not override it with ad-hoc spacing.

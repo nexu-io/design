@@ -153,7 +153,7 @@ export function WelcomePage(): React.ReactElement {
 
   const panelDescription =
     view === "buttons"
-      ? "Slack for the Agent Era, built for human & agent collaboration."
+      ? null
       : emailStep === "email"
         ? "Enter your email to get started"
         : emailStep === "verify"
