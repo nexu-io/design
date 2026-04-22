@@ -36,9 +36,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Tabs,
-  TabsList,
-  TabsTrigger,
   Textarea,
   cn,
 } from "@nexu-design/ui-web";
@@ -49,7 +46,6 @@ import { useRuntimesStore } from "@/stores/runtimes";
 import { mockAgentTemplates, mockRuntimes } from "@/mock/data";
 import type { AgentTemplate } from "@/types";
 
-type TabMode = "invite" | "agent";
 type AgentPhase = "templates" | "settings";
 
 export function CreateAgentStep(): React.ReactElement {
@@ -60,8 +56,6 @@ export function CreateAgentStep(): React.ReactElement {
   const addAgent = useAgentsStore((s) => s.addAgent);
   const runtimes = useRuntimesStore((s) => s.runtimes);
   const setGlobalRuntimes = useRuntimesStore((s) => s.setRuntimes);
-
-  const [tab, setTab] = useState<TabMode>("invite");
 
   // Invite state
   const [invitedEmails, setInvitedEmails] = useState<string[]>([]);
@@ -198,154 +192,160 @@ export function CreateAgentStep(): React.ReactElement {
   const connectedRuntimes = runtimes.filter((r) => r.status === "connected");
 
   return (
-    <div className="flex flex-col items-center gap-6 pt-8">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent">
-        <UserPlus className="h-7 w-7 text-muted-foreground" />
+    <div className="flex flex-col items-center gap-5 pt-4">
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent">
+        <UserPlus className="h-6 w-6 text-muted-foreground" />
       </div>
       <div className="text-center">
         <h2 className="text-2xl font-semibold">{t("onboarding.teammateTitle")}</h2>
-        <p className="text-muted-foreground mt-2">{t("onboarding.teammateDesc")}</p>
+        <p className="text-muted-foreground mt-1.5 text-sm">{t("onboarding.teammateDesc")}</p>
       </div>
 
-      <Tabs value={tab} onValueChange={(value) => setTab(value as TabMode)}>
-        <TabsList>
-          <TabsTrigger value="invite">
-            <UserPlus className="h-3.5 w-3.5" />
-            {t("onboarding.tabInvite")}
-          </TabsTrigger>
-          <TabsTrigger value="agent">
-            <Bot className="h-3.5 w-3.5" />
-            {t("onboarding.tabAgent")}
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
-
-      {tab === "invite" ? (
+      {agentPhase === "templates" ? (
         <>
-          <div className="w-full max-w-md space-y-4">
-            <FormField
-              label={t("onboarding.inviteMembers")}
-              invalid={Boolean(emailError)}
-              error={emailError}
-            >
+          <div className="w-[360px] space-y-5">
+            {/* Invite colleagues section */}
+            <section className="space-y-2.5">
               <div className="flex items-center gap-2">
-                <FormFieldControl className="flex-1">
-                  <Input
-                    type="email"
-                    value={emailInput}
-                    onChange={(e) => setEmailInput(e.target.value)}
-                    onKeyDown={handleEmailKeyDown}
-                    placeholder={t("workspace.invitePlaceholder")}
-                    leadingIcon={<Mail className="h-4 w-4 text-muted-foreground" />}
-                    invalid={Boolean(emailError)}
-                  />
-                </FormFieldControl>
-                <Button
-                  onClick={addEmail}
-                  disabled={!emailInput.trim()}
-                  size="sm"
-                  className="h-10 shrink-0"
-                  leadingIcon={<Send className="h-3.5 w-3.5" />}
-                >
-                  {t("workspace.invite")}
-                </Button>
+                <UserPlus className="h-3.5 w-3.5 text-muted-foreground" />
+                <h3 className="text-sm font-semibold text-foreground">
+                  {t("onboarding.tabInvite")}
+                </h3>
               </div>
 
-              <div className="mt-3 flex items-center gap-2 rounded-lg border border-dashed border-border bg-secondary/40 px-3 py-2.5">
-                <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-muted-foreground mb-0.5">
-                    {t("onboarding.shareInviteLink")}
-                  </div>
-                  <div className="text-xs font-mono text-foreground truncate">{inviteLinkUrl}</div>
+              <FormField invalid={Boolean(emailError)} error={emailError}>
+                <div className="flex items-center gap-2">
+                  <FormFieldControl className="flex-1">
+                    <Input
+                      type="email"
+                      value={emailInput}
+                      onChange={(e) => setEmailInput(e.target.value)}
+                      onKeyDown={handleEmailKeyDown}
+                      placeholder={t("workspace.invitePlaceholder")}
+                      leadingIcon={<Mail className="h-4 w-4 text-muted-foreground" />}
+                      invalid={Boolean(emailError)}
+                    />
+                  </FormFieldControl>
+                  <Button
+                    onClick={addEmail}
+                    disabled={!emailInput.trim()}
+                    size="sm"
+                    className="h-10 shrink-0"
+                    leadingIcon={<Send className="h-3.5 w-3.5" />}
+                  >
+                    {t("workspace.invite")}
+                  </Button>
                 </div>
-                <Button
-                  onClick={handleCopyLink}
-                  variant="outline"
-                  size="xs"
-                  className="h-7 shrink-0"
-                  leadingIcon={
-                    linkCopied ? (
-                      <Check className="h-3 w-3 text-nexu-online" />
-                    ) : (
-                      <Copy className="h-3 w-3" />
-                    )
-                  }
-                >
-                  {linkCopied ? t("common.copied") : t("common.copy")}
-                </Button>
-              </div>
 
-              {invitedEmails.length > 0 && (
-                <div className="mt-3 space-y-1">
-                  {invitedEmails.map((email) => (
-                    <div
-                      key={email}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-border"
-                    >
-                      <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium truncate">{email}</div>
-                        <Badge variant="success" size="xs" className="mt-1">
-                          {t("onboarding.invitationSent")}
-                        </Badge>
-                      </div>
-                      <Button
-                        onClick={() => removeEmail(email)}
-                        variant="ghost"
-                        size="icon-sm"
-                        className="h-7 w-7 text-muted-foreground hover:text-foreground"
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </Button>
+                <div className="mt-3 flex items-center gap-2 rounded-lg border border-dashed border-border bg-secondary/40 px-3 py-2.5">
+                  <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs text-muted-foreground mb-0.5">
+                      {t("onboarding.shareInviteLink")}
                     </div>
-                  ))}
+                    <div className="text-xs font-mono text-foreground truncate">
+                      {inviteLinkUrl}
+                    </div>
+                  </div>
+                  <Button
+                    onClick={handleCopyLink}
+                    variant="outline"
+                    size="xs"
+                    className="h-7 shrink-0"
+                    leadingIcon={
+                      linkCopied ? (
+                        <Check className="h-3 w-3 text-nexu-online" />
+                      ) : (
+                        <Copy className="h-3 w-3" />
+                      )
+                    }
+                  >
+                    {linkCopied ? t("common.copied") : t("common.copy")}
+                  </Button>
                 </div>
-              )}
-            </FormField>
+
+                {invitedEmails.length > 0 && (
+                  <div className="mt-3 space-y-1">
+                    {invitedEmails.map((email) => (
+                      <div
+                        key={email}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-border"
+                      >
+                        <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium truncate">{email}</div>
+                          <Badge variant="success" size="xs" className="mt-1">
+                            {t("onboarding.invitationSent")}
+                          </Badge>
+                        </div>
+                        <Button
+                          onClick={() => removeEmail(email)}
+                          variant="ghost"
+                          size="icon-sm"
+                          className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </FormField>
+            </section>
+
+            {/* Create an agent section */}
+            <section className="space-y-2.5">
+              <div className="flex items-center gap-2">
+                <Bot className="h-3.5 w-3.5 text-muted-foreground" />
+                <h3 className="text-sm font-semibold text-foreground">
+                  {t("onboarding.tabAgent")}
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                {mockAgentTemplates.map((tpl) => (
+                  <InteractiveRow
+                    key={tpl.id}
+                    onClick={() => handleSelectTemplate(tpl)}
+                    tone="subtle"
+                    className="items-start rounded-xl border border-border px-2.5 py-2.5"
+                  >
+                    <InteractiveRowLeading>
+                      <img src={tpl.avatar} alt="" className="h-9 w-9 rounded-lg shrink-0" />
+                    </InteractiveRowLeading>
+                    <InteractiveRowContent>
+                      <div className="font-medium text-[13px] leading-tight">{tpl.name}</div>
+                      <div className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">
+                        {tpl.description}
+                      </div>
+                    </InteractiveRowContent>
+                  </InteractiveRow>
+                ))}
+              </div>
+
+              <Button
+                onClick={handleBlankAgent}
+                variant="outline"
+                size="sm"
+                className="h-9 w-full border-dashed text-muted-foreground"
+                leadingIcon={<Plus className="h-3.5 w-3.5" />}
+              >
+                <span className="text-[13px] font-medium">Start from scratch</span>
+              </Button>
+            </section>
           </div>
 
-          <Button
-            onClick={finishAndGo}
-            className="mt-2 h-11"
-            trailingIcon={<ArrowRight className="h-4 w-4" />}
-          >
-            {t("onboarding.finishSetup")}
-          </Button>
-        </>
-      ) : agentPhase === "templates" ? (
-        <>
-          <div className="grid grid-cols-2 gap-3 w-full max-w-md">
-            {mockAgentTemplates.map((tpl) => (
-              <InteractiveRow
-                key={tpl.id}
-                onClick={() => handleSelectTemplate(tpl)}
-                tone="subtle"
-                className="items-start rounded-xl border border-border px-3 py-3"
-              >
-                <InteractiveRowLeading>
-                  <img src={tpl.avatar} alt="" className="h-10 w-10 rounded-lg shrink-0" />
-                </InteractiveRowLeading>
-                <InteractiveRowContent>
-                  <div className="font-medium text-sm">{tpl.name}</div>
-                  <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
-                    {tpl.description}
-                  </div>
-                </InteractiveRowContent>
-              </InteractiveRow>
-            ))}
+          <div className="flex items-center gap-3 mt-1">
+            <Button onClick={finishAndGo} variant="ghost">
+              Skip for now
+            </Button>
+            <Button
+              onClick={finishAndGo}
+              trailingIcon={<ArrowRight className="h-4 w-4" />}
+            >
+              {t("onboarding.finishSetup")}
+            </Button>
           </div>
-          <Button
-            onClick={handleBlankAgent}
-            variant="outline"
-            className="h-11 w-full max-w-md border-dashed text-muted-foreground"
-            leadingIcon={<Plus className="h-4 w-4" />}
-          >
-            <span className="text-sm font-medium">Start from scratch</span>
-          </Button>
-          <Button onClick={finishAndGo} variant="ghost" className="mt-2">
-            Skip for now
-          </Button>
         </>
       ) : (
         <>

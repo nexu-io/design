@@ -46,6 +46,8 @@ interface CreateRoutineDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   channelId: string;
+  /** When set, pin the Agent field to this id and hide the picker — used inside 1:1 agent DMs. */
+  lockedAgentId?: string;
   template?: RoutineTemplateInitial;
 }
 
@@ -122,6 +124,7 @@ export function CreateRoutineDialog({
   open,
   onOpenChange,
   channelId,
+  lockedAgentId,
   template,
 }: CreateRoutineDialogProps): React.ReactElement {
   const t = useT();
@@ -132,7 +135,8 @@ export function CreateRoutineDialog({
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [agentId, setAgentId] = useState<string>("");
+  const [agentId, setAgentId] = useState<string>(lockedAgentId ?? "");
+  const lockedAgent = lockedAgentId ? agents.find((a) => a.id === lockedAgentId) ?? null : null;
   const [triggerKind, setTriggerKind] = useState<RoutineTriggerKind | null>(null);
   const [scheduleMode, setScheduleMode] =
     useState<"hourly" | "daily" | "weekdays" | "weekly" | "custom">("weekdays");
@@ -148,6 +152,12 @@ export function CreateRoutineDialog({
   const [triggerConfigOpen, setTriggerConfigOpen] = useState(false);
   const [createAgentOpen, setCreateAgentOpen] = useState(false);
   const [agentSelectOpen, setAgentSelectOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    if (lockedAgentId) setAgentId(lockedAgentId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, lockedAgentId]);
 
   useEffect(() => {
     if (!open || !template) return;
@@ -174,7 +184,7 @@ export function CreateRoutineDialog({
   const reset = (): void => {
     setName("");
     setDescription("");
-    setAgentId("");
+    setAgentId(lockedAgentId ?? "");
     setTriggerKind(null);
     setScheduleMode("weekdays");
     setScheduleMinute(0);
@@ -303,7 +313,23 @@ export function CreateRoutineDialog({
 
             <FormField label={t("routines.agent")}>
               <FormFieldControl>
-                {agents.length === 0 ? (
+                {lockedAgent ? (
+                  <div className="flex h-9 w-full items-center gap-2 rounded-md border border-border-subtle bg-surface-2/50 px-3 text-sm">
+                    {lockedAgent.avatar ? (
+                      <img
+                        src={lockedAgent.avatar}
+                        alt=""
+                        className="h-5 w-5 rounded shrink-0"
+                      />
+                    ) : (
+                      <Bot className="h-4 w-4 shrink-0 text-text-muted" />
+                    )}
+                    <span className="truncate font-medium">{lockedAgent.name}</span>
+                    <span className="ml-auto text-[11px] text-text-muted">
+                      {t("section.session")}
+                    </span>
+                  </div>
+                ) : agents.length === 0 ? (
                   <Button
                     type="button"
                     variant="outline"

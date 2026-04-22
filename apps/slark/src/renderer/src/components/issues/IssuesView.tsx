@@ -35,7 +35,7 @@ import { useChatStore } from "@/stores/chat";
 import { useTopicsStore } from "@/stores/topics";
 import { useAgentsStore } from "@/stores/agents";
 import { resolveRef } from "@/mock/data";
-import type { Agent, Channel, IssueStatus, MemberRef, Message, Topic } from "@/types";
+import type { Channel, IssueStatus, MemberRef, Message, Topic } from "@/types";
 import { MessageInput } from "@/components/chat/MessageInput";
 
 const CURRENT_USER_ID = "u-1";
@@ -390,12 +390,12 @@ export function IssuesView(): React.ReactElement {
               }
               messages={topicMessages[selected.topic.id] ?? []}
               readAt={readAt[selected.topic.id] ?? 0}
-              assigneeId={selected.topic.issue?.assigneeAgentId}
+              assignee={selected.topic.issue?.assignee}
               agents={agents}
               isArchived={!!archived[selected.topic.id]}
               onJump={() => jumpToTopic(selected.topic)}
               onSetStatus={(status) => setIssueStatus(selected.topic.id, status)}
-              onSetAssignee={(id) => setIssueAssignee(selected.topic.id, id)}
+              onSetAssignee={(ref) => setIssueAssignee(selected.topic.id, ref)}
               onUnarchive={() => unarchiveTopic(selected.topic.id)}
               onArchive={() => archiveTopics([selected.topic.id])}
             />
@@ -479,12 +479,12 @@ interface ThreadPaneProps {
   rootMessage: Message | undefined;
   messages: Message[];
   readAt: number;
-  assigneeId: string | undefined;
-  agents: Agent[];
+  assignee: MemberRef | undefined;
+  agents: { id: string; name: string; avatar: string }[];
   isArchived: boolean;
   onJump: () => void;
   onSetStatus: (status: IssueStatus) => void;
-  onSetAssignee: (agentId: string | undefined) => void;
+  onSetAssignee: (ref: MemberRef | undefined) => void;
   onArchive: () => void;
   onUnarchive: () => void;
 }
@@ -495,7 +495,7 @@ function ThreadPane({
   rootMessage,
   messages,
   readAt,
-  assigneeId,
+  assignee: assigneeRef,
   agents,
   isArchived,
   onJump,
@@ -509,7 +509,12 @@ function ThreadPane({
   const issue = topic.issue;
   const meta = issue ? STATUS_META[issue.status] : undefined;
   const StatusIcon = meta?.icon;
-  const assignee = assigneeId ? agents.find((a) => a.id === assigneeId) : undefined;
+  const assigneeInfo = assigneeRef ? resolveRef(assigneeRef) : undefined;
+  const peopleMembers: MemberRef[] = rootChannel
+    ? rootChannel.members.filter((m): m is Extract<MemberRef, { kind: "user" }> => m.kind === "user")
+    : [];
+  const isSameRef = (a: MemberRef | undefined, b: MemberRef | undefined): boolean =>
+    !!a && !!b && a.kind === b.kind && a.id === b.id;
   const rootSender = rootMessage ? toSender(rootMessage.sender) : undefined;
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -542,30 +547,72 @@ function ThreadPane({
                 className="inline-flex h-7 items-center gap-1 rounded-md bg-surface-2 px-2 text-[11px] font-medium text-text-primary transition-opacity hover:opacity-80"
                 title="Assignee"
               >
-                <Bot className="size-3" />
-                {assignee ? assignee.name : "Unassigned"}
+                {assigneeInfo ? (
+                  <img
+                    src={assigneeInfo.avatar}
+                    alt=""
+                    className="size-4 rounded-full object-cover"
+                  />
+                ) : (
+                  <Bot className="size-3 text-text-muted" />
+                )}
+                {assigneeInfo ? assigneeInfo.name : "Unassigned"}
                 <ChevronDown className="size-3 opacity-60" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="max-h-72 w-48 overflow-y-auto">
+            <DropdownMenuContent align="end" className="max-h-72 w-52 overflow-y-auto">
               <DropdownMenuItem
                 onClick={() => onSetAssignee(undefined)}
-                className={cn(!assigneeId && "font-semibold")}
+                className={cn(!assigneeRef && "font-semibold")}
               >
-                <Bot className="size-3.5 text-text-muted" />
+                <CircleDashed className="size-3.5 text-text-muted" />
                 Unassigned
               </DropdownMenuItem>
-              {agents.length > 0 ? <DropdownMenuSeparator /> : null}
-              {agents.map((a) => (
-                <DropdownMenuItem
-                  key={a.id}
-                  onClick={() => onSetAssignee(a.id)}
-                  className={cn(a.id === assigneeId && "font-semibold")}
-                >
-                  <img src={a.avatar} alt="" className="size-4 rounded-full" />
-                  {a.name}
-                </DropdownMenuItem>
-              ))}
+              {peopleMembers.length > 0 ? (
+                <>
+                  <DropdownMenuSeparator />
+                  <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-text-muted">
+                    People
+                  </div>
+                  {peopleMembers.map((m) => {
+                    const info = resolveRef(m);
+                    if (!info) return null;
+                    const selected = isSameRef(assigneeRef, m);
+                    return (
+                      <DropdownMenuItem
+                        key={`u-${m.id}`}
+                        onClick={() => onSetAssignee(m)}
+                        className={cn(selected && "font-semibold")}
+                      >
+                        <img src={info.avatar} alt="" className="size-4 rounded-full object-cover" />
+                        {info.name}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </>
+              ) : null}
+              {agents.length > 0 ? (
+                <>
+                  <DropdownMenuSeparator />
+                  <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-text-muted">
+                    Agents
+                  </div>
+                  {agents.map((a) => {
+                    const ref: MemberRef = { kind: "agent", id: a.id };
+                    const selected = isSameRef(assigneeRef, ref);
+                    return (
+                      <DropdownMenuItem
+                        key={`a-${a.id}`}
+                        onClick={() => onSetAssignee(ref)}
+                        className={cn(selected && "font-semibold")}
+                      >
+                        <img src={a.avatar} alt="" className="size-4 rounded-full object-cover" />
+                        {a.name}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </>
+              ) : null}
             </DropdownMenuContent>
           </DropdownMenu>
         ) : null}

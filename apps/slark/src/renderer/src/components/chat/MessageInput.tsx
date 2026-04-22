@@ -7,6 +7,7 @@ import { getRandomAgentResponse } from "@/mock/data";
 import { useAgentsStore } from "@/stores/agents";
 import { useChatStore } from "@/stores/chat";
 import { useMemoriesStore } from "@/stores/memories";
+import { useSessionsStore } from "@/stores/sessions";
 import { useTopicsStore } from "@/stores/topics";
 import type { Channel, MemberRef, Message } from "@/types";
 import { EmojiPicker } from "./EmojiPicker";
@@ -137,7 +138,7 @@ export function MessageInput({
   }, [adjustHeight]);
 
   const simulateAgentReply = useCallback(
-    (agentRef: MemberRef) => {
+    (agentRef: MemberRef, sessionTaskId?: string) => {
       const fullContent = getRandomAgentResponse();
       const msgId = `msg-${Date.now()}-agent`;
       const tokens = fullContent.split(/(?<=\s)|(?=\s)/);
@@ -153,6 +154,9 @@ export function MessageInput({
           createdAt: Date.now(),
           isStreaming: true,
         });
+        if (sessionTaskId) {
+          useSessionsStore.getState().setReplyMessage(sessionTaskId, msgId);
+        }
 
         let idx = 0;
         const tick = (): void => {
@@ -163,6 +167,9 @@ export function MessageInput({
           });
           if (idx >= tokens.length) {
             updateMessage(msgId, { isStreaming: false });
+            if (sessionTaskId) {
+              useSessionsStore.getState().completeTask(sessionTaskId, "success");
+            }
           } else {
             setTimeout(tick, 25 + Math.random() * 35);
           }
@@ -228,7 +235,16 @@ export function MessageInput({
     }
 
     if (dmAgentMember) {
-      simulateAgentReply(dmAgentMember);
+      // Open a Session entry for this ask so it shows up in the agent-DM Session panel.
+      const firstLine = trimmed.split(/\n/)[0] ?? trimmed;
+      const title = firstLine.length > 100 ? `${firstLine.slice(0, 100)}…` : firstLine;
+      const taskId = useSessionsStore.getState().startTask({
+        channelId,
+        agentId: dmAgentMember.id,
+        title,
+        sourceMessageId: userMsg.id,
+      });
+      simulateAgentReply(dmAgentMember, taskId);
     } else if (mentionedAgents.length > 0) {
       for (const ref of mentionedAgents) {
         simulateAgentReply(ref);

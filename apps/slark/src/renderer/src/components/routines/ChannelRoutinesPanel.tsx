@@ -238,11 +238,14 @@ function formatRunStartedAt(ts: number): string {
 
 interface ChannelRoutinesPanelProps {
   channelId: string;
+  /** When rendered inside a 1:1 DM with an agent, lock the routine's agent field to this id. */
+  lockedAgentId?: string;
   onJumpToMessage?: (messageId: string) => void;
 }
 
 export function ChannelRoutinesPanel({
   channelId,
+  lockedAgentId,
   onJumpToMessage,
 }: ChannelRoutinesPanelProps): ReactElement {
   const t = useT();
@@ -619,6 +622,7 @@ export function ChannelRoutinesPanel({
           if (!next) setDialogTemplate(undefined);
         }}
         channelId={channelId}
+        lockedAgentId={lockedAgentId}
         template={dialogTemplate}
       />
     </div>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Button,
   ChatMessage,
+  ConfirmDialog,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -135,6 +136,7 @@ export function TopicDrawer({
   const navigate = useNavigate();
   const setIssueStatus = useTopicsStore((s) => s.setIssueStatus);
   const setIssueAssignee = useTopicsStore((s) => s.setIssueAssignee);
+  const setIssueMeta = useTopicsStore((s) => s.setIssueMeta);
   const markTopicRead = useTopicsStore((s) => s.markTopicRead);
   const updateTopicMessage = useTopicsStore((s) => s.updateTopicMessage);
   const agents = useAgentsStore((s) => s.agents);
@@ -201,6 +203,7 @@ export function TopicDrawer({
   );
 
   const [statusOpen, setStatusOpen] = useState(false);
+  const [convertConfirmOpen, setConvertConfirmOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const rootSender = useMemo(
@@ -231,13 +234,34 @@ export function TopicDrawer({
     navigate(`/chat/${topic.rootChannelId}`);
   };
 
+  // Promote a plain topic to an issue with a single click. Auto-detects an
+  // assignee from the root message's mentions, preferring agents; otherwise
+  // leaves it unassigned so the user can pick from the dropdown.
+  const handleConvertToIssue = (): void => {
+    if (!activeTopicId || topic.issue) return;
+    const mentions = rootMessage?.mentions ?? [];
+    const autoAssignee: MemberRef | undefined =
+      mentions.find((m) => m.kind === "agent") ?? mentions[0];
+    setIssueMeta(activeTopicId, {
+      status: "todo",
+      assignee: autoAssignee,
+      createdAt: Date.now(),
+    });
+  };
+
   const issue = topic.issue;
   const status = issue?.status;
   const statusMeta = status ? STATUS_META[status] : undefined;
   const StatusIcon = statusMeta?.icon;
-  const assignee = issue?.assigneeAgentId
-    ? agents.find((a) => a.id === issue.assigneeAgentId)
-    : undefined;
+  const assigneeRef = issue?.assignee;
+  const assigneeResolved = assigneeRef ? resolveRef(assigneeRef) : undefined;
+  // Candidate people are members of the root channel that are users (agents
+  // get their own section from the agents store).
+  const peopleMembers: MemberRef[] = rootChannel.members.filter(
+    (m): m is Extract<MemberRef, { kind: "user" }> => m.kind === "user",
+  );
+  const isSameRef = (a: MemberRef | undefined, b: MemberRef | undefined): boolean =>
+    !!a && !!b && a.kind === b.kind && a.id === b.id;
 
   return (
     <>
@@ -292,30 +316,72 @@ export function TopicDrawer({
                 className="inline-flex h-7 items-center gap-1 rounded-md bg-surface-2 px-2 text-[11px] font-medium text-text-primary transition-opacity hover:opacity-80"
                 title="Assignee"
               >
-                <Bot className="size-3" />
-                {assignee ? assignee.name : "Unassigned"}
+                {assigneeResolved ? (
+                  <img
+                    src={assigneeResolved.avatar}
+                    alt=""
+                    className="size-4 rounded-full object-cover"
+                  />
+                ) : (
+                  <Bot className="size-3 text-text-muted" />
+                )}
+                {assigneeResolved ? assigneeResolved.name : "Unassigned"}
                 <ChevronDown className="size-3 opacity-60" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="max-h-72 w-48 overflow-y-auto">
+            <DropdownMenuContent align="end" className="max-h-72 w-52 overflow-y-auto">
               <DropdownMenuItem
                 onClick={() => setIssueAssignee(activeTopicId, undefined)}
-                className={cn(!issue.assigneeAgentId && "font-semibold")}
+                className={cn(!assigneeRef && "font-semibold")}
               >
-                <Bot className="size-3.5 text-text-muted" />
+                <CircleDashed className="size-3.5 text-text-muted" />
                 Unassigned
               </DropdownMenuItem>
-              {agents.length > 0 ? <DropdownMenuSeparator /> : null}
-              {agents.map((a) => (
-                <DropdownMenuItem
-                  key={a.id}
-                  onClick={() => setIssueAssignee(activeTopicId, a.id)}
-                  className={cn(a.id === issue.assigneeAgentId && "font-semibold")}
-                >
-                  <img src={a.avatar} alt="" className="size-4 rounded-full" />
-                  {a.name}
-                </DropdownMenuItem>
-              ))}
+              {peopleMembers.length > 0 ? (
+                <>
+                  <DropdownMenuSeparator />
+                  <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-text-muted">
+                    People
+                  </div>
+                  {peopleMembers.map((m) => {
+                    const info = resolveRef(m);
+                    if (!info) return null;
+                    const selected = isSameRef(assigneeRef, m);
+                    return (
+                      <DropdownMenuItem
+                        key={`u-${m.id}`}
+                        onClick={() => setIssueAssignee(activeTopicId, m)}
+                        className={cn(selected && "font-semibold")}
+                      >
+                        <img src={info.avatar} alt="" className="size-4 rounded-full object-cover" />
+                        {info.name}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </>
+              ) : null}
+              {agents.length > 0 ? (
+                <>
+                  <DropdownMenuSeparator />
+                  <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-text-muted">
+                    Agents
+                  </div>
+                  {agents.map((a) => {
+                    const ref: MemberRef = { kind: "agent", id: a.id };
+                    const selected = isSameRef(assigneeRef, ref);
+                    return (
+                      <DropdownMenuItem
+                        key={`a-${a.id}`}
+                        onClick={() => setIssueAssignee(activeTopicId, ref)}
+                        className={cn(selected && "font-semibold")}
+                      >
+                        <img src={a.avatar} alt="" className="size-4 rounded-full object-cover" />
+                        {a.name}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </>
+              ) : null}
             </DropdownMenuContent>
           </DropdownMenu>
         ) : null}
@@ -361,6 +427,19 @@ export function TopicDrawer({
               </div>
             )}
           </div>
+        ) : null}
+        {!issue ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setConvertConfirmOpen(true)}
+            className="h-7 gap-1 text-[11px] font-medium"
+            title="Convert this topic to an issue"
+          >
+            <CircleDot className="size-3 text-brand-primary" />
+            Convert to Issue
+          </Button>
         ) : null}
         {variant === "drawer" ? (
           <Button
@@ -486,7 +565,23 @@ export function TopicDrawer({
         topicId={activeTopicId}
       />
     </aside>
-    {variant === "main" ? <TopicSidePanel /> : null}
+    {variant === "main" && issue ? <TopicSidePanel /> : null}
+    <ConfirmDialog
+      open={convertConfirmOpen}
+      onOpenChange={setConvertConfirmOpen}
+      title="Convert topic to issue?"
+      description={
+        <>
+          This topic will become an <strong>Issue</strong> with status{" "}
+          <strong>Todo</strong>. You&apos;ll be able to change the status, assignee, and
+          labels from the issue header.
+        </>
+      }
+      confirmLabel="Convert to Issue"
+      cancelLabel="Cancel"
+      confirmVariant="primary"
+      onConfirm={handleConvertToIssue}
+    />
     </>
   );
 }

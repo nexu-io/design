@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { cn } from "@nexu-design/ui-web";
 import { useTopicsStore } from "@/stores/topics";
-import { useAgentsStore } from "@/stores/agents";
+import { resolveRef } from "@/mock/data";
 import type { IssueStatus, Topic } from "@/types";
 
 const STATUS_META: Record<
@@ -44,7 +44,6 @@ interface IssuesBoardProps {
 export function IssuesBoard({ issues }: IssuesBoardProps): React.ReactElement {
   const topicMessages = useTopicsStore((s) => s.messages);
   const setActiveTopic = useTopicsStore((s) => s.setActiveTopic);
-  const agents = useAgentsStore((s) => s.agents);
 
   const grouped: Record<IssueStatus, Topic[]> = {
     todo: [],
@@ -83,9 +82,7 @@ export function IssuesBoard({ issues }: IssuesBoardProps): React.ReactElement {
                   column.map((topic) => {
                     const issue = topic.issue;
                     if (!issue) return null;
-                    const assignee = issue.assigneeAgentId
-                      ? agents.find((a) => a.id === issue.assigneeAgentId)
-                      : undefined;
+                    const assignee = issue.assignee ? resolveRef(issue.assignee) : undefined;
                     const replies = topicMessages[topic.id]?.length ?? 0;
                     return (
                       <button
@@ -100,7 +97,15 @@ export function IssuesBoard({ issues }: IssuesBoardProps): React.ReactElement {
                         <div className="flex items-center gap-2 text-[11px] text-text-muted">
                           {assignee ? (
                             <span className="inline-flex items-center gap-1">
-                              <Bot className="size-3" />
+                              {assignee.isAgent ? (
+                                <Bot className="size-3" />
+                              ) : (
+                                <img
+                                  src={assignee.avatar}
+                                  alt=""
+                                  className="size-3.5 rounded-full object-cover"
+                                />
+                              )}
                               <span className="truncate max-w-[80px]">{assignee.name}</span>
                             </span>
                           ) : null}

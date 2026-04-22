@@ -99,6 +99,26 @@ export interface Routine {
   createdAt: number;
 }
 
+/**
+ * A task that the user asked an agent to do in a DM conversation. Created when
+ * the user sends a message in an agent DM; transitions through running → success/error
+ * as the agent produces its reply. Surfaces alongside RoutineRun entries in the
+ * agent-DM "Session" panel.
+ */
+export interface ChatTaskSession {
+  id: string;
+  channelId: string;
+  agentId: string;
+  title: string;
+  status: "running" | "success" | "error";
+  startedAt: number;
+  completedAt?: number;
+  /** Message id of the user's ask. */
+  sourceMessageId?: string;
+  /** Message id of the agent's reply where the work landed. */
+  replyMessageId?: string;
+}
+
 export type MemoryKind = "fact" | "decision" | "preference" | "context";
 export type MemorySource = "agent" | "user";
 export type MemoryMethod = "explicit" | "keyword" | "agent_auto" | "seed";
@@ -225,7 +245,7 @@ export type IssueStatus = "todo" | "in_progress" | "in_review" | "blocked" | "do
 
 export interface IssueMeta {
   status: IssueStatus;
-  assigneeAgentId?: string;
+  assignee?: MemberRef;
   labels?: string[];
   createdAt: number;
 }

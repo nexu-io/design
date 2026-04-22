@@ -24,7 +24,7 @@ interface TopicsState {
   updateTopic: (topicId: string, updates: Partial<Topic>) => void;
   setIssueMeta: (topicId: string, issue: IssueMeta | undefined) => void;
   setIssueStatus: (topicId: string, status: IssueStatus) => void;
-  setIssueAssignee: (topicId: string, agentId: string | undefined) => void;
+  setIssueAssignee: (topicId: string, assignee: MemberRef | undefined) => void;
   markTopicRead: (topicId: string) => void;
   markAllRead: (topicIds: string[]) => void;
   archiveTopics: (topicIds: string[]) => void;
@@ -350,11 +350,11 @@ export const useTopicsStore = create<TopicsState>((set) => ({
       return { topics: { ...s.topics, [topicId]: { ...topic, issue: nextIssue } } };
     }),
 
-  setIssueAssignee: (topicId, agentId) =>
+  setIssueAssignee: (topicId, assignee) =>
     set((s) => {
       const topic = s.topics[topicId];
       if (!topic?.issue) return s;
-      const nextIssue: IssueMeta = { ...topic.issue, assigneeAgentId: agentId };
+      const nextIssue: IssueMeta = { ...topic.issue, assignee };
       return { topics: { ...s.topics, [topicId]: { ...topic, issue: nextIssue } } };
     }),
 
@@ -419,7 +419,7 @@ export const useTopicsStore = create<TopicsState>((set) => ({
           participants,
           issue: {
             status: demo.status,
-            assigneeAgentId: "a-1",
+            assignee: { kind: "agent", id: "a-1" },
             createdAt: topicCreatedAt,
           },
         };

@@ -351,7 +351,12 @@ function IssuesTab({ agent }: { agent: Agent }): React.ReactElement {
   const assigned = useMemo<Topic[]>(
     () =>
       Object.values(topics)
-        .filter((t): t is Topic => !!t.issue && t.issue.assigneeAgentId === agent.id)
+        .filter(
+          (t): t is Topic =>
+            !!t.issue &&
+            t.issue.assignee?.kind === "agent" &&
+            t.issue.assignee.id === agent.id,
+        )
         .sort((a, b) => (b.issue?.createdAt ?? 0) - (a.issue?.createdAt ?? 0)),
     [topics, agent.id],
   );

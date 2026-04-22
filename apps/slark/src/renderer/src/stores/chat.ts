@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Channel, IssueMeta, Message, QuotedMessage } from "@/types";
+import type { Channel, IssueMeta, MemberRef, Message, QuotedMessage } from "@/types";
 import { useTopicsStore } from "./topics";
 
 export interface PendingQuote {
@@ -37,7 +37,7 @@ interface ChatState {
   convertToIssue: (
     channelId: string,
     messageId: string,
-    input?: { title?: string; assigneeAgentId?: string; labels?: string[] },
+    input?: { title?: string; assignee?: MemberRef; labels?: string[] },
   ) => string | null;
 }
 
@@ -167,10 +167,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
     const rootMsg = get().messages[channelId]?.find((m: Message) => m.id === messageId);
     if (!rootMsg) return null;
 
+    // Auto-detect assignee from mentions — prefer an agent mention, else fall
+    // back to the first user mention (issues can be assigned to people too).
+    const autoAssignee: MemberRef | undefined =
+      rootMsg.mentions.find((m) => m.kind === "agent") ?? rootMsg.mentions[0];
     const issueMeta: IssueMeta = {
       status: "todo",
-      assigneeAgentId:
-        input?.assigneeAgentId ?? rootMsg.mentions.find((m) => m.kind === "agent")?.id,
+      assignee: input?.assignee ?? autoAssignee,
       labels: input?.labels,
       createdAt: Date.now(),
     };

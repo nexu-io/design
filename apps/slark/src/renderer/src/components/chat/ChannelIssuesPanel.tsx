@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "@nexu-design/ui-web";
 import { useTopicsStore } from "@/stores/topics";
-import { useAgentsStore } from "@/stores/agents";
+import { resolveRef } from "@/mock/data";
 import type { IssueStatus, Topic } from "@/types";
 import { IssuesBoard } from "./IssuesBoard";
 
@@ -78,7 +78,6 @@ export function ChannelIssuesPanel({ channelId }: ChannelIssuesPanelProps): Reac
   const topics = useTopicsStore((s) => s.topics);
   const topicMessages = useTopicsStore((s) => s.messages);
   const setActiveTopic = useTopicsStore((s) => s.setActiveTopic);
-  const agents = useAgentsStore((s) => s.agents);
   const [filter, setFilter] = useState<Filter>("all");
   const [view, setView] = useState<ViewMode>("table");
 
@@ -177,9 +176,7 @@ export function ChannelIssuesPanel({ channelId }: ChannelIssuesPanelProps): Reac
             if (!issue) return null;
             const meta = STATUS_META[issue.status];
             const Icon = meta.icon;
-            const assignee = issue.assigneeAgentId
-              ? agents.find((a) => a.id === issue.assigneeAgentId)
-              : undefined;
+            const assignee = issue.assignee ? resolveRef(issue.assignee) : undefined;
             const replies = topicMessages[topic.id]?.length ?? 0;
             return (
               <button
@@ -198,7 +195,15 @@ export function ChannelIssuesPanel({ channelId }: ChannelIssuesPanelProps): Reac
                 <span className="truncate text-[12px] text-text-muted">
                   {assignee ? (
                     <span className="inline-flex items-center gap-1">
-                      <Bot className="size-3 shrink-0" />
+                      {assignee.isAgent ? (
+                        <Bot className="size-3 shrink-0 text-text-muted" />
+                      ) : (
+                        <img
+                          src={assignee.avatar}
+                          alt=""
+                          className="size-3.5 shrink-0 rounded-full object-cover"
+                        />
+                      )}
                       <span className="truncate">{assignee.name}</span>
                     </span>
                   ) : (

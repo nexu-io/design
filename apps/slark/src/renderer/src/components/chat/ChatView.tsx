@@ -25,9 +25,11 @@ import { ChannelAvatar } from "./ChannelAvatar";
 import { TopicDrawer } from "./TopicDrawer";
 import { ChannelIssuesPanel } from "./ChannelIssuesPanel";
 import { ChannelMemoryPanel } from "./ChannelMemoryPanel";
+import { ChannelSessionsPanel } from "./ChannelSessionsPanel";
 import { ChannelRoutinesPanel } from "@/components/routines/ChannelRoutinesPanel";
 import { useTopicsStore } from "@/stores/topics";
 import { useRoutinesStore } from "@/stores/routines";
+import { useSessionsStore } from "@/stores/sessions";
 import { useMemoriesStore } from "@/stores/memories";
 
 type Tab = "chat" | "issues" | "routines" | "memory";
@@ -59,6 +61,15 @@ export function ChatView(): React.ReactElement {
     () => routines.filter((r) => r.channelId === channelId).length,
     [routines, channelId],
   );
+
+  const sessionTasks = useSessionsStore((s) => s.tasks);
+  const channelSessionCount = useMemo(() => {
+    const channelTasks = sessionTasks.filter((t) => t.channelId === channelId).length;
+    const channelRuns = routines
+      .filter((r) => r.channelId === channelId)
+      .reduce((acc, r) => acc + (r.runs?.length ?? 0), 0);
+    return channelTasks + channelRuns;
+  }, [sessionTasks, routines, channelId]);
 
   const memories = useMemoriesStore((s) => s.memories);
   const channelMemoryCount = useMemo(
@@ -169,6 +180,9 @@ export function ChatView(): React.ReactElement {
   const isDmBetweenPeople =
     channel.type === "dm" && channel.members.every((m) => m.kind === "user");
   const showIssuesTab = !isDmBetweenPeople;
+  const dmAgentId = isDmWithAgent
+    ? channel.members.find((m) => m.kind === "agent")?.id
+    : undefined;
   const otherMember =
     channel.type === "dm" ? channel.members.find((m) => m.id !== "u-1") : undefined;
   const otherResolved = otherMember ? resolveRef(otherMember) : undefined;
@@ -261,10 +275,10 @@ export function ChatView(): React.ReactElement {
             />
             <TabPill
               icon={<Workflow className="size-3.5" />}
-              label={t("section.routines")}
+              label={isDmWithAgent ? t("section.session") : t("section.routines")}
               active={tab === "routines"}
               activeTint="bg-success-subtle text-success"
-              count={channelRoutineCount}
+              count={isDmWithAgent ? channelSessionCount : channelRoutineCount}
               onClick={() => setTab("routines")}
             />
             <TabPill
@@ -286,13 +300,25 @@ export function ChatView(): React.ReactElement {
         ) : tab === "issues" ? (
           <ChannelIssuesPanel channelId={channelId} />
         ) : tab === "routines" ? (
-          <ChannelRoutinesPanel
-            channelId={channelId}
-            onJumpToMessage={(msgId) => {
-              setTab("chat");
-              useChatStore.getState().setPendingScrollToMessage(msgId);
-            }}
-          />
+          isDmWithAgent && dmAgentId ? (
+            <ChannelSessionsPanel
+              channelId={channelId}
+              agentId={dmAgentId}
+              onJumpToMessage={(msgId) => {
+                setTab("chat");
+                useChatStore.getState().setPendingScrollToMessage(msgId);
+              }}
+            />
+          ) : (
+            <ChannelRoutinesPanel
+              channelId={channelId}
+              lockedAgentId={dmAgentId}
+              onJumpToMessage={(msgId) => {
+                setTab("chat");
+                useChatStore.getState().setPendingScrollToMessage(msgId);
+              }}
+            />
+          )
         ) : (
           <ChannelMemoryPanel
             channelId={channelId}
