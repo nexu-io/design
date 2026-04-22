@@ -66,6 +66,7 @@ export function MessageInput({
   const savedSelectionRef = useRef<{ start: number; end: number } | null>(null);
   const addChannelMessage = useChatStore((s) => s.addMessage);
   const updateChannelMessage = useChatStore((s) => s.updateMessage);
+  const sendChannelMessage = useChatStore((s) => s.sendMessage);
   const addTopicMessage = useTopicsStore((s) => s.addTopicMessage);
   const updateTopicMessage = useTopicsStore((s) => s.updateTopicMessage);
   const pendingDraft = useChatStore((s) => s.pendingDraft);
@@ -231,17 +232,16 @@ export function MessageInput({
       createdAt: Date.now(),
       quoted: activeQuote ?? undefined,
     };
-    addMessage(userMsg);
-    setText("");
-    setShowMentions(false);
-    if (activeQuote) setPendingQuote(null);
-
     const dmAgentMember =
       !topicId && isDmWithAgent
         ? channel.members.find((m) => m.kind === "agent")
         : undefined;
     const targetedAgent: MemberRef | undefined = dmAgentMember ?? mentionedAgents[0];
 
+    // Keyword-based memory capture: fires eagerly off the user's message
+    // intent, not gated on send-simulation success — if the user typed
+    // "remember that…" we want the memory even if the optimistic send
+    // later flips to failed.
     if (!topicId && targetedAgent && useMemoriesStore.getState().keywordTriggerEnabled) {
       const trigger = detectMemoryTrigger(trimmed);
       if (trigger) {
@@ -257,23 +257,47 @@ export function MessageInput({
       }
     }
 
-    if (dmAgentMember) {
-      // Open a Session entry for this ask so it shows up in the agent-DM Session panel.
-      const firstLine = trimmed.split(/\n/)[0] ?? trimmed;
-      const title = firstLine.length > 100 ? `${firstLine.slice(0, 100)}…` : firstLine;
-      const taskId = useSessionsStore.getState().startTask({
-        channelId,
-        agentId: dmAgentMember.id,
-        title,
-        sourceMessageId: userMsg.id,
-      });
-      simulateAgentReply(dmAgentMember, taskId);
-    } else if (mentionedAgents.length > 0) {
-      for (const ref of mentionedAgents) {
-        simulateAgentReply(ref);
+    if (topicId) {
+      // Topic-scoped messages bypass the delivery-simulation wrapper
+      // (`sendChannelMessage` is channel-only) and post directly through
+      // the topics store. Agent replies fire immediately.
+      addMessage(userMsg);
+      if (mentionedAgents.length > 0) {
+        for (const ref of mentionedAgents) simulateAgentReply(ref);
       }
+    } else {
+      /*
+       * Channel path: kick off the simulated delivery. Agent replies —
+       * including the DM-agent session bookkeeping — are deferred until
+       * `onSent` fires so a failed send doesn't leave the agent awkwardly
+       * responding to a message the UI is simultaneously marking as
+       * undelivered. On `onFailed` we stay quiet — the retry affordance
+       * on the failed bubble is the single place to re-trigger delivery.
+       */
+      sendChannelMessage(channelId, userMsg, {
+        onSent: () => {
+          if (dmAgentMember) {
+            // Open a Session entry for this ask so it shows up in the
+            // agent-DM Session panel.
+            const firstLine = trimmed.split(/\n/)[0] ?? trimmed;
+            const title = firstLine.length > 100 ? `${firstLine.slice(0, 100)}…` : firstLine;
+            const taskId = useSessionsStore.getState().startTask({
+              channelId,
+              agentId: dmAgentMember.id,
+              title,
+              sourceMessageId: userMsg.id,
+            });
+            simulateAgentReply(dmAgentMember, taskId);
+          } else if (mentionedAgents.length > 0) {
+            for (const ref of mentionedAgents) simulateAgentReply(ref);
+          }
+        },
+      });
     }
 
+    setText("");
+    setShowMentions(false);
+    if (activeQuote) setPendingQuote(null);
     adjustHeight(textareaRef.current);
   };
 
@@ -437,7 +461,7 @@ export function MessageInput({
            * than the min-height. Left/right stay at px-1.5 for a subtle
            * inset against the border.
            */
-          className="flex-1 resize-none bg-transparent px-1.5 py-2 text-[13px] leading-[1.5] text-text-primary placeholder:text-text-muted focus:outline-none"
+          className="flex-1 resize-none bg-transparent px-1.5 py-2 text-[13px] leading-[1.5] text-text-primary placeholder:text-text-muted/50 focus:outline-none"
         />
         <div className="flex shrink-0 items-center gap-0.5">
           <Popover open={emojiOpen} onOpenChange={setEmojiOpen}>

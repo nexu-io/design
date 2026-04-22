@@ -66,29 +66,30 @@ export function ChatView(): React.ReactElement {
   );
 
   const sessionTasks = useSessionsStore((s) => s.tasks);
-  // Derive the agent id directly from channels here so the session count
-  // can be computed at the top level (hooks can't be called conditionally
-  // after the early returns below).
-  const headerChannel = useMemo(
+  // Resolve the current channel and its DM agent id up-front so the session
+  // count memo (and any other derived state) can live above the early
+  // returns below. Hooks can't be called conditionally, and `channel` /
+  // `dmAgentId` below are just convenience aliases for these.
+  const resolvedChannel = useMemo(
     () =>
       channels.find((c) => c.id === channelId) ??
       mockChannels.find((c) => c.id === channelId),
     [channels, channelId],
   );
-  const headerDmAgentId = useMemo(() => {
-    if (!headerChannel) return undefined;
-    if (headerChannel.type !== "dm") return undefined;
-    if (!headerChannel.members.some((m) => m.kind === "agent")) return undefined;
-    return headerChannel.members.find((m) => m.kind === "agent")?.id;
-  }, [headerChannel]);
+  const dmAgentId = useMemo(() => {
+    if (!resolvedChannel) return undefined;
+    if (resolvedChannel.type !== "dm") return undefined;
+    if (!resolvedChannel.members.some((m) => m.kind === "agent")) return undefined;
+    return resolvedChannel.members.find((m) => m.kind === "agent")?.id;
+  }, [resolvedChannel]);
   const agentSessionCount = useMemo(() => {
-    if (!headerDmAgentId) return 0;
-    const agentTasks = sessionTasks.filter((t) => t.agentId === headerDmAgentId).length;
+    if (!dmAgentId) return 0;
+    const agentTasks = sessionTasks.filter((t) => t.agentId === dmAgentId).length;
     const agentRuns = routines
-      .filter((r) => r.agentId === headerDmAgentId)
+      .filter((r) => r.agentId === dmAgentId)
       .reduce((acc, r) => acc + (r.runs?.length ?? 0), 0);
     return agentTasks + agentRuns;
-  }, [sessionTasks, routines, headerDmAgentId]);
+  }, [sessionTasks, routines, dmAgentId]);
 
   const memories = useMemoriesStore((s) => s.memories);
   const channelMemoryCount = useMemo(
@@ -185,8 +186,7 @@ export function ChatView(): React.ReactElement {
     );
   }
 
-  const channel =
-    channels.find((c) => c.id === channelId) ?? mockChannels.find((c) => c.id === channelId);
+  const channel = resolvedChannel;
   if (!channel) {
     return (
       <div className="flex h-full items-center justify-center text-muted-foreground">
@@ -195,13 +195,10 @@ export function ChatView(): React.ReactElement {
     );
   }
 
-  const isDmWithAgent = channel.type === "dm" && channel.members.some((m) => m.kind === "agent");
+  const isDmWithAgent = !!dmAgentId;
   const isDmBetweenPeople =
     channel.type === "dm" && channel.members.every((m) => m.kind === "user");
   const showIssuesTab = !isDmBetweenPeople;
-  const dmAgentId = isDmWithAgent
-    ? channel.members.find((m) => m.kind === "agent")?.id
-    : undefined;
   const otherMember =
     channel.type === "dm" ? channel.members.find((m) => m.id !== "u-1") : undefined;
   const otherResolved = otherMember ? resolveRef(otherMember) : undefined;

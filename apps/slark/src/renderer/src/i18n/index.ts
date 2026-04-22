@@ -315,8 +315,7 @@ const en = {
   // Invite people dialog
   "invitePeople.title": "Invite People",
   "invitePeople.emailPreview": "Email Preview",
-  "invitePeople.intro":
-    "Invite teammates by email. They'll get an invitation to join this workspace.",
+  "invitePeople.intro": "Invite by email, or share a link.",
   "invitePeople.sending": "Sending...",
   "invitePeople.sent": "Invitation sent",
   "invitePeople.previewEmail": "Preview email",
@@ -724,6 +723,7 @@ const zhCN: Dict = {
   "chat.search": "搜索",
   "chat.pinned": "置顶",
   "chat.channels": "频道",
+  "chat.directMessages": "私信",
   "chat.createChannel": "创建频道",
   "chat.channelLimitReached": "已达频道上限（{count}/20）",
   "chat.unpin": "取消置顶",
@@ -780,7 +780,7 @@ const zhCN: Dict = {
 
   "invitePeople.title": "邀请成员",
   "invitePeople.emailPreview": "邮件预览",
-  "invitePeople.intro": "通过邮箱邀请队友。他们将收到加入此工作区的邀请。",
+  "invitePeople.intro": "通过邮箱邀请，或分享邀请链接。",
   "invitePeople.sending": "正在发送...",
   "invitePeople.sent": "邀请已发送",
   "invitePeople.previewEmail": "预览邮件",
@@ -1015,6 +1015,7 @@ const zhTW: Dict = {
   "chat.search": "搜尋",
   "chat.pinned": "置頂",
   "chat.channels": "頻道",
+  "chat.directMessages": "私訊",
   "chat.createChannel": "建立頻道",
   "chat.channelLimitReached": "已達頻道上限（{count}/20）",
   "chat.unpin": "取消置頂",
@@ -1054,7 +1055,7 @@ const zhTW: Dict = {
 
   "invitePeople.title": "邀請成員",
   "invitePeople.emailPreview": "郵件預覽",
-  "invitePeople.intro": "透過電子郵件邀請隊友，他們將收到加入此工作區的邀請。",
+  "invitePeople.intro": "透過電子郵件邀請，或分享邀請連結。",
   "invitePeople.sending": "傳送中...",
   "invitePeople.sent": "邀請已傳送",
   "invitePeople.previewEmail": "預覽郵件",
@@ -1284,6 +1285,7 @@ const ja: Dict = {
   "chat.search": "検索",
   "chat.pinned": "ピン留め",
   "chat.channels": "チャンネル",
+  "chat.directMessages": "ダイレクトメッセージ",
   "chat.createChannel": "チャンネルを作成",
   "chat.channelLimitReached": "チャンネル上限に達しました（{count}/20）",
   "chat.unpin": "ピンを外す",
@@ -1324,7 +1326,7 @@ const ja: Dict = {
 
   "invitePeople.title": "メンバーを招待",
   "invitePeople.emailPreview": "メールプレビュー",
-  "invitePeople.intro": "メールで仲間を招待します。このワークスペースへの招待が届きます。",
+  "invitePeople.intro": "メールで招待、または招待リンクを共有。",
   "invitePeople.sending": "送信中...",
   "invitePeople.sent": "招待を送信しました",
   "invitePeople.previewEmail": "メールをプレビュー",
@@ -1556,6 +1558,7 @@ const ko: Dict = {
   "chat.search": "검색",
   "chat.pinned": "고정됨",
   "chat.channels": "채널",
+  "chat.directMessages": "다이렉트 메시지",
   "chat.createChannel": "채널 만들기",
   "chat.channelLimitReached": "채널 한도 도달 ({count}/20)",
   "chat.unpin": "고정 해제",
@@ -1595,7 +1598,7 @@ const ko: Dict = {
 
   "invitePeople.title": "사람 초대",
   "invitePeople.emailPreview": "이메일 미리보기",
-  "invitePeople.intro": "이메일로 팀원을 초대하세요. 이 워크스페이스 참여 초대를 받게 됩니다.",
+  "invitePeople.intro": "이메일로 초대하거나 초대 링크를 공유하세요.",
   "invitePeople.sending": "전송 중...",
   "invitePeople.sent": "초대를 보냈습니다",
   "invitePeople.previewEmail": "이메일 미리보기",
@@ -1819,6 +1822,7 @@ const es: Dict = {
   "chat.search": "Buscar",
   "chat.pinned": "Fijado",
   "chat.channels": "Canales",
+  "chat.directMessages": "Mensajes directos",
   "chat.createChannel": "Crear canal",
   "chat.selectChannel": "Selecciona un canal para empezar a chatear",
 };
@@ -1885,6 +1889,7 @@ const fr: Dict = {
   "chat.search": "Rechercher",
   "chat.pinned": "Épinglé",
   "chat.channels": "Canaux",
+  "chat.directMessages": "Messages directs",
   "chat.createChannel": "Créer un canal",
   "chat.selectChannel": "Sélectionnez un canal pour commencer à discuter",
 };
@@ -1951,6 +1956,7 @@ const de: Dict = {
   "chat.search": "Suchen",
   "chat.pinned": "Angeheftet",
   "chat.channels": "Kanäle",
+  "chat.directMessages": "Direktnachrichten",
   "chat.createChannel": "Kanal erstellen",
   "chat.selectChannel": "Wähle einen Kanal, um zu chatten",
 };
@@ -2017,6 +2023,7 @@ const ptBR: Dict = {
   "chat.search": "Buscar",
   "chat.pinned": "Fixado",
   "chat.channels": "Canais",
+  "chat.directMessages": "Mensagens diretas",
   "chat.createChannel": "Criar canal",
   "chat.selectChannel": "Selecione um canal para começar a conversar",
 };
@@ -2083,6 +2090,7 @@ const ru: Dict = {
   "chat.search": "Поиск",
   "chat.pinned": "Закреплено",
   "chat.channels": "Каналы",
+  "chat.directMessages": "Личные сообщения",
   "chat.createChannel": "Создать канал",
   "chat.selectChannel": "Выберите канал, чтобы начать общение",
 };
@@ -2149,6 +2157,7 @@ const it: Dict = {
   "chat.search": "Cerca",
   "chat.pinned": "Fissato",
   "chat.channels": "Canali",
+  "chat.directMessages": "Messaggi diretti",
   "chat.createChannel": "Crea canale",
   "chat.selectChannel": "Seleziona un canale per iniziare a chattare",
 };
@@ -2214,6 +2223,7 @@ const vi: Dict = {
   "chat.search": "Tìm kiếm",
   "chat.pinned": "Đã ghim",
   "chat.channels": "Kênh",
+  "chat.directMessages": "Tin nhắn trực tiếp",
   "chat.createChannel": "Tạo kênh",
   "chat.selectChannel": "Chọn một kênh để bắt đầu trò chuyện",
 };

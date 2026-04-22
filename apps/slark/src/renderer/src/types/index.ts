@@ -302,6 +302,13 @@ export interface QuotedMessage {
   content: string;
 }
 
+/*
+ * User-message lifecycle (agent replies use `isStreaming` instead).
+ * Historical messages loaded from mock data intentionally leave this
+ * field undefined — treat `undefined` as "sent" when rendering.
+ */
+export type MessageDeliveryStatus = "sending" | "sent" | "failed";
+
 export interface Message {
   id: string;
   channelId: string;
@@ -312,6 +319,7 @@ export interface Message {
   reactions: Reaction[];
   createdAt: number;
   isStreaming?: boolean;
+  deliveryStatus?: MessageDeliveryStatus;
   system?: {
     kind: "join";
     members: MemberRef[];

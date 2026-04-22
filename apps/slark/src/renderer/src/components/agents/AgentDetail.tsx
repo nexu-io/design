@@ -594,7 +594,11 @@ function SettingsTab({
         <FormField label={t("agent.avatar")}>
           <FormFieldControl>
             <div className="flex items-center gap-3">
-              <img src={avatar} alt="" className="size-12 rounded-xl" />
+              <img
+                src={avatar}
+                alt=""
+                className="size-12 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+              />
               <Button
                 variant="outline"
                 size="sm"

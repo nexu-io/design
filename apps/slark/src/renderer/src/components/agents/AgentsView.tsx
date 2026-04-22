@@ -50,7 +50,11 @@ export function AgentsView(): React.ReactElement {
               className="rounded-xl border border-border p-4 hover:bg-surface-2 transition-colors"
             >
               <div className="flex items-start gap-3">
-                <img src={agent.avatar} alt="" className="h-10 w-10 rounded-xl" />
+                <img
+                  src={agent.avatar}
+                  alt=""
+                  className="h-10 w-10 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+                />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm">{agent.name}</span>

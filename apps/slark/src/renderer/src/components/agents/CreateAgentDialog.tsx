@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Sparkles, Zap } from "lucide-react";
 
@@ -14,15 +14,15 @@ import {
   FormField,
   FormFieldControl,
   Input,
-  InteractiveRow,
-  InteractiveRowContent,
-  InteractiveRowLeading,
-  InteractiveRowTrailing,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
   cn,
 } from "@nexu-design/ui-web";
 
 import { useT } from "@/i18n";
-import { mockSkills } from "@/mock/data";
+import { mockRuntimes, mockSkills } from "@/mock/data";
 import { useAgentsStore } from "@/stores/agents";
 import { useChatStore } from "@/stores/chat";
 import type { Agent, AgentTemplate, Channel } from "@/types";
@@ -46,16 +46,31 @@ export function CreateAgentDialog({
   const addAgent = useAgentsStore((s) => s.addAgent);
   const selectAgent = useAgentsStore((s) => s.selectAgent);
   const addChannel = useChatStore((s) => s.addChannel);
+  /*
+   * Runtime default — pick the first connected runtime on mount so the
+   * happy path doesn't force users to hunt through a dropdown before
+   * they can press Create. They can still switch to "No runtime" or
+   * another option; we just don't want an empty-field stall.
+   *
+   * Mirrors the selection that `CreateAgentStep` (onboarding) makes
+   * after a template is chosen — keeping behaviour consistent between
+   * the two entry points.
+   */
+  const defaultRuntimeId = useMemo(
+    () => mockRuntimes.find((r) => r.status === "connected")?.id ?? null,
+    [],
+  );
+
   const [selectedTemplate, setSelectedTemplate] = useState<AgentTemplate | null>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [runtimeId, setRuntimeId] = useState<string | null>(null);
+  const [runtimeId, setRuntimeId] = useState<string | null>(defaultRuntimeId);
 
   const reset = (): void => {
     setSelectedTemplate(null);
     setName("");
     setDescription("");
-    setRuntimeId(null);
+    setRuntimeId(defaultRuntimeId);
   };
 
   const handleSelectTemplate = (template: AgentTemplate): void => {
@@ -140,9 +155,7 @@ export function CreateAgentDialog({
       <DialogContent size="md">
         <DialogHeader>
           <DialogTitle>{t("createAgent.title")}</DialogTitle>
-          <DialogDescription>
-            Start from a template or configure the core details for a brand new agent.
-          </DialogDescription>
+          <DialogDescription>Pick a template, or start blank.</DialogDescription>
         </DialogHeader>
 
         <DialogBody>
@@ -153,35 +166,66 @@ export function CreateAgentDialog({
                 description="Templates prefill the name, description, and default prompt."
               >
                 <FormFieldControl>
-                  <div className="space-y-1.5">
-                    {templates.map((template) => {
-                      const selected = selectedTemplate?.id === template.id;
-                      return (
-                        <InteractiveRow
-                          key={template.id}
-                          selected={selected}
-                          tone="subtle"
-                          onClick={() => handleSelectTemplate(template)}
-                          className="px-3 py-2"
-                        >
-                          <InteractiveRowLeading>
-                            <img src={template.avatar} alt="" className="size-9 rounded-lg" />
-                          </InteractiveRowLeading>
-                          <InteractiveRowContent>
-                            <div className="text-[13px] font-medium text-text-heading">
-                              {template.name}
-                            </div>
-                            <div className="text-[11px] text-text-muted">{template.category}</div>
-                          </InteractiveRowContent>
-                          <InteractiveRowTrailing className="flex items-center gap-2">
-                            {selected ? (
-                              <Check className="size-4 text-text-heading" strokeWidth={3} />
-                            ) : null}
-                          </InteractiveRowTrailing>
-                        </InteractiveRow>
-                      );
-                    })}
-                  </div>
+                  {/*
+                   * Two-column tile grid — 4 templates lay out as 2×2
+                   * which both shortens the dialog and lets avatars read
+                   * as a gallery rather than a list. Each tile is a
+                   * `TooltipTrigger` so hovering surfaces the full
+                   * description without requiring the user to select
+                   * the template first. `delayDuration={200}` balances
+                   * discoverability against accidental tooltip spam
+                   * when the cursor passes over while scanning.
+                   */}
+                  <TooltipProvider delayDuration={200} skipDelayDuration={120}>
+                    <div className="grid grid-cols-2 gap-2">
+                      {templates.map((template) => {
+                        const selected = selectedTemplate?.id === template.id;
+                        return (
+                          <Tooltip key={template.id}>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                aria-pressed={selected}
+                                onClick={() => handleSelectTemplate(template)}
+                                className={cn(
+                                  "group relative flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left transition-colors",
+                                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+                                  selected
+                                    ? "border-accent/40 bg-accent/5"
+                                    : "border-border-subtle bg-surface-0 hover:border-border hover:bg-surface-1",
+                                )}
+                              >
+                                <img
+                                  src={template.avatar}
+                                  alt=""
+                                  className="size-9 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+                                />
+                                <div className="min-w-0 flex-1">
+                                  <div className="truncate text-[13px] font-medium text-text-heading">
+                                    {template.name}
+                                  </div>
+                                  <div className="truncate text-[11px] capitalize text-text-muted">
+                                    {template.category}
+                                  </div>
+                                </div>
+                                {selected ? (
+                                  <Check className="size-4 shrink-0 text-accent" strokeWidth={3} />
+                                ) : null}
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="max-w-[280px] text-left">
+                              <div className="text-[12px] font-semibold leading-tight">
+                                {template.name}
+                              </div>
+                              <div className="mt-1 text-[11px] leading-[1.5] text-background/80">
+                                {template.description}
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        );
+                      })}
+                    </div>
+                  </TooltipProvider>
                 </FormFieldControl>
               </FormField>
             ) : null}
@@ -216,7 +260,6 @@ export function CreateAgentDialog({
                   {t("agent.runtime")}
                 </span>
               }
-              description="Connect a runtime now or leave it empty and configure it later."
             >
               <FormFieldControl>
                 <RuntimePicker value={runtimeId} onChange={setRuntimeId} />

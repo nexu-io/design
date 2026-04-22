@@ -1,34 +1,24 @@
 import {
   Alert,
   AlertDescription,
-  AlertTitle,
   Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
+  cn,
 } from "@nexu-design/ui-web";
-import {
-  AlertCircle,
-  CheckCircle2,
-  ExternalLink,
-  Loader2,
-  Lock,
-  MailPlus,
-  Sparkles,
-  Users,
-} from "lucide-react";
+import { AlertCircle, ArrowUpRight, CheckCircle2, Loader2, Users } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useT } from "@/i18n";
+import { SlarkAuthFrame } from "@/components/onboarding/slark-auth-frame";
 import { useWorkspaceStore } from "@/stores/workspace";
 
 type JoinState = "idle" | "joining" | "joined" | "error";
 
 export function InviteLandingPage(): React.ReactElement {
-  const t = useT();
   const { token } = useParams();
   const completeOnboarding = useWorkspaceStore((state) => state.completeOnboarding);
   const setWorkspace = useWorkspaceStore((state) => state.setWorkspace);
@@ -62,152 +52,122 @@ export function InviteLandingPage(): React.ReactElement {
     window.location.href = `nexu://join/${token}`;
   };
 
-  const browserUrl = `https://nexu.app/invite/${token ?? ""}`;
-
-  return (
-    <div
-      className="relative min-h-screen w-full overflow-hidden"
-      style={{
-        background:
-          "radial-gradient(120% 80% at 50% -10%, color-mix(in srgb, var(--color-brand-primary) 14%, transparent), transparent 55%), linear-gradient(180deg, #f7f8fb 0%, #eef0f5 100%)",
-      }}
-    >
-      <BrowserChrome url={browserUrl} />
-
-      <main className="mx-auto flex min-h-[calc(100vh-44px)] w-full max-w-[1040px] flex-col items-center justify-center px-6 py-10">
-        <div className="mb-6 flex items-center gap-2 text-[13px] text-text-tertiary">
-          <Sparkles className="size-3.5" />
-          <span>nexu.app</span>
-        </div>
-
-        <Card
-          variant="static"
-          padding="lg"
-          className="w-full max-w-[440px] rounded-2xl border-border bg-surface-1 shadow-card"
-        >
-          <CardHeader className="items-center text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-subtle text-brand-primary">
-              {state === "joined" ? (
-                <CheckCircle2 className="size-7" />
-              ) : state === "error" ? (
-                <AlertCircle className="size-7" />
-              ) : state === "joining" ? (
-                <Loader2 className="size-7 animate-spin" />
-              ) : (
-                <Users className="size-7" />
-              )}
-            </div>
-
-            {state === "idle" ? (
-              <>
-                <CardTitle className="text-2xl text-text-primary">
-                  {inviterName} {t("invite.invitedYouToJoin")}
-                </CardTitle>
-                <CardDescription className="text-sm text-text-secondary">
-                  {t("invite.accept")} <strong>{workspaceName}</strong>.
-                </CardDescription>
-              </>
-            ) : null}
-
-            {state === "joining" ? (
-              <>
-                <CardTitle className="text-2xl text-text-primary">
-                  {t("invite.joining", { name: workspaceName })}
-                </CardTitle>
-                <CardDescription className="text-sm text-text-secondary">
-                  {t("invite.settingUp")}
-                </CardDescription>
-              </>
-            ) : null}
-
-            {state === "joined" ? (
-              <>
-                <CardTitle className="text-2xl text-text-primary">{t("invite.youreIn")}</CardTitle>
-                <CardDescription className="text-sm text-text-secondary">
-                  {t("invite.welcomeTo")} <strong>{workspaceName}</strong>
-                </CardDescription>
-              </>
-            ) : null}
-
-            {state === "error" ? (
-              <>
-                <CardTitle className="text-2xl text-text-primary">
-                  {t("invite.invalidTitle")}
-                </CardTitle>
-                <CardDescription className="text-sm text-text-secondary">
-                  {t("invite.invalidDesc")}
-                </CardDescription>
-              </>
-            ) : null}
-          </CardHeader>
-
-          <CardContent className="space-y-4">
-            {state === "idle" ? (
-              <>
-                <Alert>
-                  <MailPlus className="size-4" />
-                  <AlertTitle>{t("invite.inviteCode")}</AlertTitle>
-                  <AlertDescription className="font-mono text-xs text-text-tertiary">
-                    {token}
-                  </AlertDescription>
-                </Alert>
-                <Button className="w-full justify-center" onClick={handleJoin}>
-                  {t("invite.accept")}
-                </Button>
-              </>
-            ) : null}
-
-            {state === "joining" ? (
-              <Alert>
-                <Loader2 className="size-4 animate-spin" />
-                <AlertDescription>{t("invite.settingUp")}</AlertDescription>
-              </Alert>
-            ) : null}
-
-            {state === "joined" ? (
-              <Button className="w-full justify-center" onClick={handleTryDeepLink}>
-                <ExternalLink className="size-4" />
-                {t("invite.openInApp")}
-              </Button>
-            ) : null}
-
-            {state === "error" ? (
-              <Alert variant="destructive">
-                <AlertCircle className="size-4" />
-                <AlertDescription>{t("invite.invalidDesc")}</AlertDescription>
-              </Alert>
-            ) : null}
-          </CardContent>
-        </Card>
-
-        <p className="mt-6 max-w-[420px] text-center text-[11px] text-text-tertiary">
-          {t("invite.termsAgreement")}{" "}
-          <a className="underline underline-offset-2" href="#">
-            {t("invite.terms")}
-          </a>{" "}
-          {t("invite.and")}{" "}
-          <a className="underline underline-offset-2" href="#">
-            {t("invite.privacy")}
-          </a>
-          .
-        </p>
-      </main>
-    </div>
+  const chipTone = state === "error" ? "error" : "brand";
+  const chipClassName = cn(
+    "mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl ring-1 ring-inset",
+    chipTone === "error"
+      ? "bg-[var(--color-error-subtle)] text-[var(--color-error)] ring-[color-mix(in_srgb,var(--color-error)_18%,transparent)]"
+      : "bg-[var(--color-brand-subtle)] text-[var(--color-brand-primary)] ring-[color-mix(in_srgb,var(--color-brand-primary)_18%,transparent)]",
   );
-}
 
-function BrowserChrome({ url }: { url: string }): React.ReactElement {
   return (
-    <div className="flex h-11 w-full items-center gap-3 border-b border-border bg-surface-2 px-4">
-      <div className="flex items-center gap-1.5">
-        <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-        <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-        <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-      </div>
-      <div className="flex h-7 flex-1 items-center gap-2 rounded-md bg-surface-1 px-3 text-[12px] text-text-secondary shadow-[inset_0_0_0_1px_var(--color-border)]">
-        <Lock className="size-3 text-text-tertiary" />
-        <span className="truncate font-mono">{url}</span>
-      </div>
-    </div>
+    <SlarkAuthFrame>
+      <Card
+        variant="static"
+        padding="lg"
+        className="w-full rounded-2xl border-border bg-surface-1 shadow-card"
+      >
+        <CardHeader className="items-center text-center">
+          <div className={chipClassName}>
+            {state === "joined" ? (
+              <CheckCircle2 className="size-7" strokeWidth={2.25} />
+            ) : state === "error" ? (
+              <AlertCircle className="size-7" strokeWidth={2.25} />
+            ) : state === "joining" ? (
+              <Loader2 className="size-7 animate-spin" strokeWidth={2.25} />
+            ) : (
+              <Users className="size-7" strokeWidth={2.25} />
+            )}
+          </div>
+
+          {state === "idle" ? (
+            <>
+              {/* Workspace destination chip — small annotation, serif
+                  typography for the name so it reads as a proper brand
+                  name rather than body copy. */}
+              <div className="mx-auto mb-2 inline-flex items-center gap-2 rounded-full border border-border bg-surface-2 px-2.5 py-1">
+                <img
+                  src={workspaceAvatar}
+                  alt=""
+                  className="h-5 w-5 rounded-md bg-secondary ring-1 ring-inset ring-black/5"
+                />
+                <span
+                  className="text-[13px] font-semibold leading-none tracking-tight text-text-heading"
+                  style={{ fontFamily: "var(--font-heading)" }}
+                >
+                  {workspaceName}
+                </span>
+              </div>
+              <CardTitle className="text-[22px] font-semibold leading-tight tracking-tight text-text-heading">
+                {inviterName} invited you to join
+              </CardTitle>
+            </>
+          ) : null}
+
+          {state === "joining" ? (
+            <>
+              <CardTitle className="text-[22px] font-semibold leading-tight tracking-tight text-text-heading">
+                Joining {workspaceName}…
+              </CardTitle>
+              <CardDescription className="text-[13px] leading-relaxed text-text-secondary">
+                Setting up your access
+              </CardDescription>
+            </>
+          ) : null}
+
+          {state === "joined" ? (
+            <CardTitle className="text-[22px] font-semibold leading-tight tracking-tight text-text-heading">
+              Welcome to {workspaceName}
+            </CardTitle>
+          ) : null}
+
+          {state === "error" ? (
+            <>
+              <CardTitle className="text-[22px] font-semibold leading-tight tracking-tight text-text-heading">
+                Invalid invitation
+              </CardTitle>
+              <CardDescription className="text-[13px] leading-relaxed text-text-secondary">
+                This link is invalid or has expired. Ask your teammate for a new one.
+              </CardDescription>
+            </>
+          ) : null}
+        </CardHeader>
+
+        <CardContent className="space-y-3">
+          {state === "idle" ? (
+            <Button className="w-full justify-center" size="lg" onClick={handleJoin}>
+              Accept invitation
+            </Button>
+          ) : null}
+
+          {state === "joining" ? (
+            <Alert>
+              <Loader2 className="size-4 animate-spin" />
+              <AlertDescription>Setting up your access</AlertDescription>
+            </Alert>
+          ) : null}
+
+          {state === "joined" ? (
+            <Button
+              className="w-full justify-center"
+              size="lg"
+              onClick={handleTryDeepLink}
+              trailingIcon={<ArrowUpRight className="size-4" />}
+            >
+              Open in Nexu App
+            </Button>
+          ) : null}
+
+          {state === "error" ? (
+            <Alert variant="destructive">
+              <AlertCircle className="size-4" />
+              <AlertDescription>
+                This link is invalid or has expired. Ask your teammate for a new one.
+              </AlertDescription>
+            </Alert>
+          ) : null}
+        </CardContent>
+      </Card>
+    </SlarkAuthFrame>
   );
 }

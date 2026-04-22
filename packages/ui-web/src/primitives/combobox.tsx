@@ -223,7 +223,7 @@ const ComboboxTrigger = React.forwardRef<
       data-slot="combobox-trigger"
       disabled={context.disabled || disabled}
       className={cn(
-        "flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-input bg-surface-0 px-3 py-2 text-left text-base text-foreground outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20 disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-input bg-surface-0 px-3 py-2 text-left text-base text-foreground outline-none transition-colors placeholder:text-muted-foreground/50 focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20 disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}

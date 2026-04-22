@@ -1,20 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Bot,
-  Check,
-  Copy,
-  Link2,
-  Mail,
-  Plus,
-  Rocket,
-  Search,
-  Send,
-  UserPlus,
-  X,
-} from "lucide-react";
+import { ArrowLeft, Check, Copy, Mail, Plus, Search, Send } from "lucide-react";
 import {
   Badge,
   Button,
@@ -39,17 +25,15 @@ import {
   Textarea,
   cn,
 } from "@nexu-design/ui-web";
-import { useT } from "@/i18n";
 import { useWorkspaceStore } from "@/stores/workspace";
 import { useAgentsStore } from "@/stores/agents";
 import { useRuntimesStore } from "@/stores/runtimes";
 import { mockAgentTemplates, mockRuntimes } from "@/mock/data";
 import type { AgentTemplate } from "@/types";
 
-type AgentPhase = "templates" | "settings";
+type Phase = "templates" | "settings";
 
 export function CreateAgentStep(): React.ReactElement {
-  const t = useT();
   const navigate = useNavigate();
   const completeOnboarding = useWorkspaceStore((s) => s.completeOnboarding);
   const setPendingWelcomeAgent = useWorkspaceStore((s) => s.setPendingWelcomeAgent);
@@ -57,11 +41,25 @@ export function CreateAgentStep(): React.ReactElement {
   const runtimes = useRuntimesStore((s) => s.runtimes);
   const setGlobalRuntimes = useRuntimesStore((s) => s.setRuntimes);
 
-  // Invite state
-  const [invitedEmails, setInvitedEmails] = useState<string[]>([]);
+  const [phase, setPhase] = useState<Phase>("templates");
+  const [selectedTemplate, setSelectedTemplate] = useState<AgentTemplate | null>(null);
+
+  const [agentName, setAgentName] = useState("");
+  const [description, setDescription] = useState("");
+  const [runtimeId, setRuntimeId] = useState<string | null>(null);
+  const [showDiscardDialog, setShowDiscardDialog] = useState(false);
+
+  // Invite teammates (moved here from Step 1). Kept optional — onboarding
+  // already requires workspace + runtime + first agent, so forcing an
+  // invite step earlier added friction without changing completion rate.
+  // At the last step the user has already seen the product shape, which
+  // is a better moment to ask "who should join you?".
+  const [inviteOpen, setInviteOpen] = useState(false);
   const [emailInput, setEmailInput] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [invitedEmails, setInvitedEmails] = useState<string[]>([]);
   const [linkCopied, setLinkCopied] = useState(false);
+  const emailRef = useRef<HTMLInputElement>(null);
   const errorTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
@@ -70,14 +68,6 @@ export function CreateAgentStep(): React.ReactElement {
     [],
   );
   const inviteLinkUrl = `${window.location.origin}/invite/${inviteToken}`;
-
-  // Agent state
-  const [agentPhase, setAgentPhase] = useState<AgentPhase>("templates");
-  const [selectedTemplate, setSelectedTemplate] = useState<AgentTemplate | null>(null);
-  const [agentName, setAgentName] = useState("");
-  const [description, setDescription] = useState("");
-  const [runtimeId, setRuntimeId] = useState<string | null>(null);
-  const [showDiscardDialog, setShowDiscardDialog] = useState(false);
 
   const isValidEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -91,22 +81,17 @@ export function CreateAgentStep(): React.ReactElement {
     const email = emailInput.trim();
     if (!email) return;
     if (!isValidEmail(email)) {
-      showEmailError(t("workspace.invalidEmail"));
+      showEmailError("Please enter a valid email address");
       return;
     }
     if (invitedEmails.includes(email)) {
-      showEmailError(t("onboarding.emailAlreadyAdded"));
+      showEmailError("This email has already been added");
       return;
     }
     setInvitedEmails((prev) => [...prev, email]);
     setEmailInput("");
     setEmailError("");
   };
-
-  const removeEmail = (email: string): void => {
-    setInvitedEmails((prev) => prev.filter((e) => e !== email));
-  };
-
 
   const handleEmailKeyDown = (e: React.KeyboardEvent): void => {
     if (e.key === "Enter") {
@@ -115,7 +100,7 @@ export function CreateAgentStep(): React.ReactElement {
     }
   };
 
-  const handleCopyLink = async (): Promise<void> => {
+  const handleCopyInviteLink = async (): Promise<void> => {
     try {
       await navigator.clipboard.writeText(inviteLinkUrl);
     } catch {
@@ -132,7 +117,12 @@ export function CreateAgentStep(): React.ReactElement {
     setDescription(tpl.description);
     const firstConnected = runtimes.find((r) => r.status === "connected");
     if (firstConnected) setRuntimeId(firstConnected.id);
-    setAgentPhase("settings");
+    setPhase("settings");
+  };
+
+  const handleSkip = (): void => {
+    completeOnboarding();
+    navigate("/chat/ch-welcome");
   };
 
   const handleBlankAgent = (): void => {
@@ -141,7 +131,7 @@ export function CreateAgentStep(): React.ReactElement {
     setDescription("");
     const firstConnected = runtimes.find((r) => r.status === "connected");
     if (firstConnected) setRuntimeId(firstConnected.id);
-    setAgentPhase("settings");
+    setPhase("settings");
   };
 
   const handleBackToTemplates = (): void => {
@@ -153,7 +143,7 @@ export function CreateAgentStep(): React.ReactElement {
       setShowDiscardDialog(true);
       return;
     }
-    setAgentPhase("templates");
+    setPhase("templates");
   };
 
   const handleDetectRuntimes = (): void => {
@@ -162,12 +152,7 @@ export function CreateAgentStep(): React.ReactElement {
     if (connected.length > 0) setRuntimeId(connected[0].id);
   };
 
-  const finishAndGo = (): void => {
-    completeOnboarding();
-    navigate("/chat/ch-welcome");
-  };
-
-  const handleCreateAgent = (): void => {
+  const handleCreate = (): void => {
     if (!agentName.trim()) return;
     const agentId = `a-${Date.now()}`;
     addAgent({
@@ -187,275 +172,279 @@ export function CreateAgentStep(): React.ReactElement {
       createdAt: Date.now(),
     });
     setPendingWelcomeAgent(agentId);
-    finishAndGo();
+    completeOnboarding();
+    navigate("/chat/ch-welcome");
   };
 
   const connectedRuntimes = runtimes.filter((r) => r.status === "connected");
 
-  return (
-    <div className="flex flex-col items-center gap-5 pt-4">
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent">
-        <UserPlus className="h-6 w-6 text-muted-foreground" />
-      </div>
-      <div className="text-center">
-        <h2 className="text-2xl font-semibold">{t("onboarding.teammateTitle")}</h2>
-        <p className="text-muted-foreground mt-1.5 text-sm">{t("onboarding.teammateDesc")}</p>
-      </div>
+  if (phase === "templates") {
+    return (
+      <div className="flex flex-col items-center gap-6 pt-8">
+        <div className="text-center animate-in fade-in slide-in-from-bottom-2 duration-500">
+          <h2 className="text-xl font-semibold text-text-primary">Create your first Agent</h2>
+          <p className="mt-1 text-sm text-text-secondary">Choose a template to get started</p>
+        </div>
+        <div className="grid grid-cols-2 gap-3 w-full">
+          {mockAgentTemplates.map((tpl, i) => (
+            <InteractiveRow
+              key={tpl.id}
+              onClick={() => handleSelectTemplate(tpl)}
+              tone="subtle"
+              className={cn(
+                "group items-start rounded-xl border border-border px-3 py-3",
+                "transition-all duration-200 ease-out",
+                "hover:-translate-y-0.5 hover:shadow-[0_6px_20px_-10px_rgba(0,0,0,0.18),0_2px_6px_-2px_rgba(0,0,0,0.08)] hover:border-border-strong",
+                "animate-in fade-in slide-in-from-bottom-3",
+              )}
+              style={{
+                animationDuration: "420ms",
+                animationDelay: `${120 + i * 80}ms`,
+                animationFillMode: "both",
+              }}
+            >
+              <InteractiveRowLeading>
+                <img
+                  src={tpl.avatar}
+                  alt=""
+                  className="size-10 rounded-full shrink-0 bg-secondary ring-1 ring-inset ring-black/5 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-6"
+                />
+              </InteractiveRowLeading>
+              <InteractiveRowContent>
+                <div className="text-sm font-medium text-text-primary">{tpl.name}</div>
+                <div className="mt-0.5 line-clamp-2 text-xs text-text-muted">{tpl.description}</div>
+              </InteractiveRowContent>
+            </InteractiveRow>
+          ))}
+        </div>
+        <Button
+          onClick={handleBlankAgent}
+          variant="outline"
+          className="w-full border-dashed shadow-none hover:shadow-none animate-in fade-in duration-500"
+          style={{ animationDelay: "460ms", animationFillMode: "both" }}
+          leadingIcon={<Plus className="size-4" />}
+        >
+          Start from scratch
+        </Button>
 
-      {agentPhase === "templates" ? (
-        <>
-          <div className="w-[360px] space-y-5">
-            {/* Invite colleagues section */}
-            <section className="space-y-2.5">
-              <div className="flex items-center gap-2">
-                <UserPlus className="h-3.5 w-3.5 text-muted-foreground" />
-                <h3 className="text-sm font-semibold text-foreground">
-                  {t("onboarding.tabInvite")}
-                </h3>
-              </div>
+        {/* Invite teammates — moved from Step 1 into this final step.
+            Rendered as a collapsible solid-bordered card so the affordance
+            visually matches "Start from scratch" above (both are outline
+            buttons of equal weight); the previous dashed border made this
+            read as an unfinished/placeholder region. */}
+        <div
+          className="w-full rounded-lg border border-border animate-in fade-in duration-500"
+          style={{ animationDelay: "520ms", animationFillMode: "both" }}
+        >
+          <button
+            type="button"
+            onClick={() => setInviteOpen((v) => !v)}
+            aria-expanded={inviteOpen}
+            // `h-10` matches the outline Button default height so this row
+            // lines up with `Start from scratch` above.
+            className="flex h-10 w-full items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-2/40"
+          >
+            <Plus className="size-3.5" />
+            Invite teammates
+            {invitedEmails.length > 0 ? (
+              <span className="ml-1 text-text-muted font-normal">· {invitedEmails.length}</span>
+            ) : null}
+          </button>
 
-              <FormField invalid={Boolean(emailError)} error={emailError}>
+          {inviteOpen ? (
+            <div className="space-y-3 px-3 pb-3">
+              <div>
                 <div className="flex items-center gap-2">
-                  <FormFieldControl className="flex-1">
+                  <div className="flex-1">
                     <Input
+                      ref={emailRef}
                       type="email"
                       value={emailInput}
                       onChange={(e) => setEmailInput(e.target.value)}
                       onKeyDown={handleEmailKeyDown}
-                      placeholder={t("workspace.invitePlaceholder")}
-                      leadingIcon={<Mail className="h-4 w-4 text-muted-foreground" />}
+                      placeholder="colleague@company.com"
+                      leadingIcon={<Mail className="size-4 text-text-muted" />}
                       invalid={Boolean(emailError)}
                     />
-                  </FormFieldControl>
+                  </div>
                   <Button
                     onClick={addEmail}
                     disabled={!emailInput.trim()}
                     size="sm"
-                    className="h-10 shrink-0"
-                    leadingIcon={<Send className="h-3.5 w-3.5" />}
+                    leadingIcon={<Send className="size-3.5" />}
                   >
-                    {t("workspace.invite")}
+                    Invite
                   </Button>
                 </div>
-
-                <div className="mt-3 flex items-center gap-2 rounded-lg border border-dashed border-border bg-secondary/40 px-3 py-2.5">
-                  <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs text-muted-foreground mb-0.5">
-                      {t("onboarding.shareInviteLink")}
-                    </div>
-                    <div className="text-xs font-mono text-foreground truncate">
-                      {inviteLinkUrl}
-                    </div>
-                  </div>
-                  <Button
-                    onClick={handleCopyLink}
-                    variant="outline"
-                    size="xs"
-                    className="h-7 shrink-0"
-                    leadingIcon={
-                      linkCopied ? (
-                        <Check className="h-3 w-3 text-nexu-online" />
-                      ) : (
-                        <Copy className="h-3 w-3" />
-                      )
-                    }
-                  >
-                    {linkCopied ? t("common.copied") : t("common.copy")}
-                  </Button>
-                </div>
-
-                {invitedEmails.length > 0 && (
-                  <div className="mt-3 space-y-1">
-                    {invitedEmails.map((email) => (
-                      <div
-                        key={email}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-border"
-                      >
-                        <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <div className="text-sm font-medium truncate">{email}</div>
-                          <Badge variant="success" size="xs" className="mt-1">
-                            {t("onboarding.invitationSent")}
-                          </Badge>
-                        </div>
-                        <Button
-                          onClick={() => removeEmail(email)}
-                          variant="ghost"
-                          size="icon-sm"
-                          className="h-7 w-7 text-muted-foreground hover:text-foreground"
-                        >
-                          <X className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </FormField>
-            </section>
-
-            {/* Create an agent section */}
-            <section className="space-y-2.5">
-              <div className="flex items-center gap-2">
-                <Bot className="h-3.5 w-3.5 text-muted-foreground" />
-                <h3 className="text-sm font-semibold text-foreground">
-                  {t("onboarding.tabAgent")}
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                {mockAgentTemplates.map((tpl) => (
-                  <InteractiveRow
-                    key={tpl.id}
-                    onClick={() => handleSelectTemplate(tpl)}
-                    tone="subtle"
-                    className="items-start rounded-xl border border-border px-2.5 py-2.5"
-                  >
-                    <InteractiveRowLeading>
-                      <img src={tpl.avatar} alt="" className="h-9 w-9 rounded-lg shrink-0" />
-                    </InteractiveRowLeading>
-                    <InteractiveRowContent>
-                      <div className="font-medium text-[13px] leading-tight">{tpl.name}</div>
-                      <div className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">
-                        {tpl.description}
-                      </div>
-                    </InteractiveRowContent>
-                  </InteractiveRow>
-                ))}
+                {emailError ? (
+                  <p className="mt-1.5 text-xs text-destructive">{emailError}</p>
+                ) : null}
               </div>
 
               <Button
-                onClick={handleBlankAgent}
-                variant="outline"
+                onClick={handleCopyInviteLink}
+                variant="secondary"
                 size="sm"
-                className="h-9 w-full border-dashed text-muted-foreground"
-                leadingIcon={<Plus className="h-3.5 w-3.5" />}
+                className="w-full justify-center"
+                leadingIcon={
+                  linkCopied ? (
+                    <Check className="size-3.5 text-success" />
+                  ) : (
+                    <Copy className="size-3.5" />
+                  )
+                }
               >
-                <span className="text-[13px] font-medium">Start from scratch</span>
+                {linkCopied ? "Invite link copied" : "Share invite link"}
               </Button>
-            </section>
-          </div>
 
-          <div className="flex items-center gap-3 mt-1">
-            <Button onClick={finishAndGo} variant="ghost">
-              Skip for now
-            </Button>
-            <Button
-              onClick={finishAndGo}
-              trailingIcon={<ArrowRight className="h-4 w-4" />}
-            >
-              {t("onboarding.finishSetup")}
-            </Button>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="w-full max-w-md space-y-5">
-            {selectedTemplate && (
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-accent/50 border border-border">
-                <img src={selectedTemplate.avatar} alt="" className="h-10 w-10 rounded-lg shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <div className="text-xs text-muted-foreground">Based on template</div>
-                  <div className="text-sm font-medium">{selectedTemplate.name}</div>
+              {invitedEmails.length > 0 ? (
+                <div className="space-y-1">
+                  {invitedEmails.map((email) => (
+                    <div
+                      key={email}
+                      className="flex items-center gap-3 rounded-md bg-surface-1/60 px-2.5 py-2"
+                    >
+                      <Mail className="size-4 text-text-muted shrink-0" />
+                      <div className="flex-1 min-w-0 text-sm text-text-primary truncate">
+                        {email}
+                      </div>
+                      <Badge variant="success" size="xs">
+                        Sent
+                      </Badge>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            )}
+              ) : null}
+            </div>
+          ) : null}
+        </div>
 
-            <FormField label="Agent Name">
-              <FormFieldControl>
-                <Input
-                  type="text"
-                  value={agentName}
-                  onChange={(e) => setAgentName(e.target.value)}
-                  placeholder="e.g. CodeBot"
-                  autoFocus
-                />
-              </FormFieldControl>
-            </FormField>
+        <Button
+          onClick={handleSkip}
+          variant="ghost"
+          size="sm"
+          className="animate-in fade-in duration-500"
+          style={{ animationDelay: "600ms", animationFillMode: "both" }}
+        >
+          Skip for now
+        </Button>
+      </div>
+    );
+  }
 
-            <FormField label="Description">
-              <FormFieldControl>
-                <Textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="What does this agent do?"
-                  rows={3}
-                />
-              </FormFieldControl>
-            </FormField>
+  return (
+    <div className="flex flex-col items-center gap-6 pt-8">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-text-primary">Customize your Agent</h2>
+        <p className="mt-1 text-sm text-text-secondary">
+          Set a name, description, and connect a runtime
+        </p>
+      </div>
 
-            <FormField label="Runtime">
-              <FormFieldControl>
-                <Select
-                  value={runtimeId ?? undefined}
-                  onValueChange={(value) => {
-                    setRuntimeId(value);
-                  }}
-                  disabled={connectedRuntimes.length === 0}
-                >
-                  <SelectTrigger>
-                    <SelectValue
-                      placeholder={
-                        connectedRuntimes.length > 0 ? "Select a runtime" : "No runtime connected"
-                      }
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {connectedRuntimes.map((rt) => (
-                      <SelectItem key={rt.id} value={rt.id}>
-                        <span className="flex w-full items-center gap-2">
-                          <span
-                            className={cn(
-                              "h-2 w-2 rounded-full shrink-0",
-                              rt.status === "connected" ? "bg-nexu-online" : "bg-nexu-offline",
-                            )}
-                          />
-                          <span className="truncate">{rt.name}</span>
-                          {rt.version ? (
-                            <span className="text-xs text-muted-foreground">v{rt.version}</span>
-                          ) : null}
-                        </span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormFieldControl>
-              {connectedRuntimes.length === 0 && (
-                <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                  No runtimes detected.
-                  <Button
-                    onClick={handleDetectRuntimes}
-                    type="button"
-                    variant="link"
-                    size="inline"
-                    className="h-auto text-foreground"
-                  >
-                    <Search className="h-3 w-3" />
-                    Scan now
-                  </Button>
-                </p>
-              )}
-            </FormField>
+      <div className="w-full max-w-md space-y-4">
+        {selectedTemplate && (
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-surface-1 border border-border">
+            <img
+              src={selectedTemplate.avatar}
+              alt=""
+              className="size-10 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+            />
+            <div className="min-w-0 flex-1">
+              <div className="text-xs text-text-muted">Based on template</div>
+              <div className="text-sm font-medium text-text-primary">{selectedTemplate.name}</div>
+            </div>
           </div>
+        )}
 
-          <div className="flex items-center gap-3 mt-4">
-            <Button
-              onClick={handleBackToTemplates}
-              variant="ghost"
-              leadingIcon={<ArrowLeft className="h-4 w-4" />}
+        <FormField label="Agent Name">
+          <FormFieldControl>
+            <Input
+              type="text"
+              value={agentName}
+              onChange={(e) => setAgentName(e.target.value)}
+              placeholder="e.g. CodeBot"
+              autoFocus
+            />
+          </FormFieldControl>
+        </FormField>
+
+        <FormField label="Description">
+          <FormFieldControl>
+            <Textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="What does this agent do?"
+              rows={3}
+            />
+          </FormFieldControl>
+        </FormField>
+
+        <FormField label="Runtime">
+          <FormFieldControl>
+            <Select
+              value={runtimeId ?? undefined}
+              onValueChange={(value) => {
+                setRuntimeId(value);
+              }}
+              disabled={connectedRuntimes.length === 0}
             >
-              Back to templates
-            </Button>
-            <Button
-              onClick={handleCreateAgent}
-              disabled={!agentName.trim()}
-              leadingIcon={<Rocket className="h-4 w-4" />}
-            >
-              Create Agent
-            </Button>
-          </div>
-        </>
-      )}
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={
+                    connectedRuntimes.length > 0 ? "Select a runtime" : "No runtime connected"
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {connectedRuntimes.map((rt) => (
+                  <SelectItem key={rt.id} value={rt.id}>
+                    <span className="flex w-full items-center gap-2">
+                      <span
+                        className={cn(
+                          "size-2 rounded-full shrink-0",
+                          rt.status === "connected" ? "bg-success" : "bg-surface-3",
+                        )}
+                      />
+                      <span className="truncate">{rt.name}</span>
+                      {rt.version ? (
+                        <span className="text-xs text-text-muted">v{rt.version}</span>
+                      ) : null}
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FormFieldControl>
+          {connectedRuntimes.length === 0 && (
+            <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-text-muted">
+              No runtimes detected.
+              <Button
+                onClick={handleDetectRuntimes}
+                type="button"
+                variant="link"
+                size="inline"
+                leadingIcon={<Search className="size-3" />}
+              >
+                Scan now
+              </Button>
+            </p>
+          )}
+        </FormField>
+      </div>
+
+      <div className="w-full max-w-md flex flex-col items-center gap-2 mt-2">
+        <Button onClick={handleCreate} disabled={!agentName.trim()} className="w-full">
+          Create Agent
+        </Button>
+        <Button
+          onClick={handleBackToTemplates}
+          variant="ghost"
+          size="sm"
+          leadingIcon={<ArrowLeft className="size-3.5" />}
+        >
+          Back to templates
+        </Button>
+      </div>
 
       <Dialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
         <DialogContent size="sm">
@@ -473,7 +462,7 @@ export function CreateAgentStep(): React.ReactElement {
             <Button
               onClick={() => {
                 setShowDiscardDialog(false);
-                setAgentPhase("templates");
+                setPhase("templates");
               }}
             >
               Discard and go back

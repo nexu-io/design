@@ -41,7 +41,6 @@ export function OnboardingFlow(): React.ReactElement {
         isRuntimeStep ? "mx-auto w-[760px] max-w-full" : "mx-auto max-w-[560px]"
       }
       hideBranding
-      hideFooter
       verticalAlign="top"
     >
       <div className="space-y-8">

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Plus, Search, Bot, UserPlus } from "lucide-react";
+import { Plus, Search, X } from "lucide-react";
 
 import { Button, Input, cn } from "@nexu-design/ui-web";
 
@@ -17,9 +17,7 @@ export function AgentsSidebar(): React.ReactElement {
   const { agents, setAgents, setTemplates, selectAgent } = useAgentsStore();
   const [showCreateAgent, setShowCreateAgent] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
-  const [showAddMenu, setShowAddMenu] = useState(false);
   const [search, setSearch] = useState("");
-  const addMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (agents.length === 0) {
@@ -34,17 +32,6 @@ export function AgentsSidebar(): React.ReactElement {
       if (first) navigate(`/agents/${first}`, { replace: true });
     }
   }, [memberId, agents, navigate]);
-
-  useEffect(() => {
-    if (!showAddMenu) return;
-    const handler = (e: MouseEvent): void => {
-      if (addMenuRef.current && !addMenuRef.current.contains(e.target as Node)) {
-        setShowAddMenu(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [showAddMenu]);
 
   const matchSearch = (text: string): boolean => {
     if (!search) return true;
@@ -67,197 +54,182 @@ export function AgentsSidebar(): React.ReactElement {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-3 pb-2 space-y-2">
-        <div className="relative" ref={addMenuRef}>
-          {/* Outline variant: white fill + subtle border + surface-2 hover.
-              This gives the Add-teammate action a clear visual weight and
-              keeps it distinct from the adjacent gray-filled Search input. */}
-          <Button
-            onClick={() => setShowAddMenu((v) => !v)}
-            variant="outline"
-            size="sm"
-            className="h-8 w-full justify-start"
-            leadingIcon={<Plus className="h-3.5 w-3.5" />}
-          >
-            Add teammate
-          </Button>
-
-          {showAddMenu && (
-            <div className="absolute top-9 left-0 right-0 z-50 rounded-lg border border-border bg-popover text-foreground shadow-lg overflow-hidden p-1">
-              <Button
-                onClick={() => {
-                  setShowAddMenu(false);
-                  setShowInvite(true);
-                }}
-                variant="ghost"
-                size="inline"
-                className="h-auto w-full justify-start rounded-md px-2.5 py-2 text-xs text-left text-foreground hover:bg-surface-2 hover:text-foreground"
-                leadingIcon={<UserPlus className="h-3.5 w-3.5 shrink-0" />}
-              >
-                <span className="flex-1">Invite person</span>
-              </Button>
-              <Button
-                onClick={() => {
-                  setShowAddMenu(false);
-                  if (!atAgentLimit) setShowCreateAgent(true);
-                }}
-                disabled={atAgentLimit}
-                title={atAgentLimit ? `${agents.length}/10` : undefined}
-                variant="ghost"
-                size="inline"
-                className="h-auto w-full justify-start rounded-md px-2.5 py-2 text-xs text-left text-foreground hover:bg-surface-2 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
-                leadingIcon={<Bot className="h-3.5 w-3.5 shrink-0" />}
-              >
-                <span className="flex-1">Create agent</span>
-                {atAgentLimit && (
-                  <span className="text-[10px] text-muted-foreground">{agents.length}/10</span>
-                )}
-              </Button>
-            </div>
-          )}
-        </div>
-
+      {/* Persistent search input, sitting right under the sidebar's
+          `TEAMMATE` title row. Keeping it always visible (rather than
+          behind a toggle) mirrors the Chat sidebar's layout and makes
+          the filter immediately discoverable. Scope is both members
+          and agents, matching the lists below.
+          `pt-2 pb-4` gives the input clear breathing room on both
+          sides — `pt-2` stacks on the SidebarHeader's own `pb-2` for
+          16px above the field, and `pb-4` keeps the input visually
+          detached from the MEMBERS section header beneath it. */}
+      <div className="px-2 pt-2 pb-4">
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search team"
+          placeholder="Search members, agents"
           leadingIcon={<Search className="h-3.5 w-3.5 text-nav-muted" />}
-          className="h-8 border-transparent bg-nav-input text-nav-fg shadow-none focus-within:border-transparent focus-within:ring-1 focus-within:ring-nav-ring"
-          inputClassName="text-[13px] placeholder:text-nav-muted"
+          trailingIcon={
+            search ? (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                aria-label="Clear search"
+                className="flex h-4 w-4 items-center justify-center rounded text-nav-muted hover:bg-nav-hover hover:text-nav-fg"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            ) : undefined
+          }
+          className="h-8 border-border-subtle bg-nav-input text-nav-fg shadow-none focus-within:border-transparent focus-within:ring-1 focus-within:ring-nav-ring"
+          inputClassName="text-[13px] placeholder:text-nav-muted/50"
         />
       </div>
 
-      {/* `pt-2` gives the first section header visible breathing room
-          below the Search input — flush against the input block it felt
-          cramped and made the header read as input meta. */}
-      <div className="flex-1 overflow-y-auto px-2 pt-2 space-y-3">
-        {filteredUsers.length > 0 && (
-          <div>
-            {/* Section headers drop their leading icon — the uppercase
-                label already reads as a header and the icon was adding
-                visual noise in a narrow sidebar. */}
-            <div className="flex items-center gap-1.5 px-2 py-1 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
-              <span className="flex-1">Members</span>
-              <span className="text-[11px] normal-case tracking-normal font-medium">
+      <div className="flex-1 overflow-y-auto px-2 space-y-3">
+        <section>
+          {/* Section header: [Members] [count, gap-1.5 ≈ 6px].
+              "Members" is kept distinct from the top-level "Teammate"
+              title — the top label is the sidebar's identity (and carries
+              the invite CTA + search), while this scoped label reminds
+              the reader that this list is human members, paired with the
+              Agents list below. */}
+          <div className="flex items-center gap-1 px-2 py-1 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+            <div className="flex flex-1 items-baseline gap-1.5 min-w-0">
+              <span>Members</span>
+              <span className="text-[11px] normal-case tracking-normal font-medium text-nav-muted">
                 {filteredUsers.length}
               </span>
             </div>
-            <div className="space-y-0.5">
-              {filteredUsers.map((user) => (
-                <Button
-                  key={user.id}
-                  type="button"
-                  variant="ghost"
-                  size="inline"
-                  onClick={() => handleSelectUser(user)}
-                  className={cn(
-                    "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
-                    memberId === user.id
-                      ? "bg-nav-active text-nav-active-fg"
-                      : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
-                  )}
-                >
-                  {/* Avatar + presence dot overlay. The ring keeps the photo
-                    readable on surface hover fills; the small colored dot
-                    in the bottom-right carries the member's live status
-                    (online / away / offline) using the shared presence
-                    palette. A `border-nav` ring on the dot cuts it out
-                    cleanly from whichever avatar it's sitting on. */}
-                  <span className="relative inline-block shrink-0">
-                    <img
-                      src={user.avatar}
-                      alt=""
-                      className="h-7 w-7 rounded-full ring-1 ring-inset ring-black/5"
-                    />
-                    <span
-                      role="status"
-                      aria-label={presenceLabel(user.status)}
-                      title={presenceLabel(user.status)}
-                      className={cn(
-                        "absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-nav",
-                        presenceDotClass(user.status),
-                      )}
-                    />
-                  </span>
-                  <div className="min-w-0 flex-1 text-left">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-sm font-medium truncate">{user.name}</span>
-                      {user.role === "owner" && (
-                        /* Owner tag always reads as a brand-accented label
-                         (brand-primary on brand-subtle), selected row or
-                         not — matches the larger Owner badge on the
-                         profile detail header for visual consistency. */
-                        <span className="text-[9px] font-semibold uppercase tracking-wide text-brand-primary bg-brand-subtle px-1 py-px rounded shrink-0">
-                          Owner
-                        </span>
-                      )}
-                    </div>
-                    <div
-                      className={cn(
-                        /* `font-normal` overrides the Button primitive's default
-                         `font-medium` so secondary meta (email, agent desc)
-                         reads as body text, not a second heading.
-                         `text-text-tertiary` is the lightest text token — used
-                         here so email stays clearly subordinate to the name. */
-                        "text-xs font-normal truncate",
-                        memberId === user.id ? "text-nav-active-muted" : "text-text-tertiary",
-                      )}
-                    >
-                      {user.email}
-                    </div>
-                  </div>
-                </Button>
-              ))}
-            </div>
+            {/* Section-header action: outlined 20px `+` chip. The border
+                + `surface-0` fill give it visibly more weight than a
+                bare ghost icon, reading as a clear affordance next to
+                the label rather than decorative chrome. Same chip is
+                reused on the AGENTS header for consistency. */}
+            <button
+              type="button"
+              onClick={() => setShowInvite(true)}
+              aria-label="Invite teammate"
+              title="Invite teammate"
+              className="flex h-5 w-5 items-center justify-center rounded border border-border-subtle bg-surface-0 text-nav-fg shadow-xs transition-colors hover:border-border hover:bg-nav-hover"
+            >
+              <Plus className="h-3 w-3" />
+            </button>
           </div>
-        )}
 
-        {filteredAgents.length > 0 && (
-          <div>
-            <div className="flex items-center gap-1.5 px-2 py-1 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
-              <span className="flex-1">Agents</span>
-              <span className="text-[11px] normal-case tracking-normal font-medium">
+          <div className="space-y-0.5">
+            {filteredUsers.map((user) => (
+              <Button
+                key={user.id}
+                type="button"
+                variant="ghost"
+                size="inline"
+                onClick={() => handleSelectUser(user)}
+                className={cn(
+                  "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
+                  memberId === user.id
+                    ? "bg-nav-active text-nav-active-fg"
+                    : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
+                )}
+              >
+                <span className="relative inline-block shrink-0">
+                  <img
+                    src={user.avatar}
+                    alt=""
+                    className="h-7 w-7 rounded-full ring-1 ring-inset ring-black/5"
+                  />
+                  <span
+                    role="status"
+                    aria-label={presenceLabel(user.status)}
+                    title={presenceLabel(user.status)}
+                    className={cn(
+                      "absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-nav",
+                      presenceDotClass(user.status),
+                    )}
+                  />
+                </span>
+                <div className="min-w-0 flex-1 text-left">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-medium truncate">{user.name}</span>
+                    {user.role === "owner" && (
+                      <span className="text-[9px] font-semibold uppercase tracking-wide text-brand-primary bg-brand-subtle px-1 py-px rounded shrink-0">
+                        Owner
+                      </span>
+                    )}
+                  </div>
+                  <div
+                    className={cn(
+                      "text-xs font-normal truncate",
+                      memberId === user.id ? "text-nav-active-muted" : "text-text-tertiary",
+                    )}
+                  >
+                    {user.email}
+                  </div>
+                </div>
+              </Button>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <div className="flex items-center gap-1 px-2 py-1 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+            <div className="flex flex-1 items-baseline gap-1.5 min-w-0">
+              <span>Agents</span>
+              <span className="text-[11px] normal-case tracking-normal font-medium text-nav-muted">
                 {filteredAgents.length}
               </span>
             </div>
-            <div className="space-y-0.5">
-              {filteredAgents.map((agent) => (
-                <Button
-                  key={agent.id}
-                  type="button"
-                  variant="ghost"
-                  size="inline"
-                  onClick={() => handleSelectAgent(agent)}
-                  className={cn(
-                    "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
-                    memberId === agent.id
-                      ? "bg-nav-active text-nav-active-fg"
-                      : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
-                  )}
-                >
-                  <img
-                    src={agent.avatar}
-                    alt=""
-                    className="h-7 w-7 rounded-lg shrink-0 ring-1 ring-inset ring-black/5"
-                  />
-                  <div className="min-w-0 flex-1 text-left">
-                    <div className="text-sm font-medium truncate">{agent.name}</div>
-                    <div
-                      className={cn(
-                        "text-xs font-normal truncate",
-                        memberId === agent.id ? "text-nav-active-muted" : "text-text-tertiary",
-                      )}
-                    >
-                      {agent.description}
-                    </div>
-                  </div>
-                </Button>
-              ))}
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (!atAgentLimit) setShowCreateAgent(true);
+              }}
+              disabled={atAgentLimit}
+              aria-label="Create agent"
+              title={atAgentLimit ? `${agents.length}/10` : "Create agent"}
+              className="flex h-5 w-5 items-center justify-center rounded border border-border-subtle bg-surface-0 text-nav-fg shadow-xs transition-colors hover:border-border hover:bg-nav-hover disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border-subtle disabled:hover:bg-surface-0"
+            >
+              <Plus className="h-3 w-3" />
+            </button>
           </div>
-        )}
 
-        {filteredUsers.length === 0 && filteredAgents.length === 0 && (
+          <div className="space-y-0.5">
+            {filteredAgents.map((agent) => (
+              <Button
+                key={agent.id}
+                type="button"
+                variant="ghost"
+                size="inline"
+                onClick={() => handleSelectAgent(agent)}
+                className={cn(
+                  "flex items-center gap-2.5 w-full px-2 py-2 rounded-md transition-colors",
+                  memberId === agent.id
+                    ? "bg-nav-active text-nav-active-fg"
+                    : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
+                )}
+              >
+                <img
+                  src={agent.avatar}
+                  alt=""
+                  className="h-7 w-7 rounded-full shrink-0 bg-secondary ring-1 ring-inset ring-black/5"
+                />
+                <div className="min-w-0 flex-1 text-left">
+                  <div className="text-sm font-medium truncate">{agent.name}</div>
+                  <div
+                    className={cn(
+                      "text-xs font-normal truncate",
+                      memberId === agent.id ? "text-nav-active-muted" : "text-text-tertiary",
+                    )}
+                  >
+                    {agent.description}
+                  </div>
+                </div>
+              </Button>
+            ))}
+          </div>
+        </section>
+
+        {search && filteredUsers.length === 0 && filteredAgents.length === 0 && (
           <div className="px-2 py-4 text-center text-xs text-nav-muted">No matches</div>
         )}
       </div>

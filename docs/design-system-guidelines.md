@@ -55,6 +55,18 @@ Use this doc for:
 - When an icon looks visually smaller or larger than the text next to it, adjust the icon size rather than the text size.
 - Apply the same principle to inline icons in labels, badges, and navigation items.
 
+### Icon placement and semantics in buttons
+- **Leading icon (`leadingIcon`) identifies WHAT the action is.** Reserve it for _identity_ marks where the glyph answers "what am I about to do?": brand logos (`Github`, `Google`), resource categories (`Mail`, `Folder`), object types, state indicators (`Loader2` for loading). Leading icons sit on the left and feel like "label-for-the-verb".
+- **Trailing icon (`trailingIcon`) indicates DIRECTION or OUTCOME.** Use it for _motion_ glyphs where the icon answers "where is this going to take me?": next step (`ArrowRight`), external / deep-link jump (`ArrowUpRight`), disclosure (`ChevronRight`), submit commitments (optional). Trailing icons sit on the right and feel like "the arrow at the end of the path".
+- **Concrete rules:**
+  - "Open in X App" / "Launch X" / any deep-link or cross-context jump → **`trailingIcon={<ArrowUpRight />}`** on the right. Never use a boxed `ExternalLink` icon as a leading icon for a full-width CTA — it reads as a brand logo and puts a decorative glyph in the spot where a meaningful identity mark belongs.
+  - "Continue" / "Next" in a stepper → **`trailingIcon={<ArrowRight />}`** on the right.
+  - "Back" → **`leadingIcon={<ArrowLeft />}`** on the left (the arrow itself is the identity).
+  - "Sign in with GitHub" → **`leadingIcon={<Github />}`** on the left (GitHub logo identifies the provider).
+  - "Retry" / "Refresh" → **`leadingIcon={<RotateCcw />}`** on the left (the verb icon identifies the action).
+- **Never put both a leading AND a trailing icon on the same CTA** unless one is genuinely identity and the other is genuinely directional (extremely rare). Two icons usually indicates the designer couldn't decide — pick one.
+- **`ExternalLink` (the boxed square-with-arrow glyph) is for inline text links in prose**, not for full-width CTA buttons. Inside prose it sits immediately after the link text to warn "this opens elsewhere". Full-width CTAs that jump out should use `ArrowUpRight` instead — it's the universal "go outside" arrow and reads correctly in the trailing position.
+
 ### Layout conventions
 - **Workspace content-panel layout**: every page rendered inside the OpenClaw workspace sidebar (Settings, Skills, Home, Deployments, Schedule, Rewards, Channels…) must use a consistent inner content wrapper: outer `h-full overflow-y-auto`, inner `max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8`.
 - **Page header → content spacing**: `PageHeader` with `density="shell"` uses `pb-6` (24px) as bottom padding. Do not override it with ad-hoc spacing.
@@ -90,6 +102,14 @@ Use this doc for:
   - Attachment tier: `w-[360px] max-w-full` — use for `FileAttachment`, `ImageAttachment` (default `width={360} height={220}`), `VideoAttachment`, and `VoiceMessage`
   - `ImageGallery` is the explicit third-width exception: `max-w-[480px]` with a 3-column layout when needed
   - Do not introduce ad-hoc third-width tiers without an explicit reason.
+- **Avatar shape and hairline border**:
+  - **Human (user) and AI (agent) avatars are always circular (`rounded-full`).** Shape is a semantic signal — circles read as "who", squares read as "what". Mixing round users with square agents inside the same list makes agents look like apps rather than teammates.
+  - **Workspace / team / organization / integration icons** stay rounded-rectangular (`rounded-lg` for ≤ 40px, `rounded-xl` for larger). Those represent containers and tools, not beings.
+  - Canonical recipe for a resting bare `<img>` / `<div>` avatar: `rounded-full bg-secondary ring-1 ring-inset ring-black/5`.
+    - `ring-inset` is required — a non-inset 1px ring around a `rounded-full` image bleeds past the circular mask at the corners.
+    - `bg-secondary` is the fallback fill while remote avatars load, preventing a transparent circle on white surfaces.
+  - Exceptions: avatars wrapped in the `Avatar` primitive (the primitive already applies `ring-1 ring-[var(--color-border-subtle)]`, so do not double-ring); stacked/overlapping avatars use `ring-2 ring-surface-0` instead (thicker ring in the surface color draws the separating "gap"); tiny decorative avatars ≤ 20px omit the hairline ring (a 1px ring on a 16px circle swallows the image).
+  - Status dots / notification badges anchored to an avatar keep their own `border-2 border-nav` separator — independent of the avatar's hairline ring.
 - Primary action buttons default to the **right** side of their container; secondary/cancel actions sit to the left.
 - Use `DialogFooter` for dialogs; for standalone form sections use `<div className="flex justify-end gap-2">`.
 
@@ -254,6 +274,7 @@ Use this section when consuming `@nexu-design/ui-web` components. For exhaustive
 ### Input
 - Sizes: `sm`, `md`, `lg`
 - Key props: `invalid`, `leadingIcon`, `trailingIcon`, `inputClassName`
+- **Placeholder is faded globally** — `Input`, `Textarea`, `Combobox`, `Select` all ship with `placeholder:text-muted-foreground/50` by default, so typed values clearly outrank the hint text. Do **not** re-set placeholder color at 100% opacity in consumer code; if you need a different hue (e.g. in a dark nav surface), still apply the `/50` opacity suffix (`placeholder:text-nav-muted/50`).
 
 ### Select
 - Composition: `Select > SelectTrigger > SelectValue` + `SelectContent > SelectGroup > SelectItem`
@@ -277,7 +298,11 @@ Use this section when consuming `@nexu-design/ui-web` components. For exhaustive
 
 ### TextLink
 - Variants: `default`, `muted`
-- Sizes: `xs`, `sm`, `default`, `lg`
+- Sizes: `xs`, `sm`, `default`, `lg`, `inherit`
+- **Clickable inline links use the link color, not a muted/neutral tone**: for any anchor rendered inside body text (Terms / Privacy, "Learn more", "Contact support", docs deep-links inside descriptions, etc.), use `variant="default"` — it resolves to `--color-link` (brand teal). `variant="muted"` is reserved for rare cases where the link needs to visually recede on purpose (e.g. decorative footer meta where the destination is optional). A "normal" clickable word in a paragraph should always read as a link, not as gray body text.
+- **Inline links must match the surrounding paragraph's font size** — no mixed sizes on the same row. Use `size="inherit"` when the link sits inside a `<p>`, caption, label, or any container that already sets a `text-*` class; the link will adopt the parent size instead of forcing its own. Use a concrete size (`xs` / `sm` / `default` / `lg`) only when the link is a standalone line, button-like affordance, or sits outside body copy.
+  - Good: `<p className="text-[11px]">By continuing, you agree to our <TextLink href="#" size="inherit">Terms</TextLink>.</p>`
+  - Bad: `<p className="text-[11px]">… <TextLink size="xs">Terms</TextLink> …</p>` — `size="xs"` resolves to `text-sm` (12px) while the paragraph is 11px, producing a visibly mismatched link inside the same line.
 
 ### Tooltip
 - Composition: `TooltipProvider > Tooltip > TooltipTrigger + TooltipContent`
@@ -290,6 +315,12 @@ Use this section when consuming `@nexu-design/ui-web` components. For exhaustive
 
 ### ScrollArea
 - Wraps scrollable content; optional `ScrollBar`
+
+### Scrollbars
+- Scrollbars are **hidden by default** and only fade in while the user is hovering (or focus lands inside) a scroll container. Both `::-webkit-scrollbar-thumb` and the Firefox `scrollbar-color` property are wired up globally in each app's `globals.css` / `index.css`.
+- Do not add per-component "show scrollbar" overrides unless a container must always expose affordance (e.g. a virtualized list where the thumb doubles as a position indicator).
+- Width is fixed at `6px` for both vertical and horizontal tracks — do not change it locally.
+- When scroll containers live inside rounded surfaces (dialogs, popovers), compensate scrollbar gutter with `-mx-1 px-1` so the bar does not collide with the parent's rounded edges.
 
 ---
 
