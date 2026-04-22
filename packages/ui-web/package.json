@@ -60,8 +60,9 @@
     "vitest-axe": "^0.1.0"
   },
   "scripts": {
+    "build:tokens": "pnpm --filter @nexu-design/tokens build",
     "build:types": "tsc -p tsconfig.build.json",
-    "build:css": "tailwindcss -i ./src/styles.css -o ./dist/styles.css",
+    "build:css": "pnpm run build:tokens && tailwindcss -i ./src/styles.css -o ./dist/styles.css",
     "check:dist-css": "node ../../scripts/assert-ui-web-dist-css.mjs",
     "build": "pnpm run build:types && pnpm run build:css && pnpm run check:dist-css",
     "clean": "rm -rf dist",
