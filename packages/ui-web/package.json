@@ -4,6 +4,10 @@
   "private": false,
   "description": "React primitives and patterns for building Nexu web interfaces",
   "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexu-io/design"
+  },
   "files": ["dist", "README.md"],
   "type": "module",
   "main": "./dist/index.js",

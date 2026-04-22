@@ -67,6 +67,7 @@ Accepted changeset entries are `.changeset/*.md` files, excluding `.changeset/RE
 - keeps package-level changelog generation disabled; version PR creation does not depend on `packages/*/CHANGELOG.md`
 - publishes only when the version PR lands on `main`, or when `action=publish` is run manually
 - runs `pnpm release:check` before publishing
+- requires publishable packages to declare `repository.url: "https://github.com/nexu-io/design"` so npm provenance validation passes
 
 ## First release bootstrap
 
