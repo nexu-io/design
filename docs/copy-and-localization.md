@@ -9,8 +9,10 @@ See also:
 
 ## Product copy policy
 - Product-surface copy is hardcoded English by default unless a feature or document explicitly requires localization.
+- This covers shipped product UI such as chat headers, activity-bar labels, dialogs like `CreateChannelDialog` and `InvitePeopleDialog`, toasts, settings surfaces, and similar application copy.
 - Write shipped UI copy inline; do not introduce `useT(...)`, `t("...")`, or another i18n resolver unless the surface is explicitly localized.
 - Do not convert intentionally hardcoded English product copy back to i18n wiring unless the surrounding surface is also localized.
+- Reviewers should not treat a removed `useT(...)` call as a bug when the change intentionally restores a hardcoded-English product surface.
 
 ## Exceptions
 - User-generated content must be rendered as authored.

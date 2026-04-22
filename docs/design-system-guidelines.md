@@ -47,7 +47,8 @@ Use this doc for:
 - Icons placed inside buttons or alongside text must have a visual weight that matches the adjacent text.
 - Rule of thumb: use an icon size roughly equal to or slightly larger than the companion text so that the two feel balanced.
 - Reference sizes for `Button` variants:
-  - `size="xs"` / `size="sm"` → icon 12–14px (`size={12}` to `size={14}` or `className="size-3"` to `className="size-3.5"`)
+  - `size="xs"` (11px text) → icon 12px (`size={12}` or `className="size-3"`)
+  - `size="sm"` (13px text) → icon 14px (`size={14}` or `className="size-3.5"`)
   - `size="md"` (default) → icon 16px (`size={16}` or `className="size-4"`)
   - `size="lg"` → icon 18px (`size={18}` or `className="size-[18px]"`)
 - Match the icon to the current text token used by the button size instead of hardcoding font-size assumptions in call sites.
@@ -57,31 +58,37 @@ Use this doc for:
 ### Layout conventions
 - **Workspace content-panel layout**: every page rendered inside the OpenClaw workspace sidebar (Settings, Skills, Home, Deployments, Schedule, Rewards, Channels…) must use a consistent inner content wrapper: outer `h-full overflow-y-auto`, inner `max-w-[800px] mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8`.
 - **Page header → content spacing**: `PageHeader` with `density="shell"` uses `pb-6` (24px) as bottom padding. Do not override it with ad-hoc spacing.
-- **Selection check icon placement**: in selectable lists, the selected checkmark must appear on the **right** side of the row, never on the left. Style it with `strokeWidth={3}` and `text-text-heading`.
-- **Dropdown list hover style**: clickable rows inside dropdown menus, popovers, and select panels must use `rounded-lg hover:bg-surface-2`.
+- **Selection check icon placement**: use the row pattern `[icon/logo] [label] [meta] [check ✓]`. Icons identify; checks confirm selection. In selectable lists, the selected checkmark must appear on the **right** side of the row, never on the left. Style it with `strokeWidth={3}` and `text-text-heading`.
+- **Dropdown list hover style**: clickable rows inside dropdown menus, popovers, and select panels must use `rounded-lg hover:bg-surface-2`. Do not mix rounded and square hover shapes in the same list, and do not soften this with opacity variants like `/50` or `/40`.
 - **Compact nav list density** (channels, DMs, workspace lists, sidebar sections):
   - Scroll container: `px-2`
-  - Row gap: `space-y-0.5`
-  - Row radius: `rounded-md`
+  - Row gap: `space-y-0.5` (do not collapse to `0` or loosen to `1`; this is the balanced dense rhythm)
+  - Row radius: `rounded-md` (do not jump to `rounded-lg`; large pills make compact lists look bloated)
   - Row padding: `pl-2 pr-2 py-2` with `gap-2.5`
   - Unread/count badge: `h-4 min-w-4 rounded-full text-[10px] px-1`
-  - Section header: `px-2 pt-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-nav-muted`
-  - Section header affordance button: `h-6 w-6 rounded-md p-0` with `h-3.5 w-3.5` icon
+  - Section header: `px-2 pt-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-nav-muted` (keep `pb-2`; `pb-1` crowds the first row below)
+  - Section header affordance button: `h-6 w-6 rounded-md p-0` with `h-3.5 w-3.5` icon (use 14px icons here, not 16px)
   - Search/filter input wrapper should use the same `px-2` as the list below
+  - Search/filter input should use `h-8 border-border-subtle bg-nav-input` with `focus-within:border-transparent focus-within:ring-1`
+  - Do not use `border-transparent` in the resting state; the field still needs a visible interactive boundary before focus
   - Decorative uppercase labels stay English across locales; see `docs/copy-and-localization.md`
   - Bottom affordance rows should match the same list padding rhythm
   - Applies to row-based sidebar surfaces, not content lists
 - **Selection row background**: selected rows in list-like surfaces must use a neutral background such as `bg-surface-3` with `text-text-heading` and `font-semibold`. Do not use brand/accent/semantic fills for persistent selection states.
+- **Selection row exception**: transient real-time spotlight states such as a moderation row actively processing or a recording row actively capturing may temporarily use a brand tint. Call that exception out explicitly in the PR description so reviewers know it is intentional.
 - **Row-level hover fill**: use `hover:bg-surface-2` for row-shaped targets.
 - **Model/list-item tier badges**:
   - Plus: `bg-[var(--color-brand-subtle)] text-[var(--color-brand-primary)]`
   - Pro: `bg-[var(--color-warning-subtle)] text-[var(--color-warning)]`
   - Badge size: `rounded-[4px] px-1.5 py-[1px] text-[9px] font-semibold uppercase leading-tight`
+  - Row layout: `[icon/logo] [label] [tier badge] [meta] [check ✓]`; the tier badge sits immediately after the label, not floating near the trailing meta
+  - If a model or list item has no tier value, omit the badge entirely
 - **Settings row title font size**: use `text-[13px]` for titles; descriptions/hints use `text-[12px]`.
 - **Settings row pattern**: `[title + description]` on the left, `[control]` on the right, using `flex items-start justify-between gap-4`; multiple rows use `divide-y divide-border`.
 - **Chat-feed content-block widths**:
-  - Card tier: `w-full max-w-[640px]`
-  - Attachment tier: `w-[360px] max-w-full`
+  - Card tier: `w-full max-w-[640px]` — use for `CodeBlock`, `DiffBlock`, `ToolResultBlock`, `ActionCard`, `ApprovalBlock`, `ProgressBlock`, and `TopicCard`
+  - Attachment tier: `w-[360px] max-w-full` — use for `FileAttachment`, `ImageAttachment` (default `width={360} height={220}`), `VideoAttachment`, and `VoiceMessage`
+  - `ImageGallery` is the explicit third-width exception: `max-w-[480px]` with a 3-column layout when needed
   - Do not introduce ad-hoc third-width tiers without an explicit reason.
 - Primary action buttons default to the **right** side of their container; secondary/cancel actions sit to the left.
 - Use `DialogFooter` for dialogs; for standalone form sections use `<div className="flex justify-end gap-2">`.
@@ -100,8 +107,9 @@ Use this doc for:
 - A button group should have **at most one** `default`/`brand` button.
 - Pair `loading` with async actions; never leave a button clickable while a request is in flight.
 - Inline bordered buttons should use `text-text-primary`, not `text-text-secondary`.
-- Sign-out/disconnect/revoke hover states should use destructive styling.
-- Buttons must not change shadow on hover.
+- Sign-out/disconnect/revoke hover states should use destructive styling: `hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5`.
+- Buttons must not change shadow on hover. Forbidden examples include `hover:shadow-md`, `hover:shadow-lg`, and accent-tinted shadows such as `hover:shadow-accent/20`.
+- Cards may lift; buttons may not. Do not create a second elevation jump by combining button hover with card hover.
 
 ### Typography hierarchy
 
@@ -147,7 +155,8 @@ Use this doc for:
 | `info` / `info-subtle` | Informational callouts, tips, neutral highlights |
 
 - Brand color is for links, focus rings, badges, and brand emphasis — not status.
-- Accent color is for primary interactive surfaces. Do not use `bg-accent`/`hover:bg-accent` as a general hover background on rows, menu items, cards, or outline/ghost buttons.
+- Accent color is for primary interactive surfaces. Do not use `bg-accent`/`hover:bg-accent` as a general hover background on rows, menu items, cards, or outline/ghost buttons. Tailwind's default `bg-accent` resolves to raw brand teal (`hsl(var(--accent))`), not the design-system `--color-accent`, so the hover state will drift green.
+- If you intentionally need a brand-tinted hover background, use `hover:bg-[var(--color-brand-subtle)]` instead.
 - Use the numbered surface scale in order: `surface-0` → `surface-1` → `surface-2` → `surface-3`.
 - Do not use semantic colors decoratively.
 
@@ -197,7 +206,13 @@ Use this doc for:
   - Over in-window content only: 70–92%
 - Pair translucency with `backdrop-blur-md` and a subtle border.
 - Keep the full parent chain transparent when relying on native vibrancy.
-- Content panels must still set their own opaque `bg-surface-1`.
+- Electron/macOS native vibrancy checklist:
+  1. Set `BrowserWindow` `vibrancy`.
+  2. Set `visualEffectState` so the material keeps updating with window activity.
+  3. Provide a platform-appropriate transparent or nearly transparent `backgroundColor`.
+  4. Keep `html`, `body`, and `#root` transparent.
+  5. Keep shell/layout wrappers such as `AppLayout` transparent; do not add a fallback `bg-background` over the chrome layer.
+- Reverse trap: content panels must still set their own opaque `bg-surface-1`. If a long-form panel inherits the vibrancy backdrop by accident, that is a bug, not a frosted style.
 
 ---
 
@@ -256,6 +271,9 @@ Use this section when consuming `@nexu-design/ui-web` components. For exhaustive
 - Variants: `default`, `compact`
 - Page-level tabs must include icons.
 - Page-level tab labels stay English unless a documented exception applies; see `docs/copy-and-localization.md`.
+- In chrome-like chat/channel/settings headers, all triggers stay `font-semibold` in both active and inactive states so the label width does not jump on selection.
+- Compact header tabs should use `TabsList h-7 rounded-md p-0.5`, `TabsTrigger h-6 gap-1 px-2 text-[12px] font-semibold`, and `size-3` icons.
+- Keep the title row and `TabsList` inside the same header container so they share one `border-b`; do not split them into two stacked bordered toolbars.
 
 ### TextLink
 - Variants: `default`, `muted`
@@ -297,6 +315,11 @@ Use these CSS custom properties via `var(--name)` in inline styles or Tailwind a
 | `--color-surface-2` | Secondary fills, hover states |
 | `--color-surface-3` | Tertiary fills, dividers |
 | `--color-surface-4` | Strong dividers, scrollbar tracks |
+
+App-level CSS var mappings for row selection and nav surfaces should stay neutral:
+- `--slark-color-nav-active` → `--color-surface-3`
+- active-label text → `--color-text-heading`
+- Do not map persistent selected-row styles to brand or accent tokens
 
 ### Color — Brand & Semantic
 | Token | Purpose |
