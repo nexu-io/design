@@ -19,6 +19,7 @@ const textLinkVariants = cva(
         sm: "text-sm",
         default: "text-base",
         lg: "text-lg",
+        inherit: "",
       },
     },
     defaultVariants: {
@@ -31,8 +32,20 @@ const textLinkVariants = cva(
 /**
  * Anchor link with variant and size options; supports `asChild` for composition.
  *
+ * Size guidance:
+ * - Use `size="inherit"` when the link sits inline inside a paragraph or any
+ *   container with its own `text-*` class so the link matches the surrounding
+ *   copy (no mixed font sizes on the same line).
+ * - Use a concrete size (`xs` / `sm` / `default` / `lg`) only for standalone
+ *   links that are not nested in body text.
+ *
  * @example
  * <TextLink href="/docs">Read the docs</TextLink>
+ *
+ * @example
+ * <p className="text-[13px] text-text-secondary">
+ *   Need help? <TextLink href="/help" size="inherit">Contact support</TextLink>.
+ * </p>
  */
 export interface TextLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement>,

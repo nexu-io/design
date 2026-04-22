@@ -1,6 +1,6 @@
 import type * as React from "react";
 
-import { AuthShell, BrandRail, cn } from "@nexu-design/ui-web";
+import { AuthShell, cn } from "@nexu-design/ui-web";
 import { Bot, MessageSquare, Sparkles } from "lucide-react";
 
 import { TitleBarDragRegion } from "@/components/layout/WindowChrome";
@@ -9,7 +9,6 @@ interface SlarkAuthFrameProps {
   children: React.ReactNode;
   contentInnerClassName?: string;
   hideBranding?: boolean;
-  hideFooter?: boolean;
   /**
    * Vertical alignment of content within the shell.
    * - "center" (default): vertically centered — good for single, short auth screens.
@@ -39,66 +38,65 @@ function SlarkBrandBackdrop(): React.ReactElement {
   );
 }
 
+const BRAND_TILES = [
+  {
+    icon: MessageSquare,
+    title: "Humans and agents, one workspace",
+    text: "Agents join your channels and DMs, working alongside the team.",
+  },
+  {
+    icon: Bot,
+    title: "Your models, your runtime",
+    text: "Bring OpenAI, Claude, or local models via Ollama and LM Studio.",
+  },
+] as const;
+
 function SlarkBrandRail(): React.ReactElement {
   return (
-    <BrandRail
-      logo={
-        <div className="flex items-center gap-2 text-white">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10">
-            <Sparkles className="size-4" />
-          </div>
-          <div>
-            <div className="text-lg font-semibold tracking-tight">Slark</div>
-            <div className="text-[11px] text-white/58">Desktop-first workspace</div>
+    <aside className="relative flex min-h-full w-full overflow-hidden text-white">
+      <SlarkBrandBackdrop />
+
+      <div className="relative z-10 flex w-full flex-col px-10 pb-12 pt-10 xl:px-12 xl:pb-12 xl:pt-12">
+        {/* Hero: logo + title, vertically centered in the space above tiles */}
+        <div className="flex flex-1 flex-col justify-center">
+          <div className="space-y-6">
+            <div className="flex items-center gap-2.5 text-white" aria-label="nexu">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10">
+                <Sparkles className="size-4" />
+              </div>
+              <span className="text-[22px] font-semibold tracking-tight leading-none">nexu</span>
+            </div>
+
+            <h1
+              className="max-w-[460px] text-[40px] leading-[1.05] tracking-tight text-white sm:text-[44px]"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              Slack for the Agent Era, built for human &amp; agent collaboration.
+            </h1>
           </div>
         </div>
-      }
-      logoLabel="Slark"
-      title={
-        <h1
-          className="max-w-[460px] text-[40px] leading-[0.98] tracking-tight text-white sm:text-[48px]"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
-          Bring your workspace,
-          <br />
-          agents, and invites together.
-        </h1>
-      }
-      description="Keep auth, onboarding, and invite entry points inside one shared desktop shell with drag-safe framing."
-      background={<SlarkBrandBackdrop />}
-      footer={
-        <div className="space-y-3">
-          {[
-            {
-              icon: MessageSquare,
-              text: "Chat, onboarding, and workspace navigation share the same UI system.",
-            },
-            {
-              icon: Bot,
-              text: "Keep setup flows aligned with the desktop shell and agent-first product shape.",
-            },
-          ].map((item) => (
+
+        {/* Feature tiles pinned to the bottom */}
+        <div className="space-y-3 pt-10">
+          {BRAND_TILES.map((item) => (
             <div
-              key={item.text}
-              className="grid min-h-[68px] grid-cols-[36px_1fr] items-center gap-4 rounded-xl border border-white/10 bg-white/[0.025] px-4 py-3"
+              key={item.title}
+              className="grid grid-cols-[36px_1fr] items-start gap-4 rounded-xl border border-white/10 bg-white/[0.025] px-4 py-3.5"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.06]">
-                <item.icon className="size-4 text-white/70" />
+              <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.06]">
+                <item.icon className="size-4 text-white/80" />
               </div>
-              <p className="text-sm leading-[1.6] text-white/60">{item.text}</p>
+              <div className="space-y-1">
+                <p className="text-[13px] font-semibold leading-tight text-white/90">
+                  {item.title}
+                </p>
+                <p className="text-[13px] leading-[1.55] text-white/60">{item.text}</p>
+              </div>
             </div>
           ))}
         </div>
-      }
-    />
-  );
-}
-
-function SlarkAuthFooter(): React.ReactElement {
-  return (
-    <p className="text-center text-[11px] text-text-tertiary">
-      Sign in, accept invites, and finish setup without leaving the shared desktop shell.
-    </p>
+      </div>
+    </aside>
   );
 }
 
@@ -106,7 +104,6 @@ export function SlarkAuthFrame({
   children,
   contentInnerClassName,
   hideBranding = false,
-  hideFooter = false,
   verticalAlign = "center",
 }: SlarkAuthFrameProps): React.ReactElement {
   return (
@@ -123,14 +120,7 @@ export function SlarkAuthFrame({
           )}
           contentInnerClassName={cn("mx-auto w-full max-w-[420px]", contentInnerClassName)}
         >
-          <div className="flex min-h-full flex-col px-5 pb-8">
-            {children}
-            {hideFooter ? null : (
-              <div className="mt-8">
-                <SlarkAuthFooter />
-              </div>
-            )}
-          </div>
+          <div className="flex min-h-full flex-col px-5 pb-8">{children}</div>
         </AuthShell>
       </div>
     </div>

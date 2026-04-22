@@ -285,7 +285,11 @@ Use this section when consuming `@nexu-design/ui-web` components. For exhaustive
 
 ### TextLink
 - Variants: `default`, `muted`
-- Sizes: `xs`, `sm`, `default`, `lg`
+- Sizes: `xs`, `sm`, `default`, `lg`, `inherit`
+- **Clickable inline links use the link color, not a muted/neutral tone**: for any anchor rendered inside body text (Terms / Privacy, "Learn more", "Contact support", docs deep-links inside descriptions, etc.), use `variant="default"` — it resolves to `--color-link` (brand teal). `variant="muted"` is reserved for rare cases where the link needs to visually recede on purpose (e.g. decorative footer meta where the destination is optional). A "normal" clickable word in a paragraph should always read as a link, not as gray body text.
+- **Inline links must match the surrounding paragraph's font size** — no mixed sizes on the same row. Use `size="inherit"` when the link sits inside a `<p>`, caption, label, or any container that already sets a `text-*` class; the link will adopt the parent size instead of forcing its own. Use a concrete size (`xs` / `sm` / `default` / `lg`) only when the link is a standalone line, button-like affordance, or sits outside body copy.
+  - Good: `<p className="text-[11px]">By continuing, you agree to our <TextLink href="#" size="inherit">Terms</TextLink>.</p>`
+  - Bad: `<p className="text-[11px]">… <TextLink size="xs">Terms</TextLink> …</p>` — `size="xs"` resolves to `text-sm` (12px) while the paragraph is 11px, producing a visibly mismatched link inside the same line.
 
 ### Tooltip
 - Composition: `TooltipProvider > Tooltip > TooltipTrigger + TooltipContent`

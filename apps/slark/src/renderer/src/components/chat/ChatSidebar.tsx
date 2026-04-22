@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Hash, Globe, Search, Plus, X, Pin, PinOff } from "lucide-react";
-import { Button, ConfirmDialog, Input, cn } from "@nexu-design/ui-web";
+import { Hash, Globe, Search, Plus, Check, Pin, PinOff } from "lucide-react";
+import { Button, Input, cn } from "@nexu-design/ui-web";
 
 import { useT } from "@/i18n";
 import { useChatStore } from "@/stores/chat";
@@ -52,7 +52,6 @@ export function ChatSidebar(): React.ReactElement {
   const togglePin = useChatStore((s) => s.togglePin);
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<Channel | null>(null);
   const { menu, open: openCtx, close: closeCtx } = useContextMenu();
 
   useEffect(() => {
@@ -64,17 +63,12 @@ export function ChatSidebar(): React.ReactElement {
     navigate(`/chat/${id}`);
   };
 
-  const handleDeleteClick = (e: React.MouseEvent, ch: Channel): void => {
+  const handleMarkDone = (e: React.MouseEvent, ch: Channel): void => {
     e.stopPropagation();
-    setDeleteTarget(ch);
-  };
+    const remaining = channels.filter((c) => c.id !== ch.id);
+    removeChannel(ch.id);
 
-  const handleDeleteConfirm = (): void => {
-    if (!deleteTarget) return;
-    const remaining = channels.filter((c) => c.id !== deleteTarget.id);
-    removeChannel(deleteTarget.id);
-
-    if (channelId === deleteTarget.id) {
+    if (channelId === ch.id) {
       const next = remaining.find((c) => c.type === "channel") ?? remaining[0];
       if (next) {
         setActiveChannel(next.id);
@@ -83,7 +77,6 @@ export function ChatSidebar(): React.ReactElement {
         navigate("/chat");
       }
     }
-    setDeleteTarget(null);
   };
 
   const filterBySearch = (c: Channel): boolean => {
@@ -157,11 +150,12 @@ export function ChatSidebar(): React.ReactElement {
             type="button"
             variant="ghost"
             size="icon-sm"
-            onClick={(e) => handleDeleteClick(e, c)}
+            onClick={(e) => handleMarkDone(e, c)}
             className="absolute right-2 top-1/2 ml-auto hidden h-5 w-5 -translate-y-1/2 items-center justify-center rounded hover:bg-nav-hover text-nav-muted hover:text-nav-fg transition-colors group-hover/item:flex"
-            title={t("chat.deleteChannel")}
+            title="Mark as done"
+            aria-label="Mark as done"
           >
-            <X className="h-3 w-3" />
+            <Check className="h-3 w-3" strokeWidth={2.5} />
           </Button>
         )}
       </div>
@@ -263,19 +257,6 @@ export function ChatSidebar(): React.ReactElement {
         open={createOpen}
         onOpenChange={setCreateOpen}
         onCreated={(id) => handleSelect(id)}
-      />
-
-      <ConfirmDialog
-        open={deleteTarget != null}
-        onOpenChange={(open) => {
-          if (!open) setDeleteTarget(null);
-        }}
-        title={deleteTarget ? `Delete #${deleteTarget.name}?` : "Delete channel"}
-        description="This will permanently delete the channel and all its messages. This action cannot be undone."
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
-        confirmVariant="destructive"
-        onConfirm={handleDeleteConfirm}
       />
     </div>
   );
