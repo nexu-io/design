@@ -3,6 +3,7 @@ import type * as React from "react";
 import { AuthShell, cn } from "@nexu-design/ui-web";
 import { Bot, MessageSquare, Sparkles } from "lucide-react";
 
+import brandRailArt from "@/assets/brand-rail-art.png";
 import { TitleBarDragRegion } from "@/components/layout/WindowChrome";
 
 interface SlarkAuthFrameProps {
@@ -34,7 +35,29 @@ function SlarkAuthBackdrop(): React.ReactElement {
 
 function SlarkBrandBackdrop(): React.ReactElement {
   return (
-    <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_18%_18%,rgba(255,255,255,0.08),transparent_36%),radial-gradient(80%_80%_at_82%_22%,color-mix(in_srgb,var(--color-brand-primary)_28%,transparent),transparent_36%),linear-gradient(180deg,#10131a_0%,#080a0f_100%)]" />
+    <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
+      {/* Base dark gradient */}
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,#10131a_0%,#080a0f_100%)]" />
+
+      {/* Art layer: invert the dark line-art → light lines, blend onto the
+          dark gradient so it reads as a subtle etched texture. Pushed to the
+          right so it doesn't fight with the left-aligned logo + hero copy. */}
+      <img
+        src={brandRailArt}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 right-0 h-full w-[85%] object-cover object-[75%_center] opacity-[0.22] mix-blend-screen"
+        style={{ filter: "invert(1) brightness(1.15) contrast(1.05)" }}
+        draggable={false}
+      />
+
+      {/* Left-side soft vignette to guarantee logo + title legibility even
+          when the art extends toward the center. */}
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,10,15,0.92)_0%,rgba(8,10,15,0.75)_28%,rgba(8,10,15,0.35)_55%,transparent_80%)]" />
+
+      {/* Accent glows on top to keep the brand-teal feel */}
+      <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_18%_18%,rgba(255,255,255,0.08),transparent_36%),radial-gradient(80%_80%_at_82%_22%,color-mix(in_srgb,var(--color-brand-primary)_22%,transparent),transparent_38%)]" />
+    </div>
   );
 }
 
