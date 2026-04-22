@@ -1,4 +1,4 @@
-import { Button, RuntimeLogo, cn } from "@nexu-design/ui-web";
+import { Button, ConfirmDialog, RuntimeLogo, cn } from "@nexu-design/ui-web";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -315,13 +315,69 @@ function getData(rt: Runtime): RuntimeData {
 
 export function RuntimesView(): ReactElement {
   const navigate = useNavigate();
-  const { runtimes, selectedRuntimeId, selectRuntime } = useRuntimesStore();
+  const { runtimes, selectedRuntimeId, selectRuntime, updateRuntime, removeRuntime } =
+    useRuntimesStore();
   const agents = useAgentsStore((s) => s.agents);
   const [period, setPeriod] = useState<UsagePeriod>("30d");
+  /*
+   * While a runtime is restarting we flip the header actions into a
+   * disabled / spinner state so the user gets immediate feedback and
+   * can't double-click Restart mid-flight. The id-keyed set lets
+   * multiple concurrent restarts co-exist if someone flips between
+   * runtimes quickly.
+   */
+  const [restartingIds, setRestartingIds] = useState<Set<string>>(() => new Set());
+  /*
+   * Holds the runtime the user is about to delete. We store the full
+   * object (not just the id) so the dialog keeps rendering the correct
+   * name for one frame after confirming, before the list mutates.
+   */
+  const [runtimeToDelete, setRuntimeToDelete] = useState<Runtime | null>(null);
 
   useEffect(() => {
     if (runtimes.length > 0 && !selectedRuntimeId) selectRuntime(runtimes[0].id);
   }, [runtimes, selectedRuntimeId, selectRuntime]);
+
+  const handleStopRuntime = (id: string): void => {
+    updateRuntime(id, { status: "disconnected" });
+  };
+
+  const handleStartRuntime = (id: string): void => {
+    updateRuntime(id, { status: "connected" });
+  };
+
+  const handleRestartRuntime = (id: string): void => {
+    /*
+     * Simulated restart — flip to disconnected, wait ~900ms so the
+     * user sees the state change (StatusBadge + icon row swap to
+     * the Play button), then come back connected. Matches the
+     * pattern used for the message send-state demo.
+     */
+    setRestartingIds((prev) => new Set(prev).add(id));
+    updateRuntime(id, { status: "disconnected" });
+    setTimeout(() => {
+      updateRuntime(id, { status: "connected" });
+      setRestartingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    }, 900);
+  };
+
+  const handleRequestDelete = (id: string): void => {
+    const target = runtimes.find((r) => r.id === id);
+    if (!target) return;
+    setRuntimeToDelete(target);
+  };
+
+  const handleConfirmDelete = (): void => {
+    if (!runtimeToDelete) return;
+    const id = runtimeToDelete.id;
+    removeRuntime(id);
+    const next = runtimes.find((r) => r.id !== id);
+    selectRuntime(next?.id ?? null);
+  };
 
   const rt = selectedRuntimeId ? (runtimes.find((r) => r.id === selectedRuntimeId) ?? null) : null;
 
@@ -389,7 +445,8 @@ export function RuntimesView(): ReactElement {
                       variant="outline"
                       size="icon"
                       title="Stop runtime"
-                      className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-surface-2 transition-colors"
+                      onClick={() => handleStopRuntime(rt.id)}
+                      className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
                     >
                       <Square className="h-3 w-3" />
                     </Button>
@@ -398,7 +455,8 @@ export function RuntimesView(): ReactElement {
                       variant="outline"
                       size="icon"
                       title="Restart runtime"
-                      className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-surface-2 transition-colors"
+                      onClick={() => handleRestartRuntime(rt.id)}
+                      className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
                     >
                       <RotateCw className="h-3.5 w-3.5" />
                     </Button>
@@ -408,10 +466,16 @@ export function RuntimesView(): ReactElement {
                     type="button"
                     variant="outline"
                     size="icon"
-                    title="Start runtime"
-                    className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-nexu-online hover:bg-nexu-online/10 transition-colors"
+                    title={restartingIds.has(rt.id) ? "Restarting…" : "Start runtime"}
+                    onClick={() => handleStartRuntime(rt.id)}
+                    disabled={restartingIds.has(rt.id)}
+                    className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors disabled:opacity-60 disabled:pointer-events-none"
                   >
-                    <Play className="h-3.5 w-3.5" />
+                    {restartingIds.has(rt.id) ? (
+                      <RotateCw className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Play className="h-3.5 w-3.5" />
+                    )}
                   </Button>
                 )}
               </div>
@@ -420,7 +484,8 @@ export function RuntimesView(): ReactElement {
                 variant="outline"
                 size="icon"
                 title="Delete runtime"
-                className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/10 transition-colors"
+                onClick={() => handleRequestDelete(rt.id)}
+                className="h-8 w-8 flex items-center justify-center rounded-lg border border-border text-text-secondary hover:text-destructive hover:border-destructive/30 hover:bg-destructive/10 transition-colors"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </Button>
@@ -435,9 +500,9 @@ export function RuntimesView(): ReactElement {
               <InfoRow label="CLI version">
                 {hasUpdate ? (
                   <div className="flex items-center gap-2">
-                    <span className="font-medium">{ver}</span>
+                    <span className="font-medium text-muted-foreground">{ver}</span>
                     <ArrowRight className="h-3 w-3 text-muted-foreground" />
-                    <span className="font-mono text-nexu-online">v1.1.0</span>
+                    <span className="font-medium">v1.1.0</span>
                     <Button
                       type="button"
                       variant="outline"
@@ -456,9 +521,9 @@ export function RuntimesView(): ReactElement {
               type="button"
               variant="outline"
               size="sm"
-              className="h-8 px-3 text-xs font-medium flex items-center gap-1.5 hover:bg-surface-2 transition-colors"
+              leadingIcon={<RefreshCw className="h-3.5 w-3.5" />}
+              className="hover:bg-surface-2 transition-colors"
             >
-              <RefreshCw className="h-3.5 w-3.5" />
               Test connection
             </Button>
           </section>
@@ -649,6 +714,21 @@ export function RuntimesView(): ReactElement {
           </section>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={runtimeToDelete !== null}
+        onOpenChange={(open) => {
+          if (!open) setRuntimeToDelete(null);
+        }}
+        title={
+          runtimeToDelete
+            ? `Delete "${runtimeToDelete.name}"?`
+            : "Delete runtime?"
+        }
+        description="Agents still using this runtime will fall back to no runtime. This can't be undone."
+        confirmLabel="Delete"
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }

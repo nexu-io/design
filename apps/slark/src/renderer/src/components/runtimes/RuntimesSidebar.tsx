@@ -82,6 +82,14 @@ export function RuntimesSidebar(): React.ReactElement {
   }, [runScan]);
 
   const onlineCount = runtimes.filter((r) => r.status === "connected").length;
+  const hasRuntimes = runtimes.length > 0;
+  /*
+   * Filter tabs + the `N/M online` meta only carry weight once at least
+   * one runtime exists. In the empty state both collapse to `0/0` /
+   * `Mine=All=∅`, so we hide them to keep the header focused on the
+   * single action that actually matters (picking from the Detected
+   * list below). They reappear automatically after the first Add.
+   */
   const filtered = tab === "mine" ? runtimes.filter((r) => r.ownerId === currentUserId) : runtimes;
 
   const existingTypes = useMemo(() => new Set(runtimes.map((r) => r.type)), [runtimes]);
@@ -117,39 +125,47 @@ export function RuntimesSidebar(): React.ReactElement {
         <span className="text-[13px] font-semibold uppercase tracking-wider text-nav-fg">
           Runtimes
         </span>
-        <span className="text-[11px] text-nav-muted tabular-nums">
-          {onlineCount}/{runtimes.length} online
-        </span>
+        {hasRuntimes ? (
+          <span className="text-[11px] text-nav-muted tabular-nums">
+            {onlineCount}/{runtimes.length} online
+          </span>
+        ) : null}
       </div>
 
-      <div className="px-3 pb-2 flex items-center gap-1">
-        <Button
-          type="button"
-          variant="ghost"
-          size="inline"
-          onClick={() => setTab("mine")}
-          className={cn(
-            "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
-            tab === "mine"
-              ? "bg-nav-active text-nav-active-fg"
-              : "text-nav-muted hover:text-nav-fg",
-          )}
-        >
-          Mine
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="inline"
-          onClick={() => setTab("all")}
-          className={cn(
-            "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
-            tab === "all" ? "bg-nav-active text-nav-active-fg" : "text-nav-muted hover:text-nav-fg",
-          )}
-        >
-          All
-        </Button>
-      </div>
+      {hasRuntimes ? (
+        <div className="px-3 pb-2 flex items-center gap-1">
+          <Button
+            type="button"
+            variant="ghost"
+            size="inline"
+            onClick={() => setTab("mine")}
+            className={cn(
+              "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+              tab === "mine"
+                ? "bg-nav-active text-nav-active-fg"
+                : "text-nav-muted hover:text-nav-fg",
+            )}
+          >
+            Mine
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="inline"
+            onClick={() => setTab("all")}
+            className={cn(
+              "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+              tab === "all"
+                ? "bg-nav-active text-nav-active-fg"
+                : "text-nav-muted hover:text-nav-fg",
+            )}
+          >
+            All
+          </Button>
+        </div>
+      ) : (
+        <div className="pb-1" />
+      )}
 
       <div className="flex-1 overflow-y-auto px-2 pb-3">
         <div className="space-y-0.5">
