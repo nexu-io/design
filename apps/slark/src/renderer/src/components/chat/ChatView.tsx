@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
+  Activity,
   AtSign,
   Bot,
   Brain,
@@ -32,11 +33,12 @@ import { useRoutinesStore } from "@/stores/routines";
 import { useSessionsStore } from "@/stores/sessions";
 import { useMemoriesStore } from "@/stores/memories";
 
-type Tab = "chat" | "issues" | "routines" | "memory";
+type Tab = "chat" | "session" | "issues" | "routines" | "memory";
 
 export function ChatView(): React.ReactElement {
   const t = useT();
   const { channelId } = useParams();
+  const navigate = useNavigate();
   const channels = useChatStore((s) => s.channels);
   const addMessage = useChatStore((s) => s.addMessage);
   const updateMessage = useChatStore((s) => s.updateMessage);
@@ -63,13 +65,29 @@ export function ChatView(): React.ReactElement {
   );
 
   const sessionTasks = useSessionsStore((s) => s.tasks);
-  const channelSessionCount = useMemo(() => {
-    const channelTasks = sessionTasks.filter((t) => t.channelId === channelId).length;
-    const channelRuns = routines
-      .filter((r) => r.channelId === channelId)
+  // Derive the agent id directly from channels here so the session count
+  // can be computed at the top level (hooks can't be called conditionally
+  // after the early returns below).
+  const headerChannel = useMemo(
+    () =>
+      channels.find((c) => c.id === channelId) ??
+      mockChannels.find((c) => c.id === channelId),
+    [channels, channelId],
+  );
+  const headerDmAgentId = useMemo(() => {
+    if (!headerChannel) return undefined;
+    if (headerChannel.type !== "dm") return undefined;
+    if (!headerChannel.members.some((m) => m.kind === "agent")) return undefined;
+    return headerChannel.members.find((m) => m.kind === "agent")?.id;
+  }, [headerChannel]);
+  const agentSessionCount = useMemo(() => {
+    if (!headerDmAgentId) return 0;
+    const agentTasks = sessionTasks.filter((t) => t.agentId === headerDmAgentId).length;
+    const agentRuns = routines
+      .filter((r) => r.agentId === headerDmAgentId)
       .reduce((acc, r) => acc + (r.runs?.length ?? 0), 0);
-    return channelTasks + channelRuns;
-  }, [sessionTasks, routines, channelId]);
+    return agentTasks + agentRuns;
+  }, [sessionTasks, routines, headerDmAgentId]);
 
   const memories = useMemoriesStore((s) => s.memories);
   const channelMemoryCount = useMemo(
@@ -273,12 +291,22 @@ export function ChatView(): React.ReactElement {
               count={channelIssueCount}
               onClick={() => setTab("issues")}
             />
+            {isDmWithAgent ? (
+              <TabPill
+                icon={<Activity className="size-3.5" />}
+                label={t("section.session")}
+                active={tab === "session"}
+                activeTint="bg-info-subtle text-info"
+                count={agentSessionCount}
+                onClick={() => setTab("session")}
+              />
+            ) : null}
             <TabPill
               icon={<Workflow className="size-3.5" />}
-              label={isDmWithAgent ? t("section.session") : t("section.routines")}
+              label={t("section.routines")}
               active={tab === "routines"}
               activeTint="bg-success-subtle text-success"
-              count={isDmWithAgent ? channelSessionCount : channelRoutineCount}
+              count={channelRoutineCount}
               onClick={() => setTab("routines")}
             />
             <TabPill
@@ -299,26 +327,27 @@ export function ChatView(): React.ReactElement {
           </div>
         ) : tab === "issues" ? (
           <ChannelIssuesPanel channelId={channelId} />
+        ) : tab === "session" && isDmWithAgent && dmAgentId ? (
+          <ChannelSessionsPanel
+            agentId={dmAgentId}
+            onJumpToMessage={(msgId, targetChannelId) => {
+              useChatStore.getState().setPendingScrollToMessage(msgId);
+              if (targetChannelId !== channelId) {
+                navigate(`/chat/${targetChannelId}`);
+              } else {
+                setTab("chat");
+              }
+            }}
+          />
         ) : tab === "routines" ? (
-          isDmWithAgent && dmAgentId ? (
-            <ChannelSessionsPanel
-              channelId={channelId}
-              agentId={dmAgentId}
-              onJumpToMessage={(msgId) => {
-                setTab("chat");
-                useChatStore.getState().setPendingScrollToMessage(msgId);
-              }}
-            />
-          ) : (
-            <ChannelRoutinesPanel
-              channelId={channelId}
-              lockedAgentId={dmAgentId}
-              onJumpToMessage={(msgId) => {
-                setTab("chat");
-                useChatStore.getState().setPendingScrollToMessage(msgId);
-              }}
-            />
-          )
+          <ChannelRoutinesPanel
+            channelId={channelId}
+            lockedAgentId={dmAgentId}
+            onJumpToMessage={(msgId) => {
+              setTab("chat");
+              useChatStore.getState().setPendingScrollToMessage(msgId);
+            }}
+          />
         ) : (
           <ChannelMemoryPanel
             channelId={channelId}

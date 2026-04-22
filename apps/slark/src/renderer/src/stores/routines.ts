@@ -52,6 +52,31 @@ const seedRoutines: Routine[] = [
     createdBy: "u-1",
     createdAt: Date.now() - 1000 * 60 * 60 * 24 * 7,
   },
+  // Coder's own routine that posts into #welcome — used to demo the
+  // cross-channel jump flow from the Coder DM Session panel.
+  {
+    id: "ro-coder-morning",
+    channelId: "ch-welcome",
+    name: "Morning PR digest",
+    description: "Every weekday at 9am, post a summary of overnight PR activity to #welcome.",
+    agentId: "a-1",
+    trigger: { kind: "schedule", cron: "0 9 * * 1-5" },
+    status: "active",
+    lastRunAt: Date.now() - 1000 * 60 * 60 * 5,
+    nextRunAt: Date.now() + 1000 * 60 * 60 * 19,
+    runs: [
+      {
+        id: "run-coder-morning-1",
+        startedAt: Date.now() - 1000 * 60 * 60 * 5,
+        completedAt: Date.now() - 1000 * 60 * 60 * 5 + 6200,
+        kind: "scheduled",
+        status: "success",
+        messageId: "m-1",
+      },
+    ],
+    createdBy: "u-1",
+    createdAt: Date.now() - 1000 * 60 * 60 * 24 * 2,
+  },
 ];
 
 interface RoutinesState {

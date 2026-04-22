@@ -6,7 +6,7 @@ const HOUR = 1000 * 60 * 60;
 const MIN = 1000 * 60;
 
 const seedTasks: ChatTaskSession[] = [
-  // Coder DM — a finished task
+  // Coder DM — a finished task, jumps to the vision-analyze tool-result reply
   {
     id: "task-coder-1",
     channelId: "dm-agent-1",
@@ -15,8 +15,10 @@ const seedTasks: ChatTaskSession[] = [
     status: "success",
     startedAt: Date.now() - 2 * HOUR,
     completedAt: Date.now() - 2 * HOUR + 18 * 1000,
+    sourceMessageId: "dm-m-3",
+    replyMessageId: "dm-m-4",
   },
-  // Coder DM — a failed task yesterday
+  // Coder DM — a failed task yesterday, jumps to the approval block message
   {
     id: "task-coder-2",
     channelId: "dm-agent-1",
@@ -25,8 +27,9 @@ const seedTasks: ChatTaskSession[] = [
     status: "error",
     startedAt: Date.now() - DAY - 3 * HOUR,
     completedAt: Date.now() - DAY - 3 * HOUR + 42 * 1000,
+    replyMessageId: "dm-m-6",
   },
-  // Coder DM — a successful task 2 days ago
+  // Coder DM — a successful task 2 days ago, jumps to the first DM message
   {
     id: "task-coder-3",
     channelId: "dm-agent-1",
@@ -35,6 +38,18 @@ const seedTasks: ChatTaskSession[] = [
     status: "success",
     startedAt: Date.now() - 2 * DAY - 4 * HOUR,
     completedAt: Date.now() - 2 * DAY - 4 * HOUR + 1 * MIN + 12 * 1000,
+    sourceMessageId: "dm-m-1",
+  },
+  // Cross-channel: Coder also ran a task in #welcome that jumps to m-1
+  {
+    id: "task-coder-xc-1",
+    channelId: "ch-welcome",
+    agentId: "a-1",
+    title: "Summarize today's PRs in #welcome",
+    status: "success",
+    startedAt: Date.now() - 4 * HOUR,
+    completedAt: Date.now() - 4 * HOUR + 22 * 1000,
+    replyMessageId: "m-1",
   },
   // DesignReviewer DM — one finished task
   {
