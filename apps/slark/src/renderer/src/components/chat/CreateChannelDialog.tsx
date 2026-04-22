@@ -249,8 +249,11 @@ export function CreateChannelDialog({
                   <div className="mt-2 max-h-[220px] space-y-3 overflow-y-auto">
                     {filteredUsers.length > 0 && (
                       <section>
-                        <div className="mb-1 px-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                          People
+                        <div className="mb-1 flex items-baseline gap-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                          <span>People</span>
+                          <span className="text-[11px] font-medium normal-case tracking-normal">
+                            {filteredUsers.length}
+                          </span>
                         </div>
                         <div className="space-y-0.5">
                           {filteredUsers.map((u) => {
@@ -294,8 +297,11 @@ export function CreateChannelDialog({
 
                     {filteredAgents.length > 0 && (
                       <section>
-                        <div className="mb-1 px-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                          Agents
+                        <div className="mb-1 flex items-baseline gap-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                          <span>Agents</span>
+                          <span className="text-[11px] font-medium normal-case tracking-normal">
+                            {filteredAgents.length}
+                          </span>
                         </div>
                         <div className="space-y-0.5">
                           {filteredAgents.map((a) => {

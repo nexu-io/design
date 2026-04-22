@@ -108,9 +108,13 @@ export function RuntimesSidebar(): React.ReactElement {
           meta share one line, at the same `px-3` padding as the tabs and
           list below, so everything left-aligns cleanly. The `px-1.5` ghost
           indent the outer Sidebar applies to generic section labels is
-          explicitly suppressed for `/runtimes` so this header takes over. */}
+          explicitly suppressed for `/runtimes` so this header takes over.
+          Title treatment (13px semibold `text-nav-fg`) mirrors the Teammate
+          sidebar's page title so the two functional sidebars read at the
+          same hierarchy level. The meta "N/M online" stays muted/11px so
+          it reads as secondary. */}
       <div className="px-3 pb-1.5 flex items-baseline justify-between">
-        <span className="text-[11px] font-medium uppercase tracking-wider text-nav-muted">
+        <span className="text-[13px] font-semibold uppercase tracking-wider text-nav-fg">
           Runtimes
         </span>
         <span className="text-[11px] text-nav-muted tabular-nums">

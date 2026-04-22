@@ -138,7 +138,7 @@ function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
  * Main content area between header and footer.
  */
 function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div data-slot="dialog-body" className={cn("space-y-4", className)} {...props} />;
+  return <div data-slot="dialog-body" className={cn("min-w-0 space-y-4", className)} {...props} />;
 }
 
 /**

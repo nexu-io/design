@@ -9,7 +9,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  EmptyState,
   FormField,
   FormFieldControl,
   Input,
@@ -130,8 +129,18 @@ export function AddMembersDialog({
           <div className="max-h-[320px] overflow-y-auto -mx-1 px-1 space-y-4">
             {filteredUsers.length > 0 && (
               <section>
-                <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                  {t("createChannel.people")}
+                {/* Section label styled to match the Teammate sidebar's
+                    MEMBERS / AGENTS headers: `tracking-wider`, plus the
+                    list count right after the title (gap-1.5 ≈ 6px) in
+                    `normal-case` so label and count read as one phrase.
+                    Kept at `text-muted-foreground` — this dialog sits on
+                    a `surface-0` background, not the nav, so we stay on
+                    the generic muted token. */}
+                <div className="mb-1.5 flex items-baseline gap-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <span>{t("createChannel.people")}</span>
+                  <span className="text-[11px] font-medium normal-case tracking-normal">
+                    {filteredUsers.length}
+                  </span>
                 </div>
                 <div className="space-y-0.5">
                   {filteredUsers.map((u) => {
@@ -140,7 +149,6 @@ export function AddMembersDialog({
                       <InteractiveRow
                         key={u.id}
                         onClick={() => toggle(selectedUserIds, u.id, setSelectedUserIds)}
-                        selected={selected}
                         tone="subtle"
                         className="rounded-md px-2 py-1.5"
                       >
@@ -174,8 +182,11 @@ export function AddMembersDialog({
 
             {filteredAgents.length > 0 && (
               <section>
-                <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                  {t("createChannel.agents")}
+                <div className="mb-1.5 flex items-baseline gap-1.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <span>{t("createChannel.agents")}</span>
+                  <span className="text-[11px] font-medium normal-case tracking-normal">
+                    {filteredAgents.length}
+                  </span>
                 </div>
                 <div className="space-y-0.5">
                   {filteredAgents.map((a) => {
@@ -184,7 +195,6 @@ export function AddMembersDialog({
                       <InteractiveRow
                         key={a.id}
                         onClick={() => toggle(selectedAgentIds, a.id, setSelectedAgentIds)}
-                        selected={selected}
                         tone="subtle"
                         className="rounded-md px-2 py-1.5"
                       >
@@ -235,36 +245,24 @@ export function AddMembersDialog({
             )}
 
             {filteredUsers.length === 0 && filteredAgents.length === 0 && (
-              <EmptyState
-                title={
-                  availableUsers.length === 0 && availableAgents.length === 0
-                    ? t("addMembers.everyoneAlreadyIn", { name: channel.name })
-                    : t("common.noMatches")
-                }
-                className="border-border-subtle"
-              />
+              <div className="py-6 text-center text-xs text-muted-foreground">
+                {availableUsers.length === 0 && availableAgents.length === 0
+                  ? t("addMembers.everyoneAlreadyIn", { name: channel.name })
+                  : t("common.noMatches")}
+              </div>
             )}
           </div>
         </DialogBody>
 
-        <DialogFooter className="flex items-center justify-between gap-2">
-          <span className="text-xs text-muted-foreground">
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            {t("common.cancel")}
+          </Button>
+          <Button onClick={handleAdd} disabled={totalSelected === 0}>
             {totalSelected > 0
-              ? t("addMembers.selectedCount", { count: String(totalSelected) })
-              : channel.members.length === 1
-                ? t("addMembers.currentMember", { count: String(channel.members.length) })
-                : t("addMembers.currentMembers", { count: String(channel.members.length) })}
-          </span>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              {t("common.cancel")}
-            </Button>
-            <Button onClick={handleAdd} disabled={totalSelected === 0}>
-              {totalSelected > 0
-                ? t("addMembers.addWithCount", { count: String(totalSelected) })
-                : t("common.add")}
-            </Button>
-          </div>
+              ? t("addMembers.addWithCount", { count: String(totalSelected) })
+              : t("common.add")}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

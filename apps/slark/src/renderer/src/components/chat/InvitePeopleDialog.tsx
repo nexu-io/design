@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Mail, Send, Check, Eye, Link2, Copy } from "lucide-react";
+import { Mail, Send, Check, Eye, Link2 } from "lucide-react";
 import {
-  Badge,
   Button,
   Dialog,
   DialogBody,
@@ -13,10 +12,7 @@ import {
   FormField,
   FormFieldControl,
   Input,
-  InteractiveRow,
-  InteractiveRowContent,
-  InteractiveRowLeading,
-  InteractiveRowTrailing,
+  Spinner,
 } from "@nexu-design/ui-web";
 import { useT } from "@/i18n";
 import { InviteEmailPreview } from "@/components/invite/InviteEmailPreview";
@@ -154,7 +150,7 @@ export function InvitePeopleDialog({
           </DialogBody>
         ) : (
           <DialogBody className="space-y-4">
-            <FormField label={t("invitePeople.title")} invalid={Boolean(error)} error={error}>
+            <FormField invalid={Boolean(error)} error={error}>
               <div className="flex items-center gap-2">
                 <FormFieldControl className="flex-1">
                   <Input
@@ -198,78 +194,61 @@ export function InvitePeopleDialog({
                 variant="outline"
                 size="xs"
                 className="h-7 shrink-0"
-                leadingIcon={
-                  linkCopied ? (
-                    <Check className="h-3 w-3 text-nexu-online" />
-                  ) : (
-                    <Copy className="h-3 w-3" />
-                  )
-                }
               >
                 {linkCopied ? t("common.copied") : t("common.copy")}
               </Button>
             </div>
 
             {invites.length > 0 && (
-              <div className="space-y-2">
+              <div className="-mx-1 max-h-[240px] space-y-2 overflow-y-auto px-1">
                 {invites.map((inv) => (
-                  <InteractiveRow
+                  <div
                     key={inv.email}
-                    tone="subtle"
-                    className="rounded-lg border border-dashed border-border px-2.5 py-2"
+                    className="flex items-center gap-3 rounded-xl bg-surface-2 p-3"
                   >
-                    <InteractiveRowLeading>
-                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent shrink-0">
-                        <Mail className="h-3 w-3 text-muted-foreground" />
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-surface-0">
+                      <Send className="size-3.5 text-text-muted" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-[13px] text-text-primary">{inv.email}</div>
+                      <div className="text-[11px] text-text-muted">
+                        {inv.status === "sending"
+                          ? t("invitePeople.sending")
+                          : t("invitePeople.sent")}
                       </div>
-                    </InteractiveRowLeading>
-                    <InteractiveRowContent>
-                      <div className="text-sm truncate">{inv.email}</div>
-                      {inv.status === "sending" ? (
-                        <Badge variant="secondary" size="xs" className="mt-1">
-                          {t("invitePeople.sending")}
-                        </Badge>
-                      ) : (
-                        <Badge variant="success" size="xs" className="mt-1">
-                          {t("invitePeople.sent")}
-                        </Badge>
-                      )}
-                    </InteractiveRowContent>
-                    <InteractiveRowTrailing className="flex items-center gap-1">
-                      {inv.status === "sending" ? (
-                        <div className="h-4 w-4 rounded-full border-2 border-muted-foreground border-t-transparent animate-spin shrink-0" />
-                      ) : (
-                        <>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={() => setPreviewEmail(inv.email)}
-                            title={t("invitePeople.previewEmail")}
-                          >
-                            <Eye className="h-3.5 w-3.5 text-muted-foreground" />
-                          </Button>
-                          <Check className="h-4 w-4 text-nexu-online shrink-0" />
-                        </>
-                      )}
-                    </InteractiveRowTrailing>
-                  </InteractiveRow>
+                    </div>
+                    {inv.status === "sending" ? (
+                      <Spinner className="size-4 shrink-0 text-text-muted" />
+                    ) : (
+                      <div className="flex shrink-0 items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => setPreviewEmail(inv.email)}
+                          title={t("invitePeople.previewEmail")}
+                        >
+                          <Eye className="size-3.5 text-text-muted" />
+                        </Button>
+                        <Check
+                          className="size-4 text-[var(--color-success)]"
+                          strokeWidth={3}
+                        />
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
             )}
           </DialogBody>
         )}
 
-        <DialogFooter>
-          {previewEmail && previewInvite ? (
+        {previewEmail && previewInvite ? (
+          <DialogFooter>
             <Button variant="outline" onClick={() => setPreviewEmail(null)}>
               {t("common.back")}
             </Button>
-          ) : (
-            <Button variant="outline" onClick={handleClose}>
-              {t("common.done")}
-            </Button>
-          )}
-        </DialogFooter>
+          </DialogFooter>
+        ) : null}
       </DialogContent>
     </Dialog>
   );

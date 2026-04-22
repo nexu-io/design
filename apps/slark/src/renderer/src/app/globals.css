@@ -77,8 +77,11 @@ body,
   --color-nav-ring: var(--slark-color-nav-ring);
 }
 
+/* Scrollbars are hidden by default and only fade in while the user is
+   interacting with (hovering / scrolling) the scroll container. */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -86,20 +89,44 @@ body,
 }
 
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.9 0 0);
+  background: transparent;
   border-radius: 3px;
+  transition: background-color 160ms ease;
 }
 
-::-webkit-scrollbar-thumb:hover {
+*:hover::-webkit-scrollbar-thumb,
+*:focus-within::-webkit-scrollbar-thumb {
+  background: oklch(0.9 0 0);
+}
+
+*:hover::-webkit-scrollbar-thumb:hover {
   background: oklch(0.8 0 0);
 }
 
-.dark ::-webkit-scrollbar-thumb {
+.dark *:hover::-webkit-scrollbar-thumb,
+.dark *:focus-within::-webkit-scrollbar-thumb {
   background: oklch(0.3 0 0);
 }
 
-.dark ::-webkit-scrollbar-thumb:hover {
+.dark *:hover::-webkit-scrollbar-thumb:hover {
   background: oklch(0.4 0 0);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 160ms ease;
+}
+
+*:hover,
+*:focus-within {
+  scrollbar-color: oklch(0.9 0 0) transparent;
+}
+
+.dark *:hover,
+.dark *:focus-within {
+  scrollbar-color: oklch(0.3 0 0) transparent;
 }
 
 .message-textarea {

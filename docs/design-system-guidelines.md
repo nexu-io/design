@@ -274,6 +274,7 @@ Use this section when consuming `@nexu-design/ui-web` components. For exhaustive
 ### Input
 - Sizes: `sm`, `md`, `lg`
 - Key props: `invalid`, `leadingIcon`, `trailingIcon`, `inputClassName`
+- **Placeholder is faded globally** — `Input`, `Textarea`, `Combobox`, `Select` all ship with `placeholder:text-muted-foreground/50` by default, so typed values clearly outrank the hint text. Do **not** re-set placeholder color at 100% opacity in consumer code; if you need a different hue (e.g. in a dark nav surface), still apply the `/50` opacity suffix (`placeholder:text-nav-muted/50`).
 
 ### Select
 - Composition: `Select > SelectTrigger > SelectValue` + `SelectContent > SelectGroup > SelectItem`
@@ -314,6 +315,12 @@ Use this section when consuming `@nexu-design/ui-web` components. For exhaustive
 
 ### ScrollArea
 - Wraps scrollable content; optional `ScrollBar`
+
+### Scrollbars
+- Scrollbars are **hidden by default** and only fade in while the user is hovering (or focus lands inside) a scroll container. Both `::-webkit-scrollbar-thumb` and the Firefox `scrollbar-color` property are wired up globally in each app's `globals.css` / `index.css`.
+- Do not add per-component "show scrollbar" overrides unless a container must always expose affordance (e.g. a virtualized list where the thumb doubles as a position indicator).
+- Width is fixed at `6px` for both vertical and horizontal tracks — do not change it locally.
+- When scroll containers live inside rounded surfaces (dialogs, popovers), compensate scrollbar gutter with `-mx-1 px-1` so the bar does not collide with the parent's rounded edges.
 
 ---
 
