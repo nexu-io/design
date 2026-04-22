@@ -29,6 +29,18 @@ describe("TextLink", () => {
     expect(screen.getByRole("link")).toHaveClass("text-sm");
   });
 
+  it('inherits font size from the surrounding container when size="inherit"', () => {
+    render(
+      <TextLink size="inherit" href="#">
+        Inline
+      </TextLink>,
+    );
+    const link = screen.getByRole("link");
+    expect(link).not.toHaveClass("text-sm");
+    expect(link).not.toHaveClass("text-base");
+    expect(link).not.toHaveClass("text-lg");
+  });
+
   it("merges custom className", () => {
     render(
       <TextLink className="font-bold" href="#">

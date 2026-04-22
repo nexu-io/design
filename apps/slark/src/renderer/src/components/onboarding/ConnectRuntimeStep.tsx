@@ -244,7 +244,7 @@ export function ConnectRuntimeStep(): React.ReactElement {
           <p className="mt-1 text-sm text-text-secondary">
             {phase === "scanning"
               ? "Scanning your system for installed AI runtimes"
-              : "Install a runtime below, then rescan."}
+              : "Open a setup guide below, then rescan."}
           </p>
         )}
       </div>
@@ -522,11 +522,7 @@ function OtherRuntimeCard({ runtime }: { runtime: DetectedRuntime }): React.Reac
         <div className="text-xs text-text-muted w-full leading-tight truncate" title={errorLine}>
           {errorLine}
         </div>
-      ) : (
-        <div className="text-xs font-medium text-[var(--color-brand-primary)] w-full leading-tight">
-          Install
-        </div>
-      )}
+      ) : null}
     </>
   );
 

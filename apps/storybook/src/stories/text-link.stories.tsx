@@ -60,3 +60,40 @@ export const Sizes: Story = {
     </div>
   ),
 };
+
+export const InlineInParagraph: Story = {
+  name: 'Inline in paragraph (size="inherit")',
+  render: () => (
+    <div className="max-w-md space-y-4">
+      <p className="text-[11px] leading-relaxed text-text-tertiary">
+        By continuing, you agree to our{" "}
+        <TextLink href="#" size="inherit">
+          Terms
+        </TextLink>{" "}
+        and{" "}
+        <TextLink href="#" size="inherit">
+          Privacy Policy
+        </TextLink>
+        .
+      </p>
+      <p className="text-[13px] leading-relaxed text-text-secondary">
+        Need help?{" "}
+        <TextLink href="#" size="inherit">
+          Contact support
+        </TextLink>{" "}
+        or{" "}
+        <TextLink href="#" size="inherit">
+          read the docs
+        </TextLink>
+        .
+      </p>
+      <p className="text-base leading-relaxed text-text-primary">
+        Read more in the{" "}
+        <TextLink href="#" size="inherit">
+          pricing guide
+        </TextLink>
+        .
+      </p>
+    </div>
+  ),
+};

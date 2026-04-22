@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Hash, Globe, Search, Plus, X, Pin, PinOff } from "lucide-react";
-import { Button, ConfirmDialog, Input, cn } from "@nexu-design/ui-web";
+import { Hash, Globe, Search, Plus, Check, Pin, PinOff } from "lucide-react";
+import { Button, Input, cn } from "@nexu-design/ui-web";
 
 import { useT } from "@/i18n";
 import { useChatStore } from "@/stores/chat";
@@ -52,7 +52,6 @@ export function ChatSidebar(): React.ReactElement {
   const togglePin = useChatStore((s) => s.togglePin);
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<Channel | null>(null);
   const { menu, open: openCtx, close: closeCtx } = useContextMenu();
 
   useEffect(() => {
@@ -64,17 +63,12 @@ export function ChatSidebar(): React.ReactElement {
     navigate(`/chat/${id}`);
   };
 
-  const handleDeleteClick = (e: React.MouseEvent, ch: Channel): void => {
+  const handleMarkDone = (e: React.MouseEvent, ch: Channel): void => {
     e.stopPropagation();
-    setDeleteTarget(ch);
-  };
+    const remaining = channels.filter((c) => c.id !== ch.id);
+    removeChannel(ch.id);
 
-  const handleDeleteConfirm = (): void => {
-    if (!deleteTarget) return;
-    const remaining = channels.filter((c) => c.id !== deleteTarget.id);
-    removeChannel(deleteTarget.id);
-
-    if (channelId === deleteTarget.id) {
+    if (channelId === ch.id) {
       const next = remaining.find((c) => c.type === "channel") ?? remaining[0];
       if (next) {
         setActiveChannel(next.id);
@@ -83,7 +77,6 @@ export function ChatSidebar(): React.ReactElement {
         navigate("/chat");
       }
     }
-    setDeleteTarget(null);
   };
 
   const filterBySearch = (c: Channel): boolean => {
@@ -104,6 +97,10 @@ export function ChatSidebar(): React.ReactElement {
   const channelList = channels.filter(
     (c) => c.type === "channel" && !pinnedSet.has(c.id) && filterBySearch(c),
   );
+
+  const dmList = channels
+    .filter((c) => c.type === "dm" && !pinnedSet.has(c.id) && filterBySearch(c))
+    .sort((a, b) => b.lastMessageAt - a.lastMessageAt);
 
   const renderRow = (c: Channel, opts?: { showDelete?: boolean }): React.ReactElement => {
     const isActive = channelId === c.id;
@@ -157,11 +154,12 @@ export function ChatSidebar(): React.ReactElement {
             type="button"
             variant="ghost"
             size="icon-sm"
-            onClick={(e) => handleDeleteClick(e, c)}
+            onClick={(e) => handleMarkDone(e, c)}
             className="absolute right-2 top-1/2 ml-auto hidden h-5 w-5 -translate-y-1/2 items-center justify-center rounded hover:bg-nav-hover text-nav-muted hover:text-nav-fg transition-colors group-hover/item:flex"
-            title={t("chat.deleteChannel")}
+            title="Mark as done"
+            aria-label="Mark as done"
           >
-            <X className="h-3 w-3" />
+            <Check className="h-3 w-3" strokeWidth={2.5} />
           </Button>
         )}
       </div>
@@ -180,11 +178,14 @@ export function ChatSidebar(): React.ReactElement {
           placeholder={t("chat.search")}
           leadingIcon={<Search className="h-3.5 w-3.5 text-nav-muted" />}
           className="h-8 border-border-subtle bg-nav-input text-nav-fg shadow-none focus-within:border-transparent focus-within:ring-1 focus-within:ring-nav-ring"
-          inputClassName="text-[13px] placeholder:text-nav-muted"
+          inputClassName="text-[13px] placeholder:text-nav-muted/50"
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto px-2 pb-2">
+      {/* `space-y-4` widens the rhythm between sections (Pinned / Channels /
+          Direct messages) without touching the top gap between the search
+          box and the first header. */}
+      <div className="flex-1 overflow-y-auto px-2 pb-2 space-y-4">
         {pinnedChannels.length > 0 && (
           <div>
             <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
@@ -198,26 +199,46 @@ export function ChatSidebar(): React.ReactElement {
         <div>
           <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
             <span className="flex-1">Channels</span>
-            <Button
+            {/* Plain inline button (not the `Button` primitive) matches the
+                compact 20px affordance used in AgentsSidebar so the two
+                section headers read as siblings. The primitive's own
+                `inline-flex gap-1.5` base + `icon-sm` sizing rendered
+                slightly taller and visually off-axis next to the uppercase
+                label row. */}
+            <button
               type="button"
-              variant="ghost"
-              size="icon-sm"
               onClick={() => setCreateOpen(true)}
               disabled={atLimit}
-              className="h-6 w-6 rounded-md p-0 text-nav-muted hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+              aria-label={
+                atLimit
+                  ? t("chat.channelLimitReached", { count: String(channelCount) })
+                  : t("chat.createChannel")
+              }
               title={
                 atLimit
                   ? t("chat.channelLimitReached", { count: String(channelCount) })
                   : t("chat.createChannel")
               }
+              className="flex h-5 w-5 items-center justify-center rounded text-nav-muted transition-colors hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
             >
               <Plus className="h-3.5 w-3.5" />
-            </Button>
+            </button>
           </div>
           <div className="space-y-0.5">
             {channelList.map((c) => renderRow(c, { showDelete: true }))}
           </div>
         </div>
+
+        {dmList.length > 0 && (
+          <div>
+            <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+              <span className="flex-1">{t("chat.directMessages")}</span>
+            </div>
+            <div className="space-y-0.5">
+              {dmList.map((c) => renderRow(c, { showDelete: true }))}
+            </div>
+          </div>
+        )}
       </div>
 
       {menu && (
@@ -263,19 +284,6 @@ export function ChatSidebar(): React.ReactElement {
         open={createOpen}
         onOpenChange={setCreateOpen}
         onCreated={(id) => handleSelect(id)}
-      />
-
-      <ConfirmDialog
-        open={deleteTarget != null}
-        onOpenChange={(open) => {
-          if (!open) setDeleteTarget(null);
-        }}
-        title={deleteTarget ? `Delete #${deleteTarget.name}?` : "Delete channel"}
-        description="This will permanently delete the channel and all its messages. This action cannot be undone."
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
-        confirmVariant="destructive"
-        onConfirm={handleDeleteConfirm}
       />
     </div>
   );

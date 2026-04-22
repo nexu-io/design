@@ -156,6 +156,7 @@
 
 ## Validation before finishing changes
 - **Before every commit**: run `pnpm format`, then `pnpm format:check`.
+- **Do not stop at running the commands**: after any code change, `pnpm format:check` and `pnpm biome:check` must both pass cleanly, and every reported issue must be fixed before you consider the work done.
 - For code changes in `ui-web`:
   - `pnpm --filter @nexu-design/ui-web typecheck`
   - `pnpm --filter @nexu-design/ui-web test`
@@ -164,6 +165,7 @@
 - For formatting-sensitive changes:
   - `pnpm format:check`
   - `pnpm biome:check`
+- Treat `pnpm format:check` and `pnpm biome:check` as required final gates for code changes, not optional spot checks.
 - Before release-oriented changes:
   - `pnpm --filter @nexu-design/storybook typecheck`
   - `pnpm release:check`

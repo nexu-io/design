@@ -3,8 +3,6 @@ import { AlertCircle, ArrowLeft, ArrowRight, Github, Lock, Mail, ShieldCheck } f
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useT } from "@/i18n";
-
 import { SlarkAuthFrame } from "./slark-auth-frame";
 
 function GoogleIcon({ className }: { className?: string }): React.ReactElement {
@@ -34,7 +32,6 @@ function GoogleIcon({ className }: { className?: string }): React.ReactElement {
 type EmailStep = "email" | "verify" | "password";
 
 export function WelcomePage(): React.ReactElement {
-  const t = useT();
   const navigate = useNavigate();
   const [view, setView] = useState<"buttons" | "email">("buttons");
   const [emailStep, setEmailStep] = useState<EmailStep>("email");
@@ -88,7 +85,7 @@ export function WelcomePage(): React.ReactElement {
     const trimmed = email.trim();
     if (!trimmed) return;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-      setError(t("workspace.invalidEmail"));
+      setError("Please enter a valid email address");
       return;
     }
     setError("");
@@ -132,12 +129,12 @@ export function WelcomePage(): React.ReactElement {
 
   const handlePasswordSubmit = (): void => {
     if (password.length < 8) {
-      setError(t("onboarding.passwordTooShort"));
+      setError("Password must be at least 8 characters");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError(t("onboarding.passwordsMismatch"));
+      setError("Passwords do not match");
       return;
     }
 
@@ -149,50 +146,59 @@ export function WelcomePage(): React.ReactElement {
     view === "buttons"
       ? "Sign in to Slark"
       : emailStep === "email"
-        ? t("onboarding.continueWithEmail")
+        ? "Continue with Email"
         : emailStep === "verify"
-          ? t("onboarding.codeSent")
-          : t("onboarding.createAccount");
+          ? "Check your inbox"
+          : "Create account";
 
   const panelDescription =
     view === "buttons"
-      ? t("onboarding.appSubtitle")
+      ? null
       : emailStep === "email"
-        ? t("onboarding.enterEmail")
+        ? "Enter your email to get started"
         : emailStep === "verify"
           ? null
-          : t("onboarding.setPasswordFor");
+          : `Set a password for ${email}`;
 
   const renderButtonsView = (): React.ReactElement => (
     <div className="space-y-4">
       <div className="space-y-2.5">
-        <Button className="w-full justify-center" size="md" onClick={login}>
-          <Github className="size-[18px]" />
-          {t("onboarding.continueWithGithub")}
-        </Button>
-        <Button variant="outline" className="w-full justify-center" size="md" onClick={login}>
-          <GoogleIcon className="-ml-0.5 size-[18px]" />
-          {t("onboarding.continueWithGoogle")}
+        <Button
+          className="w-full justify-center"
+          size="lg"
+          onClick={login}
+          leadingIcon={<Github className="size-[18px]" />}
+        >
+          Continue with GitHub
         </Button>
         <Button
           variant="outline"
           className="w-full justify-center"
-          size="md"
-          onClick={() => setView("email")}
+          size="lg"
+          onClick={login}
+          leadingIcon={<GoogleIcon className="size-[18px]" />}
         >
-          <Mail className="size-[18px]" />
-          {t("onboarding.continueWithEmail")}
+          Continue with Google
+        </Button>
+        <Button
+          variant="outline"
+          className="w-full justify-center"
+          size="lg"
+          onClick={() => setView("email")}
+          leadingIcon={<Mail className="size-[18px]" />}
+        >
+          Continue with Email
         </Button>
       </div>
 
       <p className="px-2 text-center text-[11px] leading-relaxed text-text-tertiary">
         By continuing, you agree to our{" "}
-        <TextLink href="#" variant="muted" size="xs">
-          {t("invite.terms")}
+        <TextLink href="#" size="inherit">
+          Terms
         </TextLink>{" "}
         and{" "}
-        <TextLink href="#" variant="muted" size="xs">
-          {t("invite.privacy")}
+        <TextLink href="#" size="inherit">
+          Privacy Policy
         </TextLink>
         .
       </p>
@@ -229,10 +235,11 @@ export function WelcomePage(): React.ReactElement {
           <Input
             ref={emailInputRef}
             type="email"
+            size="lg"
             value={email}
             invalid={!!error}
             leadingIcon={<Mail className="size-4" />}
-            placeholder={t("onboarding.emailPlaceholder")}
+            placeholder="you@company.com"
             onChange={(event) => {
               setEmail(event.target.value);
               setError("");
@@ -249,13 +256,14 @@ export function WelcomePage(): React.ReactElement {
 
           <Button
             className="w-full justify-center"
+            size="lg"
             onClick={handleEmailSubmit}
             disabled={!email.trim()}
             trailingIcon={<ArrowRight size={16} />}
           >
-            {t("onboarding.sendCode")}
+            Send verification code
           </Button>
-          {renderBackButton(resetEmail, t("common.back"))}
+          {renderBackButton(resetEmail, "Back")}
         </div>
       );
     }
@@ -264,18 +272,24 @@ export function WelcomePage(): React.ReactElement {
       return (
         <div className="space-y-5">
           <div className="text-center">
-            <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
-              <ShieldCheck className="size-5" />
+            <div
+              className={cn(
+                "mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-2xl",
+                "bg-[var(--color-brand-subtle)] text-[var(--color-brand-primary)]",
+                "ring-1 ring-inset ring-[color-mix(in_srgb,var(--color-brand-primary)_18%,transparent)]",
+              )}
+            >
+              <ShieldCheck className="size-5" strokeWidth={2.25} />
             </div>
             <p className="text-[13px] leading-relaxed text-text-secondary">
-              {t("onboarding.codeSent")}
+              We sent a 6-digit code to
             </p>
             <p className="mt-0.5 text-[13px] font-semibold text-text-primary">{email}</p>
           </div>
 
           <div className="space-y-2">
             <fieldset
-              className="flex items-center justify-center gap-1.5"
+              className="flex items-center justify-center gap-2"
               aria-label="Verification code"
             >
               {(["slot-1", "slot-2", "slot-3", "slot-4", "slot-5", "slot-6"] as const).map(
@@ -294,10 +308,10 @@ export function WelcomePage(): React.ReactElement {
                     onKeyDown={(event) => handleCodeKeyDown(index, event)}
                     onPaste={index === 0 ? handleCodePaste : undefined}
                     className={cn(
-                      "h-11 w-10 rounded-lg border bg-surface-0 text-center text-[17px] font-semibold text-text-primary outline-none transition-colors",
+                      "h-12 w-11 rounded-lg border bg-surface-0 text-center text-[18px] font-semibold tabular-nums text-text-primary outline-none transition-colors",
                       error
                         ? "border-destructive focus:border-destructive focus:ring-2 focus:ring-destructive/20"
-                        : "border-input focus:border-accent focus:ring-2 focus:ring-accent/20",
+                        : "border-input hover:border-border-hover focus:border-accent focus:ring-2 focus:ring-accent/20",
                     )}
                   />
                 ),
@@ -310,11 +324,12 @@ export function WelcomePage(): React.ReactElement {
           <div className="space-y-3">
             <Button
               className="w-full justify-center"
+              size="lg"
               disabled={code.some((digit) => digit === "")}
               trailingIcon={<ArrowRight size={16} />}
               onClick={() => {
                 if (code.some((digit) => digit === "")) {
-                  setError(t("onboarding.enterFullCode"));
+                  setError("Please enter the full code");
                   return;
                 }
 
@@ -322,13 +337,13 @@ export function WelcomePage(): React.ReactElement {
                 setEmailStep("password");
               }}
             >
-              {t("onboarding.verify")}
+              Verify
             </Button>
             {renderBackButton(() => {
               setEmailStep("email");
               setCode(["", "", "", "", "", ""]);
               setError("");
-            }, t("onboarding.changeEmail"))}
+            }, "Change email")}
           </div>
         </div>
       );
@@ -340,10 +355,11 @@ export function WelcomePage(): React.ReactElement {
           <Input
             ref={passwordInputRef}
             type="password"
+            size="lg"
             value={password}
             invalid={!!error && !error.includes("match")}
             leadingIcon={<Lock className="size-4" />}
-            placeholder={t("onboarding.passwordPlaceholder")}
+            placeholder="Password (min 8 characters)"
             onChange={(event) => {
               setPassword(event.target.value);
               setError("");
@@ -351,10 +367,11 @@ export function WelcomePage(): React.ReactElement {
           />
           <Input
             type="password"
+            size="lg"
             value={confirmPassword}
             invalid={!!error && error.includes("match")}
             leadingIcon={<Lock className="size-4" />}
-            placeholder={t("onboarding.confirmPasswordPlaceholder")}
+            placeholder="Confirm password"
             onChange={(event) => {
               setConfirmPassword(event.target.value);
               setError("");
@@ -372,27 +389,28 @@ export function WelcomePage(): React.ReactElement {
 
         <Button
           className="w-full justify-center"
+          size="lg"
           onClick={handlePasswordSubmit}
           disabled={!password || !confirmPassword}
           trailingIcon={<ArrowRight size={16} />}
         >
-          {t("onboarding.createAccount")}
+          Create account
         </Button>
         {renderBackButton(() => {
           setEmailStep("verify");
           setPassword("");
           setConfirmPassword("");
           setError("");
-        }, t("common.back"))}
+        }, "Back")}
       </div>
     );
   };
 
   return (
-    <SlarkAuthFrame hideBranding hideFooter>
+    <SlarkAuthFrame>
       <div className="px-2">
         <div className="text-center">
-          <h1 className="text-[20px] leading-tight text-text-heading font-semibold">
+          <h1 className="text-[22px] font-semibold leading-tight tracking-tight text-text-heading">
             {panelTitle}
           </h1>
           {panelDescription ? (

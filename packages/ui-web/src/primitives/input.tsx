@@ -77,7 +77,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           aria-invalid={invalid || undefined}
           className={cn(
-            "w-full border-0 bg-transparent p-0 text-foreground outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+            "w-full border-0 bg-transparent p-0 text-foreground outline-none placeholder:text-muted-foreground/50 disabled:cursor-not-allowed disabled:opacity-50",
             inputClassName,
           )}
           {...props}
