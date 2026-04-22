@@ -7,10 +7,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Input,
   cn,
 } from "@nexu-design/ui-web";
-import { AlertCircle, CheckCircle2, ExternalLink, Loader2, MailPlus, Users } from "lucide-react";
+import { AlertCircle, CheckCircle2, ExternalLink, Loader2, Users } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -128,24 +127,9 @@ export function InviteLandingPage(): React.ReactElement {
 
         <CardContent className="space-y-3">
           {state === "idle" ? (
-            <>
-              <div className="space-y-1.5">
-                <span className="block text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">
-                  Invite code
-                </span>
-                <Input
-                  readOnly
-                  size="lg"
-                  value={token ?? ""}
-                  leadingIcon={<MailPlus className="size-4 text-text-tertiary" />}
-                  inputClassName="font-mono text-[13px] tracking-tight text-text-secondary"
-                  onFocus={(event) => event.currentTarget.select()}
-                />
-              </div>
-              <Button className="w-full justify-center" size="lg" onClick={handleJoin}>
-                Accept invitation
-              </Button>
-            </>
+            <Button className="w-full justify-center" size="lg" onClick={handleJoin}>
+              Accept invitation
+            </Button>
           ) : null}
 
           {state === "joining" ? (
