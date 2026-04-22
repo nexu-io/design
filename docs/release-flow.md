@@ -69,6 +69,29 @@ Accepted changeset entries are `.changeset/*.md` files, excluding `.changeset/RE
 - runs `pnpm release:check` before publishing
 - requires publishable packages to declare `repository.url: "https://github.com/nexu-io/design"` so npm provenance validation passes
 
+## npm trusted publishing setup
+
+Use npm trusted publishing for both public packages instead of a long-lived `NPM_TOKEN`.
+
+Configure a trusted publisher entry in the npm package settings for each package:
+
+- `@nexu-design/tokens`
+- `@nexu-design/ui-web`
+
+For each package, set:
+
+- Provider: `GitHub Actions`
+- Repository owner: `nexu-io`
+- Repository name: `design`
+- Workflow file: `release.yml`
+
+Notes:
+
+- npm trusted publishing is configured per package, not once per scope.
+- `.github/workflows/release.yml` must keep `id-token: write` on the publish job.
+- `repository.url` in each publishable package manifest must match `https://github.com/nexu-io/design`.
+- After trusted publishing is configured, the publish job does not need `NODE_AUTH_TOKEN` or `NPM_CONFIG_PROVENANCE`.
+
 ## First release bootstrap
 
 This section is only for the one-time initial package creation flow. If the packages already exist on npm, skip it.
