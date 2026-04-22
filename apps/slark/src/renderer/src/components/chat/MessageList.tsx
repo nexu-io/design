@@ -463,7 +463,7 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
                    */}
                   {isSending && (
                     <Clock
-                      className="ml-1 inline-block size-3 translate-y-[1px] text-text-muted"
+                      className="ml-1 inline-block size-3 -translate-y-[1px] align-middle text-text-muted"
                       aria-label="Sending"
                     />
                   )}
