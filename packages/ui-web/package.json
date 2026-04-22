@@ -1,6 +1,6 @@
 {
   "name": "@nexu-design/ui-web",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": false,
   "description": "React primitives and patterns for building Nexu web interfaces",
   "license": "UNLICENSED",
