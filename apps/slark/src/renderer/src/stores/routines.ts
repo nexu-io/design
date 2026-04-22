@@ -4,11 +4,11 @@ import type { Routine } from "@/types";
 const seedRoutines: Routine[] = [
   {
     id: "ro-daily-review",
+    channelId: "ch-welcome",
     name: "Daily code review",
     description: "Review open PRs every morning and post a summary to #dev-review.",
     agentId: "a-code-reviewer",
     trigger: { kind: "schedule", cron: "0 9 * * 1-5" },
-    connectors: ["github", "slack"],
     status: "active",
     lastRunAt: Date.now() - 1000 * 60 * 60 * 3,
     nextRunAt: Date.now() + 1000 * 60 * 60 * 21,
@@ -16,6 +16,7 @@ const seedRoutines: Routine[] = [
       {
         id: "run-1",
         startedAt: Date.now() - 1000 * 60 * 60 * 3,
+        completedAt: Date.now() - 1000 * 60 * 60 * 3 + 4200,
         kind: "scheduled",
         status: "success",
       },
@@ -25,18 +26,31 @@ const seedRoutines: Routine[] = [
   },
   {
     id: "ro-pr-triage",
+    channelId: "ch-welcome",
     name: "PR triage on open",
     description: "Label and assign reviewers when a PR is opened.",
     agentId: null,
     trigger: {
-      kind: "github",
-      githubRepo: "nexu/design",
-      githubEvent: "pull_request",
+      kind: "connector",
+      connectorService: "github",
+      connectorEvent: "pull_request",
+      connectorTarget: "nexu/design",
     },
-    connectors: ["github", "linear"],
     status: "paused",
     createdBy: "u-1",
     createdAt: Date.now() - 1000 * 60 * 60 * 24 * 3,
+  },
+  {
+    id: "ro-showcase-digest",
+    channelId: "ch-showcase",
+    name: "Weekly design digest",
+    description: "Post a highlight reel of last week's design explorations every Monday.",
+    agentId: null,
+    trigger: { kind: "schedule", cron: "0 10 * * 1" },
+    status: "active",
+    nextRunAt: Date.now() + 1000 * 60 * 60 * 40,
+    createdBy: "u-1",
+    createdAt: Date.now() - 1000 * 60 * 60 * 24 * 7,
   },
 ];
 
@@ -50,7 +64,8 @@ interface RoutinesState {
   removeRoutine: (id: string) => void;
   selectRoutine: (id: string | null) => void;
   toggleRoutine: (id: string) => void;
-  runNow: (id: string) => void;
+  runNow: (id: string, opts?: { messageId?: string }) => string;
+  completeRun: (routineId: string, runId: string, status: "success" | "error") => void;
 }
 
 export const useRoutinesStore = create<RoutinesState>((set) => ({
@@ -71,7 +86,8 @@ export const useRoutinesStore = create<RoutinesState>((set) => ({
         r.id === id ? { ...r, status: r.status === "active" ? "paused" : "active" } : r,
       ),
     })),
-  runNow: (id) =>
+  runNow: (id, opts) => {
+    const runId = `run-${Date.now()}`;
     set((s) => ({
       routines: s.routines.map((r) =>
         r.id === id
@@ -80,13 +96,29 @@ export const useRoutinesStore = create<RoutinesState>((set) => ({
               lastRunAt: Date.now(),
               runs: [
                 {
-                  id: `run-${Date.now()}`,
+                  id: runId,
                   startedAt: Date.now(),
                   kind: "manual",
                   status: "running",
+                  ...(opts?.messageId ? { messageId: opts.messageId } : {}),
                 },
                 ...(r.runs ?? []),
               ],
+            }
+          : r,
+      ),
+    }));
+    return runId;
+  },
+  completeRun: (routineId, runId, status) =>
+    set((s) => ({
+      routines: s.routines.map((r) =>
+        r.id === routineId
+          ? {
+              ...r,
+              runs: (r.runs ?? []).map((run) =>
+                run.id === runId ? { ...run, status, completedAt: Date.now() } : run,
+              ),
             }
           : r,
       ),

@@ -1,3 +1,4 @@
+import { ImageOff } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "../lib/cn";
@@ -40,6 +41,7 @@ export const ImageAttachment = React.forwardRef<HTMLElement, ImageAttachmentProp
     ref,
   ) => {
     const interactive = typeof onSelect === "function";
+    const [failed, setFailed] = React.useState(false);
 
     return (
       <figure
@@ -68,15 +70,31 @@ export const ImageAttachment = React.forwardRef<HTMLElement, ImageAttachmentProp
               : undefined
           }
         >
-          <img
-            src={src}
-            alt={alt}
-            className={cn(
-              "h-full w-full object-cover transition-transform duration-300",
-              interactive && "group-hover:scale-[1.02]",
-              imgClassName,
-            )}
-          />
+          {failed ? (
+            <div
+              className="flex h-full w-full flex-col items-center justify-center gap-1.5 bg-surface-2 text-text-muted"
+              role="img"
+              aria-label={alt || "Image failed to load"}
+            >
+              <ImageOff className="size-6" aria-hidden />
+              {alt ? (
+                <span className="line-clamp-2 px-3 text-center text-[11px] leading-tight">
+                  {alt}
+                </span>
+              ) : null}
+            </div>
+          ) : (
+            <img
+              src={src}
+              alt={alt}
+              onError={() => setFailed(true)}
+              className={cn(
+                "h-full w-full object-cover transition-transform duration-300",
+                interactive && "group-hover:scale-[1.02]",
+                imgClassName,
+              )}
+            />
+          )}
         </div>
         {caption ? (
           <figcaption className="mt-1 text-[11px] italic text-text-muted">{caption}</figcaption>

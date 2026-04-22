@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acme Analytics — Overview</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f7fb;
+        --surface: #ffffff;
+        --border: #e5e7eb;
+        --text: #0f172a;
+        --muted: #64748b;
+        --accent: #6366f1;
+        --accent-soft: #eef2ff;
+        --success: #10b981;
+        --danger: #f43f5e;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family:
+          "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        -webkit-font-smoothing: antialiased;
+      }
+      header.topbar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 28px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+      }
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #6366f1, #ec4899);
+      }
+      nav.topnav {
+        display: flex;
+        gap: 4px;
+        margin-left: 24px;
+      }
+      nav.topnav a {
+        padding: 6px 12px;
+        border-radius: 8px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 13.5px;
+      }
+      nav.topnav a.active {
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .btn.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+      }
+      .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #f97316, #f43f5e);
+      }
+
+      main {
+        padding: 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 26px;
+        margin: 0 0 4px;
+      }
+      .subtitle {
+        color: var(--muted);
+        margin-bottom: 24px;
+        font-size: 14px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .stat {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px 18px;
+      }
+      .stat .label {
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .stat .value {
+        font-size: 26px;
+        font-weight: 600;
+        margin-top: 6px;
+      }
+      .stat .delta {
+        margin-top: 4px;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      .delta.up {
+        background: #ecfdf5;
+        color: var(--success);
+      }
+      .delta.down {
+        background: #fef2f2;
+        color: var(--danger);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px;
+      }
+      .card h3 {
+        margin: 0 0 4px;
+        font-size: 15px;
+      }
+      .card .card-sub {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 16px;
+      }
+
+      /* Bar chart */
+      .chart {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        height: 200px;
+        padding: 8px 0;
+      }
+      .bar {
+        flex: 1;
+        background: linear-gradient(180deg, #818cf8, #6366f1);
+        border-radius: 6px 6px 0 0;
+        position: relative;
+        min-height: 6px;
+      }
+      .bar::after {
+        content: attr(data-label);
+        position: absolute;
+        bottom: -22px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .bar.peak {
+        background: linear-gradient(180deg, #f472b6, #ec4899);
+      }
+      .chart-wrap {
+        padding-bottom: 24px;
+      }
+
+      /* Activity list */
+      .activity-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+      }
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        margin-top: 6px;
+        flex-shrink: 0;
+      }
+      .dot.success {
+        background: var(--success);
+      }
+      .dot.accent {
+        background: var(--accent);
+      }
+      .dot.danger {
+        background: var(--danger);
+      }
+      .activity-item .time {
+        color: var(--muted);
+        font-size: 11px;
+        margin-top: 2px;
+      }
+      .activity-item strong {
+        font-weight: 600;
+      }
+
+      /* Table */
+      .table {
+        margin-top: 16px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      thead th {
+        text-align: left;
+        padding: 12px 18px;
+        background: #f9fafb;
+        color: var(--muted);
+        font-weight: 500;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-bottom: 1px solid var(--border);
+      }
+      tbody td {
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--border);
+      }
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .tag {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .tag.active {
+        background: #ecfdf5;
+        color: var(--success);
+      }
+      .tag.paused {
+        background: #fef3c7;
+        color: #b45309;
+      }
+      .tag.error {
+        background: #fef2f2;
+        color: var(--danger);
+      }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        color: var(--muted);
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span>Acme Analytics</span>
+      </div>
+      <nav class="topnav">
+        <a class="active" href="#">Overview</a>
+        <a href="#">Reports</a>
+        <a href="#">Segments</a>
+        <a href="#">Integrations</a>
+      </nav>
+      <div class="topbar-right">
+        <button class="btn">Invite</button>
+        <button class="btn primary">+ New report</button>
+        <div class="avatar" title="You"></div>
+      </div>
+    </header>
+
+    <main>
+      <h1>Overview</h1>
+      <div class="subtitle">
+        Here's how your product performed over the last 7 days.
+      </div>
+
+      <section class="stats">
+        <div class="stat">
+          <div class="label">Active users</div>
+          <div class="value">24,831</div>
+          <span class="delta up">▲ 12.4%</span>
+        </div>
+        <div class="stat">
+          <div class="label">Sessions</div>
+          <div class="value">61,204</div>
+          <span class="delta up">▲ 4.1%</span>
+        </div>
+        <div class="stat">
+          <div class="label">Conversion</div>
+          <div class="value">3.62%</div>
+          <span class="delta down">▼ 0.3%</span>
+        </div>
+        <div class="stat">
+          <div class="label">Revenue</div>
+          <div class="value">$48,120</div>
+          <span class="delta up">▲ 8.7%</span>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card chart-wrap">
+          <h3>Daily active users</h3>
+          <div class="card-sub">Last 7 days — compared to previous period</div>
+          <div class="chart">
+            <div class="bar" style="height: 45%" data-label="Mon"></div>
+            <div class="bar" style="height: 62%" data-label="Tue"></div>
+            <div class="bar" style="height: 38%" data-label="Wed"></div>
+            <div class="bar" style="height: 72%" data-label="Thu"></div>
+            <div class="bar peak" style="height: 92%" data-label="Fri"></div>
+            <div class="bar" style="height: 58%" data-label="Sat"></div>
+            <div class="bar" style="height: 66%" data-label="Sun"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Recent activity</h3>
+          <div class="card-sub">Team, agents, and automations</div>
+          <div class="activity-item">
+            <span class="dot success"></span>
+            <div>
+              <strong>Coder</strong> shipped <em>feat/auth-flow</em>
+              <div class="time">2 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="dot accent"></span>
+            <div>
+              <strong>Alice Chen</strong> opened a topic in #design-showcase
+              <div class="time">14 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="dot accent"></span>
+            <div>
+              <strong>Reviewer</strong> approved PR #184
+              <div class="time">42 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="dot danger"></span>
+            <div>
+              <strong>Webhook retry</strong> failed after 3 attempts
+              <div class="time">1 hr ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="dot success"></span>
+            <div>
+              <strong>Nightly routine</strong> completed
+              <div class="time">6 hr ago</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="table">
+        <table>
+          <thead>
+            <tr>
+              <th>Routine</th>
+              <th>Trigger</th>
+              <th>Last run</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>Sync billing client</strong>
+                <div class="mono">cron · 0 */6 * * *</div>
+              </td>
+              <td>Schedule</td>
+              <td>02:00 PM</td>
+              <td><span class="tag active">Active</span></td>
+            </tr>
+            <tr>
+              <td>
+                <strong>PR labeler</strong>
+                <div class="mono">gh.pull_request.opened</div>
+              </td>
+              <td>GitHub</td>
+              <td>12:37 PM</td>
+              <td><span class="tag active">Active</span></td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Stale issue sweep</strong>
+                <div class="mono">cron · 0 9 * * 1</div>
+              </td>
+              <td>Schedule</td>
+              <td>Mon 09:00</td>
+              <td><span class="tag paused">Paused</span></td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Slack digest</strong>
+                <div class="mono">cron · 0 9 * * *</div>
+              </td>
+              <td>Schedule</td>
+              <td>09:02 AM</td>
+              <td><span class="tag error">Error</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>

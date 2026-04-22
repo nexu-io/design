@@ -1,6 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { MessageSquare, Bot, UserPlus, Globe, AtSign, CircleDot } from "lucide-react";
+import {
+  AtSign,
+  Bot,
+  Brain,
+  CircleDot,
+  MessageSquare,
+  Settings,
+  UserPlus,
+  Workflow,
+} from "lucide-react";
 import { cn } from "@nexu-design/ui-web";
 import { useT } from "@/i18n";
 import { useChatStore } from "@/stores/chat";
@@ -11,11 +20,17 @@ import { WindowChrome } from "@/components/layout/WindowChrome";
 import { MessageList } from "./MessageList";
 import { MessageInput } from "./MessageInput";
 import { AddMembersDialog } from "./AddMembersDialog";
+import { ChannelSettingsDialog } from "./ChannelSettingsDialog";
+import { ChannelAvatar } from "./ChannelAvatar";
 import { TopicDrawer } from "./TopicDrawer";
 import { ChannelIssuesPanel } from "./ChannelIssuesPanel";
+import { ChannelMemoryPanel } from "./ChannelMemoryPanel";
+import { ChannelRoutinesPanel } from "@/components/routines/ChannelRoutinesPanel";
 import { useTopicsStore } from "@/stores/topics";
+import { useRoutinesStore } from "@/stores/routines";
+import { useMemoriesStore } from "@/stores/memories";
 
-type Tab = "chat" | "issues";
+type Tab = "chat" | "issues" | "routines" | "memory";
 
 export function ChatView(): React.ReactElement {
   const t = useT();
@@ -26,6 +41,8 @@ export function ChatView(): React.ReactElement {
   const welcomeFired = useRef(false);
   const loadedChannels = useRef(new Set<string>());
   const [addMembersOpen, setAddMembersOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const currentUserId = useWorkspaceStore((s) => s.currentUserId);
   const [tab, setTab] = useState<Tab>("chat");
   const topics = useTopicsStore((s) => s.topics);
 
@@ -35,6 +52,18 @@ export function ChatView(): React.ReactElement {
         (t) => t.issue && t.issue.status !== "done" && t.rootChannelId === channelId,
       ).length,
     [topics, channelId],
+  );
+
+  const routines = useRoutinesStore((s) => s.routines);
+  const channelRoutineCount = useMemo(
+    () => routines.filter((r) => r.channelId === channelId).length,
+    [routines, channelId],
+  );
+
+  const memories = useMemoriesStore((s) => s.memories);
+  const channelMemoryCount = useMemo(
+    () => memories.filter((m) => m.channelId === channelId).length,
+    [memories, channelId],
   );
 
   useEffect(() => {
@@ -94,6 +123,17 @@ export function ChatView(): React.ReactElement {
         });
         if (idx >= tokens.length) {
           updateMessage("ch-welcome", replyId, { isStreaming: false });
+          setTimeout(() => {
+            useMemoriesStore.getState().addMemory({
+              channelId: "ch-welcome",
+              kind: "context",
+              source: "agent",
+              authorId: agent.id,
+              method: "agent_auto",
+              sourceMessageId: replyId,
+              content: `${agent.name} introduced itself here — ${agent.description}`,
+            });
+          }, 600);
         } else {
           setTimeout(tick, 25 + Math.random() * 35);
         }
@@ -133,10 +173,21 @@ export function ChatView(): React.ReactElement {
     channel.type === "dm" ? channel.members.find((m) => m.id !== "u-1") : undefined;
   const otherResolved = otherMember ? resolveRef(otherMember) : undefined;
   const activeTopicId = useTopicsStore((s) => s.activeTopicId);
+  const activeTopicMode = useTopicsStore((s) => s.activeTopicMode);
   const activeTopicChannel = useTopicsStore((s) =>
     s.activeTopicId ? s.topics[s.activeTopicId]?.rootChannelId : undefined,
   );
-  const showDrawer = !!activeTopicId && activeTopicChannel === channelId;
+  const topicOnThisChannel = !!activeTopicId && activeTopicChannel === channelId;
+  const showSideDrawer = topicOnThisChannel && activeTopicMode === "drawer";
+  const showMainTopic = topicOnThisChannel && activeTopicMode === "main";
+
+  if (showMainTopic) {
+    return (
+      <div className="flex h-full bg-background">
+        <TopicDrawer variant="main" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full bg-background">
@@ -144,10 +195,13 @@ export function ChatView(): React.ReactElement {
         <WindowChrome className="flex h-[52px] items-center gap-2 border-b border-border px-4 pt-2">
           <button
             type="button"
+            onClick={() => {
+              if (channel.type === "channel") setSettingsOpen(true);
+            }}
             className="no-drag flex items-center gap-1.5 rounded-md px-1.5 py-1 -ml-1.5 hover:bg-accent transition-colors text-left min-w-0"
           >
             {channel.type === "channel" ? (
-              <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
+              <ChannelAvatar channel={channel} size={20} className="rounded-md" />
             ) : otherResolved?.isAgent ? (
               <Bot className="h-4 w-4 text-nexu-agent shrink-0" />
             ) : otherResolved ? (
@@ -165,15 +219,26 @@ export function ChatView(): React.ReactElement {
           )}
 
           {channel.type === "channel" && (
-            <button
-              type="button"
-              onClick={() => setAddMembersOpen(true)}
-              className="no-drag ml-auto flex items-center gap-1.5 h-7 px-2 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors shrink-0"
-              title={t("chat.addPeopleOrAgents")}
-            >
-              <UserPlus className="h-3.5 w-3.5" />
-              <span>{channel.members.length}</span>
-            </button>
+            <div className="no-drag ml-auto flex items-center gap-0.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => setAddMembersOpen(true)}
+                className="flex items-center gap-1.5 h-7 px-2 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                title={t("chat.addPeopleOrAgents")}
+              >
+                <UserPlus className="h-3.5 w-3.5" />
+                <span>{channel.members.length}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setSettingsOpen(true)}
+                className="flex items-center justify-center h-7 w-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                title="Channel settings"
+                aria-label="Channel settings"
+              >
+                <Settings className="h-3.5 w-3.5" />
+              </button>
+            </div>
           )}
         </WindowChrome>
 
@@ -194,26 +259,66 @@ export function ChatView(): React.ReactElement {
               count={channelIssueCount}
               onClick={() => setTab("issues")}
             />
+            <TabPill
+              icon={<Workflow className="size-3.5" />}
+              label={t("section.routines")}
+              active={tab === "routines"}
+              activeTint="bg-success-subtle text-success"
+              count={channelRoutineCount}
+              onClick={() => setTab("routines")}
+            />
+            <TabPill
+              icon={<Brain className="size-3.5" />}
+              label={t("section.memory")}
+              active={tab === "memory"}
+              activeTint="bg-brand-primary/15 text-brand-primary"
+              count={channelMemoryCount}
+              onClick={() => setTab("memory")}
+            />
           </div>
         ) : null}
 
         {tab === "chat" || !showIssuesTab ? (
-          <>
+          <div className="relative flex min-h-0 flex-1 flex-col">
             <MessageList channelId={channelId} channel={channel} />
             <MessageInput channelId={channelId} isDmWithAgent={isDmWithAgent} channel={channel} />
-          </>
-        ) : (
+          </div>
+        ) : tab === "issues" ? (
           <ChannelIssuesPanel channelId={channelId} />
-        )}
-        {channel.type === "channel" && (
-          <AddMembersDialog
-            open={addMembersOpen}
-            onOpenChange={setAddMembersOpen}
-            channel={channel}
+        ) : tab === "routines" ? (
+          <ChannelRoutinesPanel
+            channelId={channelId}
+            onJumpToMessage={(msgId) => {
+              setTab("chat");
+              useChatStore.getState().setPendingScrollToMessage(msgId);
+            }}
+          />
+        ) : (
+          <ChannelMemoryPanel
+            channelId={channelId}
+            onJumpToMessage={(msgId) => {
+              setTab("chat");
+              useChatStore.getState().setPendingScrollToMessage(msgId);
+            }}
           />
         )}
+        {channel.type === "channel" && (
+          <>
+            <AddMembersDialog
+              open={addMembersOpen}
+              onOpenChange={setAddMembersOpen}
+              channel={channel}
+            />
+            <ChannelSettingsDialog
+              open={settingsOpen}
+              onOpenChange={setSettingsOpen}
+              channel={channel}
+              currentUserId={currentUserId}
+            />
+          </>
+        )}
       </div>
-      {showDrawer && <TopicDrawer />}
+      {showSideDrawer && <TopicDrawer />}
     </div>
   );
 }

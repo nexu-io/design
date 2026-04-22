@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import {
   Bot,
+  Brain,
+  Check,
   Hash,
   LogIn,
   Sparkles,
@@ -9,17 +11,36 @@ import {
   MessageSquarePlus,
   CircleDot,
   ArrowRight,
+  Smile,
+  Quote,
+  Undo2,
 } from "lucide-react";
-import { Button, ChatMessage, EventNotice, Mention } from "@nexu-design/ui-web";
+import {
+  Button,
+  ChatMessage,
+  ConfirmDialog,
+  EventNotice,
+  Mention,
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  cn,
+} from "@nexu-design/ui-web";
 import type { ChatSender } from "@nexu-design/ui-web";
 import { useChatStore } from "@/stores/chat";
 import { useWorkspaceStore } from "@/stores/workspace";
 import { useAgentsStore } from "@/stores/agents";
 import { useTopicsStore } from "@/stores/topics";
+import { useMemoriesStore } from "@/stores/memories";
+import { useT } from "@/i18n";
 import { resolveRef } from "@/mock/data";
-import { ContentBlockRenderer } from "./ContentBlocks";
+import { ContentBlockRenderer, type ApprovalResult } from "./ContentBlocks";
 import { ContentDetailOverlay } from "./ContentDetailOverlay";
-import type { Agent, Channel, ContentBlock, Message } from "@/types";
+import { EmojiPicker } from "./EmojiPicker";
+import type { Agent, Channel, ContentBlock, Message, Reaction } from "@/types";
 
 const CURRENT_USER_ID = "u-1";
 const CONSECUTIVE_WINDOW_MS = 5 * 60 * 1000;
@@ -319,6 +340,7 @@ function getQuickPrompts(name: string, templateId: string | null): string[] {
 }
 
 export function MessageList({ channelId, channel }: MessageListProps): React.ReactElement {
+  const t = useT();
   const messages = useChatStore((s) => s.messages[channelId] ?? EMPTY_MESSAGES);
   const updateMessage = useChatStore((s) => s.updateMessage);
   const convertToTopic = useChatStore((s) => s.convertToTopic);
@@ -329,7 +351,102 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
   const bottomRef = useRef<HTMLDivElement>(null);
   const lastMessageId = messages[messages.length - 1]?.id;
   const [expandedBlock, setExpandedBlock] = useState<ContentBlock | null>(null);
+  const [reactionPickerId, setReactionPickerId] = useState<string | null>(null);
+  const [highlightedMessageId, setHighlightedMessageId] = useState<string | null>(null);
+  const [recallTargetId, setRecallTargetId] = useState<string | null>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeExpanded = useCallback(() => setExpandedBlock(null), []);
+
+  const pendingScrollToMessageId = useChatStore((s) => s.pendingScrollToMessageId);
+  const pendingScrollFlashCount = useChatStore((s) => s.pendingScrollFlashCount);
+  const setPendingScrollToMessage = useChatStore((s) => s.setPendingScrollToMessage);
+
+  useEffect(() => {
+    if (!pendingScrollToMessageId) return;
+    const target = messages.find((m) => m.id === pendingScrollToMessageId);
+    if (!target) return;
+    const id = pendingScrollToMessageId;
+    const flashCount = Math.max(1, pendingScrollFlashCount);
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const frame = requestAnimationFrame(() => {
+      const el = document.querySelector(
+        `[data-message-id="${id}"]`,
+      ) as HTMLElement | null;
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        const FLASH_MS = 2400;
+        const GAP_MS = 120;
+        for (let i = 0; i < flashCount; i++) {
+          timers.push(
+            setTimeout(() => setHighlightedMessageId(id), i * (FLASH_MS + GAP_MS)),
+          );
+          timers.push(
+            setTimeout(
+              () => setHighlightedMessageId(null),
+              i * (FLASH_MS + GAP_MS) + FLASH_MS,
+            ),
+          );
+        }
+      }
+      setPendingScrollToMessage(null);
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      timers.forEach(clearTimeout);
+    };
+  }, [pendingScrollToMessageId, pendingScrollFlashCount, messages, setPendingScrollToMessage]);
+
+  const cancelClose = useCallback(() => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  }, []);
+
+  const scheduleClose = useCallback(() => {
+    cancelClose();
+    closeTimerRef.current = setTimeout(() => {
+      setReactionPickerId(null);
+      closeTimerRef.current = null;
+    }, 150);
+  }, [cancelClose]);
+
+  const openPicker = useCallback(
+    (id: string) => {
+      cancelClose();
+      setReactionPickerId(id);
+    },
+    [cancelClose],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
+  }, []);
+
+  const toggleReaction = useCallback(
+    (msg: Message, emoji: string) => {
+      const existing = msg.reactions.find((r) => r.emoji === emoji);
+      let next: Reaction[];
+      if (existing) {
+        const hasMe = existing.users.includes(currentUserId);
+        const nextUsers = hasMe
+          ? existing.users.filter((u) => u !== currentUserId)
+          : [...existing.users, currentUserId];
+        next =
+          nextUsers.length === 0
+            ? msg.reactions.filter((r) => r.emoji !== emoji)
+            : msg.reactions.map((r) =>
+                r.emoji === emoji ? { ...r, users: nextUsers } : r,
+              );
+      } else {
+        next = [...msg.reactions, { emoji, users: [currentUserId] }];
+      }
+      updateMessage(channelId, msg.id, { reactions: next });
+    },
+    [channelId, currentUserId, updateMessage],
+  );
 
   const handleStartTopic = useCallback(
     (msgId: string) => {
@@ -347,6 +464,100 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
     [channelId, convertToIssue, setActiveTopic],
   );
 
+  const addMemory = useMemoriesStore((s) => s.addMemory);
+  const proposals = useMemoriesStore((s) => s.proposals);
+  const setProposalStatus = useMemoriesStore((s) => s.setProposalStatus);
+  const allMemories = useMemoriesStore((s) => s.memories);
+
+  // Derived: which message IDs in this channel already have at least one Memory backed by them.
+  const savedMessageIds = useMemo(() => {
+    const set = new Set<string>();
+    for (const m of allMemories) {
+      if (m.channelId === channelId && m.sourceMessageId) {
+        set.add(m.sourceMessageId);
+      }
+    }
+    return set;
+  }, [allMemories, channelId]);
+
+  const handleSaveToMemory = useCallback(
+    (msg: Message) => {
+      // Already saved: do nothing — the checkmark is the persistent state.
+      if (savedMessageIds.has(msg.id)) return;
+      const text = msg.content.trim();
+      if (!text) return;
+      const truncated = text.length > 280 ? `${text.slice(0, 280).trimEnd()}…` : text;
+      addMemory({
+        channelId,
+        kind: "context",
+        content: truncated,
+        source: "user",
+        method: "explicit",
+        sourceMessageId: msg.id,
+      });
+    },
+    [addMemory, channelId, savedMessageIds],
+  );
+
+  const recallMessage = useChatStore((s) => s.recallMessage);
+  const setPendingQuote = useChatStore((s) => s.setPendingQuote);
+
+  const handleRequestRecall = useCallback((msgId: string) => {
+    setRecallTargetId(msgId);
+  }, []);
+
+  const handleConfirmRecall = useCallback(() => {
+    if (recallTargetId) recallMessage(channelId, recallTargetId);
+    setRecallTargetId(null);
+  }, [channelId, recallMessage, recallTargetId]);
+
+  const handleQuote = useCallback(
+    (msg: Message) => {
+      const resolved = resolveRef(msg.sender);
+      const senderName = resolved?.name ?? "Unknown";
+      const raw = msg.content.trim().replace(/\s+/g, " ");
+      const snippet = raw
+        ? raw.length > 140
+          ? `${raw.slice(0, 140).trimEnd()}…`
+          : raw
+        : msg.blocks && msg.blocks.length > 0
+          ? "[attachment]"
+          : "";
+      setPendingQuote({
+        channelId,
+        quote: { messageId: msg.id, senderName, content: snippet },
+      });
+    },
+    [channelId, setPendingQuote],
+  );
+
+  const jumpToMessage = useCallback(
+    (msgId: string) => {
+      setPendingScrollToMessage(msgId);
+    },
+    [setPendingScrollToMessage],
+  );
+  const handleSaveExchange = useCallback(
+    (userMsg: Message, agentMsg: Message) => {
+      const q = userMsg.content.trim().replace(/\s+/g, " ");
+      const a = agentMsg.content.trim().replace(/\s+/g, " ");
+      const compact = (s: string, n: number): string =>
+        s.length > n ? `${s.slice(0, n).trimEnd()}…` : s;
+      const content = `Q: ${compact(q, 140)}\nA: ${compact(a, 220)}`;
+      addMemory({
+        channelId,
+        kind: "context",
+        content,
+        source: "agent",
+        authorId: agentMsg.sender.id,
+        method: "agent_auto",
+        sourceMessageId: agentMsg.id,
+      });
+      setProposalStatus(agentMsg.id, "saved");
+    },
+    [addMemory, channelId, setProposalStatus],
+  );
+
   const handleOpenTopic = useCallback(
     (topicId: string) => {
       setActiveTopic(topicId);
@@ -358,12 +569,26 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
     msgId: string,
     blocks: ContentBlock[] | undefined,
     approvalId: string,
-    action: "approved" | "rejected",
+    result: ApprovalResult,
   ): void => {
     if (!blocks) return;
-    const updated = blocks.map((b) =>
-      b.type === "approval" && b.id === approvalId ? ({ ...b, status: action } as ContentBlock) : b,
-    );
+    const updated = blocks.map((b) => {
+      if (b.type !== "approval" || b.id !== approvalId) return b;
+      if (result.kind === "text") {
+        return { ...b, status: "responded", response: { text: result.text } } as ContentBlock;
+      }
+      const status: "approved" | "rejected" | "responded" =
+        result.choiceId === "approved"
+          ? "approved"
+          : result.choiceId === "rejected"
+            ? "rejected"
+            : "responded";
+      return {
+        ...b,
+        status,
+        response: { choiceId: result.choiceId, label: result.label },
+      } as ContentBlock;
+    });
     updateMessage(channelId, msgId, { blocks: updated });
   };
 
@@ -410,7 +635,7 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
           return (
             <div key={msg.id}>
               {showDateSeparator && (
-                <EventNotice className="py-2 text-[11px] font-semibold text-text-primary">
+                <EventNotice className="mt-4 py-2 text-[11px] font-semibold text-text-primary">
                   {formatDateLabel(msg.createdAt)}
                 </EventNotice>
               )}
@@ -427,13 +652,38 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
         const sender = toSender(msg);
         if (!sender) return null;
 
-        const prevNonSystem = prev && !prev.system ? prev : undefined;
+        if (msg.recalled) {
+          const isMine = msg.sender.kind === "user" && msg.sender.id === currentUserId;
+          const recallText = isMine
+            ? t("chat.recalledByYou")
+            : t("chat.recalledBy", { name: sender.name });
+          return (
+            <div key={msg.id}>
+              {showDateSeparator && (
+                <EventNotice className="mt-4 py-2 text-[11px] font-semibold text-text-primary">
+                  {formatDateLabel(msg.createdAt)}
+                </EventNotice>
+              )}
+              <EventNotice icon={<Undo2 className="size-2.5" />}>
+                {recallText}
+                <span className="ml-1.5 font-mono tabular-nums text-text-tertiary">
+                  {formatClock(msg.recalledAt ?? msg.createdAt)}
+                </span>
+              </EventNotice>
+            </div>
+          );
+        }
+
+        const prevNonSystem = prev && !prev.system && !prev.recalled ? prev : undefined;
         const isConsecutive =
           !!prevNonSystem &&
           prevNonSystem.sender.kind === msg.sender.kind &&
           prevNonSystem.sender.id === msg.sender.id &&
           msg.createdAt - prevNonSystem.createdAt < CONSECUTIVE_WINDOW_MS &&
           !showDateSeparator;
+
+        const isOwnMessage = msg.sender.kind === "user" && msg.sender.id === currentUserId;
+        const isSavedToMemory = savedMessageIds.has(msg.id);
 
         const reactions = msg.reactions.map((r) => ({
           emoji: r.emoji,
@@ -445,19 +695,37 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
         const isIssue = !!derivedTopic?.issue;
         const mentionsAgent = msg.mentions.some((m) => m.kind === "agent");
 
+        const isAgentReply = msg.sender.kind === "agent" && !msg.isStreaming;
+        const precedingUserMsg =
+          isAgentReply &&
+          prevNonSystem &&
+          prevNonSystem.sender.kind === "user" &&
+          prevNonSystem.sender.id === currentUserId &&
+          prevNonSystem.content.trim().length > 0
+            ? prevNonSystem
+            : undefined;
+        const proposalStatus = proposals[msg.id];
+        const showProposal = !!precedingUserMsg && !proposalStatus;
+
+        const isHighlighted = highlightedMessageId === msg.id;
+
         return (
           <div key={msg.id}>
             {showDateSeparator && (
-              <EventNotice className="py-2 text-[11px] font-semibold text-text-primary">
+              <EventNotice className="mt-4 py-2 text-[11px] font-semibold text-text-primary">
                 {formatDateLabel(msg.createdAt)}
               </EventNotice>
             )}
-            <div className="group relative">
+            <div
+              data-message-id={msg.id}
+              className={cn("group relative", isHighlighted && "message-flash")}
+            >
               <ChatMessage
                 sender={sender}
                 time={formatClock(msg.createdAt)}
                 compact={isConsecutive}
                 reactions={reactions.length > 0 ? reactions : undefined}
+                onReactionClick={(emoji) => toggleReaction(msg, emoji)}
                 blocks={
                   msg.blocks && msg.blocks.length > 0
                     ? msg.blocks.map((block) => (
@@ -465,8 +733,8 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
                           key={blockKey(block)}
                           block={block}
                           isMe={msg.sender.id === currentUserId}
-                          onApprovalAction={(aid, action) =>
-                            handleApproval(msg.id, msg.blocks, aid, action)
+                          onApprovalAction={(aid, result) =>
+                            handleApproval(msg.id, msg.blocks, aid, result)
                           }
                           onExpand={setExpandedBlock}
                         />
@@ -474,11 +742,26 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
                     : undefined
                 }
               >
+                {msg.quoted ? (
+                  <button
+                    type="button"
+                    onClick={() => jumpToMessage(msg.quoted!.messageId)}
+                    className="mb-1.5 block w-full max-w-[520px] rounded-md border-l-2 border-brand-primary bg-surface-2/50 px-2 py-1 text-left transition-colors hover:bg-surface-2"
+                  >
+                    <div className="flex items-center gap-1 text-[11px] font-semibold text-text-secondary">
+                      <Quote className="size-3 shrink-0 opacity-70" />
+                      <span className="truncate">{msg.quoted.senderName}</span>
+                    </div>
+                    <div className="mt-0.5 line-clamp-2 text-[12px] leading-snug text-text-muted">
+                      {msg.quoted.content || t("chat.recalledOriginal")}
+                    </div>
+                  </button>
+                ) : null}
                 {msg.content ? (
                   <>
                     {renderContent(msg.content)}
                     {msg.isStreaming && (
-                      <span className="ml-0.5 inline-block h-4 w-1.5 animate-pulse bg-current align-middle opacity-60" />
+                      <span className="ml-0.5 inline-block h-[1em] w-[2px] animate-pulse rounded-[1px] bg-current align-[-0.15em] opacity-80" />
                     )}
                   </>
                 ) : null}
@@ -502,32 +785,170 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
                   </button>
                 </div>
               ) : null}
+              {showProposal && precedingUserMsg ? (
+                <div className="pl-[60px] pr-4 pb-1 pt-0.5">
+                  <div className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-brand-primary/30 bg-brand-primary/5 px-2 py-1 text-[11px] font-medium text-brand-primary">
+                    <Brain className="size-3 shrink-0" />
+                    <span className="truncate">{t("memory.proposalPrompt")}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleSaveExchange(precedingUserMsg, msg)}
+                      className="ml-1.5 inline-flex h-5 items-center gap-1 rounded bg-brand-primary px-1.5 text-[10.5px] font-semibold text-accent-fg transition-opacity hover:opacity-90"
+                    >
+                      {t("memory.proposalSave")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setProposalStatus(msg.id, "dismissed")}
+                      className="inline-flex h-5 items-center rounded px-1.5 text-[10.5px] font-medium text-text-muted transition-colors hover:bg-surface-2 hover:text-text-primary"
+                    >
+                      {t("memory.proposalSkip")}
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+              {proposalStatus === "saved" ? (
+                <div className="pl-[60px] pr-4 pb-1 pt-0.5">
+                  <div className="inline-flex items-center gap-1 rounded-md bg-success-subtle px-1.5 py-0.5 text-[10.5px] font-medium text-success">
+                    <Brain className="size-3 shrink-0" />
+                    {t("memory.proposalSaved")}
+                  </div>
+                </div>
+              ) : null}
               {!msg.isStreaming && (
                 <div
-                  className="pointer-events-none absolute right-3 top-1 z-10 flex items-center gap-0.5 rounded-md border border-border-subtle bg-surface-0 px-0.5 py-0.5 opacity-0 shadow-sm transition-opacity group-hover:pointer-events-auto group-hover:opacity-100"
+                  className={cn(
+                    "absolute right-3 -top-2.5 z-10 flex items-center gap-0.5 rounded-md border border-border-subtle bg-surface-0 px-0.5 py-0.5 shadow-sm transition-opacity",
+                    reactionPickerId === msg.id
+                      ? "pointer-events-auto opacity-100"
+                      : "pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100",
+                  )}
                 >
-                  {!derivedTopic && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-sm"
-                      title="Start topic"
-                      onClick={() => handleStartTopic(msg.id)}
+                  <Popover
+                    open={reactionPickerId === msg.id}
+                    onOpenChange={(open) => setReactionPickerId(open ? msg.id : null)}
+                  >
+                    <Tooltip>
+                      <PopoverAnchor asChild>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => openPicker(msg.id)}
+                            onMouseEnter={() => openPicker(msg.id)}
+                            onMouseLeave={scheduleClose}
+                          >
+                            <Smile className="size-3.5" />
+                          </Button>
+                        </TooltipTrigger>
+                      </PopoverAnchor>
+                      <TooltipContent side="top">{t("chat.tooltipReact")}</TooltipContent>
+                    </Tooltip>
+                    <PopoverContent
+                      align="end"
+                      side="top"
+                      sideOffset={6}
+                      className="w-auto p-0"
+                      onOpenAutoFocus={(e) => e.preventDefault()}
+                      onMouseEnter={cancelClose}
+                      onMouseLeave={scheduleClose}
                     >
-                      <MessageSquarePlus className="size-3.5" />
-                    </Button>
+                      <EmojiPicker
+                        onSelect={(emoji) => {
+                          toggleReaction(msg, emoji);
+                          setReactionPickerId(null);
+                          cancelClose();
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  {!derivedTopic && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => handleStartTopic(msg.id)}
+                        >
+                          <MessageSquarePlus className="size-3.5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">{t("chat.tooltipStartTopic")}</TooltipContent>
+                    </Tooltip>
                   )}
                   {!isIssue && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-sm"
-                      title={mentionsAgent ? "Convert to Issue" : "Mark as Issue"}
-                      onClick={() => handleConvertToIssue(msg.id)}
-                      className={mentionsAgent ? "text-brand-primary" : undefined}
-                    >
-                      <CircleDot className="size-3.5" />
-                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => handleConvertToIssue(msg.id)}
+                          className={mentionsAgent ? "text-brand-primary" : undefined}
+                        >
+                          <CircleDot className="size-3.5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">
+                        {mentionsAgent
+                          ? t("chat.tooltipConvertIssue")
+                          : t("chat.tooltipMarkIssue")}
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => handleQuote(msg)}
+                      >
+                        <Quote className="size-3.5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">{t("chat.tooltipQuote")}</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => handleSaveToMemory(msg)}
+                        className={isSavedToMemory ? "text-success" : undefined}
+                        aria-pressed={isSavedToMemory}
+                      >
+                        {isSavedToMemory ? (
+                          <Check className="size-3.5" />
+                        ) : (
+                          <Brain className="size-3.5" />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      {isSavedToMemory
+                        ? t("chat.tooltipSavedToMemory")
+                        : t("chat.tooltipSaveToMemory")}
+                    </TooltipContent>
+                  </Tooltip>
+                  {isOwnMessage && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => handleRequestRecall(msg.id)}
+                          className="text-text-muted hover:text-destructive"
+                        >
+                          <Undo2 className="size-3.5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">{t("chat.tooltipRecall")}</TooltipContent>
+                    </Tooltip>
                   )}
                 </div>
               )}
@@ -537,6 +958,18 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
       })}
       <div ref={bottomRef} />
       <ContentDetailOverlay block={expandedBlock} onClose={closeExpanded} />
+      <ConfirmDialog
+        open={recallTargetId !== null}
+        onOpenChange={(open) => {
+          if (!open) setRecallTargetId(null);
+        }}
+        title={t("chat.confirmRecallTitle")}
+        description={t("chat.confirmRecallDesc")}
+        confirmLabel={t("chat.confirmRecallAction")}
+        cancelLabel={t("common.cancel")}
+        confirmVariant="destructive"
+        onConfirm={handleConfirmRecall}
+      />
     </div>
   );
 }

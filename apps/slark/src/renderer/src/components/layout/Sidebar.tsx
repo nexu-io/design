@@ -29,7 +29,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AgentsSidebar } from "@/components/agents/AgentsSidebar";
 import { ChatSidebar } from "@/components/chat/ChatSidebar";
 import { InvitePeopleDialog } from "@/components/chat/InvitePeopleDialog";
-import { RoutinesSidebar } from "@/components/routines/RoutinesSidebar";
 import { RuntimesSidebar } from "@/components/runtimes/RuntimesSidebar";
 import { type TranslationKey, useT } from "@/i18n";
 import { useWorkspaceStore } from "@/stores/workspace";
@@ -40,7 +39,6 @@ const sections: { path: string; labelKey: TranslationKey }[] = [
   { path: "/chat", labelKey: "section.chat" },
   { path: "/agents", labelKey: "section.team" },
   { path: "/runtimes", labelKey: "section.runtimes" },
-  { path: "/routines", labelKey: "section.routines" },
   { path: "/settings", labelKey: "section.settings" },
 ];
 
@@ -59,7 +57,6 @@ export function Sidebar(): React.ReactElement {
     if (location.pathname.startsWith("/chat")) return <ChatSidebar />;
     if (location.pathname.startsWith("/agents")) return <AgentsSidebar />;
     if (location.pathname.startsWith("/runtimes")) return <RuntimesSidebar />;
-    if (location.pathname.startsWith("/routines")) return <RoutinesSidebar />;
     if (location.pathname.startsWith("/settings")) return <SettingsSidebar />;
     return null;
   };

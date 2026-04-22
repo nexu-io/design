@@ -65,37 +65,56 @@ export interface Connector {
   connected: boolean;
 }
 
-export type RoutineTriggerKind = "schedule" | "github" | "api" | "connector";
+export type RoutineTriggerKind = "schedule" | "api" | "connector";
 
 export interface RoutineTrigger {
   kind: RoutineTriggerKind;
   cron?: string;
-  githubRepo?: string;
-  githubEvent?: "push" | "pull_request" | "issues" | "release";
   connectorService?: ConnectorService;
   connectorEvent?: string;
+  connectorTarget?: string;
 }
 
 export interface RoutineRun {
   id: string;
   startedAt: number;
+  completedAt?: number;
   kind: "scheduled" | "manual";
   status: "running" | "success" | "error";
+  messageId?: string;
 }
 
 export interface Routine {
   id: string;
+  channelId: string;
   name: string;
   description: string;
   agentId: string | null;
   trigger: RoutineTrigger;
-  connectors: ConnectorService[];
   status: "active" | "paused" | "error";
   lastRunAt?: number;
   nextRunAt?: number;
   runs?: RoutineRun[];
   createdBy: string;
   createdAt: number;
+}
+
+export type MemoryKind = "fact" | "decision" | "preference" | "context";
+export type MemorySource = "agent" | "user";
+export type MemoryMethod = "explicit" | "keyword" | "agent_auto" | "seed";
+
+export interface Memory {
+  id: string;
+  channelId: string;
+  kind: MemoryKind;
+  content: string;
+  source: MemorySource;
+  authorId: string;
+  method: MemoryMethod;
+  sourceMessageId?: string;
+  sourceTopicId?: string;
+  createdAt: number;
+  updatedAt: number;
 }
 
 export interface Runtime {
@@ -112,6 +131,7 @@ export interface Channel {
   id: string;
   name: string;
   description?: string;
+  avatar?: string;
   type: "channel" | "dm";
   members: MemberRef[];
   lastMessageAt: number;
@@ -140,7 +160,6 @@ export type ContentBlock =
       waveform?: number[];
     }
   | { type: "file"; name: string; size: number; url: string; mimeType?: string }
-  | { type: "code"; code: string; language?: string; filename?: string }
   | {
       type: "action";
       title: string;
@@ -156,38 +175,23 @@ export type ContentBlock =
       status: "success" | "failed";
     }
   | {
-      type: "diff";
-      filename: string;
-      content: string;
-      additions: number;
-      deletions: number;
-    }
-  | {
       type: "approval";
       id: string;
       title: string;
       description?: string;
-      status: "pending" | "approved" | "rejected";
-    }
-  | {
-      type: "progress";
-      title: string;
-      current: number;
-      total: number;
-      steps?: { label: string; status: "done" | "active" | "pending" }[];
-    }
-  | {
-      type: "topic";
-      id: string;
-      title: string;
-      author: string;
-      status?: "active" | "needs-review" | "blocked" | "done" | "archived";
-      lastActivity: string;
-      replies: number;
-      participants: string[];
-      preview?: string;
-      assignee?: { name: string; isAgent?: boolean; accent?: string };
+      status: "pending" | "approved" | "rejected" | "responded";
+      options?: { id: string; label: string; tone?: "primary" | "danger" | "neutral" }[];
+      response?: { choiceId?: string; label?: string; text?: string };
     };
+
+export interface QuotedMessage {
+  /** Original message id, used for jump-to-source. */
+  messageId: string;
+  /** Snapshot of the original sender name (so display still works if the source changes). */
+  senderName: string;
+  /** Truncated snapshot of the original content. */
+  content: string;
+}
 
 export interface Message {
   id: string;
@@ -204,6 +208,12 @@ export interface Message {
     members: MemberRef[];
   };
   derivedTopicId?: string;
+  /** Reply-to / quoted message snapshot. */
+  quoted?: QuotedMessage;
+  /** Marks the message as recalled (withdrawn) by its sender. */
+  recalled?: boolean;
+  /** Timestamp at which the message was recalled. */
+  recalledAt?: number;
 }
 
 export interface Reaction {

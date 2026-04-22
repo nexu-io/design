@@ -3,13 +3,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   Bot,
   Check,
+  Circle,
+  CircleCheck,
+  CircleDashed,
   CircleDot,
-  Globe,
+  CircleSlash,
+  Eye,
   Hash,
   MessagesSquare,
-  Pencil,
   Pin,
   PinOff,
+  Plus,
   Search,
 } from "lucide-react";
 import { Button, Input, cn } from "@nexu-design/ui-web";
@@ -18,11 +22,48 @@ import { useT } from "@/i18n";
 import { useChatStore } from "@/stores/chat";
 import { useAgentsStore } from "@/stores/agents";
 import { useTopicsStore } from "@/stores/topics";
-import { mockChannels, resolveRef } from "@/mock/data";
+import { mockChannels, mockMessages, resolveRef } from "@/mock/data";
 import { CreateChannelDialog } from "./CreateChannelDialog";
-import type { Channel } from "@/types";
+import { ChannelAvatar } from "./ChannelAvatar";
+import type { Channel, IssueStatus } from "@/types";
 
 const CURRENT_USER_ID = "u-1";
+
+const ISSUE_STATUS_META: Record<
+  IssueStatus,
+  { icon: typeof Circle; bubble: string; text: string; label: string }
+> = {
+  todo: {
+    icon: Circle,
+    bubble: "bg-surface-2",
+    text: "text-text-muted",
+    label: "Todo",
+  },
+  in_progress: {
+    icon: CircleDashed,
+    bubble: "bg-warning/15",
+    text: "text-warning",
+    label: "In progress",
+  },
+  in_review: {
+    icon: Eye,
+    bubble: "bg-info/15",
+    text: "text-info",
+    label: "In review",
+  },
+  blocked: {
+    icon: CircleSlash,
+    bubble: "bg-danger/15",
+    text: "text-danger",
+    label: "Blocked",
+  },
+  done: {
+    icon: CircleCheck,
+    bubble: "bg-success/15",
+    text: "text-success",
+    label: "Done",
+  },
+};
 
 interface ConvoItem {
   key: string;
@@ -32,18 +73,20 @@ interface ConvoItem {
   title: string;
   subtitle: string;
   avatarUrl?: string;
+  channelAvatar?: string;
   iconKind?: "globe" | "topic";
   lastActivityAt: number;
   unreadCount: number;
   openIssues?: number;
   hasIssue?: boolean;
+  issueStatus?: IssueStatus;
   hasAgent?: boolean;
   hasMention?: boolean;
   canHide: boolean;
   canPin: boolean;
 }
 
-type ConvoFilter = "all" | "human" | "agent" | "issue" | "mention";
+type ConvoFilter = "all" | "human" | "agent" | "topic" | "issue" | "mention";
 
 interface ContextMenuState {
   x: number;
@@ -130,6 +173,7 @@ export function ChatSidebar(): React.ReactElement {
   const topicArchived = useTopicsStore((s) => s.archived);
   const topicReadAt = useTopicsStore((s) => s.readAt);
   const setActiveTopic = useTopicsStore((s) => s.setActiveTopic);
+  const activeTopicId = useTopicsStore((s) => s.activeTopicId);
 
   const agents = useAgentsStore((s) => s.agents);
 
@@ -181,8 +225,18 @@ export function ChatSidebar(): React.ReactElement {
   const pinnedSet = useMemo(() => new Set(pinnedIds), [pinnedIds]);
 
   const handleSelect = (item: ConvoItem): void => {
+    // Preload mock messages synchronously so TopicDrawer can resolve rootMessage on
+    // the very first render after navigate (otherwise the drawer flashes blank or
+    // appears to be "just the channel"). No-op if the channel was already hydrated.
     if (item.topicId) {
-      setActiveTopic(item.topicId);
+      const store = useChatStore.getState();
+      const existing = store.messages[item.channelId] ?? [];
+      if (existing.length === 0 && mockMessages[item.channelId]) {
+        for (const msg of mockMessages[item.channelId]) {
+          store.addMessage(item.channelId, msg);
+        }
+      }
+      setActiveTopic(item.topicId, "main");
     } else {
       setActiveTopic(null);
     }
@@ -228,6 +282,7 @@ export function ChatSidebar(): React.ReactElement {
           title: c.name,
           subtitle: preview,
           iconKind: "globe",
+          channelAvatar: c.avatar,
           lastActivityAt,
           unreadCount: c.unreadCount,
           hasAgent,
@@ -295,6 +350,7 @@ export function ChatSidebar(): React.ReactElement {
         unreadCount: unread,
         openIssues: 0,
         hasIssue: !!topic.issue,
+        issueStatus: topic.issue?.status,
         hasAgent: topicHasAgent,
         hasMention: topicHasMention,
         canHide: true,
@@ -334,34 +390,58 @@ export function ChatSidebar(): React.ReactElement {
     return acc;
   }, [topics]);
 
-  // Pinned items: always show (not affected by category filter) so the header doesn't jitter.
-  const pinnedItems = items.filter((it) => pinnedSet.has(it.key));
-  // Rest items: apply category filter only here.
-  const restItems = items.filter((it) => {
-    if (pinnedSet.has(it.key)) return false;
-    switch (filter) {
-      case "all":
-        return true;
-      case "human":
-        return !it.hasAgent;
-      case "agent":
-        return !!it.hasAgent;
-      case "issue":
-        return !!it.hasIssue;
-      case "mention":
-        return !!it.hasMention;
-      default:
-        return true;
+  // Channels whose topics contain a mention of the current user — used so the `@`
+  // filter can surface a parent channel even when the channel itself has no direct
+  // @me messages (only a topic under it does).
+  const channelsWithMentionedTopic = useMemo(() => {
+    const acc = new Set<string>();
+    for (const topic of Object.values(topics)) {
+      const tMsgs = topicMessages[topic.id] ?? [];
+      const hit = tMsgs.some((m) =>
+        m.mentions?.some((ref) => ref.kind === "user" && ref.id === CURRENT_USER_ID),
+      );
+      if (hit) acc.add(topic.rootChannelId);
     }
-  });
+    return acc;
+  }, [topics, topicMessages]);
+
+  const matchesFilter = useCallback(
+    (it: ConvoItem): boolean => {
+      switch (filter) {
+        case "all":
+          return true;
+        case "human":
+          return it.kind === "dm-user";
+        case "agent":
+          return it.kind === "dm-agent";
+        case "topic":
+          return it.kind === "topic" && !it.hasIssue;
+        case "issue":
+          return !!it.hasIssue;
+        case "mention":
+          if (it.hasMention) return true;
+          // Topic under no-@me channel still needs nothing extra (it already has hasMention).
+          // But a channel with no direct @me but a mentioned topic should appear too.
+          if (it.kind !== "topic" && channelsWithMentionedTopic.has(it.channelId)) return true;
+          return false;
+        default:
+          return true;
+      }
+    },
+    [filter, channelsWithMentionedTopic],
+  );
+
+  // Filter applies to BOTH pinned and rest so the sections stay in sync with the tab.
+  const pinnedItems = items.filter((it) => pinnedSet.has(it.key) && matchesFilter(it));
+  const restItems = items.filter((it) => !pinnedSet.has(it.key) && matchesFilter(it));
 
   const channelCount = channels.filter((c) => c.type === "channel").length;
   const atLimit = channelCount >= 20;
 
   const renderRow = (item: ConvoItem): React.ReactElement => {
     const isActive = item.topicId
-      ? false // topic rows never "active" via URL
-      : channelId === item.channelId;
+      ? activeTopicId === item.topicId
+      : channelId === item.channelId && !activeTopicId;
     const unread = item.unreadCount > 0;
     const openIssues = item.kind === "channel" ? (openIssueCountByChannel[item.channelId] ?? 0) : 0;
     const isTopic = item.kind === "topic";
@@ -372,38 +452,67 @@ export function ChatSidebar(): React.ReactElement {
         onContextMenu={(e) => openCtx(e, item)}
         className="group/item relative w-full"
       >
-        {/* Topic accent bar — visually anchors topic under its parent channel */}
-        {isTopic ? (
-          <span
-            aria-hidden
-            className="pointer-events-none absolute left-[9px] top-0 h-full w-[2px] bg-brand-primary/40"
-          />
-        ) : null}
 
         <button
           type="button"
           onClick={() => handleSelect(item)}
           className={cn(
-            "flex w-full items-start gap-2.5 py-2 pr-3 text-left transition-colors",
-            isTopic ? "pl-6" : "pl-3",
+            "flex w-full items-start gap-2.5 pr-3 text-left transition-colors",
+            // Topic uses a smaller avatar (size-6), so nudge left-padding so its
+            // center aligns with the channel avatar center (pl-3 + size-8/2 = 28px).
+            isTopic ? "py-1.5 pl-4" : "py-2 pl-3",
             isActive
               ? "bg-nav-active text-nav-active-fg"
               : unread
                 ? "text-nav-fg hover:bg-nav-hover"
                 : "text-nav-muted hover:bg-nav-hover hover:text-nav-fg",
+            // Done issues read as "archived" — dim the whole row (unless active/unread).
+            isTopic && item.issueStatus === "done" && !isActive && !unread && "opacity-65",
           )}
         >
           <div className="relative shrink-0">
             {item.avatarUrl ? (
               <img src={item.avatarUrl} alt="" className="size-8 rounded-lg" />
             ) : isTopic ? (
-              <div className="flex size-7 items-center justify-center rounded-lg bg-brand-primary/15">
-                <MessagesSquare className="size-3.5 text-brand-primary" />
-              </div>
+              (() => {
+                const statusMeta = item.issueStatus
+                  ? ISSUE_STATUS_META[item.issueStatus]
+                  : undefined;
+                const StatusIcon = statusMeta?.icon ?? MessagesSquare;
+                return (
+                  <div
+                    className={cn(
+                      "flex size-6 items-center justify-center rounded-full ring-2 ring-nav",
+                      isActive
+                        ? "bg-nav-active-fg/20 ring-nav-active"
+                        : statusMeta
+                          ? statusMeta.bubble
+                          : "bg-brand-primary/15",
+                    )}
+                    title={statusMeta?.label}
+                  >
+                    <StatusIcon
+                      className={cn(
+                        "size-3",
+                        isActive
+                          ? "text-nav-active-fg"
+                          : statusMeta
+                            ? statusMeta.text
+                            : "text-brand-primary",
+                      )}
+                    />
+                  </div>
+                );
+              })()
             ) : item.iconKind === "globe" ? (
-              <div className="flex size-8 items-center justify-center rounded-lg bg-surface-2">
-                <Globe className="size-4 text-text-muted" />
-              </div>
+              <ChannelAvatar
+                channel={{
+                  id: item.channelId,
+                  name: item.title,
+                  avatar: item.channelAvatar,
+                }}
+                size={32}
+              />
             ) : (
               <div className="flex size-8 items-center justify-center rounded-lg bg-surface-2">
                 <Hash className="size-4 text-text-muted" />
@@ -421,11 +530,6 @@ export function ChatSidebar(): React.ReactElement {
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
-              {isTopic ? (
-                <span className="shrink-0 rounded-sm bg-brand-primary/15 px-1 py-[1px] text-[9px] font-semibold uppercase tracking-wider text-brand-primary">
-                  Topic
-                </span>
-              ) : null}
               <span
                 className={cn(
                   "min-w-0 flex-1 truncate",
@@ -440,6 +544,30 @@ export function ChatSidebar(): React.ReactElement {
               >
                 {item.title}
               </span>
+              {isTopic && item.issueStatus
+                ? (() => {
+                    const statusMeta = ISSUE_STATUS_META[item.issueStatus];
+                    return (
+                      <span
+                        title={statusMeta.label}
+                        className={cn(
+                          "shrink-0 size-1.5 rounded-full",
+                          isActive
+                            ? "bg-nav-active-fg/60"
+                            : item.issueStatus === "in_progress"
+                              ? "bg-warning"
+                              : item.issueStatus === "in_review"
+                                ? "bg-info"
+                                : item.issueStatus === "blocked"
+                                  ? "bg-danger text-danger status-pulse"
+                                  : item.issueStatus === "done"
+                                    ? "bg-success"
+                                    : "bg-text-muted/60",
+                        )}
+                      />
+                    );
+                  })()
+                : null}
               <span
                 className={cn(
                   "shrink-0 text-[10px] tabular-nums",
@@ -520,7 +648,7 @@ export function ChatSidebar(): React.ReactElement {
               : t("chat.createChannel")
           }
         >
-          <Pencil className="size-3.5" />
+          <Plus className="size-4" />
         </Button>
       </div>
 
@@ -530,6 +658,7 @@ export function ChatSidebar(): React.ReactElement {
             { value: "all", label: "All" },
             { value: "human", label: "Human" },
             { value: "agent", label: "Agent" },
+            { value: "topic", label: "Topic" },
             { value: "issue", label: "Issue" },
             { value: "mention", label: "@" },
           ] as { value: ConvoFilter; label: string }[]
@@ -560,7 +689,11 @@ export function ChatSidebar(): React.ReactElement {
               <PinnedTile
                 key={it.key}
                 item={it}
-                active={channelId === it.channelId && !it.topicId}
+                active={
+                  it.topicId
+                    ? activeTopicId === it.topicId
+                    : channelId === it.channelId && !activeTopicId
+                }
                 onClick={() => handleSelect(it)}
                 onContextMenu={(e) => openCtx(e, it)}
               />
@@ -667,9 +800,15 @@ function PinnedTile({ item, active, onClick, onContextMenu }: PinnedTileProps): 
             <CircleDot className="size-4 text-brand-primary" />
           </div>
         ) : item.iconKind === "globe" ? (
-          <div className="flex size-9 items-center justify-center rounded-full bg-surface-2">
-            <Globe className="size-4 text-text-muted" />
-          </div>
+          <ChannelAvatar
+            channel={{
+              id: item.channelId,
+              name: item.title,
+              avatar: item.channelAvatar,
+            }}
+            size={36}
+            className="rounded-full"
+          />
         ) : (
           <div className="flex size-9 items-center justify-center rounded-full bg-surface-2">
             <Hash className="size-4 text-text-muted" />

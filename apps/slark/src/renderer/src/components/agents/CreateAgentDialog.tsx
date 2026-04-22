@@ -32,11 +32,13 @@ import { RuntimePicker } from "./RuntimePicker";
 interface CreateAgentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onCreated?: (agent: Agent) => void;
 }
 
 export function CreateAgentDialog({
   open,
   onOpenChange,
+  onCreated,
 }: CreateAgentDialogProps): React.ReactElement {
   const t = useT();
   const navigate = useNavigate();
@@ -109,7 +111,11 @@ export function CreateAgentDialog({
 
     addChannel(dmChannel);
     selectAgent(agentId);
-    navigate(`/agents/${agentId}`);
+    if (onCreated) {
+      onCreated(agent);
+    } else {
+      navigate(`/agents/${agentId}`);
+    }
     onOpenChange(false);
     reset();
   };

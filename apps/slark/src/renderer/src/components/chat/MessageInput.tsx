@@ -1,13 +1,15 @@
-import { Button, cn } from "@nexu-design/ui-web";
-import { Paperclip, Send } from "lucide-react";
+import { Button, Popover, PopoverContent, PopoverTrigger, cn } from "@nexu-design/ui-web";
+import { Paperclip, Quote, Send, Smile, X } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { useT } from "@/i18n";
 import { getRandomAgentResponse } from "@/mock/data";
 import { useAgentsStore } from "@/stores/agents";
 import { useChatStore } from "@/stores/chat";
+import { useMemoriesStore } from "@/stores/memories";
 import { useTopicsStore } from "@/stores/topics";
 import type { Channel, MemberRef, Message } from "@/types";
+import { EmojiPicker } from "./EmojiPicker";
 import { MentionPicker } from "./MentionPicker";
 
 interface MessageInputProps {
@@ -21,6 +23,26 @@ interface MessageInputProps {
 const MIN_HEIGHT = 36;
 const MAX_HEIGHT = 150;
 
+type TriggerMatch = { cleaned: string; kind: "context" | "preference" };
+
+const PREF_KEYWORDS = /(?:以后(?:都)?|默认|默认都|always|from now on)/i;
+const REMEMBER_KEYWORDS = /^(?:记住|记一下|请记住|remember)[\s:：,，]*/i;
+
+function detectMemoryTrigger(content: string): TriggerMatch | null {
+  const withoutMentions = content.replace(/@[\w-]+/g, "").trim();
+  if (!withoutMentions) return null;
+  if (REMEMBER_KEYWORDS.test(withoutMentions)) {
+    const stripped = withoutMentions.replace(REMEMBER_KEYWORDS, "").trim();
+    const body = stripped || withoutMentions;
+    const kind = PREF_KEYWORDS.test(body) ? "preference" : "context";
+    return { cleaned: body, kind };
+  }
+  if (PREF_KEYWORDS.test(withoutMentions)) {
+    return { cleaned: withoutMentions, kind: "preference" };
+  }
+  return null;
+}
+
 export function MessageInput({
   channelId,
   isDmWithAgent,
@@ -32,13 +54,23 @@ export function MessageInput({
   const [showMentions, setShowMentions] = useState(false);
   const [mentionQuery, setMentionQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [emojiOpen, setEmojiOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const savedSelectionRef = useRef<{ start: number; end: number } | null>(null);
   const addChannelMessage = useChatStore((s) => s.addMessage);
   const updateChannelMessage = useChatStore((s) => s.updateMessage);
   const addTopicMessage = useTopicsStore((s) => s.addTopicMessage);
   const updateTopicMessage = useTopicsStore((s) => s.updateTopicMessage);
   const pendingDraft = useChatStore((s) => s.pendingDraft);
   const setPendingDraft = useChatStore((s) => s.setPendingDraft);
+  const pendingQuoteState = useChatStore((s) => s.pendingQuote);
+  const setPendingQuote = useChatStore((s) => s.setPendingQuote);
+  const activeQuote =
+    pendingQuoteState &&
+    pendingQuoteState.channelId === channelId &&
+    (pendingQuoteState.topicId ?? null) === (topicId ?? null)
+      ? pendingQuoteState.quote
+      : null;
   const allAgents = useAgentsStore((s) => s.agents);
 
   // Mention pool = channel members + all workspace agents (user-created ones always available).
@@ -84,6 +116,15 @@ export function MessageInput({
       textareaRef.current?.focus();
     }
   }, [pendingDraft, setPendingDraft, topicId]);
+
+  // Focus the textarea whenever a new quote becomes active for this input.
+  useEffect(() => {
+    if (activeQuote) textareaRef.current?.focus();
+  }, [activeQuote?.messageId]);
+
+  const cancelQuote = useCallback((): void => {
+    setPendingQuote(null);
+  }, [setPendingQuote]);
 
   const adjustHeight = useCallback((textarea: HTMLTextAreaElement | null) => {
     if (!textarea) return;
@@ -158,14 +199,36 @@ export function MessageInput({
       mentions: mentionedAgents,
       reactions: [],
       createdAt: Date.now(),
+      quoted: activeQuote ?? undefined,
     };
     addMessage(userMsg);
     setText("");
     setShowMentions(false);
+    if (activeQuote) setPendingQuote(null);
 
-    if (!topicId && isDmWithAgent) {
-      const agentMember = channel.members.find((m) => m.kind === "agent");
-      if (agentMember) simulateAgentReply(agentMember);
+    const dmAgentMember =
+      !topicId && isDmWithAgent
+        ? channel.members.find((m) => m.kind === "agent")
+        : undefined;
+    const targetedAgent: MemberRef | undefined = dmAgentMember ?? mentionedAgents[0];
+
+    if (!topicId && targetedAgent && useMemoriesStore.getState().keywordTriggerEnabled) {
+      const trigger = detectMemoryTrigger(trimmed);
+      if (trigger) {
+        useMemoriesStore.getState().addMemory({
+          channelId,
+          kind: trigger.kind,
+          content: trigger.cleaned,
+          source: "user",
+          authorId: "u-1",
+          method: "keyword",
+          sourceMessageId: userMsg.id,
+        });
+      }
+    }
+
+    if (dmAgentMember) {
+      simulateAgentReply(dmAgentMember);
     } else if (mentionedAgents.length > 0) {
       for (const ref of mentionedAgents) {
         simulateAgentReply(ref);
@@ -197,6 +260,38 @@ export function MessageInput({
     } else {
       setShowMentions(false);
     }
+  };
+
+  const handleStickerSelect = (url: string): void => {
+    const msg: Message = {
+      id: `msg-${Date.now()}`,
+      channelId,
+      sender: { kind: "user", id: "u-1" },
+      content: "",
+      blocks: [{ type: "image", url, alt: "sticker" }],
+      mentions: [],
+      reactions: [],
+      createdAt: Date.now(),
+    };
+    addMessage(msg);
+    setEmojiOpen(false);
+  };
+
+  const handleEmojiSelect = (emoji: string): void => {
+    const sel = savedSelectionRef.current;
+    const start = sel?.start ?? text.length;
+    const end = sel?.end ?? text.length;
+    const next = text.slice(0, start) + emoji + text.slice(end);
+    setText(next);
+    const nextPos = start + emoji.length;
+    savedSelectionRef.current = { start: nextPos, end: nextPos };
+    requestAnimationFrame(() => {
+      const ta = textareaRef.current;
+      if (!ta) return;
+      ta.focus();
+      ta.setSelectionRange(nextPos, nextPos);
+      adjustHeight(ta);
+    });
   };
 
   const handleMentionSelect = (_ref: MemberRef, name: string): void => {
@@ -232,6 +327,31 @@ export function MessageInput({
         )}
       </div>
 
+      {activeQuote ? (
+        <div className="mb-1.5 flex items-start gap-2 rounded-md border border-border-subtle bg-surface-2/50 px-2 py-1.5 text-[12px]">
+          <Quote className="mt-0.5 size-3.5 shrink-0 text-brand-primary" />
+          <div className="min-w-0 flex-1">
+            <div className="font-semibold text-text-secondary">
+              {t("chat.replyingTo", { name: activeQuote.senderName })}
+            </div>
+            <div className="mt-0.5 line-clamp-2 text-text-muted">
+              {activeQuote.content || t("chat.recalledOriginal")}
+            </div>
+          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={cancelQuote}
+            aria-label={t("chat.cancelReply")}
+            title={t("chat.cancelReply")}
+            className="-mr-1 -mt-1 shrink-0"
+          >
+            <X className="size-3.5" />
+          </Button>
+        </div>
+      ) : null}
+
       <div
         className={cn(
           "flex items-center gap-1 rounded-lg border bg-surface-0 px-2 py-1 transition-colors",
@@ -244,7 +364,13 @@ export function MessageInput({
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onBlur={(e) => {
+            setIsFocused(false);
+            savedSelectionRef.current = {
+              start: e.target.selectionStart,
+              end: e.target.selectionEnd,
+            };
+          }}
           placeholder={
             topicId
               ? t("chat.replyInTopic")
@@ -256,6 +382,32 @@ export function MessageInput({
           className="flex-1 resize-none bg-transparent px-1.5 py-1.5 text-[13px] leading-[1.5] text-text-primary placeholder:text-text-muted focus:outline-none"
         />
         <div className="flex shrink-0 items-center gap-0.5">
+          <Popover open={emojiOpen} onOpenChange={setEmojiOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Emoji"
+                title="Emoji"
+                className={cn(emojiOpen && "text-brand-primary")}
+              >
+                <Smile className="size-4" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              align="end"
+              side="top"
+              sideOffset={8}
+              className="w-auto p-0"
+              onOpenAutoFocus={(e) => e.preventDefault()}
+            >
+              <EmojiPicker
+                onSelect={handleEmojiSelect}
+                onStickerSelect={handleStickerSelect}
+              />
+            </PopoverContent>
+          </Popover>
           <Button type="button" variant="ghost" size="icon-sm" aria-label="Attach" title="Attach">
             <Paperclip className="size-4" />
           </Button>

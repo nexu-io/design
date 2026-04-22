@@ -14,32 +14,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@nexu-design/ui-web";
-import {
-  Check,
-  Inbox,
-  LogOut,
-  MessageSquare,
-  Plus,
-  Settings,
-  Users,
-  Workflow,
-  Zap,
-} from "lucide-react";
+import { Check, MessageSquare, Plus, Settings, Users, Zap } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useT, type TranslationKey } from "@/i18n";
 import { useWorkspaceStore } from "@/stores/workspace";
-import { useTopicsStore } from "@/stores/topics";
 
 import { TitleBarSpacer } from "./WindowChrome";
 
 const navItems: { icon: typeof MessageSquare; path: string; labelKey: TranslationKey }[] = [
   { icon: MessageSquare, path: "/chat", labelKey: "section.chat" },
-  { icon: Inbox, path: "/issues", labelKey: "section.issues" },
   { icon: Users, path: "/agents", labelKey: "section.team" },
   { icon: Zap, path: "/runtimes", labelKey: "section.runtimes" },
-  { icon: Workflow, path: "/routines", labelKey: "section.routines" },
 ];
 
 function getWorkspaceSlug(name: string): string {
@@ -53,22 +40,8 @@ export function ActivityBar(): React.ReactElement {
   const navigate = useNavigate();
   const location = useLocation();
   const t = useT();
-  const { workspace, workspaces, switchWorkspace, reset } = useWorkspaceStore();
+  const { workspace, workspaces, switchWorkspace } = useWorkspaceStore();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const inboxUnreadCount = useTopicsStore((s) => {
-    let count = 0;
-    for (const topic of Object.values(s.topics)) {
-      if (!topic.issue) continue;
-      const lastRead = s.readAt[topic.id] ?? 0;
-      const msgs = s.messages[topic.id] ?? [];
-      const hasUnread = msgs.some(
-        (m) => m.sender.id !== "u-1" && m.createdAt > lastRead,
-      );
-      if (hasUnread) count += 1;
-    }
-    return count;
-  });
 
   return (
     <UiActivityBar className="w-14 border-r-0 bg-nav-surface py-0 text-nav-fg">
@@ -145,18 +118,6 @@ export function ActivityBar(): React.ReactElement {
               ) : null}
             </DropdownMenuItem>
 
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem
-              onClick={() => {
-                reset();
-                navigate("/");
-              }}
-              className="gap-2.5 rounded-lg px-3 py-2 text-destructive focus:text-destructive"
-            >
-              <LogOut className="size-3.5" />
-              {t("workspace.logOut")}
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </ActivityBarHeader>
@@ -164,7 +125,6 @@ export function ActivityBar(): React.ReactElement {
       <ActivityBarContent className="gap-1.5">
         {navItems.map(({ icon: Icon, path, labelKey }) => {
           const isActive = location.pathname.startsWith(path);
-          const showInboxBadge = path === "/issues" && inboxUnreadCount > 0;
 
           return (
             <ActivityBarItem
@@ -178,11 +138,6 @@ export function ActivityBar(): React.ReactElement {
                 <ActivityBarIndicator className="left-[-8px] inset-y-2 w-[3px] bg-nav-active-fg" />
               ) : null}
               <Icon className="size-[19px]" />
-              {showInboxBadge ? (
-                <span className="absolute -right-0.5 -top-0.5 flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-brand-primary px-1 text-[10px] font-semibold text-accent-fg">
-                  {inboxUnreadCount}
-                </span>
-              ) : null}
             </ActivityBarItem>
           );
         })}

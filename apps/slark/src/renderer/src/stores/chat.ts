@@ -1,12 +1,22 @@
 import { create } from "zustand";
-import type { Channel, IssueMeta, Message } from "@/types";
+import type { Channel, IssueMeta, Message, QuotedMessage } from "@/types";
 import { useTopicsStore } from "./topics";
+
+export interface PendingQuote {
+  channelId: string;
+  /** When set, the quote is scoped to this topic instead of the channel feed. */
+  topicId?: string;
+  quote: QuotedMessage;
+}
 
 interface ChatState {
   channels: Channel[];
   activeChannelId: string | null;
   messages: Record<string, Message[]>;
   pendingDraft: string | null;
+  pendingScrollToMessageId: string | null;
+  pendingScrollFlashCount: number;
+  pendingQuote: PendingQuote | null;
   pinnedIds: string[];
   hiddenIds: string[];
 
@@ -17,7 +27,10 @@ interface ChatState {
   removeChannel: (channelId: string) => void;
   addMessage: (channelId: string, message: Message) => void;
   updateMessage: (channelId: string, messageId: string, updates: Partial<Message>) => void;
+  recallMessage: (channelId: string, messageId: string) => void;
   setPendingDraft: (text: string | null) => void;
+  setPendingScrollToMessage: (messageId: string | null, flashCount?: number) => void;
+  setPendingQuote: (quote: PendingQuote | null) => void;
   togglePin: (channelId: string) => void;
   toggleHide: (id: string) => void;
   convertToTopic: (channelId: string, messageId: string, titleOverride?: string) => string | null;
@@ -39,6 +52,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
   activeChannelId: null,
   messages: {},
   pendingDraft: null,
+  pendingScrollToMessageId: null,
+  pendingScrollFlashCount: 1,
+  pendingQuote: null,
   pinnedIds: [],
   hiddenIds: [],
 
@@ -78,7 +94,32 @@ export const useChatStore = create<ChatState>((set, get) => ({
       },
     })),
 
+  recallMessage: (channelId, messageId) =>
+    set((state) => ({
+      messages: {
+        ...state.messages,
+        [channelId]: (state.messages[channelId] ?? []).map((msg) =>
+          msg.id === messageId
+            ? {
+                ...msg,
+                recalled: true,
+                recalledAt: Date.now(),
+                content: "",
+                blocks: undefined,
+                reactions: [],
+                isStreaming: false,
+              }
+            : msg,
+        ),
+      },
+    })),
+
   setPendingDraft: (text) => set({ pendingDraft: text }),
+
+  setPendingScrollToMessage: (messageId, flashCount = 1) =>
+    set({ pendingScrollToMessageId: messageId, pendingScrollFlashCount: flashCount }),
+
+  setPendingQuote: (quote) => set({ pendingQuote: quote }),
 
   togglePin: (channelId) =>
     set((s) => ({
