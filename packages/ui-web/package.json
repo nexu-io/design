@@ -4,10 +4,7 @@
   "private": false,
   "description": "React primitives and patterns for building Nexu web interfaces",
   "license": "UNLICENSED",
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
