@@ -49,8 +49,19 @@ export function ActivityBar(): React.ReactElement {
        the rail. 64px lands between Linear (60px) and Slack (70px) — a
        comfortable Mac-native chrome density. TitleBarSpacer `h-[40px]`
        kept so the first header row clears `trafficLightPosition` (y:14
-       + hit target) with a consistent gap. */
-    <UiActivityBar surface="glass" className="w-16 border-r-0 py-0 text-nav-fg">
+       + hit target) with a consistent gap.
+
+       `pl-1.5` (6px) is deliberate and MUST match the base-plate's
+       `p-1.5` on the right of the rail in AppLayout. Without it,
+       `items-center` centres icons inside the 64px rail alone (x=12
+       to x=52), which reads visually left-shifted once you include
+       the 6px base-plate gap before the inner panel's rounded corner
+       (right gap = 18px vs left gap = 12px). The `pl-1.5` offset
+       re-centres icons against the full `rail + base-plate` chrome
+       so left gap (to window edge) equals right gap (to panel
+       corner) = 15px. Keep this padding in sync with AppLayout's
+       `p-1.5`; if that changes, this must change too. */
+    <UiActivityBar surface="glass" className="w-16 border-r-0 py-0 pl-1.5 text-nav-fg">
       <TitleBarSpacer className="mb-3 h-[40px]" />
 
       <ActivityBarHeader className="mb-4 w-10 border-b-0 pb-0">
