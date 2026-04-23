@@ -690,7 +690,7 @@ The ladder (approximate background lightness in dark mode):
 | **Input well** (inset, _below_ card) | `color-mix(surface-0, surface-1)` (~8.5%) | `Input`, `Textarea`, `Select`, `Combobox`, install-command pill, copyable-link container |
 | Card / panel | `surface-1` (~11%) | `Card`, main content |
 | **Button / chip** (_above_ card, low emphasis) | translucent `foreground` tint (`bg-foreground/[0.03]` light, `bg-foreground/[0.06]` dark for `outline`; `/[0.06]` light, `/[0.1]` dark for `secondary`) | `Button variant="outline" \| "secondary"`, chip-style affordances |
-| **Modal / floating layer** (_above_ card) | `surface-2` + stronger `border-border` | `Dialog`, `Sheet`, `DropdownMenu`, `Popover` |
+| **Modal / floating layer** (_above_ card) | `surface-2` + `dark:border-border-strong` + `shadow-lg` | `Dialog`, `Sheet`, `DropdownMenu`, `Popover`, `Select`, `Combobox` (via `Popover`) |
 
 Paired rules:
 
@@ -702,7 +702,7 @@ Paired rules:
 Do:
 
 - Reach for `color-mix(surface-0, surface-1)` when a control needs the "inset well" feel in dark.
-- Raise modal / popover surfaces to `surface-2` _and_ strengthen the border to `border-border` — don't lean on shadow alone in dark.
+- Raise modal / popover surfaces to `surface-2`, use `dark:border-border-strong` (translucent-white 12%, not the surface-tone `--border` token), _and_ carry `shadow-lg`. Overlay-on-overlay cases (e.g. a Popover / Select opening inside a Dialog) put two surface-2 panels flush against each other — a solid-tone border self-paints invisibly, only a translucent-white edge lifts clear of any parent surface.
 - Keep all surface overrides expressed as `dark:` utilities on the existing light token, not a parallel token.
 
 Don't:

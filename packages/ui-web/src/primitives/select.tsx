@@ -92,7 +92,17 @@ const SelectContent = React.forwardRef<
       ref={ref}
       data-slot="select-content"
       className={cn(
-        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95",
+        // Overlay surface recipe mirrors Popover / Dialog / Dropdown —
+        // see the Popover primitive for the full rationale. `bg-popover`
+        // (= `surface-1` in dark) was a half-step below the other
+        // overlays and would render as a pit when a Select opens on
+        // top of a Dialog surface-2. Align on `dark:bg-surface-2` +
+        // `dark:border-border-strong` + `shadow-lg` so Select stands
+        // out from any parent without per-context tuning. See the
+        // Popover primitive for the full rationale on why `strong`
+        // (translucent-white) beats `--border` (surface-2 tone) for
+        // overlay-on-overlay edges in dark.
+        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-xl border border-border-subtle dark:border-border-strong bg-popover dark:bg-surface-2 text-popover-foreground shadow-lg animate-in fade-in-0 zoom-in-95",
         position === "popper" && "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
         className,
       )}

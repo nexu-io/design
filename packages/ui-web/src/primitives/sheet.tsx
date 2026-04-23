@@ -31,7 +31,12 @@ const sheetVariants = cva(
   // dimmed page and need to read as a lifted layer. Raw `surface-0` in
   // dark blends with the scrim; `surface-2` puts the sheet one clear
   // step above the card.
-  "fixed z-50 gap-4 bg-surface-0 dark:bg-surface-2 p-6 shadow-md transition ease-in-out data-[state=closed]:duration-200 data-[state=open]:duration-300",
+  //
+  // `border-border-subtle dark:border-border-strong` + `shadow-lg` — matches
+  // the shared overlay recipe (see Popover / Dialog / DropdownMenu). The
+  // per-`side` variants below only carry `border-b|t|l|r` so the active
+  // edge inherits these colour + shadow tokens.
+  "fixed z-50 gap-4 bg-surface-0 dark:bg-surface-2 p-6 border-border-subtle dark:border-border-strong shadow-lg transition ease-in-out data-[state=closed]:duration-200 data-[state=open]:duration-300",
   {
     variants: {
       side: {

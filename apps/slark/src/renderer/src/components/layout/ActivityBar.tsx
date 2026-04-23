@@ -49,8 +49,19 @@ export function ActivityBar(): React.ReactElement {
        the rail. 64px lands between Linear (60px) and Slack (70px) — a
        comfortable Mac-native chrome density. TitleBarSpacer `h-[40px]`
        kept so the first header row clears `trafficLightPosition` (y:14
-       + hit target) with a consistent gap. */
-    <UiActivityBar surface="glass" className="w-16 border-r-0 py-0 text-nav-fg">
+       + hit target) with a consistent gap.
+
+       `pl-1.5` (6px) is deliberate and MUST match the base-plate's
+       `p-1.5` on the right of the rail in AppLayout. Without it,
+       `items-center` centres icons inside the 64px rail alone (x=12
+       to x=52), which reads visually left-shifted once you include
+       the 6px base-plate gap before the inner panel's rounded corner
+       (right gap = 18px vs left gap = 12px). The `pl-1.5` offset
+       re-centres icons against the full `rail + base-plate` chrome
+       so left gap (to window edge) equals right gap (to panel
+       corner) = 15px. Keep this padding in sync with AppLayout's
+       `p-1.5`; if that changes, this must change too. */
+    <UiActivityBar surface="glass" className="w-16 border-r-0 py-0 pl-1.5 text-nav-fg">
       <TitleBarSpacer className="mb-3 h-[40px]" />
 
       <ActivityBarHeader className="mb-4 w-10 border-b-0 pb-0">
@@ -115,7 +126,17 @@ export function ActivityBar(): React.ReactElement {
               className="gap-3 rounded-lg px-2.5 py-2"
               onClick={() => setMenuOpen(false)}
             >
-              <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-secondary/40">
+              {/* `+` placeholder tile sits on the dropdown surface, which PR
+                  #57's dark-mode ladder lifted to `surface-2`. The old
+                  `bg-secondary/40` fill became invisible there (secondary ≡
+                  surface-2 in dark, so 40% of it on top of itself reads as
+                  no fill). Switch to the translucent `foreground` tint used
+                  by the outline / secondary button variants — it borrows
+                  value contrast from the text colour, so it reads on both
+                  the light-mode popover card *and* the dark-mode surface-2
+                  dropdown without re-tuning per theme. Border stays since
+                  that's the "empty add-slot" outline. */}
+              <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-foreground/[0.03] dark:bg-foreground/[0.06]">
                 <Plus className="size-4 text-muted-foreground" />
               </div>
               <span className="flex-1 text-left text-sm text-foreground">Add workspace</span>
