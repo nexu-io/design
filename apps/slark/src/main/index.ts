@@ -50,6 +50,7 @@ function createWindow(): void {
     height: 800,
     minWidth: 960,
     minHeight: 600,
+    backgroundColor: isMac ? "#00000000" : "#fafafa",
     show: false,
     titleBarStyle: "hiddenInset",
     trafficLightPosition: { x: 16, y: 14 },
@@ -60,15 +61,29 @@ function createWindow(): void {
     // Non-mac platforms fall back to a solid light background that matches
     // --color-surface-0 so there's no black flash on startup.
     ...(isMac
-      ? { vibrancy: "sidebar" as const, visualEffectState: "active" as const }
-      : { backgroundColor: "#fafafa" }),
+      ? {
+          transparent: true,
+          vibrancy: "sidebar" as const,
+          visualEffectState: "followWindow" as const,
+        }
+      : {}),
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       sandbox: false,
     },
   });
 
+  if (isMac) {
+    mainWindow.setBackgroundColor("#00000000");
+    mainWindow.setVibrancy("sidebar");
+  }
+
   mainWindow.on("ready-to-show", () => {
+    if (isMac) {
+      mainWindow.setBackgroundColor("#00000000");
+      mainWindow.setVibrancy("sidebar");
+    }
+
     mainWindow.show();
   });
 
