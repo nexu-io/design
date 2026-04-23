@@ -279,3 +279,64 @@ Skills and marketplace cards should use a **stable, data-driven icon mapping** i
 - **UI layer:** render `logo` first, then `icon` fallback through `SkillMarketplaceCard`
 
 Reference implementation: `packages/demo-pages/src/pages/openclaw/skillData.ts`.
+
+---
+
+## 12. Dark-mode surface & contrast ladder
+
+Dark mode inverts the "light = shallow, dark = elevated" relationship that
+the default surface token map assumes. A handful of primitives therefore
+apply `dark:` overrides to re-establish a coherent elevation ladder where
+**inputs sit just below the card, buttons and modals sit above it**, and
+neither disappears into the deep `surface-0` tone used for the app
+background. Light mode is intentionally untouched.
+
+### The ladder
+
+Approximate background lightness in dark mode, bottom-up:
+
+| Role | Token recipe | Primitives |
+|------|--------------|------------|
+| App / page | `bg-surface-0` (~5.7%) | app shell, scrim behind modals |
+| **Input well** (inset, _below_ card) | `bg-surface-0 dark:bg-[color:color-mix(in_srgb,var(--color-surface-0),var(--color-surface-1))]` (~8.5%) | `Input`, `Textarea`, `Select` trigger, `Combobox` trigger, install-command pill, copyable-link container |
+| Card / panel | `bg-surface-1` (~11%) | `Card`, main content surfaces |
+| **Button / chip** (low emphasis, lifted _above_ card) | translucent `foreground` tint — `outline`: `bg-foreground/[0.03] dark:bg-foreground/[0.06]` (hover `/[0.06]` / `/[0.1]`); `secondary`: `bg-foreground/[0.06] dark:bg-foreground/[0.1]` (hover `/[0.09]` / `/[0.14]`) | `Button variant="outline" \| "secondary"`, chip-style affordances |
+| **Modal / floating layer** (lifted _above_ card) | `bg-surface-0 dark:bg-surface-2` _plus_ `border-border-subtle dark:border-border-strong` _plus_ `shadow-lg` | `Dialog`, `Sheet`, `DropdownMenu`, `DropdownMenuSubContent`, `Popover`, `Select`, `Combobox` (via `Popover`) |
+
+### Paired rules
+
+- **Placeholder contrast:** drop from `placeholder:text-muted-foreground/50` to `dark:placeholder:text-muted-foreground/35` on all form-field primitives. `muted-foreground` is brighter in dark, so the same `/50` reads as hot against the deeper input bg.
+- **Avatar / icon tile ring:** pair `ring-black/5` with `dark:ring-white/10` wherever a `rounded-full` (or square tile) sits over `bg-secondary` / `surface-2`. Avatars disappear otherwise.
+- **Sidebar section-header affordances:** prefer the bare ghost recipe (`text-nav-muted transition-colors hover:bg-nav-hover hover:text-nav-fg`) over a filled chip. A filled chip with `bg-surface-0` reads as a dark pit in dark sidebars; the ghost version stays invisible at rest and lights up on hover in either theme.
+
+### Why `bg-surface-0` alone doesn't work in dark
+
+In light mode `surface-0 (98%)` sits just below `surface-1 (100%)` — a subtle inset that reads correctly as a "well" for inputs and a "clean chrome" for dialogs sitting on a dimmer page.
+
+In dark mode `surface-0 (5.7%)` sits well below `surface-1 (11.2%)`, and the page + scrim also live near `surface-0`. Any primitive using `bg-surface-0` therefore:
+
+- reads as a near-black pit for inputs (rather than a soft recess);
+- blends into the scrim for modals (rather than floating above);
+- blends into the page for dropdowns and popovers.
+
+The `dark:` overrides above preserve the intended elevation relationships without requiring the base tokens to flip per theme: inputs sit in a mixed well below the card, modals lift to `surface-2`, and low-emphasis buttons use a translucent `foreground` tint so they adapt to tinted cards (warning / success / info / glass) instead of stamping a fixed surface patch on a coloured parent.
+
+### Rules
+
+- Keep all overrides expressed as `dark:` utilities layered on top of the existing light token — do not fork a second set of tokens for dark.
+- Reach for `color-mix(in srgb, var(--color-surface-0), var(--color-surface-1))` whenever a control needs the "inset well" feel in dark; do not invent a one-off hex.
+- Raise modal surfaces with `dark:bg-surface-2`, reinforce the edge with **`dark:border-border-strong`** (translucent-white 12% — _not_ the surface-tone `--border` token), _and_ carry `shadow-lg`. Overlay-on-overlay cases (e.g. a `Popover` or `Select` opening inside a `Dialog`) put two `surface-2` panels flush against each other, and a solid-tone border self-paints invisibly on a same-tone parent. `border-strong` is a translucent-white tint so it lifts clear of any parent surface without per-context tuning.
+- Use the translucent `foreground` tint for low-emphasis buttons (`outline`, `secondary`) — never a hard `bg-surface-*`. These buttons sit on cards that may be warning / success / info tinted, and a fixed surface colour stamps through the tint. Brand / CTA variants (`default`, `brand`, `primary`, `destructive`) stay solid — emphasis is intentional.
+- Avatar rings always need the `dark:ring-white/10` pair; fix regressions the same day they land.
+- Don't apply bare `bg-surface-0` to modal, floating, popover, or sheet content — always pair with `dark:bg-surface-2`.
+- Don't silently introduce a new surface tone (e.g. `dark:bg-[#1e1e24]`). Map new controls onto this ladder first, and only promote to a named token once the same mapping recurs across multiple primitives.
+
+### Reference implementations
+
+- Input family: `packages/ui-web/src/primitives/{input,textarea,select,combobox}.tsx`
+- Button: `packages/ui-web/src/primitives/button.tsx` (`outline`, `secondary` variants)
+- Modal family: `packages/ui-web/src/primitives/{dialog,sheet,dropdown-menu,popover}.tsx`
+- Install / copyable command pill: `apps/slark/src/renderer/src/components/runtimes/RuntimesView.tsx` (`InstallCommand`)
+- Invite link container: `apps/slark/src/renderer/src/components/chat/InvitePeopleDialog.tsx`
+- Sidebar `+` affordance: `apps/slark/src/renderer/src/components/agents/AgentsSidebar.tsx`, `apps/slark/src/renderer/src/components/chat/ChatSidebar.tsx`
+- Avatar ring: any `rounded-full ... ring-1 ring-inset ring-black/5 dark:ring-white/10` occurrence in `apps/slark/src/renderer/src/components/`

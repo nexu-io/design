@@ -7,12 +7,13 @@ import { cn } from "../lib/cn";
 /**
  * `surface` controls the rail background:
  *  - `solid` (default): opaque `bg-surface-1`, safe on any host.
- *  - `glass`: a light frosted-glass wash (`bg-white/30 backdrop-saturate-150`)
- *    designed to sit on top of a translucent host window. On macOS Electron
- *    this gives a true frosted look when the host `BrowserWindow` opts into
- *    `vibrancy: "sidebar"` (and locks `nativeTheme.themeSource = "light"` so
- *    the native vibrancy always renders light). On web / non-vibrancy hosts
- *    it degrades gracefully to a soft white tint — never dark.
+ *  - `glass`: a frosted-glass wash designed to sit on top of a translucent
+ *    host window. On macOS Electron the host `BrowserWindow` opts into
+ *    `vibrancy: "sidebar"` and follows the OS appearance, so this variant
+ *    produces a light wash in light mode and a dark wash in dark mode —
+ *    otherwise the rail reads as a "light mode tint" over a dark vibrancy
+ *    and fights the surrounding surfaces. On web / non-vibrancy hosts it
+ *    degrades gracefully to a subtle theme-matched tint.
  */
 const activityBarVariants = cva(
   "flex w-12 shrink-0 flex-col items-center border-r border-border py-2",
@@ -20,7 +21,8 @@ const activityBarVariants = cva(
     variants: {
       surface: {
         solid: "bg-surface-1",
-        glass: "bg-white/30 backdrop-saturate-150",
+        glass:
+          "bg-white/30 backdrop-saturate-150 dark:bg-black/80 dark:backdrop-saturate-125 dark:backdrop-blur-md",
       },
     },
     defaultVariants: {

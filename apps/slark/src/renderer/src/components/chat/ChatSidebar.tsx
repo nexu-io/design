@@ -606,7 +606,13 @@ export function ChatSidebar(): React.ReactElement {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-1.5 px-3 pb-2">
+      {/* No `pt-*` on the search wrap — the 12px gap from the sidebar's
+          page title down to here is owned by `SidebarHeader`'s `pb-3`
+          (spacing rule in layout/Sidebar.tsx).
+          `pb-4` = 16px below the search, matching AgentsSidebar so the
+          first section header sits at the same vertical distance from
+          the search input across sidebars. */}
+      <div className="flex items-center gap-1.5 px-3 pb-4">
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}

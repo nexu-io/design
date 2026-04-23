@@ -87,7 +87,7 @@ export function UserDetail({ user }: UserDetailProps): React.ReactElement {
             <img
               src={user.avatar}
               alt=""
-              className="h-14 w-14 shrink-0 rounded-full ring-1 ring-inset ring-black/5"
+              className="h-14 w-14 shrink-0 rounded-full ring-1 ring-inset ring-black/5 dark:ring-white/10"
             />
             <div className="min-w-0">
               <div className="flex items-center gap-2">

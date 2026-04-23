@@ -53,7 +53,7 @@ export function AgentsView(): React.ReactElement {
                 <img
                   src={agent.avatar}
                   alt=""
-                  className="h-10 w-10 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+                  className="h-10 w-10 rounded-full bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10"
                 />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">

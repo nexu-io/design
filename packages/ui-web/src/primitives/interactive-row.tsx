@@ -32,7 +32,16 @@ export const InteractiveRow = React.forwardRef<HTMLButtonElement, InteractiveRow
           "flex w-full items-start gap-3 rounded-xl border text-left transition-colors",
           tone === "default"
             ? "border-border bg-surface-1 hover:border-border-hover hover:bg-surface-2/60"
-            : "border-transparent bg-transparent hover:bg-surface-2/60",
+            : // `subtle` hover previously used `bg-surface-2/60`, which
+              // assumed the row sat on a surface-0 / surface-1 parent.
+              // After PR #57 lifted Dialog / Popover / DropdownMenu to
+              // `surface-2` in dark mode, 60% of surface-2 composited on
+              // top of surface-2 collapses to no colour change, so the row
+              // appears unresponsive to hover in any of those overlays.
+              // Switch to the translucent `foreground` tint used by the
+              // outline / secondary buttons — it borrows value contrast
+              // from the text colour and therefore reads on any surface.
+              "border-transparent bg-transparent hover:bg-foreground/[0.04] dark:hover:bg-foreground/[0.06]",
           selected && "border-accent/40 bg-accent/5 ring-2 ring-accent/20",
           className,
         )}

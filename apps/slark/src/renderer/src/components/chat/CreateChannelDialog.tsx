@@ -184,9 +184,18 @@ export function CreateChannelDialog({
             <FormFieldControl>
               <Popover open={membersOpen} onOpenChange={setMembersOpen}>
                 <PopoverTrigger asChild>
+                  {/* Hand-rolled "input-looking" trigger: this button sits in the
+                      same form stack as the Name / Description <Input>s above, so
+                      it has to follow the same dark-mode well recipe the Input
+                      primitive uses — `bg-surface-0` in light mode, and
+                      `color-mix(surface-0, surface-1)` in dark mode — otherwise
+                      this row renders as a near-black pit against the dialog's
+                      surface-2 card while the real inputs render one step
+                      lighter. See COMPONENT_REFERENCE → "Dark-mode surface &
+                      contrast ladder → Input / textarea / copy pill". */}
                   <button
                     type="button"
-                    className="flex w-full items-center gap-2 rounded-lg border border-input bg-surface-0 px-3 py-2 text-left transition-colors hover:border-border-hover data-[state=open]:border-accent data-[state=open]:ring-2 data-[state=open]:ring-accent/20"
+                    className="flex w-full items-center gap-2 rounded-lg border border-input bg-surface-0 dark:bg-[color:color-mix(in_srgb,var(--color-surface-0),var(--color-surface-1))] px-3 py-2 text-left transition-colors hover:border-border-hover data-[state=open]:border-accent data-[state=open]:ring-2 data-[state=open]:ring-accent/20"
                   >
                     {previewAvatars.length > 0 ? (
                       <div className="flex shrink-0 -space-x-1.5">
@@ -269,7 +278,7 @@ export function CreateChannelDialog({
                                   <img
                                     src={u.avatar}
                                     alt={u.name}
-                                    className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+                                    className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10"
                                   />
                                 </InteractiveRowLeading>
                                 <InteractiveRowContent>
@@ -283,7 +292,13 @@ export function CreateChannelDialog({
                                     "flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors",
                                     selected
                                       ? "border-foreground bg-foreground text-background"
-                                      : "border-input",
+                                      : // Empty-state needs a visible fill,
+                                        // not just a ghost border — see
+                                        // AddMembersDialog for the same
+                                        // reasoning. Without this the
+                                        // checkbox is imperceptible on the
+                                        // popover's dark surface-2 card.
+                                        "border-input bg-foreground/[0.04] dark:bg-foreground/[0.08]",
                                   )}
                                 >
                                   {selected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
@@ -318,10 +333,10 @@ export function CreateChannelDialog({
                                     <img
                                       src={a.avatar}
                                       alt={a.name}
-                                      className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+                                      className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10"
                                     />
                                   ) : (
-                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary ring-1 ring-inset ring-black/5">
+                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10">
                                       <Bot className="h-3.5 w-3.5 text-muted-foreground" />
                                     </div>
                                   )}
@@ -339,7 +354,13 @@ export function CreateChannelDialog({
                                     "flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors",
                                     selected
                                       ? "border-foreground bg-foreground text-background"
-                                      : "border-input",
+                                      : // Empty-state needs a visible fill,
+                                        // not just a ghost border — see
+                                        // AddMembersDialog for the same
+                                        // reasoning. Without this the
+                                        // checkbox is imperceptible on the
+                                        // popover's dark surface-2 card.
+                                        "border-input bg-foreground/[0.04] dark:bg-foreground/[0.08]",
                                   )}
                                 >
                                   {selected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}

@@ -198,7 +198,7 @@ export function CreateAgentDialog({
                                 <img
                                   src={template.avatar}
                                   alt=""
-                                  className="size-9 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+                                  className="size-9 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10"
                                 />
                                 <div className="min-w-0 flex-1">
                                   <div className="truncate text-[13px] font-medium text-text-heading">

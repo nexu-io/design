@@ -156,7 +156,7 @@ export function AddMembersDialog({
                           <img
                             src={u.avatar}
                             alt={u.name}
-                            className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+                            className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10"
                           />
                         </InteractiveRowLeading>
                         <InteractiveRowContent>
@@ -168,7 +168,14 @@ export function AddMembersDialog({
                             "flex items-center justify-center h-5 w-5 rounded border transition-colors shrink-0",
                             selected
                               ? "bg-foreground border-foreground text-background"
-                              : "border-input",
+                              : // Empty-state checkbox needs to read as a
+                                // visible rounded shape, not a ghost border.
+                                // `border-input` alone was invisible on the
+                                // Dialog's dark surface-2 card; add a
+                                // translucent `foreground` tint so the box
+                                // is clearly an affordance before the user
+                                // hovers it.
+                                "border-input bg-foreground/[0.04] dark:bg-foreground/[0.08]",
                           )}
                         >
                           {selected && <Check className="h-3.5 w-3.5" />}
@@ -203,10 +210,10 @@ export function AddMembersDialog({
                             <img
                               src={a.avatar}
                               alt={a.name}
-                              className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+                              className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10"
                             />
                           ) : (
-                            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary ring-1 ring-inset ring-black/5">
+                            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10">
                               <Bot className="h-3.5 w-3.5 text-muted-foreground" />
                             </div>
                           )}
@@ -232,7 +239,14 @@ export function AddMembersDialog({
                             "flex items-center justify-center h-5 w-5 rounded border transition-colors shrink-0",
                             selected
                               ? "bg-foreground border-foreground text-background"
-                              : "border-input",
+                              : // Empty-state checkbox needs to read as a
+                                // visible rounded shape, not a ghost border.
+                                // `border-input` alone was invisible on the
+                                // Dialog's dark surface-2 card; add a
+                                // translucent `foreground` tint so the box
+                                // is clearly an affordance before the user
+                                // hovers it.
+                                "border-input bg-foreground/[0.04] dark:bg-foreground/[0.08]",
                           )}
                         >
                           {selected && <Check className="h-3.5 w-3.5" />}

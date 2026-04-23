@@ -14,9 +14,28 @@ const buttonVariants = cva(
           "bg-[var(--color-accent)] text-[var(--color-accent-fg,white)] shadow-sm hover:bg-[var(--color-accent-hover)]",
         brand: "bg-primary text-primary-foreground hover:bg-primary/90",
         primary: "bg-primary text-primary-foreground hover:bg-primary/90",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        // Secondary sits one step louder than outline but follows the
+        // same "translucent foreground tint" pattern so it adapts to
+        // tinted / glass / plain parents instead of stamping a fixed
+        // surface-2 block. Higher opacity than outline gives it a
+        // slightly filled personality while still borrowing the parent
+        // colour.
+        secondary:
+          "bg-foreground/[0.06] dark:bg-foreground/[0.1] text-secondary-foreground hover:bg-foreground/[0.09] dark:hover:bg-foreground/[0.14]",
+        // Outline is a low-emphasis control. The rest fill is a
+        // translucent tint of `foreground` rather than a hard surface
+        // token so the button reads correctly on ANY parent colour —
+        // plain cards, tinted warning/success/info cards, glass
+        // chrome — instead of stamping a fixed `bg-surface-*` patch
+        // onto a coloured background. `foreground` auto-flips per
+        // theme (dark text in light mode / light text in dark mode),
+        // so a single opacity value gives a subtle inset in light and
+        // a subtle lift in dark. Hover doubles the opacity for
+        // feedback. NOTE: no `shadow-*` — the border + translucent
+        // tint already carry the shape; a drop shadow reads as a
+        // black halo against tinted / dark parent cards.
         outline:
-          "border border-input bg-background text-foreground shadow-xs hover:border-foreground/15 hover:bg-foreground/[0.03] hover:text-foreground",
+          "border border-input bg-foreground/[0.03] dark:bg-foreground/[0.06] text-foreground hover:border-foreground/15 hover:bg-foreground/[0.06] dark:hover:bg-foreground/[0.1] hover:text-foreground",
         ghost:
           "text-[var(--color-text-muted)] hover:bg-surface-2 hover:text-[var(--color-text-secondary)]",
         soft: "bg-accent/10 text-accent hover:bg-accent/20",

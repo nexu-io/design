@@ -33,8 +33,6 @@ import { RuntimesSidebar } from "@/components/runtimes/RuntimesSidebar";
 import { type TranslationKey, useT } from "@/i18n";
 import { useWorkspaceStore } from "@/stores/workspace";
 
-import { TitleBarSpacer } from "./WindowChrome";
-
 const sections: { path: string; labelKey: TranslationKey }[] = [
   { path: "/chat", labelKey: "section.chat" },
   { path: "/agents", labelKey: "section.team" },
@@ -69,16 +67,47 @@ export function Sidebar(): React.ReactElement {
     : "nexu.app";
 
   return (
-    <UiSidebar className="w-64 border-r border-nav-border bg-nav text-nav-fg shadow-none">
-      <TitleBarSpacer className="h-[38px]" />
+    <UiSidebar className="w-64 border-r-0 bg-transparent text-nav-fg shadow-none">
+      {/* ────────────────────────────────────────────────────────────
+          Sidebar layout rules (keep in sync across ChatSidebar /
+          AgentsSidebar / RuntimesSidebar / SettingsSidebar):
 
-      <SidebarHeader className="no-drag px-3 pb-2">
+          1. Page title (this SidebarHeader)
+             - `text-[13px] font-semibold uppercase tracking-wider`
+             - `px-4 pt-3 pb-3` — the `pb-3` (= 12px) is the ONLY
+               owner of the gap between the page title and the first
+               content element. Sidebars MUST NOT add `pt-*` on their
+               root container or first child — otherwise the gap
+               stacks. Change this one value to adjust globally.
+             - The title row itself is pinned to `flex h-7 items-center`
+               (28px) so differently-sized title slots (15px workspace
+               switcher vs 13px uppercase label) still render at the
+               same y-coordinate — otherwise the search input beneath
+               drifts 6–8px between sidebars.
+             - Exception: `/chat` renders a workspace-switcher dropdown
+               here instead (15px / bold / mixed-case).
+
+          2. Section header (inside the list below)
+             - `flex items-center gap-1.5 px-2 py-1.5
+               text-[11px] font-semibold text-nav-muted
+               uppercase tracking-wider`
+
+          3. Sibling sections
+             - wrap the scroll container with `space-y-3` (= 12px)
+
+          4. List rows
+             - `px-2 py-2 rounded-md` with inner `space-y-0.5`
+          ──────────────────────────────────────────────────────────── */}
+      <SidebarHeader className="no-drag px-4 pt-3 pb-3">
         {location.pathname.startsWith("/chat") ? (
           <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
             <DropdownMenuTrigger asChild>
+              {/* `h-7` pins this row to the same 28px height used by the
+                  generic title slots below, so the search input under
+                  every sidebar sits at the exact same y-coordinate. */}
               <button
                 type="button"
-                className="flex w-full items-center gap-1.5 rounded-md px-1.5 py-1 text-left hover:bg-nav-hover transition-colors"
+                className="flex h-7 w-full items-center gap-1.5 rounded-md px-1.5 text-left hover:bg-nav-hover transition-colors"
               >
                 <span className="truncate text-[15px] font-bold tracking-tight">
                   {workspace?.name ?? "Nexu"}
@@ -157,16 +186,22 @@ export function Sidebar(): React.ReactElement {
           /* `/agents` overrides the generic `section.team` label ("Team")
              with the singular "Teammate" as the sidebar's page title —
              the invite CTA has moved down into the MEMBERS section
-             header, so this row is now label-only. */
-          <div className="mt-1 px-1.5 text-[13px] font-semibold uppercase tracking-wider text-nav-fg">
+             header, so this row is now label-only.
+             `flex h-7 items-center` matches the Chat workspace switcher's
+             28px row so the search input below sits at the same y. */
+          <div className="flex h-7 items-center px-1.5 text-[13px] font-semibold uppercase tracking-wider text-nav-fg">
             Teammate
           </div>
-        ) : currentSection && !location.pathname.startsWith("/runtimes") ? (
-          /* The runtimes panel owns its own header row (label + online
-             count on a single line) so we skip the generic label here
-             — otherwise the label sits at a different indent than the
-             content below it. */
-          <div className="mt-1 px-1.5 text-[13px] font-semibold uppercase tracking-wider text-nav-fg">
+        ) : currentSection ? (
+          /* All other sidebars (chat dropdown handled above) reuse the
+             same top-title slot so `Runtimes`, `Settings`, etc. sit at
+             the exact same vertical baseline and left indent as the
+             `Teammate` label — previously the runtimes panel rendered
+             its own in-body title row, which sank the label ~20px
+             lower than Teammate's and made the two sidebars feel
+             misaligned when switching.
+             `flex h-7 items-center` pins the row height (see above). */
+          <div className="flex h-7 items-center px-1.5 text-[13px] font-semibold uppercase tracking-wider text-nav-fg">
             {t(currentSection.labelKey)}
           </div>
         ) : null}
@@ -196,7 +231,7 @@ function SettingsSidebar(): React.ReactElement {
   ];
 
   return (
-    <ScrollArea className="h-full px-2 pb-3">
+    <ScrollArea className="h-full px-3 pb-3">
       <NavigationMenu>
         <NavigationMenuList>
           {items.map(({ path, label, icon: Icon, exact }) => {
@@ -209,7 +244,7 @@ function SettingsSidebar(): React.ReactElement {
                 <NavigationMenuButton
                   active={isActive}
                   onClick={() => navigate(path)}
-                  className="rounded-md px-2.5 py-1.5 text-sm text-nav-muted data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg hover:bg-nav-hover hover:text-nav-fg"
+                  className="rounded-md px-2 py-2 text-sm text-nav-muted data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg hover:bg-nav-hover hover:text-nav-fg"
                 >
                   <Icon className="h-4 w-4 shrink-0" />
                   <span>{label}</span>

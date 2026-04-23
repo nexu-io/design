@@ -673,6 +673,47 @@ Shared guardrails for the most common polish regressions.
 - Use semantic Lucide icons only as fallbacks for unknown, custom, or internal skills.
 - Keep the existing marketplace card slot sizing: 18px mark inside the 36px leading carrier.
 
+### Dark-mode surface & contrast ladder
+
+Dark mode inverts the "light = shallow, dark = elevated" relationship that
+the default surface token map assumes, so a handful of primitives
+deliberately override their background, ring, or placeholder opacity under
+`.dark`. Keep the relationship consistent across the library — straying
+breaks either the "well" feel of inputs or the "floats above" feel of
+modals.
+
+The ladder (approximate background lightness in dark mode):
+
+| Role | Dark surface | Primitives |
+|------|--------------|-----------|
+| App / page | `surface-0` (~5.7%) | app background, scrim |
+| **Input well** (inset, _below_ card) | `color-mix(surface-0, surface-1)` (~8.5%) | `Input`, `Textarea`, `Select`, `Combobox`, install-command pill, copyable-link container |
+| Card / panel | `surface-1` (~11%) | `Card`, main content |
+| **Button / chip** (_above_ card, low emphasis) | translucent `foreground` tint (`bg-foreground/[0.03]` light, `bg-foreground/[0.06]` dark for `outline`; `/[0.06]` light, `/[0.1]` dark for `secondary`) | `Button variant="outline" \| "secondary"`, chip-style affordances |
+| **Modal / floating layer** (_above_ card) | `surface-2` + `dark:border-border-strong` + `shadow-lg` | `Dialog`, `Sheet`, `DropdownMenu`, `Popover`, `Select`, `Combobox` (via `Popover`) |
+
+Paired rules:
+
+- Input placeholders drop to `dark:placeholder:text-muted-foreground/35` — `/50` is too hot on the deep-ish input background.
+- Avatars / icon tiles use `ring-black/5 dark:ring-white/10` so the edge stays visible on dark surfaces.
+- Low-emphasis buttons (`outline`, `secondary`) use a translucent tint of `foreground` rather than a hard `surface-2` fill so they borrow the parent's colour on tinted cards (warning / success / info / glass). Brand / CTA buttons (`default`, `brand`, `primary`, `destructive`) stay solid — emphasis is intentional.
+- Light mode is intentionally left untouched. Every rule is a `dark:` override layered on top of the existing token.
+
+Do:
+
+- Reach for `color-mix(surface-0, surface-1)` when a control needs the "inset well" feel in dark.
+- Raise modal / popover surfaces to `surface-2`, use `dark:border-border-strong` (translucent-white 12%, not the surface-tone `--border` token), _and_ carry `shadow-lg`. Overlay-on-overlay cases (e.g. a Popover / Select opening inside a Dialog) put two surface-2 panels flush against each other — a solid-tone border self-paints invisibly, only a translucent-white edge lifts clear of any parent surface.
+- Keep all surface overrides expressed as `dark:` utilities on the existing light token, not a parallel token.
+
+Don't:
+
+- Don't apply bare `bg-surface-0` to modal or floating layers — they blend into the scrim'd page in dark.
+- Don't use `ring-black/5` alone on avatars that may render on dark surfaces.
+- Don't stamp a hard `bg-surface-*` fill on low-emphasis buttons (`outline`, `secondary`). They must ride on top of potentially tinted parents (warning / success / info / glass cards); a translucent `foreground` tint keeps the button coherent with whichever card it lands on.
+- Don't invent a new surface tone for a control without first mapping it onto this ladder; promote to a named token only once the mapping recurs across multiple primitives.
+
+Spec: `specs/ui-polish-conventions.md#12-dark-mode-surface--contrast-ladder`.
+
 ### Related docs and stories
 
 - Spec: `specs/ui-polish-conventions.md`
@@ -688,6 +729,7 @@ Shared guardrails for the most common polish regressions.
 - TextLink: `apps/storybook/src/stories/text-link.stories.tsx`
 - PageHeader: `apps/storybook/src/stories/page-header.stories.tsx`
 - Audit surface: `apps/storybook/src/stories/ui-polish-audit.stories.tsx`
+- Dark-mode surface ladder: `packages/ui-web/src/primitives/{input,textarea,select,combobox,button,dialog,sheet,dropdown-menu,popover}.tsx` + `specs/ui-polish-conventions.md#12-dark-mode-surface--contrast-ladder`
 
 ---
 
