@@ -44,6 +44,8 @@ export interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   rowActions?: React.ReactNode;
   /** Handler invoked when the `+` reaction chip is clicked (only visible with reactions). */
   onAddReaction?: () => void;
+  /** Handler invoked when a reaction chip is clicked. Receives the clicked emoji. */
+  onReactionClick?: (emoji: string) => void;
 }
 
 /**
@@ -87,6 +89,7 @@ export const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
       highlighted = false,
       rowActions,
       onAddReaction,
+      onReactionClick,
       className,
       ...rest
     },
@@ -103,7 +106,7 @@ export const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
         className={cn(
           "group relative flex gap-3 px-4 transition-colors",
           highlighted && "bg-surface-2/60",
-          compact ? "py-0.5" : "pt-5 pb-1",
+          compact ? "py-[3px]" : "pt-4 pb-1",
           className,
         )}
         {...rest}
@@ -181,6 +184,7 @@ export const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
                   type="button"
                   key={r.emoji}
                   data-reacted={r.reacted ? "" : undefined}
+                  onClick={onReactionClick ? () => onReactionClick(r.emoji) : undefined}
                   className={cn(
                     // Monochrome pill. Reacted state carries the same surface-2
                     // wash + border as the hover preview, so hovering an
@@ -202,7 +206,7 @@ export const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
                   type="button"
                   onClick={onAddReaction}
                   aria-label="Add reaction"
-                  className="inline-flex items-center rounded-full border border-dashed border-border-subtle px-2 py-0.5 text-[11px] text-text-muted opacity-0 transition-opacity hover:border-border-hover hover:bg-surface-2 group-hover:opacity-100"
+                  className="inline-flex items-center rounded-full border border-dashed border-border-subtle px-1.5 py-[1px] text-[11px] text-text-muted opacity-0 transition-opacity hover:border-border-hover hover:bg-surface-2 group-hover:opacity-100"
                 >
                   +
                 </button>

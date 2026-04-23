@@ -213,7 +213,9 @@ export function ConnectRuntimeStep(): React.ReactElement {
     }
   }, [phase, readyRuntimes.length]);
 
-  const goSkip = (): void => navigate("/onboarding/agent");
+  const goSkip = (): void => {
+    void navigate("/onboarding/agent");
+  };
   const goContinue = (): void => {
     const selectedRuntimes: Runtime[] = runtimes
       .filter((r) => r.detected && !r.error && selected.has(r.type))

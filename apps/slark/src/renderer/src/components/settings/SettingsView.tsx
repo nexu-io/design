@@ -1,6 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Check, Mail, Monitor, Moon, Send, Sun, Trash2 } from "lucide-react";
+import {
+  Check,
+  Copy,
+  Link as LinkIcon,
+  Mail,
+  Monitor,
+  Moon,
+  RefreshCw,
+  Send,
+  Sun,
+  Trash2,
+} from "lucide-react";
 
 import {
   Avatar,
@@ -48,11 +59,34 @@ export function SettingsView(): React.ReactElement {
   const [pendingInvites, setPendingInvites] = useState<PendingInvite[]>([]);
   const [emailError, setEmailError] = useState("");
   const errorTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const [inviteToken, setInviteToken] = useState(() => Math.random().toString(36).slice(2, 12));
+  const [linkCopied, setLinkCopied] = useState(false);
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const inviteLink = `https://nexu.app/join/${inviteToken}`;
+
+  const handleCopyLink = (): void => {
+    navigator.clipboard
+      .writeText(inviteLink)
+      .then(() => {
+        setLinkCopied(true);
+        if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+        copiedTimerRef.current = setTimeout(() => setLinkCopied(false), 1800);
+      })
+      .catch(() => undefined);
+  };
+
+  const handleRegenerateLink = (): void => {
+    setInviteToken(Math.random().toString(36).slice(2, 12));
+    setLinkCopied(false);
+  };
 
   useEffect(() => {
     return () => {
       if (errorTimerRef.current) {
         clearTimeout(errorTimerRef.current);
+      }
+      if (copiedTimerRef.current) {
+        clearTimeout(copiedTimerRef.current);
       }
     };
   }, []);
@@ -119,6 +153,10 @@ export function SettingsView(): React.ReactElement {
               setEmailError={setEmailError}
               pendingInvites={pendingInvites}
               handleInvite={handleInvite}
+              inviteLink={inviteLink}
+              linkCopied={linkCopied}
+              handleCopyLink={handleCopyLink}
+              handleRegenerateLink={handleRegenerateLink}
             />
           ) : null}
 
@@ -154,6 +192,10 @@ interface WorkspaceTabProps {
   setEmailError: (value: string) => void;
   pendingInvites: PendingInvite[];
   handleInvite: () => void;
+  inviteLink: string;
+  linkCopied: boolean;
+  handleCopyLink: () => void;
+  handleRegenerateLink: () => void;
 }
 
 function WorkspaceTab({
@@ -165,6 +207,10 @@ function WorkspaceTab({
   setEmailError,
   pendingInvites,
   handleInvite,
+  inviteLink,
+  linkCopied,
+  handleCopyLink,
+  handleRegenerateLink,
 }: WorkspaceTabProps): React.ReactElement {
   return (
     <section className="space-y-4">
@@ -219,6 +265,42 @@ function WorkspaceTab({
                 >
                   Invite
                 </Button>
+              </div>
+            </FormFieldControl>
+          </FormField>
+
+          <FormField
+            label="Invite link"
+            description="Anyone with this link can join the workspace."
+          >
+            <FormFieldControl>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <Input
+                  readOnly
+                  value={inviteLink}
+                  leadingIcon={<LinkIcon className="size-4" />}
+                  className="flex-1 font-mono text-[12px]"
+                  onFocus={(e) => e.currentTarget.select()}
+                />
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="default"
+                    onClick={handleCopyLink}
+                    leadingIcon={
+                      linkCopied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />
+                    }
+                  >
+                    {linkCopied ? "Copied" : "Copy link"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleRegenerateLink}
+                    title="Generate a new link (old one stops working)"
+                    leadingIcon={<RefreshCw className="size-3.5" />}
+                  >
+                    Reset
+                  </Button>
+                </div>
               </div>
             </FormFieldControl>
           </FormField>

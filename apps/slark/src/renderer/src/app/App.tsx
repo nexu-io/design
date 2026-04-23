@@ -7,9 +7,11 @@ import { useWorkspaceStore } from "@/stores/workspace";
 import { useAgentsStore } from "@/stores/agents";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { DevPanel } from "@/components/layout/DevPanel";
+import { DemoOverlay } from "@/demo/DemoOverlay";
 import { WelcomePage } from "@/components/onboarding/WelcomePage";
 import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
 import { ChatView } from "@/components/chat/ChatView";
+import { IssuesView } from "@/components/issues/IssuesView";
 import { AgentsView } from "@/components/agents/AgentsView";
 import { AgentDetail } from "@/components/agents/AgentDetail";
 import { UserDetail } from "@/components/agents/UserDetail";
@@ -90,6 +92,7 @@ export function App(): React.ReactElement {
               <Route path="/" element={<Navigate to="/chat/ch-showcase" replace />} />
               <Route path="/chat" element={<Navigate to="/chat/ch-showcase" replace />} />
               <Route path="/chat/:channelId" element={<ChatView />} />
+              <Route path="/issues" element={<IssuesView />} />
               <Route path="/agents" element={<AgentsView />} />
               <Route path="/agents/:memberId" element={<MemberDetailRoute />} />
               <Route path="/runtimes" element={<RuntimesView />} />
@@ -102,6 +105,7 @@ export function App(): React.ReactElement {
           </Routes>
         )}
         <DevPanel />
+        <DemoOverlay />
       </BrowserRouter>
     </ErrorBoundary>
   );

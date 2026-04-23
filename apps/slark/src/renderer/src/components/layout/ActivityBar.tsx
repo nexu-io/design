@@ -146,14 +146,6 @@ export function ActivityBar(): React.ReactElement {
                 </span>
               ) : null}
             </DropdownMenuItem>
-
-            {/* Sign-out was intentionally removed from the workspace
-                switcher. This menu is a workspace picker — mixing a
-                destructive account action into it conflates "switch
-                tenant" with "leave the product", and users expect
-                sign-out to live in Settings / account UI. The picker
-                now ends on `Add workspace`, keeping the menu scoped to
-                workspace-level intents. */}
           </DropdownMenuContent>
         </DropdownMenu>
       </ActivityBarHeader>
@@ -167,7 +159,7 @@ export function ActivityBar(): React.ReactElement {
               key={path}
               active={isActive}
               onClick={() => navigate(path)}
-              className="no-drag size-10 rounded-xl text-nav-muted hover:bg-nav-hover hover:text-nav-fg data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg"
+              className="no-drag relative size-10 rounded-xl text-nav-muted hover:bg-nav-hover hover:text-nav-fg data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg"
               title={t(labelKey)}
             >
               <Icon className="size-[19px]" />

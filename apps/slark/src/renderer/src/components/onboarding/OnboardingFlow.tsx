@@ -1,5 +1,5 @@
 import { Stepper, StepperItem, StepperSeparator } from "@nexu-design/ui-web";
-import { Bot, Building2, PlugZap } from "lucide-react";
+import { Building2, PlugZap, UsersRound } from "lucide-react";
 import { Fragment } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
@@ -21,8 +21,8 @@ const steps = [
   },
   {
     path: "agent",
-    label: "Agent",
-    icon: <Bot className="size-4" />,
+    label: "Teammate",
+    icon: <UsersRound className="size-4" />,
   },
 ] as const;
 

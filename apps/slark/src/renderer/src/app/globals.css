@@ -183,3 +183,66 @@ body,
 .no-drag {
   -webkit-app-region: no-drag;
 }
+
+@keyframes message-flash-overlay {
+  0% {
+    opacity: 0;
+    filter: hue-rotate(0deg);
+  }
+  12% {
+    opacity: 1;
+    filter: hue-rotate(0deg);
+  }
+  40% {
+    opacity: 0.9;
+    filter: hue-rotate(70deg);
+  }
+  70% {
+    opacity: 0.6;
+    filter: hue-rotate(150deg);
+  }
+  100% {
+    opacity: 0;
+    filter: hue-rotate(220deg);
+  }
+}
+
+.message-flash {
+  position: relative;
+  isolation: isolate;
+}
+
+.message-flash::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: -4px -12px;
+  border-radius: 0.5rem;
+  background-color: rgb(59 130 246 / 0.18);
+  box-shadow: inset 0 0 0 2px rgb(59 130 246 / 0.6), 0 0 16px 2px rgb(59 130 246 / 0.3);
+  pointer-events: none;
+  z-index: -1;
+  animation: message-flash-overlay 2.4s ease-in-out 1;
+  opacity: 0;
+}
+
+@keyframes status-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 currentColor;
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 3px color-mix(in oklch, currentColor 20%, transparent);
+    opacity: 0.85;
+  }
+}
+
+.status-pulse {
+  animation: status-pulse 2s ease-in-out infinite;
+}

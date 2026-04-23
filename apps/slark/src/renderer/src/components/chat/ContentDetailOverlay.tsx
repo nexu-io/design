@@ -1,5 +1,5 @@
 import { Button, cn } from "@nexu-design/ui-web";
-import { Check, Copy, GitPullRequestArrow, Maximize2, X } from "lucide-react";
+import { Check, Copy, GitPullRequestArrow, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import type { ContentBlock } from "@/types";
@@ -49,6 +49,17 @@ export function ContentDetailOverlay({
     return <ImageLightbox url={block.url} alt={block.alt} onClose={onClose} />;
   }
 
+  if (block.type === "video") {
+    return (
+      <VideoLightbox
+        url={block.url}
+        thumbnail={block.thumbnail}
+        title={block.title}
+        onClose={onClose}
+      />
+    );
+  }
+
   if (block.type === "code") {
     return <CodeDetailView block={block} onClose={onClose} />;
   }
@@ -58,6 +69,53 @@ export function ContentDetailOverlay({
   }
 
   return null;
+}
+
+function VideoLightbox({
+  url,
+  thumbnail,
+  title,
+  onClose,
+}: {
+  url?: string;
+  thumbnail: string;
+  title: string;
+  onClose: () => void;
+}): React.ReactElement {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      onMouseDown={onClose}
+    >
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        onClick={onClose}
+        className="absolute top-4 right-4 h-9 w-9 rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
+      >
+        <X className="h-5 w-5" />
+      </Button>
+      <div className="max-w-[90vw] max-h-[85vh] p-4" onMouseDown={(e) => e.stopPropagation()}>
+        {url ? (
+          // biome-ignore lint/a11y/useMediaCaption: user-uploaded video has no caption track available.
+          <video
+            src={url}
+            poster={thumbnail}
+            controls
+            autoPlay
+            className="max-w-[88vw] max-h-[80vh] rounded-lg shadow-2xl bg-black"
+          />
+        ) : (
+          <img
+            src={thumbnail}
+            alt={title}
+            className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+          />
+        )}
+        <p className="text-sm text-white/50 text-center mt-3">{title}</p>
+      </div>
+    </div>
+  );
 }
 
 function ImageLightbox({
@@ -265,15 +323,6 @@ function DiffDetailView({
           <span className="text-[11px] text-white/20 font-mono">{lineEntries.length} lines</span>
         </div>
       </div>
-    </div>
-  );
-}
-
-export function ExpandHint(): React.ReactElement {
-  return (
-    <div className="flex items-center gap-1 text-[10px] text-muted-foreground/40 mt-1">
-      <Maximize2 className="h-2.5 w-2.5" />
-      Click to expand
     </div>
   );
 }

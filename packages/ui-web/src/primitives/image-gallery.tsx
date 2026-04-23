@@ -1,6 +1,42 @@
+import { ImageOff } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "../lib/cn";
+
+function GalleryThumb({
+  src,
+  alt,
+  interactive,
+}: { src: string; alt: string; interactive: boolean }): React.ReactElement {
+  const [failed, setFailed] = React.useState(false);
+
+  if (failed) {
+    return (
+      <div
+        className="flex h-full w-full flex-col items-center justify-center gap-1 bg-surface-2 text-text-muted"
+        role="img"
+        aria-label={alt || "Image failed to load"}
+      >
+        <ImageOff className="size-5" aria-hidden />
+        {alt ? (
+          <span className="line-clamp-2 px-2 text-center text-[10px] leading-tight">{alt}</span>
+        ) : null}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      onError={() => setFailed(true)}
+      className={cn(
+        "h-full w-full object-cover transition-transform duration-300",
+        interactive && "group-hover:scale-[1.04]",
+      )}
+    />
+  );
+}
 
 export interface ImageGalleryItem {
   src: string;
@@ -43,14 +79,7 @@ export const ImageGallery = React.forwardRef<HTMLDivElement, ImageGalleryProps>(
 
           const content = (
             <>
-              <img
-                src={img.src}
-                alt={img.alt ?? ""}
-                className={cn(
-                  "h-full w-full object-cover transition-transform duration-300",
-                  interactive && "group-hover:scale-[1.04]",
-                )}
-              />
+              <GalleryThumb src={img.src} alt={img.alt ?? ""} interactive={interactive} />
               {showOverflow ? (
                 <span className="absolute inset-0 flex items-center justify-center bg-black/55 text-sm font-semibold text-white">
                   +{overflow}

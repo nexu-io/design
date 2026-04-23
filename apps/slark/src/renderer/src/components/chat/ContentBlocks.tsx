@@ -1,6 +1,5 @@
 import type { AgentRunStep, ContentBlock } from "@/types";
 import {
-  Button,
   FileAttachment,
   ImageAttachment,
   ImageGallery,
@@ -11,7 +10,6 @@ import {
 } from "@nexu-design/ui-web";
 import type { FileAttachmentKind } from "@nexu-design/ui-web";
 import {
-  Check,
   CheckCircle2,
   ChevronDown,
   ChevronRight,
@@ -19,11 +17,17 @@ import {
   FileCode2,
   GitPullRequestArrow,
   Loader2,
+  MessageSquareReply,
+  SendHorizontal,
   ShieldQuestion,
   Terminal,
   XCircle,
 } from "lucide-react";
 import { useState } from "react";
+
+export type ApprovalResult =
+  | { kind: "choice"; choiceId: string; label: string }
+  | { kind: "text"; text: string };
 
 /**
  * Content-block props.
@@ -31,16 +35,22 @@ import { useState } from "react";
  * `onExpand` routes heavy/ephemeral content (code, diff, image) into a
  * fullscreen modal overlay — the reader briefly leaves the chat context
  * to inspect a payload and then returns.
- *
- * The topic-click → right-side-panel interaction is deferred to a later
- * release (see `feature/chat-tabs-and-topic-panel`); for now TopicBlock
- * renders as a read-only display card.
  */
 interface ContentBlockRendererProps {
   block: ContentBlock;
-  onApprovalAction?: (id: string, action: "approved" | "rejected") => void;
+  isMe: boolean;
+  onApprovalAction?: (id: string, result: ApprovalResult) => void;
   onExpand?: (block: ContentBlock) => void;
 }
+
+const DEFAULT_APPROVAL_OPTIONS: {
+  id: string;
+  label: string;
+  tone: "primary" | "danger" | "neutral";
+}[] = [
+  { id: "approved", label: "Approve", tone: "primary" },
+  { id: "rejected", label: "Reject", tone: "danger" },
+];
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -95,6 +105,24 @@ function ImageBlock({
   block,
   onExpand,
 }: { block: Extract<ContentBlock, { type: "image" }>; onExpand?: () => void }): React.ReactElement {
+  // Stickers render at natural aspect ratio, capped by max-width, with no frame/caption.
+  if (block.alt === "sticker") {
+    return (
+      <button
+        type="button"
+        onClick={onExpand}
+        className="inline-block max-w-[200px] cursor-zoom-in overflow-hidden rounded-md bg-transparent p-0 align-top transition-opacity hover:opacity-90"
+        aria-label="Sticker"
+      >
+        <img
+          src={block.url}
+          alt=""
+          className="block h-auto w-auto max-h-[220px] max-w-full object-contain"
+          draggable={false}
+        />
+      </button>
+    );
+  }
   return (
     <ImageAttachment
       src={block.url}
@@ -127,12 +155,16 @@ function FileBlock({
 
 function GalleryBlock({
   block,
-}: { block: Extract<ContentBlock, { type: "gallery" }> }): React.ReactElement {
+  onExpand,
+}: {
+  block: Extract<ContentBlock, { type: "gallery" }>;
+  onExpand?: (block: ContentBlock) => void;
+}): React.ReactElement {
   return (
     <ImageGallery
       images={block.images.map((img) => ({ src: img.url, alt: img.alt }))}
-      onSelect={() => {
-        /* TODO: open in ContentDetailOverlay; gallery expansion is not yet wired up. */
+      onSelect={(img) => {
+        onExpand?.({ type: "image", url: img.src, alt: img.alt });
       }}
     />
   );
@@ -140,16 +172,18 @@ function GalleryBlock({
 
 function VideoBlock({
   block,
-}: { block: Extract<ContentBlock, { type: "video" }> }): React.ReactElement {
+  onExpand,
+}: {
+  block: Extract<ContentBlock, { type: "video" }>;
+  onExpand?: () => void;
+}): React.ReactElement {
   return (
     <VideoAttachment
       thumbnail={block.thumbnail}
       duration={block.duration}
       title={block.title}
       meta={block.size ? formatFileSize(block.size) : undefined}
-      onClick={() => {
-        if (block.url) window.open(block.url, "_blank", "noopener,noreferrer");
-      }}
+      onClick={onExpand}
     />
   );
 }
@@ -267,31 +301,19 @@ function ActionCard({
   return (
     <div
       className={cn(
-        "flex w-full max-w-[640px] items-start gap-3 rounded-xl border bg-surface-1 px-3.5 py-3 transition-colors",
-        block.status === "running" && "border-info/25 bg-info-subtle/40",
-        block.status === "success" && "border-success/25 bg-success-subtle/40",
-        block.status === "failed" && "border-error/25 bg-error-subtle/40",
+        "inline-flex items-center gap-2 max-w-[360px] pl-2.5 pr-3 py-1.5 rounded-full border text-[12.5px] leading-snug transition-colors",
+        block.status === "running" && "border-info/25 bg-info-subtle text-info",
+        block.status === "success" && "border-success/25 bg-success-subtle text-success",
+        block.status === "failed" && "border-danger/25 bg-danger-subtle text-danger",
       )}
     >
-      <div className="mt-0.5 shrink-0">
-        {block.status === "running" && <Loader2 className="size-4 animate-spin text-info" />}
-        {block.status === "success" && <CheckCircle2 className="size-4 text-success" />}
-        {block.status === "failed" && <XCircle className="size-4 text-error" />}
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-[13px] font-medium leading-snug text-text-heading">{block.title}</p>
-        {block.description && (
-          <p className="mt-0.5 text-[12px] leading-relaxed text-text-secondary">
-            {block.description}
-          </p>
-        )}
-        {block.tool && (
-          <div className="mt-2 flex items-center gap-1.5">
-            <Terminal className="size-3 text-text-muted" />
-            <span className="font-mono text-[10px] text-text-muted">{block.tool}</span>
-          </div>
-        )}
-      </div>
+      <span className="shrink-0 inline-flex items-center">
+        {block.status === "running" && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+        {block.status === "success" && <CheckCircle2 className="h-3.5 w-3.5" />}
+        {block.status === "failed" && <XCircle className="h-3.5 w-3.5" />}
+      </span>
+      <span className="truncate font-medium text-text-primary">{block.title}</span>
+      {block.description && <span className="truncate text-text-muted">· {block.description}</span>}
     </div>
   );
 }
@@ -300,53 +322,56 @@ function ToolResultBlock({
   block,
 }: { block: Extract<ContentBlock, { type: "tool-result" }> }): React.ReactElement {
   const [expanded, setExpanded] = useState(false);
+  const isSuccess = block.status === "success";
 
   return (
-    <div className="w-full max-w-[640px] overflow-hidden rounded-lg border border-border-subtle bg-surface-1">
+    <div className="inline-flex flex-col items-stretch max-w-[420px]">
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center gap-2.5 px-3 py-2 text-left transition-colors hover:bg-surface-2"
-      >
-        <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-surface-2 text-text-muted">
-          <Terminal className="size-3.5" />
-        </span>
-        <span className="min-w-0 flex-1 truncate font-mono text-[12px] text-text-heading">
-          {block.tool}
-        </span>
-        {block.status === "success" ? (
-          <CheckCircle2 className="size-3.5 shrink-0 text-success" />
-        ) : (
-          <XCircle className="size-3.5 shrink-0 text-error" />
+        className={cn(
+          "inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-full border text-[12px] transition-colors self-start",
+          isSuccess
+            ? "border-border-subtle bg-surface-1 hover:bg-surface-2 text-text-secondary"
+            : "border-danger/25 bg-danger-subtle hover:bg-danger/10 text-danger",
+          expanded && "rounded-b-none",
         )}
+      >
         {expanded ? (
-          <ChevronDown className="size-3.5 shrink-0 text-text-muted" />
+          <ChevronDown className="h-3 w-3 shrink-0 opacity-60" />
         ) : (
-          <ChevronRight className="size-3.5 shrink-0 text-text-muted" />
+          <ChevronRight className="h-3 w-3 shrink-0 opacity-60" />
+        )}
+        <Terminal className="h-3 w-3 shrink-0 opacity-70" />
+        <span className="font-mono font-medium truncate text-text-primary">{block.tool}</span>
+        {isSuccess ? (
+          <CheckCircle2 className="h-3 w-3 text-success shrink-0" />
+        ) : (
+          <XCircle className="h-3 w-3 text-danger shrink-0" />
         )}
       </button>
       {expanded && (
-        <div className="border-t border-border-subtle bg-[#0d1117]">
+        <div className="rounded-b-lg rounded-tr-lg border border-border-subtle bg-surface-1 -mt-px overflow-hidden">
           {block.input && (
-            <div className="px-3.5 pt-3 pb-2">
-              <p className="mb-1.5 font-medium text-[10px] uppercase tracking-widest text-white/20">
+            <div className="px-3 pt-2.5 pb-2">
+              <p className="text-[10px] uppercase tracking-wider text-text-muted mb-1 font-medium">
                 Input
               </p>
-              <pre className="whitespace-pre-wrap break-words font-mono text-[11px] leading-relaxed text-white/50">
+              <pre className="text-[11px] font-mono text-text-secondary whitespace-pre-wrap break-words leading-relaxed">
                 {block.input}
               </pre>
             </div>
           )}
           <div
             className={cn(
-              "px-3.5 pb-3",
-              block.input ? "border-t border-white/[0.04] pt-1" : "pt-3",
+              "px-3 pb-2.5",
+              block.input ? "pt-1.5 border-t border-border-subtle" : "pt-2.5",
             )}
           >
-            <p className="mb-1.5 font-medium text-[10px] uppercase tracking-widest text-white/20">
+            <p className="text-[10px] uppercase tracking-wider text-text-muted mb-1 font-medium">
               Output
             </p>
-            <pre className="whitespace-pre-wrap break-words font-mono text-[11px] leading-relaxed text-white/70">
+            <pre className="text-[11px] font-mono text-text-primary whitespace-pre-wrap break-words leading-relaxed">
               {block.output}
             </pre>
           </div>
@@ -380,78 +405,148 @@ function ApprovalBlock({
   onAction,
 }: {
   block: Extract<ContentBlock, { type: "approval" }>;
-  onAction?: (id: string, action: "approved" | "rejected") => void;
+  onAction?: (id: string, result: ApprovalResult) => void;
 }): React.ReactElement {
+  const [customText, setCustomText] = useState("");
+  const [replyOpen, setReplyOpen] = useState(false);
+  const options = block.options?.length ? block.options : DEFAULT_APPROVAL_OPTIONS;
+  const isResolved = block.status !== "pending";
+  const isCompact = options.length <= 2;
+
+  const toneClass = (tone: "primary" | "danger" | "neutral" = "neutral"): string => {
+    switch (tone) {
+      case "primary":
+        return "border-success/30 bg-success-subtle text-success hover:bg-success hover:text-white hover:border-success";
+      case "danger":
+        return "border-danger/25 bg-danger-subtle text-danger hover:bg-danger hover:text-white hover:border-danger";
+      default:
+        return "border-border-subtle bg-surface-2 text-text-secondary hover:bg-surface-3 hover:text-text-primary";
+    }
+  };
+
+  const submitText = (): void => {
+    const trimmed = customText.trim();
+    if (!trimmed) return;
+    onAction?.(block.id, { kind: "text", text: trimmed });
+    setCustomText("");
+    setReplyOpen(false);
+  };
+
   return (
     <div
       className={cn(
-        "w-full max-w-[640px] rounded-xl border bg-surface-1 px-4 py-3.5",
-        block.status === "pending" && "border-warning/25 bg-warning-subtle/40",
-        block.status === "approved" && "border-success/25 bg-success-subtle/40",
-        block.status === "rejected" && "border-error/25 bg-error-subtle/40",
+        "w-[320px] max-w-full rounded-xl border px-3 py-2.5",
+        block.status === "pending" && "border-warning/20 bg-warning-subtle",
+        block.status === "approved" && "border-success/20 bg-success-subtle",
+        block.status === "rejected" && "border-danger/20 bg-danger-subtle",
+        block.status === "responded" && "border-info/20 bg-info-subtle",
       )}
     >
-      <div className="flex items-start gap-2.5">
+      <div className="flex items-start gap-2">
         <ShieldQuestion
           className={cn(
-            "mt-0.5 size-[18px] shrink-0",
+            "h-4 w-4 mt-0.5 shrink-0",
             block.status === "pending" && "text-warning",
             block.status === "approved" && "text-success",
-            block.status === "rejected" && "text-error",
+            block.status === "rejected" && "text-danger",
+            block.status === "responded" && "text-info",
           )}
         />
         <div className="min-w-0 flex-1">
-          <p className="text-[13px] font-semibold leading-snug text-text-heading">{block.title}</p>
+          <p className="text-[13px] font-semibold leading-snug text-text-primary">{block.title}</p>
           {block.description && (
-            <p className="mt-1 text-[12px] leading-relaxed text-text-secondary">
+            <p className="text-[12px] text-text-muted mt-0.5 leading-relaxed">
               {block.description}
             </p>
           )}
         </div>
       </div>
 
-      <div className="mt-3 border-t border-border-subtle pt-3">
-        {block.status === "pending" && (
-          /*
-           * Reject (secondary/outline) on the left, Approve (primary) on the
-           * right — follows the design-system rule that confirm / primary
-           * actions trail on the right in horizontal groups. Both keep
-           * flex-1 so the row still reads as "pick one of two equal paths"
-           * rather than a weighted CTA with a tucked-away cancel.
-           */
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => onAction?.(block.id, "rejected")}
-              leadingIcon={<XCircle className="size-3.5" />}
-              className="flex-1 hover:border-destructive/30 hover:bg-destructive/5 hover:text-destructive"
-            >
-              Reject
-            </Button>
-            <Button
-              size="sm"
-              onClick={() => onAction?.(block.id, "approved")}
-              leadingIcon={<CheckCircle2 className="size-3.5" />}
-              className="flex-1"
-            >
-              Approve
-            </Button>
+      {!isResolved && (
+        <div className="mt-2.5">
+          <div className={cn("flex gap-1.5", isCompact ? "flex-row" : "flex-col")}>
+            {options.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() =>
+                  onAction?.(block.id, { kind: "choice", choiceId: opt.id, label: opt.label })
+                }
+                className={cn(
+                  "inline-flex items-center justify-center gap-1.5 h-8 px-3 rounded-lg border text-[12.5px] font-medium transition-colors",
+                  isCompact ? "flex-1 min-w-0" : "w-full",
+                  toneClass(opt.tone),
+                )}
+              >
+                {opt.tone === "primary" ? (
+                  <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                ) : opt.tone === "danger" ? (
+                  <XCircle className="h-3.5 w-3.5 shrink-0" />
+                ) : null}
+                <span className="truncate">{opt.label}</span>
+              </button>
+            ))}
+            {!replyOpen && (
+              <button
+                type="button"
+                onClick={() => setReplyOpen(true)}
+                aria-label="Write a reply"
+                className="shrink-0 inline-flex items-center justify-center h-8 w-8 rounded-lg border border-border-subtle bg-surface-2 text-text-muted hover:bg-surface-3 hover:text-text-primary transition-colors"
+              >
+                <MessageSquareReply className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
-        )}
-        {block.status === "approved" && (
-          <div className="flex items-center gap-1.5 text-[12px] font-medium text-success">
-            <CheckCircle2 className="size-3.5" />
-            Approved
-          </div>
-        )}
-        {block.status === "rejected" && (
-          <div className="flex items-center gap-1.5 text-[12px] font-medium text-error">
-            <XCircle className="size-3.5" />
-            Rejected
-          </div>
-        )}
-      </div>
+          {replyOpen && (
+            <div className="relative mt-1.5">
+              <input
+                // biome-ignore lint/a11y/noAutofocus: reply input opens on explicit user click; focusing is the expected affordance.
+                autoFocus
+                value={customText}
+                onChange={(e) => setCustomText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    submitText();
+                  } else if (e.key === "Escape") {
+                    setReplyOpen(false);
+                    setCustomText("");
+                  }
+                }}
+                placeholder="Write a reply…"
+                className="w-full h-8 rounded-lg border border-border-subtle bg-surface-2 pl-3 pr-8 text-[12.5px] text-text-primary placeholder:text-text-muted focus:outline-none focus:border-border-strong focus:bg-surface-3"
+              />
+              <button
+                type="button"
+                onClick={submitText}
+                disabled={!customText.trim()}
+                aria-label="Send reply"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 inline-flex items-center justify-center rounded-md text-text-muted hover:text-text-primary hover:bg-surface-3 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-text-muted"
+              >
+                <SendHorizontal className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+      {block.status === "approved" && (
+        <div className="mt-2 flex items-center gap-1.5 text-[12px] font-medium text-success">
+          <CheckCircle2 className="h-3.5 w-3.5" />
+          {block.response?.label ?? "Approved"}
+        </div>
+      )}
+      {block.status === "rejected" && (
+        <div className="mt-2 flex items-center gap-1.5 text-[12px] font-medium text-danger">
+          <XCircle className="h-3.5 w-3.5" />
+          {block.response?.label ?? "Rejected"}
+        </div>
+      )}
+      {block.status === "responded" && (
+        <div className="mt-2 flex items-start gap-1.5 text-[12px] text-info">
+          <MessageSquareReply className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+          <span className="leading-relaxed">{block.response?.text}</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -466,13 +561,6 @@ function ProgressBlock({
 
   return (
     <div className="w-full max-w-[640px] rounded-xl border border-border-subtle bg-surface-1 px-4 py-3.5">
-      {/*
-       * Header — title + compact "X of Y" counter instead of a percentage bar.
-       * Rendering progress as a list of checklist-style steps (Cursor style)
-       * makes the individual substeps the primary readout; a duplicate bar or
-       * big percentage competes with that. The counter keeps completion
-       * legible at a glance without an extra color surface.
-       */}
       <div className="flex items-center justify-between">
         <p className="text-[13px] font-medium text-text-heading">{block.title}</p>
         <span
@@ -489,21 +577,8 @@ function ProgressBlock({
         <ul className="mt-3 flex flex-col gap-3">
           {indexedSteps.map(({ key, value: step }) => (
             <li key={key} className="flex items-center gap-2.5">
-              {/*
-               * Monochrome step icons (Cursor style) — no status colors here
-               * because the label styling (strikethrough + muted / bold /
-               * tertiary) already communicates state. Keeps the card quiet in
-               * a busy chat feed.
-               * - done:    Check glyph, muted
-               * - active:  spinner, heading color
-               * - pending: empty circle, tertiary color
-               */}
               {step.status === "done" && (
-                <Check
-                  aria-hidden="true"
-                  strokeWidth={2.75}
-                  className="size-3.5 shrink-0 text-text-muted"
-                />
+                <CheckCircle2 aria-hidden="true" className="size-3.5 shrink-0 text-text-muted" />
               )}
               {step.status === "active" && (
                 <Loader2
@@ -512,14 +587,6 @@ function ProgressBlock({
                 />
               )}
               {step.status === "pending" && (
-                /*
-                 * Dashed ring for "not yet started" steps (Cursor style). The
-                 * dashed outline reads as "placeholder / outline of a future
-                 * step" — distinct from a solid ring which can look like
-                 * "selectable / actionable". `strokeDasharray` is set via
-                 * inline style because lucide forwards style → the <svg>, and
-                 * SVG stroke-dasharray inherits down to the child <circle>.
-                 */
                 <Circle
                   aria-hidden="true"
                   strokeWidth={1.75}
@@ -665,6 +732,7 @@ function AgentRunBlock({
 
 export function ContentBlockRenderer({
   block,
+  isMe: _isMe,
   onApprovalAction,
   onExpand,
 }: ContentBlockRendererProps): React.ReactElement {
@@ -674,21 +742,21 @@ export function ContentBlockRenderer({
     case "image":
       return <ImageBlock block={block} onExpand={handleExpand} />;
     case "gallery":
-      return <GalleryBlock block={block} />;
+      return <GalleryBlock block={block} onExpand={onExpand} />;
     case "video":
-      return <VideoBlock block={block} />;
+      return <VideoBlock block={block} onExpand={handleExpand} />;
     case "voice":
       return <VoiceBlock block={block} />;
     case "file":
       return <FileBlock block={block} />;
     case "code":
       return <CodeBlock block={block} onExpand={handleExpand} />;
+    case "diff":
+      return <DiffBlock block={block} onExpand={handleExpand} />;
     case "action":
       return <ActionCard block={block} />;
     case "tool-result":
       return <ToolResultBlock block={block} />;
-    case "diff":
-      return <DiffBlock block={block} onExpand={handleExpand} />;
     case "approval":
       return <ApprovalBlock block={block} onAction={onApprovalAction} />;
     case "progress":

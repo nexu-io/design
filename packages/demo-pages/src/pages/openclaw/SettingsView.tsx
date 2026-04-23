@@ -44,6 +44,7 @@ import {
   Mail,
   Monitor,
   MousePointer2,
+  Play,
   Plus,
   RefreshCw,
   ScrollText,
@@ -1061,6 +1062,9 @@ export function SettingsView({
   const [checkStates, setCheckStates] = useState<
     Record<string, "idle" | "checking" | "success" | "error">
   >({});
+  const [modelCheckStates, setModelCheckStates] = useState<
+    Record<string, "idle" | "checking" | "success" | "error">
+  >({});
   const [providerSearch, setProviderSearch] = useState("");
   const [showAddModelDialog, setShowAddModelDialog] = useState(false);
   const [addModelSearch, setAddModelSearch] = useState("");
@@ -1163,6 +1167,34 @@ export function SettingsView({
       }));
       setTimeout(() => setCheckStates((prev) => ({ ...prev, [providerId]: "idle" })), 3000);
     }, 1500);
+  };
+
+  const handleCheckModel = (providerId: string, modelId: string) => {
+    const key = `${providerId}:${modelId}`;
+    setModelCheckStates((prev) => ({ ...prev, [key]: "checking" }));
+    setTimeout(() => {
+      setModelCheckStates((prev) => ({
+        ...prev,
+        [key]: Math.random() > 0.3 ? "success" : "error",
+      }));
+    }, 1500);
+  };
+
+  const handleCheckAllModels = (providerId: string) => {
+    const provider = combinedProviders.find((p) => p.id === providerId);
+    if (!provider) return;
+    for (const model of provider.models) {
+      const key = `${providerId}:${model.id}`;
+      if (modelCheckStates[key] === "checking") continue;
+      const delay = Math.random() * 500;
+      setTimeout(() => handleCheckModel(providerId, model.id), delay);
+    }
+  };
+
+  const isCheckingAllModels = (providerId: string) => {
+    const provider = combinedProviders.find((p) => p.id === providerId);
+    if (!provider) return false;
+    return provider.models.some((m) => modelCheckStates[`${providerId}:${m.id}`] === "checking");
   };
 
   const saveState = saveStates[activeProvider.id] ?? "idle";
@@ -2263,17 +2295,35 @@ Available tools:
                           </div>
                           <div className="flex items-center gap-2">
                             {activeProvider.id !== "nexu" && (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setAddModelSearch("");
-                                  setShowAddModelDialog(true);
-                                }}
-                                className="inline-flex items-center gap-1 text-[12px] font-medium text-text-secondary transition-colors hover:text-text-primary"
-                              >
-                                <Plus size={13} />
-                                <span>{t("ws.settings.addModel")}</span>
-                              </button>
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => handleCheckAllModels(activeProvider.id)}
+                                  disabled={
+                                    isCheckingAllModels(activeProvider.id) ||
+                                    activeProvider.models.length === 0
+                                  }
+                                  className="inline-flex items-center gap-1 text-[12px] font-medium text-text-secondary transition-colors hover:text-text-primary disabled:opacity-50"
+                                >
+                                  <Play size={13} />
+                                  <span>
+                                    {isCheckingAllModels(activeProvider.id)
+                                      ? t("ws.settings.testingAllModels")
+                                      : t("ws.settings.testAllModels")}
+                                  </span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setAddModelSearch("");
+                                    setShowAddModelDialog(true);
+                                  }}
+                                  className="inline-flex items-center gap-1 text-[12px] font-medium text-text-secondary transition-colors hover:text-text-primary"
+                                >
+                                  <Plus size={13} />
+                                  <span>{t("ws.settings.addModel")}</span>
+                                </button>
+                              </>
                             )}
                             {activeProvider.id === "nexu" && (
                               <button
@@ -2300,6 +2350,8 @@ Available tools:
                           <div className="space-y-0.5">
                             {activeProvider.models.map((model) => {
                               const isActive = model.id === selectedModelId;
+                              const modelCheckState =
+                                modelCheckStates[`${activeProvider.id}:${model.id}`] ?? "idle";
                               return (
                                 <button
                                   type="button"
@@ -2348,6 +2400,33 @@ Available tools:
                                   {isActive ? (
                                     <Check size={14} className="shrink-0 text-accent" />
                                   ) : null}
+                                  {activeProvider.id !== "nexu" && (
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleCheckModel(activeProvider.id, model.id);
+                                      }}
+                                      disabled={modelCheckState === "checking"}
+                                      className={cn(
+                                        "shrink-0 rounded-md px-1.5 py-0.5 text-[10px] transition-all",
+                                        modelCheckState === "checking" && "text-text-muted",
+                                        modelCheckState === "success" &&
+                                          "text-[var(--color-success)]",
+                                        modelCheckState === "error" && "text-[var(--color-error)]",
+                                        modelCheckState === "idle" &&
+                                          "text-text-muted opacity-0 hover:text-text-secondary group-hover/model:opacity-100",
+                                      )}
+                                    >
+                                      {modelCheckState === "checking" &&
+                                        t("ws.settings.testingModel")}
+                                      {modelCheckState === "success" &&
+                                        t("ws.settings.modelAvailable")}
+                                      {modelCheckState === "error" &&
+                                        t("ws.settings.modelUnavailable")}
+                                      {modelCheckState === "idle" && t("ws.settings.testModel")}
+                                    </button>
+                                  )}
                                   {activeProvider.id !== "nexu" && (
                                     <button
                                       type="button"

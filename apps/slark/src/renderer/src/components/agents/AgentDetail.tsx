@@ -1,8 +1,16 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  Circle,
+  CircleCheck,
+  CircleDashed,
+  CircleDot,
+  CircleSlash,
   Copy,
+  Eye,
   FileText,
+  Globe,
+  Hash,
   MessageSquare,
   MoreHorizontal,
   Settings,
@@ -41,7 +49,9 @@ import { useT } from "@/i18n";
 import { mockRuntimes } from "@/mock/data";
 import { useAgentsStore } from "@/stores/agents";
 import { useChatStore } from "@/stores/chat";
-import type { Agent, Channel } from "@/types";
+import { useTopicsStore } from "@/stores/topics";
+import { resolveRef } from "@/mock/data";
+import type { Agent, Channel, IssueStatus, Topic } from "@/types";
 
 import { RuntimePicker } from "./RuntimePicker";
 
@@ -204,6 +214,14 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
               <FileText className="size-3.5" />
               {t("agent.tabInstructions")}
             </TabsTrigger>
+            <TabsTrigger value="issues">
+              <CircleDot className="size-3.5" />
+              Issues
+            </TabsTrigger>
+            <TabsTrigger value="channels">
+              <Hash className="size-3.5" />
+              Channels
+            </TabsTrigger>
             <TabsTrigger value="skills">
               <Wrench className="size-3.5" />
               {t("agent.tabSkills")}
@@ -219,6 +237,14 @@ export function AgentDetail({ agent }: AgentDetailProps): React.ReactElement {
               agent={agent}
               onSave={(prompt) => updateAgent(agent.id, { systemPrompt: prompt })}
             />
+          </TabsContent>
+
+          <TabsContent value="issues" className="mt-0">
+            <IssuesTab agent={agent} />
+          </TabsContent>
+
+          <TabsContent value="channels" className="mt-0">
+            <ChannelsTab agent={agent} />
           </TabsContent>
 
           <TabsContent value="skills" className="mt-0">
@@ -272,6 +298,204 @@ function InstructionsTab({
             {t("common.save")}
           </Button>
         </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+const ISSUE_STATUS_META: Record<
+  IssueStatus,
+  { label: string; icon: typeof CircleDot; dotClass: string; textClass: string }
+> = {
+  todo: { label: "Todo", icon: Circle, dotClass: "text-text-muted", textClass: "text-text-muted" },
+  in_progress: {
+    label: "In progress",
+    icon: CircleDashed,
+    dotClass: "text-warning",
+    textClass: "text-warning",
+  },
+  in_review: { label: "In review", icon: Eye, dotClass: "text-info", textClass: "text-info" },
+  blocked: {
+    label: "Blocked",
+    icon: CircleSlash,
+    dotClass: "text-danger",
+    textClass: "text-danger",
+  },
+  done: {
+    label: "Done",
+    icon: CircleCheck,
+    dotClass: "text-success",
+    textClass: "text-success",
+  },
+};
+
+function formatRelative(ts: number): string {
+  const diff = Date.now() - ts;
+  const min = Math.floor(diff / 60000);
+  if (min < 1) return "now";
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  const day = Math.floor(hr / 24);
+  if (day < 7) return `${day}d ago`;
+  return new Date(ts).toLocaleDateString();
+}
+
+function IssuesTab({ agent }: { agent: Agent }): React.ReactElement {
+  const navigate = useNavigate();
+  const topics = useTopicsStore((s) => s.topics);
+  const topicMessages = useTopicsStore((s) => s.messages);
+  const setActiveTopic = useTopicsStore((s) => s.setActiveTopic);
+  const channels = useChatStore((s) => s.channels);
+
+  const assigned = useMemo<Topic[]>(
+    () =>
+      Object.values(topics)
+        .filter(
+          (t): t is Topic =>
+            !!t.issue && t.issue.assignee?.kind === "agent" && t.issue.assignee.id === agent.id,
+        )
+        .sort((a, b) => (b.issue?.createdAt ?? 0) - (a.issue?.createdAt ?? 0)),
+    [topics, agent.id],
+  );
+
+  const openIssue = (topic: Topic): void => {
+    setActiveTopic(topic.id);
+    navigate(`/chat/${topic.rootChannelId}`);
+  };
+
+  return (
+    <Card variant="outline" padding="lg">
+      <CardHeader>
+        <CardTitle className="text-[16px] text-text-heading">Assigned issues</CardTitle>
+        <CardDescription>
+          Issues assigned to {agent.name}. Click to open the thread in chat.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {assigned.length === 0 ? (
+          <EmptyState
+            title="No issues assigned"
+            description="Assign an issue to this agent from any chat thread."
+            icon={<CircleDot className="size-7" />}
+            className="border-border-subtle"
+          />
+        ) : (
+          <ul className="divide-y divide-border-subtle">
+            {assigned.map((topic) => {
+              const issue = topic.issue;
+              if (!issue) return null;
+              const meta = ISSUE_STATUS_META[issue.status];
+              const Icon = meta.icon;
+              const channel = channels.find((c) => c.id === topic.rootChannelId);
+              const replies = topicMessages[topic.id]?.length ?? 0;
+              return (
+                <li key={topic.id}>
+                  <button
+                    type="button"
+                    onClick={() => openIssue(topic)}
+                    className="flex w-full items-start gap-3 py-2.5 text-left hover:bg-surface-2/60"
+                  >
+                    <Icon className={cn("mt-0.5 size-4 shrink-0", meta.dotClass)} />
+                    <div className="min-w-0 flex-1 space-y-0.5">
+                      <div className="flex items-center gap-2">
+                        <div className="truncate text-[13px] font-medium text-text-primary">
+                          {topic.title}
+                        </div>
+                        <span
+                          className={cn(
+                            "shrink-0 rounded-[4px] bg-surface-2 px-1.5 py-[1px] text-[10px] font-semibold uppercase tracking-wide",
+                            meta.textClass,
+                          )}
+                        >
+                          {meta.label}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-[11px] text-text-muted">
+                        {channel ? (
+                          <span className="inline-flex items-center gap-1">
+                            <Hash className="size-3" />
+                            {channel.name}
+                          </span>
+                        ) : null}
+                        <span>·</span>
+                        <span>
+                          {replies} repl{replies === 1 ? "y" : "ies"}
+                        </span>
+                        <span>·</span>
+                        <span>{formatRelative(issue.createdAt)}</span>
+                      </div>
+                    </div>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function ChannelsTab({ agent }: { agent: Agent }): React.ReactElement {
+  const navigate = useNavigate();
+  const channels = useChatStore((s) => s.channels);
+
+  const memberOf = useMemo<Channel[]>(
+    () => channels.filter((c) => c.members.some((m) => m.kind === "agent" && m.id === agent.id)),
+    [channels, agent.id],
+  );
+
+  return (
+    <Card variant="outline" padding="lg">
+      <CardHeader>
+        <CardTitle className="text-[16px] text-text-heading">Channels</CardTitle>
+        <CardDescription>Where {agent.name} has been added.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {memberOf.length === 0 ? (
+          <EmptyState
+            title="Not in any channel"
+            description="Add this agent to a channel to let it participate."
+            icon={<Hash className="size-7" />}
+            className="border-border-subtle"
+          />
+        ) : (
+          <ul className="divide-y divide-border-subtle">
+            {memberOf.map((c) => {
+              const isDm = c.type === "dm";
+              const other = isDm ? c.members.find((m) => m.id !== "u-1") : undefined;
+              const resolved = other ? resolveRef(other) : undefined;
+              const label = isDm ? (resolved?.name ?? c.name) : c.name;
+              const memberCount = c.members.length;
+              return (
+                <li key={c.id}>
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/chat/${c.id}`)}
+                    className="flex w-full items-center gap-3 py-2.5 text-left hover:bg-surface-2/60"
+                  >
+                    {isDm ? (
+                      <MessageSquare className="size-4 shrink-0 text-text-muted" />
+                    ) : (
+                      <Globe className="size-4 shrink-0 text-text-muted" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-[13px] font-medium text-text-primary">
+                        {label}
+                      </div>
+                      <div className="text-[11px] text-text-muted">
+                        {isDm
+                          ? "Direct message"
+                          : `Channel · ${memberCount} member${memberCount === 1 ? "" : "s"}`}
+                      </div>
+                    </div>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </CardContent>
     </Card>
   );
