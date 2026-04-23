@@ -94,12 +94,15 @@ export function ChatSidebar(): React.ReactElement {
     .map((id) => channels.find((c) => c.id === id))
     .filter((c): c is Channel => c != null && filterBySearch(c));
 
-  const channelList = channels.filter(
-    (c) => c.type === "channel" && !pinnedSet.has(c.id) && filterBySearch(c),
-  );
-
-  const dmList = channels
-    .filter((c) => c.type === "dm" && !pinnedSet.has(c.id) && filterBySearch(c))
+  // Channels and DMs share one unified list sorted by recency. Keeping
+  // them under a single section (instead of two sub-headers) matches
+  // the modern Slack/Linear conversation-list pattern where what you
+  // talked to last is what surfaces first, regardless of whether the
+  // thread is a channel or a 1:1. The `+` affordance stays on the
+  // section header since that's still the only way to create a new
+  // channel; DMs start implicitly from a message.
+  const conversationList = channels
+    .filter((c) => !pinnedSet.has(c.id) && filterBySearch(c))
     .sort((a, b) => b.lastMessageAt - a.lastMessageAt);
 
   const renderRow = (c: Channel, opts?: { showDelete?: boolean }): React.ReactElement => {
@@ -133,7 +136,17 @@ export function ChatSidebar(): React.ReactElement {
           {isChannel ? (
             <Globe className="h-3.5 w-3.5 shrink-0 opacity-90" />
           ) : resolved ? (
-            <img src={resolved.avatar} alt="" className="h-3.5 w-3.5 rounded-full shrink-0" />
+            // Avatar ring follows the app-wide rule:
+            // `ring-black/5 dark:ring-white/10`. Without this the edge
+            // of light-background avatars (fair-skin emoji, white-edge
+            // illustrations) dissolves into the sidebar in light mode
+            // and blends into the panel in dark mode, which is why DMs
+            // looked "border-less" next to other avatars in the app.
+            <img
+              src={resolved.avatar}
+              alt=""
+              className="h-3.5 w-3.5 rounded-full shrink-0 ring-1 ring-inset ring-black/5 dark:ring-white/10"
+            />
           ) : (
             <Hash className="h-3.5 w-3.5 shrink-0" />
           )}
@@ -171,7 +184,13 @@ export function ChatSidebar(): React.ReactElement {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-2 pb-2">
+      {/* No `pt-*` on the search wrap — the 12px gap from the sidebar's
+          page title down to here is owned by `SidebarHeader`'s `pb-3`
+          (spacing rule in layout/Sidebar.tsx).
+          `pb-4` = 16px below the search, matching AgentsSidebar so the
+          first section header sits at the same vertical distance from
+          the search input across sidebars. */}
+      <div className="px-3 pb-4">
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -182,13 +201,15 @@ export function ChatSidebar(): React.ReactElement {
         />
       </div>
 
-      {/* `space-y-4` widens the rhythm between sections (Pinned / Channels /
-          Direct messages) without touching the top gap between the search
-          box and the first header. */}
-      <div className="flex-1 overflow-y-auto px-2 pb-2 space-y-4">
+      {/* Unified list rhythm across all sidebars:
+          - `space-y-3` (12px) between sibling sections
+          - each section header uses `px-2 py-1.5 gap-1.5` (11px uppercase)
+          - each section's rows use `space-y-0.5` for tight list rhythm
+          Keep this in sync with AgentsSidebar / RuntimesSidebar. */}
+      <div className="flex-1 overflow-y-auto px-3 pb-2 space-y-3">
         {pinnedChannels.length > 0 && (
           <div>
-            <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+            <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
               <Pin className="h-3.5 w-3.5" />
               <span className="flex-1">Pinned</span>
             </div>
@@ -197,7 +218,7 @@ export function ChatSidebar(): React.ReactElement {
         )}
 
         <div>
-          <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
             <span className="flex-1">Channels</span>
             {/* Plain inline button (not the `Button` primitive) matches the
                 compact 20px affordance used in AgentsSidebar so the two
@@ -225,20 +246,9 @@ export function ChatSidebar(): React.ReactElement {
             </button>
           </div>
           <div className="space-y-0.5">
-            {channelList.map((c) => renderRow(c, { showDelete: true }))}
+            {conversationList.map((c) => renderRow(c, { showDelete: true }))}
           </div>
         </div>
-
-        {dmList.length > 0 && (
-          <div>
-            <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
-              <span className="flex-1">{t("chat.directMessages")}</span>
-            </div>
-            <div className="space-y-0.5">
-              {dmList.map((c) => renderRow(c, { showDelete: true }))}
-            </div>
-          </div>
-        )}
       </div>
 
       {menu && (

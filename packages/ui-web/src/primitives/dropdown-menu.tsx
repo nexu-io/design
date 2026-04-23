@@ -41,7 +41,10 @@ function DropdownMenuSubContent({
     <DropdownMenuPrimitive.SubContent
       data-slot="dropdown-menu-sub-content"
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-xl border border-border-subtle bg-surface-0 p-1 text-text-primary shadow-lg",
+        // `dark:bg-surface-2` lifts the menu above the card so it reads
+        // as a floating layer in dark mode (same rationale as Dialog /
+        // Sheet). Light mode keeps the original `surface-0` white.
+        "z-50 min-w-[8rem] overflow-hidden rounded-xl border border-border-subtle dark:border-border bg-surface-0 dark:bg-surface-2 p-1 text-text-primary shadow-lg",
         className,
       )}
       {...props}
@@ -60,7 +63,9 @@ function DropdownMenuContent({
         data-slot="dropdown-menu-content"
         sideOffset={sideOffset}
         className={cn(
-          "z-50 min-w-[8rem] overflow-hidden rounded-xl border border-border-subtle bg-surface-0 p-1 text-text-primary shadow-lg",
+          // See DropdownMenuSubContent above for the `dark:bg-surface-2`
+          // rationale — lifts the menu above the page in dark mode.
+          "z-50 min-w-[8rem] overflow-hidden rounded-xl border border-border-subtle dark:border-border bg-surface-0 dark:bg-surface-2 p-1 text-text-primary shadow-lg",
           className,
         )}
         {...props}

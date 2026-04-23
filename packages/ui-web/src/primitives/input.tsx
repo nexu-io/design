@@ -3,8 +3,19 @@ import * as React from "react";
 
 import { cn } from "../lib/cn";
 
+// Surface — preserve the same RELATIONSHIP to the parent card across
+// themes: the input sits slightly DEEPER than its card so the control
+// reads as an inset well.
+//   Light: `surface-0` (98%) on a `surface-1` card (100%) → subtly muted
+//          recess, matches shadcn / Radix conventions.
+//   Dark:  raw `surface-0` (5.7%) on a `surface-1` card (11.2%) lands as
+//          a near-black pit that fights the chrome. We mix surface-0 and
+//          surface-1 50/50 to land between them (~#141419), which stays
+//          clearly deeper than the card but well above pure black — same
+//          inset intent, calmer contrast. Textarea / Select / Combobox
+//          apply the same recipe so form fields read as one family.
 const inputShellVariants = cva(
-  "flex w-full items-center gap-2 rounded-lg border border-input bg-surface-0 text-foreground transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/20",
+  "flex w-full items-center gap-2 rounded-lg border border-input bg-surface-0 dark:bg-[color:color-mix(in_srgb,var(--color-surface-0),var(--color-surface-1))] text-foreground transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/20",
   {
     variants: {
       size: {
@@ -77,7 +88,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           aria-invalid={invalid || undefined}
           className={cn(
-            "w-full border-0 bg-transparent p-0 text-foreground outline-none placeholder:text-muted-foreground/50 disabled:cursor-not-allowed disabled:opacity-50",
+            // Placeholder contrast: in light mode `muted-foreground/50`
+            // (~#7C8084 at 50%) is a subtle grey on a white input; in
+            // dark mode the same token is much brighter (~#A3A3A3) and
+            // at /50 on the deep-ish input surface it pops too hard
+            // against the control background. Dropping to /35 in dark
+            // keeps the hint visible without yelling.
+            "w-full border-0 bg-transparent p-0 text-foreground outline-none placeholder:text-muted-foreground/50 dark:placeholder:text-muted-foreground/35 disabled:cursor-not-allowed disabled:opacity-50",
             inputClassName,
           )}
           {...props}

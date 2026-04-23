@@ -89,7 +89,7 @@ export function InviteLandingPage(): React.ReactElement {
                 <img
                   src={workspaceAvatar}
                   alt=""
-                  className="h-5 w-5 rounded-md bg-secondary ring-1 ring-inset ring-black/5"
+                  className="h-5 w-5 rounded-md bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10"
                 />
                 <span
                   className="text-[13px] font-semibold leading-none tracking-tight text-text-heading"

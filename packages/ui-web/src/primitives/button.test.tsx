@@ -51,14 +51,21 @@ describe("Button", () => {
     ).toBeInTheDocument();
   });
 
-  it("keeps outline buttons visible on hover", () => {
+  it("keeps outline buttons visible on hover and rides on a translucent foreground tint", () => {
     render(<Button variant="outline">Cancel</Button>);
 
     const button = screen.getByRole("button", { name: "Cancel" });
 
     expect(button).toHaveClass("border-input");
+    // Rest state is a translucent tint of `foreground` (not a hard
+    // `bg-surface-*`) so the button adapts to tinted / glass parent
+    // cards — see Dark-mode surface & contrast ladder in
+    // COMPONENT_REFERENCE.md.
+    expect(button).toHaveClass("bg-foreground/[0.03]");
+    expect(button).toHaveClass("dark:bg-foreground/[0.06]");
     expect(button).toHaveClass("hover:border-foreground/15");
-    expect(button).toHaveClass("hover:bg-foreground/[0.03]");
+    expect(button).toHaveClass("hover:bg-foreground/[0.06]");
+    expect(button).toHaveClass("dark:hover:bg-foreground/[0.1]");
     expect(button).toHaveClass("hover:text-foreground");
   });
 

@@ -553,7 +553,7 @@ export function RuntimesView(): ReactElement {
                       }}
                       className="flex items-center gap-3 w-full px-3 py-2 rounded-lg hover:bg-surface-2 transition-colors text-left"
                     >
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 ring-1 ring-inset ring-black/5">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 ring-1 ring-inset ring-black/5 dark:ring-white/10">
                         {agent.avatar ? (
                           <img src={agent.avatar} alt="" className="h-8 w-8 rounded-full" />
                         ) : (
@@ -815,9 +815,18 @@ function InstallCommand({
   };
 
   return (
+    /* Command pill is an input-shaped surface — a read-only string the
+       user copies out — so it follows the same "sits deeper than the
+       parent card" rule as Input/Textarea/Select/Combobox. Light mode
+       uses `surface-0` for a subtle inset; dark mode mixes
+       `surface-0 + surface-1` so the pill stays clearly below the card
+       tone without dropping to near-black.
+       Copy button: the click-target background lifts on hover
+       (`surface-2` / `surface-3`) rather than going darker, so the
+       affordance reads as "pressable" instead of "another pit". */
     <div
       className={cn(
-        "group/cmd flex items-center gap-2 rounded-md bg-secondary/60 pl-2 pr-1 py-1",
+        "group/cmd flex items-center gap-2 rounded-md bg-surface-0 dark:bg-[color:color-mix(in_srgb,var(--color-surface-0),var(--color-surface-1))] pl-2 pr-1 py-1",
         className,
       )}
     >
@@ -833,7 +842,7 @@ function InstallCommand({
           "flex size-5 shrink-0 items-center justify-center rounded transition-colors",
           copied
             ? "text-success"
-            : "text-muted-foreground hover:text-foreground hover:bg-background",
+            : "text-muted-foreground hover:text-foreground hover:bg-surface-2 dark:hover:bg-surface-3",
         )}
       >
         {copied ? <Check className="size-3" /> : <Copy className="size-3" />}
@@ -849,7 +858,7 @@ function EmptyRuntimesGuide(): ReactElement {
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-6 pb-10">
           <div className="flex flex-col items-center text-center gap-3 pt-6 pb-8">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-2 text-text-primary ring-1 ring-inset ring-black/5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-2 text-text-primary ring-1 ring-inset ring-black/5 dark:ring-white/10">
               <Zap className="h-6 w-6" />
             </div>
             <h1 className="text-xl font-semibold">No runtimes installed</h1>

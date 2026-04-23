@@ -126,7 +126,7 @@ export function ChatView(): React.ReactElement {
    *   description context, surface it in the body, not the chrome.
    */
   return (
-    <div className="flex h-full flex-col bg-surface-1">
+    <div className="flex h-full flex-col">
       <WindowChrome className="flex h-[52px] items-center gap-2 border-b border-border px-4 pt-2">
         <button
           type="button"

@@ -59,6 +59,42 @@ body,
   --slark-color-nav-ring: var(--color-brand-primary);
 }
 
+/*
+ * ActivityBar-on-glass override: when the ActivityBar is rendered with
+ * `surface="glass"` (macOS vibrancy / translucent base plate under PR #57's
+ * floating-panel layout), the default `surface-3` fill renders as a flat
+ * opaque chip that fights with the vibrancy behind it — the pill reads as
+ * a cut-out rather than "lit up on glass".
+ *
+ * We override the `--slark-color-nav-*` variables ONLY inside
+ * `[data-slot="activity-bar"][data-surface="glass"]`. Tailwind v4's
+ * `@theme inline` block below resolves `bg-nav-active` / `bg-nav-hover`
+ * directly to `var(--slark-color-nav-active)` / `var(--slark-color-nav-hover)`
+ * at build time (the intermediate `--color-nav-*` aliases are NOT emitted
+ * at runtime), so overriding the `--slark-*` source tokens is the only
+ * way a scoped value actually reaches the utility class.
+ *
+ * Scope guarantees:
+ * - Other sidebars (ChatSidebar, AgentsSidebar, RuntimesSidebar, Settings)
+ *   sit on opaque `surface-1` panels and keep the original `surface-3`
+ *   behaviour — no global token shift.
+ * - Solid-surface ActivityBars (non-mac fallback or `surface="solid"`) are
+ *   NOT matched by the selector, so they also keep the original behaviour.
+ *
+ * `--slark-color-nav-active-fg` intentionally NOT overridden: `text-heading`
+ * auto-switches with light/dark theme and stays legible on the translucent
+ * pill in both modes.
+ */
+[data-slot="activity-bar"][data-surface="glass"] {
+  --slark-color-nav-active: color-mix(in srgb, white 65%, transparent);
+  --slark-color-nav-hover: color-mix(in srgb, white 35%, transparent);
+}
+
+.dark [data-slot="activity-bar"][data-surface="glass"] {
+  --slark-color-nav-active: color-mix(in srgb, white 14%, transparent);
+  --slark-color-nav-hover: color-mix(in srgb, white 7%, transparent);
+}
+
 @theme inline {
   --color-nexu-primary: var(--slark-color-nexu-primary);
   --color-nexu-agent: var(--slark-color-nexu-agent);

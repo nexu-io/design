@@ -59,11 +59,11 @@ export function AgentsSidebar(): React.ReactElement {
           behind a toggle) mirrors the Chat sidebar's layout and makes
           the filter immediately discoverable. Scope is both members
           and agents, matching the lists below.
-          `pt-2 pb-4` gives the input clear breathing room on both
-          sides — `pt-2` stacks on the SidebarHeader's own `pb-2` for
-          16px above the field, and `pb-4` keeps the input visually
-          detached from the MEMBERS section header beneath it. */}
-      <div className="px-2 pt-2 pb-4">
+          No `pt-*` here — the 12px gap above is owned by `SidebarHeader`'s
+          `pb-3` (see spacing rule in layout/Sidebar.tsx). `pb-4` keeps
+          the input visually detached from the MEMBERS section header
+          beneath it. */}
+      <div className="px-3 pb-4">
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -86,34 +86,37 @@ export function AgentsSidebar(): React.ReactElement {
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto px-2 space-y-3">
+      <div className="flex-1 overflow-y-auto px-3 space-y-3">
         <section>
           {/* Section header: [Members] [count, gap-1.5 ≈ 6px].
               "Members" is kept distinct from the top-level "Teammate"
               title — the top label is the sidebar's identity (and carries
               the invite CTA + search), while this scoped label reminds
               the reader that this list is human members, paired with the
-              Agents list below. */}
-          <div className="flex items-center gap-1 px-2 py-1 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+              Agents list below.
+              Shared section-header pattern (see ChatSidebar /
+              RuntimesSidebar): `gap-1.5 px-2 py-1.5 text-[11px]`. */}
+          <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
             <div className="flex flex-1 items-baseline gap-1.5 min-w-0">
               <span>Members</span>
               <span className="text-[11px] normal-case tracking-normal font-medium text-nav-muted">
                 {filteredUsers.length}
               </span>
             </div>
-            {/* Section-header action: outlined 20px `+` chip. The border
-                + `surface-0` fill give it visibly more weight than a
-                bare ghost icon, reading as a clear affordance next to
-                the label rather than decorative chrome. Same chip is
-                reused on the AGENTS header for consistency. */}
+            {/* Section-header action: bare ghost `+` icon matching
+                ChatSidebar's channel/DM create buttons (see
+                chat/ChatSidebar.tsx). Default is transparent so the
+                affordance never reads as a dark pit on dark-mode
+                sidebars — it's a subtle icon that lights up on hover.
+                Same recipe reused on the AGENTS header below. */}
             <button
               type="button"
               onClick={() => setShowInvite(true)}
               aria-label="Invite teammate"
               title="Invite teammate"
-              className="flex h-5 w-5 items-center justify-center rounded border border-border-subtle bg-surface-0 text-nav-fg shadow-xs transition-colors hover:border-border hover:bg-nav-hover"
+              className="flex h-5 w-5 items-center justify-center rounded text-nav-muted transition-colors hover:bg-nav-hover hover:text-nav-fg"
             >
-              <Plus className="h-3 w-3" />
+              <Plus className="h-3.5 w-3.5" />
             </button>
           </div>
 
@@ -136,7 +139,7 @@ export function AgentsSidebar(): React.ReactElement {
                   <img
                     src={user.avatar}
                     alt=""
-                    className="h-7 w-7 rounded-full ring-1 ring-inset ring-black/5"
+                    className="h-7 w-7 rounded-full ring-1 ring-inset ring-black/5 dark:ring-white/10"
                   />
                   <span
                     role="status"
@@ -172,7 +175,7 @@ export function AgentsSidebar(): React.ReactElement {
         </section>
 
         <section>
-          <div className="flex items-center gap-1 px-2 py-1 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
             <div className="flex flex-1 items-baseline gap-1.5 min-w-0">
               <span>Agents</span>
               <span className="text-[11px] normal-case tracking-normal font-medium text-nav-muted">
@@ -187,9 +190,9 @@ export function AgentsSidebar(): React.ReactElement {
               disabled={atAgentLimit}
               aria-label="Create agent"
               title={atAgentLimit ? `${agents.length}/10` : "Create agent"}
-              className="flex h-5 w-5 items-center justify-center rounded border border-border-subtle bg-surface-0 text-nav-fg shadow-xs transition-colors hover:border-border hover:bg-nav-hover disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border-subtle disabled:hover:bg-surface-0"
+              className="flex h-5 w-5 items-center justify-center rounded text-nav-muted transition-colors hover:bg-nav-hover hover:text-nav-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
             >
-              <Plus className="h-3 w-3" />
+              <Plus className="h-3.5 w-3.5" />
             </button>
           </div>
 
@@ -211,7 +214,7 @@ export function AgentsSidebar(): React.ReactElement {
                 <img
                   src={agent.avatar}
                   alt=""
-                  className="h-7 w-7 rounded-full shrink-0 bg-secondary ring-1 ring-inset ring-black/5"
+                  className="h-7 w-7 rounded-full shrink-0 bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10"
                 />
                 <div className="min-w-0 flex-1 text-left">
                   <div className="text-sm font-medium truncate">{agent.name}</div>
