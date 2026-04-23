@@ -64,11 +64,28 @@ export function AppLayout(): React.ReactElement {
            maxSidebar    = usable − MAIN_MIN_WIDTH
            collapsed     = maxSidebar < SIDEBAR_MIN_WIDTH
            effectiveWidth = clamp(sidebarPref, SIDEBAR_MIN, min(SIDEBAR_MAX, maxSidebar))
-         When `collapsed` the sidebar and its splitter are both
-         unmounted — main takes the full usable width.
+         When `collapsed` the Sidebar and its splitter stay mounted
+         but animate to `width: 0` (and `pointer-events: none` on the
+         splitter) so the collapse-on-window-narrow is a smooth
+         slide instead of a pop. The transition is suppressed while
+         the user is actively dragging either splitter (tracked via
+         `isResizing`) so handle drags still track the cursor 1:1 —
+         a transitioned width during drag would feel laggy/rubbery.
      ──────────────────────────────────────────────────────────── */
   const panelRef = useRef<HTMLDivElement>(null);
   const [panelWidth, setPanelWidth] = useState(0);
+  const [isResizing, setIsResizing] = useState(false);
+  /**
+   * `hasMeasured` gates the collapse animation until after
+   * `ResizeObserver` has reported the initial `panelWidth`.
+   * Otherwise a user whose last window was narrow enough to
+   * auto-collapse the Sidebar would see the Sidebar flash open at
+   * its persisted width on startup and then animate closed as the
+   * post-measurement state lands — a "bounce" that reads as a
+   * rendering bug. Suppressing transition on the first measured
+   * layout lets the Sidebar land directly at its final width.
+   */
+  const [hasMeasured, setHasMeasured] = useState(false);
   const sidebarPref = useLayoutStore((s) => s.sidebarWidth);
   const setSidebarWidth = useLayoutStore((s) => s.setSidebarWidth);
   const activityBarWidth = useLayoutStore((s) => s.activityBarWidth);
@@ -76,10 +93,21 @@ export function AppLayout(): React.ReactElement {
   const sidebarDragStartRef = useRef(0);
   const activityBarDragStartRef = useRef(0);
 
+  /**
+   * 200ms = long enough to read as an intentional animation
+   * (anything under ~150ms reads as a glitch / flash), short enough
+   * not to get in the way when the user is rapid-resizing the
+   * window. `cubic-bezier(0.32, 0.72, 0, 1)` is a mild ease-out —
+   * the sidebar "settles" into its new size instead of braking hard.
+   */
+  const COLLAPSE_TRANSITION = "width 200ms cubic-bezier(0.32, 0.72, 0, 1)";
+  const widthTransition = isResizing || !hasMeasured ? "none" : COLLAPSE_TRANSITION;
+
   useLayoutEffect(() => {
     const el = panelRef.current;
     if (!el) return;
     setPanelWidth(el.getBoundingClientRect().width);
+    setHasMeasured(true);
 
     if (typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver((entries) => {
@@ -102,6 +130,7 @@ export function AppLayout(): React.ReactElement {
 
   const handleSidebarResizeStart = (): void => {
     sidebarDragStartRef.current = effectiveSidebarWidth;
+    setIsResizing(true);
   };
 
   const handleSidebarResize = (delta: number): void => {
@@ -109,13 +138,18 @@ export function AppLayout(): React.ReactElement {
     setSidebarWidth(Math.min(next, maxSidebarByMain));
   };
 
+  const handleSidebarResizeEnd = (): void => setIsResizing(false);
+
   const handleActivityBarResizeStart = (): void => {
     activityBarDragStartRef.current = activityBarWidth;
+    setIsResizing(true);
   };
 
   const handleActivityBarResize = (delta: number): void => {
     setActivityBarWidth(activityBarDragStartRef.current + delta);
   };
+
+  const handleActivityBarResizeEnd = (): void => setIsResizing(false);
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
@@ -182,6 +216,7 @@ export function AppLayout(): React.ReactElement {
           <ResizableHandle
             onResizeStart={handleActivityBarResizeStart}
             onResize={handleActivityBarResize}
+            onResizeEnd={handleActivityBarResizeEnd}
             aria-label="Resize navigation rail"
             aria-valuemin={ACTIVITY_BAR_MIN_WIDTH}
             aria-valuemax={ACTIVITY_BAR_MAX_WIDTH}
@@ -189,25 +224,46 @@ export function AppLayout(): React.ReactElement {
             className="absolute inset-y-0 left-0 z-10 w-1 bg-transparent"
           />
 
-          {!sidebarCollapsed && (
-            <>
-              <Sidebar style={{ width: effectiveSidebarWidth }} />
-              {/* Sidebar → main splitter. 4px hit zone with a 1px
-                  visual divider centred inside, mirroring how Slack /
-                  Feishu mark the column boundary. */}
-              <ResizableHandle
-                onResizeStart={handleSidebarResizeStart}
-                onResize={handleSidebarResize}
-                aria-label="Resize sidebar"
-                aria-valuemin={SIDEBAR_MIN_WIDTH}
-                aria-valuemax={SIDEBAR_MAX_WIDTH}
-                aria-valuenow={effectiveSidebarWidth}
-                className="group w-1 bg-transparent transition-colors hover:bg-border/20 data-[dragging=true]:bg-accent/40"
-              >
-                <div className="mx-auto h-full w-px bg-border-subtle transition-colors group-hover:bg-border" />
-              </ResizableHandle>
-            </>
-          )}
+          {/* Sidebar + its right-side splitter stay mounted even
+              when `sidebarCollapsed` is true — width animates to 0
+              instead of the element popping out of the tree. Both
+              elements share the same `widthTransition` so they
+              slide/reappear together, and the splitter's pointer
+              events turn off while the sidebar is a 0-px sliver so
+              it can't be grabbed there. `overflow: hidden` on the
+              Sidebar wrapper clips its children (chat list rows,
+              search bar, etc.) while the parent width shrinks past
+              their natural width; otherwise they'd spill over into
+              the main pane mid-animation. */}
+          <Sidebar
+            style={{
+              width: sidebarCollapsed ? 0 : effectiveSidebarWidth,
+              overflow: "hidden",
+              transition: widthTransition,
+            }}
+          />
+          {/* Sidebar → main splitter. 4px hit zone with a 1px
+              visual divider centred inside, mirroring how Slack /
+              Feishu mark the column boundary. Width transitions
+              with the sidebar so the splitter slides in/out as one
+              unit; inline `width` overrides the absent class width. */}
+          <ResizableHandle
+            onResizeStart={handleSidebarResizeStart}
+            onResize={handleSidebarResize}
+            onResizeEnd={handleSidebarResizeEnd}
+            aria-label="Resize sidebar"
+            aria-valuemin={SIDEBAR_MIN_WIDTH}
+            aria-valuemax={SIDEBAR_MAX_WIDTH}
+            aria-valuenow={effectiveSidebarWidth}
+            style={{
+              width: sidebarCollapsed ? 0 : 4,
+              transition: widthTransition,
+              pointerEvents: sidebarCollapsed ? "none" : undefined,
+            }}
+            className="group bg-transparent hover:bg-border/20 data-[dragging=true]:bg-accent/40"
+          >
+            <div className="mx-auto h-full w-px bg-border-subtle transition-colors group-hover:bg-border" />
+          </ResizableHandle>
 
           <main className="flex-1 min-w-0">
             <Outlet />
