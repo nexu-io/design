@@ -42,8 +42,8 @@ export function ActivityBar(): React.ReactElement {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <UiActivityBar surface="glass" className="w-14 border-r border-border-subtle py-0 text-nav-fg">
-      <TitleBarSpacer className="mb-3 h-[38px]" />
+    <UiActivityBar className="w-[84px] border-r-0 bg-surface-0/70 py-0 text-nav-fg backdrop-blur-md">
+      <TitleBarSpacer className="mb-3 h-[40px]" />
 
       <ActivityBarHeader className="mb-4 w-10 border-b-0 pb-0">
         <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
@@ -129,7 +129,7 @@ export function ActivityBar(): React.ReactElement {
         </DropdownMenu>
       </ActivityBarHeader>
 
-      <ActivityBarContent className="gap-1.5">
+      <ActivityBarContent className="gap-2">
         {navItems.map(({ icon: Icon, path, labelKey }) => {
           const isActive = location.pathname.startsWith(path);
 

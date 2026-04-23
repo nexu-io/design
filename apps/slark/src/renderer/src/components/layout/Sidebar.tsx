@@ -67,7 +67,7 @@ export function Sidebar(): React.ReactElement {
     : "nexu.app";
 
   return (
-    <UiSidebar className="w-64 border-r border-nav-border bg-nav text-nav-fg shadow-none">
+    <UiSidebar className="h-full w-64 overflow-hidden rounded-bl-xl rounded-tl-xl border-r-0 bg-nav text-nav-fg shadow-none">
       <TitleBarSpacer className="h-[38px]" />
 
       <SidebarHeader className="no-drag px-3 pb-2">

@@ -15,7 +15,12 @@
 html,
 body,
 #root {
+  height: 100%;
+  margin: 0;
   background: transparent;
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 :root {
