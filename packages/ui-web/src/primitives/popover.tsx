@@ -18,7 +18,12 @@ const PopoverContent = React.forwardRef<
       align={align}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 w-72 rounded-xl border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95",
+        // `dark:bg-surface-2` — `bg-popover` resolves to the card tone
+        // (`surface-1`) in dark mode, which blends into panels that are
+        // themselves `surface-1`. Lifting to `surface-2` gives the
+        // popover the same clear elevation as Dialog / DropdownMenu in
+        // dark; light mode keeps the original `bg-popover` white.
+        "z-50 w-72 rounded-xl border bg-popover dark:bg-surface-2 p-4 text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95",
         className,
       )}
       {...props}

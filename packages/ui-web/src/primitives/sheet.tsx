@@ -27,7 +27,11 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const sheetVariants = cva(
-  "fixed z-50 gap-4 bg-surface-0 p-6 shadow-md transition ease-in-out data-[state=closed]:duration-200 data-[state=open]:duration-300",
+  // `dark:bg-surface-2` — same rationale as Dialog: sheets slide over a
+  // dimmed page and need to read as a lifted layer. Raw `surface-0` in
+  // dark blends with the scrim; `surface-2` puts the sheet one clear
+  // step above the card.
+  "fixed z-50 gap-4 bg-surface-0 dark:bg-surface-2 p-6 shadow-md transition ease-in-out data-[state=closed]:duration-200 data-[state=open]:duration-300",
   {
     variants: {
       side: {
