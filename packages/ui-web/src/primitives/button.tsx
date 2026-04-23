@@ -15,8 +15,16 @@ const buttonVariants = cva(
         brand: "bg-primary text-primary-foreground hover:bg-primary/90",
         primary: "bg-primary text-primary-foreground hover:bg-primary/90",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        // Outline is a low-emphasis control that should still read as a
+        // button, not a recess. Light mode keeps `bg-background` (98% on
+        // a 100% card → subtle inset). In dark mode `bg-background` is
+        // the darkest surface and sits BELOW the card, so the button
+        // reads as a near-black pit; `dark:bg-surface-2` lifts it just
+        // above the card tone so it feels like an actionable chip,
+        // inverse of the form-field primitives which intentionally sit
+        // deeper than the card.
         outline:
-          "border border-input bg-background text-foreground shadow-xs hover:border-foreground/15 hover:bg-foreground/[0.03] hover:text-foreground",
+          "border border-input bg-background dark:bg-surface-2 text-foreground shadow-xs hover:border-foreground/15 hover:bg-foreground/[0.03] dark:hover:bg-surface-3 hover:text-foreground",
         ghost:
           "text-[var(--color-text-muted)] hover:bg-surface-2 hover:text-[var(--color-text-secondary)]",
         soft: "bg-accent/10 text-accent hover:bg-accent/20",
