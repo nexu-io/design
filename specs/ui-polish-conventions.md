@@ -301,7 +301,7 @@ Approximate background lightness in dark mode, bottom-up:
 | **Input well** (inset, _below_ card) | `bg-surface-0 dark:bg-[color:color-mix(in_srgb,var(--color-surface-0),var(--color-surface-1))]` (~8.5%) | `Input`, `Textarea`, `Select` trigger, `Combobox` trigger, install-command pill, copyable-link container |
 | Card / panel | `bg-surface-1` (~11%) | `Card`, main content surfaces |
 | **Button / chip** (low emphasis, lifted _above_ card) | translucent `foreground` tint — `outline`: `bg-foreground/[0.03] dark:bg-foreground/[0.06]` (hover `/[0.06]` / `/[0.1]`); `secondary`: `bg-foreground/[0.06] dark:bg-foreground/[0.1]` (hover `/[0.09]` / `/[0.14]`) | `Button variant="outline" \| "secondary"`, chip-style affordances |
-| **Modal / floating layer** (lifted _above_ card) | `bg-surface-0 dark:bg-surface-2` _plus_ `border-border-subtle dark:border-border` | `Dialog`, `Sheet`, `DropdownMenu`, `DropdownMenuSubContent`, `Popover` |
+| **Modal / floating layer** (lifted _above_ card) | `bg-surface-0 dark:bg-surface-2` _plus_ `border-border-subtle dark:border-border` _plus_ `shadow-lg` | `Dialog`, `Sheet`, `DropdownMenu`, `DropdownMenuSubContent`, `Popover`, `Select`, `Combobox` (via `Popover`) |
 
 ### Paired rules
 
@@ -325,7 +325,7 @@ The `dark:` overrides above preserve the intended elevation relationships withou
 
 - Keep all overrides expressed as `dark:` utilities layered on top of the existing light token — do not fork a second set of tokens for dark.
 - Reach for `color-mix(in srgb, var(--color-surface-0), var(--color-surface-1))` whenever a control needs the "inset well" feel in dark; do not invent a one-off hex.
-- Raise modal surfaces with `dark:bg-surface-2` _and_ reinforce the edge with `dark:border-border`; shadow alone is not enough separation on dark backgrounds.
+- Raise modal surfaces with `dark:bg-surface-2`, reinforce the edge with `dark:border-border`, _and_ carry `shadow-lg`. The edge + shadow combo is required because overlay-on-overlay cases (e.g. a `Popover` or `Select` opening inside a `Dialog`) put two `surface-2` panels flush against each other; neither a lighter bg nor a softer shadow alone is enough to separate them.
 - Use the translucent `foreground` tint for low-emphasis buttons (`outline`, `secondary`) — never a hard `bg-surface-*`. These buttons sit on cards that may be warning / success / info tinted, and a fixed surface colour stamps through the tint. Brand / CTA variants (`default`, `brand`, `primary`, `destructive`) stay solid — emphasis is intentional.
 - Avatar rings always need the `dark:ring-white/10` pair; fix regressions the same day they land.
 - Don't apply bare `bg-surface-0` to modal, floating, popover, or sheet content — always pair with `dark:bg-surface-2`.
