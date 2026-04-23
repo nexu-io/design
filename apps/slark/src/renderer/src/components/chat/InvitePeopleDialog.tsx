@@ -181,7 +181,13 @@ export function InvitePeopleDialog({
               </div>
             </FormField>
 
-            <div className="flex items-center gap-2 rounded-lg border border-dashed border-border bg-secondary/40 px-3 py-2.5">
+            {/* Copyable invite link — treated as an input-shaped surface
+                (a read-only string the user copies out), so it follows
+                the same "deeper than the parent card" rule as
+                Input/Textarea/InstallCommand. Dark mode mixes surface-0
+                and surface-1 to land just below the card tone without
+                falling to near-black. */}
+            <div className="flex items-center gap-2 rounded-lg border border-dashed border-border bg-surface-0 dark:bg-[color:color-mix(in_srgb,var(--color-surface-0),var(--color-surface-1))] px-3 py-2.5">
               <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
               <div className="flex-1 min-w-0">
                 <div className="text-xs text-muted-foreground mb-0.5">

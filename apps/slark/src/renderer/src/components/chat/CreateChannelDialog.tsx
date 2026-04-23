@@ -269,7 +269,7 @@ export function CreateChannelDialog({
                                   <img
                                     src={u.avatar}
                                     alt={u.name}
-                                    className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+                                    className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10"
                                   />
                                 </InteractiveRowLeading>
                                 <InteractiveRowContent>
@@ -318,10 +318,10 @@ export function CreateChannelDialog({
                                     <img
                                       src={a.avatar}
                                       alt={a.name}
-                                      className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+                                      className="h-7 w-7 shrink-0 rounded-full bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10"
                                     />
                                   ) : (
-                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary ring-1 ring-inset ring-black/5">
+                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10">
                                       <Bot className="h-3.5 w-3.5 text-muted-foreground" />
                                     </div>
                                   )}

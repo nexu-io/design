@@ -368,7 +368,7 @@ function SettingsTab({
               <img
                 src={avatar}
                 alt=""
-                className="size-12 rounded-full bg-secondary ring-1 ring-inset ring-black/5"
+                className="size-12 rounded-full bg-secondary ring-1 ring-inset ring-black/5 dark:ring-white/10"
               />
               <Button
                 variant="outline"
