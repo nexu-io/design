@@ -283,7 +283,13 @@ export function CreateChannelDialog({
                                     "flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors",
                                     selected
                                       ? "border-foreground bg-foreground text-background"
-                                      : "border-input",
+                                      : // Empty-state needs a visible fill,
+                                        // not just a ghost border — see
+                                        // AddMembersDialog for the same
+                                        // reasoning. Without this the
+                                        // checkbox is imperceptible on the
+                                        // popover's dark surface-2 card.
+                                        "border-input bg-foreground/[0.04] dark:bg-foreground/[0.08]",
                                   )}
                                 >
                                   {selected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
@@ -339,7 +345,13 @@ export function CreateChannelDialog({
                                     "flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors",
                                     selected
                                       ? "border-foreground bg-foreground text-background"
-                                      : "border-input",
+                                      : // Empty-state needs a visible fill,
+                                        // not just a ghost border — see
+                                        // AddMembersDialog for the same
+                                        // reasoning. Without this the
+                                        // checkbox is imperceptible on the
+                                        // popover's dark surface-2 card.
+                                        "border-input bg-foreground/[0.04] dark:bg-foreground/[0.08]",
                                   )}
                                 >
                                   {selected && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
