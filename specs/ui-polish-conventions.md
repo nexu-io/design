@@ -300,7 +300,7 @@ Approximate background lightness in dark mode, bottom-up:
 | App / page | `bg-surface-0` (~5.7%) | app shell, scrim behind modals |
 | **Input well** (inset, _below_ card) | `bg-surface-0 dark:bg-[color:color-mix(in_srgb,var(--color-surface-0),var(--color-surface-1))]` (~8.5%) | `Input`, `Textarea`, `Select` trigger, `Combobox` trigger, install-command pill, copyable-link container |
 | Card / panel | `bg-surface-1` (~11%) | `Card`, main content surfaces |
-| **Button / chip** (lifted _above_ card) | `bg-background dark:bg-surface-2` (~15%); hover `dark:bg-surface-3` | `Button variant="outline"`, sidebar chip-style affordances |
+| **Button / chip** (low emphasis, lifted _above_ card) | translucent `foreground` tint — `outline`: `bg-foreground/[0.03] dark:bg-foreground/[0.06]` (hover `/[0.06]` / `/[0.1]`); `secondary`: `bg-foreground/[0.06] dark:bg-foreground/[0.1]` (hover `/[0.09]` / `/[0.14]`) | `Button variant="outline" \| "secondary"`, chip-style affordances |
 | **Modal / floating layer** (lifted _above_ card) | `bg-surface-0 dark:bg-surface-2` _plus_ `border-border-subtle dark:border-border` | `Dialog`, `Sheet`, `DropdownMenu`, `DropdownMenuSubContent`, `Popover` |
 
 ### Paired rules
@@ -319,14 +319,14 @@ In dark mode `surface-0 (5.7%)` sits well below `surface-1 (11.2%)`, and the pag
 - blends into the scrim for modals (rather than floating above);
 - blends into the page for dropdowns and popovers.
 
-The three `dark:` overrides above (mix into the input well, lift buttons and modals to `surface-2`) preserve the intended elevation relationships without requiring the base tokens to flip per theme.
+The `dark:` overrides above preserve the intended elevation relationships without requiring the base tokens to flip per theme: inputs sit in a mixed well below the card, modals lift to `surface-2`, and low-emphasis buttons use a translucent `foreground` tint so they adapt to tinted cards (warning / success / info / glass) instead of stamping a fixed surface patch on a coloured parent.
 
 ### Rules
 
 - Keep all overrides expressed as `dark:` utilities layered on top of the existing light token — do not fork a second set of tokens for dark.
 - Reach for `color-mix(in srgb, var(--color-surface-0), var(--color-surface-1))` whenever a control needs the "inset well" feel in dark; do not invent a one-off hex.
 - Raise modal surfaces with `dark:bg-surface-2` _and_ reinforce the edge with `dark:border-border`; shadow alone is not enough separation on dark backgrounds.
-- Use the "button / chip" recipe for any outline-style affordance that sits on a card — otherwise it will read as another pit.
+- Use the translucent `foreground` tint for low-emphasis buttons (`outline`, `secondary`) — never a hard `bg-surface-*`. These buttons sit on cards that may be warning / success / info tinted, and a fixed surface colour stamps through the tint. Brand / CTA variants (`default`, `brand`, `primary`, `destructive`) stay solid — emphasis is intentional.
 - Avatar rings always need the `dark:ring-white/10` pair; fix regressions the same day they land.
 - Don't apply bare `bg-surface-0` to modal, floating, popover, or sheet content — always pair with `dark:bg-surface-2`.
 - Don't silently introduce a new surface tone (e.g. `dark:bg-[#1e1e24]`). Map new controls onto this ladder first, and only promote to a named token once the same mapping recurs across multiple primitives.
@@ -334,7 +334,7 @@ The three `dark:` overrides above (mix into the input well, lift buttons and mod
 ### Reference implementations
 
 - Input family: `packages/ui-web/src/primitives/{input,textarea,select,combobox}.tsx`
-- Button: `packages/ui-web/src/primitives/button.tsx` (`outline` variant)
+- Button: `packages/ui-web/src/primitives/button.tsx` (`outline`, `secondary` variants)
 - Modal family: `packages/ui-web/src/primitives/{dialog,sheet,dropdown-menu,popover}.tsx`
 - Install / copyable command pill: `apps/slark/src/renderer/src/components/runtimes/RuntimesView.tsx` (`InstallCommand`)
 - Invite link container: `apps/slark/src/renderer/src/components/chat/InvitePeopleDialog.tsx`

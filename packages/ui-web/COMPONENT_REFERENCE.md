@@ -689,13 +689,14 @@ The ladder (approximate background lightness in dark mode):
 | App / page | `surface-0` (~5.7%) | app background, scrim |
 | **Input well** (inset, _below_ card) | `color-mix(surface-0, surface-1)` (~8.5%) | `Input`, `Textarea`, `Select`, `Combobox`, install-command pill, copyable-link container |
 | Card / panel | `surface-1` (~11%) | `Card`, main content |
-| **Button / chip** (_above_ card) | `surface-2` (~15%) | `Button variant="outline"`, sidebar chip-style affordances |
+| **Button / chip** (_above_ card, low emphasis) | translucent `foreground` tint (`bg-foreground/[0.03]` light, `bg-foreground/[0.06]` dark for `outline`; `/[0.06]` light, `/[0.1]` dark for `secondary`) | `Button variant="outline" \| "secondary"`, chip-style affordances |
 | **Modal / floating layer** (_above_ card) | `surface-2` + stronger `border-border` | `Dialog`, `Sheet`, `DropdownMenu`, `Popover` |
 
 Paired rules:
 
 - Input placeholders drop to `dark:placeholder:text-muted-foreground/35` — `/50` is too hot on the deep-ish input background.
 - Avatars / icon tiles use `ring-black/5 dark:ring-white/10` so the edge stays visible on dark surfaces.
+- Low-emphasis buttons (`outline`, `secondary`) use a translucent tint of `foreground` rather than a hard `surface-2` fill so they borrow the parent's colour on tinted cards (warning / success / info / glass). Brand / CTA buttons (`default`, `brand`, `primary`, `destructive`) stay solid — emphasis is intentional.
 - Light mode is intentionally left untouched. Every rule is a `dark:` override layered on top of the existing token.
 
 Do:
@@ -708,6 +709,7 @@ Don't:
 
 - Don't apply bare `bg-surface-0` to modal or floating layers — they blend into the scrim'd page in dark.
 - Don't use `ring-black/5` alone on avatars that may render on dark surfaces.
+- Don't stamp a hard `bg-surface-*` fill on low-emphasis buttons (`outline`, `secondary`). They must ride on top of potentially tinted parents (warning / success / info / glass cards); a translucent `foreground` tint keeps the button coherent with whichever card it lands on.
 - Don't invent a new surface tone for a control without first mapping it onto this ladder; promote to a named token only once the mapping recurs across multiple primitives.
 
 Spec: `specs/ui-polish-conventions.md#12-dark-mode-surface--contrast-ladder`.
