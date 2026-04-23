@@ -112,60 +112,52 @@ export function RuntimesSidebar(): React.ReactElement {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Unified header row — `Runtimes` section label and the `N/M online`
-          meta share one line, at the same `px-3` padding as the tabs and
-          list below, so everything left-aligns cleanly. The `px-1.5` ghost
-          indent the outer Sidebar applies to generic section labels is
-          explicitly suppressed for `/runtimes` so this header takes over.
-          Title treatment (13px semibold `text-nav-fg`) mirrors the Teammate
-          sidebar's page title so the two functional sidebars read at the
-          same hierarchy level. The meta "N/M online" stays muted/11px so
-          it reads as secondary. */}
-      <div className="px-4 pt-3 pb-1.5 flex items-baseline justify-between">
-        <span className="text-[13px] font-semibold uppercase tracking-wider text-nav-fg">
-          Runtimes
-        </span>
-        {hasRuntimes ? (
-          <span className="text-[11px] text-nav-muted tabular-nums">
+      {/* The `Runtimes` page title now lives in the shared SidebarHeader
+          (see `layout/Sidebar.tsx`) so it aligns vertically with the
+          `Teammate` title and everything else. This sidebar body mirrors
+          the Teammate structure: an optional filter row right under the
+          title, then scoped sections below at `px-3`. The `N/M online`
+          meta piggy-backs on the filter row's trailing slot so it stays
+          discoverable without adding a dedicated title line.
+          No `pt-*` on the filter row — the 12px gap above is owned by
+          `SidebarHeader`'s `pb-3` (spacing rule in layout/Sidebar.tsx). */}
+      {hasRuntimes ? (
+        <div className="px-3 pb-3 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1">
+            <Button
+              type="button"
+              variant="ghost"
+              size="inline"
+              onClick={() => setTab("mine")}
+              className={cn(
+                "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                tab === "mine"
+                  ? "bg-nav-active text-nav-active-fg"
+                  : "text-nav-muted hover:text-nav-fg",
+              )}
+            >
+              Mine
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="inline"
+              onClick={() => setTab("all")}
+              className={cn(
+                "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                tab === "all"
+                  ? "bg-nav-active text-nav-active-fg"
+                  : "text-nav-muted hover:text-nav-fg",
+              )}
+            >
+              All
+            </Button>
+          </div>
+          <span className="text-[11px] text-nav-muted tabular-nums shrink-0">
             {onlineCount}/{runtimes.length} online
           </span>
-        ) : null}
-      </div>
-
-      {hasRuntimes ? (
-        <div className="px-4 pb-2 flex items-center gap-1">
-          <Button
-            type="button"
-            variant="ghost"
-            size="inline"
-            onClick={() => setTab("mine")}
-            className={cn(
-              "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
-              tab === "mine"
-                ? "bg-nav-active text-nav-active-fg"
-                : "text-nav-muted hover:text-nav-fg",
-            )}
-          >
-            Mine
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="inline"
-            onClick={() => setTab("all")}
-            className={cn(
-              "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
-              tab === "all"
-                ? "bg-nav-active text-nav-active-fg"
-                : "text-nav-muted hover:text-nav-fg",
-            )}
-          >
-            All
-          </Button>
         </div>
-      ) : (
-        <div className="pb-3" />
-      )}
+      ) : null}
 
       <div className="flex-1 overflow-y-auto px-3 pb-3">
         <div className="space-y-0.5">
@@ -211,18 +203,24 @@ export function RuntimesSidebar(): React.ReactElement {
         </div>
 
         {(scanning || detectedNotAdded.length > 0) && (
-          <div className="mt-2 pt-2 border-t border-nav-border">
-            {/* The label sits on the left and the rescan affordance always
-                occupies the same trailing slot, regardless of state. While
-                `scanning`, the same button renders the spinning glyph and
-                is disabled; idle, it becomes clickable. Previously the
-                spinner lived inline next to the label and a separate
-                button mounted on the right only when idle, which caused
-                the label and icon to jump horizontally on every rescan. */}
-            <div className="flex items-center justify-between px-2 pb-1.5">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-nav-muted">
-                Detected on this device
-              </span>
+          /* Divider + `mt-3 pt-3` only when there is an added-runtimes
+             list above — the border exists to visually separate "your
+             runtimes" from "auto-detected". In the empty state there's
+             nothing to separate from, so the Detected section slots
+             right under the sidebar title at the usual 12px gap. */
+          <div
+            className={cn(
+              hasRuntimes && "mt-3 pt-3 border-t border-nav-border",
+            )}
+          >
+            {/* Shared section-header pattern (see ChatSidebar /
+                AgentsSidebar): `gap-1.5 px-2 py-1.5 text-[11px]`. The
+                rescan affordance fills the trailing chip slot that
+                MEMBERS/AGENTS use for their `+` action — that slot
+                always occupies the same position so the label doesn't
+                shift horizontally between scanning and idle states. */}
+            <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+              <span className="flex-1 min-w-0 truncate">Detected on this device</span>
               <Button
                 type="button"
                 variant="ghost"

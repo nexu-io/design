@@ -59,11 +59,11 @@ export function AgentsSidebar(): React.ReactElement {
           behind a toggle) mirrors the Chat sidebar's layout and makes
           the filter immediately discoverable. Scope is both members
           and agents, matching the lists below.
-          `pt-2 pb-4` gives the input clear breathing room on both
-          sides — `pt-2` stacks on the SidebarHeader's own `pb-2` for
-          16px above the field, and `pb-4` keeps the input visually
-          detached from the MEMBERS section header beneath it. */}
-      <div className="px-3 pt-2 pb-4">
+          No `pt-*` here — the 12px gap above is owned by `SidebarHeader`'s
+          `pb-3` (see spacing rule in layout/Sidebar.tsx). `pb-4` keeps
+          the input visually detached from the MEMBERS section header
+          beneath it. */}
+      <div className="px-3 pb-4">
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -93,8 +93,10 @@ export function AgentsSidebar(): React.ReactElement {
               title — the top label is the sidebar's identity (and carries
               the invite CTA + search), while this scoped label reminds
               the reader that this list is human members, paired with the
-              Agents list below. */}
-          <div className="flex items-center gap-1 px-2 py-1 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+              Agents list below.
+              Shared section-header pattern (see ChatSidebar /
+              RuntimesSidebar): `gap-1.5 px-2 py-1.5 text-[11px]`. */}
+          <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
             <div className="flex flex-1 items-baseline gap-1.5 min-w-0">
               <span>Members</span>
               <span className="text-[11px] normal-case tracking-normal font-medium text-nav-muted">
@@ -172,7 +174,7 @@ export function AgentsSidebar(): React.ReactElement {
         </section>
 
         <section>
-          <div className="flex items-center gap-1 px-2 py-1 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
             <div className="flex flex-1 items-baseline gap-1.5 min-w-0">
               <span>Agents</span>
               <span className="text-[11px] normal-case tracking-normal font-medium text-nav-muted">

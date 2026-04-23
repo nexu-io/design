@@ -171,7 +171,13 @@ export function ChatSidebar(): React.ReactElement {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-3 pb-2">
+      {/* No `pt-*` on the search wrap — the 12px gap from the sidebar's
+          page title down to here is owned by `SidebarHeader`'s `pb-3`
+          (spacing rule in layout/Sidebar.tsx).
+          `pb-4` = 16px below the search, matching AgentsSidebar so the
+          first section header sits at the same vertical distance from
+          the search input across sidebars. */}
+      <div className="px-3 pb-4">
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -182,13 +188,15 @@ export function ChatSidebar(): React.ReactElement {
         />
       </div>
 
-      {/* `space-y-4` widens the rhythm between sections (Pinned / Channels /
-          Direct messages) without touching the top gap between the search
-          box and the first header. */}
-      <div className="flex-1 overflow-y-auto px-3 pb-2 space-y-4">
+      {/* Unified list rhythm across all sidebars:
+          - `space-y-3` (12px) between sibling sections
+          - each section header uses `px-2 py-1.5 gap-1.5` (11px uppercase)
+          - each section's rows use `space-y-0.5` for tight list rhythm
+          Keep this in sync with AgentsSidebar / RuntimesSidebar. */}
+      <div className="flex-1 overflow-y-auto px-3 pb-2 space-y-3">
         {pinnedChannels.length > 0 && (
           <div>
-            <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+            <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
               <Pin className="h-3.5 w-3.5" />
               <span className="flex-1">Pinned</span>
             </div>
@@ -197,7 +205,7 @@ export function ChatSidebar(): React.ReactElement {
         )}
 
         <div>
-          <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
             <span className="flex-1">Channels</span>
             {/* Plain inline button (not the `Button` primitive) matches the
                 compact 20px affordance used in AgentsSidebar so the two
@@ -231,7 +239,7 @@ export function ChatSidebar(): React.ReactElement {
 
         {dmList.length > 0 && (
           <div>
-            <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
+            <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
               <span className="flex-1">{t("chat.directMessages")}</span>
             </div>
             <div className="space-y-0.5">
