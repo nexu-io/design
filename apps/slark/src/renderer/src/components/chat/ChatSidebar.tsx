@@ -94,12 +94,15 @@ export function ChatSidebar(): React.ReactElement {
     .map((id) => channels.find((c) => c.id === id))
     .filter((c): c is Channel => c != null && filterBySearch(c));
 
-  const channelList = channels.filter(
-    (c) => c.type === "channel" && !pinnedSet.has(c.id) && filterBySearch(c),
-  );
-
-  const dmList = channels
-    .filter((c) => c.type === "dm" && !pinnedSet.has(c.id) && filterBySearch(c))
+  // Channels and DMs share one unified list sorted by recency. Keeping
+  // them under a single section (instead of two sub-headers) matches
+  // the modern Slack/Linear conversation-list pattern where what you
+  // talked to last is what surfaces first, regardless of whether the
+  // thread is a channel or a 1:1. The `+` affordance stays on the
+  // section header since that's still the only way to create a new
+  // channel; DMs start implicitly from a message.
+  const conversationList = channels
+    .filter((c) => !pinnedSet.has(c.id) && filterBySearch(c))
     .sort((a, b) => b.lastMessageAt - a.lastMessageAt);
 
   const renderRow = (c: Channel, opts?: { showDelete?: boolean }): React.ReactElement => {
@@ -133,7 +136,17 @@ export function ChatSidebar(): React.ReactElement {
           {isChannel ? (
             <Globe className="h-3.5 w-3.5 shrink-0 opacity-90" />
           ) : resolved ? (
-            <img src={resolved.avatar} alt="" className="h-3.5 w-3.5 rounded-full shrink-0" />
+            // Avatar ring follows the app-wide rule:
+            // `ring-black/5 dark:ring-white/10`. Without this the edge
+            // of light-background avatars (fair-skin emoji, white-edge
+            // illustrations) dissolves into the sidebar in light mode
+            // and blends into the panel in dark mode, which is why DMs
+            // looked "border-less" next to other avatars in the app.
+            <img
+              src={resolved.avatar}
+              alt=""
+              className="h-3.5 w-3.5 rounded-full shrink-0 ring-1 ring-inset ring-black/5 dark:ring-white/10"
+            />
           ) : (
             <Hash className="h-3.5 w-3.5 shrink-0" />
           )}
@@ -233,20 +246,9 @@ export function ChatSidebar(): React.ReactElement {
             </button>
           </div>
           <div className="space-y-0.5">
-            {channelList.map((c) => renderRow(c, { showDelete: true }))}
+            {conversationList.map((c) => renderRow(c, { showDelete: true }))}
           </div>
         </div>
-
-        {dmList.length > 0 && (
-          <div>
-            <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">
-              <span className="flex-1">{t("chat.directMessages")}</span>
-            </div>
-            <div className="space-y-0.5">
-              {dmList.map((c) => renderRow(c, { showDelete: true }))}
-            </div>
-          </div>
-        )}
       </div>
 
       {menu && (
