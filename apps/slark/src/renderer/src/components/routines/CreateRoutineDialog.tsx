@@ -136,10 +136,11 @@ export function CreateRoutineDialog({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [agentId, setAgentId] = useState<string>(lockedAgentId ?? "");
-  const lockedAgent = lockedAgentId ? agents.find((a) => a.id === lockedAgentId) ?? null : null;
+  const lockedAgent = lockedAgentId ? (agents.find((a) => a.id === lockedAgentId) ?? null) : null;
   const [triggerKind, setTriggerKind] = useState<RoutineTriggerKind | null>(null);
-  const [scheduleMode, setScheduleMode] =
-    useState<"hourly" | "daily" | "weekdays" | "weekly" | "custom">("weekdays");
+  const [scheduleMode, setScheduleMode] = useState<
+    "hourly" | "daily" | "weekdays" | "weekly" | "custom"
+  >("weekdays");
   const [scheduleMinute, setScheduleMinute] = useState<number>(0);
   const [scheduleHour, setScheduleHour] = useState<number>(9);
   const [scheduleDow, setScheduleDow] = useState<number>(1);
@@ -206,7 +207,14 @@ export function CreateRoutineDialog({
   });
 
   const triggerSummary = (() => {
-    if (triggerKind === "schedule") return describeScheduleSummary(scheduleMode, scheduleHour, scheduleMinute, scheduleDow, customCron);
+    if (triggerKind === "schedule")
+      return describeScheduleSummary(
+        scheduleMode,
+        scheduleHour,
+        scheduleMinute,
+        scheduleDow,
+        customCron,
+      );
     if (triggerKind === "api") return "POST webhook — generated after create";
     const eventLabel =
       connectorEventOptions[connectorService].find((e) => e.value === connectorEvent)?.label ??
@@ -217,8 +225,7 @@ export function CreateRoutineDialog({
     return `${serviceName} · ${eventLabel}${target}`;
   })();
 
-  const canCreate =
-    name.trim().length > 0 && description.trim().length > 0 && triggerKind !== null;
+  const canCreate = name.trim().length > 0 && description.trim().length > 0 && triggerKind !== null;
 
   const handleCreate = (): void => {
     if (!canCreate || triggerKind === null) return;
@@ -287,8 +294,7 @@ export function CreateRoutineDialog({
             <FormField
               label={
                 <span>
-                  {t("agent.description") as string}{" "}
-                  <span className="text-destructive">*</span>
+                  {t("agent.description") as string} <span className="text-destructive">*</span>
                 </span>
               }
             >
@@ -304,8 +310,8 @@ export function CreateRoutineDialog({
                 />
                 {description.trim().length === 0 && (
                   <p className="mt-1.5 text-xs text-muted-foreground">
-                    Describe the task in plain language — goal, inputs, and the output
-                    you expect. The agent uses this as its instructions every run.
+                    Describe the task in plain language — goal, inputs, and the output you expect.
+                    The agent uses this as its instructions every run.
                   </p>
                 )}
               </FormFieldControl>
@@ -316,11 +322,7 @@ export function CreateRoutineDialog({
                 {lockedAgent ? (
                   <div className="flex h-9 w-full items-center gap-2 rounded-md border border-border-subtle bg-surface-2/50 px-3 text-sm">
                     {lockedAgent.avatar ? (
-                      <img
-                        src={lockedAgent.avatar}
-                        alt=""
-                        className="h-5 w-5 rounded shrink-0"
-                      />
+                      <img src={lockedAgent.avatar} alt="" className="h-5 w-5 rounded shrink-0" />
                     ) : (
                       <Bot className="h-4 w-4 shrink-0 text-text-muted" />
                     )}
@@ -416,9 +418,7 @@ export function CreateRoutineDialog({
                   );
                 })}
               </div>
-
             </div>
-
           </div>
         </DialogBody>
 
@@ -494,9 +494,7 @@ export function CreateRoutineDialog({
                         min={0}
                         max={59}
                         value={scheduleMinute}
-                        onChange={(e) =>
-                          setScheduleMinute(clamp(Number(e.target.value), 0, 59))
-                        }
+                        onChange={(e) => setScheduleMinute(clamp(Number(e.target.value), 0, 59))}
                         className="w-24 font-mono text-sm"
                       />
                       <span className="text-xs">every hour</span>
@@ -571,9 +569,7 @@ export function CreateRoutineDialog({
                       placeholder={t("routines.cronPlaceholder")}
                       className="font-mono text-sm"
                     />
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {t("routines.cronHint")}
-                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">{t("routines.cronHint")}</p>
                   </div>
                 )}
 
@@ -681,7 +677,6 @@ export function CreateRoutineDialog({
     </Dialog>
   );
 }
-
 
 function clamp(n: number, min: number, max: number): number {
   if (Number.isNaN(n)) return min;

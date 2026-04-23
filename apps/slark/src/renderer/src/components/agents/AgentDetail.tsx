@@ -353,9 +353,7 @@ function IssuesTab({ agent }: { agent: Agent }): React.ReactElement {
       Object.values(topics)
         .filter(
           (t): t is Topic =>
-            !!t.issue &&
-            t.issue.assignee?.kind === "agent" &&
-            t.issue.assignee.id === agent.id,
+            !!t.issue && t.issue.assignee?.kind === "agent" && t.issue.assignee.id === agent.id,
         )
         .sort((a, b) => (b.issue?.createdAt ?? 0) - (a.issue?.createdAt ?? 0)),
     [topics, agent.id],
@@ -444,10 +442,7 @@ function ChannelsTab({ agent }: { agent: Agent }): React.ReactElement {
   const channels = useChatStore((s) => s.channels);
 
   const memberOf = useMemo<Channel[]>(
-    () =>
-      channels.filter((c) =>
-        c.members.some((m) => m.kind === "agent" && m.id === agent.id),
-      ),
+    () => channels.filter((c) => c.members.some((m) => m.kind === "agent" && m.id === agent.id)),
     [channels, agent.id],
   );
 

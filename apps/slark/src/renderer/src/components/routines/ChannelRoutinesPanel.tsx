@@ -121,7 +121,8 @@ const ROUTINE_TEMPLATES: RoutineTemplate[] = [
     id: "webhook-runner",
     icon: Webhook,
     name: "Manual webhook runner",
-    description: "Expose a POST endpoint you can call from CI or other services to trigger the agent.",
+    description:
+      "Expose a POST endpoint you can call from CI or other services to trigger the agent.",
     triggerLabel: "POST webhook",
     initial: {
       name: "Manual webhook runner",
@@ -249,13 +250,22 @@ export function ChannelRoutinesPanel({
   onJumpToMessage,
 }: ChannelRoutinesPanelProps): ReactElement {
   const t = useT();
-  const { routines, selectedRoutineId, selectRoutine, toggleRoutine, removeRoutine, runNow, completeRun } =
-    useRoutinesStore();
+  const {
+    routines,
+    selectedRoutineId,
+    selectRoutine,
+    toggleRoutine,
+    removeRoutine,
+    runNow,
+    completeRun,
+  } = useRoutinesStore();
   const addMessage = useChatStore((s) => s.addMessage);
   const updateMessage = useChatStore((s) => s.updateMessage);
   const agents = useAgentsStore((s) => s.agents);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogTemplate, setDialogTemplate] = useState<RoutineTemplateInitial | undefined>(undefined);
+  const [dialogTemplate, setDialogTemplate] = useState<RoutineTemplateInitial | undefined>(
+    undefined,
+  );
   const [toastOpen, setToastOpen] = useState(false);
   const [lastRunMessageId, setLastRunMessageId] = useState<string | null>(null);
   const [lastRunStatus, setLastRunStatus] = useState<RoutineRun["status"] | null>(null);
@@ -266,7 +276,7 @@ export function ChannelRoutinesPanel({
   };
 
   const handleRunNow = (routine: Routine): void => {
-    const agent = routine.agentId ? agents.find((a) => a.id === routine.agentId) ?? null : null;
+    const agent = routine.agentId ? (agents.find((a) => a.id === routine.agentId) ?? null) : null;
     const messageId = `msg-routine-${routine.id}-${Date.now()}`;
     const agentRef = agent
       ? ({ kind: "agent", id: agent.id } as const)
@@ -510,9 +520,7 @@ export function ChannelRoutinesPanel({
 
               <Section title={t("routines.instructions")}>
                 <div className="rounded-lg border border-border-subtle bg-surface-2/40 px-4 py-3 text-sm leading-relaxed">
-                  {selected.description || (
-                    <span className="text-text-muted">—</span>
-                  )}
+                  {selected.description || <span className="text-text-muted">—</span>}
                 </div>
               </Section>
 
@@ -530,9 +538,7 @@ export function ChannelRoutinesPanel({
                             ? () => onJumpToMessage(run.messageId!)
                             : undefined
                         }
-                        onRetry={
-                          run.status === "error" ? () => handleRunNow(selected) : undefined
-                        }
+                        onRetry={run.status === "error" ? () => handleRunNow(selected) : undefined}
                       />
                     ))}
                   </ul>
@@ -575,7 +581,8 @@ export function ChannelRoutinesPanel({
                 {lastRunStatus === "running" &&
                   "The agent is working — you'll see its reply in chat when it's done."}
                 {lastRunStatus === "success" && "Agent posted its reply to this channel."}
-                {lastRunStatus === "error" && "The agent hit an error. Check the reply for details."}
+                {lastRunStatus === "error" &&
+                  "The agent hit an error. Check the reply for details."}
               </span>
             </div>
             {lastRunStatus === "error" && selected ? (
@@ -700,11 +707,7 @@ function RunRow({
 }): ReactElement {
   const t = useT();
   const statusLabel =
-    run.status === "running"
-      ? "Running"
-      : run.status === "success"
-        ? "Success"
-        : "Failed";
+    run.status === "running" ? "Running" : run.status === "success" ? "Success" : "Failed";
   const KindIcon = run.kind === "manual" ? Play : Clock;
   const kindLabel = run.kind === "manual" ? t("routines.runManual") : t("routines.runScheduled");
   const duration = formatRunDuration(run);
@@ -721,9 +724,7 @@ function RunRow({
           <KindIcon className="h-3 w-3" />
           <span className="capitalize">{run.kind}</span>
         </span>
-        {duration ? (
-          <span className="text-[11px] text-text-muted">· {duration}</span>
-        ) : null}
+        {duration ? <span className="text-[11px] text-text-muted">· {duration}</span> : null}
       </div>
       <span
         className={cn(
@@ -775,10 +776,7 @@ function RunStatusIcon({ status }: { status: RoutineRun["status"] }): ReactEleme
   return <CircleX className="h-4 w-4 text-destructive" />;
 }
 
-function buildRoutineRunMessage(
-  routine: Routine,
-  status: "running" | "success" | "error",
-): string {
+function buildRoutineRunMessage(routine: Routine, status: "running" | "success" | "error"): string {
   const prefix =
     status === "running"
       ? `⏳ **${routine.name}** — running now (manual trigger)`

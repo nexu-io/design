@@ -90,7 +90,10 @@ function renderContent(content: string): React.ReactNode {
   });
 }
 
-const STATUS_META: Record<IssueStatus, { label: string; icon: typeof CircleDot; className: string }> = {
+const STATUS_META: Record<
+  IssueStatus,
+  { label: string; icon: typeof CircleDot; className: string }
+> = {
   todo: {
     label: "Todo",
     icon: Circle,
@@ -185,9 +188,7 @@ export function TopicDrawer({
       next =
         nextUsers.length === 0
           ? msg.reactions.filter((r) => r.emoji !== emoji)
-          : msg.reactions.map((r) =>
-              r.emoji === emoji ? { ...r, users: nextUsers } : r,
-            );
+          : msg.reactions.map((r) => (r.emoji === emoji ? { ...r, users: nextUsers } : r));
     } else {
       next = [...msg.reactions, { emoji, users: [currentUserId] }];
     }
@@ -265,323 +266,328 @@ export function TopicDrawer({
 
   return (
     <>
-    <aside
-      className={cn(
-        "flex h-full flex-col bg-background",
-        variant === "drawer"
-          ? "w-[420px] shrink-0 border-l border-border"
-          : "min-w-0 flex-1",
-      )}
-    >
-      <div
+      <aside
         className={cn(
-          "flex h-[52px] shrink-0 items-center gap-2 border-b border-border px-3",
-          variant === "main" && "drag-region pt-2",
+          "flex h-full flex-col bg-background",
+          variant === "drawer" ? "w-[420px] shrink-0 border-l border-border" : "min-w-0 flex-1",
         )}
       >
-        <div className="flex min-w-0 flex-1 items-center gap-2">
-          {issue ? (
-            <CircleDot className="size-4 shrink-0 text-brand-primary" />
-          ) : (
-            <Pin className="size-4 shrink-0 text-text-muted" />
+        <div
+          className={cn(
+            "flex h-[52px] shrink-0 items-center gap-2 border-b border-border px-3",
+            variant === "main" && "drag-region pt-2",
           )}
-          <div className="min-w-0">
-            <div className="truncate text-[13px] font-semibold">{topic.title}</div>
-            <div className="truncate text-[11px] text-text-muted">
-              {issue ? "Issue" : "Topic"}
-              {rootChannel.type === "channel" ? (
-                <>
-                  {" · 来自 "}
-                  <button
-                    type="button"
-                    onClick={handleGoToRootChannel}
-                    className="no-drag text-brand-primary hover:underline"
-                    title="Jump to source message"
-                  >
-                    #{rootChannel.name}
-                  </button>
-                </>
-              ) : null}
-              {" · "}
-              {topicMessages.length} repl{topicMessages.length === 1 ? "y" : "ies"}
+        >
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            {issue ? (
+              <CircleDot className="size-4 shrink-0 text-brand-primary" />
+            ) : (
+              <Pin className="size-4 shrink-0 text-text-muted" />
+            )}
+            <div className="min-w-0">
+              <div className="truncate text-[13px] font-semibold">{topic.title}</div>
+              <div className="truncate text-[11px] text-text-muted">
+                {issue ? "Issue" : "Topic"}
+                {rootChannel.type === "channel" ? (
+                  <>
+                    {" · 来自 "}
+                    <button
+                      type="button"
+                      onClick={handleGoToRootChannel}
+                      className="no-drag text-brand-primary hover:underline"
+                      title="Jump to source message"
+                    >
+                      #{rootChannel.name}
+                    </button>
+                  </>
+                ) : null}
+                {" · "}
+                {topicMessages.length} repl{topicMessages.length === 1 ? "y" : "ies"}
+              </div>
             </div>
           </div>
-        </div>
-        <div className={cn("flex items-center gap-2", variant === "main" && "no-drag")}>
-        {issue ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className="inline-flex h-7 items-center gap-1 rounded-md bg-surface-2 px-2 text-[11px] font-medium text-text-primary transition-opacity hover:opacity-80"
-                title="Assignee"
-              >
-                {assigneeResolved ? (
-                  <img
-                    src={assigneeResolved.avatar}
-                    alt=""
-                    className="size-4 rounded-full object-cover"
-                  />
-                ) : (
-                  <Bot className="size-3 text-text-muted" />
+          <div className={cn("flex items-center gap-2", variant === "main" && "no-drag")}>
+            {issue ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="inline-flex h-7 items-center gap-1 rounded-md bg-surface-2 px-2 text-[11px] font-medium text-text-primary transition-opacity hover:opacity-80"
+                    title="Assignee"
+                  >
+                    {assigneeResolved ? (
+                      <img
+                        src={assigneeResolved.avatar}
+                        alt=""
+                        className="size-4 rounded-full object-cover"
+                      />
+                    ) : (
+                      <Bot className="size-3 text-text-muted" />
+                    )}
+                    {assigneeResolved ? assigneeResolved.name : "Unassigned"}
+                    <ChevronDown className="size-3 opacity-60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="max-h-72 w-52 overflow-y-auto">
+                  <DropdownMenuItem
+                    onClick={() => setIssueAssignee(activeTopicId, undefined)}
+                    className={cn(!assigneeRef && "font-semibold")}
+                  >
+                    <CircleDashed className="size-3.5 text-text-muted" />
+                    Unassigned
+                  </DropdownMenuItem>
+                  {peopleMembers.length > 0 ? (
+                    <>
+                      <DropdownMenuSeparator />
+                      <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-text-muted">
+                        People
+                      </div>
+                      {peopleMembers.map((m) => {
+                        const info = resolveRef(m);
+                        if (!info) return null;
+                        const selected = isSameRef(assigneeRef, m);
+                        return (
+                          <DropdownMenuItem
+                            key={`u-${m.id}`}
+                            onClick={() => setIssueAssignee(activeTopicId, m)}
+                            className={cn(selected && "font-semibold")}
+                          >
+                            <img
+                              src={info.avatar}
+                              alt=""
+                              className="size-4 rounded-full object-cover"
+                            />
+                            {info.name}
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </>
+                  ) : null}
+                  {agents.length > 0 ? (
+                    <>
+                      <DropdownMenuSeparator />
+                      <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-text-muted">
+                        Agents
+                      </div>
+                      {agents.map((a) => {
+                        const ref: MemberRef = { kind: "agent", id: a.id };
+                        const selected = isSameRef(assigneeRef, ref);
+                        return (
+                          <DropdownMenuItem
+                            key={`a-${a.id}`}
+                            onClick={() => setIssueAssignee(activeTopicId, ref)}
+                            className={cn(selected && "font-semibold")}
+                          >
+                            <img
+                              src={a.avatar}
+                              alt=""
+                              className="size-4 rounded-full object-cover"
+                            />
+                            {a.name}
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </>
+                  ) : null}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : null}
+            {issue && statusMeta && StatusIcon ? (
+              <div className="relative">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setStatusOpen((v) => !v)}
+                  className={cn(
+                    "h-7 gap-1 rounded-md px-2 text-[11px] font-semibold",
+                    statusMeta.className,
+                  )}
+                >
+                  <StatusIcon className="size-3" />
+                  {statusMeta.label}
+                  <ChevronDown className="size-3" />
+                </Button>
+                {statusOpen && (
+                  <div className="absolute right-0 top-8 z-20 w-36 rounded-md border border-border bg-surface-0 p-1 shadow-lg">
+                    {STATUS_ORDER.map((s) => {
+                      const meta = STATUS_META[s];
+                      const Icon = meta.icon;
+                      return (
+                        <button
+                          key={s}
+                          type="button"
+                          className={cn(
+                            "flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-[12px] hover:bg-surface-2",
+                            s === status && "font-semibold",
+                          )}
+                          onClick={() => {
+                            setIssueStatus(activeTopicId, s);
+                            setStatusOpen(false);
+                          }}
+                        >
+                          <Icon className="size-3.5" />
+                          {meta.label}
+                        </button>
+                      );
+                    })}
+                  </div>
                 )}
-                {assigneeResolved ? assigneeResolved.name : "Unassigned"}
-                <ChevronDown className="size-3 opacity-60" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="max-h-72 w-52 overflow-y-auto">
-              <DropdownMenuItem
-                onClick={() => setIssueAssignee(activeTopicId, undefined)}
-                className={cn(!assigneeRef && "font-semibold")}
+              </div>
+            ) : null}
+            {!issue ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setConvertConfirmOpen(true)}
+                className="h-7 gap-1 text-[11px] font-medium"
+                title="Convert this topic to an issue"
               >
-                <CircleDashed className="size-3.5 text-text-muted" />
-                Unassigned
-              </DropdownMenuItem>
-              {peopleMembers.length > 0 ? (
-                <>
-                  <DropdownMenuSeparator />
-                  <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-text-muted">
-                    People
-                  </div>
-                  {peopleMembers.map((m) => {
-                    const info = resolveRef(m);
-                    if (!info) return null;
-                    const selected = isSameRef(assigneeRef, m);
-                    return (
-                      <DropdownMenuItem
-                        key={`u-${m.id}`}
-                        onClick={() => setIssueAssignee(activeTopicId, m)}
-                        className={cn(selected && "font-semibold")}
-                      >
-                        <img src={info.avatar} alt="" className="size-4 rounded-full object-cover" />
-                        {info.name}
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </>
-              ) : null}
-              {agents.length > 0 ? (
-                <>
-                  <DropdownMenuSeparator />
-                  <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-text-muted">
-                    Agents
-                  </div>
-                  {agents.map((a) => {
-                    const ref: MemberRef = { kind: "agent", id: a.id };
-                    const selected = isSameRef(assigneeRef, ref);
-                    return (
-                      <DropdownMenuItem
-                        key={`a-${a.id}`}
-                        onClick={() => setIssueAssignee(activeTopicId, ref)}
-                        className={cn(selected && "font-semibold")}
-                      >
-                        <img src={a.avatar} alt="" className="size-4 rounded-full object-cover" />
-                        {a.name}
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </>
-              ) : null}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : null}
-        {issue && statusMeta && StatusIcon ? (
-          <div className="relative">
+                <CircleDot className="size-3 text-brand-primary" />
+                Convert to Issue
+              </Button>
+            ) : null}
+            {variant === "drawer" ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => setActiveTopic(activeTopicId, "main")}
+                aria-label="Open topic detail"
+                title="Open topic detail"
+              >
+                <Maximize2 className="size-4" />
+              </Button>
+            ) : null}
             <Button
               type="button"
               variant="ghost"
-              size="sm"
-              onClick={() => setStatusOpen((v) => !v)}
-              className={cn(
-                "h-7 gap-1 rounded-md px-2 text-[11px] font-semibold",
-                statusMeta.className,
-              )}
+              size="icon-sm"
+              onClick={handleClose}
+              aria-label="Close topic"
+              title="Close topic"
             >
-              <StatusIcon className="size-3" />
-              {statusMeta.label}
-              <ChevronDown className="size-3" />
+              <X className="size-4" />
             </Button>
-            {statusOpen && (
-              <div className="absolute right-0 top-8 z-20 w-36 rounded-md border border-border bg-surface-0 p-1 shadow-lg">
-                {STATUS_ORDER.map((s) => {
-                  const meta = STATUS_META[s];
-                  const Icon = meta.icon;
-                  return (
-                    <button
-                      key={s}
-                      type="button"
-                      className={cn(
-                        "flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-[12px] hover:bg-surface-2",
-                        s === status && "font-semibold",
-                      )}
-                      onClick={() => {
-                        setIssueStatus(activeTopicId, s);
-                        setStatusOpen(false);
-                      }}
-                    >
-                      <Icon className="size-3.5" />
-                      {meta.label}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        ) : null}
-        {!issue ? (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => setConvertConfirmOpen(true)}
-            className="h-7 gap-1 text-[11px] font-medium"
-            title="Convert this topic to an issue"
-          >
-            <CircleDot className="size-3 text-brand-primary" />
-            Convert to Issue
-          </Button>
-        ) : null}
-        {variant === "drawer" ? (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            onClick={() => setActiveTopic(activeTopicId, "main")}
-            aria-label="Open topic detail"
-            title="Open topic detail"
-          >
-            <Maximize2 className="size-4" />
-          </Button>
-        ) : null}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          onClick={handleClose}
-          aria-label="Close topic"
-          title="Close topic"
-        >
-          <X className="size-4" />
-        </Button>
-        </div>
-      </div>
-
-      {rootMessage && rootSender ? (
-        <div className="border-b border-border bg-surface-2/40 px-3 py-2">
-          <div className="mb-1 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-text-muted">
-            <Pin className="size-2.5" />
-            Root message
-          </div>
-          <div className="rounded-md bg-surface-0 p-1">
-            <ChatMessage sender={rootSender} time={formatClock(rootMessage.createdAt)}>
-              {renderContent(rootMessage.content)}
-            </ChatMessage>
           </div>
         </div>
-      ) : null}
 
-      <div className="flex-1 overflow-y-auto px-1 py-2">
-        {topicMessages.length === 0 ? (
-          <div className="flex h-full flex-col items-center justify-center gap-1 px-6 text-center text-[12px] text-text-muted">
-            <MessageSquareIcon />
-            <div>Continue the discussion here.</div>
-            <div className="text-[11px] text-text-tertiary">
-              Replies in a topic stay threaded under the root message.
+        {rootMessage && rootSender ? (
+          <div className="border-b border-border bg-surface-2/40 px-3 py-2">
+            <div className="mb-1 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-text-muted">
+              <Pin className="size-2.5" />
+              Root message
+            </div>
+            <div className="rounded-md bg-surface-0 p-1">
+              <ChatMessage sender={rootSender} time={formatClock(rootMessage.createdAt)}>
+                {renderContent(rootMessage.content)}
+              </ChatMessage>
             </div>
           </div>
-        ) : (
-          topicMessages.map((msg) => {
-            const sender = toSender(msg.sender);
-            if (!sender) return null;
-            const reactions = msg.reactions.map((r) => ({
-              emoji: r.emoji,
-              count: r.users.length,
-              reacted: r.users.includes(currentUserId),
-            }));
-            return (
-              <div key={msg.id} className="group relative">
-                <ChatMessage
-                  sender={sender}
-                  time={formatClock(msg.createdAt)}
-                  reactions={reactions.length > 0 ? reactions : undefined}
-                  onReactionClick={(emoji) => toggleTopicReaction(msg, emoji)}
-                >
-                  {renderContent(msg.content)}
-                </ChatMessage>
-                <div
-                  className={cn(
-                    "absolute right-3 top-1 z-10 flex items-center gap-0.5 rounded-md border border-border-subtle bg-surface-0 px-0.5 py-0.5 shadow-sm transition-opacity",
-                    reactionPickerId === msg.id
-                      ? "pointer-events-auto opacity-100"
-                      : "pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100",
-                  )}
-                >
-                  <Popover
-                    open={reactionPickerId === msg.id}
-                    onOpenChange={(open) => setReactionPickerId(open ? msg.id : null)}
+        ) : null}
+
+        <div className="flex-1 overflow-y-auto px-1 py-2">
+          {topicMessages.length === 0 ? (
+            <div className="flex h-full flex-col items-center justify-center gap-1 px-6 text-center text-[12px] text-text-muted">
+              <MessageSquareIcon />
+              <div>Continue the discussion here.</div>
+              <div className="text-[11px] text-text-tertiary">
+                Replies in a topic stay threaded under the root message.
+              </div>
+            </div>
+          ) : (
+            topicMessages.map((msg) => {
+              const sender = toSender(msg.sender);
+              if (!sender) return null;
+              const reactions = msg.reactions.map((r) => ({
+                emoji: r.emoji,
+                count: r.users.length,
+                reacted: r.users.includes(currentUserId),
+              }));
+              return (
+                <div key={msg.id} className="group relative">
+                  <ChatMessage
+                    sender={sender}
+                    time={formatClock(msg.createdAt)}
+                    reactions={reactions.length > 0 ? reactions : undefined}
+                    onReactionClick={(emoji) => toggleTopicReaction(msg, emoji)}
                   >
-                    <PopoverTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        title="Add reaction"
-                        onMouseEnter={() => openPicker(msg.id)}
+                    {renderContent(msg.content)}
+                  </ChatMessage>
+                  <div
+                    className={cn(
+                      "absolute right-3 top-1 z-10 flex items-center gap-0.5 rounded-md border border-border-subtle bg-surface-0 px-0.5 py-0.5 shadow-sm transition-opacity",
+                      reactionPickerId === msg.id
+                        ? "pointer-events-auto opacity-100"
+                        : "pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100",
+                    )}
+                  >
+                    <Popover
+                      open={reactionPickerId === msg.id}
+                      onOpenChange={(open) => setReactionPickerId(open ? msg.id : null)}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          title="Add reaction"
+                          onMouseEnter={() => openPicker(msg.id)}
+                          onMouseLeave={scheduleClose}
+                        >
+                          <Smile className="size-3.5" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        align="end"
+                        side="top"
+                        sideOffset={6}
+                        className="w-auto p-0"
+                        onOpenAutoFocus={(e) => e.preventDefault()}
+                        onMouseEnter={cancelClose}
                         onMouseLeave={scheduleClose}
                       >
-                        <Smile className="size-3.5" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      align="end"
-                      side="top"
-                      sideOffset={6}
-                      className="w-auto p-0"
-                      onOpenAutoFocus={(e) => e.preventDefault()}
-                      onMouseEnter={cancelClose}
-                      onMouseLeave={scheduleClose}
-                    >
-                      <EmojiPicker
-                        onSelect={(emoji) => {
-                          toggleTopicReaction(msg, emoji);
-                          setReactionPickerId(null);
-                          cancelClose();
-                        }}
-                      />
-                    </PopoverContent>
-                  </Popover>
+                        <EmojiPicker
+                          onSelect={(emoji) => {
+                            toggleTopicReaction(msg, emoji);
+                            setReactionPickerId(null);
+                            cancelClose();
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
-              </div>
-            );
-          })
-        )}
-        <div ref={bottomRef} />
-      </div>
+              );
+            })
+          )}
+          <div ref={bottomRef} />
+        </div>
 
-      <MessageInput
-        channelId={rootChannel.id}
-        isDmWithAgent={false}
-        channel={rootChannel}
-        topicId={activeTopicId}
+        <MessageInput
+          channelId={rootChannel.id}
+          isDmWithAgent={false}
+          channel={rootChannel}
+          topicId={activeTopicId}
+        />
+      </aside>
+      {variant === "main" && issue ? <TopicSidePanel /> : null}
+      <ConfirmDialog
+        open={convertConfirmOpen}
+        onOpenChange={setConvertConfirmOpen}
+        title="Convert topic to issue?"
+        description={
+          <>
+            This topic will become an <strong>Issue</strong> with status <strong>Todo</strong>.
+            You&apos;ll be able to change the status, assignee, and labels from the issue header.
+          </>
+        }
+        confirmLabel="Convert to Issue"
+        cancelLabel="Cancel"
+        confirmVariant="primary"
+        onConfirm={handleConvertToIssue}
       />
-    </aside>
-    {variant === "main" && issue ? <TopicSidePanel /> : null}
-    <ConfirmDialog
-      open={convertConfirmOpen}
-      onOpenChange={setConvertConfirmOpen}
-      title="Convert topic to issue?"
-      description={
-        <>
-          This topic will become an <strong>Issue</strong> with status{" "}
-          <strong>Todo</strong>. You&apos;ll be able to change the status, assignee, and
-          labels from the issue header.
-        </>
-      }
-      confirmLabel="Convert to Issue"
-      cancelLabel="Cancel"
-      confirmVariant="primary"
-      onConfirm={handleConvertToIssue}
-    />
     </>
   );
 }

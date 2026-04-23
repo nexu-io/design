@@ -88,7 +88,8 @@ export function buildCtx({ runKey, navigate }: BuildCtxArgs): ScriptCtx {
     if (voices.length === 0) return null;
     // Prefer zh-CN female-ish voices (captions are mostly Simplified Chinese).
     const prefer = [
-      (v: SpeechSynthesisVoice) => v.lang === "zh-CN" && /Tingting|Meijia|Siri|Huihui/i.test(v.name),
+      (v: SpeechSynthesisVoice) =>
+        v.lang === "zh-CN" && /Tingting|Meijia|Siri|Huihui/i.test(v.name),
       (v: SpeechSynthesisVoice) => v.lang === "zh-CN",
       (v: SpeechSynthesisVoice) => v.lang.startsWith("zh"),
       () => true,
@@ -347,7 +348,10 @@ export function buildCtx({ runKey, navigate }: BuildCtxArgs): ScriptCtx {
   };
 
   const setNativeValue = (el: HTMLInputElement | HTMLTextAreaElement, value: string): void => {
-    const proto = el instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+    const proto =
+      el instanceof HTMLTextAreaElement
+        ? HTMLTextAreaElement.prototype
+        : HTMLInputElement.prototype;
     const setter = Object.getOwnPropertyDescriptor(proto, "value")?.set;
     if (setter) setter.call(el, value);
     else el.value = value;

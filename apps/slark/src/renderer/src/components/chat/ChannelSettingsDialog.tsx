@@ -114,10 +114,7 @@ export function ChannelSettingsDialog({
     (description.trim() || undefined) !== (channel.description ?? undefined) ||
     (avatar.trim() || undefined) !== (channel.avatar ?? undefined);
 
-  const normalizedName = useMemo(
-    () => name.trim().toLowerCase().replace(/\s+/g, "-"),
-    [name],
-  );
+  const normalizedName = useMemo(() => name.trim().toLowerCase().replace(/\s+/g, "-"), [name]);
 
   const canSave = dirty && normalizedName.length > 0;
 
@@ -224,9 +221,7 @@ export function ChannelSettingsDialog({
                         </Button>
                       ) : null}
                     </div>
-                    {avatarError ? (
-                      <p className="text-[11px] text-danger">{avatarError}</p>
-                    ) : null}
+                    {avatarError ? <p className="text-[11px] text-danger">{avatarError}</p> : null}
                     <input
                       ref={fileInputRef}
                       type="file"
@@ -251,8 +246,7 @@ export function ChannelSettingsDialog({
                 <FormField
                   label={
                     <span>
-                      Description{" "}
-                      <span className="font-normal text-text-muted">Optional</span>
+                      Description <span className="font-normal text-text-muted">Optional</span>
                     </span>
                   }
                 >
@@ -353,11 +347,7 @@ export function ChannelSettingsDialog({
                           key={`a-${a.id}`}
                           avatar={
                             a.avatar ? (
-                              <img
-                                src={a.avatar}
-                                alt={a.name}
-                                className="size-8 rounded-lg"
-                              />
+                              <img src={a.avatar} alt={a.name} className="size-8 rounded-lg" />
                             ) : (
                               <div className="flex size-8 items-center justify-center rounded-lg bg-surface-2">
                                 <Bot className="size-4 text-text-muted" />

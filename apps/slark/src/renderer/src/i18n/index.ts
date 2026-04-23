@@ -77,7 +77,8 @@ const en = {
   "memory.searchPlaceholder": "Search memories",
   "memory.clearSearch": "Clear search",
   "memory.noResultsTitle": "No matching memories",
-  "memory.noResultsDesc": "Nothing matched \u201c{query}\u201d. Try different keywords or clear the search.",
+  "memory.noResultsDesc":
+    "Nothing matched \u201c{query}\u201d. Try different keywords or clear the search.",
   "memory.search": "Search",
   "memory.filterAll": "All",
   "memory.filterMine": "By me",
@@ -512,7 +513,8 @@ const zhCN: Dict = {
   "sessions.paused": "已暂停",
   "sessions.errored": "出错",
   "sessions.emptyTitle": "暂无活动",
-  "sessions.emptyDesc": "你在对话里交给这个 Agent 的任务，以及它的每次例行任务执行，都会显示在这里。",
+  "sessions.emptyDesc":
+    "你在对话里交给这个 Agent 的任务，以及它的每次例行任务执行，都会显示在这里。",
   "sessions.createRoutine": "创建例行任务",
   "section.settings": "设置",
 

@@ -268,9 +268,7 @@ export function IssuesView(): React.ReactElement {
   };
 
   const handleArchiveCompleted = (): void => {
-    archiveTopics(
-      items.filter((it) => it.topic.issue?.status === "done").map((it) => it.topic.id),
-    );
+    archiveTopics(items.filter((it) => it.topic.issue?.status === "done").map((it) => it.topic.id));
   };
 
   return (
@@ -383,11 +381,9 @@ export function IssuesView(): React.ReactElement {
             <ThreadPane
               item={selected}
               rootChannel={channels.find((c) => c.id === selected.topic.rootChannelId)}
-              rootMessage={
-                channelMessages[selected.topic.rootChannelId]?.find(
-                  (m) => m.id === selected.topic.rootMessageId,
-                )
-              }
+              rootMessage={channelMessages[selected.topic.rootChannelId]?.find(
+                (m) => m.id === selected.topic.rootMessageId,
+              )}
               messages={topicMessages[selected.topic.id] ?? []}
               readAt={readAt[selected.topic.id] ?? 0}
               assignee={selected.topic.issue?.assignee}
@@ -511,7 +507,9 @@ function ThreadPane({
   const StatusIcon = meta?.icon;
   const assigneeInfo = assigneeRef ? resolveRef(assigneeRef) : undefined;
   const peopleMembers: MemberRef[] = rootChannel
-    ? rootChannel.members.filter((m): m is Extract<MemberRef, { kind: "user" }> => m.kind === "user")
+    ? rootChannel.members.filter(
+        (m): m is Extract<MemberRef, { kind: "user" }> => m.kind === "user",
+      )
     : [];
   const isSameRef = (a: MemberRef | undefined, b: MemberRef | undefined): boolean =>
     !!a && !!b && a.kind === b.kind && a.id === b.id;
@@ -584,7 +582,11 @@ function ThreadPane({
                         onClick={() => onSetAssignee(m)}
                         className={cn(selected && "font-semibold")}
                       >
-                        <img src={info.avatar} alt="" className="size-4 rounded-full object-cover" />
+                        <img
+                          src={info.avatar}
+                          alt=""
+                          className="size-4 rounded-full object-cover"
+                        />
                         {info.name}
                       </DropdownMenuItem>
                     );
@@ -706,9 +708,7 @@ function ThreadPane({
         {messages.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-1 px-6 text-center text-[12px] text-text-muted">
             <div>No replies yet</div>
-            <div className="text-[11px] text-text-tertiary">
-              Type below to reply in this issue.
-            </div>
+            <div className="text-[11px] text-text-tertiary">Type below to reply in this issue.</div>
           </div>
         ) : (
           messages.map((msg) => {

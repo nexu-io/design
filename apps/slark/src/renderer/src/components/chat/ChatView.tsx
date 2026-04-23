@@ -71,9 +71,7 @@ export function ChatView(): React.ReactElement {
   // returns below. Hooks can't be called conditionally, and `channel` /
   // `dmAgentId` below are just convenience aliases for these.
   const resolvedChannel = useMemo(
-    () =>
-      channels.find((c) => c.id === channelId) ??
-      mockChannels.find((c) => c.id === channelId),
+    () => channels.find((c) => c.id === channelId) ?? mockChannels.find((c) => c.id === channelId),
     [channels, channelId],
   );
   const dmAgentId = useMemo(() => {
@@ -399,7 +397,14 @@ interface TabPillProps {
   onClick: () => void;
 }
 
-function TabPill({ icon, label, active, activeTint, count, onClick }: TabPillProps): React.ReactElement {
+function TabPill({
+  icon,
+  label,
+  active,
+  activeTint,
+  count,
+  onClick,
+}: TabPillProps): React.ReactElement {
   return (
     <button
       type="button"

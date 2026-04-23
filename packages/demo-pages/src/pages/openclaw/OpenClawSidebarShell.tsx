@@ -280,7 +280,6 @@ export function OpenClawSidebarShell({
           </div>
         )}
 
-
         <div
           className="flex shrink-0 items-center justify-between gap-1 px-3 pb-1.5"
           style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}

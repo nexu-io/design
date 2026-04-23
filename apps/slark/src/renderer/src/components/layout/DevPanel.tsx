@@ -65,10 +65,7 @@ function ControlRow({
   title?: string;
 }): React.ReactElement {
   return (
-    <div
-      title={title}
-      className="flex h-8 items-center gap-2 px-3 text-[12px] text-foreground/85"
-    >
+    <div title={title} className="flex h-8 items-center gap-2 px-3 text-[12px] text-foreground/85">
       {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-muted-foreground" /> : null}
       <span className="flex-1 truncate">{label}</span>
       {children}

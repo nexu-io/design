@@ -41,10 +41,7 @@ export function ChannelSessionsPanel({
   const agents = useAgentsStore((s) => s.agents);
   const agent = agents.find((a) => a.id === agentId);
 
-  const agentTasks = useMemo(
-    () => tasks.filter((t) => t.agentId === agentId),
-    [tasks, agentId],
-  );
+  const agentTasks = useMemo(() => tasks.filter((t) => t.agentId === agentId), [tasks, agentId]);
 
   const agentRoutines = useMemo(
     () => routines.filter((r) => r.agentId === agentId),
@@ -121,16 +118,10 @@ export function ChannelSessionsPanel({
                         onJump={
                           entry.task.replyMessageId && onJumpToMessage
                             ? () =>
-                                onJumpToMessage(
-                                  entry.task.replyMessageId!,
-                                  entry.task.channelId,
-                                )
+                                onJumpToMessage(entry.task.replyMessageId!, entry.task.channelId)
                             : entry.task.sourceMessageId && onJumpToMessage
                               ? () =>
-                                  onJumpToMessage(
-                                    entry.task.sourceMessageId!,
-                                    entry.task.channelId,
-                                  )
+                                  onJumpToMessage(entry.task.sourceMessageId!, entry.task.channelId)
                               : undefined
                         }
                       />
@@ -141,11 +132,7 @@ export function ChannelSessionsPanel({
                         run={entry.run}
                         onJump={
                           entry.run.messageId && onJumpToMessage
-                            ? () =>
-                                onJumpToMessage(
-                                  entry.run.messageId!,
-                                  entry.routine.channelId,
-                                )
+                            ? () => onJumpToMessage(entry.run.messageId!, entry.routine.channelId)
                             : undefined
                         }
                       />
@@ -244,10 +231,8 @@ function StatusIcon({
 }: {
   status: "running" | "success" | "error";
 }): ReactElement {
-  if (status === "running")
-    return <Loader2 className="h-4 w-4 shrink-0 animate-spin text-info" />;
-  if (status === "success")
-    return <CircleCheck className="h-4 w-4 shrink-0 text-success" />;
+  if (status === "running") return <Loader2 className="h-4 w-4 shrink-0 animate-spin text-info" />;
+  if (status === "success") return <CircleCheck className="h-4 w-4 shrink-0 text-success" />;
   return <CircleX className="h-4 w-4 shrink-0 text-danger" />;
 }
 
@@ -265,9 +250,7 @@ function EmptyState({ agent }: { agent: Agent | undefined }): ReactElement {
       <h2 className="mb-1.5 text-[15px] font-semibold text-text-primary">
         {t("sessions.emptyTitle")}
       </h2>
-      <p className="text-[12.5px] leading-relaxed text-text-muted">
-        {t("sessions.emptyDesc")}
-      </p>
+      <p className="text-[12.5px] leading-relaxed text-text-muted">{t("sessions.emptyDesc")}</p>
     </div>
   );
 }

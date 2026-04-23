@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, Link2 } from "lucide-react";
 import { Button, FormField, FormFieldControl, Input } from "@nexu-design/ui-web";
 
-
 import { useWorkspaceStore } from "@/stores/workspace";
 
 export function CreateWorkspaceStep(): React.ReactElement {

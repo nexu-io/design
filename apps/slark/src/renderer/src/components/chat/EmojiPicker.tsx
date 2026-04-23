@@ -1,11 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import {
-  Plus,
-  Search,
-  Smile as SmileIcon,
-  Sticker as StickerIcon,
-  Trash2,
-} from "lucide-react";
+import { Plus, Search, Smile as SmileIcon, Sticker as StickerIcon, Trash2 } from "lucide-react";
 import { cn } from "@nexu-design/ui-web";
 import { useStickersStore } from "@/stores/stickers";
 
@@ -360,10 +354,7 @@ interface EmojiPickerProps {
 
 type Mode = "emoji" | "stickers";
 
-export function EmojiPicker({
-  onSelect,
-  onStickerSelect,
-}: EmojiPickerProps): React.ReactElement {
+export function EmojiPicker({ onSelect, onStickerSelect }: EmojiPickerProps): React.ReactElement {
   const [mode, setMode] = useState<Mode>("emoji");
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState(CATEGORIES[0].key);
@@ -416,9 +407,7 @@ export function EmojiPicker({
                     title={c.label}
                     className={cn(
                       "relative flex h-8 w-8 items-center justify-center rounded-md text-[17px] transition-colors",
-                      activeCat === c.key
-                        ? "bg-brand-primary/10"
-                        : "hover:bg-surface-2",
+                      activeCat === c.key ? "bg-brand-primary/10" : "hover:bg-surface-2",
                     )}
                   >
                     <span className="leading-none">{c.icon}</span>

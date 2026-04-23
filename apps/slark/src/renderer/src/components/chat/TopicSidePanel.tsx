@@ -100,9 +100,7 @@ export function TopicSidePanel(): React.ReactElement {
               >
                 <Icon className="size-3.5" />
                 {t.label}
-                {t.hasUpdate ? (
-                  <span className="size-1.5 rounded-full bg-info" />
-                ) : null}
+                {t.hasUpdate ? <span className="size-1.5 rounded-full bg-info" /> : null}
               </button>
             );
           })}
@@ -281,9 +279,7 @@ function DiffMock(): React.ReactElement {
       <div className="min-h-0 flex-1 overflow-y-auto px-3 py-2">
         <div className="mb-2 flex items-center gap-1.5 text-[11px]">
           <ChevronDown className="size-3 text-text-muted" />
-          <span className="font-mono text-text-muted">
-            apps/slark/src/renderer/src/app/App.tsx
-          </span>
+          <span className="font-mono text-text-muted">apps/slark/src/renderer/src/app/App.tsx</span>
           <span className="text-success">+2</span>
           <span className="text-danger">-0</span>
         </div>
@@ -293,44 +289,51 @@ function DiffMock(): React.ReactElement {
 
           <DiffLine num={10} tone="context">
             <Code>
-              <Kw>import</Kw> {"{ "}<Ident>WelcomePage</Ident>{" }"} <Kw>from</Kw>{" "}
-              <Str>&quot;@/components/onboarding/WelcomePage&quot;</Str>;
+              <Kw>import</Kw> {"{ "}
+              <Ident>WelcomePage</Ident>
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/onboarding/WelcomePage&quot;</Str>;
             </Code>
           </DiffLine>
           <DiffLine num={11} tone="context">
             <Code>
-              <Kw>import</Kw> {"{ "}<Ident>OnboardingFlow</Ident>{" }"} <Kw>from</Kw>{" "}
-              <Str>&quot;@/components/onboarding/OnboardingFlow&quot;</Str>;
+              <Kw>import</Kw> {"{ "}
+              <Ident>OnboardingFlow</Ident>
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/onboarding/OnboardingFlow&quot;</Str>;
             </Code>
           </DiffLine>
           <DiffLine num={12} tone="context">
             <Code>
-              <Kw>import</Kw> {"{ "}<Ident>ChatView</Ident>{" }"} <Kw>from</Kw>{" "}
-              <Str>&quot;@/components/chat/ChatView&quot;</Str>;
+              <Kw>import</Kw> {"{ "}
+              <Ident>ChatView</Ident>
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/chat/ChatView&quot;</Str>;
             </Code>
           </DiffLine>
           <DiffLine num={13} tone="add">
             <Code>
-              <Kw>import</Kw> {"{ "}<Ident>IssuesView</Ident>{" }"} <Kw>from</Kw>{" "}
-              <Str>&quot;@/components/issues/IssuesView&quot;</Str>;
+              <Kw>import</Kw> {"{ "}
+              <Ident>IssuesView</Ident>
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/issues/IssuesView&quot;</Str>;
             </Code>
           </DiffLine>
           <DiffLine num={14} tone="context">
             <Code>
-              <Kw>import</Kw> {"{ "}<Ident>AgentsView</Ident>{" }"} <Kw>from</Kw>{" "}
-              <Str>&quot;@/components/agents/AgentsView&quot;</Str>;
+              <Kw>import</Kw> {"{ "}
+              <Ident>AgentsView</Ident>
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/agents/AgentsView&quot;</Str>;
             </Code>
           </DiffLine>
           <DiffLine num={15} tone="add">
             <Code>
-              <Kw>import</Kw> {"{ "}<Ident>AgentDetail</Ident>{" }"} <Kw>from</Kw>{" "}
-              <Str>&quot;@/components/agents/AgentDetail&quot;</Str>;
+              <Kw>import</Kw> {"{ "}
+              <Ident>AgentDetail</Ident>
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/agents/AgentDetail&quot;</Str>;
             </Code>
           </DiffLine>
           <DiffLine num={16} tone="context">
             <Code>
-              <Kw>import</Kw> {"{ "}<Ident>UserDetail</Ident>{" }"} <Kw>from</Kw>{" "}
-              <Str>&quot;@/components/agents/UserDetail&quot;</Str>;
+              <Kw>import</Kw> {"{ "}
+              <Ident>UserDetail</Ident>
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/agents/UserDetail&quot;</Str>;
             </Code>
           </DiffLine>
 
@@ -339,11 +342,10 @@ function DiffMock(): React.ReactElement {
           <DiffLine num={91} tone="context">
             <Code>
               {"        "}
-              <Tag>&lt;Route</Tag> <Attr>path</Attr>=<Str>&quot;/&quot;</Str>{" "}
-              <Attr>element</Attr>={"{"}
-              <Tag>&lt;Navigate</Tag> <Attr>to</Attr>=
-              <Str>&quot;/chat/ch-welcome&quot;</Str> <Attr>replace</Attr>{" "}
-              <Tag>/&gt;</Tag>
+              <Tag>&lt;Route</Tag> <Attr>path</Attr>=<Str>&quot;/&quot;</Str> <Attr>element</Attr>=
+              {"{"}
+              <Tag>&lt;Navigate</Tag> <Attr>to</Attr>=<Str>&quot;/chat/ch-welcome&quot;</Str>{" "}
+              <Attr>replace</Attr> <Tag>/&gt;</Tag>
               {"}"} <Tag>/&gt;</Tag>
             </Code>
           </DiffLine>
@@ -386,9 +388,7 @@ function DiffLine({
           tone === "add" ? "bg-success" : "bg-transparent",
         )}
       />
-      <span className="w-6 shrink-0 text-right text-text-tertiary tabular-nums">
-        {num}
-      </span>
+      <span className="w-6 shrink-0 text-right text-text-tertiary tabular-nums">{num}</span>
       <span className="min-w-0 flex-1 whitespace-pre-wrap break-all">{children}</span>
     </div>
   );
@@ -421,17 +421,15 @@ function TerminalMock(): React.ReactElement {
         <span className="font-mono">zsh — design</span>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto bg-surface-0 px-3 py-2 font-mono text-[11px] leading-5 text-text-primary">
-        <div className="text-text-muted">
-          Your user&apos;s .npmrc file (${"{HOME}"}/.npmrc)
-        </div>
+        <div className="text-text-muted">Your user&apos;s .npmrc file (${"{HOME}"}/.npmrc)</div>
         <div className="text-text-muted">
           has a <span className="text-warning">`globalconfig`</span> and/or a{" "}
           <span className="text-warning">`prefix`</span> setting, which
         </div>
         <div className="text-text-muted">are incompatible with nvm.</div>
         <div className="text-text-muted">
-          Run <span className="text-info">`nvm use --delete-prefix v22.22.2 --silent`</span>{" "}
-          to unset it.
+          Run <span className="text-info">`nvm use --delete-prefix v22.22.2 --silent`</span> to
+          unset it.
         </div>
         <div className="mt-1 flex items-center gap-1">
           <span className="text-success">sunqingyu@MacBook-Pro</span>
@@ -476,12 +474,7 @@ function TasksMock(): React.ReactElement {
           badge="Bash"
           tone="completed"
         />
-        <TaskCard
-          title="bzx0vakdn"
-          subtitle="Stopped"
-          badge="Task"
-          tone="stopped"
-        />
+        <TaskCard title="bzx0vakdn" subtitle="Stopped" badge="Task" tone="stopped" />
         <TaskCard
           title="slark electron dev readiness"
           subtitle="Stopped"
@@ -530,7 +523,13 @@ function TaskCard({
           <span className="inline-flex size-2 animate-pulse rounded-full bg-info" />
         ) : tone === "completed" ? (
           <span className="inline-flex size-3.5 items-center justify-center rounded-full border border-text-tertiary/60 text-text-muted">
-            <svg viewBox="0 0 12 12" className="size-2.5" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg
+              viewBox="0 0 12 12"
+              className="size-2.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
               <path d="M2.5 6.5L5 9l4.5-5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </span>
@@ -574,7 +573,8 @@ function PlanMock(): React.ReactElement {
             Add editable preview URL + plan panel content
           </div>
           <div className="mt-1 text-[11px] text-text-muted">
-            Dev Controls panel now lets the user replace the preview target and surfaces the plan Claude is executing.
+            Dev Controls panel now lets the user replace the preview target and surfaces the plan
+            Claude is executing.
           </div>
         </div>
 
@@ -667,9 +667,7 @@ function PlanStep({
         >
           {title}
         </div>
-        {detail ? (
-          <div className="mt-0.5 text-[11px] text-text-muted">{detail}</div>
-        ) : null}
+        {detail ? <div className="mt-0.5 text-[11px] text-text-muted">{detail}</div> : null}
       </div>
     </div>
   );

@@ -32,10 +32,7 @@ function load(): Sticker[] {
     if (!Array.isArray(parsed)) return DEFAULT_STICKERS;
     return parsed.filter(
       (s) =>
-        s &&
-        typeof s.id === "string" &&
-        typeof s.url === "string" &&
-        typeof s.name === "string",
+        s && typeof s.id === "string" && typeof s.url === "string" && typeof s.name === "string",
     );
   } catch {
     return DEFAULT_STICKERS;

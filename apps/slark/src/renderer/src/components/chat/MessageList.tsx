@@ -374,22 +374,15 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
     const flashCount = Math.max(1, pendingScrollFlashCount);
     const timers: ReturnType<typeof setTimeout>[] = [];
     const frame = requestAnimationFrame(() => {
-      const el = document.querySelector(
-        `[data-message-id="${id}"]`,
-      ) as HTMLElement | null;
+      const el = document.querySelector(`[data-message-id="${id}"]`) as HTMLElement | null;
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "center" });
         const FLASH_MS = 2400;
         const GAP_MS = 120;
         for (let i = 0; i < flashCount; i++) {
+          timers.push(setTimeout(() => setHighlightedMessageId(id), i * (FLASH_MS + GAP_MS)));
           timers.push(
-            setTimeout(() => setHighlightedMessageId(id), i * (FLASH_MS + GAP_MS)),
-          );
-          timers.push(
-            setTimeout(
-              () => setHighlightedMessageId(null),
-              i * (FLASH_MS + GAP_MS) + FLASH_MS,
-            ),
+            setTimeout(() => setHighlightedMessageId(null), i * (FLASH_MS + GAP_MS) + FLASH_MS),
           );
         }
       }
@@ -442,9 +435,7 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
         next =
           nextUsers.length === 0
             ? msg.reactions.filter((r) => r.emoji !== emoji)
-            : msg.reactions.map((r) =>
-                r.emoji === emoji ? { ...r, users: nextUsers } : r,
-              );
+            : msg.reactions.map((r) => (r.emoji === emoji ? { ...r, users: nextUsers } : r));
       } else {
         next = [...msg.reactions, { emoji, users: [currentUserId] }];
       }
@@ -699,9 +690,7 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
         const derivedTopic = msg.derivedTopicId ? topics[msg.derivedTopicId] : undefined;
         const isIssue = !!derivedTopic?.issue;
         const mentionsAgent = msg.mentions.some((m) => m.kind === "agent");
-        const mentionsMe = msg.mentions.some(
-          (m) => m.kind === "user" && m.id === currentUserId,
-        );
+        const mentionsMe = msg.mentions.some((m) => m.kind === "user" && m.id === currentUserId);
 
         const isAgentReply = msg.sender.kind === "agent" && !msg.isStreaming;
         const precedingUserMsg =
@@ -966,9 +955,7 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent side="top">
-                        {mentionsAgent
-                          ? t("chat.tooltipConvertIssue")
-                          : t("chat.tooltipMarkIssue")}
+                        {mentionsAgent ? t("chat.tooltipConvertIssue") : t("chat.tooltipMarkIssue")}
                       </TooltipContent>
                     </Tooltip>
                   )}

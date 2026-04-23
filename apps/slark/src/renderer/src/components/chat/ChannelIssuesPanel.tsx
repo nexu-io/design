@@ -155,7 +155,8 @@ export function ChannelIssuesPanel({ channelId }: ChannelIssuesPanelProps): Reac
         <div className="flex flex-1 flex-col items-center justify-center gap-2 text-text-muted">
           <Inbox className="size-8 opacity-40" />
           <div className="text-sm">
-            No issues {filter !== "all" ? `in ${STATUS_META[filter].label.toLowerCase()}` : "in this channel"}
+            No issues{" "}
+            {filter !== "all" ? `in ${STATUS_META[filter].label.toLowerCase()}` : "in this channel"}
           </div>
           <div className="text-[12px] text-text-tertiary">
             Hover any message and click the issue icon to create one.
@@ -241,7 +242,9 @@ function ViewToggle({ icon, active, label, onClick }: ViewToggleProps): React.Re
       aria-label={label}
       className={cn(
         "inline-flex h-6 items-center justify-center rounded px-1.5 transition-colors",
-        active ? "bg-surface-0 text-text-primary shadow-sm" : "text-text-muted hover:text-text-primary",
+        active
+          ? "bg-surface-0 text-text-primary shadow-sm"
+          : "text-text-muted hover:text-text-primary",
       )}
     >
       {icon}

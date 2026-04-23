@@ -1,12 +1,4 @@
-import {
-  Bot,
-  Circle,
-  CircleCheck,
-  CircleDashed,
-  CircleDot,
-  CircleSlash,
-  Eye,
-} from "lucide-react";
+import { Bot, Circle, CircleCheck, CircleDashed, CircleDot, CircleSlash, Eye } from "lucide-react";
 import { cn } from "@nexu-design/ui-web";
 import { useTopicsStore } from "@/stores/topics";
 import { resolveRef } from "@/mock/data";
@@ -110,7 +102,9 @@ export function IssuesBoard({ issues }: IssuesBoardProps): React.ReactElement {
                             </span>
                           ) : null}
                           {assignee ? <span>·</span> : null}
-                          <span>{replies} repl{replies === 1 ? "y" : "ies"}</span>
+                          <span>
+                            {replies} repl{replies === 1 ? "y" : "ies"}
+                          </span>
                           <span className="ml-auto">{formatRelative(issue.createdAt)}</span>
                         </div>
                       </button>

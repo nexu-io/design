@@ -1194,9 +1194,7 @@ export function SettingsView({
   const isCheckingAllModels = (providerId: string) => {
     const provider = combinedProviders.find((p) => p.id === providerId);
     if (!provider) return false;
-    return provider.models.some(
-      (m) => modelCheckStates[`${providerId}:${m.id}`] === "checking",
-    );
+    return provider.models.some((m) => modelCheckStates[`${providerId}:${m.id}`] === "checking");
   };
 
   const saveState = saveStates[activeProvider.id] ?? "idle";
@@ -2415,8 +2413,7 @@ Available tools:
                                         modelCheckState === "checking" && "text-text-muted",
                                         modelCheckState === "success" &&
                                           "text-[var(--color-success)]",
-                                        modelCheckState === "error" &&
-                                          "text-[var(--color-error)]",
+                                        modelCheckState === "error" && "text-[var(--color-error)]",
                                         modelCheckState === "idle" &&
                                           "text-text-muted opacity-0 hover:text-text-secondary group-hover/model:opacity-100",
                                       )}

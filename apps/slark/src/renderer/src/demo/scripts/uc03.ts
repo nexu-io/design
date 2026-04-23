@@ -130,9 +130,7 @@ export async function runUC03(ctx: ScriptCtx): Promise<void> {
   const routineStart = Date.now();
   let createdRoutineId: string | null = null;
   while (Date.now() - routineStart < 4000) {
-    const r = useRoutinesStore
-      .getState()
-      .routines.find((it) => it.channelId === channel.id);
+    const r = useRoutinesStore.getState().routines.find((it) => it.channelId === channel.id);
     if (r) {
       createdRoutineId = r.id;
       break;
@@ -270,8 +268,5 @@ export async function runUC03(ctx: ScriptCtx): Promise<void> {
   useRoutinesStore.getState().updateRoutine(routineId, { status: "active" });
   await ctx.wait(1400);
 
-  await ctx.say(
-    "✅ 定时任务 = Agent 在群里按时发言；失败有对话可追踪，人机接力无缝",
-    3000,
-  );
+  await ctx.say("✅ 定时任务 = Agent 在群里按时发言；失败有对话可追踪，人机接力无缝", 3000);
 }

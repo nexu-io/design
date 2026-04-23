@@ -117,7 +117,6 @@ export function ActivityBar(): React.ReactElement {
                 </span>
               ) : null}
             </DropdownMenuItem>
-
           </DropdownMenuContent>
         </DropdownMenu>
       </ActivityBarHeader>

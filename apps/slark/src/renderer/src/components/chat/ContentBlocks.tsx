@@ -313,9 +313,7 @@ function ActionCard({
         {block.status === "failed" && <XCircle className="h-3.5 w-3.5" />}
       </span>
       <span className="truncate font-medium text-text-primary">{block.title}</span>
-      {block.description && (
-        <span className="truncate text-text-muted">· {block.description}</span>
-      )}
+      {block.description && <span className="truncate text-text-muted">· {block.description}</span>}
     </div>
   );
 }
@@ -579,10 +577,7 @@ function ProgressBlock({
           {indexedSteps.map(({ key, value: step }) => (
             <li key={key} className="flex items-center gap-2.5">
               {step.status === "done" && (
-                <CheckCircle2
-                  aria-hidden="true"
-                  className="size-3.5 shrink-0 text-text-muted"
-                />
+                <CheckCircle2 aria-hidden="true" className="size-3.5 shrink-0 text-text-muted" />
               )}
               {step.status === "active" && (
                 <Loader2

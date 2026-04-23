@@ -233,9 +233,7 @@ export function MessageInput({
       quoted: activeQuote ?? undefined,
     };
     const dmAgentMember =
-      !topicId && isDmWithAgent
-        ? channel.members.find((m) => m.kind === "agent")
-        : undefined;
+      !topicId && isDmWithAgent ? channel.members.find((m) => m.kind === "agent") : undefined;
     const targetedAgent: MemberRef | undefined = dmAgentMember ?? mentionedAgents[0];
 
     // Keyword-based memory capture: fires eagerly off the user's message
@@ -484,10 +482,7 @@ export function MessageInput({
               className="w-auto p-0"
               onOpenAutoFocus={(e) => e.preventDefault()}
             >
-              <EmojiPicker
-                onSelect={handleEmojiSelect}
-                onStickerSelect={handleStickerSelect}
-              />
+              <EmojiPicker onSelect={handleEmojiSelect} onStickerSelect={handleStickerSelect} />
             </PopoverContent>
           </Popover>
           <Button type="button" variant="ghost" size="icon-sm" aria-label="Attach" title="Attach">

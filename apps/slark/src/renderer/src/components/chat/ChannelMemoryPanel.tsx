@@ -509,9 +509,7 @@ function MemoryRow({
   t,
 }: MemoryRowProps): ReactElement {
   const author = resolveRef(
-    m.source === "agent"
-      ? { kind: "agent", id: m.authorId }
-      : { kind: "user", id: m.authorId },
+    m.source === "agent" ? { kind: "agent", id: m.authorId } : { kind: "user", id: m.authorId },
   );
   const Icon = kindIcons[m.kind];
   const MIcon = methodIcons[m.method];
@@ -579,12 +577,7 @@ function MemoryRow({
                   <X className="mr-1 size-3.5" />
                   {t("memory.cancel")}
                 </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={onSaveEdit}
-                  disabled={!editDraft.trim()}
-                >
+                <Button type="button" size="sm" onClick={onSaveEdit} disabled={!editDraft.trim()}>
                   <Check className="mr-1 size-3.5" />
                   {t("memory.save")}
                 </Button>

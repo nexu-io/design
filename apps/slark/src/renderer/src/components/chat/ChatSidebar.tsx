@@ -197,8 +197,7 @@ export function ChatSidebar(): React.ReactElement {
 
       const state = useChatStore.getState();
       let dm = state.channels.find(
-        (c) =>
-          c.type === "dm" && c.members.some((m) => m.kind === "agent" && m.id === agent.id),
+        (c) => c.type === "dm" && c.members.some((m) => m.kind === "agent" && m.id === agent.id),
       );
       if (!dm) {
         const newDm: Channel = {
@@ -363,23 +362,13 @@ export function ChatSidebar(): React.ReactElement {
     const hiddenSet = new Set(hiddenIds);
     const bySearch = q
       ? list.filter(
-          (it) =>
-            it.title.toLowerCase().includes(q) || it.subtitle.toLowerCase().includes(q),
+          (it) => it.title.toLowerCase().includes(q) || it.subtitle.toLowerCase().includes(q),
         )
       : list.filter((it) => !hiddenSet.has(it.key));
 
     bySearch.sort((a, b) => b.lastActivityAt - a.lastActivityAt);
     return bySearch;
-  }, [
-    channels,
-    messagesMap,
-    topics,
-    topicMessages,
-    topicArchived,
-    topicReadAt,
-    search,
-    hiddenIds,
-  ]);
+  }, [channels, messagesMap, topics, topicMessages, topicArchived, topicReadAt, search, hiddenIds]);
 
   const openIssueCountByChannel = useMemo(() => {
     const acc: Record<string, number> = {};
@@ -452,7 +441,6 @@ export function ChatSidebar(): React.ReactElement {
         onContextMenu={(e) => openCtx(e, item)}
         className="group/item relative w-full"
       >
-
         <button
           type="button"
           onClick={() => handleSelect(item)}
@@ -535,11 +523,7 @@ export function ChatSidebar(): React.ReactElement {
                   "min-w-0 flex-1 truncate",
                   isTopic ? "text-[12.5px]" : "text-[13px]",
                   unread || isActive ? "font-semibold" : "font-medium",
-                  isActive
-                    ? "text-nav-active-fg"
-                    : unread
-                      ? "text-nav-fg"
-                      : "text-nav-fg/90",
+                  isActive ? "text-nav-active-fg" : unread ? "text-nav-fg" : "text-nav-fg/90",
                 )}
               >
                 {item.title}
@@ -581,11 +565,7 @@ export function ChatSidebar(): React.ReactElement {
               <span
                 className={cn(
                   "min-w-0 flex-1 truncate text-[11.5px]",
-                  isActive
-                    ? "text-nav-active-fg/80"
-                    : unread
-                      ? "text-nav-fg/80"
-                      : "text-nav-muted",
+                  isActive ? "text-nav-active-fg/80" : unread ? "text-nav-fg/80" : "text-nav-muted",
                 )}
               >
                 {item.subtitle}
@@ -767,7 +747,6 @@ export function ChatSidebar(): React.ReactElement {
         onOpenChange={setCreateOpen}
         onCreated={(id) => handleSelectChannel(id)}
       />
-
     </div>
   );
 }

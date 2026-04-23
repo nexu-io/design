@@ -59,7 +59,7 @@ const DEMO_ISSUES: DemoIssueSpec[] = [
       {
         from: "u1",
         content:
-          "Current empty state just says \"No account found\" — feels abrupt. Want to rewrite with a softer tone and a clear CTA.",
+          'Current empty state just says "No account found" — feels abrupt. Want to rewrite with a softer tone and a clear CTA.',
         minutesAgo: 180,
       },
       {
@@ -358,8 +358,7 @@ export const useTopicsStore = create<TopicsState>((set) => ({
       return { topics: { ...s.topics, [topicId]: { ...topic, issue: nextIssue } } };
     }),
 
-  markTopicRead: (topicId) =>
-    set((s) => ({ readAt: { ...s.readAt, [topicId]: Date.now() } })),
+  markTopicRead: (topicId) => set((s) => ({ readAt: { ...s.readAt, [topicId]: Date.now() } })),
 
   markAllRead: (topicIds) =>
     set((s) => {

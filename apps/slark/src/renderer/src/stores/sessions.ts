@@ -98,9 +98,7 @@ export const useSessionsStore = create<SessionsState>((set) => ({
   },
   completeTask: (id, status) =>
     set((s) => ({
-      tasks: s.tasks.map((t) =>
-        t.id === id ? { ...t, status, completedAt: Date.now() } : t,
-      ),
+      tasks: s.tasks.map((t) => (t.id === id ? { ...t, status, completedAt: Date.now() } : t)),
     })),
   setReplyMessage: (id, replyMessageId) =>
     set((s) => ({
