@@ -42,7 +42,7 @@ export function ActivityBar(): React.ReactElement {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <UiActivityBar surface="glass" className="w-14 border-r border-border-subtle py-0 text-nav-fg">
+    <UiActivityBar surface="glass" className="w-14 border-r-0 py-0 text-nav-fg">
       <TitleBarSpacer className="mb-3 h-[38px]" />
 
       <ActivityBarHeader className="mb-4 w-10 border-b-0 pb-0">

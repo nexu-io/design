@@ -63,7 +63,7 @@ export function AgentsSidebar(): React.ReactElement {
           sides — `pt-2` stacks on the SidebarHeader's own `pb-2` for
           16px above the field, and `pb-4` keeps the input visually
           detached from the MEMBERS section header beneath it. */}
-      <div className="px-2 pt-2 pb-4">
+      <div className="px-3 pt-2 pb-4">
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -86,7 +86,7 @@ export function AgentsSidebar(): React.ReactElement {
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto px-2 space-y-3">
+      <div className="flex-1 overflow-y-auto px-3 space-y-3">
         <section>
           {/* Section header: [Members] [count, gap-1.5 ≈ 6px].
               "Members" is kept distinct from the top-level "Teammate"

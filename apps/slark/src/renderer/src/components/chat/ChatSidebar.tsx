@@ -171,7 +171,7 @@ export function ChatSidebar(): React.ReactElement {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-2 pb-2">
+      <div className="px-3 pb-2">
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -185,7 +185,7 @@ export function ChatSidebar(): React.ReactElement {
       {/* `space-y-4` widens the rhythm between sections (Pinned / Channels /
           Direct messages) without touching the top gap between the search
           box and the first header. */}
-      <div className="flex-1 overflow-y-auto px-2 pb-2 space-y-4">
+      <div className="flex-1 overflow-y-auto px-3 pb-2 space-y-4">
         {pinnedChannels.length > 0 && (
           <div>
             <div className="flex items-center gap-1.5 px-2 pt-3 pb-2 text-[11px] font-semibold text-nav-muted uppercase tracking-wider">

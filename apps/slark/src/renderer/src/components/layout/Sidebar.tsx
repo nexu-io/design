@@ -33,8 +33,6 @@ import { RuntimesSidebar } from "@/components/runtimes/RuntimesSidebar";
 import { type TranslationKey, useT } from "@/i18n";
 import { useWorkspaceStore } from "@/stores/workspace";
 
-import { TitleBarSpacer } from "./WindowChrome";
-
 const sections: { path: string; labelKey: TranslationKey }[] = [
   { path: "/chat", labelKey: "section.chat" },
   { path: "/agents", labelKey: "section.team" },
@@ -67,10 +65,8 @@ export function Sidebar(): React.ReactElement {
     : "nexu.app";
 
   return (
-    <UiSidebar className="w-64 border-r border-nav-border bg-nav text-nav-fg shadow-none">
-      <TitleBarSpacer className="h-[38px]" />
-
-      <SidebarHeader className="no-drag px-3 pb-2">
+    <UiSidebar className="w-64 border-r-0 bg-transparent text-nav-fg shadow-none">
+      <SidebarHeader className="no-drag px-4 pt-3 pb-2">
         {location.pathname.startsWith("/chat") ? (
           <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
             <DropdownMenuTrigger asChild>
@@ -194,7 +190,7 @@ function SettingsSidebar(): React.ReactElement {
   ];
 
   return (
-    <ScrollArea className="h-full px-2 pb-3">
+    <ScrollArea className="h-full px-3 pb-3">
       <NavigationMenu>
         <NavigationMenuList>
           {items.map(({ path, label, icon: Icon, exact }) => {

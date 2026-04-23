@@ -121,7 +121,7 @@ export function RuntimesSidebar(): React.ReactElement {
           sidebar's page title so the two functional sidebars read at the
           same hierarchy level. The meta "N/M online" stays muted/11px so
           it reads as secondary. */}
-      <div className="px-3 pb-1.5 flex items-baseline justify-between">
+      <div className="px-4 pt-3 pb-1.5 flex items-baseline justify-between">
         <span className="text-[13px] font-semibold uppercase tracking-wider text-nav-fg">
           Runtimes
         </span>
@@ -133,7 +133,7 @@ export function RuntimesSidebar(): React.ReactElement {
       </div>
 
       {hasRuntimes ? (
-        <div className="px-3 pb-2 flex items-center gap-1">
+        <div className="px-4 pb-2 flex items-center gap-1">
           <Button
             type="button"
             variant="ghost"
@@ -164,10 +164,10 @@ export function RuntimesSidebar(): React.ReactElement {
           </Button>
         </div>
       ) : (
-        <div className="pb-1" />
+        <div className="pb-3" />
       )}
 
-      <div className="flex-1 overflow-y-auto px-2 pb-3">
+      <div className="flex-1 overflow-y-auto px-3 pb-3">
         <div className="space-y-0.5">
           {filtered.map((rt) => {
             const ownerUser = tab === "all" ? mockUsers.find((u) => u.id === rt.ownerId) : null;
@@ -211,7 +211,7 @@ export function RuntimesSidebar(): React.ReactElement {
         </div>
 
         {(scanning || detectedNotAdded.length > 0) && (
-          <div className="mt-3 pt-3 border-t border-nav-border">
+          <div className="mt-2 pt-2 border-t border-nav-border">
             {/* The label sits on the left and the rescan affordance always
                 occupies the same trailing slot, regardless of state. While
                 `scanning`, the same button renders the spinning glyph and
