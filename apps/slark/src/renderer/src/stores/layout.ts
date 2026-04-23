@@ -41,9 +41,23 @@ export const ACTIVITY_BAR_DEFAULT_WIDTH = 64;
  */
 export const ACTIVITY_BAR_EXPAND_THRESHOLD = 96;
 
-export const SIDEBAR_MIN_WIDTH = 220;
+/**
+ * Sidebar min/default/max (px) — tuned against the Chat list row,
+ * which is the densest thing the sidebar hosts:
+ *   avatar (40) + gap + [name · time · unread-badge] stacked over
+ *   [latest-message preview] + horizontal padding (~28).
+ * With `SIDEBAR_MIN_WIDTH = 260`, the name+time row gets ~190 px of
+ * text area, enough to show a common handle ("Bob Kim") plus a
+ * relative time ("12m") plus a 2-digit unread badge without the
+ * preview clipping at the first or second word. Values below ~240
+ * start truncating the preview mid-word ("That's every…") on the
+ * first user who hasn't resized — which is what the user flagged.
+ * Default nudged up to 280 so a fresh install isn't sitting on the
+ * floor.
+ */
+export const SIDEBAR_MIN_WIDTH = 260;
 export const SIDEBAR_MAX_WIDTH = 400;
-export const SIDEBAR_DEFAULT_WIDTH = 256;
+export const SIDEBAR_DEFAULT_WIDTH = 280;
 /**
  * Minimum main-pane width. The Sidebar auto-collapses when the
  * right-of-rail panel width drops below
