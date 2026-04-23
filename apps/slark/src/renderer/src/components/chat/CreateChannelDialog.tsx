@@ -184,9 +184,18 @@ export function CreateChannelDialog({
             <FormFieldControl>
               <Popover open={membersOpen} onOpenChange={setMembersOpen}>
                 <PopoverTrigger asChild>
+                  {/* Hand-rolled "input-looking" trigger: this button sits in the
+                      same form stack as the Name / Description <Input>s above, so
+                      it has to follow the same dark-mode well recipe the Input
+                      primitive uses — `bg-surface-0` in light mode, and
+                      `color-mix(surface-0, surface-1)` in dark mode — otherwise
+                      this row renders as a near-black pit against the dialog's
+                      surface-2 card while the real inputs render one step
+                      lighter. See COMPONENT_REFERENCE → "Dark-mode surface &
+                      contrast ladder → Input / textarea / copy pill". */}
                   <button
                     type="button"
-                    className="flex w-full items-center gap-2 rounded-lg border border-input bg-surface-0 px-3 py-2 text-left transition-colors hover:border-border-hover data-[state=open]:border-accent data-[state=open]:ring-2 data-[state=open]:ring-accent/20"
+                    className="flex w-full items-center gap-2 rounded-lg border border-input bg-surface-0 dark:bg-[color:color-mix(in_srgb,var(--color-surface-0),var(--color-surface-1))] px-3 py-2 text-left transition-colors hover:border-border-hover data-[state=open]:border-accent data-[state=open]:ring-2 data-[state=open]:ring-accent/20"
                   >
                     {previewAvatars.length > 0 ? (
                       <div className="flex shrink-0 -space-x-1.5">
