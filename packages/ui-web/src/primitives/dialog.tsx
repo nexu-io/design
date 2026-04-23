@@ -16,7 +16,7 @@ const dialogContentVariants = cva(
   //          (15.1%) lifts it one clear step above the card / page, and
   //          `border-border` (10% white) draws a crisp edge so the shadow
   //          alone isn't carrying all of the separation.
-  "fixed left-1/2 top-1/2 z-50 grid w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl border border-border-subtle dark:border-border bg-surface-0 dark:bg-surface-2 p-6 shadow-lg duration-[var(--duration-normal)] ease-[var(--ease-standard)] data-[state=open]:animate-in data-[state=closed]:animate-out",
+  "fixed left-1/2 top-1/2 z-50 grid w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl border border-border-subtle dark:border-border-strong bg-surface-0 dark:bg-surface-2 p-6 shadow-lg duration-[var(--duration-normal)] ease-[var(--ease-standard)] data-[state=open]:animate-in data-[state=closed]:animate-out",
   {
     variants: {
       size: {

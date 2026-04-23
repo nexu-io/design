@@ -2,27 +2,36 @@
 "@nexu-design/ui-web": patch
 ---
 
-Popover and Select now match the full floating-surface recipe the
-PR #57 dark-mode ladder codified for `Dialog`, `Sheet`, and
-`DropdownMenu`:
+All floating overlay surfaces now share one dark-mode recipe —
+`surface-2` + `border-border-subtle dark:border-border-strong` +
+`shadow-lg` — so overlays stay visually distinct from each other in
+overlay-on-overlay scenarios (e.g. `Popover` or `Select` opening
+inside a `Dialog`, or a `DropdownMenu` cascading into a submenu).
 
-- `Popover`: adds `border-border-subtle dark:border-border` edge
-  reinforcement and upgrades `shadow-md` → `shadow-lg`. Previously
-  only `dark:bg-surface-2` was applied, so a Popover opening inside
-  a Dialog (both `surface-2` in dark) fused into the dialog surface
-  with only a faint default border to separate them.
-- `Select` (`SelectContent`): aligns to the same recipe — lifts
-  from `bg-popover` (`surface-1` in dark) to `surface-2`, adds
-  `dark:border-border`, and carries `shadow-lg`. Fixes the same
-  overlay-on-overlay blending when Select opens inside a Dialog
-  and also stops Select from rendering as a "pit" (surface-1 below
-  surface-2) on `Dialog` parents.
+Per-primitive:
+
+- `Popover`: previously only lifted to `dark:bg-surface-2` after PR
+  #57. Now also carries explicit border + stronger shadow so it no
+  longer fuses into a Dialog it opens on top of.
+- `Select` (`SelectContent`): was stuck at `bg-popover` (`surface-1`
+  in dark) — rendered as a pit inside Dialogs. Lifted to `surface-2`
+  with the full edge treatment.
+- `Dialog`, `Sheet`, `DropdownMenu`, `DropdownMenuSubContent`:
+  previously used `dark:border-border`, but `--border` in dark
+  resolves to the same tone as `surface-2` so the edge self-painted
+  invisibly on overlay-on-overlay stacks. Switched to
+  `dark:border-border-strong` (translucent-white 12%), which lifts
+  clear of any parent surface regardless of what's underneath.
+- `Sheet`: also bumped `shadow-md` → `shadow-lg` to match the rest
+  of the family.
 - `Combobox` inherits the fix automatically because it portals
   through `PopoverContent`.
 
-Light mode is unchanged. No API changes.
+Light mode unchanged. No API changes.
 
 The rule — "modal / floating surfaces carry `surface-2` +
-`dark:border-border` + `shadow-lg` for overlay-on-overlay clarity"
-— is documented in `COMPONENT_REFERENCE.md` under "Dark-mode surface
-& contrast ladder" and in `specs/ui-polish-conventions.md` §12.
+`dark:border-border-strong` + `shadow-lg` for overlay-on-overlay
+clarity; never `dark:border-border` (surface-tone, self-paints
+invisible on same-tone parents)" — is documented in
+`COMPONENT_REFERENCE.md` under "Dark-mode surface & contrast ladder"
+and in `specs/ui-polish-conventions.md` §12.

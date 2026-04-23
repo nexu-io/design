@@ -24,17 +24,18 @@ const PopoverContent = React.forwardRef<
         // popover the same clear elevation as Dialog / DropdownMenu in
         // dark; light mode keeps the original `bg-popover` white.
         //
-        // `border-border-subtle dark:border-border` + `shadow-lg` — PR
-        // #57 established this edge-reinforcement recipe for Dialog /
-        // Sheet / DropdownMenu but missed Popover. When a Popover opens
-        // *inside* a Dialog (e.g. CreateChannelDialog's Select members
-        // picker), both surfaces are `surface-2` in dark — the two
-        // panels fuse unless the popover's edge is strong enough to
-        // draw itself. Explicit `border-border` + `shadow-lg` give the
-        // popover a visible 1px step and a cushion of fall-off even on
-        // a same-tone parent. Light mode keeps the default subtle
-        // border since there's no same-tone blending risk on white.
-        "z-50 w-72 rounded-xl border border-border-subtle dark:border-border bg-popover dark:bg-surface-2 p-4 text-popover-foreground shadow-lg outline-none animate-in fade-in-0 zoom-in-95",
+        // `border-border-subtle dark:border-border-strong` + `shadow-lg`
+        // — PR #57 tried `dark:border-border` for overlay edges, but the
+        // `--border` token in dark resolves to ≈ `hsl(240 6.5% 15.1%)`,
+        // which is the same tone as `surface-2` itself. On same-tone
+        // overlay-on-overlay stacks (e.g. a Popover inside a Dialog —
+        // see `CreateChannelDialog`'s Select-members picker) that edge
+        // self-paints invisibly. `--color-border-strong` is
+        // translucent-white 12% in dark mode, so it lifts clear of any
+        // parent surface without needing to know what's underneath.
+        // Light mode keeps the subtle solid token — no same-tone
+        // blending risk on white.
+        "z-50 w-72 rounded-xl border border-border-subtle dark:border-border-strong bg-popover dark:bg-surface-2 p-4 text-popover-foreground shadow-lg outline-none animate-in fade-in-0 zoom-in-95",
         className,
       )}
       {...props}
