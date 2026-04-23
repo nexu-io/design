@@ -223,7 +223,13 @@ const ComboboxTrigger = React.forwardRef<
       data-slot="combobox-trigger"
       disabled={context.disabled || disabled}
       className={cn(
-        "flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-input bg-surface-0 px-3 py-2 text-left text-base text-foreground outline-none transition-colors placeholder:text-muted-foreground/50 focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20 disabled:cursor-not-allowed disabled:opacity-50",
+        // Dark-mode surface mixes `surface-0` and `surface-1` so the
+        // trigger stays slightly deeper than the card (matching the light
+        // mode inset feel) without hitting near-black. See the Input
+        // primitive for the full rationale.
+        // `dark:placeholder:text-muted-foreground/35` — see Input
+        // primitive for the placeholder contrast rationale in dark mode.
+        "flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-input bg-surface-0 dark:bg-[color:color-mix(in_srgb,var(--color-surface-0),var(--color-surface-1))] px-3 py-2 text-left text-base text-foreground outline-none transition-colors placeholder:text-muted-foreground/50 dark:placeholder:text-muted-foreground/35 focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/20 disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
