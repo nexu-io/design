@@ -9,11 +9,32 @@ import { cn } from "../lib/cn";
  *  - `solid` (default): opaque `bg-surface-1`, safe on any host.
  *  - `glass`: a frosted-glass wash designed to sit on top of a translucent
  *    host window. On macOS Electron the host `BrowserWindow` opts into
- *    `vibrancy: "sidebar"` and follows the OS appearance, so this variant
- *    produces a light wash in light mode and a dark wash in dark mode —
- *    otherwise the rail reads as a "light mode tint" over a dark vibrancy
- *    and fights the surrounding surfaces. On web / non-vibrancy hosts it
- *    degrades gracefully to a subtle theme-matched tint.
+ *    `vibrancy: "sidebar"`, and the HTML tint is tuned per-theme so the
+ *    rail looks right even when the **app theme and the OS appearance
+ *    disagree** (dark-app-on-light-OS is the common case — the user
+ *    toggles the in-app theme while macOS stays in Light Mode, so
+ *    native vibrancy keeps rendering the desktop wallpaper behind the
+ *    chrome).
+ *
+ *    Light mode: `bg-white/30 backdrop-saturate-150` — a thin white
+ *    wash pops the rail against the grey-ish light sidebar vibrancy,
+ *    which otherwise reads as muddy.
+ *
+ *    Dark mode: `bg-surface-0/85` — a `surface-0` wash (one step
+ *    darker than the surrounding `surface-1` island). 85 % opacity
+ *    is a deliberate design call: high enough to mute a light-OS
+ *    vibrancy leak to a non-distracting amount, but low enough to
+ *    keep a visible frosted feel on both dark-OS and light-OS hosts
+ *    (higher values start to read as a flat opaque chip). Paired
+ *    with `backdrop-saturate-100` so any residual leak is NOT
+ *    colour-amplified — the previous `bg-black/80 +
+ *    backdrop-saturate-125` combo used a similar alpha but pumped
+ *    the leak's saturation, which is what made the rail read as
+ *    whitish-coloured.
+ *
+ *    On web / non-vibrancy hosts the variant still works as a plain
+ *    theme-matched tint; callers that want a hard opaque background
+ *    should use `surface="solid"`.
  */
 const activityBarVariants = cva(
   "flex w-12 shrink-0 flex-col items-center border-r border-border py-2",
@@ -21,8 +42,7 @@ const activityBarVariants = cva(
     variants: {
       surface: {
         solid: "bg-surface-1",
-        glass:
-          "bg-white/30 backdrop-saturate-150 dark:bg-black/80 dark:backdrop-saturate-125 dark:backdrop-blur-md",
+        glass: "bg-white/30 backdrop-saturate-150 dark:bg-surface-0/85 dark:backdrop-saturate-100",
       },
     },
     defaultVariants: {

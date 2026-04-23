@@ -11,12 +11,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  cn,
 } from "@nexu-design/ui-web";
 import { Check, MessageSquare, Plus, Settings, Users, Zap } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useT, type TranslationKey } from "@/i18n";
+import { ACTIVITY_BAR_EXPAND_THRESHOLD, useLayoutStore } from "@/stores/layout";
 import { useWorkspaceStore } from "@/stores/workspace";
 
 import { TitleBarSpacer } from "./WindowChrome";
@@ -40,33 +42,70 @@ export function ActivityBar(): React.ReactElement {
   const t = useT();
   const { workspace, workspaces, switchWorkspace } = useWorkspaceStore();
   const [menuOpen, setMenuOpen] = useState(false);
+  const activityBarWidth = useLayoutStore((s) => s.activityBarWidth);
+  const expanded = activityBarWidth > ACTIVITY_BAR_EXPAND_THRESHOLD;
+
+  /* ────────────────────────────────────────────────────────────
+     Collapsed (`w = ACTIVITY_BAR_MIN_WIDTH`, 64px):
+       - items render as 40×40 icon-only rounded squares;
+       - header/footer inner widths pin to `w-10` (40px) so the
+         square icons and horizontal dividers stay self-centred
+         inside the 64px rail (see the PR #59 width rationale
+         preserved in the `pl-1.5` comment below).
+
+     Expanded (`w > ACTIVITY_BAR_EXPAND_THRESHOLD`, ≥ 96px):
+       - each item becomes a full-width row, icon left + label
+         right, 10px gap between;
+       - header/footer inner widths stretch to `w-full` so the
+         workspace-switcher row and the settings row visually
+         align with the nav rows below/above them.
+     ──────────────────────────────────────────────────────────── */
+
+  const navItemClass = cn(
+    "no-drag rounded-xl text-nav-muted transition-colors",
+    "hover:bg-nav-hover hover:text-nav-fg",
+    "data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg",
+    expanded ? "h-10 w-full justify-start gap-2.5 px-2.5" : "size-10",
+  );
 
   return (
-    /* Width pinned to 64px: 40px icon (`size-10`) + 12px breathing room on
-       each side. PR #59's `w-[84px]` (22px padding) felt roomy and made
-       the icons look lost in the rail; PR #57's `w-14`/56px (8px) felt
-       tight against the traffic lights and reduced the visual weight of
-       the rail. 64px lands between Linear (60px) and Slack (70px) — a
-       comfortable Mac-native chrome density. TitleBarSpacer `h-[40px]`
-       kept so the first header row clears `trafficLightPosition` (y:14
-       + hit target) with a consistent gap.
+    /* Width pinned to 64px at rest: 40px icon (`size-10`) + 12px
+       breathing room on each side. `pl-1.5` gives the 40×40 icons a
+       bit of left gutter inside the 64px rail (icons sit at x=6..46,
+       with 18px of space on the right) — rail + Sidebar are now
+       flush with no intermediate padding, so this no longer needs
+       to mirror a base-plate gap, but the slight left bias still
+       reads as intentional "this column is a rail, not a toolbar".
 
-       `pl-1.5` (6px) is deliberate and MUST match the base-plate's
-       `p-1.5` on the right of the rail in AppLayout. Without it,
-       `items-center` centres icons inside the 64px rail alone (x=12
-       to x=52), which reads visually left-shifted once you include
-       the 6px base-plate gap before the inner panel's rounded corner
-       (right gap = 18px vs left gap = 12px). The `pl-1.5` offset
-       re-centres icons against the full `rail + base-plate` chrome
-       so left gap (to window edge) equals right gap (to panel
-       corner) = 15px. Keep this padding in sync with AppLayout's
-       `p-1.5`; if that changes, this must change too. */
-    <UiActivityBar surface="glass" className="w-16 border-r-0 py-0 pl-1.5 text-nav-fg">
+       In expanded mode we also add `pr-2` so labels don't kiss
+       the Sidebar's left edge. */
+    <UiActivityBar
+      surface="glass"
+      style={{ width: activityBarWidth }}
+      className={cn(
+        "shrink-0 border-r-0 py-0 pl-1.5 text-nav-fg",
+        expanded ? "pr-2 items-stretch" : "items-center",
+      )}
+    >
       <TitleBarSpacer className="mb-3 h-[40px]" />
 
+      {/* Header inner width pinned to `w-10` regardless of expanded
+          state: the avatar button is always a 40×40 square tile, so
+          stretching the header to `w-full` in expanded mode would just
+          add empty right-side whitespace beside the tile. Kept
+          `items-stretch` on the rail container so the nav rows below
+          can still span the full expanded width. */}
       <ActivityBarHeader className="mb-4 w-10 border-b-0 pb-0">
         <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
           <DropdownMenuTrigger asChild>
+            {/* Workspace avatar stays icon-only in both collapsed and
+                expanded modes. The expanded Sidebar already renders the
+                workspace name (15px bold) in its top row, so repeating
+                it next to the rail avatar reads as duplicated chrome
+                and visually fights the Sidebar header for attention.
+                The avatar alone is enough to signal which workspace
+                the switcher targets; `title` preserves the hover
+                tooltip for wayfinding. */}
             <ActivityBarItem
               className="no-drag size-10 overflow-hidden rounded-xl p-0 text-nav-fg hover:bg-nav-hover hover:text-nav-fg"
               title={workspace?.name ?? "Nexu"}
@@ -117,25 +156,13 @@ export function ActivityBar(): React.ReactElement {
             {/* No separator here — `Add workspace` is a sibling affordance
                 to the workspace rows above (same row treatment, just with a
                 `+` tile instead of an avatar), so splitting them with a
-                divider implies a semantic break that doesn't exist. The
-                separator only appears before `Sign out` to fence off the
-                destructive action. */}
+                divider implies a semantic break that doesn't exist. */}
             <DropdownMenuItem
               disabled={workspaces.length >= 5}
               title={workspaces.length >= 5 ? "Workspace limit reached (5 max)" : undefined}
               className="gap-3 rounded-lg px-2.5 py-2"
               onClick={() => setMenuOpen(false)}
             >
-              {/* `+` placeholder tile sits on the dropdown surface, which PR
-                  #57's dark-mode ladder lifted to `surface-2`. The old
-                  `bg-secondary/40` fill became invisible there (secondary ≡
-                  surface-2 in dark, so 40% of it on top of itself reads as
-                  no fill). Switch to the translucent `foreground` tint used
-                  by the outline / secondary button variants — it borrows
-                  value contrast from the text colour, so it reads on both
-                  the light-mode popover card *and* the dark-mode surface-2
-                  dropdown without re-tuning per theme. Border stays since
-                  that's the "empty add-slot" outline. */}
               <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-foreground/[0.03] dark:bg-foreground/[0.06]">
                 <Plus className="size-4 text-muted-foreground" />
               </div>
@@ -150,7 +177,7 @@ export function ActivityBar(): React.ReactElement {
         </DropdownMenu>
       </ActivityBarHeader>
 
-      <ActivityBarContent className="gap-1.5">
+      <ActivityBarContent className={cn("gap-1.5", expanded ? "items-stretch" : "items-center")}>
         {navItems.map(({ icon: Icon, path, labelKey }) => {
           const isActive = location.pathname.startsWith(path);
 
@@ -159,23 +186,31 @@ export function ActivityBar(): React.ReactElement {
               key={path}
               active={isActive}
               onClick={() => navigate(path)}
-              className="no-drag relative size-10 rounded-xl text-nav-muted hover:bg-nav-hover hover:text-nav-fg data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg"
-              title={t(labelKey)}
+              className={navItemClass}
+              title={expanded ? undefined : t(labelKey)}
             >
-              <Icon className="size-[19px]" />
+              <Icon className={cn("shrink-0", expanded ? "size-[17px]" : "size-[19px]")} />
+              {expanded ? (
+                <span className="truncate text-[13px] font-medium">{t(labelKey)}</span>
+              ) : null}
             </ActivityBarItem>
           );
         })}
       </ActivityBarContent>
 
-      <ActivityBarFooter className="w-10 border-t-0 pb-3 pt-0">
+      <ActivityBarFooter
+        className={cn("border-t-0 pb-3 pt-0", expanded ? "w-full items-stretch" : "w-10")}
+      >
         <ActivityBarItem
           active={location.pathname.startsWith("/settings")}
           onClick={() => navigate("/settings")}
-          className="no-drag size-10 rounded-xl text-nav-muted hover:bg-nav-hover hover:text-nav-fg data-[active=true]:bg-nav-active data-[active=true]:text-nav-active-fg"
-          title={t("section.settings")}
+          className={navItemClass}
+          title={expanded ? undefined : t("section.settings")}
         >
-          <Settings className="size-[19px]" />
+          <Settings className={cn("shrink-0", expanded ? "size-[17px]" : "size-[19px]")} />
+          {expanded ? (
+            <span className="truncate text-[13px] font-medium">{t("section.settings")}</span>
+          ) : null}
         </ActivityBarItem>
       </ActivityBarFooter>
     </UiActivityBar>

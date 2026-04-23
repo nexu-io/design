@@ -40,7 +40,16 @@ const sections: { path: string; labelKey: TranslationKey }[] = [
   { path: "/settings", labelKey: "section.settings" },
 ];
 
-export function Sidebar(): React.ReactElement {
+interface SidebarProps {
+  /**
+   * Inline style forwarded to the aside root. AppLayout sets `width`
+   * from the layout store so the sidebar can be drag-resized and
+   * auto-collapsed in sync with the right-of-rail panel width.
+   */
+  style?: React.CSSProperties;
+}
+
+export function Sidebar({ style }: SidebarProps = {}): React.ReactElement {
   const location = useLocation();
   const navigate = useNavigate();
   const t = useT();
@@ -67,7 +76,7 @@ export function Sidebar(): React.ReactElement {
     : "nexu.app";
 
   return (
-    <UiSidebar className="w-64 border-r-0 bg-transparent text-nav-fg shadow-none">
+    <UiSidebar style={style} className="shrink-0 border-r-0 bg-transparent text-nav-fg shadow-none">
       {/* ────────────────────────────────────────────────────────────
           Sidebar layout rules (keep in sync across ChatSidebar /
           AgentsSidebar / RuntimesSidebar / SettingsSidebar):
