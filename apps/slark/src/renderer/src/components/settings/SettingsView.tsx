@@ -16,7 +16,6 @@ import {
   FormField,
   FormFieldControl,
   Input,
-  PageHeader,
   Select,
   SelectContent,
   SelectItem,
@@ -98,30 +97,18 @@ export function SettingsView(): React.ReactElement {
     }, 1200);
   };
 
-  const headerCopy =
-    activeTab === "workspace"
-      ? {
-          title: "Workspace settings",
-          description: "Manage your workspace name, member invites, and destructive actions.",
-        }
-      : activeTab === "appearance"
-        ? {
-            title: "Appearance",
-            description: "Choose the theme and display language used across Slark.",
-          }
-        : {
-            title: "Profile",
-            description: "Update your personal details and avatar settings.",
-          };
-
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-[800px] px-4 pt-2 pb-6 sm:px-6 sm:pb-8">
+        {/* The duplicate "Workspace settings" / "Appearance" / "Profile"
+            PageHeader was dropped — the left sidebar already labels the
+            active page (Workspace / Appearance / Profile) and each card
+            below is self-describing. Keeping `WindowChrome` for the
+            traffic-light drag region, plus an `mt-4` spacer so the first
+            card breathes below the chrome instead of sticking to it. */}
         <WindowChrome className="h-10" />
 
-        <PageHeader density="shell" title={headerCopy.title} description={headerCopy.description} />
-
-        <div className="space-y-4">
+        <div className="mt-4 space-y-4">
           {activeTab === "workspace" ? (
             <WorkspaceTab
               workspaceName={workspace?.name ?? ""}
