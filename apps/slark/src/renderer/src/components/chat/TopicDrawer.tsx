@@ -212,10 +212,17 @@ export function TopicDrawer({
     [rootMessage],
   );
 
+  // Scroll to the latest reply whenever a new one arrives. We deliberately key
+  // off `topicMessages.length` (not the array itself) so unrelated re-renders
+  // don't trigger a scroll.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: length is the intended trigger.
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [topicMessages.length]);
 
+  // Mark the topic as read on open AND whenever new messages arrive — the
+  // length dependency is intentional even though the body doesn't read it.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: length is the intended trigger.
   useEffect(() => {
     if (activeTopicId) markTopicRead(activeTopicId);
   }, [activeTopicId, topicMessages.length, markTopicRead]);
@@ -605,7 +612,10 @@ function MessageSquareIcon(): React.ReactElement {
       strokeLinecap="round"
       strokeLinejoin="round"
       className="opacity-40"
+      role="img"
+      aria-label="Message"
     >
+      <title>Message</title>
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
     </svg>
   );

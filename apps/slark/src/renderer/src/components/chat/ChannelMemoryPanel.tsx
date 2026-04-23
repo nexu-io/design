@@ -377,6 +377,7 @@ export function ChannelMemoryPanel({
                 onChange={(e) => setDraftContent(e.target.value)}
                 placeholder={t("memory.placeholder")}
                 rows={3}
+                // biome-ignore lint/a11y/noAutofocus: compose form opens on explicit user click; focusing the textarea is the expected affordance.
                 autoFocus
                 onKeyDown={(e) => {
                   if (e.key === "Escape") {
@@ -562,6 +563,7 @@ function MemoryRow({
                 value={editDraft}
                 onChange={(e) => onEditDraftChange(e.target.value)}
                 rows={3}
+                // biome-ignore lint/a11y/noAutofocus: inline edit opens on explicit user click; focusing the textarea is the expected affordance.
                 autoFocus
                 onKeyDown={(e) => {
                   if (e.key === "Escape") onCancelEdit();

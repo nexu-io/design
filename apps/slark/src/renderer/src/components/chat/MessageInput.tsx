@@ -134,6 +134,9 @@ export function MessageInput({
   }, [pendingDraft, setPendingDraft, topicId]);
 
   // Focus the textarea whenever a new quote becomes active for this input.
+  // We key off `activeQuote?.messageId` (not `activeQuote`) so refocus only
+  // fires when the quoted message actually changes, not on every parent rerender.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: messageId is the intended trigger; activeQuote object identity would refocus too eagerly.
   useEffect(() => {
     if (activeQuote) textareaRef.current?.focus();
   }, [activeQuote?.messageId]);

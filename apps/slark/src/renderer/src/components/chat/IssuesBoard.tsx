@@ -1,4 +1,12 @@
-import { Bot, Circle, CircleCheck, CircleDashed, CircleDot, CircleSlash, Eye } from "lucide-react";
+import {
+  Bot,
+  Circle,
+  CircleCheck,
+  CircleDashed,
+  type CircleDot,
+  CircleSlash,
+  Eye,
+} from "lucide-react";
 import { cn } from "@nexu-design/ui-web";
 import { useTopicsStore } from "@/stores/topics";
 import { resolveRef } from "@/mock/data";

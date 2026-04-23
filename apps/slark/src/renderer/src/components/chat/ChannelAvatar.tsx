@@ -34,7 +34,9 @@ const GRADIENTS: Array<{ from: string; via?: string; to: string }> = [
 ];
 
 function pickGradient(seed: string): { from: string; via?: string; to: string } {
-  return GRADIENTS[hashString(seed) % GRADIENTS.length]!;
+  // Index is always in-bounds (modulo by length) and GRADIENTS is a
+  // non-empty literal; the fallback is just to keep the type non-undefined.
+  return GRADIENTS[hashString(seed) % GRADIENTS.length] ?? GRADIENTS[0];
 }
 
 /**
@@ -46,7 +48,10 @@ export function getChannelInitials(name: string): string {
   if (!cleaned) return "?";
   const parts = cleaned.split(/[\s\-_./]+/).filter(Boolean);
   if (parts.length >= 2) {
-    return (parts[0]![0]! + parts[1]![0]!).toUpperCase();
+    // Branch guard guarantees parts[0] / parts[1] exist; filter(Boolean) drops
+    // empty strings so [0] is also safe. Use ?? "" to satisfy biome's
+    // noNonNullAssertion without changing behaviour.
+    return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase();
   }
   return cleaned.slice(0, 2).toUpperCase();
 }

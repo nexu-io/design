@@ -95,6 +95,9 @@ export function ChatView(): React.ReactElement {
     [memories, channelId],
   );
 
+  // Reset to the Chat tab whenever the user switches channels — channelId is
+  // intentionally the trigger, even though the body doesn't read it.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: channelId is the intended trigger, not a referenced value.
   useEffect(() => {
     setTab("chat");
   }, [channelId]);

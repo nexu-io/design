@@ -157,9 +157,12 @@ export function CreateRoutineDialog({
   useEffect(() => {
     if (!open) return;
     if (lockedAgentId) setAgentId(lockedAgentId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, lockedAgentId]);
 
+  // Seed local state from `template` when the dialog opens. We deliberately
+  // re-run only on `open` (not on every template change) — once the user
+  // starts editing fields, in-flight template tweaks shouldn't blow them away.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: template is intentionally read-once on open.
   useEffect(() => {
     if (!open || !template) return;
     if (template.name !== undefined) setName(template.name);
@@ -179,7 +182,6 @@ export function CreateRoutineDialog({
       setConnectorEvent(template.connectorEvent);
     }
     if (template.connectorTarget !== undefined) setConnectorTarget(template.connectorTarget);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const reset = (): void => {
@@ -486,6 +488,7 @@ export function CreateRoutineDialog({
                 </div>
 
                 {scheduleMode === "hourly" && (
+                  // biome-ignore lint/a11y/noLabelWithoutControl: <Input> is a thin wrapper around a real <input> nested inside this label.
                   <label className="flex flex-col gap-1 text-xs text-muted-foreground">
                     At minute
                     <div className="flex items-center gap-2">
@@ -525,6 +528,7 @@ export function CreateRoutineDialog({
                 )}
                 {scheduleMode === "weekly" && (
                   <div className="flex flex-wrap items-end gap-3">
+                    {/* biome-ignore lint/a11y/noLabelWithoutControl: <Select> renders an interactive control (button + listbox) nested inside this label. */}
                     <label className="flex flex-col gap-1 text-xs text-muted-foreground">
                       Day
                       <Select
@@ -857,6 +861,7 @@ function TimeOfDayPicker({
   const pad = (n: number): string => (n < 10 ? `0${n}` : String(n));
   const value = `${pad(hour)}:${pad(minute)}`;
   return (
+    // biome-ignore lint/a11y/noLabelWithoutControl: <Input> is a thin wrapper around a real <input type="time"> nested inside this label.
     <label className="flex flex-col gap-1 text-xs text-muted-foreground">
       At time
       <div className="flex items-center gap-2">

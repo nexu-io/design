@@ -162,7 +162,7 @@ function getAgentSuggestions(agent: Agent): string[] {
   const generic = [
     `Hi ${agent.name}, what can you help me with?`,
     `${agent.name}, show me an example of what you can do.`,
-    `Give me a quick overview of your capabilities.`,
+    "Give me a quick overview of your capabilities.",
   ];
   const combined = [...fromSkills, ...generic];
   return combined.slice(0, 3);
@@ -781,7 +781,7 @@ export function MessageList({ channelId, channel }: MessageListProps): React.Rea
                 {msg.quoted ? (
                   <button
                     type="button"
-                    onClick={() => jumpToMessage(msg.quoted!.messageId)}
+                    onClick={() => msg.quoted && jumpToMessage(msg.quoted.messageId)}
                     className="mb-1.5 block w-full max-w-[520px] rounded-md border-l-2 border-brand-primary bg-surface-2/50 px-2 py-1 text-left transition-colors hover:bg-surface-2"
                   >
                     <div className="flex items-center gap-1 text-[11px] font-semibold text-text-secondary">

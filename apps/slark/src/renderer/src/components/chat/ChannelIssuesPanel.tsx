@@ -4,7 +4,7 @@ import {
   Circle,
   CircleCheck,
   CircleDashed,
-  CircleDot,
+  type CircleDot,
   CircleSlash,
   Columns3,
   Eye,

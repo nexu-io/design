@@ -64,7 +64,10 @@ export function ChannelSettingsDialog({
   const nameInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Reset local draft when opening or switching channel.
+  // Reset local draft when opening or switching channel. We track channel.id
+  // explicitly so the reset still runs when switching to a channel that happens
+  // to have the same name/description/avatar.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: channel.id is intentional — see comment above.
   useEffect(() => {
     if (!open) return;
     setName(channel.name);

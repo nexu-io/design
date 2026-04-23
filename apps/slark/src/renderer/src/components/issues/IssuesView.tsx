@@ -201,7 +201,7 @@ export function IssuesView(): React.ReactElement {
     }
     result.sort((a, b) => b.latestActivityAt - a.latestActivityAt);
     return result;
-  }, [topics, topicMessages, readAt, archived]);
+  }, [topics, topicMessages, readAt]);
 
   const counts = useMemo(() => {
     const base: Record<Filter, number> = {
@@ -516,6 +516,10 @@ function ThreadPane({
   const rootSender = rootMessage ? toSender(rootMessage.sender) : undefined;
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  // Snap to the bottom whenever the user opens a different topic or new
+  // messages arrive — both deps are intentional even though the body
+  // doesn't read them.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: topic.id and length are the intended triggers.
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "auto" });
   }, [topic.id, messages.length]);

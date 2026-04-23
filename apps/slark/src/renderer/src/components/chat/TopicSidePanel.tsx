@@ -12,7 +12,7 @@ import {
   FileDiff,
   Hand,
   ListChecks,
-  Map,
+  Map as MapIcon,
   Pencil,
   RefreshCw,
   Terminal,
@@ -34,7 +34,7 @@ const TABS: TabMeta[] = [
   { value: "diff", label: "Diff", icon: FileDiff, shortcut: "⇧⌘D" },
   { value: "terminal", label: "Terminal", icon: Terminal, shortcut: "⌃`" },
   { value: "tasks", label: "Tasks", icon: ListChecks, hasUpdate: true },
-  { value: "plan", label: "Plan", icon: Map },
+  { value: "plan", label: "Plan", icon: MapIcon },
 ];
 
 export function TopicSidePanel(): React.ReactElement {
@@ -190,6 +190,7 @@ function PreviewMock(): React.ReactElement {
         {editing ? (
           <>
             <input
+              // biome-ignore lint/a11y/noAutofocus: rename input opens on explicit user click; focusing is the expected affordance.
               autoFocus
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
@@ -291,49 +292,56 @@ function DiffMock(): React.ReactElement {
             <Code>
               <Kw>import</Kw> {"{ "}
               <Ident>WelcomePage</Ident>
-              {" }"} <Kw>from</Kw> <Str>&quot;@/components/onboarding/WelcomePage&quot;</Str>;
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/onboarding/WelcomePage&quot;</Str>
+              {";"}
             </Code>
           </DiffLine>
           <DiffLine num={11} tone="context">
             <Code>
               <Kw>import</Kw> {"{ "}
               <Ident>OnboardingFlow</Ident>
-              {" }"} <Kw>from</Kw> <Str>&quot;@/components/onboarding/OnboardingFlow&quot;</Str>;
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/onboarding/OnboardingFlow&quot;</Str>
+              {";"}
             </Code>
           </DiffLine>
           <DiffLine num={12} tone="context">
             <Code>
               <Kw>import</Kw> {"{ "}
               <Ident>ChatView</Ident>
-              {" }"} <Kw>from</Kw> <Str>&quot;@/components/chat/ChatView&quot;</Str>;
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/chat/ChatView&quot;</Str>
+              {";"}
             </Code>
           </DiffLine>
           <DiffLine num={13} tone="add">
             <Code>
               <Kw>import</Kw> {"{ "}
               <Ident>IssuesView</Ident>
-              {" }"} <Kw>from</Kw> <Str>&quot;@/components/issues/IssuesView&quot;</Str>;
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/issues/IssuesView&quot;</Str>
+              {";"}
             </Code>
           </DiffLine>
           <DiffLine num={14} tone="context">
             <Code>
               <Kw>import</Kw> {"{ "}
               <Ident>AgentsView</Ident>
-              {" }"} <Kw>from</Kw> <Str>&quot;@/components/agents/AgentsView&quot;</Str>;
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/agents/AgentsView&quot;</Str>
+              {";"}
             </Code>
           </DiffLine>
           <DiffLine num={15} tone="add">
             <Code>
               <Kw>import</Kw> {"{ "}
               <Ident>AgentDetail</Ident>
-              {" }"} <Kw>from</Kw> <Str>&quot;@/components/agents/AgentDetail&quot;</Str>;
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/agents/AgentDetail&quot;</Str>
+              {";"}
             </Code>
           </DiffLine>
           <DiffLine num={16} tone="context">
             <Code>
               <Kw>import</Kw> {"{ "}
               <Ident>UserDetail</Ident>
-              {" }"} <Kw>from</Kw> <Str>&quot;@/components/agents/UserDetail&quot;</Str>;
+              {" }"} <Kw>from</Kw> <Str>&quot;@/components/agents/UserDetail&quot;</Str>
+              {";"}
             </Code>
           </DiffLine>
 
@@ -529,7 +537,10 @@ function TaskCard({
               fill="none"
               stroke="currentColor"
               strokeWidth="1.5"
+              role="img"
+              aria-label="Done"
             >
+              <title>Done</title>
               <path d="M2.5 6.5L5 9l4.5-5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </span>
@@ -616,7 +627,7 @@ function PlanMock(): React.ReactElement {
 
         <div className="mt-4 rounded-md border border-border bg-surface-0 px-2.5 py-2">
           <div className="flex items-center gap-1.5 text-[11px] font-semibold text-text-primary">
-            <Map className="size-3 text-text-muted" />
+            <MapIcon className="size-3 text-text-muted" />
             Notes
           </div>
           <ul className="mt-1.5 flex flex-col gap-1 text-[11px] text-text-muted">

@@ -320,6 +320,10 @@ export function ChannelRoutinesPanel({
     [channelRoutines, selectedRoutineId],
   );
 
+  // Drop the selection when the routine no longer belongs to the active
+  // channel. channelId is intentional even though the body doesn't read it —
+  // it forces the check to re-run on channel switch.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: channelId is the intended trigger on channel switch.
   useEffect(() => {
     if (selectedRoutineId && !channelRoutines.some((r) => r.id === selectedRoutineId)) {
       selectRoutine(null);
@@ -533,11 +537,11 @@ export function ChannelRoutinesPanel({
                       <RunRow
                         key={run.id}
                         run={run}
-                        onJump={
-                          run.messageId && onJumpToMessage
-                            ? () => onJumpToMessage(run.messageId!)
-                            : undefined
-                        }
+                        onJump={(() => {
+                          const messageId = run.messageId;
+                          if (!messageId || !onJumpToMessage) return undefined;
+                          return () => onJumpToMessage(messageId);
+                        })()}
                         onRetry={run.status === "error" ? () => handleRunNow(selected) : undefined}
                       />
                     ))}

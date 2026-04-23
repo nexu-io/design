@@ -97,6 +97,7 @@ function VideoLightbox({
       </Button>
       <div className="max-w-[90vw] max-h-[85vh] p-4" onMouseDown={(e) => e.stopPropagation()}>
         {url ? (
+          // biome-ignore lint/a11y/useMediaCaption: user-uploaded video has no caption track available.
           <video
             src={url}
             poster={thumbnail}

@@ -115,26 +115,23 @@ export function ChannelSessionsPanel({
                       <TaskRow
                         key={`task-${entry.task.id}`}
                         task={entry.task}
-                        onJump={
-                          entry.task.replyMessageId && onJumpToMessage
-                            ? () =>
-                                onJumpToMessage(entry.task.replyMessageId!, entry.task.channelId)
-                            : entry.task.sourceMessageId && onJumpToMessage
-                              ? () =>
-                                  onJumpToMessage(entry.task.sourceMessageId!, entry.task.channelId)
-                              : undefined
-                        }
+                        onJump={(() => {
+                          if (!onJumpToMessage) return undefined;
+                          const targetId = entry.task.replyMessageId ?? entry.task.sourceMessageId;
+                          if (!targetId) return undefined;
+                          return () => onJumpToMessage(targetId, entry.task.channelId);
+                        })()}
                       />
                     ) : (
                       <RoutineRunRow
                         key={`run-${entry.run.id}`}
                         routine={entry.routine}
                         run={entry.run}
-                        onJump={
-                          entry.run.messageId && onJumpToMessage
-                            ? () => onJumpToMessage(entry.run.messageId!, entry.routine.channelId)
-                            : undefined
-                        }
+                        onJump={(() => {
+                          const messageId = entry.run.messageId;
+                          if (!messageId || !onJumpToMessage) return undefined;
+                          return () => onJumpToMessage(messageId, entry.routine.channelId);
+                        })()}
                       />
                     ),
                   )}

@@ -500,6 +500,7 @@ function ApprovalBlock({
           {replyOpen && (
             <div className="relative mt-1.5">
               <input
+                // biome-ignore lint/a11y/noAutofocus: reply input opens on explicit user click; focusing is the expected affordance.
                 autoFocus
                 value={customText}
                 onChange={(e) => setCustomText(e.target.value)}
