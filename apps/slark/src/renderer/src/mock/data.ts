@@ -795,7 +795,7 @@ export const mockMessages: Record<string, Message[]> = {
       channelId: "ch-showcase",
       sender: user2Ref,
       content:
-        "That's every block in one feed — images, gallery, video, voice, files, action, tool output, and approval. Ship it. 🚀",
+        "That's every block in one feed — images, gallery, video, voice, files, code, diff, action, tool output, progress, approval, and topic cards. Ship it. 🚀",
       mentions: [],
       reactions: [
         { emoji: "🚀", users: ["u-1", "u-3"] },
@@ -847,6 +847,23 @@ export const mockMessages: Record<string, Message[]> = {
       createdAt: Date.now() - 600000,
     },
     {
+      id: "dm-m-2",
+      channelId: "dm-agent-1",
+      sender: agent1Ref,
+      content: "Sure! Here's a type-safe debounce hook:",
+      blocks: [
+        {
+          type: "code",
+          language: "typescript",
+          filename: "useDebounce.ts",
+          code: "function useDebounce<T>(value: T, delay: number): T {\n  const [debouncedValue, setDebouncedValue] = useState(value)\n\n  useEffect(() => {\n    const timer = setTimeout(() => setDebouncedValue(value), delay)\n    return () => clearTimeout(timer)\n  }, [value, delay])\n\n  return debouncedValue\n}",
+        },
+      ],
+      mentions: [],
+      reactions: [],
+      createdAt: Date.now() - 540000,
+    },
+    {
       id: "dm-m-3",
       channelId: "dm-agent-1",
       sender: user1Ref,
@@ -889,6 +906,25 @@ export const mockMessages: Record<string, Message[]> = {
       createdAt: Date.now() - 420000,
     },
     {
+      id: "dm-m-5",
+      channelId: "dm-agent-1",
+      sender: agent1Ref,
+      content: "I found a small button sizing issue. Here's the fix:",
+      blocks: [
+        {
+          type: "diff",
+          filename: "src/components/Button.tsx",
+          content:
+            '@@ -12,7 +12,7 @@\n export function Button({ children, size = "md" }) {\n   return (\n     <button\n-      className="px-3 py-1 rounded-md"\n+      className="px-4 py-2.5 min-h-[44px] rounded-md"\n     >\n       {children}\n     </button>',
+          additions: 1,
+          deletions: 1,
+        },
+      ],
+      mentions: [],
+      reactions: [],
+      createdAt: Date.now() - 360000,
+    },
+    {
       id: "dm-m-6",
       channelId: "dm-agent-1",
       sender: agent1Ref,
@@ -905,6 +941,30 @@ export const mockMessages: Record<string, Message[]> = {
       mentions: [],
       reactions: [],
       createdAt: Date.now() - 300000,
+    },
+    {
+      id: "dm-m-7",
+      channelId: "dm-agent-1",
+      sender: agent1Ref,
+      content: "",
+      blocks: [
+        {
+          type: "progress",
+          title: "Running test suite",
+          current: 3,
+          total: 5,
+          steps: [
+            { label: "Lint", status: "done" as const },
+            { label: "Unit tests", status: "done" as const },
+            { label: "Integration", status: "done" as const },
+            { label: "E2E", status: "active" as const },
+            { label: "Deploy", status: "pending" as const },
+          ],
+        },
+      ],
+      mentions: [],
+      reactions: [],
+      createdAt: Date.now() - 240000,
     },
     {
       id: "dm-m-8",

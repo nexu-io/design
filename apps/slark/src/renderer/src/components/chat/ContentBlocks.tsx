@@ -79,6 +79,28 @@ function fileExtension(name: string): string | undefined {
   return name.slice(idx + 1).toLowerCase();
 }
 
+interface IndexedItem<T> {
+  key: string;
+  value: T;
+  lineNumber: number;
+}
+
+function createIndexedItems<T>(items: T[], keyOf: (item: T) => string): IndexedItem<T>[] {
+  const occurrences = new Map<string, number>();
+  const indexed: IndexedItem<T>[] = [];
+  let lineNumber = 0;
+
+  for (const item of items) {
+    lineNumber += 1;
+    const base = keyOf(item);
+    const count = (occurrences.get(base) ?? 0) + 1;
+    occurrences.set(base, count);
+    indexed.push({ key: `${base}:${count}`, value: item, lineNumber });
+  }
+
+  return indexed;
+}
+
 function ImageBlock({
   block,
   onExpand,
@@ -534,6 +556,9 @@ function ProgressBlock({
   block,
 }: { block: Extract<ContentBlock, { type: "progress" }> }): React.ReactElement {
   const isDone = block.current >= block.total;
+  const indexedSteps = block.steps
+    ? createIndexedItems(block.steps, (step) => `${step.label}-${step.status}`)
+    : [];
 
   return (
     <div className="w-full max-w-[640px] rounded-xl border border-border-subtle bg-surface-1 px-4 py-3.5">
@@ -551,8 +576,8 @@ function ProgressBlock({
 
       {block.steps && block.steps.length > 0 && (
         <ul className="mt-3 flex flex-col gap-3">
-          {block.steps.map((step, idx) => (
-            <li key={`${step.label}-${idx}`} className="flex items-center gap-2.5">
+          {indexedSteps.map(({ key, value: step }) => (
+            <li key={key} className="flex items-center gap-2.5">
               {step.status === "done" && (
                 <CheckCircle2
                   aria-hidden="true"
