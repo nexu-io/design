@@ -115,7 +115,17 @@ export function ActivityBar(): React.ReactElement {
               className="gap-3 rounded-lg px-2.5 py-2"
               onClick={() => setMenuOpen(false)}
             >
-              <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-secondary/40">
+              {/* `+` placeholder tile sits on the dropdown surface, which PR
+                  #57's dark-mode ladder lifted to `surface-2`. The old
+                  `bg-secondary/40` fill became invisible there (secondary ≡
+                  surface-2 in dark, so 40% of it on top of itself reads as
+                  no fill). Switch to the translucent `foreground` tint used
+                  by the outline / secondary button variants — it borrows
+                  value contrast from the text colour, so it reads on both
+                  the light-mode popover card *and* the dark-mode surface-2
+                  dropdown without re-tuning per theme. Border stays since
+                  that's the "empty add-slot" outline. */}
+              <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-foreground/[0.03] dark:bg-foreground/[0.06]">
                 <Plus className="size-4 text-muted-foreground" />
               </div>
               <span className="flex-1 text-left text-sm text-foreground">Add workspace</span>
