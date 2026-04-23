@@ -53,7 +53,7 @@ function createWindow(): void {
     backgroundColor: isMac ? "#00000000" : "#fafafa",
     show: false,
     titleBarStyle: "hiddenInset",
-    trafficLightPosition: { x: 16, y: 14 },
+    trafficLightPosition: { x: 8, y: 14 },
     // On macOS we opt into native sidebar vibrancy so the ActivityBar and any
     // translucent chrome can show real frosted-glass (blurs the desktop behind
     // the window). `visualEffectState: "active"` keeps the blur active even when

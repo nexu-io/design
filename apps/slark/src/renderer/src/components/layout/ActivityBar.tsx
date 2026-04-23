@@ -42,8 +42,16 @@ export function ActivityBar(): React.ReactElement {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <UiActivityBar surface="glass" className="w-14 border-r-0 py-0 text-nav-fg">
-      <TitleBarSpacer className="mb-3 h-[38px]" />
+    /* Width pinned to 64px: 40px icon (`size-10`) + 12px breathing room on
+       each side. PR #59's `w-[84px]` (22px padding) felt roomy and made
+       the icons look lost in the rail; PR #57's `w-14`/56px (8px) felt
+       tight against the traffic lights and reduced the visual weight of
+       the rail. 64px lands between Linear (60px) and Slack (70px) — a
+       comfortable Mac-native chrome density. TitleBarSpacer `h-[40px]`
+       kept so the first header row clears `trafficLightPosition` (y:14
+       + hit target) with a consistent gap. */
+    <UiActivityBar surface="glass" className="w-16 border-r-0 py-0 text-nav-fg">
+      <TitleBarSpacer className="mb-3 h-[40px]" />
 
       <ActivityBarHeader className="mb-4 w-10 border-b-0 pb-0">
         <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
