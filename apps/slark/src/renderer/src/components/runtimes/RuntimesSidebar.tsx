@@ -208,11 +208,7 @@ export function RuntimesSidebar(): React.ReactElement {
              runtimes" from "auto-detected". In the empty state there's
              nothing to separate from, so the Detected section slots
              right under the sidebar title at the usual 12px gap. */
-          <div
-            className={cn(
-              hasRuntimes && "mt-3 pt-3 border-t border-nav-border",
-            )}
-          >
+          <div className={cn(hasRuntimes && "mt-3 pt-3 border-t border-nav-border")}>
             {/* Shared section-header pattern (see ChatSidebar /
                 AgentsSidebar): `gap-1.5 px-2 py-1.5 text-[11px]`. The
                 rescan affordance fills the trailing chip slot that
