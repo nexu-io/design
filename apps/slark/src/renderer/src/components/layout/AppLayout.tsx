@@ -1,28 +1,271 @@
+import { ResizableHandle } from "@nexu-design/ui-web";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Outlet } from "react-router-dom";
+
+import {
+  ACTIVITY_BAR_MAX_WIDTH,
+  ACTIVITY_BAR_MIN_WIDTH,
+  MAIN_MIN_WIDTH,
+  SIDEBAR_MAX_WIDTH,
+  SIDEBAR_MIN_WIDTH,
+  useLayoutStore,
+} from "@/stores/layout";
+
 import { ActivityBar } from "./ActivityBar";
 import { Sidebar } from "./Sidebar";
 import { TitleBarDragRegion } from "./WindowChrome";
 
+/**
+ * Width of the invisible resize handles (rail splitter + sidebar
+ * splitter). 4px is the smallest hit-zone that still feels reliably
+ * grabbable with a trackpad; a single column of pixels is too
+ * slippery.
+ */
+const HANDLE_WIDTH = 4;
+
 export function AppLayout(): React.ReactElement {
+  /* ────────────────────────────────────────────────────────────
+     Layout model — "frosted base plate + floating island".
+
+     Window chrome decomposes left-to-right into:
+       1. ActivityBar — fixed width, native vibrancy frosted glass.
+       2. Base plate — transparent HTML, lets macOS sidebar vibrancy
+          render a frosted strip around the island on three sides
+          (top / right / bottom). The left side is intentionally
+          `pl-0` so the island sits flush against the rail, removing
+          the visible "gap between rail and sidebar" the user
+          flagged on the Feishu-parity pass.
+       3. Floating island — solid `bg-surface-1` rounded panel
+          with a soft `shadow-sm`. Only the right side is rounded
+          (`rounded-r-lg`); the left side is flat so it can butt
+          directly against the rail without leaving rounded-corner
+          slivers of vibrancy showing between them.
+
+     Why this shape works for the macOS transparent-window resize
+     lag ("浮岛跟不上底板"):
+       - During a native window-edge drag, Chromium's compositor
+         pauses HTML painting, but macOS native vibrancy keeps
+         repainting. The visible artifact is the HTML layer (rail
+         excluded, since its width is fixed) appearing to trail
+         the vibrancy layer by a few frames.
+       - We can't structurally eliminate that — alpha-composited
+         windows just have this tax on macOS. The mitigation lives
+         in `main/index.ts`: a `will-resize` listener calls
+         `webContents.invalidate()` to nudge Chromium into
+         repainting on every resize tick, which materially narrows
+         the trailing gap. See main/index.ts for the rationale.
+
+     Sidebar width derivation:
+       - On first paint `panelWidth === 0` (ResizeObserver hasn't
+         reported yet). Skip clamping so the user sees their
+         persisted width, not a flash of min width.
+       - Once measured:
+           usable        = panelWidth - 2·HANDLE_WIDTH
+           maxSidebar    = usable − MAIN_MIN_WIDTH
+           collapsed     = maxSidebar < SIDEBAR_MIN_WIDTH
+           effectiveWidth = clamp(sidebarPref, SIDEBAR_MIN, min(SIDEBAR_MAX, maxSidebar))
+         When `collapsed` the Sidebar and its splitter stay mounted
+         but animate to `width: 0` (and `pointer-events: none` on the
+         splitter) so the collapse-on-window-narrow is a smooth
+         slide instead of a pop. The transition is suppressed while
+         the user is actively dragging either splitter (tracked via
+         `isResizing`) so handle drags still track the cursor 1:1 —
+         a transitioned width during drag would feel laggy/rubbery.
+     ──────────────────────────────────────────────────────────── */
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [panelWidth, setPanelWidth] = useState(0);
+  const [isResizing, setIsResizing] = useState(false);
+  /**
+   * `hasMeasured` gates the collapse animation until after
+   * `ResizeObserver` has reported the initial `panelWidth`.
+   * Otherwise a user whose last window was narrow enough to
+   * auto-collapse the Sidebar would see the Sidebar flash open at
+   * its persisted width on startup and then animate closed as the
+   * post-measurement state lands — a "bounce" that reads as a
+   * rendering bug. Suppressing transition on the first measured
+   * layout lets the Sidebar land directly at its final width.
+   */
+  const [hasMeasured, setHasMeasured] = useState(false);
+  const sidebarPref = useLayoutStore((s) => s.sidebarWidth);
+  const setSidebarWidth = useLayoutStore((s) => s.setSidebarWidth);
+  const activityBarWidth = useLayoutStore((s) => s.activityBarWidth);
+  const setActivityBarWidth = useLayoutStore((s) => s.setActivityBarWidth);
+  const sidebarDragStartRef = useRef(0);
+  const activityBarDragStartRef = useRef(0);
+
+  /**
+   * 200ms = long enough to read as an intentional animation
+   * (anything under ~150ms reads as a glitch / flash), short enough
+   * not to get in the way when the user is rapid-resizing the
+   * window. `cubic-bezier(0.32, 0.72, 0, 1)` is a mild ease-out —
+   * the sidebar "settles" into its new size instead of braking hard.
+   */
+  const COLLAPSE_TRANSITION = "width 200ms cubic-bezier(0.32, 0.72, 0, 1)";
+  const widthTransition = isResizing || !hasMeasured ? "none" : COLLAPSE_TRANSITION;
+
+  useLayoutEffect(() => {
+    const el = panelRef.current;
+    if (!el) return;
+    setPanelWidth(el.getBoundingClientRect().width);
+    setHasMeasured(true);
+
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (entry) setPanelWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const usableWidth = panelWidth > 0 ? panelWidth - HANDLE_WIDTH * 2 : 0;
+  const maxSidebarByMain = usableWidth > 0 ? usableWidth - MAIN_MIN_WIDTH : SIDEBAR_MAX_WIDTH;
+  const sidebarCollapsed = usableWidth > 0 && maxSidebarByMain < SIDEBAR_MIN_WIDTH;
+  const effectiveSidebarWidth = sidebarCollapsed
+    ? 0
+    : Math.max(
+        SIDEBAR_MIN_WIDTH,
+        Math.min(Math.min(SIDEBAR_MAX_WIDTH, maxSidebarByMain), sidebarPref),
+      );
+
+  const handleSidebarResizeStart = (): void => {
+    sidebarDragStartRef.current = effectiveSidebarWidth;
+    setIsResizing(true);
+  };
+
+  const handleSidebarResize = (delta: number): void => {
+    const next = sidebarDragStartRef.current + delta;
+    setSidebarWidth(Math.min(next, maxSidebarByMain));
+  };
+
+  const handleSidebarResizeEnd = (): void => setIsResizing(false);
+
+  const handleActivityBarResizeStart = (): void => {
+    activityBarDragStartRef.current = activityBarWidth;
+    setIsResizing(true);
+  };
+
+  const handleActivityBarResize = (delta: number): void => {
+    setActivityBarWidth(activityBarDragStartRef.current + delta);
+  };
+
+  const handleActivityBarResizeEnd = (): void => setIsResizing(false);
+
   return (
     <div className="flex h-screen w-screen overflow-hidden">
       <ActivityBar />
-      {/* Base plate — the frosted frame between the window edge and the
-          inner floating panel. MUST use the exact same glass recipe as
-          the ActivityBar's `surface="glass"` variant (see
-          `packages/ui-web/src/primitives/activity-bar.tsx`) so the rail
-          and the surrounding frame read as one continuous frosted layer
-          rather than two mismatched chromes. */}
-      <div className="relative flex flex-1 min-w-0 bg-white/30 backdrop-saturate-150 dark:bg-black/80 dark:backdrop-saturate-125 dark:backdrop-blur-md p-1.5">
+      {/* Base plate: frosted frame around the floating island on
+          all four sides. The HTML tint here MUST stay in lock-step
+          with the rail's `surface="glass"` variant (see
+          `packages/ui-web/src/primitives/activity-bar.tsx`) —
+          otherwise rail and frame read as two different materials
+          and produce a visible cut.
+          Light: `bg-white/30 backdrop-saturate-150` — white wash on
+          light sidebar vibrancy.
+          Dark: `bg-surface-0/85` — a `surface-0` wash over native
+          vibrancy. This is required because the app has its own
+          dark-mode toggle that is NOT coupled to the OS appearance.
+          A user running macOS in Light Mode but toggling the app
+          into dark mode keeps a **light** native vibrancy behind
+          the chrome; the 85 % overlay mutes that leak to a
+          non-distracting amount while still letting a frosted feel
+          come through — going higher starts to read as flat opaque.
+          `backdrop-saturate-100` explicitly neutralises the
+          light-mode saturate boost so any residual leak isn't
+          colour-amplified.
+          Keeping rail and frame tinted together also keeps the
+          transparent-window resize lag in sync: both regions
+          freeze together during a drag, so the only lag edge is
+          the outer window boundary — which the
+          `will-resize → webContents.invalidate()` mitigation in
+          `main/index.ts` already narrows to a single frame.
+          `p-1` = 4px — small enough that rail and sidebar read as
+          "adjacent panels, not split by a gutter", large enough
+          to let the island's rounded corners breathe and show the
+          drop shadow without getting clipped. */}
+      <div className="relative flex flex-1 min-w-0 overflow-hidden bg-white/30 p-1 backdrop-saturate-150 dark:bg-surface-0/85 dark:backdrop-saturate-100">
         <TitleBarDragRegion />
-        {/* Inner floating panel — one continuous surface. Sidebar and
-            main share the same `bg-surface-1` so the panel reads as a
-            single rounded chrome instead of two tonal columns glued
-            together. The thin `border-l` between them still delineates
-            the sidebar boundary. */}
-        <div className="flex flex-1 min-w-0 overflow-hidden rounded-lg bg-surface-1 shadow-sm">
-          <Sidebar />
-          <main className="flex-1 min-w-0 border-l border-border-subtle">
+
+        {/* Floating island — the inner panel. Fully rounded on all
+            four corners. Shadow is a single very soft drop only —
+            2px offset + 4px blur at 6 % alpha. No hairline ring
+            because a zero-blur outer spread draws a crisp line on
+            ALL four sides; the left side of the island sat on
+            light vibrancy and the ring read as a hard seam with
+            the rail, which the user flagged.
+            A plain drop shadow fades toward the top and the left
+            (directionally weighted by the y-offset), so the
+            island's top/left edges are defined only by the subtle
+            bg difference between surface-1 and sidebar vibrancy,
+            while the bottom-right still shows a soft lift. */}
+        <div
+          ref={panelRef}
+          className="relative flex flex-1 min-w-0 overflow-hidden rounded-lg bg-surface-1 shadow-[0_2px_4px_rgba(0,0,0,0.06)]"
+        >
+          {/* Rail-width splitter. Positioned absolutely at x=0 of the
+              island so it overlays the first 4px of the Sidebar (or
+              of `main`, when Sidebar is collapsed) without taking
+              any extra horizontal space. User-facing intent: "drag
+              the Sidebar's left edge to widen the navigation rail",
+              which matches Feishu's Mac client. Kept transparent /
+              no hover tint — zero visible seam between rail and
+              Sidebar, only the `col-resize` cursor signals the
+              affordance. `z-10` sits above Sidebar/main content but
+              below `TitleBarDragRegion` (`z-20`), so the top 40px
+              of this strip still registers as window-drag area. */}
+          <ResizableHandle
+            onResizeStart={handleActivityBarResizeStart}
+            onResize={handleActivityBarResize}
+            onResizeEnd={handleActivityBarResizeEnd}
+            aria-label="Resize navigation rail"
+            aria-valuemin={ACTIVITY_BAR_MIN_WIDTH}
+            aria-valuemax={ACTIVITY_BAR_MAX_WIDTH}
+            aria-valuenow={activityBarWidth}
+            className="absolute inset-y-0 left-0 z-10 w-1 bg-transparent"
+          />
+
+          {/* Sidebar + its right-side splitter stay mounted even
+              when `sidebarCollapsed` is true — width animates to 0
+              instead of the element popping out of the tree. Both
+              elements share the same `widthTransition` so they
+              slide/reappear together, and the splitter's pointer
+              events turn off while the sidebar is a 0-px sliver so
+              it can't be grabbed there. `overflow: hidden` on the
+              Sidebar wrapper clips its children (chat list rows,
+              search bar, etc.) while the parent width shrinks past
+              their natural width; otherwise they'd spill over into
+              the main pane mid-animation. */}
+          <Sidebar
+            style={{
+              width: sidebarCollapsed ? 0 : effectiveSidebarWidth,
+              overflow: "hidden",
+              transition: widthTransition,
+            }}
+          />
+          {/* Sidebar → main splitter. 4px hit zone with a 1px
+              visual divider centred inside, mirroring how Slack /
+              Feishu mark the column boundary. Width transitions
+              with the sidebar so the splitter slides in/out as one
+              unit; inline `width` overrides the absent class width. */}
+          <ResizableHandle
+            onResizeStart={handleSidebarResizeStart}
+            onResize={handleSidebarResize}
+            onResizeEnd={handleSidebarResizeEnd}
+            aria-label="Resize sidebar"
+            aria-valuemin={SIDEBAR_MIN_WIDTH}
+            aria-valuemax={SIDEBAR_MAX_WIDTH}
+            aria-valuenow={effectiveSidebarWidth}
+            style={{
+              width: sidebarCollapsed ? 0 : 4,
+              transition: widthTransition,
+              pointerEvents: sidebarCollapsed ? "none" : undefined,
+            }}
+            className="group bg-transparent hover:bg-border/20 data-[dragging=true]:bg-accent/40"
+          >
+            <div className="mx-auto h-full w-px bg-border-subtle transition-colors group-hover:bg-border" />
+          </ResizableHandle>
+
+          <main className="flex-1 min-w-0">
             <Outlet />
           </main>
         </div>

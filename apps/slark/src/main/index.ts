@@ -48,8 +48,16 @@ function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
-    minWidth: 960,
-    minHeight: 600,
+    /* `minWidth: 520` lets the user drag the window narrow enough
+       to trigger the Sidebar auto-collapse in the renderer layout
+       store (`MAIN_MIN_WIDTH + SIDEBAR_MIN_WIDTH = 740` on the
+       base plate, which hits ~820 window width after accounting
+       for the ActivityBar rail). A stricter `960` min that was
+       here previously prevented the collapse from ever firing on
+       narrow windows — so from the user's perspective the Feishu-
+       style auto-hide looked unimplemented. */
+    minWidth: 520,
+    minHeight: 520,
     backgroundColor: isMac ? "#00000000" : "#fafafa",
     show: false,
     titleBarStyle: "hiddenInset",
@@ -73,9 +81,53 @@ function createWindow(): void {
     },
   });
 
+  // Belt-and-braces: call `setMinimumSize` after construction. In
+  // practice the `minWidth/minHeight` on the BrowserWindow options
+  // already establishes the floor, but we've seen cases on macOS
+  // where a cached window-state (from a previous build that shipped
+  // a larger `minWidth: 960`) bleeds through a hot-restart and keeps
+  // the OS-level constraint at the old value. Re-applying it
+  // imperatively guarantees the user can drag the window narrow
+  // enough to exercise the Sidebar auto-collapse threshold.
+  mainWindow.setMinimumSize(520, 520);
+
   if (isMac) {
     mainWindow.setBackgroundColor("#00000000");
     mainWindow.setVibrancy("sidebar");
+
+    /* ────────────────────────────────────────────────────────────
+       Mitigate the macOS transparent-window resize lag.
+
+       Symptom: during a native window-edge drag, the HTML layer
+       (base plate + floating island) visibly trails the native
+       sidebar vibrancy by several frames — a strip of frosted
+       vibrancy shows between the island's stale right edge and
+       the window's fresh right edge, reading as "the floating
+       island can't keep up with the frame".
+
+       Root cause: Chromium's compositor throttles painting of
+       alpha-composited (transparent) windows during live native
+       resizes. The vibrancy is an NSVisualEffectView owned by
+       the OS, so it repaints independently and instantly.
+
+       There's no way to structurally fix this without giving up
+       either transparency (kills vibrancy) or floating chrome.
+       But Chromium exposes `webContents.invalidate()` which
+       schedules a full repaint on the next frame. Calling it on
+       every `will-resize` tick — which fires synchronously for
+       each incremental size the window is about to take during
+       the drag — forces Chromium to try to keep up instead of
+       coalescing paints. In practice on Electron ≥ 28 this
+       reduces the visible trailing gap from ~100–200px to a
+       single-frame flicker.
+
+       Guard: only attach on macOS, since this is purely a macOS
+       vibrancy-driven compositor quirk and Windows/Linux
+       transparent windows don't exhibit the same lag.
+       ──────────────────────────────────────────────────────────── */
+    mainWindow.on("will-resize", () => {
+      mainWindow.webContents.invalidate();
+    });
   }
 
   mainWindow.on("ready-to-show", () => {

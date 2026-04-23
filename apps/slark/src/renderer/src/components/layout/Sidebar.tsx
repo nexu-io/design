@@ -40,7 +40,16 @@ const sections: { path: string; labelKey: TranslationKey }[] = [
   { path: "/settings", labelKey: "section.settings" },
 ];
 
-export function Sidebar(): React.ReactElement {
+interface SidebarProps {
+  /**
+   * Inline style forwarded to the aside root. AppLayout sets `width`
+   * from the layout store so the sidebar can be drag-resized and
+   * auto-collapsed in sync with the right-of-rail panel width.
+   */
+  style?: React.CSSProperties;
+}
+
+export function Sidebar({ style }: SidebarProps = {}): React.ReactElement {
   const location = useLocation();
   const navigate = useNavigate();
   const t = useT();
@@ -67,7 +76,7 @@ export function Sidebar(): React.ReactElement {
     : "nexu.app";
 
   return (
-    <UiSidebar className="w-64 border-r-0 bg-transparent text-nav-fg shadow-none">
+    <UiSidebar style={style} className="shrink-0 border-r-0 bg-transparent text-nav-fg shadow-none">
       {/* ────────────────────────────────────────────────────────────
           Sidebar layout rules (keep in sync across ChatSidebar /
           AgentsSidebar / RuntimesSidebar / SettingsSidebar):
@@ -104,10 +113,21 @@ export function Sidebar(): React.ReactElement {
             <DropdownMenuTrigger asChild>
               {/* `h-7` pins this row to the same 28px height used by the
                   generic title slots below, so the search input under
-                  every sidebar sits at the exact same y-coordinate. */}
+                  every sidebar sits at the exact same y-coordinate.
+                  `relative z-30` lifts this trigger ABOVE the
+                  `TitleBarDragRegion` (`absolute z-20` covering the top
+                  40px of the base plate). The drag region would
+                  otherwise sit on top of this button and macOS would
+                  claim every click in the upper ~24px of the row as a
+                  window drag instead of a button click — producing a
+                  tiny effective hit area at the bottom of the row and
+                  hover-that-won't-trigger. `no-drag` on SidebarHeader
+                  alone isn't enough because hit-testing for the app
+                  region is resolved by topmost element at the hit
+                  point, not by ancestor classes. */}
               <button
                 type="button"
-                className="flex h-7 w-full items-center gap-1.5 rounded-md px-1.5 text-left hover:bg-nav-hover transition-colors"
+                className="relative z-30 flex h-7 w-full items-center gap-1.5 rounded-md px-1.5 text-left hover:bg-nav-hover transition-colors"
               >
                 <span className="truncate text-[15px] font-bold tracking-tight">
                   {workspace?.name ?? "Nexu"}
