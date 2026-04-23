@@ -113,10 +113,21 @@ export function Sidebar({ style }: SidebarProps = {}): React.ReactElement {
             <DropdownMenuTrigger asChild>
               {/* `h-7` pins this row to the same 28px height used by the
                   generic title slots below, so the search input under
-                  every sidebar sits at the exact same y-coordinate. */}
+                  every sidebar sits at the exact same y-coordinate.
+                  `relative z-30` lifts this trigger ABOVE the
+                  `TitleBarDragRegion` (`absolute z-20` covering the top
+                  40px of the base plate). The drag region would
+                  otherwise sit on top of this button and macOS would
+                  claim every click in the upper ~24px of the row as a
+                  window drag instead of a button click — producing a
+                  tiny effective hit area at the bottom of the row and
+                  hover-that-won't-trigger. `no-drag` on SidebarHeader
+                  alone isn't enough because hit-testing for the app
+                  region is resolved by topmost element at the hit
+                  point, not by ancestor classes. */}
               <button
                 type="button"
-                className="flex h-7 w-full items-center gap-1.5 rounded-md px-1.5 text-left hover:bg-nav-hover transition-colors"
+                className="relative z-30 flex h-7 w-full items-center gap-1.5 rounded-md px-1.5 text-left hover:bg-nav-hover transition-colors"
               >
                 <span className="truncate text-[15px] font-bold tracking-tight">
                   {workspace?.name ?? "Nexu"}
