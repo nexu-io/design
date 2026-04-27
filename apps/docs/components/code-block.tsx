@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { CopyButton } from "./copy-button";
 
 interface CodeBlockProps {
@@ -30,8 +32,62 @@ export function CodeBlock({
         <CopyButton value={code} label="Copy code" className="h-7 w-24 shrink-0 px-2 text-xs" />
       </div>
       <pre className="m-0 overflow-x-auto bg-transparent p-4 text-sm leading-6 text-text-primary shadow-none">
-        <code>{code}</code>
+        <code data-language={language}>{highlightCode(code, language)}</code>
       </pre>
     </div>
   );
+}
+
+const tokenPattern =
+  /(\/\/.*|\/\*[\s\S]*?\*\/|`(?:\\.|[^`])*`|'(?:\\.|[^'])*'|"(?:\\.|[^"])*"|\b(?:as|async|await|boolean|class|const|export|false|from|function|import|interface|null|number|return|string|true|type|undefined)\b|\b\d+(?:\.\d+)?\b|<\/?[A-Z][\w.:-]*|\b[A-Z][A-Za-z0-9]+(?=\b)|--[\w-]+|@[\w/-]+)/g;
+
+function highlightCode(code: string, language: string): ReactNode[] {
+  const nodes: ReactNode[] = [];
+  let lastIndex = 0;
+
+  for (const match of code.matchAll(tokenPattern)) {
+    const token = match[0];
+    const index = match.index ?? 0;
+
+    if (index > lastIndex) {
+      nodes.push(code.slice(lastIndex, index));
+    }
+
+    nodes.push(
+      <span key={`${index}-${token}`} className={getTokenClassName(token, language)}>
+        {token}
+      </span>,
+    );
+    lastIndex = index + token.length;
+  }
+
+  if (lastIndex < code.length) {
+    nodes.push(code.slice(lastIndex));
+  }
+
+  return nodes;
+}
+
+function getTokenClassName(token: string, language: string) {
+  if (token.startsWith("//") || token.startsWith("/*")) {
+    return "text-text-muted";
+  }
+
+  if (token.startsWith("'") || token.startsWith('"') || token.startsWith("`")) {
+    return "text-success";
+  }
+
+  if (token.startsWith("<") || /^[A-Z]/.test(token)) {
+    return "text-brand-primary";
+  }
+
+  if (token.startsWith("--") || token.startsWith("@")) {
+    return language === "bash" ? "text-warning" : "text-accent";
+  }
+
+  if (/^\d/.test(token)) {
+    return "text-warning";
+  }
+
+  return "text-brand-primary";
 }

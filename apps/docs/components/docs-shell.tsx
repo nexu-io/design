@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { docsNavSections, type DocsHeading } from "../lib/docs";
+import { DocsSearch } from "./docs-search";
+import { docsNavSections, docsSearchItems, type DocsHeading } from "../lib/docs";
 import { MobileSidebar } from "./mobile-sidebar";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -15,7 +16,7 @@ export function DocsShell({ title, description, headings, children }: DocsShellP
   return (
     <div className="min-h-screen">
       <DocsHeader />
-      <MobileSidebar sections={docsNavSections} />
+      <MobileSidebar sections={docsNavSections} searchItems={docsSearchItems} />
       <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[17rem_minmax(0,1fr)_13rem] lg:px-8">
         <DocsSidebar />
         <main className="min-w-0">
@@ -60,6 +61,9 @@ export function DocsHeader() {
             </Link>
           ))}
         </nav>
+        <div className="hidden min-w-0 flex-1 justify-center lg:flex">
+          <DocsSearch items={docsSearchItems} />
+        </div>
         <div className="flex items-center gap-2">
           <Link
             href="/components/button"
@@ -108,15 +112,19 @@ function TableOfContents({ headings }: { headings: DocsHeading[] }) {
         On this page
       </h2>
       <nav className="mt-3 grid gap-2" aria-label="Table of contents">
-        {headings.map((heading) => (
-          <a
-            key={heading.id}
-            href={`#${heading.id}`}
-            className="text-sm text-text-secondary hover:text-text-heading"
-          >
-            {heading.title}
-          </a>
-        ))}
+        {headings.length > 0 ? (
+          headings.map((heading) => (
+            <a
+              key={heading.id}
+              href={`#${heading.id}`}
+              className="border-l border-border-subtle pl-3 text-sm text-text-secondary hover:border-brand-primary hover:text-text-heading"
+            >
+              {heading.title}
+            </a>
+          ))
+        ) : (
+          <p className="text-sm text-text-muted">No page sections yet.</p>
+        )}
       </nav>
     </aside>
   );

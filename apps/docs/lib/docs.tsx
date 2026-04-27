@@ -902,6 +902,21 @@ export const docsPages: DocsPage[] = [
   },
 ];
 
+export const docsSearchItems = docsPages.map((page) => {
+  const href = `/${page.slug.join("/")}`;
+  const section =
+    docsNavSections.find((navSection) => navSection.items.some((item) => item.href === href))
+      ?.title ?? "Docs";
+
+  return {
+    title: page.title,
+    description: page.description,
+    href,
+    section,
+    headings: page.headings.map((heading) => heading.title),
+  };
+});
+
 export function getPageBySlug(slug: string[] = ["guide", "introduction"]) {
   return docsPages.find((page) => page.slug.join("/") === slug.join("/"));
 }

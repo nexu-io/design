@@ -2,19 +2,35 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { MobileDocsSearch, type DocsSearchItem } from "./docs-search";
 import type { DocsNavSection } from "../lib/docs";
 
 interface MobileSidebarProps {
   sections: DocsNavSection[];
+  searchItems: DocsSearchItem[];
 }
 
-export function MobileSidebar({ sections }: MobileSidebarProps) {
+export function MobileSidebar({ sections, searchItems }: MobileSidebarProps) {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const currentItem = sections
+    .flatMap((section) => section.items)
+    .find((item) => item.href === pathname);
 
   return (
-    <details className="group border-b border-border-subtle bg-surface-1/95 px-4 py-3 lg:hidden">
+    <details
+      className="group border-b border-border-subtle bg-surface-1/95 px-4 py-3 shadow-rest lg:hidden"
+      open={open}
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+    >
       <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-semibold text-text-heading">
-        Browse docs
+        <span>
+          Browse docs
+          {currentItem ? (
+            <span className="ml-2 font-normal text-text-muted">/ {currentItem.title}</span>
+          ) : null}
+        </span>
         <span
           className="text-text-muted transition-transform group-open:rotate-180"
           aria-hidden="true"
@@ -23,6 +39,7 @@ export function MobileSidebar({ sections }: MobileSidebarProps) {
         </span>
       </summary>
       <nav className="mt-3 grid gap-4" aria-label="Mobile documentation navigation">
+        <MobileDocsSearch items={searchItems} onNavigate={() => setOpen(false)} />
         {sections.map((section) => (
           <div key={section.title}>
             <p className="px-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
@@ -36,6 +53,7 @@ export function MobileSidebar({ sections }: MobileSidebarProps) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={() => setOpen(false)}
                     className={
                       isActive
                         ? "rounded-md bg-surface-3 px-2 py-2 text-sm font-semibold text-text-heading"
