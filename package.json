@@ -35,6 +35,7 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "biome:check": "biome check .",
+    "check:docs": "pnpm check:docs-metadata && pnpm docs:typecheck && pnpm docs:build",
     "check:docs-metadata": "node ./scripts/check-docs-metadata.mjs",
     "check:interactive-typography": "node ./scripts/check-interactive-typography.mjs",
     "check:publishable-packages": "node ./scripts/check-publishable-packages.mjs",
