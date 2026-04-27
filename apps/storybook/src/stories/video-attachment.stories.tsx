@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { VideoAttachment } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/VideoAttachment",
   component: VideoAttachment,
@@ -15,8 +17,9 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Video attachment card with play-overlay thumbnail and a single-line footer for title and optional meta.",
+        component: `Video attachment card with play-overlay thumbnail and a single-line footer for title and optional meta.
+
+${docsDescription("/components/video-attachment")}`,
       },
     },
   },

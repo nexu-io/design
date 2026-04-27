@@ -1,12 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { Bell, Home, Sparkles } from "lucide-react";
 
 import { NavItem } from "@nexu-design/ui-web";
+
+import { docsDescription } from "../storybook/docs-links";
 
 const meta = {
   title: "Primitives/NavItem",
   component: NavItem,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/nav-item"),
+      },
+    },
+  },
 } satisfies Meta<typeof NavItem>;
 
 export default meta;

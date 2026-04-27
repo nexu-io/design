@@ -2,10 +2,19 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Button, EmptyState } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Patterns/EmptyState",
   component: EmptyState,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/patterns/empty-state"),
+      },
+    },
+  },
   args: {
     title: "Empty",
   },

@@ -8,6 +8,8 @@ import {
   ComboboxTrigger,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const pickerItems: Array<{
   keywords: string[];
   label: string;
@@ -58,8 +60,9 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Searchable value picker with type-ahead filtering. Defaults are tuned to match Select readability: 13px input/item text, ~36px option rows, and 16px affordance icons. For simple closed lists use **Select**; for action menus use **DropdownMenu**.",
+        component: `Searchable value picker with type-ahead filtering. Defaults are tuned to match Select readability: 13px input/item text, ~36px option rows, and 16px affordance icons. For simple closed lists use **Select**; for action menus use **DropdownMenu**.
+
+${docsDescription("/components/combobox")}`,
       },
     },
   },

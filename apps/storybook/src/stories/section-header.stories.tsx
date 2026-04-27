@@ -2,10 +2,19 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Button, SectionHeader } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Patterns/SectionHeader",
   component: SectionHeader,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/patterns/section-header"),
+      },
+    },
+  },
   args: {
     title: "Recent activity",
   },

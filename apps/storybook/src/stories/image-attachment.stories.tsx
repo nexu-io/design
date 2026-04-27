@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { ImageAttachment } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/ImageAttachment",
   component: ImageAttachment,
@@ -15,8 +17,9 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Inline image attachment with fixed dimensions and an optional caption. Pass `onSelect` to make the image keyboard-activatable (opens a lightbox in the host app).",
+        component: `Inline image attachment with fixed dimensions and an optional caption. Pass \`onSelect\` to make the image keyboard-activatable (opens a lightbox in the host app).
+
+${docsDescription("/components/image-attachment")}`,
       },
     },
   },

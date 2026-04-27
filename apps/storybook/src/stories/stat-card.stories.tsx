@@ -1,12 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { Activity, CreditCard, ShieldCheck, TriangleAlert } from "lucide-react";
 
 import { StatCard } from "@nexu-design/ui-web";
+
+import { docsDescription } from "../storybook/docs-links";
 
 const meta = {
   title: "Primitives/StatCard",
   component: StatCard,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/stat-card"),
+      },
+    },
+  },
   args: {
     label: "Monthly credits",
     value: "128,400",

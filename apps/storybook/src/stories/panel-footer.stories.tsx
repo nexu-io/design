@@ -2,10 +2,19 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Button, PanelFooter, PanelFooterActions, PanelFooterMeta } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/PanelFooter",
   component: PanelFooter,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/panel-footer"),
+      },
+    },
+  },
 } satisfies Meta<typeof PanelFooter>;
 
 export default meta;

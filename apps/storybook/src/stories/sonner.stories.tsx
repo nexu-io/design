@@ -1,12 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { toast } from "sonner";
 
 import { Button, Toaster } from "@nexu-design/ui-web";
+
+import { docsDescription } from "../storybook/docs-links";
 
 const meta = {
   title: "Primitives/Sonner",
   component: Toaster,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/sonner"),
+      },
+    },
+  },
 } satisfies Meta<typeof Toaster>;
 
 export default meta;

@@ -2,10 +2,19 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Button, PageHeader } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Patterns/PageHeader",
   component: PageHeader,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/patterns/page-header"),
+      },
+    },
+  },
   args: {
     title: "Page",
   },

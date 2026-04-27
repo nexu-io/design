@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { Bold, Italic, Pin, Underline } from "lucide-react";
 
 import { Toggle, ToggleGroup, ToggleGroupItem } from "@nexu-design/ui-web";
+
+import { docsDescription } from "../storybook/docs-links";
 
 const meta = {
   title: "Primitives/Toggle",
@@ -10,8 +13,9 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Single on/off toggle button (e.g. bold, pin). For switching between views use **Tabs**; for segmented filters use **Segmented**.",
+        component: `Single on/off toggle button (e.g. bold, pin). For switching between views use **Tabs**; for segmented filters use **Segmented**.
+
+${docsDescription("/components/toggle")}`,
       },
     },
   },

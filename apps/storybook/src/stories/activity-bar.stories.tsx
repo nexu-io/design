@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { Bell, CreditCard, LayoutGrid, MessageSquare, Settings } from "lucide-react";
 
 import {
@@ -11,10 +12,19 @@ import {
   Button,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Reserved/ActivityBar",
   component: ActivityBar,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/activity-bar"),
+      },
+    },
+  },
 } satisfies Meta<typeof ActivityBar>;
 
 export default meta;

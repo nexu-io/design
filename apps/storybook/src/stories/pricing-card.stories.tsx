@@ -2,10 +2,19 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Button, PricingCard } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/PricingCard",
   component: PricingCard,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/pricing-card"),
+      },
+    },
+  },
 } satisfies Meta<typeof PricingCard>;
 
 export default meta;

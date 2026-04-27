@@ -2,9 +2,18 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { TagGroup, TagGroupItem } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/TagGroup",
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/tag-group"),
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

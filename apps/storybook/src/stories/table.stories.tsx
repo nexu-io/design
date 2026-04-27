@@ -12,10 +12,19 @@ import {
   TableRow,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Table",
   component: Table,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/table"),
+      },
+    },
+  },
 } satisfies Meta<typeof Table>;
 
 export default meta;

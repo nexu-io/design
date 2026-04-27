@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { FileAttachment } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/FileAttachment",
   component: FileAttachment,
@@ -13,8 +15,9 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Compact attachment row for files shared inside messages or feeds. Icon tile colors track the `kind` prop; consumers control click (open) and can override the trailing slot.",
+        component: `Compact attachment row for files shared inside messages or feeds. Icon tile colors track the \`kind\` prop; consumers control click (open) and can override the trailing slot.
+
+${docsDescription("/components/file-attachment")}`,
       },
     },
   },

@@ -2,9 +2,18 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Collapsible",
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/collapsible"),
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

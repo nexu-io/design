@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import {
   ChevronUp,
   CircleHelp,
@@ -24,6 +25,8 @@ import {
   SidebarHeader,
   StatusDot,
 } from "@nexu-design/ui-web";
+
+import { docsDescription } from "../storybook/docs-links";
 
 const meta = {
   title: "Primitives/Sidebar",
@@ -194,6 +197,7 @@ export const SessionListPattern: Story = {
   parameters: {
     docs: {
       description: {
+        component: docsDescription("/components/sidebar"),
         story:
           "Recommended dense sidebar/session item: leading logo, stronger title, muted subtitle/meta, and a trailing StatusDot instead of a redundant Live pill.",
       },

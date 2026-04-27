@@ -9,10 +9,19 @@ import {
   FilterPillsList,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Patterns/FilterPills",
   component: FilterPills,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/patterns/filter-pills"),
+      },
+    },
+  },
 } satisfies Meta<typeof FilterPills>;
 
 export default meta;

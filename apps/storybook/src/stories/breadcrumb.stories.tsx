@@ -9,9 +9,18 @@ import {
   BreadcrumbSeparator,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Breadcrumb",
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/breadcrumb"),
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

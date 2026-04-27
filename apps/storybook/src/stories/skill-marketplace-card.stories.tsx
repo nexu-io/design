@@ -1,12 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { Bot, Code, FileSearch, Globe, MessageSquare, PenTool } from "lucide-react";
 
 import { Button, SkillMarketplaceCard } from "@nexu-design/ui-web";
+
+import { docsDescription } from "../storybook/docs-links";
 
 const meta = {
   title: "Patterns/SkillMarketplaceCard",
   component: SkillMarketplaceCard,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/patterns/skill-marketplace-card"),
+      },
+    },
+  },
   args: {
     name: "Web Search",
     description: "Search the web for real-time information and return summarized results.",

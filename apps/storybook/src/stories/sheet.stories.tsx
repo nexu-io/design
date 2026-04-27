@@ -12,6 +12,8 @@ import {
   SheetTrigger,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Sheet",
   component: Sheet,
@@ -19,8 +21,9 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Slide-over panel from a screen edge for settings, detail views, or secondary workflows. For centered modals use **Dialog**.",
+        component: `Slide-over panel from a screen edge for settings, detail views, or secondary workflows. For centered modals use **Dialog**.
+
+${docsDescription("/components/sheet")}`,
       },
     },
   },

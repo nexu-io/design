@@ -11,11 +11,18 @@ import {
   ThemeRoot,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/ThemeRoot",
   component: ThemeRoot,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/theme-root"),
+      },
+    },
     layout: "fullscreen",
   },
 } satisfies Meta<typeof ThemeRoot>;
