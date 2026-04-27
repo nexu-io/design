@@ -1,6 +1,10 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { CodeBlock } from "../components/code-block";
+import { ComponentPreview } from "../components/component-preview";
+import { StorybookLink } from "../components/storybook-link";
+
 export interface DocsNavItem {
   title: string;
   href: string;
@@ -137,7 +141,23 @@ export const docsPages: DocsPage[] = [
     headings: shellHeadings,
     content: <InitialShellContent />,
   })),
-  ...["button", "input", "card", "badge"].map((name) => ({
+  {
+    title: "Button",
+    description: "Trigger an action, submit a form, or navigate with a clear affordance.",
+    slug: ["components", "button"],
+    headings: [
+      { id: "overview", title: "Overview" },
+      { id: "import", title: "Import" },
+      { id: "basic-usage", title: "Basic usage" },
+      { id: "variants", title: "Variants" },
+      { id: "states", title: "States" },
+      { id: "accessibility", title: "Accessibility" },
+      { id: "props", title: "Props" },
+      { id: "storybook", title: "Storybook" },
+    ],
+    content: <ButtonDocsContent />,
+  },
+  ...["input", "card", "badge"].map((name) => ({
     title: toTitle(name),
     description: `Initial ${toTitle(name)} component page scaffold for the docs shell.`,
     slug: ["components", name],
@@ -194,6 +214,139 @@ function InitialShellContent() {
         component documentation.
       </p>
     </>
+  );
+}
+
+const buttonImportSnippet = "import { Button } from '@nexu-design/ui-web';";
+
+const buttonProps = [
+  {
+    name: "variant",
+    type: "'default' | 'brand' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'soft' | 'destructive' | 'link'",
+    defaultValue: "'default'",
+    description: "Visual style and emphasis level for the action.",
+  },
+  {
+    name: "size",
+    type: "'xs' | 'sm' | 'md' | 'lg' | 'inline' | 'icon' | 'icon-sm'",
+    defaultValue: "'md'",
+    description: "Control height, padding, and type scale preset.",
+  },
+  {
+    name: "loading",
+    type: "boolean",
+    defaultValue: "false",
+    description: "Shows a spinner and disables native button interaction while work is pending.",
+  },
+  {
+    name: "disabled",
+    type: "boolean",
+    defaultValue: "false",
+    description: "Disables the button for unavailable actions.",
+  },
+  {
+    name: "leadingIcon",
+    type: "ReactNode",
+    defaultValue: "—",
+    description: "Icon before the label, reserved for identity or verb meaning.",
+  },
+  {
+    name: "trailingIcon",
+    type: "ReactNode",
+    defaultValue: "—",
+    description: "Icon after the label, reserved for direction or outcome.",
+  },
+  {
+    name: "asChild",
+    type: "boolean",
+    defaultValue: "false",
+    description: "Renders through Radix Slot for link-like or custom element composition.",
+  },
+];
+
+function ButtonDocsContent() {
+  return (
+    <>
+      <h2 id="overview">Overview</h2>
+      <p>
+        Use <code>Button</code> for explicit user actions: saving changes, starting flows,
+        confirming destructive work, or linking to a next destination when the action needs button
+        affordance. Button renders a native <code>button</code> by default and supports variants,
+        sizes, icons, loading, disabled state, and <code>asChild</code> composition.
+      </p>
+      <h2 id="import">Import</h2>
+      <CodeBlock code={buttonImportSnippet} title="Import" />
+      <h2 id="basic-usage">Basic usage</h2>
+      <ComponentPreview id="button/basic" />
+      <h2 id="variants">Variants</h2>
+      <p>
+        Choose one high-emphasis action per group, then use outline, ghost, or secondary variants
+        for supporting actions. Reserve destructive for irreversible work.
+      </p>
+      <ComponentPreview id="button/variants" />
+      <h2 id="states">States</h2>
+      <p>
+        Pair <code>loading</code> with async work so users cannot submit twice. Use disabled for
+        unavailable actions and explain the prerequisite nearby when it is not obvious.
+      </p>
+      <ComponentPreview id="button/loading" />
+      <h2 id="accessibility">Accessibility</h2>
+      <ul>
+        <li>Renders a native button by default, preserving keyboard and form behavior.</li>
+        <li>
+          Loading native buttons are disabled to prevent duplicate submission while keeping the
+          visible label in place.
+        </li>
+        <li>
+          Icon-only buttons must include an accessible label with <code>aria-label</code>.
+        </li>
+        <li>
+          When using <code>asChild</code> for links, keep the child element accessible and avoid
+          presenting disabled links as interactive controls.
+        </li>
+      </ul>
+      <h2 id="props">Props</h2>
+      <p>
+        Button also accepts native <code>button</code> HTML attributes such as <code>type</code>,
+        <code> onClick</code>, and <code>aria-*</code> props.
+      </p>
+      <ButtonPropsTable />
+      <h2 id="storybook">Storybook</h2>
+      <StorybookLink component="button" />
+    </>
+  );
+}
+
+function ButtonPropsTable() {
+  return (
+    <div className="not-prose my-6 overflow-x-auto rounded-xl border border-border-subtle bg-card shadow-rest">
+      <table className="min-w-full border-collapse text-left text-sm">
+        <thead className="bg-surface-2 text-xs uppercase tracking-wider text-text-muted">
+          <tr>
+            <th className="px-4 py-3 font-semibold">Prop</th>
+            <th className="px-4 py-3 font-semibold">Type</th>
+            <th className="px-4 py-3 font-semibold">Default</th>
+            <th className="px-4 py-3 font-semibold">Description</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border-subtle">
+          {buttonProps.map((prop) => (
+            <tr key={prop.name}>
+              <td className="px-4 py-3 align-top font-mono text-xs text-text-heading">
+                {prop.name}
+              </td>
+              <td className="max-w-xs px-4 py-3 align-top font-mono text-xs leading-5 text-text-secondary">
+                {prop.type}
+              </td>
+              <td className="px-4 py-3 align-top font-mono text-xs text-text-secondary">
+                {prop.defaultValue}
+              </td>
+              <td className="px-4 py-3 align-top text-text-secondary">{prop.description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

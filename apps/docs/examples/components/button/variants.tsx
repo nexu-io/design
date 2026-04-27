@@ -1,4 +1,4 @@
-import { Button } from "@nexu-design/ui-web";
+import { Button } from "../../../../../packages/ui-web/src/primitives/button";
 
 export function ButtonVariantsExample() {
   return (

@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import path from "node:path";
 import type { ComponentType } from "react";
 
 import { ButtonBasicExample } from "../examples/components/button/basic";
@@ -64,5 +65,32 @@ function defineExample(definition: Omit<ExampleDefinition, "source">): ExampleDe
 }
 
 function readExampleSource(filePath: ExampleDefinition["filePath"]) {
-  return readFileSync(new URL(`../${filePath}`, import.meta.url), "utf8").trimEnd();
+  let source: string;
+
+  switch (filePath) {
+    case "examples/components/button/basic.tsx":
+      source = readFileSync(resolveExampleFile("examples/components/button/basic.tsx"), "utf8");
+      break;
+    case "examples/components/button/variants.tsx":
+      source = readFileSync(resolveExampleFile("examples/components/button/variants.tsx"), "utf8");
+      break;
+    case "examples/components/button/loading.tsx":
+      source = readFileSync(resolveExampleFile("examples/components/button/loading.tsx"), "utf8");
+      break;
+    default:
+      throw new Error(`Unknown example source path: ${filePath}`);
+  }
+
+  return source
+    .replace('"../../../../../packages/ui-web/src/primitives/button"', '"@nexu-design/ui-web"')
+    .trimEnd();
+}
+
+function resolveExampleFile(filePath: ExampleDefinition["filePath"]) {
+  const cwd = process.cwd();
+  const docsRoot = cwd.endsWith(`${path.sep}apps${path.sep}docs`)
+    ? cwd
+    : path.join(cwd, "apps", "docs");
+
+  return path.join(docsRoot, filePath);
 }
