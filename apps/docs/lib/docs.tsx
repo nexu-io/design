@@ -513,6 +513,265 @@ const componentDocDefinitions: ComponentDocDefinition[] = [
       },
     ],
   },
+  {
+    id: "tabs",
+    title: "Tabs",
+    description: "Organize related sections into keyboard-accessible tab panels.",
+    importSnippet:
+      "import { Tabs, TabsContent, TabsList, TabsTrigger } from '@nexu-design/ui-web';",
+    overview:
+      "Use Tabs when users need to switch between peer sections without navigating away from the current page. Tabs compose Radix Tabs with Nexu list, trigger, and content styling.",
+    usage:
+      "Keep tab labels short, choose stable values for each panel, and avoid hiding critical form steps behind tabs when users must complete them in order.",
+    examples: ["tabs/basic"],
+    accessibility: [
+      "Radix provides tablist, tab, and tabpanel semantics with keyboard navigation.",
+      "Give TabsList an accessible label when the tab set needs context beyond nearby headings.",
+      "Use disabled tabs only for unavailable sections, not as progress indicators without explanation.",
+    ],
+    inheritedProps: "Radix Tabs Root, List, Trigger, and Content props on corresponding exports.",
+    props: [
+      {
+        name: "value",
+        type: "string",
+        defaultValue: "—",
+        description: "Controlled active tab value on Tabs.",
+      },
+      {
+        name: "defaultValue",
+        type: "string",
+        defaultValue: "—",
+        description: "Initial uncontrolled active tab value.",
+      },
+      {
+        name: "onValueChange",
+        type: "(value: string) => void",
+        defaultValue: "—",
+        description: "Called when users activate a different tab.",
+      },
+      {
+        name: "variant",
+        type: "'default' | 'compact'",
+        defaultValue: "'default'",
+        description: "Visual density on TabsList and TabsTrigger.",
+      },
+    ],
+  },
+  {
+    id: "tooltip",
+    title: "Tooltip",
+    description: "Reveal short supplemental hints on hover or keyboard focus.",
+    importSnippet:
+      "import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@nexu-design/ui-web';",
+    overview:
+      "Use Tooltip for concise, non-essential supporting information. It composes Radix Tooltip with portal rendering, a small elevated surface, and arrow treatment.",
+    usage:
+      "Wrap related tooltips in TooltipProvider, keep copy brief, and do not put required instructions or interactive content inside a tooltip.",
+    examples: ["tooltip/basic"],
+    accessibility: [
+      "Radix opens tooltips from hover and focus and connects trigger/content semantics.",
+      "Tooltip content should supplement, not replace, visible labels or error messages.",
+      "Use Popover or Dialog instead when content is interactive or longer than a short hint.",
+    ],
+    inheritedProps: "Radix Tooltip Provider, Root, Trigger, and Content props.",
+    props: [
+      {
+        name: "delayDuration",
+        type: "number",
+        defaultValue: "Radix default",
+        description: "Delay before opening when set on TooltipProvider or Tooltip.",
+      },
+      {
+        name: "open",
+        type: "boolean",
+        defaultValue: "—",
+        description: "Controlled open state on Tooltip.",
+      },
+      {
+        name: "sideOffset",
+        type: "number",
+        defaultValue: "8",
+        description: "Distance between trigger and TooltipContent.",
+      },
+    ],
+  },
+  {
+    id: "popover",
+    title: "Popover",
+    description: "Show contextual content in an anchored floating panel.",
+    importSnippet:
+      "import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from '@nexu-design/ui-web';",
+    overview:
+      "Use Popover for lightweight contextual panels such as summaries, filters, or small pickers that should remain anchored to a trigger.",
+    usage:
+      "Prefer Popover for short contextual content, Dialog for modal workflows, and DropdownMenu for menu actions.",
+    examples: ["popover/basic"],
+    accessibility: [
+      "Radix handles trigger association, portal rendering, dismissal, and focus behavior.",
+      "Keep popover content concise and provide a labelled trigger that describes what opens.",
+      "Do not use Popover for critical blocking workflows that need modal focus trapping.",
+    ],
+    inheritedProps: "Radix Popover Root, Anchor, Trigger, and Content props.",
+    props: [
+      {
+        name: "open",
+        type: "boolean",
+        defaultValue: "—",
+        description: "Controlled open state on Popover.",
+      },
+      {
+        name: "defaultOpen",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Initial uncontrolled open state.",
+      },
+      {
+        name: "align",
+        type: "'start' | 'center' | 'end'",
+        defaultValue: "'center'",
+        description: "Horizontal alignment for PopoverContent.",
+      },
+      {
+        name: "sideOffset",
+        type: "number",
+        defaultValue: "4",
+        description: "Distance between trigger and PopoverContent.",
+      },
+    ],
+  },
+  {
+    id: "dropdown-menu",
+    title: "DropdownMenu",
+    description: "Present a compact menu of actions, grouped options, or submenus.",
+    importSnippet:
+      "import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@nexu-design/ui-web';",
+    overview:
+      "Use DropdownMenu for action menus and menu-like choices attached to a trigger. It composes Radix Dropdown Menu with styled items, labels, separators, shortcuts, checkbox items, radio items, and submenus.",
+    usage:
+      "Use menu items for commands, Select for choosing one value in a form, and visible buttons for primary actions that should not be hidden.",
+    examples: ["dropdown-menu/basic"],
+    accessibility: [
+      "Radix provides menu roles, roving focus, typeahead, submenus, and keyboard dismissal.",
+      "Label the trigger clearly and keep destructive menu items explicit in text, not only color.",
+      "Use disabled menu items for temporarily unavailable actions when the context remains useful.",
+    ],
+    inheritedProps:
+      "Radix Dropdown Menu Root, Trigger, Content, Item, CheckboxItem, RadioItem, and submenu props.",
+    props: [
+      {
+        name: "open",
+        type: "boolean",
+        defaultValue: "—",
+        description: "Controlled open state on DropdownMenu.",
+      },
+      {
+        name: "modal",
+        type: "boolean",
+        defaultValue: "true",
+        description: "Whether menu interaction is modal while open.",
+      },
+      {
+        name: "sideOffset",
+        type: "number",
+        defaultValue: "4",
+        description: "Distance between trigger and DropdownMenuContent.",
+      },
+      {
+        name: "inset",
+        type: "boolean",
+        defaultValue: "false",
+        description:
+          "Adds leading indentation on labels, items, and submenu triggers that support it.",
+      },
+    ],
+  },
+  {
+    id: "alert",
+    title: "Alert",
+    description: "Communicate contextual status with semantic emphasis and recovery guidance.",
+    importSnippet: "import { Alert, AlertDescription, AlertTitle } from '@nexu-design/ui-web';",
+    overview:
+      "Use Alert for inline messages that need attention: warnings, errors, success states, or information tied to the surrounding content.",
+    usage:
+      "Choose a variant that matches the message severity and include clear text so status is not communicated by color alone.",
+    examples: ["alert/basic"],
+    accessibility: [
+      "Alert renders role=alert so assistive technology can announce important status updates.",
+      "Use AlertTitle for a concise summary and AlertDescription for actionable recovery details.",
+      "Avoid overusing alerts for decorative callouts; reserve live announcements for meaningful changes.",
+    ],
+    inheritedProps: "Div attributes on Alert and slot-specific heading/div attributes.",
+    props: [
+      {
+        name: "variant",
+        type: "'default' | 'info' | 'success' | 'warning' | 'destructive'",
+        defaultValue: "'default'",
+        description: "Semantic color and border treatment for the message.",
+      },
+      {
+        name: "className",
+        type: "string",
+        defaultValue: "—",
+        description: "Additional classes for the alert container or slots.",
+      },
+    ],
+  },
+  {
+    id: "spinner",
+    title: "Spinner",
+    description: "Indicate indeterminate loading with a compact animated icon.",
+    importSnippet: "import { Spinner } from '@nexu-design/ui-web';",
+    overview:
+      "Use Spinner for short indeterminate waits, inline async states, or background refresh. It renders a decorative loading icon sized by token-aligned presets.",
+    usage:
+      "Pair Spinner with visible loading copy or an aria-live region when users need to understand what is happening.",
+    examples: ["spinner/basic"],
+    accessibility: [
+      "Spinner is aria-hidden by default because the icon itself is decorative.",
+      "Provide adjacent text such as Loading or Syncing when the state needs to be announced visually.",
+      "Use Button loading for pending button actions instead of adding a separate spinner beside the same action.",
+    ],
+    inheritedProps: "SVG attributes such as className, data-*, and aria-* props.",
+    props: [
+      {
+        name: "size",
+        type: "'sm' | 'md' | 'lg'",
+        defaultValue: "'md'",
+        description: "Icon size preset.",
+      },
+      {
+        name: "className",
+        type: "string",
+        defaultValue: "—",
+        description: "Additional classes for color, spacing, or layout context.",
+      },
+    ],
+  },
+  {
+    id: "skeleton",
+    title: "Skeleton",
+    description: "Reserve layout space with animated loading placeholders.",
+    importSnippet: "import { Skeleton } from '@nexu-design/ui-web';",
+    overview:
+      "Use Skeleton to show the expected shape of content while data loads, reducing layout shift and making loading states feel intentional.",
+    usage:
+      "Match skeleton dimensions to the eventual content and keep the placeholder structure simpler than the final UI.",
+    examples: ["skeleton/basic"],
+    accessibility: [
+      "Skeleton renders a div and does not announce loading by itself.",
+      "Use nearby loading copy, aria-busy, or live-region status when users need assistive feedback.",
+      "Do not leave skeletons on screen after content has loaded or when an error requires recovery copy.",
+    ],
+    inheritedProps: "Div attributes such as className, style, data-*, and aria-* props.",
+    props: [
+      {
+        name: "className",
+        type: "string",
+        defaultValue: "—",
+        description: "Controls placeholder size, radius overrides, and layout placement.",
+      },
+    ],
+  },
 ];
 
 export const docsPages: DocsPage[] = [

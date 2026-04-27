@@ -12,6 +12,13 @@ export const exampleIds = [
   "switch/basic",
   "select/basic",
   "dialog/basic",
+  "tabs/basic",
+  "tooltip/basic",
+  "popover/basic",
+  "dropdown-menu/basic",
+  "alert/basic",
+  "spinner/basic",
+  "skeleton/basic",
 ] as const;
 
 export type ExampleId = (typeof exampleIds)[number];
@@ -97,6 +104,55 @@ export const examples = {
     description: "Compose Dialog with trigger, labelled content, body, and footer actions.",
     category: "components",
     filePath: "examples/components/dialog/basic.tsx",
+  }),
+  "tabs/basic": defineExample({
+    id: "tabs/basic",
+    title: "Basic usage",
+    description: "Use Tabs to switch between related panels without leaving the page.",
+    category: "components",
+    filePath: "examples/components/tabs/basic.tsx",
+  }),
+  "tooltip/basic": defineExample({
+    id: "tooltip/basic",
+    title: "Basic usage",
+    description: "Use Tooltip for brief, non-essential hints on focus or hover.",
+    category: "components",
+    filePath: "examples/components/tooltip/basic.tsx",
+  }),
+  "popover/basic": defineExample({
+    id: "popover/basic",
+    title: "Basic usage",
+    description: "Use Popover for lightweight contextual content anchored to a trigger.",
+    category: "components",
+    filePath: "examples/components/popover/basic.tsx",
+  }),
+  "dropdown-menu/basic": defineExample({
+    id: "dropdown-menu/basic",
+    title: "Basic usage",
+    description: "Use DropdownMenu for compact action lists and menu-style choices.",
+    category: "components",
+    filePath: "examples/components/dropdown-menu/basic.tsx",
+  }),
+  "alert/basic": defineExample({
+    id: "alert/basic",
+    title: "Basic usage",
+    description: "Use Alert to surface contextual status or recovery guidance.",
+    category: "components",
+    filePath: "examples/components/alert/basic.tsx",
+  }),
+  "spinner/basic": defineExample({
+    id: "spinner/basic",
+    title: "Basic usage",
+    description: "Use Spinner to show indeterminate background or inline loading.",
+    category: "components",
+    filePath: "examples/components/spinner/basic.tsx",
+  }),
+  "skeleton/basic": defineExample({
+    id: "skeleton/basic",
+    title: "Basic usage",
+    description: "Use Skeleton to reserve space while content loads.",
+    category: "components",
+    filePath: "examples/components/skeleton/basic.tsx",
   }),
 } satisfies Record<ExampleId, ExampleDefinition>;
 

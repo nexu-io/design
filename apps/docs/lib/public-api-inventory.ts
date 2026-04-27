@@ -51,6 +51,7 @@ interface PublicApiInventoryInput {
 const uiWebPackage = "@nexu-design/ui-web" satisfies PublicApiPackage;
 
 const documentedDocsIds = new Set([
+  "alert",
   "button",
   "input",
   "card",
@@ -59,6 +60,12 @@ const documentedDocsIds = new Set([
   "switch",
   "select",
   "dialog",
+  "tabs",
+  "tooltip",
+  "popover",
+  "dropdown-menu",
+  "spinner",
+  "skeleton",
 ]);
 const provisionalPropsIds = documentedDocsIds;
 
@@ -126,6 +133,7 @@ export const publicApiInventory = [
     name: "Alert",
     exports: ["Alert", "AlertDescription", "AlertTitle"],
     storybookSlug: "alert",
+    examples: ["alert/basic"],
   }),
   definePrimitive({
     id: "avatar",
@@ -250,6 +258,7 @@ export const publicApiInventory = [
     name: "DropdownMenu",
     exports: ["DropdownMenu", "DropdownMenuContent", "DropdownMenuItem", "DropdownMenuTrigger"],
     storybookSlug: "dropdownmenu",
+    examples: ["dropdown-menu/basic"],
   }),
   definePrimitive({
     id: "entity-card",
@@ -352,6 +361,7 @@ export const publicApiInventory = [
     name: "Popover",
     exports: ["Popover", "PopoverAnchor", "PopoverContent", "PopoverTrigger"],
     storybookSlug: "popover",
+    examples: ["popover/basic"],
   }),
   definePrimitive({
     id: "pricing-card",
@@ -417,6 +427,7 @@ export const publicApiInventory = [
     name: "Skeleton",
     exports: ["Skeleton"],
     storybookSlug: "skeleton",
+    examples: ["skeleton/basic"],
   }),
   definePrimitive({
     id: "sonner",
@@ -430,6 +441,7 @@ export const publicApiInventory = [
     name: "Spinner",
     exports: ["Spinner"],
     storybookSlug: "spinner",
+    examples: ["spinner/basic"],
   }),
   definePrimitive({
     id: "split-view",
@@ -484,6 +496,7 @@ export const publicApiInventory = [
     name: "Tabs",
     exports: ["Tabs", "TabsContent", "TabsList", "TabsTrigger"],
     storybookSlug: "tabs",
+    examples: ["tabs/basic"],
   }),
   definePrimitive({
     id: "tag-group",
@@ -527,6 +540,7 @@ export const publicApiInventory = [
     name: "Tooltip",
     exports: ["Tooltip", "TooltipContent", "TooltipProvider", "TooltipTrigger"],
     storybookSlug: "tooltip",
+    examples: ["tooltip/basic"],
   }),
   definePrimitive({
     id: "video-attachment",
