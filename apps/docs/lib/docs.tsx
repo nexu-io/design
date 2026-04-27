@@ -1,5 +1,25 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import {
+  accentVariantTokens,
+  borderTokens,
+  darkSurfaceTokens,
+  fontSizeTokens,
+  fontWeightTokens,
+  motionTokens,
+  radiusTokens,
+  semanticColorTokens,
+  shadowTokens,
+  spacingTokens,
+  surfaceTokens,
+  textLevelTokens,
+  textStyleTokens,
+  themeVariables,
+  typographyTokens,
+  type FontSizeToken,
+  type TextStyleDefinition,
+  type TokenDefinition,
+} from "@nexu-design/tokens";
 
 import { CodeBlock } from "../components/code-block";
 import { ComponentPreview } from "../components/component-preview";
@@ -35,6 +55,10 @@ export interface DocsPage {
   content: ReactNode;
 }
 
+type FoundationToken = Omit<TokenDefinition, "value"> & {
+  value: string | number;
+};
+
 export const docsNavSections: DocsNavSection[] = docsNavigationSections.map((section) => ({
   title: section.title,
   items: section.items.map(({ title, href }) => ({ title, href })),
@@ -50,6 +74,59 @@ const guideHeadings: DocsHeading[] = [
   { id: "summary", title: "Summary" },
   { id: "consumer-guidance", title: "Consumer guidance" },
   { id: "source-documents", title: "Source documents" },
+];
+
+const foundationHeadings: DocsHeading[] = [
+  { id: "overview", title: "Overview" },
+  { id: "tokens", title: "Tokens" },
+  { id: "usage", title: "Usage" },
+  { id: "source", title: "Source" },
+];
+
+const foundationPages: DocsPage[] = [
+  {
+    title: "Colors",
+    description: "Semantic color, surface, border, text, dark-surface, and accent variables.",
+    slug: ["foundations", "colors"],
+    headings: foundationHeadings,
+    content: <ColorsFoundationContent />,
+  },
+  {
+    title: "Typography",
+    description:
+      "Font families, type scale, weights, and text-style recipes from token source data.",
+    slug: ["foundations", "typography"],
+    headings: foundationHeadings,
+    content: <TypographyFoundationContent />,
+  },
+  {
+    title: "Spacing",
+    description: "The base spacing unit and named spacing steps used for layout rhythm.",
+    slug: ["foundations", "spacing"],
+    headings: foundationHeadings,
+    content: <SpacingFoundationContent />,
+  },
+  {
+    title: "Radius",
+    description: "Corner-radius variables for controls, cards, overlays, and pill shapes.",
+    slug: ["foundations", "radius"],
+    headings: foundationHeadings,
+    content: <RadiusFoundationContent />,
+  },
+  {
+    title: "Shadow",
+    description: "Elevation variables for cards, focus, dropdowns, overlays, and hover lift.",
+    slug: ["foundations", "shadow"],
+    headings: foundationHeadings,
+    content: <ShadowFoundationContent />,
+  },
+  {
+    title: "Motion",
+    description: "Shared duration and easing variables for consistent UI transitions.",
+    slug: ["foundations", "motion"],
+    headings: foundationHeadings,
+    content: <MotionFoundationContent />,
+  },
 ];
 
 export const docsPages: DocsPage[] = [
@@ -137,13 +214,7 @@ export const docsPages: DocsPage[] = [
     headings: guideHeadings,
     content: <LocalConsumptionGuideContent />,
   },
-  ...["colors", "typography", "spacing", "radius", "shadow", "motion"].map((name) => ({
-    title: toTitle(name),
-    description: `Initial ${name} foundation page scaffold backed by shared tokens.`,
-    slug: ["foundations", name],
-    headings: shellHeadings,
-    content: <InitialShellContent />,
-  })),
+  ...foundationPages,
   {
     title: "Button",
     description: "Trigger an action, submit a form, or navigate with a clear affordance.",
@@ -478,6 +549,346 @@ function GuideSourceLinks({ sources }: { sources: string[] }) {
       ))}
     </ul>
   );
+}
+
+function ColorsFoundationContent() {
+  const colorGroups = [
+    { title: "Semantic", tokens: semanticColorTokens },
+    { title: "Surface", tokens: surfaceTokens },
+    { title: "Border", tokens: borderTokens },
+    { title: "Text", tokens: textLevelTokens },
+    { title: "Dark surfaces", tokens: darkSurfaceTokens },
+    { title: "Accent variants", tokens: accentVariantTokens },
+  ];
+  const allColorTokens = colorGroups.flatMap((group) => group.tokens);
+
+  return (
+    <FoundationPageIntro
+      title="Color tokens"
+      description="Use semantic variables instead of fixed hex values so components inherit light, dark, and brand presets. Primitive HSL tokens such as --primary are wrapped with hsl(var(...)); derived --color-* tokens can be used directly."
+      usage="Use role-based choices first: surfaces for containers, text levels for hierarchy, borders for separation, semantic colors for state, and accent variables for brand emphasis."
+      tokens={allColorTokens}
+    >
+      <h2 id="tokens">Tokens</h2>
+      {colorGroups.map((group) => (
+        <TokenSection key={group.title} title={group.title} tokens={group.tokens} preview="color" />
+      ))}
+    </FoundationPageIntro>
+  );
+}
+
+function TypographyFoundationContent() {
+  return (
+    <FoundationPageIntro
+      title="Typography tokens"
+      description="Typography tokens define the font stacks, compact UI type scale, and supported weights used by Nexu components. Text-style recipes combine generated Tailwind utilities for common hierarchy roles."
+      usage="Use the documented text-size and weight variables through the package utilities; reserve script and heading families for intentional brand moments."
+      tokens={[...typographyTokens, ...fontSizeTokens, ...fontWeightTokens]}
+    >
+      <h2 id="tokens">Tokens</h2>
+      <TokenSection title="Font families" tokens={typographyTokens} preview="typography" />
+      <FontSizeTable tokens={fontSizeTokens} />
+      <TokenSection title="Weights" tokens={fontWeightTokens} preview="text" />
+      <TextStyleRecipes styles={textStyleTokens} />
+    </FoundationPageIntro>
+  );
+}
+
+function SpacingFoundationContent() {
+  return (
+    <FoundationPageIntro
+      title="Spacing tokens"
+      description="Spacing is based on a 4px unit exposed as --spacing. Source metadata documents the supported steps and their intended use while full generated spacing metadata is deferred to Phase 2."
+      usage="Prefer the named spacing steps for product layout rhythm; use smaller values for inline controls and larger values for sections or page regions."
+      tokens={spacingTokens}
+    >
+      <h2 id="tokens">Tokens</h2>
+      <TokenSection title="Spacing scale" tokens={spacingTokens} preview="spacing" />
+    </FoundationPageIntro>
+  );
+}
+
+function RadiusFoundationContent() {
+  return (
+    <FoundationPageIntro
+      title="Radius tokens"
+      description="Radius tokens set consistent corner geometry for compact controls, cards, panels, modals, hero surfaces, and pills."
+      usage="Match radius to component scale: md for default controls, lg/xl for cards and overlays, and pill only for badges or capsules."
+      tokens={radiusTokens}
+    >
+      <h2 id="tokens">Tokens</h2>
+      <TokenSection title="Radius scale" tokens={radiusTokens} preview="radius" />
+    </FoundationPageIntro>
+  );
+}
+
+function ShadowFoundationContent() {
+  return (
+    <FoundationPageIntro
+      title="Shadow tokens"
+      description="Shadow tokens create a restrained elevation scale for rest states, cards, dropdowns, focus rings, overlays, and interactive lift."
+      usage="Use the semantic shadows for intent: rest/card for static containers, dropdown/overlay for detached layers, focus for keyboard focus, and refine/elevated for hover or prominent panels."
+      tokens={shadowTokens}
+    >
+      <h2 id="tokens">Tokens</h2>
+      <TokenSection title="Elevation scale" tokens={shadowTokens} preview="shadow" />
+    </FoundationPageIntro>
+  );
+}
+
+function MotionFoundationContent() {
+  return (
+    <FoundationPageIntro
+      title="Motion tokens"
+      description="Motion tokens define the shared transition durations and easing curve for small UI affordances and default component state changes."
+      usage="Use fast for hover affordances, normal for default state transitions, and the standard easing curve for consistent acceleration."
+      tokens={motionTokens}
+    >
+      <h2 id="tokens">Tokens</h2>
+      <TokenSection title="Timing" tokens={motionTokens} preview="motion" />
+    </FoundationPageIntro>
+  );
+}
+
+function FoundationPageIntro({
+  title,
+  description,
+  usage,
+  tokens,
+  children,
+}: {
+  title: string;
+  description: string;
+  usage: string;
+  tokens: FoundationToken[];
+  children: ReactNode;
+}) {
+  return (
+    <>
+      <h2 id="overview">Overview</h2>
+      <p>{description}</p>
+      <div className="not-prose my-6 rounded-xl border border-border-subtle bg-card p-5 shadow-rest">
+        <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">
+          Source-backed Phase 1 page
+        </p>
+        <p className="mt-2 text-sm leading-6 text-text-secondary">
+          Token names, descriptions, and CSS variables come from
+          <code> packages/tokens/src/token-source.json</code>. Full shared metadata generation for
+          docs, APIs, and <code>llms</code> outputs is deferred to Phase 2.
+        </p>
+      </div>
+      {children}
+      <h2 id="usage">Usage</h2>
+      <p>{usage}</p>
+      <CodeBlock
+        code={cssVariablesSnippet(tokens)}
+        language="css"
+        title={`${title} CSS variables`}
+      />
+      <h2 id="source">Source</h2>
+      <GuideSourceLinks
+        sources={["packages/tokens/src/token-source.json", "packages/tokens/src/styles.css"]}
+      />
+    </>
+  );
+}
+
+function TokenSection({
+  title,
+  tokens,
+  preview,
+}: {
+  title: string;
+  tokens: FoundationToken[];
+  preview: "color" | "radius" | "shadow" | "spacing" | "motion" | "typography" | "text";
+}) {
+  return (
+    <section className="not-prose my-6">
+      <h3 className="mb-3 text-base font-semibold text-text-heading">{title}</h3>
+      <div className="overflow-hidden rounded-xl border border-border-subtle bg-card shadow-rest">
+        <table className="min-w-full border-collapse text-left text-sm">
+          <thead className="bg-surface-2 text-xs uppercase tracking-wider text-text-muted">
+            <tr>
+              <th className="px-4 py-3 font-semibold">Preview</th>
+              <th className="px-4 py-3 font-semibold">Token</th>
+              <th className="px-4 py-3 font-semibold">CSS variable</th>
+              <th className="px-4 py-3 font-semibold">Value</th>
+              <th className="px-4 py-3 font-semibold">Description</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border-subtle">
+            {tokens.map((token) => (
+              <tr key={token.cssVar}>
+                <td className="px-4 py-3 align-top">
+                  <TokenPreview token={token} kind={preview} />
+                </td>
+                <td className="px-4 py-3 align-top font-medium text-text-heading">{token.name}</td>
+                <td className="px-4 py-3 align-top font-mono text-xs text-text-secondary">
+                  {token.cssVar}
+                </td>
+                <td className="max-w-xs px-4 py-3 align-top font-mono text-xs leading-5 text-text-secondary">
+                  {tokenDisplayValue(token)}
+                </td>
+                <td className="px-4 py-3 align-top text-text-secondary">{token.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function TokenPreview({ token, kind }: { token: FoundationToken; kind: string }) {
+  if (kind === "color") {
+    return (
+      <div
+        className="h-10 w-16 rounded-lg border border-border-subtle shadow-xs"
+        style={{ background: colorPreviewValue(token) }}
+      />
+    );
+  }
+
+  if (kind === "radius") {
+    return (
+      <div
+        className="h-10 w-16 border border-brand-primary bg-brand-subtle"
+        style={{ borderRadius: `var(${token.cssVar})` }}
+      />
+    );
+  }
+
+  if (kind === "shadow") {
+    return (
+      <div
+        className="h-10 w-16 rounded-lg border border-border-subtle bg-card"
+        style={{ boxShadow: `var(${token.cssVar})` }}
+      />
+    );
+  }
+
+  if (kind === "spacing") {
+    return (
+      <div className="flex h-10 w-20 items-center rounded-lg bg-surface-2 px-2">
+        <div className="h-3 rounded-full bg-brand-primary" style={{ width: token.value }} />
+      </div>
+    );
+  }
+
+  if (kind === "motion") {
+    return <div className="h-3 w-16 rounded-full bg-brand-primary transition-all" />;
+  }
+
+  if (kind === "typography") {
+    return <span style={{ fontFamily: `var(${token.cssVar})` }}>Aa</span>;
+  }
+
+  return <span className="font-semibold text-text-heading">Aa</span>;
+}
+
+function FontSizeTable({ tokens }: { tokens: FontSizeToken[] }) {
+  return (
+    <section className="not-prose my-6">
+      <h3 className="mb-3 text-base font-semibold text-text-heading">Type scale</h3>
+      <div className="overflow-hidden rounded-xl border border-border-subtle bg-card shadow-rest">
+        <table className="min-w-full border-collapse text-left text-sm">
+          <thead className="bg-surface-2 text-xs uppercase tracking-wider text-text-muted">
+            <tr>
+              <th className="px-4 py-3 font-semibold">Preview</th>
+              <th className="px-4 py-3 font-semibold">Token</th>
+              <th className="px-4 py-3 font-semibold">CSS variable</th>
+              <th className="px-4 py-3 font-semibold">Size</th>
+              <th className="px-4 py-3 font-semibold">Line height</th>
+              <th className="px-4 py-3 font-semibold">Description</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border-subtle">
+            {tokens.map((token) => (
+              <tr key={token.cssVar}>
+                <td className="px-4 py-3 align-top">
+                  <span style={{ fontSize: `var(${token.cssVar})`, lineHeight: token.lineHeight }}>
+                    Aa
+                  </span>
+                </td>
+                <td className="px-4 py-3 align-top font-medium text-text-heading">{token.name}</td>
+                <td className="px-4 py-3 align-top font-mono text-xs text-text-secondary">
+                  {token.cssVar}
+                </td>
+                <td className="px-4 py-3 align-top font-mono text-xs text-text-secondary">
+                  {token.value} / {token.px}px
+                </td>
+                <td className="px-4 py-3 align-top font-mono text-xs text-text-secondary">
+                  {token.lineHeight}
+                </td>
+                <td className="px-4 py-3 align-top text-text-secondary">{token.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function TextStyleRecipes({ styles }: { styles: TextStyleDefinition[] }) {
+  return (
+    <section className="not-prose my-6">
+      <h3 className="mb-3 text-base font-semibold text-text-heading">Text-style recipes</h3>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {styles.map((style) => (
+          <div
+            key={style.name}
+            className="rounded-xl border border-border-subtle bg-card p-4 shadow-rest"
+          >
+            <p className={`${style.size} ${style.weight} ${style.leading} text-text-heading`}>
+              {style.name}
+            </p>
+            <p className="mt-2 text-sm leading-6 text-text-secondary">{style.description}</p>
+            <p className="mt-3 font-mono text-xs text-text-muted">
+              {style.size} {style.weight} {style.leading}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function cssVariablesSnippet(tokens: FoundationToken[]) {
+  const lines = tokens.flatMap((token) => {
+    const value = cssVariableValue(token);
+    const base = [`  ${token.cssVar}: ${value};`];
+
+    if (token.foreground) {
+      const cssVar = token.foreground.match(/var\((--[^)]+)\)/)?.[1];
+      if (cssVar) {
+        const foregroundVar = cssVar as `--${string}`;
+        base.push(
+          `  ${foregroundVar}: ${themeVariables.light[foregroundVar] ?? token.foreground};`,
+        );
+      }
+    }
+
+    return base;
+  });
+
+  return [":root {", ...lines, "}"].join("\n");
+}
+
+function cssVariableValue(token: FoundationToken) {
+  return themeVariables.light[token.cssVar] ?? String(token.value);
+}
+
+function tokenDisplayValue(token: FoundationToken) {
+  const value = cssVariableValue(token);
+  return token.foreground ? `${value} / fg ${token.foreground}` : value;
+}
+
+function colorPreviewValue(token: FoundationToken) {
+  const value = String(token.value);
+  if (value.startsWith("hsl(var(")) return value;
+  if (value.startsWith("var(")) return `var(${token.cssVar})`;
+  return value;
 }
 
 function ComponentReferenceContent() {
