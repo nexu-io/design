@@ -448,7 +448,6 @@ export const publicApiInventory = [
     name: "SplitView",
     status: "experimental",
     exports: ["ResizableHandle", "ResizablePanel", "SplitView"],
-    storybookSlug: "splitview",
   }),
   definePrimitive({
     id: "stat-card",
