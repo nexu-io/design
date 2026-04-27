@@ -1,21 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import {
-  accentVariantTokens,
-  borderTokens,
-  darkSurfaceTokens,
   fontSizeTokens,
-  fontWeightTokens,
-  motionTokens,
-  radiusTokens,
-  semanticColorTokens,
-  shadowTokens,
-  spacingTokens,
-  surfaceTokens,
-  textLevelTokens,
-  textStyleTokens,
   themeVariables,
-  typographyTokens,
   type FontSizeToken,
   type TextStyleDefinition,
   type TokenDefinition,
@@ -30,9 +17,15 @@ import {
   docsNavigationSections,
   docsSourceOfTruthPolicy,
 } from "./content-policy";
-import type { ExampleId } from "./examples";
+import {
+  componentMetadata,
+  getTokenMetadataPage,
+  metadataSourceFiles,
+  type ComponentMetadata,
+  type PropMetadata,
+} from "./docs-metadata";
 import { publicApiInventory } from "./public-api-inventory";
-import { getStorybookHomeUrl, type StorybookComponentId } from "./storybook";
+import { getStorybookHomeUrl } from "./storybook";
 
 export interface DocsNavItem {
   title: string;
@@ -140,640 +133,6 @@ const componentHeadings: DocsHeading[] = [
   { id: "storybook", title: "Storybook" },
 ];
 
-interface PropDefinition {
-  name: string;
-  type: string;
-  defaultValue: string;
-  description: string;
-}
-
-interface ComponentDocDefinition {
-  id: StorybookComponentId;
-  title: string;
-  description: string;
-  importSnippet: string;
-  overview: string;
-  usage: string;
-  examples: readonly ExampleId[];
-  accessibility: string[];
-  props: PropDefinition[];
-  inheritedProps: string;
-}
-
-const componentDocDefinitions: ComponentDocDefinition[] = [
-  {
-    id: "button",
-    title: "Button",
-    description: "Trigger an action, submit a form, or navigate with a clear affordance.",
-    importSnippet: "import { Button } from '@nexu-design/ui-web';",
-    overview:
-      "Use Button for explicit user actions: saving changes, starting flows, confirming destructive work, or linking to a next destination when the action needs button affordance.",
-    usage:
-      "Choose one high-emphasis action per group, then use outline, ghost, or secondary variants for supporting actions. Pair loading with async work so users cannot submit twice.",
-    examples: ["button/basic", "button/variants", "button/loading"],
-    accessibility: [
-      "Renders a native button by default, preserving keyboard and form behavior.",
-      "Loading native buttons are disabled to prevent duplicate submission while keeping the visible label in place.",
-      "Icon-only buttons must include an accessible label with aria-label.",
-      "When using asChild for links, keep the child element accessible and avoid presenting disabled links as interactive controls.",
-    ],
-    inheritedProps: "Native button HTML attributes such as type, onClick, and aria-* props.",
-    props: [
-      {
-        name: "variant",
-        type: "'default' | 'brand' | 'primary' | 'secondary' | 'outline' | 'ghost' | 'soft' | 'destructive' | 'link'",
-        defaultValue: "'default'",
-        description: "Visual style and emphasis level for the action.",
-      },
-      {
-        name: "size",
-        type: "'xs' | 'sm' | 'md' | 'lg' | 'inline' | 'icon' | 'icon-sm'",
-        defaultValue: "'md'",
-        description: "Control height, padding, and type scale preset.",
-      },
-      {
-        name: "loading",
-        type: "boolean",
-        defaultValue: "false",
-        description:
-          "Shows a spinner and disables native button interaction while work is pending.",
-      },
-      {
-        name: "asChild",
-        type: "boolean",
-        defaultValue: "false",
-        description: "Renders through Radix Slot for link-like or custom element composition.",
-      },
-    ],
-  },
-  {
-    id: "input",
-    title: "Input",
-    description: "Collect short freeform text with token-aligned focus, invalid, and icon states.",
-    importSnippet: "import { Input } from '@nexu-design/ui-web';",
-    overview:
-      "Use Input for single-line text entry such as names, search queries, API keys, and short identifiers. It wraps a native input in a styled shell for size, focus, invalid, and icon support.",
-    usage:
-      "Pair every Input with a visible label or an aria-label. Use invalid when validation fails and connect supporting error text with aria-describedby.",
-    examples: ["input/basic"],
-    accessibility: [
-      "Preserves native input semantics and forwards input attributes to the inner input element.",
-      "Use htmlFor/id or aria-label so the field has an accessible name.",
-      "The invalid prop sets aria-invalid on the input; pair it with nearby error copy for recovery.",
-    ],
-    inheritedProps: "Native input attributes except the HTML size attribute, plus aria-* props.",
-    props: [
-      {
-        name: "size",
-        type: "'sm' | 'md' | 'lg'",
-        defaultValue: "'md'",
-        description: "Control height, padding, and text size.",
-      },
-      {
-        name: "invalid",
-        type: "boolean",
-        defaultValue: "false",
-        description: "Applies error styling and aria-invalid.",
-      },
-      {
-        name: "leadingIcon",
-        type: "ReactNode",
-        defaultValue: "—",
-        description: "Decorative icon before the input value.",
-      },
-      {
-        name: "trailingIcon",
-        type: "ReactNode",
-        defaultValue: "—",
-        description: "Decorative icon after the input value.",
-      },
-      {
-        name: "inputClassName",
-        type: "string",
-        defaultValue: "—",
-        description: "Class name applied to the inner input element.",
-      },
-    ],
-  },
-  {
-    id: "card",
-    title: "Card",
-    description: "Group related content and actions in a bordered, token-backed surface.",
-    importSnippet:
-      "import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@nexu-design/ui-web';",
-    overview:
-      "Use Card for contained content groups such as summaries, settings panels, and lightweight dashboards. Compose slots for consistent title, description, body, and footer spacing.",
-    usage:
-      "Use static cards for non-interactive content and interactive only when the whole surface acts as one target.",
-    examples: ["card/basic"],
-    accessibility: [
-      "Card renders a div and does not add landmark or button semantics by itself.",
-      "Keep headings meaningful with CardTitle and preserve heading order in the page.",
-      "If a card is interactive, use the appropriate semantic element or labelled control inside it.",
-    ],
-    inheritedProps: "Div attributes on Card and slot-specific HTML attributes on subcomponents.",
-    props: [
-      {
-        name: "variant",
-        type: "'default' | 'outline' | 'muted' | 'interactive' | 'static'",
-        defaultValue: "'default'",
-        description: "Surface treatment and hover behavior.",
-      },
-      {
-        name: "padding",
-        type: "'none' | 'sm' | 'md' | 'lg'",
-        defaultValue: "'md'",
-        description: "Outer padding applied by Card.",
-      },
-      {
-        name: "className",
-        type: "string",
-        defaultValue: "—",
-        description: "Additional classes for Card or slot composition.",
-      },
-    ],
-  },
-  {
-    id: "badge",
-    title: "Badge",
-    description: "Show compact status, metadata, or category labels.",
-    importSnippet: "import { Badge } from '@nexu-design/ui-web';",
-    overview:
-      "Use Badge for short labels that annotate nearby content: status, novelty, category, or priority. Badges are informational and should not replace buttons or links.",
-    usage: "Choose semantic variants for status and keep badge text short enough to scan inline.",
-    examples: ["badge/basic"],
-    accessibility: [
-      "Badge renders a div and is read as plain text by default.",
-      "Do not rely on color alone; include text that communicates the status.",
-      "Avoid placing interactive behavior on Badge; use Button or links for actions.",
-    ],
-    inheritedProps: "Div attributes such as title, data-*, and aria-* props.",
-    props: [
-      {
-        name: "variant",
-        type: "'default' | 'accent' | 'secondary' | 'outline' | 'success' | 'warning' | 'danger' | 'destructive'",
-        defaultValue: "'default'",
-        description: "Color and emphasis treatment.",
-      },
-      {
-        name: "size",
-        type: "'xs' | 'sm' | 'default' | 'lg'",
-        defaultValue: "'default'",
-        description: "Padding and text size preset.",
-      },
-      {
-        name: "radius",
-        type: "'full' | 'md' | 'lg'",
-        defaultValue: "'full'",
-        description: "Corner radius preset.",
-      },
-    ],
-  },
-  {
-    id: "checkbox",
-    title: "Checkbox",
-    description: "Toggle independent boolean choices in forms and settings.",
-    importSnippet: "import { Checkbox } from '@nexu-design/ui-web';",
-    overview:
-      "Use Checkbox when users may select zero, one, or many independent options. It wraps Radix Checkbox for checked, unchecked, and indeterminate state behavior.",
-    usage:
-      "Place a concise label next to the control and use Checkbox for form choices, not immediate system toggles.",
-    examples: ["checkbox/basic"],
-    accessibility: [
-      "Radix provides checkbox roles, state attributes, keyboard interaction, and focus management.",
-      "Associate the control with visible label text using htmlFor/id.",
-      "Use aria-describedby for helper or error text that affects the decision.",
-    ],
-    inheritedProps:
-      "Radix Checkbox Root props including checked, defaultChecked, disabled, required, and onCheckedChange.",
-    props: [
-      {
-        name: "checked",
-        type: "boolean | 'indeterminate'",
-        defaultValue: "—",
-        description: "Controlled checked state.",
-      },
-      {
-        name: "defaultChecked",
-        type: "boolean | 'indeterminate'",
-        defaultValue: "false",
-        description: "Initial uncontrolled checked state.",
-      },
-      {
-        name: "onCheckedChange",
-        type: "(checked) => void",
-        defaultValue: "—",
-        description: "Called when the checked state changes.",
-      },
-      {
-        name: "disabled",
-        type: "boolean",
-        defaultValue: "false",
-        description: "Prevents user interaction.",
-      },
-    ],
-  },
-  {
-    id: "switch",
-    title: "Switch",
-    description: "Control an immediately applied on/off setting.",
-    importSnippet: "import { Switch } from '@nexu-design/ui-web';",
-    overview:
-      "Use Switch for settings that take effect immediately, such as enabling sync or notifications. For multi-select form choices, use Checkbox instead.",
-    usage:
-      "Use a visible label and reserve Switch for binary state where on/off language is clear.",
-    examples: ["switch/basic"],
-    accessibility: [
-      "Radix provides switch semantics, keyboard interaction, and checked state attributes.",
-      "Associate the switch with a visible label using htmlFor/id or provide aria-label.",
-      "Do not use Switch for actions that require a separate submit confirmation.",
-    ],
-    inheritedProps:
-      "Radix Switch Root props including checked, defaultChecked, disabled, required, and onCheckedChange.",
-    props: [
-      {
-        name: "size",
-        type: "'default' | 'sm'",
-        defaultValue: "'default'",
-        description: "Track and thumb dimensions.",
-      },
-      {
-        name: "checked",
-        type: "boolean",
-        defaultValue: "—",
-        description: "Controlled on/off state.",
-      },
-      {
-        name: "defaultChecked",
-        type: "boolean",
-        defaultValue: "false",
-        description: "Initial uncontrolled state.",
-      },
-      {
-        name: "onCheckedChange",
-        type: "(checked: boolean) => void",
-        defaultValue: "—",
-        description: "Called when the setting changes.",
-      },
-    ],
-  },
-  {
-    id: "select",
-    title: "Select",
-    description: "Pick one value from a closed list of options.",
-    importSnippet:
-      "import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@nexu-design/ui-web';",
-    overview:
-      "Use Select for finite option lists where search is not required. It composes Radix Select primitives for trigger, value, portal content, grouped options, labels, separators, and items.",
-    usage:
-      "Use Select for values, DropdownMenu for actions, and Combobox when users need filtering or freeform search.",
-    examples: ["select/basic"],
-    accessibility: [
-      "Radix handles trigger roles, roving focus, typeahead, and keyboard selection behavior.",
-      "Label the trigger with visible text or aria-label and keep option text descriptive.",
-      "Use disabled SelectItem values for unavailable options instead of removing important context.",
-    ],
-    inheritedProps:
-      "Radix Select Root, Trigger, Content, and Item props on the corresponding exports.",
-    props: [
-      {
-        name: "value",
-        type: "string",
-        defaultValue: "—",
-        description: "Controlled selected value on Select.",
-      },
-      {
-        name: "defaultValue",
-        type: "string",
-        defaultValue: "—",
-        description: "Initial uncontrolled selected value.",
-      },
-      {
-        name: "onValueChange",
-        type: "(value: string) => void",
-        defaultValue: "—",
-        description: "Called when the selected value changes.",
-      },
-      {
-        name: "position",
-        type: "'item-aligned' | 'popper'",
-        defaultValue: "'popper'",
-        description: "Positioning mode on SelectContent.",
-      },
-    ],
-  },
-  {
-    id: "dialog",
-    title: "Dialog",
-    description: "Present modal content with a focus trap, scrim, title, and actions.",
-    importSnippet:
-      "import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@nexu-design/ui-web';",
-    overview:
-      "Use Dialog for focused workflows that interrupt the current page, such as setup forms and confirmations. The primitive composes Radix Dialog with a portal overlay and built-in close control.",
-    usage:
-      "Every dialog needs a title, concise description when helpful, and clear primary/secondary actions in the footer.",
-    examples: ["dialog/basic"],
-    accessibility: [
-      "Radix traps focus, restores focus to the trigger, handles Escape, and wires modal semantics.",
-      "Always include DialogTitle; use DialogDescription for supporting context.",
-      "Keep destructive confirmations explicit and avoid hiding critical consequences only in color.",
-    ],
-    inheritedProps:
-      "Radix Dialog Root, Trigger, Content, Close, Title, and Description props on corresponding exports.",
-    props: [
-      {
-        name: "open",
-        type: "boolean",
-        defaultValue: "—",
-        description: "Controlled open state on Dialog.",
-      },
-      {
-        name: "defaultOpen",
-        type: "boolean",
-        defaultValue: "false",
-        description: "Initial uncontrolled open state.",
-      },
-      {
-        name: "onOpenChange",
-        type: "(open: boolean) => void",
-        defaultValue: "—",
-        description: "Called when the modal opens or closes.",
-      },
-      {
-        name: "size",
-        type: "'sm' | 'md' | 'lg' | 'xl' | 'full'",
-        defaultValue: "'md'",
-        description: "Maximum width preset on DialogContent.",
-      },
-      {
-        name: "closeOnOverlayClick",
-        type: "boolean",
-        defaultValue: "true",
-        description: "Allows DialogContent to prevent outside-pointer close.",
-      },
-    ],
-  },
-  {
-    id: "tabs",
-    title: "Tabs",
-    description: "Organize related sections into keyboard-accessible tab panels.",
-    importSnippet:
-      "import { Tabs, TabsContent, TabsList, TabsTrigger } from '@nexu-design/ui-web';",
-    overview:
-      "Use Tabs when users need to switch between peer sections without navigating away from the current page. Tabs compose Radix Tabs with Nexu list, trigger, and content styling.",
-    usage:
-      "Keep tab labels short, choose stable values for each panel, and avoid hiding critical form steps behind tabs when users must complete them in order.",
-    examples: ["tabs/basic"],
-    accessibility: [
-      "Radix provides tablist, tab, and tabpanel semantics with keyboard navigation.",
-      "Give TabsList an accessible label when the tab set needs context beyond nearby headings.",
-      "Use disabled tabs only for unavailable sections, not as progress indicators without explanation.",
-    ],
-    inheritedProps: "Radix Tabs Root, List, Trigger, and Content props on corresponding exports.",
-    props: [
-      {
-        name: "value",
-        type: "string",
-        defaultValue: "—",
-        description: "Controlled active tab value on Tabs.",
-      },
-      {
-        name: "defaultValue",
-        type: "string",
-        defaultValue: "—",
-        description: "Initial uncontrolled active tab value.",
-      },
-      {
-        name: "onValueChange",
-        type: "(value: string) => void",
-        defaultValue: "—",
-        description: "Called when users activate a different tab.",
-      },
-      {
-        name: "variant",
-        type: "'default' | 'compact'",
-        defaultValue: "'default'",
-        description: "Visual density on TabsList and TabsTrigger.",
-      },
-    ],
-  },
-  {
-    id: "tooltip",
-    title: "Tooltip",
-    description: "Reveal short supplemental hints on hover or keyboard focus.",
-    importSnippet:
-      "import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@nexu-design/ui-web';",
-    overview:
-      "Use Tooltip for concise, non-essential supporting information. It composes Radix Tooltip with portal rendering, a small elevated surface, and arrow treatment.",
-    usage:
-      "Wrap related tooltips in TooltipProvider, keep copy brief, and do not put required instructions or interactive content inside a tooltip.",
-    examples: ["tooltip/basic"],
-    accessibility: [
-      "Radix opens tooltips from hover and focus and connects trigger/content semantics.",
-      "Tooltip content should supplement, not replace, visible labels or error messages.",
-      "Use Popover or Dialog instead when content is interactive or longer than a short hint.",
-    ],
-    inheritedProps: "Radix Tooltip Provider, Root, Trigger, and Content props.",
-    props: [
-      {
-        name: "delayDuration",
-        type: "number",
-        defaultValue: "Radix default",
-        description: "Delay before opening when set on TooltipProvider or Tooltip.",
-      },
-      {
-        name: "open",
-        type: "boolean",
-        defaultValue: "—",
-        description: "Controlled open state on Tooltip.",
-      },
-      {
-        name: "sideOffset",
-        type: "number",
-        defaultValue: "8",
-        description: "Distance between trigger and TooltipContent.",
-      },
-    ],
-  },
-  {
-    id: "popover",
-    title: "Popover",
-    description: "Show contextual content in an anchored floating panel.",
-    importSnippet:
-      "import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from '@nexu-design/ui-web';",
-    overview:
-      "Use Popover for lightweight contextual panels such as summaries, filters, or small pickers that should remain anchored to a trigger.",
-    usage:
-      "Prefer Popover for short contextual content, Dialog for modal workflows, and DropdownMenu for menu actions.",
-    examples: ["popover/basic"],
-    accessibility: [
-      "Radix handles trigger association, portal rendering, dismissal, and focus behavior.",
-      "Keep popover content concise and provide a labelled trigger that describes what opens.",
-      "Do not use Popover for critical blocking workflows that need modal focus trapping.",
-    ],
-    inheritedProps: "Radix Popover Root, Anchor, Trigger, and Content props.",
-    props: [
-      {
-        name: "open",
-        type: "boolean",
-        defaultValue: "—",
-        description: "Controlled open state on Popover.",
-      },
-      {
-        name: "defaultOpen",
-        type: "boolean",
-        defaultValue: "false",
-        description: "Initial uncontrolled open state.",
-      },
-      {
-        name: "align",
-        type: "'start' | 'center' | 'end'",
-        defaultValue: "'center'",
-        description: "Horizontal alignment for PopoverContent.",
-      },
-      {
-        name: "sideOffset",
-        type: "number",
-        defaultValue: "4",
-        description: "Distance between trigger and PopoverContent.",
-      },
-    ],
-  },
-  {
-    id: "dropdown-menu",
-    title: "DropdownMenu",
-    description: "Present a compact menu of actions, grouped options, or submenus.",
-    importSnippet:
-      "import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@nexu-design/ui-web';",
-    overview:
-      "Use DropdownMenu for action menus and menu-like choices attached to a trigger. It composes Radix Dropdown Menu with styled items, labels, separators, shortcuts, checkbox items, radio items, and submenus.",
-    usage:
-      "Use menu items for commands, Select for choosing one value in a form, and visible buttons for primary actions that should not be hidden.",
-    examples: ["dropdown-menu/basic"],
-    accessibility: [
-      "Radix provides menu roles, roving focus, typeahead, submenus, and keyboard dismissal.",
-      "Label the trigger clearly and keep destructive menu items explicit in text, not only color.",
-      "Use disabled menu items for temporarily unavailable actions when the context remains useful.",
-    ],
-    inheritedProps:
-      "Radix Dropdown Menu Root, Trigger, Content, Item, CheckboxItem, RadioItem, and submenu props.",
-    props: [
-      {
-        name: "open",
-        type: "boolean",
-        defaultValue: "—",
-        description: "Controlled open state on DropdownMenu.",
-      },
-      {
-        name: "modal",
-        type: "boolean",
-        defaultValue: "true",
-        description: "Whether menu interaction is modal while open.",
-      },
-      {
-        name: "sideOffset",
-        type: "number",
-        defaultValue: "4",
-        description: "Distance between trigger and DropdownMenuContent.",
-      },
-      {
-        name: "inset",
-        type: "boolean",
-        defaultValue: "false",
-        description:
-          "Adds leading indentation on labels, items, and submenu triggers that support it.",
-      },
-    ],
-  },
-  {
-    id: "alert",
-    title: "Alert",
-    description: "Communicate contextual status with semantic emphasis and recovery guidance.",
-    importSnippet: "import { Alert, AlertDescription, AlertTitle } from '@nexu-design/ui-web';",
-    overview:
-      "Use Alert for inline messages that need attention: warnings, errors, success states, or information tied to the surrounding content.",
-    usage:
-      "Choose a variant that matches the message severity and include clear text so status is not communicated by color alone.",
-    examples: ["alert/basic"],
-    accessibility: [
-      "Alert renders role=alert so assistive technology can announce important status updates.",
-      "Use AlertTitle for a concise summary and AlertDescription for actionable recovery details.",
-      "Avoid overusing alerts for decorative callouts; reserve live announcements for meaningful changes.",
-    ],
-    inheritedProps: "Div attributes on Alert and slot-specific heading/div attributes.",
-    props: [
-      {
-        name: "variant",
-        type: "'default' | 'info' | 'success' | 'warning' | 'destructive'",
-        defaultValue: "'default'",
-        description: "Semantic color and border treatment for the message.",
-      },
-      {
-        name: "className",
-        type: "string",
-        defaultValue: "—",
-        description: "Additional classes for the alert container or slots.",
-      },
-    ],
-  },
-  {
-    id: "spinner",
-    title: "Spinner",
-    description: "Indicate indeterminate loading with a compact animated icon.",
-    importSnippet: "import { Spinner } from '@nexu-design/ui-web';",
-    overview:
-      "Use Spinner for short indeterminate waits, inline async states, or background refresh. It renders a decorative loading icon sized by token-aligned presets.",
-    usage:
-      "Pair Spinner with visible loading copy or an aria-live region when users need to understand what is happening.",
-    examples: ["spinner/basic"],
-    accessibility: [
-      "Spinner is aria-hidden by default because the icon itself is decorative.",
-      "Provide adjacent text such as Loading or Syncing when the state needs to be announced visually.",
-      "Use Button loading for pending button actions instead of adding a separate spinner beside the same action.",
-    ],
-    inheritedProps: "SVG attributes such as className, data-*, and aria-* props.",
-    props: [
-      {
-        name: "size",
-        type: "'sm' | 'md' | 'lg'",
-        defaultValue: "'md'",
-        description: "Icon size preset.",
-      },
-      {
-        name: "className",
-        type: "string",
-        defaultValue: "—",
-        description: "Additional classes for color, spacing, or layout context.",
-      },
-    ],
-  },
-  {
-    id: "skeleton",
-    title: "Skeleton",
-    description: "Reserve layout space with animated loading placeholders.",
-    importSnippet: "import { Skeleton } from '@nexu-design/ui-web';",
-    overview:
-      "Use Skeleton to show the expected shape of content while data loads, reducing layout shift and making loading states feel intentional.",
-    usage:
-      "Match skeleton dimensions to the eventual content and keep the placeholder structure simpler than the final UI.",
-    examples: ["skeleton/basic"],
-    accessibility: [
-      "Skeleton renders a div and does not announce loading by itself.",
-      "Use nearby loading copy, aria-busy, or live-region status when users need assistive feedback.",
-      "Do not leave skeletons on screen after content has loaded or when an error requires recovery copy.",
-    ],
-    inheritedProps: "Div attributes such as className, style, data-*, and aria-* props.",
-    props: [
-      {
-        name: "className",
-        type: "string",
-        defaultValue: "—",
-        description: "Controls placeholder size, radius overrides, and layout placement.",
-      },
-    ],
-  },
-];
-
 export const docsPages: DocsPage[] = [
   {
     title: "Introduction",
@@ -873,10 +232,10 @@ export const docsPages: DocsPage[] = [
     content: <AiAgentsGuideContent />,
   },
   ...foundationPages,
-  ...componentDocDefinitions.map((component) => ({
+  ...componentMetadata.map((component) => ({
     title: component.title,
     description: component.description,
-    slug: ["components", component.id],
+    slug: component.docsSlug.split("/").filter(Boolean),
     headings: componentHeadings,
     content: <ComponentDocsContent component={component} />,
   })),
@@ -901,7 +260,7 @@ export const docsPages: DocsPage[] = [
   },
   {
     title: "Tokens",
-    description: "Token metadata and JSON API references will live here in Phase 2.",
+    description: "Token metadata reference page placeholder for the shared docs metadata model.",
     slug: ["reference", "tokens"],
     headings: shellHeadings,
     content: <InitialShellContent />,
@@ -1237,12 +596,12 @@ function AiAgentsGuideContent() {
       <ul>
         <li>There is no published MCP server yet; MCP tools are planned for Phase 3.</li>
         <li>
-          Generated component, token, example, and props JSON APIs are deferred to Phase 2 metadata
-          generation.
+          Shared component, token, example, and props metadata exists internally now; public JSON
+          endpoints are still planned as the next step.
         </li>
         <li>
-          Props tables on MVP component pages are provisional and manually curated until shared
-          metadata generation replaces duplicated content.
+          Props tables on MVP component pages are still provisional even though the shared metadata
+          source now removes the previous duplicated docs definitions.
         </li>
         <li>
           Coverage flags describe docs readiness and should not be treated as exhaustive package
@@ -1270,14 +629,10 @@ function GuideSourceLinks({ sources }: { sources: string[] }) {
 }
 
 function ColorsFoundationContent() {
-  const colorGroups = [
-    { title: "Semantic", tokens: semanticColorTokens },
-    { title: "Surface", tokens: surfaceTokens },
-    { title: "Border", tokens: borderTokens },
-    { title: "Text", tokens: textLevelTokens },
-    { title: "Dark surfaces", tokens: darkSurfaceTokens },
-    { title: "Accent variants", tokens: accentVariantTokens },
-  ];
+  const colorPage = getTokenMetadataPage("colors");
+  if (!colorPage) return null;
+
+  const colorGroups = colorPage.groups;
   const allColorTokens = colorGroups.flatMap((group) => group.tokens);
 
   return (
@@ -1296,74 +651,109 @@ function ColorsFoundationContent() {
 }
 
 function TypographyFoundationContent() {
+  const typographyPage = getTokenMetadataPage("typography");
+  if (!typographyPage || !("textStyles" in typographyPage)) return null;
+
   return (
     <FoundationPageIntro
       title="Typography tokens"
       description="Typography tokens define the font stacks, compact UI type scale, and supported weights used by Nexu components. Text-style recipes combine generated Tailwind utilities for common hierarchy roles."
       usage="Use the documented text-size and weight variables through the package utilities; reserve script and heading families for intentional brand moments."
-      tokens={[...typographyTokens, ...fontSizeTokens, ...fontWeightTokens]}
+      tokens={typographyPage.groups.flatMap((group) => group.tokens)}
     >
       <h2 id="tokens">Tokens</h2>
-      <TokenSection title="Font families" tokens={typographyTokens} preview="typography" />
+      <TokenSection
+        title="Font families"
+        tokens={typographyPage.groups[0]?.tokens ?? []}
+        preview="typography"
+      />
       <FontSizeTable tokens={fontSizeTokens} />
-      <TokenSection title="Weights" tokens={fontWeightTokens} preview="text" />
-      <TextStyleRecipes styles={textStyleTokens} />
+      <TokenSection
+        title="Weights"
+        tokens={typographyPage.groups[2]?.tokens ?? []}
+        preview="text"
+      />
+      <TextStyleRecipes styles={typographyPage.textStyles} />
     </FoundationPageIntro>
   );
 }
 
 function SpacingFoundationContent() {
+  const spacingPage = getTokenMetadataPage("spacing");
+  if (!spacingPage) return null;
+
   return (
     <FoundationPageIntro
       title="Spacing tokens"
-      description="Spacing is based on a 4px unit exposed as --spacing. Source metadata documents the supported steps and their intended use while full generated spacing metadata is deferred to Phase 2."
+      description="Spacing is based on a 4px unit exposed as --spacing. Shared metadata now provides the supported steps for docs and internal agent artifacts, while public JSON endpoints remain a planned follow-up."
       usage="Prefer the named spacing steps for product layout rhythm; use smaller values for inline controls and larger values for sections or page regions."
-      tokens={spacingTokens}
+      tokens={spacingPage.groups[0]?.tokens ?? []}
     >
       <h2 id="tokens">Tokens</h2>
-      <TokenSection title="Spacing scale" tokens={spacingTokens} preview="spacing" />
+      <TokenSection
+        title="Spacing scale"
+        tokens={spacingPage.groups[0]?.tokens ?? []}
+        preview="spacing"
+      />
     </FoundationPageIntro>
   );
 }
 
 function RadiusFoundationContent() {
+  const radiusPage = getTokenMetadataPage("radius");
+  if (!radiusPage) return null;
+
   return (
     <FoundationPageIntro
       title="Radius tokens"
       description="Radius tokens set consistent corner geometry for compact controls, cards, panels, modals, hero surfaces, and pills."
       usage="Match radius to component scale: md for default controls, lg/xl for cards and overlays, and pill only for badges or capsules."
-      tokens={radiusTokens}
+      tokens={radiusPage.groups[0]?.tokens ?? []}
     >
       <h2 id="tokens">Tokens</h2>
-      <TokenSection title="Radius scale" tokens={radiusTokens} preview="radius" />
+      <TokenSection
+        title="Radius scale"
+        tokens={radiusPage.groups[0]?.tokens ?? []}
+        preview="radius"
+      />
     </FoundationPageIntro>
   );
 }
 
 function ShadowFoundationContent() {
+  const shadowPage = getTokenMetadataPage("shadow");
+  if (!shadowPage) return null;
+
   return (
     <FoundationPageIntro
       title="Shadow tokens"
       description="Shadow tokens create a restrained elevation scale for rest states, cards, dropdowns, focus rings, overlays, and interactive lift."
       usage="Use the semantic shadows for intent: rest/card for static containers, dropdown/overlay for detached layers, focus for keyboard focus, and refine/elevated for hover or prominent panels."
-      tokens={shadowTokens}
+      tokens={shadowPage.groups[0]?.tokens ?? []}
     >
       <h2 id="tokens">Tokens</h2>
-      <TokenSection title="Elevation scale" tokens={shadowTokens} preview="shadow" />
+      <TokenSection
+        title="Elevation scale"
+        tokens={shadowPage.groups[0]?.tokens ?? []}
+        preview="shadow"
+      />
     </FoundationPageIntro>
   );
 }
 
 function MotionFoundationContent() {
+  const motionPage = getTokenMetadataPage("motion");
+  if (!motionPage) return null;
+
   return (
     <FoundationPageIntro
       title="Motion tokens"
       description="Motion tokens define the shared transition durations and easing curve for small UI affordances and default component state changes."
       usage="Use fast for hover affordances, normal for default state transitions, and the standard easing curve for consistent acceleration."
-      tokens={motionTokens}
+      tokens={motionPage.groups[0]?.tokens ?? []}
     >
       <h2 id="tokens">Tokens</h2>
-      <TokenSection title="Timing" tokens={motionTokens} preview="motion" />
+      <TokenSection title="Timing" tokens={motionPage.groups[0]?.tokens ?? []} preview="motion" />
     </FoundationPageIntro>
   );
 }
@@ -1390,9 +780,9 @@ function FoundationPageIntro({
           Source-backed Phase 1 page
         </p>
         <p className="mt-2 text-sm leading-6 text-text-secondary">
-          Token names, descriptions, and CSS variables come from
-          <code> packages/tokens/src/token-source.json</code>. Full shared metadata generation for
-          docs, APIs, and <code>llms</code> outputs is deferred to Phase 2.
+          Token names, descriptions, CSS variables, and shared docs metadata come from
+          <code> {metadataSourceFiles.tokens.join(", ")}</code>. Public JSON endpoints for this
+          metadata are still planned as a follow-up.
         </p>
       </div>
       {children}
@@ -1634,8 +1024,8 @@ function ComponentReferenceContent() {
       <p>
         The curated inventory in <code>apps/docs/lib/public-api-inventory.ts</code> separates public
         barrel exports from the component docs backlog. It tracks package imports, source files,
-        planned docs slugs, Storybook ids, examples, status, and coverage flags for Phase 1 and the
-        metadata APIs planned in Phase 2.
+        planned docs slugs, Storybook ids, examples, status, and coverage flags, and now feeds the
+        shared docs metadata module used by docs pages and agent artifacts.
       </p>
       <PublicInventorySummary />
       <h2 id="component-template">Component template</h2>
@@ -1742,7 +1132,7 @@ function PublicInventorySummary() {
   );
 }
 
-function ComponentDocsContent({ component }: { component: ComponentDocDefinition }) {
+function ComponentDocsContent({ component }: { component: ComponentMetadata }) {
   return (
     <>
       <h2 id="overview">Overview</h2>
@@ -1771,7 +1161,7 @@ function ComponentDocsContent({ component }: { component: ComponentDocDefinition
   );
 }
 
-function PropsTable({ props }: { props: PropDefinition[] }) {
+function PropsTable({ props }: { props: PropMetadata[] }) {
   return (
     <div className="not-prose my-6 overflow-x-auto rounded-xl border border-border-subtle bg-card shadow-rest">
       <table className="min-w-full border-collapse text-left text-sm">

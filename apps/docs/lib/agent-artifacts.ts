@@ -1,4 +1,11 @@
 import { docsNavigationSections } from "./content-policy";
+import {
+  componentMetadata,
+  exampleMetadata,
+  inventoryMetadata,
+  metadataSourceFiles,
+  tokenMetadata,
+} from "./docs-metadata";
 import { publicApiInventory, type PublicApiInventoryItem } from "./public-api-inventory";
 
 const inventorySource = "apps/docs/lib/public-api-inventory.ts";
@@ -77,11 +84,11 @@ export function getAgentManifest() {
       currentScope: [
         "Read public API inventory metadata, docs slugs, Storybook ids, package imports, examples, and coverage flags.",
         "Use docs pages and Storybook links as static references for component usage and QA context.",
-        "Treat provisional props coverage as manually curated until Phase 2 metadata generation lands.",
+        "Internal shared metadata for components, props, examples, and tokens is available from one source module.",
       ],
       limitations: [
         "No MCP server or runtime search tools are published yet.",
-        "Props, tokens, and examples JSON APIs are deferred to Phase 2 shared metadata generation.",
+        "Public JSON APIs for components, props, tokens, and examples are planned in the next task.",
         "Coverage flags describe docs readiness and may not prove package export completeness.",
       ],
     },
@@ -92,17 +99,19 @@ export function getAgentManifest() {
         {
           href: "/api/components.json",
           status: "planned",
-          description: "Phase 2 generated component metadata.",
+          description:
+            "Planned public component metadata endpoint backed by shared internal metadata.",
         },
         {
           href: "/api/tokens.json",
           status: "planned",
-          description: "Phase 2 generated token metadata.",
+          description: "Planned public token metadata endpoint backed by shared internal metadata.",
         },
         {
           href: "/api/examples.json",
           status: "planned",
-          description: "Phase 2 generated example metadata.",
+          description:
+            "Planned public example metadata endpoint backed by shared internal metadata.",
         },
       ],
     },
@@ -111,6 +120,15 @@ export function getAgentManifest() {
       source: inventorySource,
       counts,
       items: agentInventoryItems,
+    },
+    metadata: {
+      sources: metadataSourceFiles,
+      counts: {
+        inventory: inventoryMetadata.length,
+        components: componentMetadata.length,
+        examples: exampleMetadata.length,
+        tokens: tokenMetadata.length,
+      },
     },
   };
 }
@@ -133,8 +151,8 @@ export function generateLlmsText() {
     `- Guide: ${aiAgentsGuidePath}`,
     "- Manifest: /api/manifest.json",
     `- Inventory source: ${inventorySource}`,
-    "- Scope: static docs, curated public API inventory, Storybook ids, import snippets, examples, and coverage flags.",
-    "- Not available yet: MCP tools, runtime search APIs, generated props metadata, generated token metadata, or llms-full.txt.",
+    "- Scope: static docs, curated public API inventory, shared component/example/token metadata, Storybook ids, import snippets, and coverage flags.",
+    "- Not available yet: MCP tools, runtime search APIs, public JSON metadata endpoints, or llms-full.txt.",
     "",
     "## Packages",
     "",
