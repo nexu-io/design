@@ -18,6 +18,8 @@ import {
   DropdownMenuTrigger,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/DropdownMenu",
   component: DropdownMenu,
@@ -25,8 +27,7 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Action/command menu triggered by a button. For picking a form value use **Select**; for searchable value lists use **Combobox**.",
+        component: `Action/command menu triggered by a button. For picking a form value use **Select**; for searchable value lists use **Combobox**.\n\n${docsDescription("/components/dropdown-menu")}`,
       },
     },
   },

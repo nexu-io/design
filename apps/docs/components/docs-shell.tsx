@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { DocsSearch } from "./docs-search";
 import { docsNavSections, docsSearchItems, type DocsHeading } from "../lib/docs";
+import { getStorybookHomeUrl } from "../lib/storybook";
 import { MobileSidebar } from "./mobile-sidebar";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -38,6 +39,8 @@ export function DocsShell({ title, description, headings, children }: DocsShellP
 }
 
 export function DocsHeader() {
+  const storybookUrl = getStorybookHomeUrl();
+
   return (
     <header className="sticky top-0 z-40 border-b border-border-subtle bg-surface-0/85 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
@@ -70,6 +73,12 @@ export function DocsHeader() {
             className="hidden rounded-md px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-2 hover:text-text-heading sm:inline-flex"
           >
             Components
+          </Link>
+          <Link
+            href={storybookUrl}
+            className="hidden rounded-md px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-2 hover:text-text-heading sm:inline-flex"
+          >
+            Storybook
           </Link>
           <ThemeToggle />
         </div>

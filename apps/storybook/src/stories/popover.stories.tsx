@@ -2,9 +2,18 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Button, Popover, PopoverContent, PopoverTrigger } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Popover",
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/popover"),
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

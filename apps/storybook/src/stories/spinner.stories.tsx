@@ -2,9 +2,18 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Spinner } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Spinner",
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/spinner"),
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

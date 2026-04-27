@@ -10,10 +10,19 @@ import {
   CardTitle,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Card",
   component: Card,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/card"),
+      },
+    },
+  },
 } satisfies Meta<typeof Card>;
 
 export default meta;

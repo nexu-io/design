@@ -8,9 +8,18 @@ import {
   TooltipTrigger,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Tooltip",
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/tooltip"),
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

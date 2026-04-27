@@ -18,13 +18,23 @@ export const storybookLinks = {
 
 export type StorybookComponentId = keyof typeof storybookLinks;
 
+function getStorybookBaseUrl() {
+  return process.env.NEXT_PUBLIC_STORYBOOK_URL?.replace(/\/$/, "");
+}
+
+export function getStorybookHomeUrl() {
+  const baseUrl = getStorybookBaseUrl();
+
+  return baseUrl ? `${baseUrl}/` : "/";
+}
+
 export function getStorybookUrl(component: StorybookComponentId) {
   const path = storybookLinks[component];
-  const baseUrl = process.env.NEXT_PUBLIC_STORYBOOK_URL;
+  const baseUrl = getStorybookBaseUrl();
 
   if (!baseUrl) {
     return path;
   }
 
-  return `${baseUrl.replace(/\/$/, "")}${path}`;
+  return `${baseUrl}${path}`;
 }

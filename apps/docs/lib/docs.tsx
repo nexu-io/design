@@ -32,7 +32,7 @@ import {
 } from "./content-policy";
 import type { ExampleId } from "./examples";
 import { publicApiInventory } from "./public-api-inventory";
-import type { StorybookComponentId } from "./storybook";
+import { getStorybookHomeUrl, type StorybookComponentId } from "./storybook";
 
 export interface DocsNavItem {
   title: string;
@@ -1738,8 +1738,10 @@ function toTitle(value: string) {
 }
 
 export function HomeCards() {
+  const storybookUrl = getStorybookHomeUrl();
+
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <HomeCard eyebrow="Guide" title="Start with installation" href="/guide/installation">
         Import packages, styles, and theme primitives correctly.
       </HomeCard>
@@ -1748,6 +1750,9 @@ export function HomeCards() {
       </HomeCard>
       <HomeCard eyebrow="Components" title="Use real primitives" href="/components/button">
         Docs render the same UI package that applications consume.
+      </HomeCard>
+      <HomeCard eyebrow="Storybook" title="Browse live stories" href={storybookUrl}>
+        Explore interactive component docs and states in Storybook.
       </HomeCard>
     </div>
   );

@@ -2,9 +2,18 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Checkbox, Label } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Checkbox",
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/checkbox"),
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;
