@@ -1495,10 +1495,10 @@ pnpm --filter @nexu-design/ui-web test
 
 ### Phase 1 checklist
 
-- [ ] 定义 frontmatter schema。
-- [ ] 定义组件页模板。
+- [x] 定义 frontmatter schema。
+- [x] 定义组件页模板。
 - [ ] 建立 curated public API inventory。
-- [ ] 明确 `docs/*.md` 作为 MVP source-of-truth 的引用策略。
+- [x] 明确 `docs/*.md` 作为 MVP source-of-truth 的引用策略。
 - [ ] 建立 Guide 页面。
 - [ ] 建立 Foundations 页面。
 - [ ] 覆盖第一批 MVP 组件：Button、Input、Card、Badge、Checkbox、Switch、Select、Dialog。

@@ -4,6 +4,12 @@ import type { ReactNode } from "react";
 import { CodeBlock } from "../components/code-block";
 import { ComponentPreview } from "../components/component-preview";
 import { StorybookLink } from "../components/storybook-link";
+import {
+  componentFrontmatterPolicy,
+  componentPageTemplateSections,
+  docsNavigationSections,
+  docsSourceOfTruthPolicy,
+} from "./content-policy";
 
 export interface DocsNavItem {
   title: string;
@@ -28,41 +34,10 @@ export interface DocsPage {
   content: ReactNode;
 }
 
-export const docsNavSections: DocsNavSection[] = [
-  {
-    title: "Guide",
-    items: [
-      { title: "Introduction", href: "/guide/introduction" },
-      { title: "Installation", href: "/guide/installation" },
-      { title: "Styling", href: "/guide/styling" },
-      { title: "Dark mode", href: "/guide/dark-mode" },
-    ],
-  },
-  {
-    title: "Foundations",
-    items: [
-      { title: "Colors", href: "/foundations/colors" },
-      { title: "Typography", href: "/foundations/typography" },
-      { title: "Spacing", href: "/foundations/spacing" },
-    ],
-  },
-  {
-    title: "Components",
-    items: [
-      { title: "Button", href: "/components/button" },
-      { title: "Input", href: "/components/input" },
-      { title: "Card", href: "/components/card" },
-      { title: "Badge", href: "/components/badge" },
-    ],
-  },
-  {
-    title: "Reference",
-    items: [
-      { title: "Component API", href: "/reference/components" },
-      { title: "Tokens", href: "/reference/tokens" },
-    ],
-  },
-];
+export const docsNavSections: DocsNavSection[] = docsNavigationSections.map((section) => ({
+  title: section.title,
+  items: section.items.map(({ title, href }) => ({ title, href })),
+}));
 
 const shellHeadings: DocsHeading[] = [
   { id: "navigation", title: "Navigation" },
@@ -112,6 +87,13 @@ export const docsPages: DocsPage[] = [
     content: <InitialShellContent />,
   },
   {
+    title: "Theming",
+    description: "Understand the shared token contract for application themes.",
+    slug: ["guide", "theming"],
+    headings: shellHeadings,
+    content: <InitialShellContent />,
+  },
+  {
     title: "Dark mode",
     description: "Dark mode uses the shared `.dark` token contract.",
     slug: ["guide", "dark-mode"],
@@ -134,7 +116,19 @@ export const docsPages: DocsPage[] = [
       </>
     ),
   },
-  ...["colors", "typography", "spacing"].map((name) => ({
+  ...[
+    ["accessibility", "Accessibility"],
+    ["copy-and-localization", "Copy & localization"],
+    ["release-and-versioning", "Release & versioning"],
+    ["local-package-consumption", "Local package consumption"],
+  ].map(([slug, title]) => ({
+    title,
+    description: `${title} guidance summarized from the internal source documents.`,
+    slug: ["guide", slug],
+    headings: shellHeadings,
+    content: <InitialShellContent />,
+  })),
+  ...["colors", "typography", "spacing", "radius", "shadow", "motion"].map((name) => ({
     title: toTitle(name),
     description: `Initial ${name} foundation page scaffold backed by shared tokens.`,
     slug: ["foundations", name],
@@ -157,7 +151,7 @@ export const docsPages: DocsPage[] = [
     ],
     content: <ButtonDocsContent />,
   },
-  ...["input", "card", "badge"].map((name) => ({
+  ...["input", "card", "badge", "checkbox", "switch", "select", "dialog"].map((name) => ({
     title: toTitle(name),
     description: `Initial ${toTitle(name)} component page scaffold for the docs shell.`,
     slug: ["components", name],
@@ -165,16 +159,34 @@ export const docsPages: DocsPage[] = [
     content: <InitialShellContent />,
   })),
   {
-    title: "Component API",
-    description: "Curated component API inventory will live here in Phase 1.",
-    slug: ["reference", "components"],
+    title: "Forms",
+    description: "Composition guidance for form fields and validation patterns.",
+    slug: ["patterns", "forms"],
     headings: shellHeadings,
     content: <InitialShellContent />,
+  },
+  {
+    title: "Component API",
+    description: "Component page IA, frontmatter, template, and source-of-truth policy.",
+    slug: ["reference", "components"],
+    headings: [
+      { id: "frontmatter", title: "Frontmatter" },
+      { id: "component-template", title: "Component template" },
+      { id: "source-of-truth", title: "Source of truth" },
+    ],
+    content: <ComponentReferenceContent />,
   },
   {
     title: "Tokens",
     description: "Token metadata and JSON API references will live here in Phase 2.",
     slug: ["reference", "tokens"],
+    headings: shellHeadings,
+    content: <InitialShellContent />,
+  },
+  {
+    title: "Release notes",
+    description: "Changelog and release summary entry point for Nexu Design packages.",
+    slug: ["changelog"],
     headings: shellHeadings,
     content: <InitialShellContent />,
   },
@@ -213,6 +225,71 @@ function InitialShellContent() {
         Upcoming tasks will add the typed examples registry and replace these scaffolds with rich
         component documentation.
       </p>
+    </>
+  );
+}
+
+function ComponentReferenceContent() {
+  return (
+    <>
+      <h2 id="frontmatter">Frontmatter</h2>
+      <p>
+        MDX pages use the Fumadocs schema in <code>apps/docs/source.config.ts</code>. Component
+        pages must identify the public API inventory item, package import, Storybook story, runnable
+        example ids, source files, and source documents before the page can move beyond draft
+        status.
+      </p>
+      <div className="not-prose my-6 rounded-xl border border-border-subtle bg-card p-5 shadow-rest">
+        <h3 className="text-base font-semibold text-text-heading">Required fields</h3>
+        <p className="mt-2 text-sm text-text-secondary">
+          {componentFrontmatterPolicy.required.join(", ")}
+        </p>
+        <h3 className="mt-5 text-base font-semibold text-text-heading">Optional fields</h3>
+        <p className="mt-2 text-sm text-text-secondary">
+          {componentFrontmatterPolicy.optional.join(", ")}
+        </p>
+        <p className="mt-5 text-sm text-text-secondary">{componentFrontmatterPolicy.notes}</p>
+      </div>
+      <h2 id="component-template">Component template</h2>
+      <p>
+        Component pages follow a reusable outline so the docs, metadata APIs, Storybook links, and
+        future <code>llms.txt</code> outputs can share the same shape.
+      </p>
+      <div className="not-prose my-6 overflow-x-auto rounded-xl border border-border-subtle bg-card shadow-rest">
+        <table className="min-w-full border-collapse text-left text-sm">
+          <thead className="bg-surface-2 text-xs uppercase tracking-wider text-text-muted">
+            <tr>
+              <th className="px-4 py-3 font-semibold">Section</th>
+              <th className="px-4 py-3 font-semibold">Required</th>
+              <th className="px-4 py-3 font-semibold">Source</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border-subtle">
+            {componentPageTemplateSections.map((section) => (
+              <tr key={section.id}>
+                <td className="px-4 py-3 font-medium text-text-heading">{section.title}</td>
+                <td className="px-4 py-3 text-text-secondary">{section.required ? "Yes" : "No"}</td>
+                <td className="px-4 py-3 font-mono text-xs text-text-secondary">
+                  {section.source}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <h2 id="source-of-truth">Source of truth</h2>
+      <p>
+        During Phase 1, existing <code>docs/*.md</code> files remain the authoritative maintainer
+        policies. Docs pages should summarize them for consumers and link back rather than fork a
+        second policy.
+      </p>
+      <ul>
+        {docsSourceOfTruthPolicy.map((item) => (
+          <li key={item.source}>
+            <code>{item.source}</code> feeds {item.docsDestinations.join(", ")}. {item.policy}
+          </li>
+        ))}
+      </ul>
     </>
   );
 }
