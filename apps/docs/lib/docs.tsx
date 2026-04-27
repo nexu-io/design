@@ -10,6 +10,7 @@ import {
   docsNavigationSections,
   docsSourceOfTruthPolicy,
 } from "./content-policy";
+import { publicApiInventory } from "./public-api-inventory";
 
 export interface DocsNavItem {
   title: string;
@@ -171,6 +172,7 @@ export const docsPages: DocsPage[] = [
     slug: ["reference", "components"],
     headings: [
       { id: "frontmatter", title: "Frontmatter" },
+      { id: "public-inventory", title: "Public API inventory" },
       { id: "component-template", title: "Component template" },
       { id: "source-of-truth", title: "Source of truth" },
     ],
@@ -250,6 +252,14 @@ function ComponentReferenceContent() {
         </p>
         <p className="mt-5 text-sm text-text-secondary">{componentFrontmatterPolicy.notes}</p>
       </div>
+      <h2 id="public-inventory">Public API inventory</h2>
+      <p>
+        The curated inventory in <code>apps/docs/lib/public-api-inventory.ts</code> separates public
+        barrel exports from the component docs backlog. It tracks package imports, source files,
+        planned docs slugs, Storybook ids, examples, status, and coverage flags for Phase 1 and the
+        metadata APIs planned in Phase 2.
+      </p>
+      <PublicInventorySummary />
       <h2 id="component-template">Component template</h2>
       <p>
         Component pages follow a reusable outline so the docs, metadata APIs, Storybook links, and
@@ -291,6 +301,66 @@ function ComponentReferenceContent() {
         ))}
       </ul>
     </>
+  );
+}
+
+function PublicInventorySummary() {
+  const counts = publicApiInventory.reduce(
+    (accumulator, item) => {
+      accumulator[item.kind] += 1;
+      if (item.documentable) accumulator.documentable += 1;
+      if (item.coverage.docs === "complete") accumulator.docsComplete += 1;
+      if (item.coverage.storybook === "complete") accumulator.storybookComplete += 1;
+      return accumulator;
+    },
+    {
+      primitive: 0,
+      pattern: 0,
+      utility: 0,
+      documentable: 0,
+      docsComplete: 0,
+      storybookComplete: 0,
+    },
+  );
+
+  return (
+    <div className="not-prose my-6 overflow-x-auto rounded-xl border border-border-subtle bg-card shadow-rest">
+      <table className="min-w-full border-collapse text-left text-sm">
+        <thead className="bg-surface-2 text-xs uppercase tracking-wider text-text-muted">
+          <tr>
+            <th className="px-4 py-3 font-semibold">Area</th>
+            <th className="px-4 py-3 font-semibold">Count</th>
+            <th className="px-4 py-3 font-semibold">Coverage note</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border-subtle">
+          <tr>
+            <td className="px-4 py-3 font-medium text-text-heading">Primitives</td>
+            <td className="px-4 py-3 font-mono text-xs text-text-secondary">{counts.primitive}</td>
+            <td className="px-4 py-3 text-text-secondary">Public component-level exports.</td>
+          </tr>
+          <tr>
+            <td className="px-4 py-3 font-medium text-text-heading">Patterns</td>
+            <td className="px-4 py-3 font-mono text-xs text-text-secondary">{counts.pattern}</td>
+            <td className="px-4 py-3 text-text-secondary">Compositional product patterns.</td>
+          </tr>
+          <tr>
+            <td className="px-4 py-3 font-medium text-text-heading">Utilities</td>
+            <td className="px-4 py-3 font-mono text-xs text-text-secondary">{counts.utility}</td>
+            <td className="px-4 py-3 text-text-secondary">Public helpers, not component pages.</td>
+          </tr>
+          <tr>
+            <td className="px-4 py-3 font-medium text-text-heading">Documentable items</td>
+            <td className="px-4 py-3 font-mono text-xs text-text-secondary">
+              {counts.documentable}
+            </td>
+            <td className="px-4 py-3 text-text-secondary">
+              {counts.docsComplete} docs complete; {counts.storybookComplete} Storybook links found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   );
 }
 
