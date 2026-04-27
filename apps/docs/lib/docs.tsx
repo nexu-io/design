@@ -46,53 +46,45 @@ const shellHeadings: DocsHeading[] = [
   { id: "next-steps", title: "Next steps" },
 ];
 
+const guideHeadings: DocsHeading[] = [
+  { id: "summary", title: "Summary" },
+  { id: "consumer-guidance", title: "Consumer guidance" },
+  { id: "source-documents", title: "Source documents" },
+];
+
 export const docsPages: DocsPage[] = [
   {
     title: "Introduction",
     description: "The product documentation home for Nexu Design consumers.",
     slug: ["guide", "introduction"],
-    headings: shellHeadings,
-    content: <InitialShellContent />,
+    headings: guideHeadings,
+    content: <IntroductionGuideContent />,
   },
   {
     title: "Installation",
     description: "Install the packages and import the shared styles entrypoint.",
     slug: ["guide", "installation"],
     headings: [
+      { id: "summary", title: "Summary" },
       { id: "packages", title: "Packages" },
       { id: "styles", title: "Styles" },
+      { id: "source-documents", title: "Source documents" },
     ],
-    content: (
-      <>
-        <h2 id="packages">Packages</h2>
-        <p>
-          Applications consume the UI and token packages from the workspace or published package
-          registry.
-        </p>
-        <pre>
-          <code>pnpm add @nexu-design/ui-web @nexu-design/tokens</code>
-        </pre>
-        <h2 id="styles">Styles</h2>
-        <p>Import the UI package CSS once near the application root.</p>
-        <pre>
-          <code>{"import '@nexu-design/ui-web/styles.css'"}</code>
-        </pre>
-      </>
-    ),
+    content: <InstallationGuideContent />,
   },
   {
     title: "Styling",
     description: "Use Nexu semantic CSS variables and component classes consistently.",
     slug: ["guide", "styling"],
-    headings: shellHeadings,
-    content: <InitialShellContent />,
+    headings: guideHeadings,
+    content: <StylingGuideContent />,
   },
   {
     title: "Theming",
     description: "Understand the shared token contract for application themes.",
     slug: ["guide", "theming"],
-    headings: shellHeadings,
-    content: <InitialShellContent />,
+    headings: guideHeadings,
+    content: <ThemingGuideContent />,
   },
   {
     title: "Dark mode",
@@ -117,18 +109,34 @@ export const docsPages: DocsPage[] = [
       </>
     ),
   },
-  ...[
-    ["accessibility", "Accessibility"],
-    ["copy-and-localization", "Copy & localization"],
-    ["release-and-versioning", "Release & versioning"],
-    ["local-package-consumption", "Local package consumption"],
-  ].map(([slug, title]) => ({
-    title,
-    description: `${title} guidance summarized from the internal source documents.`,
-    slug: ["guide", slug],
-    headings: shellHeadings,
-    content: <InitialShellContent />,
-  })),
+  {
+    title: "Accessibility",
+    description: "Accessible component usage guidance summarized from source policy.",
+    slug: ["guide", "accessibility"],
+    headings: guideHeadings,
+    content: <AccessibilityGuideContent />,
+  },
+  {
+    title: "Copy & localization",
+    description: "Product copy and localization boundaries for Nexu Design consumers.",
+    slug: ["guide", "copy-and-localization"],
+    headings: guideHeadings,
+    content: <CopyLocalizationGuideContent />,
+  },
+  {
+    title: "Release & versioning",
+    description: "Changesets, versioning, validation, and publish flow guidance.",
+    slug: ["guide", "release-and-versioning"],
+    headings: guideHeadings,
+    content: <ReleaseVersioningGuideContent />,
+  },
+  {
+    title: "Local package consumption",
+    description: "Use workspace or file dependencies while developing against local packages.",
+    slug: ["guide", "local-package-consumption"],
+    headings: guideHeadings,
+    content: <LocalConsumptionGuideContent />,
+  },
   ...["colors", "typography", "spacing", "radius", "shadow", "motion"].map((name) => ({
     title: toTitle(name),
     description: `Initial ${name} foundation page scaffold backed by shared tokens.`,
@@ -228,6 +236,247 @@ function InitialShellContent() {
         component documentation.
       </p>
     </>
+  );
+}
+
+function IntroductionGuideContent() {
+  return (
+    <>
+      <h2 id="summary">Summary</h2>
+      <p>
+        Nexu Design docs are the consumer-facing layer for installation, foundations, components,
+        patterns, and reference material. The source policy remains in repository markdown files;
+        guide pages summarize that policy and link back when maintainers need the complete workflow.
+      </p>
+      <h2 id="consumer-guidance">Consumer guidance</h2>
+      <ul>
+        <li>Start with installation, then import the shared stylesheet once at the app root.</li>
+        <li>Use semantic tokens for color, spacing, radius, shadow, and typography decisions.</li>
+        <li>Prefer documented primitives and patterns over custom low-level behavior.</li>
+        <li>Use Storybook for state matrices and visual QA; use docs for product integration.</li>
+      </ul>
+      <h2 id="source-documents">Source documents</h2>
+      <GuideSourceLinks
+        sources={[
+          "docs/design-system-guidelines.md",
+          "docs/component-api-guidelines.md",
+          "docs/package-publishing-and-consumption.md",
+        ]}
+      />
+    </>
+  );
+}
+
+function InstallationGuideContent() {
+  return (
+    <>
+      <h2 id="summary">Summary</h2>
+      <p>
+        Applications consume <code>@nexu-design/ui-web</code> and <code>@nexu-design/tokens</code>
+        from the workspace during development or from the package registry after release. The UI
+        package ships compiled JavaScript, declarations, and a compiled stylesheet.
+      </p>
+      <h2 id="packages">Packages</h2>
+      <p>Install both public packages when consuming the design system from a regular app.</p>
+      <CodeBlock code="pnpm add @nexu-design/ui-web @nexu-design/tokens" language="bash" />
+      <h2 id="styles">Styles</h2>
+      <p>
+        Import the UI package stylesheet once near the application root. This is the preferred
+        entrypoint because it includes the compiled component classes and token CSS expected by
+        <code> ui-web</code> components.
+      </p>
+      <CodeBlock code="import '@nexu-design/ui-web/styles.css';" title="Root stylesheet" />
+      <h2 id="source-documents">Source documents</h2>
+      <GuideSourceLinks sources={["docs/package-publishing-and-consumption.md"]} />
+    </>
+  );
+}
+
+function StylingGuideContent() {
+  return (
+    <>
+      <h2 id="summary">Summary</h2>
+      <p>
+        Styling is utility-first and token-driven. Compose existing components with the shared
+        <code> cn()</code> helper, CVA variants, and semantic CSS variables instead of duplicating
+        visual rules in product code.
+      </p>
+      <h2 id="consumer-guidance">Consumer guidance</h2>
+      <ul>
+        <li>Prefer semantic utilities and token variables over one-off colors or pixel values.</li>
+        <li>Use CVA-backed variants for repeated component states and emphasis levels.</li>
+        <li>
+          Keep global CSS at package or app entrypoints; keep component styling in class names.
+        </li>
+        <li>Use neutral surface tokens for persistent selection and row hover states.</li>
+        <li>Match spacing, radius, typography, and shadow choices to the documented hierarchy.</li>
+      </ul>
+      <h2 id="source-documents">Source documents</h2>
+      <GuideSourceLinks sources={["docs/design-system-guidelines.md"]} />
+    </>
+  );
+}
+
+function ThemingGuideContent() {
+  return (
+    <>
+      <h2 id="summary">Summary</h2>
+      <p>
+        Themes are built from the shared token contract in <code>@nexu-design/tokens</code>. Use
+        semantic text, surface, border, brand, semantic-status, radius, shadow, typography, and
+        motion variables so applications can change themes without rewriting component markup.
+      </p>
+      <h2 id="consumer-guidance">Consumer guidance</h2>
+      <ul>
+        <li>
+          Use <code>--color-text-*</code> tokens for readable hierarchy.
+        </li>
+        <li>
+          Layer surfaces from <code>surface-0</code> through <code>surface-4</code> in order.
+        </li>
+        <li>
+          Reserve brand for links, focus, badges, and brand emphasis; use semantic colors for
+          status.
+        </li>
+        <li>Use radius and shadow tokens consistently with component scale and elevation.</li>
+        <li>Use motion tokens for hover and transition timing instead of ad hoc durations.</li>
+      </ul>
+      <h2 id="source-documents">Source documents</h2>
+      <GuideSourceLinks sources={["docs/design-system-guidelines.md"]} />
+    </>
+  );
+}
+
+function AccessibilityGuideContent() {
+  return (
+    <>
+      <h2 id="summary">Summary</h2>
+      <p>
+        Accessibility depends on preserving native and Radix behavior, using components for their
+        intended semantics, and keeping labels, error text, focus states, and keyboard behavior
+        intact.
+      </p>
+      <h2 id="consumer-guidance">Consumer guidance</h2>
+      <ul>
+        <li>
+          Use native form semantics and labeled controls; prefer <code>FormField</code> for inputs.
+        </li>
+        <li>Do not skip heading levels or flatten semantic structure for visual convenience.</li>
+        <li>
+          Keep icon-only controls labeled with <code>aria-label</code> or visible text.
+        </li>
+        <li>Use the right primitive for the interaction: menus for actions, selects for values.</li>
+        <li>Localize dates, numbers, currency, and pluralization with locale-aware formatting.</li>
+      </ul>
+      <h2 id="source-documents">Source documents</h2>
+      <GuideSourceLinks
+        sources={["docs/design-system-guidelines.md", "docs/copy-and-localization.md"]}
+      />
+    </>
+  );
+}
+
+function CopyLocalizationGuideContent() {
+  return (
+    <>
+      <h2 id="summary">Summary</h2>
+      <p>
+        Product-surface copy is hardcoded English by default unless a feature explicitly requires
+        localization. Component-library packages should remain copy-free and receive labels through
+        props.
+      </p>
+      <h2 id="consumer-guidance">Consumer guidance</h2>
+      <ul>
+        <li>Write shipped UI copy inline unless the surrounding surface is already localized.</li>
+        <li>
+          Do not add <code>useT()</code>, <code>t()</code>, or another resolver without a
+          requirement.
+        </li>
+        <li>
+          User-authored content, mock content, and seed data render in their authored language.
+        </li>
+        <li>
+          Legal, policy, dates, numbers, currencies, and pluralization may need locale-aware
+          handling.
+        </li>
+        <li>Decorative uppercase labels and page-level navigation tabs stay English by default.</li>
+      </ul>
+      <h2 id="source-documents">Source documents</h2>
+      <GuideSourceLinks sources={["docs/copy-and-localization.md"]} />
+    </>
+  );
+}
+
+function ReleaseVersioningGuideContent() {
+  return (
+    <>
+      <h2 id="summary">Summary</h2>
+      <p>
+        Package releases use Changesets for <code>@nexu-design/tokens</code> and
+        <code> @nexu-design/ui-web</code>. Add a changeset for consumer-visible package changes and
+        run release readiness checks before publishing.
+      </p>
+      <h2 id="consumer-guidance">Consumer guidance</h2>
+      <ul>
+        <li>
+          Create a changeset with <code>pnpm changeset</code> for public package changes.
+        </li>
+        <li>
+          Use <code>major</code> for breaking changes and include migration notes.
+        </li>
+        <li>
+          Run <code>pnpm release:check</code> before release-oriented work is considered ready.
+        </li>
+        <li>Publishable packages release together through the linked Changesets group.</li>
+        <li>
+          Prefer a patch hotfix over unpublishing; deprecate bad published versions if needed.
+        </li>
+      </ul>
+      <h2 id="source-documents">Source documents</h2>
+      <GuideSourceLinks sources={["docs/release-flow.md"]} />
+    </>
+  );
+}
+
+function LocalConsumptionGuideContent() {
+  return (
+    <>
+      <h2 id="summary">Summary</h2>
+      <p>
+        During development, consume packages through workspace ranges inside a pnpm workspace or
+        <code> file:</code> dependencies from another local app. Build packages before relying on
+        their publishable <code>dist/</code> outputs.
+      </p>
+      <h2 id="consumer-guidance">Consumer guidance</h2>
+      <ul>
+        <li>
+          Use <code>workspace:^0.1.0</code> ranges for monorepo consumers.
+        </li>
+        <li>
+          Use <code>file:../path/to/packages/ui-web</code> only for local machine integration.
+        </li>
+        <li>
+          Run <code>pnpm --dir ../design build:packages</code> before consuming file dependencies.
+        </li>
+        <li>
+          Still import <code>@nexu-design/ui-web/styles.css</code> from the consuming app root.
+        </li>
+      </ul>
+      <h2 id="source-documents">Source documents</h2>
+      <GuideSourceLinks sources={["docs/package-publishing-and-consumption.md"]} />
+    </>
+  );
+}
+
+function GuideSourceLinks({ sources }: { sources: string[] }) {
+  return (
+    <ul>
+      {sources.map((source) => (
+        <li key={source}>
+          <Link href={`https://github.com/nexu-io/design/blob/main/${source}`}>{source}</Link>
+        </li>
+      ))}
+    </ul>
   );
 }
 
