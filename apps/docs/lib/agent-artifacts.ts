@@ -1,3 +1,5 @@
+import { themeVariables } from "@nexu-design/tokens";
+
 import { docsNavigationSections } from "./content-policy";
 import {
   componentMetadata,
@@ -5,6 +7,7 @@ import {
   inventoryMetadata,
   metadataSourceFiles,
   tokenMetadata,
+  tokenMetadataPages,
 } from "./docs-metadata";
 import { publicApiInventory, type PublicApiInventoryItem } from "./public-api-inventory";
 
@@ -52,6 +55,26 @@ const routeItems = docsNavigationSections.flatMap((section) =>
 
 const packageNames = Array.from(new Set(publicApiInventory.map((item) => item.packageName))).sort();
 
+const schemaVersion = "2026-04-27.phase-2";
+
+const jsonApiRoutes = [
+  {
+    href: "/api/components.json",
+    status: "generated",
+    description: "Public component metadata backed by shared docs metadata.",
+  },
+  {
+    href: "/api/tokens.json",
+    status: "generated",
+    description: "Public token metadata backed by shared token metadata.",
+  },
+  {
+    href: "/api/examples.json",
+    status: "generated",
+    description: "Public example metadata backed by the examples registry and source files.",
+  },
+] as const;
+
 export function getAgentManifest() {
   const counts = publicApiInventory.reduce(
     (summary, item) => {
@@ -72,7 +95,7 @@ export function getAgentManifest() {
   );
 
   return {
-    schemaVersion: "2026-04-27.phase-1.5",
+    schemaVersion,
     name: "Nexu Design docs manifest",
     description:
       "Static machine-readable index for Nexu Design docs, public API inventory, and agent entrypoints.",
@@ -80,7 +103,13 @@ export function getAgentManifest() {
     support: {
       mode: "static",
       guide: aiAgentsGuidePath,
-      entrypoints: ["/llms.txt", "/api/manifest.json", aiAgentsGuidePath],
+      entrypoints: [
+        "/llms.txt",
+        "/llms-full.txt",
+        "/api/manifest.json",
+        ...jsonApiRoutes.map((route) => route.href),
+        aiAgentsGuidePath,
+      ],
       currentScope: [
         "Read public API inventory metadata, docs slugs, Storybook ids, package imports, examples, and coverage flags.",
         "Use docs pages and Storybook links as static references for component usage and QA context.",
@@ -88,7 +117,6 @@ export function getAgentManifest() {
       ],
       limitations: [
         "No MCP server or runtime search tools are published yet.",
-        "Public JSON APIs for components, props, tokens, and examples are planned in the next task.",
         "Coverage flags describe docs readiness and may not prove package export completeness.",
       ],
     },
@@ -96,23 +124,7 @@ export function getAgentManifest() {
       docs: routeItems,
       api: [
         { href: "/api/manifest.json", status: "generated", description: "This manifest." },
-        {
-          href: "/api/components.json",
-          status: "planned",
-          description:
-            "Planned public component metadata endpoint backed by shared internal metadata.",
-        },
-        {
-          href: "/api/tokens.json",
-          status: "planned",
-          description: "Planned public token metadata endpoint backed by shared internal metadata.",
-        },
-        {
-          href: "/api/examples.json",
-          status: "planned",
-          description:
-            "Planned public example metadata endpoint backed by shared internal metadata.",
-        },
+        ...jsonApiRoutes,
       ],
     },
     packages: packageNames,
@@ -133,6 +145,95 @@ export function getAgentManifest() {
   };
 }
 
+export function getComponentsApi() {
+  return {
+    schemaVersion,
+    generatedFrom: metadataSourceFiles.components,
+    count: componentMetadata.length,
+    components: componentMetadata.map((component) => ({
+      id: component.id,
+      name: component.title,
+      status: getInventoryStatus(component.id),
+      category: `${getInventoryKind(component.id)}s`,
+      package: component.packageName,
+      exports: component.exports,
+      import: component.importSnippet,
+      description: component.description,
+      overview: component.overview,
+      usage: component.usage,
+      docsUrl: component.docsSlug,
+      storybookId: component.storybookId,
+      storybookUrl: component.storybookPath,
+      storybookTitle: component.storybookTitle,
+      sourcePath: component.sourcePath,
+      examples: component.examples,
+      accessibility: component.accessibility,
+      inheritedProps: component.inheritedProps,
+      coverage: component.coverage,
+      props: component.props,
+    })),
+  };
+}
+
+export function getTokensApi() {
+  return {
+    schemaVersion,
+    generatedFrom: metadataSourceFiles.tokens,
+    count: tokenMetadata.length,
+    themes: themeVariables,
+    pages: tokenMetadataPages.map((page) => ({
+      id: page.id,
+      title: page.title,
+      groups: page.groups.map((group) => ({
+        title: group.title,
+        tokens: group.tokens.map((token) => token.name),
+      })),
+      ...(page.id === "typography" ? { textStyles: page.textStyles } : {}),
+    })),
+    tokens: tokenMetadata.map((token) => ({
+      name: token.name,
+      category: token.category,
+      page: token.page,
+      group: token.group,
+      cssVar: token.cssVar,
+      value: token.value,
+      resolvedValue: token.resolvedValue,
+      description: token.description,
+      usage: token.utility,
+      foreground: token.foreground,
+      themes: {
+        light: themeVariables.light[token.cssVar],
+        dark: themeVariables.dark[token.cssVar],
+      },
+    })),
+  };
+}
+
+export function getExamplesApi() {
+  return {
+    schemaVersion,
+    generatedFrom: metadataSourceFiles.examples,
+    count: exampleMetadata.length,
+    examples: exampleMetadata.map((example) => {
+      const componentId = example.id.split("/")[0];
+      const component = componentMetadata.find((item) => item.id === componentId);
+
+      return {
+        id: example.id,
+        componentId,
+        title: example.title,
+        description: example.description,
+        category: example.category,
+        tags: [example.category, componentId],
+        filePath: example.filePath,
+        source: example.source,
+        dependencies: getExampleDependencies(example.source),
+        docsUrl: component?.docsSlug,
+      };
+    }),
+  };
+}
+
 export function generateLlmsText() {
   const documentedItems = publicApiInventory.filter(
     (item) => item.documentable && item.coverage.docs === "complete" && item.docsSlug,
@@ -150,9 +251,11 @@ export function generateLlmsText() {
     "",
     `- Guide: ${aiAgentsGuidePath}`,
     "- Manifest: /api/manifest.json",
+    "- Full context: /llms-full.txt",
     `- Inventory source: ${inventorySource}`,
     "- Scope: static docs, curated public API inventory, shared component/example/token metadata, Storybook ids, import snippets, and coverage flags.",
-    "- Not available yet: MCP tools, runtime search APIs, public JSON metadata endpoints, or llms-full.txt.",
+    "- JSON metadata: /api/components.json, /api/tokens.json, /api/examples.json",
+    "- Not available yet: MCP tools or runtime search APIs.",
     "",
     "## Packages",
     "",
@@ -176,6 +279,75 @@ export function generateLlmsText() {
   ].join("\n");
 }
 
+export function generateLlmsFullText() {
+  return [
+    "# Nexu Design full agent context",
+    "",
+    "> Static full-context export generated from shared component, token, example, and inventory metadata.",
+    "",
+    "## Generated JSON APIs",
+    "",
+    ...jsonApiRoutes.map((route) => `- ${route.href}: ${route.description}`),
+    "",
+    "## Metadata sources",
+    "",
+    ...metadataSourceFiles.all.map((source) => `- ${source}`),
+    "",
+    "## Components",
+    "",
+    ...componentMetadata.flatMap((component) => [
+      `### ${component.title}`,
+      "",
+      component.description,
+      "",
+      `- id: ${component.id}`,
+      `- package: ${component.packageName}`,
+      `- import: ${component.importSnippet}`,
+      `- docs: ${component.docsSlug}`,
+      `- storybook: ${component.storybookId ?? "none"}`,
+      `- examples: ${component.examples.length > 0 ? component.examples.join(", ") : "none"}`,
+      `- source: ${component.sourcePath}`,
+      "- props:",
+      ...component.props.map(
+        (prop) =>
+          `  - ${prop.name}: ${prop.type}; default=${prop.defaultValue}; ${prop.description}`,
+      ),
+      "- accessibility:",
+      ...component.accessibility.map((item) => `  - ${item}`),
+      "",
+    ]),
+    "## Tokens",
+    "",
+    ...tokenMetadataPages.flatMap((page) => [
+      `### ${page.title}`,
+      "",
+      ...page.groups.flatMap((group) => [
+        `#### ${group.title}`,
+        "",
+        ...group.tokens.map(
+          (token) =>
+            `- ${token.name} (${token.cssVar}): ${token.resolvedValue}; ${token.description}`,
+        ),
+        "",
+      ]),
+    ]),
+    "## Examples",
+    "",
+    ...exampleMetadata.flatMap((example) => [
+      `### ${example.id}`,
+      "",
+      `- title: ${example.title}`,
+      `- description: ${example.description ?? "none"}`,
+      `- file: ${example.filePath}`,
+      "",
+      "```tsx",
+      example.source,
+      "```",
+      "",
+    ]),
+  ].join("\n");
+}
+
 function formatInventoryItemForLlms(item: PublicApiInventoryItem) {
   const parts = [
     `- [${item.name}](${item.docsSlug}) (${item.kind}, ${item.status})`,
@@ -187,4 +359,23 @@ function formatInventoryItemForLlms(item: PublicApiInventoryItem) {
   if (item.examples.length > 0) parts.push(`examples: ${item.examples.join(", ")}`);
 
   return parts.join("; ");
+}
+
+function getInventoryKind(componentId: string) {
+  return publicApiInventory.find((item) => item.id === componentId)?.kind ?? "primitive";
+}
+
+function getInventoryStatus(componentId: string) {
+  return publicApiInventory.find((item) => item.id === componentId)?.status ?? "experimental";
+}
+
+function getExampleDependencies(source: string) {
+  return Array.from(
+    new Set(
+      source
+        .split("\n")
+        .map((line) => line.match(/^import(?:\s+type)?[\s\S]*?from ["']([^"']+)["']/)?.[1])
+        .filter((dependency): dependency is string => Boolean(dependency)),
+    ),
+  ).sort();
 }
