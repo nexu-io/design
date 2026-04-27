@@ -50,8 +50,17 @@ interface PublicApiInventoryInput {
 
 const uiWebPackage = "@nexu-design/ui-web" satisfies PublicApiPackage;
 
-const documentedDocsIds = new Set(["button"]);
-const provisionalPropsIds = new Set(["button"]);
+const documentedDocsIds = new Set([
+  "button",
+  "input",
+  "card",
+  "badge",
+  "checkbox",
+  "switch",
+  "select",
+  "dialog",
+]);
+const provisionalPropsIds = documentedDocsIds;
 
 const mvpComponentDocsIds = new Set([
   "button",
@@ -129,6 +138,7 @@ export const publicApiInventory = [
     name: "Badge",
     exports: ["Badge"],
     storybookSlug: "badge",
+    examples: ["badge/basic"],
   }),
   definePrimitive({
     id: "breadcrumb",
@@ -155,6 +165,7 @@ export const publicApiInventory = [
     name: "Card",
     exports: ["Card", "CardContent", "CardDescription", "CardFooter", "CardHeader", "CardTitle"],
     storybookSlug: "card",
+    examples: ["card/basic"],
   }),
   definePrimitive({
     id: "chat-message",
@@ -167,6 +178,7 @@ export const publicApiInventory = [
     name: "Checkbox",
     exports: ["Checkbox"],
     storybookSlug: "checkbox",
+    examples: ["checkbox/basic"],
   }),
   definePrimitive({
     id: "collapsible",
@@ -231,6 +243,7 @@ export const publicApiInventory = [
       "DialogTrigger",
     ],
     storybookSlug: "dialog",
+    examples: ["dialog/basic"],
   }),
   definePrimitive({
     id: "dropdown-menu",
@@ -287,6 +300,7 @@ export const publicApiInventory = [
     name: "Input",
     exports: ["Input"],
     storybookSlug: "input",
+    examples: ["input/basic"],
   }),
   definePrimitive({
     id: "interactive-row",
@@ -370,6 +384,7 @@ export const publicApiInventory = [
     name: "Select",
     exports: ["Select", "SelectContent", "SelectItem", "SelectTrigger", "SelectValue"],
     storybookSlug: "select",
+    examples: ["select/basic"],
   }),
   definePrimitive({
     id: "separator",
@@ -451,7 +466,13 @@ export const publicApiInventory = [
     storybookSlug: "stepper",
     coverage: { storybook: "missing" },
   }),
-  definePrimitive({ id: "switch", name: "Switch", exports: ["Switch"], storybookSlug: "switch" }),
+  definePrimitive({
+    id: "switch",
+    name: "Switch",
+    exports: ["Switch"],
+    storybookSlug: "switch",
+    examples: ["switch/basic"],
+  }),
   definePrimitive({
     id: "table",
     name: "Table",

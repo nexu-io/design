@@ -1,5 +1,6 @@
 import type { ExampleId } from "../lib/examples";
 import { getExample } from "../lib/examples";
+import { ExampleRenderer } from "../lib/examples-client";
 import { CodeBlock } from "./code-block";
 
 interface ComponentPreviewProps {
@@ -8,7 +9,6 @@ interface ComponentPreviewProps {
 
 export function ComponentPreview({ id }: ComponentPreviewProps) {
   const example = getExample(id);
-  const Example = example.component;
 
   return (
     <section className="not-prose my-6 overflow-hidden rounded-2xl border border-border-subtle bg-card shadow-rest">
@@ -19,7 +19,7 @@ export function ComponentPreview({ id }: ComponentPreviewProps) {
         ) : null}
       </div>
       <div className="grid min-h-36 place-items-center bg-surface-0 p-6 sm:p-8">
-        <Example />
+        <ExampleRenderer id={id} />
       </div>
       <CodeBlock code={example.source} title={example.filePath} variant="embedded" />
     </section>

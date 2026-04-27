@@ -1,12 +1,18 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import type { ComponentType } from "react";
 
-import { ButtonBasicExample } from "../examples/components/button/basic";
-import { ButtonLoadingExample } from "../examples/components/button/loading";
-import { ButtonVariantsExample } from "../examples/components/button/variants";
-
-export const exampleIds = ["button/basic", "button/variants", "button/loading"] as const;
+export const exampleIds = [
+  "button/basic",
+  "button/variants",
+  "button/loading",
+  "input/basic",
+  "card/basic",
+  "badge/basic",
+  "checkbox/basic",
+  "switch/basic",
+  "select/basic",
+  "dialog/basic",
+] as const;
 
 export type ExampleId = (typeof exampleIds)[number];
 
@@ -17,7 +23,6 @@ export interface ExampleDefinition {
   title: string;
   description?: string;
   category: ExampleCategory;
-  component: ComponentType;
   source: string;
   filePath: `examples/${string}.tsx`;
 }
@@ -28,7 +33,6 @@ export const examples = {
     title: "Basic usage",
     description: "Render a primary action with the default Button variant and size.",
     category: "components",
-    component: ButtonBasicExample,
     filePath: "examples/components/button/basic.tsx",
   }),
   "button/variants": defineExample({
@@ -36,7 +40,6 @@ export const examples = {
     title: "Variants",
     description: "Compare the common emphasis levels available on Button.",
     category: "components",
-    component: ButtonVariantsExample,
     filePath: "examples/components/button/variants.tsx",
   }),
   "button/loading": defineExample({
@@ -44,8 +47,56 @@ export const examples = {
     title: "Loading and disabled states",
     description: "Use loading for pending work and disabled for unavailable actions.",
     category: "components",
-    component: ButtonLoadingExample,
     filePath: "examples/components/button/loading.tsx",
+  }),
+  "input/basic": defineExample({
+    id: "input/basic",
+    title: "Basic usage",
+    description: "Pair Input with a visible label and optional icon for common form fields.",
+    category: "components",
+    filePath: "examples/components/input/basic.tsx",
+  }),
+  "card/basic": defineExample({
+    id: "card/basic",
+    title: "Basic usage",
+    description: "Compose Card slots for grouped content, supporting copy, and actions.",
+    category: "components",
+    filePath: "examples/components/card/basic.tsx",
+  }),
+  "badge/basic": defineExample({
+    id: "badge/basic",
+    title: "Basic usage",
+    description: "Use badge variants for compact status and metadata labels.",
+    category: "components",
+    filePath: "examples/components/badge/basic.tsx",
+  }),
+  "checkbox/basic": defineExample({
+    id: "checkbox/basic",
+    title: "Basic usage",
+    description: "Use Checkbox for independent yes/no choices with an associated label.",
+    category: "components",
+    filePath: "examples/components/checkbox/basic.tsx",
+  }),
+  "switch/basic": defineExample({
+    id: "switch/basic",
+    title: "Basic usage",
+    description: "Use Switch for immediately applied on/off settings.",
+    category: "components",
+    filePath: "examples/components/switch/basic.tsx",
+  }),
+  "select/basic": defineExample({
+    id: "select/basic",
+    title: "Basic usage",
+    description: "Use Select for a closed list of values where one option is chosen.",
+    category: "components",
+    filePath: "examples/components/select/basic.tsx",
+  }),
+  "dialog/basic": defineExample({
+    id: "dialog/basic",
+    title: "Basic usage",
+    description: "Compose Dialog with trigger, labelled content, body, and footer actions.",
+    category: "components",
+    filePath: "examples/components/dialog/basic.tsx",
   }),
 } satisfies Record<ExampleId, ExampleDefinition>;
 
@@ -65,21 +116,7 @@ function defineExample(definition: Omit<ExampleDefinition, "source">): ExampleDe
 }
 
 function readExampleSource(filePath: ExampleDefinition["filePath"]) {
-  let source: string;
-
-  switch (filePath) {
-    case "examples/components/button/basic.tsx":
-      source = readFileSync(resolveExampleFile("examples/components/button/basic.tsx"), "utf8");
-      break;
-    case "examples/components/button/variants.tsx":
-      source = readFileSync(resolveExampleFile("examples/components/button/variants.tsx"), "utf8");
-      break;
-    case "examples/components/button/loading.tsx":
-      source = readFileSync(resolveExampleFile("examples/components/button/loading.tsx"), "utf8");
-      break;
-    default:
-      throw new Error(`Unknown example source path: ${filePath}`);
-  }
+  const source = readFileSync(resolveExampleFile(filePath), "utf8");
 
   return source
     .replace('"../../../../../packages/ui-web/src/primitives/button"', '"@nexu-design/ui-web"')
