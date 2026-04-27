@@ -116,7 +116,7 @@ export function getAgentManifest() {
         "Internal shared metadata for components, props, examples, and tokens is available from one source module.",
       ],
       limitations: [
-        "No MCP server or runtime search tools are published yet.",
+        "Read-only MCP tools are available through @nexu-design/mcp and consume the same JSON metadata APIs.",
         "Coverage flags describe docs readiness and may not prove package export completeness.",
       ],
     },
@@ -127,7 +127,22 @@ export function getAgentManifest() {
         ...jsonApiRoutes,
       ],
     },
-    packages: packageNames,
+    packages: [...packageNames, "@nexu-design/mcp"],
+    mcp: {
+      package: "@nexu-design/mcp",
+      command: "npx -y @nexu-design/mcp",
+      transport: "stdio",
+      tools: [
+        "search_components",
+        "get_component",
+        "get_component_props",
+        "get_example",
+        "search_tokens",
+        "get_token",
+      ],
+      scope:
+        "read-only metadata lookup backed by /api/components.json, /api/examples.json, and /api/tokens.json",
+    },
     inventory: {
       source: inventorySource,
       counts,

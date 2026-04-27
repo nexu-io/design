@@ -1,0 +1,37 @@
+{
+  "name": "@nexu-design/mcp",
+  "version": "0.0.0",
+  "private": false,
+  "description": "Read-only MCP server for querying Nexu Design components, examples, and tokens",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexu-io/design"
+  },
+  "files": ["dist", "README.md"],
+  "type": "module",
+  "bin": {
+    "mcp": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "pack:check": "pnpm run build && npm pack --dry-run"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "~5.9.3"
+  }
+}
