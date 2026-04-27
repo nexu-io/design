@@ -1,4 +1,7 @@
 node_modules
+.next
+.source
+*.tsbuildinfo
 dist
 storybook-static
 .turbo

@@ -10,8 +10,11 @@
     "ignore": [
       "**/dist/**",
       "**/dist-electron/**",
+      "**/.next/**",
+      "**/.source/**",
       "**/release/**",
       "**/storybook-static/**",
+      "**/*.tsbuildinfo",
       "apps/slark/out/**"
     ]
   },
