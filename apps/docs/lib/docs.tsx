@@ -859,6 +859,19 @@ export const docsPages: DocsPage[] = [
     headings: guideHeadings,
     content: <LocalConsumptionGuideContent />,
   },
+  {
+    title: "AI agents",
+    description: "Static machine-readable docs surfaces and current agent support scope.",
+    slug: ["guide", "ai-agents"],
+    headings: [
+      { id: "summary", title: "Summary" },
+      { id: "entrypoints", title: "Entrypoints" },
+      { id: "scope", title: "Current scope" },
+      { id: "limits", title: "Limits" },
+      { id: "source-documents", title: "Source documents" },
+    ],
+    content: <AiAgentsGuideContent />,
+  },
   ...foundationPages,
   ...componentDocDefinitions.map((component) => ({
     title: component.title,
@@ -1179,6 +1192,67 @@ function LocalConsumptionGuideContent() {
       </ul>
       <h2 id="source-documents">Source documents</h2>
       <GuideSourceLinks sources={["docs/package-publishing-and-consumption.md"]} />
+    </>
+  );
+}
+
+function AiAgentsGuideContent() {
+  return (
+    <>
+      <h2 id="summary">Summary</h2>
+      <p>
+        Nexu Design currently supports AI agents through static, generated docs artifacts. Agents
+        should use these surfaces to discover public component and pattern metadata without scraping
+        Storybook or source files first.
+      </p>
+      <h2 id="entrypoints">Entrypoints</h2>
+      <ul>
+        <li>
+          <Link href="/llms.txt">/llms.txt</Link> is the compact text index for LLM context.
+        </li>
+        <li>
+          <Link href="/api/manifest.json">/api/manifest.json</Link> is the structured manifest for
+          docs routes, package names, inventory items, Storybook ids, examples, and coverage flags.
+        </li>
+        <li>
+          <Link href="/reference/components">/reference/components</Link> documents the source of
+          truth policy for public component pages and frontmatter.
+        </li>
+      </ul>
+      <h2 id="scope">Current scope</h2>
+      <ul>
+        <li>Discover package import snippets for public primitives, patterns, and utilities.</li>
+        <li>Resolve docs slugs and Storybook ids from the curated public API inventory.</li>
+        <li>Read coverage flags for docs, examples, Storybook, and provisional props content.</li>
+        <li>Use Storybook links for state matrices and visual QA context, not as primary docs.</li>
+      </ul>
+      <CodeBlock
+        title="Recommended static-agent flow"
+        code={
+          "1. Fetch /llms.txt for a compact overview.\n2. Fetch /api/manifest.json when structured metadata is needed.\n3. Open the linked docs page for usage guidance.\n4. Use Storybook ids only for visual QA or state coverage."
+        }
+        language="text"
+      />
+      <h2 id="limits">Limits</h2>
+      <ul>
+        <li>There is no published MCP server yet; MCP tools are planned for Phase 3.</li>
+        <li>
+          Generated component, token, example, and props JSON APIs are deferred to Phase 2 metadata
+          generation.
+        </li>
+        <li>
+          Props tables on MVP component pages are provisional and manually curated until shared
+          metadata generation replaces duplicated content.
+        </li>
+        <li>
+          Coverage flags describe docs readiness and should not be treated as exhaustive package
+          export validation.
+        </li>
+      </ul>
+      <h2 id="source-documents">Source documents</h2>
+      <GuideSourceLinks
+        sources={["docs/component-api-guidelines.md", "packages/ui-web/COMPONENT_REFERENCE.md"]}
+      />
     </>
   );
 }

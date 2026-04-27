@@ -70,6 +70,7 @@ export const docsNavigationSections: DocsNavSectionDefinition[] = [
         href: "/guide/local-package-consumption",
         status: "mvp",
       },
+      { title: "AI agents", href: "/guide/ai-agents", status: "generated" },
     ],
   },
   {
