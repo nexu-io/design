@@ -19,6 +19,7 @@
     "dev:storybook": "pnpm --filter @nexu-design/storybook storybook",
     "docs:dev": "pnpm --filter @nexu-design/docs dev",
     "docs:build": "pnpm --filter @nexu-design/docs build && pnpm docs:pages-output",
+    "build:pages": "pnpm docs:build",
     "docs:pages-output": "rm -rf out storybook-static apps/storybook/storybook-static && cp -R apps/docs/out out && cp -R apps/docs/out storybook-static && cp -R apps/docs/out apps/storybook/storybook-static",
     "docs:typecheck": "pnpm --filter @nexu-design/docs typecheck",
     "docs:lint": "pnpm --filter @nexu-design/docs lint",
