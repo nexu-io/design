@@ -59,12 +59,6 @@ export const docsNavSections: DocsNavSection[] = docsNavigationSections.map((sec
   items: section.items.map(({ title, href }) => ({ title, href })),
 }));
 
-const shellHeadings: DocsHeading[] = [
-  { id: "navigation", title: "Navigation" },
-  { id: "theme", title: "Theme" },
-  { id: "next-steps", title: "Next steps" },
-];
-
 const guideHeadings: DocsHeading[] = [
   { id: "summary", title: "Summary" },
   { id: "consumer-guidance", title: "Consumer guidance" },
@@ -179,13 +173,14 @@ export const docsPages: DocsPage[] = [
       <>
         <h2 id="token-contract">Token contract</h2>
         <p>
-          The docs shell toggles the <code>.dark</code> class on the document element, reusing the
-          same dark variables shipped by <code>@nexu-design/tokens/styles.css</code>.
+          Dark mode is driven by toggling the <code>.dark</code> class on the document element. The
+          same dark variables shipped by <code>@nexu-design/tokens/styles.css</code> apply across
+          every component, so product surfaces inherit the theme without custom overrides.
         </p>
         <h2 id="toggle">Toggle</h2>
         <p>
-          The header control persists theme selection in local storage while still respecting system
-          preference on first visit.
+          Applications can wire any theme toggle they prefer. Persisting the selection in local
+          storage while still respecting system preference on first visit is recommended.
         </p>
       </>
     ),
@@ -225,7 +220,7 @@ export const docsPages: DocsPage[] = [
     headings: [
       { id: "summary", title: "Summary" },
       { id: "entrypoints", title: "Entrypoints" },
-      { id: "scope", title: "Current scope" },
+      { id: "scope", title: "What agents can do today" },
       { id: "limits", title: "Limits" },
       { id: "source-documents", title: "Source documents" },
     ],
@@ -253,17 +248,25 @@ export const docsPages: DocsPage[] = [
   },
   {
     title: "Tokens",
-    description: "Token metadata reference page placeholder for the shared docs metadata model.",
+    description: "Structured reference for token categories, groups, and shared metadata.",
     slug: ["reference", "tokens"],
-    headings: shellHeadings,
-    content: <InitialShellContent />,
+    headings: [
+      { id: "overview", title: "Overview" },
+      { id: "categories", title: "Categories" },
+      { id: "consuming", title: "Consuming tokens" },
+    ],
+    content: <TokensReferenceContent />,
   },
   {
     title: "Release notes",
-    description: "Changelog and release summary entry point for Nexu Design packages.",
+    description: "Track releases for the Nexu Design packages.",
     slug: ["changelog"],
-    headings: shellHeadings,
-    content: <InitialShellContent />,
+    headings: [
+      { id: "overview", title: "Overview" },
+      { id: "packages", title: "Packages" },
+      { id: "process", title: "Release process" },
+    ],
+    content: <ReleaseNotesContent />,
   },
 ];
 
@@ -286,34 +289,87 @@ export function getPageBySlug(slug: string[] = ["guide", "introduction"]) {
   return docsPages.find((page) => page.slug.join("/") === slug.join("/"));
 }
 
-function InitialShellContent() {
+function TokensReferenceContent() {
   return (
     <>
-      <h2 id="navigation">Navigation</h2>
+      <h2 id="overview">Overview</h2>
       <p>
-        The initial shell establishes stable header, sidebar, content, and page-outline regions so
-        future MDX content can be added without reworking layout primitives.
+        <code>@nexu-design/tokens</code> ships the shared design tokens that every Nexu Design
+        component consumes: semantic colors, type scale, spacing, radius, shadow, and motion. Tokens
+        are exposed as CSS custom properties so theming can be applied at any layer of an
+        application.
       </p>
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-xl border border-border-subtle bg-card p-5 shadow-rest">
-          <h3>Consumer docs</h3>
-          <p>Guide, foundation, and component pages use root-level URLs.</p>
-        </div>
-        <div className="rounded-xl border border-border-subtle bg-card p-5 shadow-rest">
-          <h3>Storybook remains</h3>
-          <p>Storybook stays focused on QA, states, and visual review.</p>
-        </div>
-      </div>
-      <h2 id="theme">Theme</h2>
+      <h2 id="categories">Categories</h2>
       <p>
-        This site imports <code>@nexu-design/ui-web/styles.css</code>, which imports token CSS and
-        provides the same semantic color, spacing, radius, shadow, and typography variables used by
-        the component library.
+        Each category has a dedicated foundation page with previews, CSS variable names, and usage
+        guidance:
       </p>
-      <h2 id="next-steps">Next steps</h2>
+      <ul>
+        <li>
+          <Link href="/foundations/colors">Colors</Link> — semantic surfaces, text levels, borders,
+          brand, and status colors.
+        </li>
+        <li>
+          <Link href="/foundations/typography">Typography</Link> — font families, type scale,
+          weights, and text-style recipes.
+        </li>
+        <li>
+          <Link href="/foundations/spacing">Spacing</Link> — the 4px base unit and named spacing
+          steps.
+        </li>
+        <li>
+          <Link href="/foundations/radius">Radius</Link> — corner geometry from compact controls to
+          pill shapes.
+        </li>
+        <li>
+          <Link href="/foundations/shadow">Shadow</Link> — elevation scale for rest, cards,
+          overlays, and focus states.
+        </li>
+        <li>
+          <Link href="/foundations/motion">Motion</Link> — shared duration and easing curves.
+        </li>
+      </ul>
+      <h2 id="consuming">Consuming tokens</h2>
       <p>
-        Upcoming tasks will add the typed examples registry and replace these scaffolds with rich
-        component documentation.
+        Import the shared stylesheet once at the application root and reference tokens through their
+        semantic CSS variables.
+      </p>
+      <CodeBlock code="import '@nexu-design/ui-web/styles.css';" title="Root stylesheet" />
+      <CodeBlock
+        title="Token usage"
+        code={
+          ".card {\n  background: var(--color-surface-1);\n  color: var(--color-text-primary);\n  border: 1px solid var(--color-border-subtle);\n  border-radius: var(--radius-lg);\n  box-shadow: var(--shadow-card);\n}"
+        }
+        language="css"
+      />
+    </>
+  );
+}
+
+function ReleaseNotesContent() {
+  return (
+    <>
+      <h2 id="overview">Overview</h2>
+      <p>
+        Nexu Design packages follow semantic versioning and are released together through
+        Changesets. Each release bundles tokens and components so consumers can upgrade them in
+        lockstep.
+      </p>
+      <h2 id="packages">Packages</h2>
+      <ul>
+        <li>
+          <code>@nexu-design/ui-web</code> — React component library with compiled styles.
+        </li>
+        <li>
+          <code>@nexu-design/tokens</code> — shared token source, CSS variables, and type
+          definitions.
+        </li>
+      </ul>
+      <h2 id="process">Release process</h2>
+      <p>
+        See the <Link href="/guide/release-and-versioning">Release &amp; versioning</Link> guide for
+        the full workflow, including changeset authoring, validation, and publishing. Published
+        release notes will appear here as versions ship.
       </p>
     </>
   );
@@ -324,9 +380,9 @@ function IntroductionGuideContent() {
     <>
       <h2 id="summary">Summary</h2>
       <p>
-        Nexu Design docs are the consumer-facing layer for installation, foundations, components,
-        patterns, and reference material. The source policy remains in repository markdown files;
-        guide pages summarize that policy and link back when maintainers need the complete workflow.
+        Nexu Design is a React component library and token system for building consistent,
+        accessible product surfaces. Use this site for installation, foundations, components,
+        patterns, and API reference; use Storybook for visual QA and state matrices.
       </p>
       <h2 id="consumer-guidance">Consumer guidance</h2>
       <ul>
@@ -553,52 +609,63 @@ function AiAgentsGuideContent() {
     <>
       <h2 id="summary">Summary</h2>
       <p>
-        Nexu Design currently supports AI agents through static, generated docs artifacts. Agents
-        should use these surfaces to discover public component and pattern metadata without scraping
-        Storybook or source files first.
+        Nexu Design ships machine-readable artifacts so AI coding agents and LLM tooling can
+        discover public components, tokens, and examples without scraping Storybook or reading
+        source files. Use these endpoints to ground prompts, generate code, and route users to the
+        right primitive.
       </p>
       <h2 id="entrypoints">Entrypoints</h2>
       <ul>
         <li>
-          <Link href="/llms.txt">/llms.txt</Link> is the compact text index for LLM context.
+          <Link href="/llms.txt">/llms.txt</Link> — compact text index of every public component,
+          pattern, and utility, optimized for LLM context.
         </li>
         <li>
-          <Link href="/api/manifest.json">/api/manifest.json</Link> is the structured manifest for
-          docs routes, package names, inventory items, Storybook ids, examples, and coverage flags.
+          <Link href="/llms-full.txt">/llms-full.txt</Link> — full export of components, tokens, and
+          example source for deep grounding.
         </li>
         <li>
-          <Link href="/reference/components">/reference/components</Link> documents the source of
-          truth policy for public component pages and frontmatter.
+          <Link href="/api/manifest.json">/api/manifest.json</Link> — structured manifest of docs
+          routes, package names, inventory items, Storybook ids, examples, and coverage flags.
+        </li>
+        <li>
+          <Link href="/api/components.json">/api/components.json</Link>,{" "}
+          <Link href="/api/tokens.json">/api/tokens.json</Link>,{" "}
+          <Link href="/api/examples.json">/api/examples.json</Link> — JSON metadata APIs for
+          components, tokens, and runnable examples.
+        </li>
+        <li>
+          <code>@nexu-design/mcp</code> — read-only MCP server exposing the same metadata for agents
+          with MCP support.
         </li>
       </ul>
-      <h2 id="scope">Current scope</h2>
+      <h2 id="scope">What agents can do today</h2>
       <ul>
-        <li>Discover package import snippets for public primitives, patterns, and utilities.</li>
+        <li>Discover the public import path for every primitive, pattern, and utility.</li>
         <li>Resolve docs slugs and Storybook ids from the curated public API inventory.</li>
-        <li>Read coverage flags for docs, examples, Storybook, and provisional props content.</li>
-        <li>Use Storybook links for state matrices and visual QA context, not as primary docs.</li>
+        <li>Look up tokens, component props, and example source code through JSON or MCP.</li>
+        <li>Link to Storybook for state matrices and visual QA context.</li>
       </ul>
       <CodeBlock
-        title="Recommended static-agent flow"
+        title="Recommended agent flow"
         code={
-          "1. Fetch /llms.txt for a compact overview.\n2. Fetch /api/manifest.json when structured metadata is needed.\n3. Open the linked docs page for usage guidance.\n4. Use Storybook ids only for visual QA or state coverage."
+          "1. Fetch /llms.txt for a compact overview of public APIs.\n2. Fetch /api/manifest.json or the topic-specific JSON when structured metadata is needed.\n3. Open the linked docs page for usage guidance and examples.\n4. Use @nexu-design/mcp for read-only metadata lookup inside MCP-compatible agents.\n5. Use Storybook ids for visual QA or state coverage."
         }
         language="text"
       />
+      <CodeBlock title="Run the MCP server" code="npx -y @nexu-design/mcp" language="bash" />
       <h2 id="limits">Limits</h2>
       <ul>
-        <li>There is no published MCP server yet; MCP tools are planned for Phase 3.</li>
         <li>
-          Shared component, token, example, and props metadata exists internally now; public JSON
-          endpoints are still planned as the next step.
+          MCP tools and JSON APIs are read-only; they do not write, mutate, or execute product
+          workflows.
         </li>
         <li>
-          Props tables on MVP component pages are still provisional even though the shared metadata
-          source now removes the previous duplicated docs definitions.
+          Props tables are curated. Treat them as authoritative for documented behavior, and fall
+          back to the component source when a prop is missing.
         </li>
         <li>
-          Coverage flags describe docs readiness and should not be treated as exhaustive package
-          export validation.
+          Coverage flags describe docs readiness, not exhaustive validation of package exports.
         </li>
       </ul>
       <h2 id="source-documents">Source documents</h2>
@@ -688,7 +755,7 @@ function SpacingFoundationContent() {
   return (
     <FoundationPageIntro
       title="Spacing tokens"
-      description="Spacing is based on a 4px unit exposed as --spacing. Shared metadata now provides the supported steps for docs and internal agent artifacts, while public JSON endpoints remain a planned follow-up."
+      description="Spacing is based on a 4px unit exposed as --spacing. Use the documented steps for consistent layout rhythm across product surfaces."
       usage="Prefer the named spacing steps for product layout rhythm; use smaller values for inline controls and larger values for sections or page regions."
       tokens={spacingPage.groups[0]?.tokens ?? []}
     >
@@ -780,12 +847,12 @@ function FoundationPageIntro({
       <p>{description}</p>
       <div className="not-prose my-6 rounded-xl border border-border-subtle bg-card p-5 shadow-rest">
         <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">
-          Source-backed Phase 1 page
+          Token source
         </p>
         <p className="mt-2 text-sm leading-6 text-text-secondary">
-          Token names, descriptions, CSS variables, and shared docs metadata come from
-          <code> {metadataSourceFiles.tokens.join(", ")}</code>. Public JSON endpoints for this
-          metadata are still planned as a follow-up.
+          Names, descriptions, and CSS variables on this page are generated directly from
+          <code> {metadataSourceFiles.tokens.join(", ")}</code>, so docs and consuming applications
+          always agree on the contract.
         </p>
       </div>
       {children}
@@ -1025,16 +1092,16 @@ function ComponentReferenceContent() {
       </div>
       <h2 id="public-inventory">Public API inventory</h2>
       <p>
-        The curated inventory in <code>apps/docs/lib/public-api-inventory.ts</code> separates public
-        barrel exports from the component docs backlog. It tracks package imports, source files,
-        planned docs slugs, Storybook ids, examples, status, and coverage flags, and now feeds the
-        shared docs metadata module used by docs pages and agent artifacts.
+        The curated inventory in <code>apps/docs/lib/public-api-inventory.ts</code> tracks every
+        public export from <code>@nexu-design/ui-web</code>: package imports, source files, docs
+        slugs, Storybook ids, and runnable examples. It feeds the shared docs metadata consumed by
+        this site and by agent-facing artifacts.
       </p>
       <PublicInventorySummary />
       <h2 id="component-template">Component template</h2>
       <p>
-        Component pages follow a reusable outline so the docs, metadata APIs, Storybook links, and
-        future <code>llms.txt</code> outputs can share the same shape.
+        Every component page follows a shared outline so docs, metadata APIs, Storybook links, and
+        machine-readable outputs stay aligned.
       </p>
       <div className="not-prose my-6 overflow-x-auto rounded-xl border border-border-subtle bg-card shadow-rest">
         <table className="min-w-full border-collapse text-left text-sm">
@@ -1060,9 +1127,8 @@ function ComponentReferenceContent() {
       </div>
       <h2 id="source-of-truth">Source of truth</h2>
       <p>
-        During Phase 1, existing <code>docs/*.md</code> files remain the authoritative maintainer
-        policies. Docs pages should summarize them for consumers and link back rather than fork a
-        second policy.
+        Maintainer policy lives in repository markdown files. Docs pages summarize that policy for
+        consumers and link back when the complete workflow is needed.
       </p>
       <ul>
         {docsSourceOfTruthPolicy.map((item) => (
@@ -1207,17 +1273,17 @@ export function HomeCards() {
 
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      <HomeCard eyebrow="Guide" title="Start with installation" href="/guide/installation">
-        Import packages, styles, and theme primitives correctly.
+      <HomeCard eyebrow="Install" title="Drop-in setup" href="/guide/installation">
+        Add two packages, import one stylesheet, and start composing UI.
       </HomeCard>
-      <HomeCard eyebrow="Tokens" title="Browse foundations" href="/foundations/colors">
-        Colors, typography, spacing, radius, shadow, and motion.
+      <HomeCard eyebrow="Foundations" title="Design tokens" href="/foundations/colors">
+        Semantic color, typography, spacing, radius, shadow, and motion variables.
       </HomeCard>
-      <HomeCard eyebrow="Components" title="Use real primitives" href="/components/button">
-        Docs render the same UI package that applications consume.
+      <HomeCard eyebrow="Components" title="Accessible primitives" href="/components/button">
+        Radix-backed primitives and patterns with keyboard and screen-reader support.
       </HomeCard>
-      <HomeCard eyebrow="Storybook" title="Browse live stories" href={storybookUrl}>
-        Explore interactive component docs and states in Storybook.
+      <HomeCard eyebrow="Storybook" title="Interactive states" href={storybookUrl}>
+        Explore every component variant, state, and scenario in Storybook.
       </HomeCard>
     </div>
   );

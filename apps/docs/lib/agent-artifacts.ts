@@ -55,7 +55,7 @@ const routeItems = docsNavigationSections.flatMap((section) =>
 
 const packageNames = Array.from(new Set(publicApiInventory.map((item) => item.packageName))).sort();
 
-const schemaVersion = "2026-04-27.phase-2";
+const schemaVersion = "2026-04-27";
 
 const jsonApiRoutes = [
   {
@@ -270,7 +270,7 @@ export function generateLlmsText() {
     `- Inventory source: ${inventorySource}`,
     "- Scope: static docs, curated public API inventory, shared component/example/token metadata, Storybook ids, import snippets, and coverage flags.",
     "- JSON metadata: /api/components.json, /api/tokens.json, /api/examples.json",
-    "- Not available yet: MCP tools or runtime search APIs.",
+    "- MCP: read-only tools via @nexu-design/mcp (stdio).",
     "",
     "## Packages",
     "",

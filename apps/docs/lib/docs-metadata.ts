@@ -1754,7 +1754,7 @@ function createGeneratedComponentDocDefinition(
         type: "Component-specific React props",
         defaultValue: "—",
         description:
-          "Generated placeholder until Phase 2 props metadata is extracted from the source component.",
+          "Additional props forwarded to the underlying element. See the component source for the full type surface.",
       },
     ],
   };
