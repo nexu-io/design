@@ -179,7 +179,7 @@ export function getComponentsApi() {
       description: component.description,
       overview: component.overview,
       usage: component.usage,
-      docsUrl: component.docsSlug,
+      docsUrl: toBaseRelativePath(component.docsSlug),
       storybookId: component.storybookId,
       storybookUrl: component.storybookPath,
       storybookTitle: component.storybookTitle,
@@ -246,7 +246,7 @@ export function getExamplesApi() {
         filePath: example.filePath,
         source: example.source,
         dependencies: getExampleDependencies(example.source),
-        docsUrl: component?.docsSlug,
+        docsUrl: component?.docsSlug ? toBaseRelativePath(component.docsSlug) : undefined,
       };
     }),
   };

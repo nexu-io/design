@@ -19,7 +19,7 @@ export const fallbackMetadata: MetadataStore = {
           "Use Button for explicit user actions: saving changes, starting flows, confirming destructive work, or linking to a next destination when the action needs button affordance.",
         usage:
           "Choose one high-emphasis action per group, then use outline, ghost, or secondary variants for supporting actions. Pair loading with async work so users cannot submit twice.",
-        docsUrl: "/components/button",
+        docsUrl: "components/button",
         storybookId: "button",
         examples: ["button/basic", "button/variants", "button/loading"],
         accessibility: [
@@ -74,7 +74,7 @@ export const fallbackMetadata: MetadataStore = {
         source:
           "import { Button } from '@nexu-design/ui-web';\n\nexport function ButtonBasicExample() {\n  return <Button>Save changes</Button>;\n}",
         dependencies: ["@nexu-design/ui-web"],
-        docsUrl: "/components/button",
+        docsUrl: "components/button",
       },
     ],
   },
