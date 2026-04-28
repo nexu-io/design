@@ -56,7 +56,7 @@ const agentInventoryItems: AgentInventoryItem[] = publicApiInventory.map((item) 
 const routeItems = docsNavigationSections.flatMap((section) =>
   section.items.map((item) => ({
     title: item.title,
-    href: item.href,
+    href: toApiRelativePath(item.href),
     section: section.title,
     status: item.status ?? "draft",
   })),
