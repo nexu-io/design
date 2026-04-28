@@ -12,7 +12,7 @@ import {
 import { publicApiInventory, type PublicApiInventoryItem } from "./public-api-inventory";
 
 const inventorySource = "apps/docs/lib/public-api-inventory.ts";
-const aiAgentsGuidePath = "/guide/ai-agents";
+const aiAgentsGuidePath = "guide/ai-agents";
 
 function toBaseRelativePath(path: string) {
   return path.replace(/^\/+/, "");

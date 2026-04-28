@@ -47,6 +47,13 @@ class InvalidParamsError extends Error {
   }
 }
 
+class ResourceNotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ResourceNotFoundError";
+  }
+}
+
 const tools = [
   {
     name: "search_components",
@@ -235,10 +242,11 @@ async function handleSingleMessage(message: unknown): Promise<JsonRpcResponse | 
   } catch (error) {
     const isMethodNotFound = error instanceof MethodNotFoundError;
     const isInvalidParams = error instanceof InvalidParamsError;
+    const isResourceNotFound = error instanceof ResourceNotFoundError;
 
     return buildError(
       request.id,
-      isMethodNotFound ? -32601 : isInvalidParams ? -32602 : -32603,
+      isMethodNotFound ? -32601 : isInvalidParams ? -32602 : isResourceNotFound ? -32002 : -32603,
       error instanceof Error ? error.message : "Internal error",
       error,
     );
@@ -319,6 +327,10 @@ async function callTool(params: unknown) {
 async function readResource(params: unknown) {
   const { uri } = asRecord(params);
 
+  if (typeof uri !== "string") {
+    throw new InvalidParamsError("Resource uri must be a string.");
+  }
+
   if (uri === "nexu://components") {
     const result = await searchComponents({ limit: 100 });
     return resourceContents(uri, result);
@@ -329,17 +341,33 @@ async function readResource(params: unknown) {
     return resourceContents(uri, result);
   }
 
-  if (typeof uri === "string" && uri.startsWith("nexu://components/")) {
-    const result = await getComponent({ name: uri.replace("nexu://components/", "") });
+  if (uri.startsWith("nexu://components/")) {
+    const result = await readExistingResource(() =>
+      getComponent({ name: uri.replace("nexu://components/", "") }),
+    );
     return resourceContents(uri, result);
   }
 
-  if (typeof uri === "string" && uri.startsWith("nexu://examples/")) {
-    const result = await getExample({ example: uri.replace("nexu://examples/", "") });
+  if (uri.startsWith("nexu://examples/")) {
+    const result = await readExistingResource(() =>
+      getExample({ example: uri.replace("nexu://examples/", "") }),
+    );
     return resourceContents(uri, result);
   }
 
-  throw new Error(`Unknown Nexu Design MCP resource: ${String(uri)}`);
+  throw new ResourceNotFoundError(`Unknown Nexu Design MCP resource: ${uri}`);
+}
+
+async function readExistingResource(read: () => Promise<unknown>) {
+  try {
+    return await read();
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith("Unknown Nexu Design")) {
+      throw new ResourceNotFoundError(error.message);
+    }
+
+    throw error;
+  }
 }
 
 function resource(uri: string, name: string, description: string) {
@@ -347,7 +375,7 @@ function resource(uri: string, name: string, description: string) {
 }
 
 function resourceContents(uri: unknown, result: unknown) {
-  if (typeof uri !== "string") throw new Error("Resource uri must be a string.");
+  if (typeof uri !== "string") throw new InvalidParamsError("Resource uri must be a string.");
 
   return {
     contents: [
