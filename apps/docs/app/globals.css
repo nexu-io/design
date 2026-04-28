@@ -1,6 +1,8 @@
-@import "@nexu-design/ui-web/styles.css";
+@import "tailwindcss";
+@import "../../../packages/tokens/src/styles.css";
 
 @source "../**/*.{ts,tsx,mdx}";
+@source "../../../packages/ui-web/src/**/*.{ts,tsx}";
 
 html {
   color-scheme: light;

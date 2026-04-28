@@ -111,6 +111,8 @@ export const publicApiInventory = [
     name: "Accordion",
     exports: ["Accordion", "AccordionContent", "AccordionItem", "AccordionTrigger"],
     storybookSlug: "accordion",
+
+    examples: ["accordion/basic"],
   }),
   definePrimitive({
     id: "activity-bar",
@@ -127,6 +129,8 @@ export const publicApiInventory = [
     storybookSlug: "activitybar",
     storybookSection: "Reserved",
     storybookIdPrefix: "reserved",
+
+    examples: ["activity-bar/basic"],
   }),
   definePrimitive({
     id: "alert",
@@ -140,6 +144,8 @@ export const publicApiInventory = [
     name: "Avatar",
     exports: ["Avatar", "AvatarFallback", "AvatarImage"],
     storybookSlug: "avatar",
+
+    examples: ["avatar/basic"],
   }),
   definePrimitive({
     id: "badge",
@@ -160,6 +166,8 @@ export const publicApiInventory = [
       "BreadcrumbSeparator",
     ],
     storybookSlug: "breadcrumb",
+
+    examples: ["breadcrumb/basic"],
   }),
   definePrimitive({
     id: "button",
@@ -180,6 +188,8 @@ export const publicApiInventory = [
     name: "ChatMessage",
     status: "experimental",
     exports: ["ChatMessage", "ChatMessageReaction", "ChatSender", "Mention"],
+
+    examples: ["chat-message/basic"],
   }),
   definePrimitive({
     id: "checkbox",
@@ -193,12 +203,16 @@ export const publicApiInventory = [
     name: "Collapsible",
     exports: ["Collapsible", "CollapsibleContent", "CollapsibleTrigger"],
     storybookSlug: "collapsible",
+
+    examples: ["collapsible/basic"],
   }),
   definePrimitive({
     id: "combobox",
     name: "Combobox",
     exports: ["Combobox", "ComboboxContent", "ComboboxInput", "ComboboxItem", "ComboboxTrigger"],
     storybookSlug: "combobox",
+
+    examples: ["combobox/basic"],
   }),
   definePrimitive({
     id: "conversation-message",
@@ -206,6 +220,8 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["ConversationMessage", "ConversationMessageStatusIcon"],
     storybookSlug: "conversationmessage",
+
+    examples: ["conversation-message/basic"],
   }),
   definePrimitive({
     id: "data-table",
@@ -221,6 +237,8 @@ export const publicApiInventory = [
       "DataTableToolbar",
     ],
     storybookSlug: "datatable",
+
+    examples: ["data-table/basic"],
   }),
   definePrimitive({
     id: "detail-panel",
@@ -235,6 +253,8 @@ export const publicApiInventory = [
       "DetailPanelTitle",
     ],
     storybookSlug: "detailpanel",
+
+    examples: ["detail-panel/basic"],
   }),
   definePrimitive({
     id: "dialog",
@@ -275,6 +295,8 @@ export const publicApiInventory = [
       "EntityCardTitle",
     ],
     storybookSlug: "entitycard",
+
+    examples: ["entity-card/basic"],
   }),
   definePrimitive({
     id: "event-notice",
@@ -282,6 +304,8 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["EventNotice"],
     storybookSlug: "eventnotice",
+
+    examples: ["event-notice/basic"],
   }),
   definePrimitive({
     id: "file-attachment",
@@ -289,6 +313,8 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["FileAttachment"],
     storybookSlug: "fileattachment",
+
+    examples: ["file-attachment/basic"],
   }),
   definePrimitive({
     id: "image-attachment",
@@ -296,6 +322,8 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["ImageAttachment"],
     storybookSlug: "imageattachment",
+
+    examples: ["image-attachment/basic"],
   }),
   definePrimitive({
     id: "image-gallery",
@@ -303,6 +331,8 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["ImageGallery", "ImageGalleryItem"],
     storybookSlug: "imagegallery",
+
+    examples: ["image-gallery/basic"],
   }),
   definePrimitive({
     id: "input",
@@ -322,8 +352,16 @@ export const publicApiInventory = [
       "InteractiveRowTrailing",
     ],
     storybookSlug: "interactiverow",
+
+    examples: ["interactive-row/basic"],
   }),
-  definePrimitive({ id: "label", name: "Label", exports: ["Label"], storybookSlug: "label" }),
+  definePrimitive({
+    id: "label",
+    name: "Label",
+    exports: ["Label"],
+    storybookSlug: "label",
+    examples: ["label/basic"],
+  }),
   definePrimitive({
     id: "logo",
     name: "Logo",
@@ -341,6 +379,8 @@ export const publicApiInventory = [
       "RuntimeName",
     ],
     importNames: ["BrandLogo", "ProviderLogo", "ModelLogo"],
+
+    examples: ["logo/basic"],
   }),
   definePrimitive({
     id: "nav-item",
@@ -348,6 +388,8 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["NavItem"],
     storybookSlug: "navitem",
+
+    examples: ["nav-item/basic"],
   }),
   definePrimitive({
     id: "panel-footer",
@@ -355,6 +397,8 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["PanelFooter", "PanelFooterActions", "PanelFooterMeta"],
     storybookSlug: "panelfooter",
+
+    examples: ["panel-footer/basic"],
   }),
   definePrimitive({
     id: "popover",
@@ -369,25 +413,39 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["PricingCard"],
     storybookSlug: "pricingcard",
+
+    examples: ["pricing-card/basic"],
   }),
   definePrimitive({
     id: "progress",
     name: "Progress",
     exports: ["Progress"],
     storybookSlug: "progress",
+
+    examples: ["progress/basic"],
   }),
-  definePrimitive({ id: "prose", name: "Prose", exports: ["Prose"], storybookSlug: "prose" }),
+  definePrimitive({
+    id: "prose",
+    name: "Prose",
+    exports: ["Prose"],
+    storybookSlug: "prose",
+    examples: ["prose/basic"],
+  }),
   definePrimitive({
     id: "radio-group",
     name: "RadioGroup",
     exports: ["RadioGroup", "RadioGroupItem"],
     storybookSlug: "radiogroup",
+
+    examples: ["radio-group/basic"],
   }),
   definePrimitive({
     id: "scroll-area",
     name: "ScrollArea",
     exports: ["ScrollArea", "ScrollBar"],
     storybookSlug: "scrollarea",
+
+    examples: ["scroll-area/basic"],
   }),
   definePrimitive({
     id: "select",
@@ -401,6 +459,8 @@ export const publicApiInventory = [
     name: "Separator",
     exports: ["Separator"],
     storybookSlug: "separator",
+
+    examples: ["separator/basic"],
   }),
   definePrimitive({
     id: "sheet",
@@ -414,6 +474,8 @@ export const publicApiInventory = [
       "SheetTrigger",
     ],
     storybookSlug: "sheet",
+
+    examples: ["sheet/basic"],
   }),
   definePrimitive({
     id: "sidebar",
@@ -421,6 +483,8 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["Sidebar", "SidebarContent", "SidebarFooter", "SidebarHeader"],
     storybookSlug: "sidebar",
+
+    examples: ["sidebar/basic"],
   }),
   definePrimitive({
     id: "skeleton",
@@ -435,6 +499,8 @@ export const publicApiInventory = [
     exports: ["Toaster"],
     importNames: ["Toaster"],
     storybookSlug: "sonner",
+
+    examples: ["sonner/basic"],
   }),
   definePrimitive({
     id: "spinner",
@@ -448,6 +514,8 @@ export const publicApiInventory = [
     name: "SplitView",
     status: "experimental",
     exports: ["ResizableHandle", "ResizablePanel", "SplitView"],
+
+    examples: ["split-view/basic"],
   }),
   definePrimitive({
     id: "stat-card",
@@ -455,6 +523,8 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["StatCard"],
     storybookSlug: "statcard",
+
+    examples: ["stat-card/basic"],
   }),
   definePrimitive({
     id: "stats-bar",
@@ -462,12 +532,16 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["StatsBar", "StatsBarItem"],
     storybookSlug: "statsbar",
+
+    examples: ["stats-bar/basic"],
   }),
   definePrimitive({
     id: "status-dot",
     name: "StatusDot",
     exports: ["StatusDot"],
     storybookSlug: "statusdot",
+
+    examples: ["status-dot/basic"],
   }),
   definePrimitive({
     id: "stepper",
@@ -476,6 +550,8 @@ export const publicApiInventory = [
     exports: ["Stepper", "StepperItem", "StepperSeparator"],
     storybookSlug: "stepper",
     coverage: { storybook: "missing" },
+
+    examples: ["stepper/basic"],
   }),
   definePrimitive({
     id: "switch",
@@ -489,6 +565,8 @@ export const publicApiInventory = [
     name: "Table",
     exports: ["Table", "TableBody", "TableCell", "TableHead", "TableHeader", "TableRow"],
     storybookSlug: "table",
+
+    examples: ["table/basic"],
   }),
   definePrimitive({
     id: "tabs",
@@ -503,36 +581,48 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["TagGroup", "TagGroupItem"],
     storybookSlug: "taggroup",
+
+    examples: ["tag-group/basic"],
   }),
   definePrimitive({
     id: "text-link",
     name: "TextLink",
     exports: ["TextLink"],
     storybookSlug: "textlink",
+
+    examples: ["text-link/basic"],
   }),
   definePrimitive({
     id: "textarea",
     name: "Textarea",
     exports: ["Textarea"],
     storybookSlug: "textarea",
+
+    examples: ["textarea/basic"],
   }),
   definePrimitive({
     id: "theme-root",
     name: "ThemeRoot",
     exports: ["ThemeRoot"],
     storybookSlug: "themeroot",
+
+    examples: ["theme-root/basic"],
   }),
   definePrimitive({
     id: "toggle",
     name: "Toggle",
     exports: ["Toggle", "ToggleGroup", "ToggleGroupItem"],
     storybookSlug: "toggle",
+
+    examples: ["toggle/basic"],
   }),
   definePrimitive({
     id: "topic-card",
     name: "TopicCard",
     status: "experimental",
     exports: ["TopicAssignee", "TopicCard"],
+
+    examples: ["topic-card/basic"],
   }),
   definePrimitive({
     id: "tooltip",
@@ -547,6 +637,8 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["VideoAttachment"],
     storybookSlug: "videoattachment",
+
+    examples: ["video-attachment/basic"],
   }),
   definePrimitive({
     id: "voice-message",
@@ -554,6 +646,8 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["VoiceMessage"],
     storybookSlug: "voicemessage",
+
+    examples: ["voice-message/basic"],
   }),
   definePattern({
     id: "auth-shell",
@@ -561,12 +655,16 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["AuthShell"],
     storybookSlug: "authshell",
+
+    examples: ["auth-shell/basic"],
   }),
   definePattern({
     id: "brand-rail",
     name: "BrandRail",
     status: "experimental",
     exports: ["BrandRail"],
+
+    examples: ["brand-rail/basic"],
   }),
   definePattern({
     id: "budget-popover",
@@ -574,12 +672,16 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["BudgetPopover", "BudgetPopoverItem"],
     storybookSlug: "budgetpopover",
+
+    examples: ["budget-popover/basic"],
   }),
   definePattern({
     id: "confirm-dialog",
     name: "ConfirmDialog",
     exports: ["ConfirmDialog"],
     storybookSlug: "confirmdialog",
+
+    examples: ["confirm-dialog/basic"],
   }),
   definePattern({
     id: "credits-capsule",
@@ -587,24 +689,32 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["CreditsCapsule"],
     storybookSlug: "creditscapsule",
+
+    examples: ["credits-capsule/basic"],
   }),
   definePattern({
     id: "empty-state",
     name: "EmptyState",
     exports: ["EmptyState"],
     storybookSlug: "emptystate",
+
+    examples: ["empty-state/basic"],
   }),
   definePattern({
     id: "filter-pills",
     name: "FilterPills",
     exports: ["FilterPillTrigger", "FilterPills", "FilterPillsContent", "FilterPillsList"],
     storybookSlug: "filterpills",
+
+    examples: ["filter-pills/basic"],
   }),
   definePattern({
     id: "follow-up-input",
     name: "FollowUpInput",
     status: "experimental",
     exports: ["FollowUpInput"],
+
+    examples: ["follow-up-input/basic"],
   }),
   definePattern({
     id: "form-field",
@@ -618,12 +728,16 @@ export const publicApiInventory = [
     ],
     docsSlug: "/patterns/forms",
     storybookSlug: "formfield",
+
+    examples: ["form-field/basic"],
   }),
   definePattern({
     id: "page-header",
     name: "PageHeader",
     exports: ["PageHeader"],
     storybookSlug: "pageheader",
+
+    examples: ["page-header/basic"],
   }),
   definePattern({
     id: "page-shell",
@@ -631,12 +745,16 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["PageShell"],
     storybookSlug: "pageshell",
+
+    examples: ["page-shell/basic"],
   }),
   definePattern({
     id: "section-header",
     name: "SectionHeader",
     exports: ["SectionHeader"],
     storybookSlug: "sectionheader",
+
+    examples: ["section-header/basic"],
   }),
   definePattern({
     id: "skill-marketplace-card",
@@ -644,12 +762,16 @@ export const publicApiInventory = [
     status: "experimental",
     exports: ["SkillMarketplaceCard"],
     storybookSlug: "skillmarketplacecard",
+
+    examples: ["skill-marketplace-card/basic"],
   }),
   definePattern({
     id: "underline-tabs",
     name: "UnderlineTabs",
     exports: ["UnderlineTabs", "UnderlineTabsContent", "UnderlineTabsList", "UnderlineTabsTrigger"],
     storybookSlug: "underlinetabs",
+
+    examples: ["underline-tabs/basic"],
   }),
 ] satisfies PublicApiInventoryItem[];
 
@@ -781,6 +903,7 @@ function resolveCoverage(
 
 function getDocsCoverage(input: PublicApiInventoryInput): PublicApiCoverageFlag {
   if (documentedDocsIds.has(input.id)) return "complete";
+  if ((input.kind === "primitive" || input.kind === "pattern") && input.docsSlug) return "complete";
   if (mvpComponentDocsIds.has(input.id) || plannedPatternDocsIds.has(input.id)) return "planned";
   return input.docsSlug ? "missing" : "not-applicable";
 }

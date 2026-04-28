@@ -1,5 +1,9 @@
-import type { ReactNode } from "react";
+"use client";
 
+import type { ReactNode } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
+
+import { Button } from "../../../packages/ui-web/src/primitives/button";
 import { CopyButton } from "./copy-button";
 
 interface CodeBlockProps {
@@ -7,6 +11,8 @@ interface CodeBlockProps {
   language?: string;
   title?: string;
   variant?: "standalone" | "embedded";
+  collapsible?: boolean;
+  defaultCollapsed?: boolean;
 }
 
 export function CodeBlock({
@@ -14,8 +20,33 @@ export function CodeBlock({
   language = "tsx",
   title,
   variant = "standalone",
+  collapsible = false,
+  defaultCollapsed = true,
 }: CodeBlockProps) {
   const isEmbedded = variant === "embedded";
+  const isCollapsible = collapsible && code.split("\n").length > 8;
+  const [collapsed, setCollapsed] = useState(defaultCollapsed);
+  const [expandedHeight, setExpandedHeight] = useState<number | null>(null);
+  const codeId = useId();
+  const codeRef = useRef<HTMLPreElement>(null);
+  const codeCollapsed = isCollapsible && collapsed;
+
+  useLayoutEffect(() => {
+    if (!isCollapsible) return;
+
+    const codeElement = codeRef.current;
+    if (!codeElement) return;
+
+    const updateHeight = () => setExpandedHeight(codeElement.scrollHeight);
+    updateHeight();
+
+    if (typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(codeElement);
+
+    return () => observer.disconnect();
+  }, [isCollapsible]);
 
   return (
     <div
@@ -31,9 +62,50 @@ export function CodeBlock({
         </p>
         <CopyButton value={code} label="Copy code" className="h-7 w-24 shrink-0 px-2 text-xs" />
       </div>
-      <pre className="m-0 overflow-x-auto bg-transparent p-4 text-sm leading-6 text-text-primary shadow-none">
-        <code data-language={language}>{highlightCode(code, language)}</code>
-      </pre>
+      <div className="relative">
+        <pre
+          ref={codeRef}
+          id={codeId}
+          style={
+            isCollapsible
+              ? { maxHeight: codeCollapsed ? "10rem" : (expandedHeight ?? undefined) }
+              : undefined
+          }
+          className={[
+            "m-0 overflow-x-auto bg-transparent p-4 text-sm leading-6 text-text-primary shadow-none",
+            "transition-[max-height] duration-300 ease-out",
+            codeCollapsed ? "overflow-hidden" : isCollapsible ? "pb-14" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <code data-language={language}>{highlightCode(code, language)}</code>
+        </pre>
+        {isCollapsible ? (
+          <>
+            <div
+              aria-hidden="true"
+              className={[
+                "pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-surface-1 via-surface-1/90 to-transparent transition-opacity duration-200",
+                codeCollapsed ? "opacity-100" : "opacity-0",
+              ].join(" ")}
+            />
+            <div className="pointer-events-none absolute inset-x-0 bottom-3 flex justify-center">
+              <Button
+                type="button"
+                size="xs"
+                variant="outline"
+                className="pointer-events-auto bg-surface-1 px-3 text-xs text-text-secondary shadow-rest hover:text-text-heading"
+                aria-controls={codeId}
+                aria-expanded={!collapsed}
+                onClick={() => setCollapsed((current) => !current)}
+              >
+                {collapsed ? "Expand code" : "Collapse code"}
+              </Button>
+            </div>
+          </>
+        ) : null}
+      </div>
     </div>
   );
 }

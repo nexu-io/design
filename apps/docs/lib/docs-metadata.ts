@@ -21,10 +21,11 @@ import {
 import { exampleIds, examples, type ExampleCategory, type ExampleId } from "./examples";
 import {
   getPublicApiInventoryItem,
+  publicComponentInventory,
   publicApiInventory,
   type PublicApiCoverageFlags,
+  type PublicApiInventoryItem,
 } from "./public-api-inventory";
-import type { StorybookComponentId } from "./storybook";
 
 export interface PropMetadata {
   name: string;
@@ -34,7 +35,7 @@ export interface PropMetadata {
 }
 
 interface ComponentDocDefinition {
-  id: StorybookComponentId;
+  id: string;
   title: string;
   description: string;
   overview: string;
@@ -704,29 +705,183 @@ const componentDocDefinitions: ComponentDocDefinition[] = [
   },
 ];
 
-export const componentMetadata: ComponentMetadata[] = componentDocDefinitions.map((definition) => {
-  const inventoryItem = getPublicApiInventoryItem(definition.id);
+const componentDocDefinitionsById = new Map(
+  componentDocDefinitions.map((definition) => [definition.id, definition]),
+);
 
-  if (!inventoryItem?.docsSlug || !inventoryItem.importSnippet) {
-    throw new Error(`Missing public API inventory metadata for component: ${definition.id}`);
-  }
+export const componentMetadata: ComponentMetadata[] = publicComponentInventory
+  .filter((inventoryItem) => inventoryItem.documentable && inventoryItem.docsSlug)
+  .map((inventoryItem) => {
+    const definition =
+      componentDocDefinitionsById.get(inventoryItem.id) ??
+      createGeneratedComponentDocDefinition(inventoryItem);
+
+    if (!inventoryItem.docsSlug || !inventoryItem.importSnippet) {
+      throw new Error(`Missing public API inventory metadata for component: ${definition.id}`);
+    }
+
+    return {
+      ...definition,
+      importSnippet: inventoryItem.importSnippet,
+      examples: (inventoryItem.examples.length > 0
+        ? inventoryItem.examples
+        : definition.examples) as readonly ExampleId[],
+      docsSlug: inventoryItem.docsSlug,
+      storybookId: inventoryItem.storybookId,
+      storybookPath: inventoryItem.storybookPath,
+      storybookTitle: inventoryItem.storybookTitle,
+      coverage: inventoryItem.coverage,
+      sourcePath: inventoryItem.sourcePath,
+      packageName: inventoryItem.packageName,
+      exports: inventoryItem.exports,
+    };
+  });
+
+function createGeneratedComponentDocDefinition(
+  inventoryItem: PublicApiInventoryItem,
+): ComponentDocDefinition {
+  const kindLabel = inventoryItem.kind === "pattern" ? "pattern" : "primitive";
+  const exportsList = inventoryItem.exports.join(", ");
+  const description = getGeneratedComponentDescription(inventoryItem);
 
   return {
-    ...definition,
-    importSnippet: inventoryItem.importSnippet,
-    examples: (inventoryItem.examples.length > 0
-      ? inventoryItem.examples
-      : definition.examples) as readonly ExampleId[],
-    docsSlug: inventoryItem.docsSlug,
-    storybookId: inventoryItem.storybookId,
-    storybookPath: inventoryItem.storybookPath,
-    storybookTitle: inventoryItem.storybookTitle,
-    coverage: inventoryItem.coverage,
-    sourcePath: inventoryItem.sourcePath,
-    packageName: inventoryItem.packageName,
-    exports: inventoryItem.exports,
+    id: inventoryItem.id,
+    title: inventoryItem.name,
+    description,
+    overview: `${inventoryItem.name} provides a production-ready ${kindLabel} for building consistent Nexu Design interfaces. Use it when you need a reusable, token-aligned solution with predictable layout, interaction, and accessibility behavior.`,
+    usage: `Import ${inventoryItem.importSnippet ? "the documented symbol" : inventoryItem.name} and compose it with existing Nexu Design primitives instead of creating one-off local UI. Keep labels, keyboard behavior, and semantic states intact when adapting it to product surfaces.`,
+    examples: [],
+    accessibility: [
+      "Preserve native element, Radix, and aria-* behavior exposed by the component.",
+      "Provide visible labels or aria-label values for icon-only and form-related controls.",
+      "Keep keyboard focus, disabled, loading, and validation states discoverable and testable.",
+    ],
+    inheritedProps: `documented exports from ${inventoryItem.sourcePath}: ${exportsList}.`,
+    props: [
+      {
+        name: "className",
+        type: "string",
+        defaultValue: "—",
+        description:
+          "Additional classes when supported by the underlying component. Use semantic tokens and the shared cn() helper for composition.",
+      },
+      {
+        name: "...props",
+        type: "Component-specific React props",
+        defaultValue: "—",
+        description:
+          "Generated placeholder until Phase 2 props metadata is extracted from the source component.",
+      },
+    ],
   };
-});
+}
+
+function getGeneratedComponentDescription(inventoryItem: PublicApiInventoryItem) {
+  const descriptions: Record<string, string> = {
+    accordion:
+      "Organize related sections into expandable panels for dense product settings and reference content.",
+    "activity-bar":
+      "Present compact workspace navigation with clear active state and grouped actions.",
+    avatar:
+      "Represent people, agents, and identities with consistent fallback, image, and sizing behavior.",
+    breadcrumb: "Show page hierarchy and current location with accessible navigation semantics.",
+    "chat-message":
+      "Render rich chat-feed rows with sender metadata, reactions, mentions, and attachments.",
+    collapsible:
+      "Reveal optional content inline while preserving accessible trigger and region relationships.",
+    combobox:
+      "Let users search and choose from a controlled list of options with keyboard-friendly behavior.",
+    "conversation-message":
+      "Display assistant, user, system, and status messages in conversational interfaces.",
+    "data-table":
+      "Frame tabular product data with headers, toolbars, empty states, and footer context.",
+    "detail-panel":
+      "Provide a persistent side panel for inspecting selected records without leaving context.",
+    "entity-card":
+      "Summarize selectable entities with media, metadata, descriptions, and footer actions.",
+    "event-notice":
+      "Insert low-emphasis feed notices for joins, pins, assignments, and other timeline events.",
+    "file-attachment":
+      "Display downloadable file rows with type-aware icons, metadata, and hover affordances.",
+    "image-attachment":
+      "Show a single image attachment with sizing, caption, loading fallback, and optional selection.",
+    "image-gallery":
+      "Preview multiple image attachments in a compact thumbnail grid with overflow handling.",
+    "interactive-row":
+      "Build full-width selectable rows for settings, lists, and navigation-like product surfaces.",
+    label:
+      "Associate controls with concise field labels that match Nexu form and settings density.",
+    logo: "Render provider, platform, runtime, model, and Nexu brand marks with consistent sizing.",
+    "nav-item": "Create compact navigation rows with selected, hover, and disabled states.",
+    "panel-footer":
+      "Align footer metadata and actions consistently at the bottom of panels and sheets.",
+    "pricing-card":
+      "Present plan pricing, feature lists, badges, and calls to action in a balanced card layout.",
+    progress:
+      "Communicate determinate progress with semantic variants, sizes, and accessible progressbar state.",
+    prose:
+      "Style rich text content with Nexu typography, spacing, tables, quotes, and inline code treatments.",
+    "radio-group":
+      "Collect a single choice from related options with native radio-group accessibility.",
+    "scroll-area":
+      "Provide constrained scrolling regions with subtle, token-aligned scrollbar affordances.",
+    separator: "Separate related content groups with accessible horizontal or vertical dividers.",
+    sheet: "Open secondary workflows in an edge-aligned overlay without losing page context.",
+    sidebar:
+      "Structure application sidebars with header, content, footer, and navigation menu regions.",
+    sonner: "Render toast notifications with Nexu surface, border, and semantic status styling.",
+    "split-view": "Compose resizable panel layouts for master-detail and multi-pane workspaces.",
+    "stat-card":
+      "Highlight key metrics with trend badges, icons, supporting metadata, and optional progress.",
+    "stats-bar":
+      "Display compact metric summaries across dashboards, lists, and filtered data views.",
+    "status-dot":
+      "Show concise semantic status indicators for availability, health, and processing states.",
+    stepper: "Guide users through ordered workflows with current, completed, and pending steps.",
+    table:
+      "Render structured data tables with density, hover, selected rows, and semantic table elements.",
+    "tag-group": "Group short labels and metadata tags with consistent badge styling and spacing.",
+    "text-link":
+      "Use inline and standalone links with token-aware color, sizing, and optional external affordance.",
+    textarea: "Collect multiline text with consistent sizing, focus, invalid, and resize behavior.",
+    "theme-root": "Scope light, dark, or system theme behavior around a product surface.",
+    toggle:
+      "Let users switch compact view, formatting, and filter states with toggle buttons or groups.",
+    "topic-card":
+      "Summarize persistent discussion topics with status, participants, previews, and reply counts.",
+    "video-attachment":
+      "Preview video files with thumbnail, play affordance, duration, title, and metadata.",
+    "voice-message":
+      "Display voice notes with playback controls, waveform, duration, and optional transcript.",
+    "auth-shell":
+      "Compose authentication screens with a branded rail and focused form content area.",
+    "brand-rail":
+      "Create branded side rails for onboarding, authentication, and high-emphasis product entry points.",
+    "budget-popover": "Explain usage, limits, and budget details in a compact contextual popover.",
+    "confirm-dialog":
+      "Ask users to confirm consequential actions with clear cancel and confirm affordances.",
+    "credits-capsule":
+      "Summarize credit usage with progress, metadata, breakdowns, and upgrade actions.",
+    "empty-state": "Guide users from an empty surface toward the next useful action.",
+    "filter-pills": "Switch between filtered views with compact pill-style tab controls.",
+    "follow-up-input":
+      "Capture lightweight follow-up prompts with a multiline input and send action.",
+    "form-field":
+      "Wire labels, descriptions, controls, and validation messages into accessible form fields.",
+    "page-header":
+      "Introduce product pages with title, description, density options, and primary actions.",
+    "page-shell": "Constrain page content to a readable product layout with consistent padding.",
+    "section-header": "Label page sections with balanced action placement and reusable spacing.",
+    "skill-marketplace-card":
+      "Present marketplace skills with icon, category, description, and footer actions.",
+    "underline-tabs": "Switch content sections with a low-profile underline tab treatment.",
+  };
+
+  return (
+    descriptions[inventoryItem.id] ??
+    `Build consistent ${inventoryItem.name} experiences with Nexu Design tokens, accessibility behavior, and reusable component composition.`
+  );
+}
 
 export const componentMetadataById = Object.fromEntries(
   componentMetadata.map((component) => [component.id, component]),

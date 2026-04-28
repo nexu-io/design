@@ -1,3 +1,5 @@
+import { publicComponentInventory } from "./public-api-inventory";
+
 export type DocsSectionId =
   | "guide"
   | "foundations"
@@ -52,6 +54,22 @@ export interface SourceOfTruthPolicyItem {
   policy: string;
 }
 
+const generatedComponentNavItems = publicComponentInventory
+  .filter((item) => item.kind === "primitive" && item.docsSlug?.startsWith("/components/"))
+  .map((item) => ({
+    title: item.name,
+    href: item.docsSlug as `/${string}`,
+    status: item.coverage.docs === "complete" ? "generated" : "stub",
+  })) satisfies DocsNavItemDefinition[];
+
+const generatedPatternNavItems = publicComponentInventory
+  .filter((item) => item.kind === "pattern" && item.docsSlug?.startsWith("/patterns/"))
+  .map((item) => ({
+    title: item.docsSlug === "/patterns/forms" ? "Forms" : item.name,
+    href: item.docsSlug as `/${string}`,
+    status: item.coverage.docs === "complete" ? "generated" : "stub",
+  })) satisfies DocsNavItemDefinition[];
+
 export const docsNavigationSections: DocsNavSectionDefinition[] = [
   {
     id: "guide",
@@ -88,21 +106,12 @@ export const docsNavigationSections: DocsNavSectionDefinition[] = [
   {
     id: "components",
     title: "Components",
-    items: [
-      { title: "Button", href: "/components/button", status: "mvp" },
-      { title: "Input", href: "/components/input", status: "stub" },
-      { title: "Card", href: "/components/card", status: "stub" },
-      { title: "Badge", href: "/components/badge", status: "stub" },
-      { title: "Checkbox", href: "/components/checkbox", status: "stub" },
-      { title: "Switch", href: "/components/switch", status: "stub" },
-      { title: "Select", href: "/components/select", status: "stub" },
-      { title: "Dialog", href: "/components/dialog", status: "stub" },
-    ],
+    items: generatedComponentNavItems,
   },
   {
     id: "patterns",
     title: "Patterns",
-    items: [{ title: "Forms", href: "/patterns/forms", status: "stub" }],
+    items: generatedPatternNavItems,
   },
   {
     id: "reference",

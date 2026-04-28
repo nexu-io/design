@@ -21,7 +21,7 @@ export function ComponentPreview({ id }: ComponentPreviewProps) {
       <div className="grid min-h-36 place-items-center bg-surface-0 p-6 sm:p-8">
         <ExampleRenderer id={id} />
       </div>
-      <CodeBlock code={example.source} title={example.filePath} variant="embedded" />
+      <CodeBlock code={example.source} title={example.filePath} variant="embedded" collapsible />
     </section>
   );
 }

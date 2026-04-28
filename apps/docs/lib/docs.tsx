@@ -240,13 +240,6 @@ export const docsPages: DocsPage[] = [
     content: <ComponentDocsContent component={component} />,
   })),
   {
-    title: "Forms",
-    description: "Composition guidance for form fields and validation patterns.",
-    slug: ["patterns", "forms"],
-    headings: shellHeadings,
-    content: <InitialShellContent />,
-  },
-  {
     title: "Component API",
     description: "Component page IA, frontmatter, template, and source-of-truth policy.",
     slug: ["reference", "components"],
@@ -1141,9 +1134,9 @@ function ComponentDocsContent({ component }: { component: ComponentMetadata }) {
       <CodeBlock code={component.importSnippet} title="Import" />
       <h2 id="examples">Examples</h2>
       <p>{component.usage}</p>
-      {component.examples.map((exampleId) => (
-        <ComponentPreview key={exampleId} id={exampleId} />
-      ))}
+      {component.examples.length > 0
+        ? component.examples.map((exampleId) => <ComponentPreview key={exampleId} id={exampleId} />)
+        : null}
       <h2 id="accessibility">Accessibility</h2>
       <ul>
         {component.accessibility.map((note) => (
@@ -1156,7 +1149,7 @@ function ComponentDocsContent({ component }: { component: ComponentMetadata }) {
       </p>
       <PropsTable props={component.props} />
       <h2 id="storybook">Storybook</h2>
-      <StorybookLink component={component.id} />
+      <StorybookLink href={component.storybookPath} title={component.storybookTitle} />
     </>
   );
 }
