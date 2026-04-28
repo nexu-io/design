@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "build:pages": "next build",
+    "build": "next build && pnpm pages-output",
+    "build:pages": "next build && pnpm pages-output",
+    "pages-output": "rm -rf storybook-static && cp -R out storybook-static",
     "typecheck": "tsc --noEmit",
     "lint": "biome check ."
   },
