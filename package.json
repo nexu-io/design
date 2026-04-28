@@ -3,10 +3,10 @@
   "private": true,
   "packageManager": "pnpm@10.16.1",
   "engines": {
-    "node": ">=22.16 <25"
+    "node": "24.15.0"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": ["electron", "electron-winstaller", "esbuild"]
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
