@@ -77,6 +77,22 @@ export async function getExample(args: GetExampleArgs = {}) {
     if (found) return found;
   }
 
+  if (example && !component) {
+    const shortNameMatches = examples.filter((item) => {
+      const shortName = item.id.split("/").at(-1) ?? item.id;
+      return normalizeIdentifier(shortName) === example;
+    });
+
+    if (shortNameMatches.length === 1) return shortNameMatches[0];
+
+    if (shortNameMatches.length > 1) {
+      const matches = shortNameMatches.map((item) => item.id).join(", ");
+      throw new Error(
+        `Ambiguous Nexu Design example: ${args.example}. Pass a full example id. Matches: ${matches}`,
+      );
+    }
+  }
+
   if (component) {
     const componentExamples = examples.filter(
       (item) => normalizeIdentifier(item.componentId) === component,

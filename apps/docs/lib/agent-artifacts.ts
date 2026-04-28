@@ -59,17 +59,17 @@ const schemaVersion = "2026-04-27";
 
 const jsonApiRoutes = [
   {
-    href: "/api/components.json",
+    href: "components.json",
     status: "generated",
     description: "Public component metadata backed by shared docs metadata.",
   },
   {
-    href: "/api/tokens.json",
+    href: "tokens.json",
     status: "generated",
     description: "Public token metadata backed by shared token metadata.",
   },
   {
-    href: "/api/examples.json",
+    href: "examples.json",
     status: "generated",
     description: "Public example metadata backed by the examples registry and source files.",
   },
@@ -106,7 +106,7 @@ export function getAgentManifest() {
       entrypoints: [
         "/llms.txt",
         "/llms-full.txt",
-        "/api/manifest.json",
+        "manifest.json",
         ...jsonApiRoutes.map((route) => route.href),
         aiAgentsGuidePath,
       ],
@@ -123,7 +123,7 @@ export function getAgentManifest() {
     routes: {
       docs: routeItems,
       api: [
-        { href: "/api/manifest.json", status: "generated", description: "This manifest." },
+        { href: "manifest.json", status: "generated", description: "This manifest." },
         ...jsonApiRoutes,
       ],
     },
