@@ -265,7 +265,7 @@ function extractSet(source, name, fallback) {
   const assignment = new RegExp(`const ${name} = ([^;]+);`).exec(source);
   if (!assignment) return fallback ?? new Set();
 
-  if (assignment[1].trim() !== "new Set([") {
+  if (!/^new\s+Set\s*\(\s*\[/.test(assignment[1].trim())) {
     const aliasedSet = new RegExp(`const ${name} = ([a-zA-Z0-9_]+);`).exec(source);
     return aliasedSet ? extractSet(source, aliasedSet[1], fallback) : (fallback ?? new Set());
   }

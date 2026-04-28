@@ -14,6 +14,10 @@ import { publicApiInventory, type PublicApiInventoryItem } from "./public-api-in
 const inventorySource = "apps/docs/lib/public-api-inventory.ts";
 const aiAgentsGuidePath = "/guide/ai-agents";
 
+function toBaseRelativePath(path: string) {
+  return path.replace(/^\/+/, "");
+}
+
 interface AgentInventoryItem {
   id: string;
   name: string;
@@ -264,12 +268,12 @@ export function generateLlmsText() {
     "",
     "## Static agent support",
     "",
-    `- Guide: ${aiAgentsGuidePath}`,
-    "- Manifest: /api/manifest.json",
-    "- Full context: /llms-full.txt",
+    `- Guide: ${toBaseRelativePath(aiAgentsGuidePath)}`,
+    "- Manifest: api/manifest.json",
+    "- Full context: llms-full.txt",
     `- Inventory source: ${inventorySource}`,
     "- Scope: static docs, curated public API inventory, shared component/example/token metadata, Storybook ids, import snippets, and coverage flags.",
-    "- JSON metadata: /api/components.json, /api/tokens.json, /api/examples.json",
+    "- JSON metadata: api/components.json, api/tokens.json, api/examples.json",
     "- MCP: read-only tools via @nexu-design/mcp (stdio).",
     "",
     "## Packages",
