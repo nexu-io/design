@@ -33,6 +33,13 @@ type ToolHandler = (args: Record<string, unknown>) => Promise<unknown>;
 
 const protocolVersion = "2024-11-05";
 
+class MethodNotFoundError extends Error {
+  constructor(method: string) {
+    super(`Unsupported MCP method: ${method}`);
+    this.name = "MethodNotFoundError";
+  }
+}
+
 const tools = [
   {
     name: "search_components",
@@ -219,9 +226,11 @@ async function handleSingleMessage(message: unknown): Promise<JsonRpcResponse | 
     const result = await handleRequest(request);
     return buildResponse(request.id, result);
   } catch (error) {
+    const isMethodNotFound = error instanceof MethodNotFoundError;
+
     return buildError(
       request.id,
-      -32603,
+      isMethodNotFound ? -32601 : -32603,
       error instanceof Error ? error.message : "Internal error",
       error,
     );
@@ -262,7 +271,7 @@ async function handleRequest(request: JsonRpcRequest) {
     case "resources/read":
       return readResource(request.params);
     default:
-      throw new Error(`Unsupported MCP method: ${request.method}`);
+      throw new MethodNotFoundError(request.method);
   }
 }
 

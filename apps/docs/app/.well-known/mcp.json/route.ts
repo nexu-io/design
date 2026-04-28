@@ -8,9 +8,9 @@ export function GET() {
     transport: "stdio",
     docsUrl: "/guide/ai-agents",
     metadata: {
-      components: "/api/components.json",
-      examples: "/api/examples.json",
-      tokens: "/api/tokens.json",
+      components: "../api/components.json",
+      examples: "../api/examples.json",
+      tokens: "../api/tokens.json",
     },
     tools: [
       "search_components",
