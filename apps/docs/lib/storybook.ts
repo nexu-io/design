@@ -28,13 +28,21 @@ export function getStorybookHomeUrl() {
   return baseUrl ? `${baseUrl}/` : "/";
 }
 
-export function getStorybookUrl(component: StorybookComponentId) {
-  const path = storybookLinks[component];
+export function getStorybookPathUrl(path: string): string;
+export function getStorybookPathUrl(path?: undefined): undefined;
+export function getStorybookPathUrl(path: string | undefined): string | undefined;
+export function getStorybookPathUrl(path?: string) {
+  if (!path) return undefined;
+
   const baseUrl = getStorybookBaseUrl();
 
   if (!baseUrl) {
     return path;
   }
 
-  return `${baseUrl}${path}`;
+  return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+export function getStorybookUrl(component: StorybookComponentId) {
+  return getStorybookPathUrl(storybookLinks[component]);
 }

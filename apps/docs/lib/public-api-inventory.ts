@@ -903,8 +903,8 @@ function resolveCoverage(
 
 function getDocsCoverage(input: PublicApiInventoryInput): PublicApiCoverageFlag {
   if (documentedDocsIds.has(input.id)) return "complete";
-  if ((input.kind === "primitive" || input.kind === "pattern") && input.docsSlug) return "complete";
   if (mvpComponentDocsIds.has(input.id) || plannedPatternDocsIds.has(input.id)) return "planned";
+  if ((input.kind === "primitive" || input.kind === "pattern") && input.docsSlug) return "complete";
   return input.docsSlug ? "missing" : "not-applicable";
 }
 

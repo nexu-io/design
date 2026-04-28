@@ -25,7 +25,7 @@ import {
   type PropMetadata,
 } from "./docs-metadata";
 import { publicApiInventory } from "./public-api-inventory";
-import { getStorybookHomeUrl } from "./storybook";
+import { getStorybookHomeUrl, getStorybookPathUrl } from "./storybook";
 
 export interface DocsNavItem {
   title: string;
@@ -1223,7 +1223,10 @@ function ComponentDocsContent({ component }: { component: ComponentMetadata }) {
       <p>This component also accepts {component.inheritedProps}</p>
       <PropsTable props={component.props} />
       <h2 id="storybook">Storybook</h2>
-      <StorybookLink href={component.storybookPath} title={component.storybookTitle} />
+      <StorybookLink
+        href={getStorybookPathUrl(component.storybookPath)}
+        title={component.storybookTitle}
+      />
     </>
   );
 }
