@@ -19,6 +19,10 @@ function toBaseRelativePath(path: string) {
   return path.replace(/^\/+/, "");
 }
 
+function toApiRelativePath(path: string) {
+  return `../${toBaseRelativePath(path)}`;
+}
+
 interface AgentInventoryItem {
   id: string;
   name: string;
@@ -179,7 +183,7 @@ export function getComponentsApi() {
       description: component.description,
       overview: component.overview,
       usage: component.usage,
-      docsUrl: toBaseRelativePath(component.docsSlug),
+      docsUrl: toApiRelativePath(component.docsSlug),
       storybookId: component.storybookId,
       storybookUrl: component.storybookPath,
       storybookTitle: component.storybookTitle,
@@ -246,7 +250,7 @@ export function getExamplesApi() {
         filePath: example.filePath,
         source: example.source,
         dependencies: getExampleDependencies(example.source),
-        docsUrl: component?.docsSlug ? toBaseRelativePath(component.docsSlug) : undefined,
+        docsUrl: component?.docsSlug ? toApiRelativePath(component.docsSlug) : undefined,
       };
     }),
   };
@@ -281,7 +285,9 @@ export function generateLlmsText() {
     "",
     "## Primary docs",
     "",
-    ...routeItems.map((item) => `- [${item.section} / ${item.title}](${item.href})`),
+    ...routeItems.map(
+      (item) => `- [${item.section} / ${item.title}](${toBaseRelativePath(item.href)})`,
+    ),
     "",
     "## Documented public API",
     "",
@@ -368,7 +374,7 @@ export function generateLlmsFullText() {
 
 function formatInventoryItemForLlms(item: PublicApiInventoryItem) {
   const parts = [
-    `- [${item.name}](${item.docsSlug}) (${item.kind}, ${item.status})`,
+    `- [${item.name}](${toBaseRelativePath(item.docsSlug ?? "")}) (${item.kind}, ${item.status})`,
     `exports: ${item.exports.join(", ")}`,
     `import: ${item.importSnippet}`,
   ];

@@ -12,7 +12,7 @@ import {
 type JsonRpcId = string | number | null;
 
 interface JsonRpcRequest {
-  jsonrpc?: "2.0";
+  jsonrpc: "2.0";
   id?: JsonRpcId;
   method: string;
   params?: unknown;
@@ -405,11 +405,17 @@ function getRequiredString(args: Record<string, unknown>, key: string) {
 }
 
 function isJsonRpcRequest(value: unknown): value is JsonRpcRequest {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+
+  const request = value as { jsonrpc?: unknown; id?: unknown; method?: unknown };
+
   return (
-    !!value &&
-    typeof value === "object" &&
-    !Array.isArray(value) &&
-    typeof (value as { method?: unknown }).method === "string"
+    request.jsonrpc === "2.0" &&
+    typeof request.method === "string" &&
+    (request.id === undefined ||
+      request.id === null ||
+      typeof request.id === "string" ||
+      typeof request.id === "number")
   );
 }
 
