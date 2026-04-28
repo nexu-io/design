@@ -14,6 +14,7 @@ debug-storybook.log
 .opencode/
 apps/slark/out/
 apps/docs/out/
+out/
 
 # Local design notes / scratchpads (personal, not shipped)
 competitive-analysis.md
