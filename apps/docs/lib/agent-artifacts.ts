@@ -13,6 +13,7 @@ import { publicApiInventory, type PublicApiInventoryItem } from "./public-api-in
 
 const inventorySource = "apps/docs/lib/public-api-inventory.ts";
 const aiAgentsGuidePath = "guide/ai-agents";
+const rootAgentEntrypoints = ["llms.txt", "llms-full.txt", aiAgentsGuidePath] as const;
 
 function toBaseRelativePath(path: string) {
   return path.replace(/^\/+/, "");
@@ -106,13 +107,11 @@ export function getAgentManifest() {
     generatedFrom: [inventorySource, "apps/docs/lib/content-policy.ts"],
     support: {
       mode: "static",
-      guide: aiAgentsGuidePath,
+      guide: `../${aiAgentsGuidePath}`,
       entrypoints: [
-        "llms.txt",
-        "llms-full.txt",
+        ...rootAgentEntrypoints.map((entrypoint) => `../${entrypoint}`),
         "manifest.json",
         ...jsonApiRoutes.map((route) => route.href),
-        aiAgentsGuidePath,
       ],
       currentScope: [
         "Read public API inventory metadata, docs slugs, Storybook ids, package imports, examples, and coverage flags.",
@@ -306,7 +305,7 @@ export function generateLlmsFullText() {
     "",
     "## Generated JSON APIs",
     "",
-    ...jsonApiRoutes.map((route) => `- ${route.href}: ${route.description}`),
+    ...jsonApiRoutes.map((route) => `- api/${route.href}: ${route.description}`),
     "",
     "## Metadata sources",
     "",

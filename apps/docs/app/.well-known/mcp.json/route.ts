@@ -6,7 +6,7 @@ export function GET() {
     package: "@nexu-design/mcp",
     command: "npx -y @nexu-design/mcp",
     transport: "stdio",
-    docsUrl: "/guide/ai-agents",
+    docsUrl: "../guide/ai-agents",
     metadata: {
       components: "../api/components.json",
       examples: "../api/examples.json",
