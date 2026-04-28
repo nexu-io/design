@@ -7,6 +7,7 @@
   "scripts": {
     "storybook": "STORYBOOK_DISABLE_TELEMETRY=1 storybook dev -p 6006",
     "build": "STORYBOOK_DISABLE_TELEMETRY=1 storybook build && rm -rf ../../out ../../storybook-static && cp -R storybook-static ../../out && cp -R storybook-static ../../storybook-static",
+    "pages:build": "pnpm -w run docs:build",
     "build:pages": "pnpm -w run build:pages",
     "build:storybook": "pnpm build",
     "docs:build": "pnpm -w run docs:build",

@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && pnpm pages-output",
+    "pages:build": "pnpm build",
     "build:pages": "next build && pnpm pages-output",
     "build:storybook": "pnpm -w run build:storybook",
     "docs:build": "pnpm build",
