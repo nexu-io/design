@@ -9,11 +9,24 @@ import {
   searchTokens,
 } from "./tools.js";
 
+type JsonRpcId = string | number | null;
+
 interface JsonRpcRequest {
   jsonrpc?: "2.0";
-  id?: string | number | null;
+  id?: JsonRpcId;
   method: string;
   params?: unknown;
+}
+
+interface JsonRpcResponse {
+  jsonrpc: "2.0";
+  id: JsonRpcId;
+  result?: unknown;
+  error?: {
+    code: number;
+    message: string;
+    data?: string;
+  };
 }
 
 type ToolHandler = (args: Record<string, unknown>) => Promise<unknown>;
@@ -153,30 +166,60 @@ function processInputBuffer(flush = false) {
 async function handleLine(line: string) {
   if (!line) return;
 
-  let request: JsonRpcRequest;
+  let message: unknown;
 
   try {
-    request = JSON.parse(line) as JsonRpcRequest;
+    message = JSON.parse(line) as unknown;
   } catch (error) {
     writeError(null, -32700, "Parse error", error);
     return;
   }
 
-  if (!request.method) {
-    writeError(request.id ?? null, -32600, "Invalid request");
-    return;
-  }
+  const response = await handleMessage(message);
+
+  if (response !== undefined) writeMessage(response);
+}
+
+async function handleMessage(
+  message: unknown,
+): Promise<JsonRpcResponse | JsonRpcResponse[] | undefined> {
+  if (Array.isArray(message)) return handleBatch(message);
+
+  return handleSingleMessage(message);
+}
+
+async function handleBatch(
+  messages: unknown[],
+): Promise<JsonRpcResponse | JsonRpcResponse[] | undefined> {
+  if (messages.length === 0) return buildError(null, -32600, "Invalid request");
+
+  const responses = (await Promise.all(messages.map(handleSingleMessage))).filter(
+    (response): response is JsonRpcResponse => response !== undefined,
+  );
+
+  return responses.length > 0 ? responses : undefined;
+}
+
+async function handleSingleMessage(message: unknown): Promise<JsonRpcResponse | undefined> {
+  if (!isJsonRpcRequest(message)) return buildError(null, -32600, "Invalid request");
+
+  const request = message;
 
   if (request.id === undefined) {
-    await handleNotification(request);
-    return;
+    try {
+      await handleNotification(request);
+    } catch {
+      // JSON-RPC notifications do not receive responses; ignore unsupported extension notifications.
+    }
+
+    return undefined;
   }
 
   try {
     const result = await handleRequest(request);
-    writeResponse(request.id, result);
+    return buildResponse(request.id, result);
   } catch (error) {
-    writeError(
+    return buildError(
       request.id,
       -32603,
       error instanceof Error ? error.message : "Internal error",
@@ -302,25 +345,35 @@ function getRequiredString(args: Record<string, unknown>, key: string) {
   return value;
 }
 
-function writeResponse(id: string | number | null | undefined, result: unknown) {
-  stdout.write(`${JSON.stringify({ jsonrpc: "2.0", id, result })}\n`);
+function isJsonRpcRequest(value: unknown): value is JsonRpcRequest {
+  return (
+    !!value &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    typeof (value as { method?: unknown }).method === "string"
+  );
 }
 
-function writeError(
-  id: string | number | null | undefined,
-  code: number,
-  message: string,
-  error?: unknown,
-) {
-  stdout.write(
-    `${JSON.stringify({
-      jsonrpc: "2.0",
-      id,
-      error: {
-        code,
-        message,
-        data: error instanceof Error ? error.stack : undefined,
-      },
-    })}\n`,
-  );
+function buildResponse(id: JsonRpcId, result: unknown): JsonRpcResponse {
+  return { jsonrpc: "2.0", id, result };
+}
+
+function buildError(id: JsonRpcId, code: number, message: string, error?: unknown) {
+  return {
+    jsonrpc: "2.0" as const,
+    id,
+    error: {
+      code,
+      message,
+      data: error instanceof Error ? error.stack : undefined,
+    },
+  };
+}
+
+function writeMessage(message: JsonRpcResponse | JsonRpcResponse[]) {
+  stdout.write(`${JSON.stringify(message)}\n`);
+}
+
+function writeError(id: JsonRpcId, code: number, message: string, error?: unknown) {
+  writeMessage(buildError(id, code, message, error));
 }

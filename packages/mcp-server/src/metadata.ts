@@ -20,7 +20,11 @@ export function resetMetadataCache() {
 }
 
 export async function loadMetadata(): Promise<MetadataStore> {
-  metadataPromise ??= loadRemoteMetadata().catch(() => fallbackMetadata);
+  metadataPromise ??= loadRemoteMetadata().catch(() => {
+    metadataPromise = undefined;
+
+    return fallbackMetadata;
+  });
 
   return metadataPromise;
 }
@@ -28,9 +32,9 @@ export async function loadMetadata(): Promise<MetadataStore> {
 async function loadRemoteMetadata(): Promise<MetadataStore> {
   const baseUrl = getDocsBaseUrl();
   const [componentsApi, examplesApi, tokensApi] = await Promise.all([
-    fetchJson<ComponentsApiResponse>(baseUrl, "/api/components.json"),
-    fetchJson<ExamplesApiResponse>(baseUrl, "/api/examples.json"),
-    fetchJson<TokensApiResponse>(baseUrl, "/api/tokens.json"),
+    fetchJson<ComponentsApiResponse>(baseUrl, "api/components.json"),
+    fetchJson<ExamplesApiResponse>(baseUrl, "api/examples.json"),
+    fetchJson<TokensApiResponse>(baseUrl, "api/tokens.json"),
   ]);
 
   if (!Array.isArray(componentsApi.components)) {
