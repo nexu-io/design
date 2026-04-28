@@ -8,6 +8,7 @@ import {
   Link2,
   MessageSquare,
   Monitor,
+  MoveRight,
   User,
   Users,
   X,
@@ -20,6 +21,7 @@ import StepClone from "./StepClone";
 import StepIM from "./StepIM";
 import StepLanding from "./StepLanding";
 import StepOnboarding from "./StepOnboarding";
+import StepOpenclawMigration from "./StepOpenclawMigration";
 import StepPreview from "./StepPreview";
 import StepSession from "./StepSession";
 import StepTeam from "./StepTeam";
@@ -27,6 +29,7 @@ import StepUpgrade from "./StepUpgrade";
 
 const STEPS = [
   { id: "landing", label: "Landing Page", icon: Globe, desc: "龙虾的赛博办公室" },
+  { id: "openclaw-migration", label: "迁移 Openclaw", icon: MoveRight, desc: "首次启动：一键关联已有 Openclaw 配置" },
   { id: "onboarding", label: "Onboarding", icon: MessageSquare, desc: "分身初始化" },
   { id: "clone", label: "分身入口", icon: User, desc: "产品主界面" },
   { id: "session", label: "Session", icon: Monitor, desc: "对话交互" },
@@ -39,6 +42,7 @@ const STEPS = [
 
 const STEP_COMPONENTS = [
   StepLanding,
+  StepOpenclawMigration,
   StepOnboarding,
   StepClone,
   StepSession,
