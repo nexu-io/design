@@ -24,7 +24,7 @@
     "dev:demo": "pnpm --filter @nexu-design/demo dev",
     "dev:demo:web": "pnpm --filter @nexu-design/demo dev:web",
     "dev:cloud-demo": "pnpm --filter @nexu-design/cloud-demo dev",
-    "build": "pnpm build:storybook",
+    "build": "pnpm docs:build && pnpm build:storybook",
     "build:storybook": "pnpm --filter @nexu-design/storybook build-storybook",
     "build:demo": "pnpm --filter @nexu-design/demo build",
     "build:cloud-demo": "pnpm --filter @nexu-design/cloud-demo build",
