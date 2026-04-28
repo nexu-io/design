@@ -290,7 +290,21 @@ async function callTool(params: unknown) {
     throw new InvalidParamsError(`Unknown Nexu Design MCP tool: ${String(name)}`);
   }
 
-  const result = await toolHandlers[name](asRecord(args));
+  let result: unknown;
+
+  try {
+    result = await toolHandlers[name](asRecord(args));
+  } catch (error) {
+    return {
+      isError: true,
+      content: [
+        {
+          type: "text",
+          text: error instanceof Error ? error.message : "Tool execution failed",
+        },
+      ],
+    };
+  }
 
   return {
     content: [

@@ -104,8 +104,8 @@ export function getAgentManifest() {
       mode: "static",
       guide: aiAgentsGuidePath,
       entrypoints: [
-        "/llms.txt",
-        "/llms-full.txt",
+        "llms.txt",
+        "llms-full.txt",
         "manifest.json",
         ...jsonApiRoutes.map((route) => route.href),
         aiAgentsGuidePath,

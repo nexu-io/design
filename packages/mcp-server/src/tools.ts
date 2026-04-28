@@ -75,7 +75,16 @@ export async function getExample(args: GetExampleArgs = {}) {
 
   if (exactId) {
     const found = examples.find((item) => normalizeIdentifier(item.id) === exactId);
-    if (found) return found;
+    if (found) {
+      const foundComponent = normalizeIdentifier(found.componentId);
+      if (component && foundComponent !== component) {
+        throw new Error(
+          `Nexu Design example ${args.example} belongs to ${found.componentId}, not ${args.component}.`,
+        );
+      }
+
+      return found;
+    }
   }
 
   if (example && !component) {
@@ -217,7 +226,7 @@ function normalizeIdentifier(value: string) {
 }
 
 function normalizeSearchText(value: string) {
-  return normalizeIdentifier(value).replaceAll("/", " ");
+  return normalizeIdentifier(value).replaceAll("/", " ").replaceAll("-", " ");
 }
 
 function normalizeLimit(value: number | undefined) {
