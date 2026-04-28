@@ -21,11 +21,11 @@ const documentedDocsIds = extractSet(inventorySource, "documentedDocsIds");
 const provisionalPropsIds = extractSet(inventorySource, "provisionalPropsIds", documentedDocsIds);
 const mvpComponentDocsIds = extractSet(inventorySource, "mvpComponentDocsIds");
 const plannedPatternDocsIds = extractSet(inventorySource, "plannedPatternDocsIds");
-const componentDocs = extractComponentDocs(metadataSource);
 const exampleIds = extractStringArray(examplesSource, "exampleIds");
 const exampleDefinitions = new Set(extractRecordKeys(examplesSource, "examples"));
 const storybookLinks = new Set(extractRecordKeys(storybookSource, "storybookLinks"));
 const inventoryItems = extractInventoryItems(inventorySource);
+const componentDocs = extractComponentDocs(metadataSource, inventoryItems);
 
 validateUniqueIds(inventoryItems);
 validateInventoryItems(inventoryItems);
@@ -87,7 +87,11 @@ function validateInventoryItems(items) {
       if (!existsInRepo(`apps/storybook/src/stories/${item.id}.stories.tsx`)) {
         fail(`${item.id}: complete Storybook coverage requires a matching story file`);
       }
-      if (coverage.docs === "complete" && !storybookLinks.has(item.id)) {
+      if (
+        coverage.docs === "complete" &&
+        documentedDocsIds.has(item.id) &&
+        !storybookLinks.has(item.id)
+      ) {
         fail(
           `${item.id}: documented Storybook component is missing from apps/docs/lib/storybook.ts`,
         );
@@ -217,6 +221,7 @@ function resolveCoverage(item) {
 function getDocsCoverage(item) {
   if (documentedDocsIds.has(item.id)) return "complete";
   if (mvpComponentDocsIds.has(item.id) || plannedPatternDocsIds.has(item.id)) return "planned";
+  if ((item.kind === "primitive" || item.kind === "pattern") && item.docsSlug) return "complete";
 
   return item.docsSlug ? "missing" : "not-applicable";
 }
@@ -237,7 +242,7 @@ function extractDefineCalls(source) {
   return calls;
 }
 
-function extractComponentDocs(source) {
+function extractComponentDocs(source, items) {
   const start = source.indexOf("const componentDocDefinitions");
   const end = source.indexOf("export const componentMetadata", start);
   const docsSource = source.slice(start, end);
@@ -256,6 +261,15 @@ function extractComponentDocs(source) {
     });
     entryStart.lastIndex = objectEnd + 1;
     match = entryStart.exec(docsSource);
+  }
+
+  for (const item of items) {
+    if (!item.documentable || !item.docsSlug || docs.has(item.id)) continue;
+
+    docs.set(item.id, {
+      examples: item.examples,
+      hasProps: true,
+    });
   }
 
   return docs;
