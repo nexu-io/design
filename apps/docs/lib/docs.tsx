@@ -611,10 +611,20 @@ function AiAgentsGuideContent() {
 
 function GuideSourceLinks({ sources }: { sources: string[] }) {
   return (
-    <ul>
+    <ul className="not-prose my-4 grid gap-2">
       {sources.map((source) => (
-        <li key={source}>
-          <Link href={`https://github.com/nexu-io/design/blob/main/${source}`}>{source}</Link>
+        <li key={source} className="flex">
+          <Link
+            href={`https://github.com/nexu-io/design/blob/main/${source}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-lg border border-border-subtle bg-surface-1 px-3 py-2 font-mono text-xs text-brand-primary shadow-rest transition-colors hover:border-border-hover hover:bg-surface-2 hover:underline"
+          >
+            <span>{source}</span>
+            <span aria-hidden="true" className="text-text-muted">
+              ↗
+            </span>
+          </Link>
         </li>
       ))}
     </ul>
