@@ -57,6 +57,7 @@ const routeItems = docsNavigationSections.flatMap((section) =>
   section.items.map((item) => ({
     title: item.title,
     href: toApiRelativePath(item.href),
+    llmsHref: toBaseRelativePath(item.href),
     section: section.title,
     status: item.status ?? "draft",
   })),
@@ -285,9 +286,7 @@ export function generateLlmsText() {
     "",
     "## Primary docs",
     "",
-    ...routeItems.map(
-      (item) => `- [${item.section} / ${item.title}](${toBaseRelativePath(item.href)})`,
-    ),
+    ...routeItems.map((item) => `- [${item.section} / ${item.title}](${item.llmsHref})`),
     "",
     "## Documented public API",
     "",
