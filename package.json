@@ -27,7 +27,7 @@
     "dev:demo": "pnpm --filter @nexu-design/demo dev",
     "dev:demo:web": "pnpm --filter @nexu-design/demo dev:web",
     "dev:cloud-demo": "pnpm --filter @nexu-design/cloud-demo dev",
-    "build": "pnpm docs:build",
+    "build": "pnpm build:storybook",
     "build:storybook": "pnpm --filter @nexu-design/storybook build-storybook && pnpm storybook:pages-output",
     "build-storybook": "pnpm build:storybook",
     "storybook:pages-output": "rm -rf out storybook-static && cp -R apps/storybook/storybook-static out && cp -R apps/storybook/storybook-static storybook-static",
