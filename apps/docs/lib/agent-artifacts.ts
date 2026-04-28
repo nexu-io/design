@@ -390,10 +390,10 @@ function getInventoryStatus(componentId: string) {
 function getExampleDependencies(source: string) {
   return Array.from(
     new Set(
-      source
-        .split("\n")
-        .map((line) => line.match(/^import(?:\s+type)?[\s\S]*?from ["']([^"']+)["']/)?.[1])
-        .filter((dependency): dependency is string => Boolean(dependency)),
+      Array.from(
+        source.matchAll(/^import(?:\s+type)?[\s\S]*?\sfrom ["']([^"']+)["']/gm),
+        (match) => match[1],
+      ),
     ),
   ).sort();
 }
