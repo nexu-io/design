@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "storybook": "STORYBOOK_DISABLE_TELEMETRY=1 storybook dev -p 6006",
+    "build": "STORYBOOK_DISABLE_TELEMETRY=1 storybook build && rm -rf ../../out && cp -R storybook-static ../../out",
     "build-storybook": "STORYBOOK_DISABLE_TELEMETRY=1 storybook build",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
