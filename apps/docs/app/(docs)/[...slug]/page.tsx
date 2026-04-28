@@ -37,7 +37,12 @@ export default async function DocsPage({ params }: DocsPageProps) {
   }
 
   return (
-    <DocsShell title={page.title} description={page.description} headings={page.headings}>
+    <DocsShell
+      title={page.title}
+      description={page.description}
+      headings={page.headings}
+      pathname={`/${slug.join("/")}`}
+    >
       {page.content}
     </DocsShell>
   );

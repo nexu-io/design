@@ -46,6 +46,11 @@ interface ComponentDocDefinition {
   inheritedProps: string;
 }
 
+interface GeneratedPropsDefinition {
+  inheritedProps: string;
+  props: PropMetadata[];
+}
+
 export interface ComponentMetadata extends ComponentDocDefinition {
   importSnippet: string;
   docsSlug: string;
@@ -709,6 +714,982 @@ const componentDocDefinitionsById = new Map(
   componentDocDefinitions.map((definition) => [definition.id, definition]),
 );
 
+const generatedPropsById: Record<string, GeneratedPropsDefinition> = {
+  accordion: {
+    inheritedProps:
+      "Accordion Root, Item, Trigger, and Content props, including native div/button attributes and Radix-style controlled state props.",
+    props: [
+      prop(
+        "type",
+        "'single' | 'multiple'",
+        "'single'",
+        "Selects whether one panel or multiple panels can be open.",
+      ),
+      prop(
+        "collapsible",
+        "boolean",
+        "false",
+        "Allows the active item to close again in single mode.",
+      ),
+      prop("value", "string | string[]", "—", "Controlled open item value or values."),
+      prop(
+        "defaultValue",
+        "string | string[]",
+        "—",
+        "Initial uncontrolled open item value or values.",
+      ),
+      prop(
+        "onValueChange",
+        "(value: string | string[]) => void",
+        "—",
+        "Called when open item state changes.",
+      ),
+      prop(
+        "icon",
+        "ReactNode",
+        "—",
+        "Optional trigger icon slot when supported by AccordionTrigger.",
+      ),
+    ],
+  },
+  "activity-bar": {
+    inheritedProps: "Div attributes on rail slots and native button attributes on ActivityBarItem.",
+    props: [
+      prop(
+        "surface",
+        "'solid' | 'glass'",
+        "'solid'",
+        "Background treatment for the activity rail.",
+      ),
+      prop("active", "boolean", "false", "Marks an ActivityBarItem as the current destination."),
+      prop(
+        "asChild",
+        "boolean",
+        "false",
+        "Renders an ActivityBarItem through Radix Slot for router links.",
+      ),
+      prop(
+        "className",
+        "string",
+        "—",
+        "Additional classes for the rail, slot, item, or indicator.",
+      ),
+    ],
+  },
+  avatar: {
+    inheritedProps: "Radix Avatar Root, Image, and Fallback props on the corresponding exports.",
+    props: [
+      prop("src", "string", "—", "Image source passed to AvatarImage."),
+      prop("alt", "string", "—", "Accessible image alternative text passed to AvatarImage."),
+      prop("delayMs", "number", "Radix default", "Delay before AvatarFallback renders."),
+      prop(
+        "className",
+        "string",
+        "—",
+        "Additional classes for the avatar root, image, or fallback.",
+      ),
+    ],
+  },
+  breadcrumb: {
+    inheritedProps:
+      "Nav, list, list item, anchor, span, and separator attributes on the matching Breadcrumb exports.",
+    props: [
+      prop(
+        "aria-label",
+        "string",
+        "'breadcrumb'",
+        "Accessible label for the breadcrumb navigation landmark.",
+      ),
+      prop(
+        "asChild",
+        "boolean",
+        "false",
+        "Renders BreadcrumbLink through Radix Slot for framework links.",
+      ),
+      prop("href", "string", "—", "Destination for BreadcrumbLink when rendering an anchor."),
+      prop("className", "string", "—", "Additional classes for breadcrumb slots."),
+    ],
+  },
+  "chat-message": {
+    inheritedProps:
+      "Div attributes except children, plus documented ChatSender and ChatMessageReaction data shapes.",
+    props: [
+      prop(
+        "sender",
+        "ChatSender",
+        "required",
+        "Author metadata including id, name, fallback, avatar, role, and agent styling.",
+      ),
+      prop("time", "string", "required", "Formatted timestamp shown with the sender header."),
+      prop(
+        "compact",
+        "boolean",
+        "false",
+        "Reduces repeated header and avatar spacing for consecutive messages.",
+      ),
+      prop("mention", "string", "—", "Prepends an @mention pill before the message body."),
+      prop("blocks", "ReactNode", "—", "Attachment or rich-content blocks below the main message."),
+      prop(
+        "reactions",
+        "ChatMessageReaction[]",
+        "—",
+        "Reaction chips with emoji, count, and reacted state.",
+      ),
+      prop(
+        "highlighted",
+        "boolean",
+        "false",
+        "Applies highlighted row background for referenced messages.",
+      ),
+      prop("rowActions", "ReactNode", "—", "Hover/focus actions rendered at the row edge."),
+      prop("onAddReaction", "() => void", "—", "Called when users choose to add a reaction."),
+      prop(
+        "onReactionClick",
+        "(emoji: string) => void",
+        "—",
+        "Called when an existing reaction is selected.",
+      ),
+    ],
+  },
+  collapsible: {
+    inheritedProps:
+      "Collapsible Root, Trigger, and Content props, including native div/button attributes.",
+    props: [
+      prop("open", "boolean", "—", "Controlled open state."),
+      prop("defaultOpen", "boolean", "false", "Initial uncontrolled open state."),
+      prop("onOpenChange", "(open: boolean) => void", "—", "Called when the collapsible toggles."),
+      prop("forceMount", "boolean", "false", "Keeps CollapsibleContent mounted while closed."),
+    ],
+  },
+  combobox: {
+    inheritedProps:
+      "Combobox root props plus Popover-derived Trigger/Content props and Input-derived input props.",
+    props: [
+      prop("value", "string", "—", "Controlled selected item value."),
+      prop("defaultValue", "string", "—", "Initial uncontrolled selected value."),
+      prop("onValueChange", "(value: string) => void", "—", "Called when users select an item."),
+      prop("open", "boolean", "—", "Controlled popover open state."),
+      prop("defaultOpen", "boolean", "false", "Initial uncontrolled popover state."),
+      prop(
+        "onOpenChange",
+        "(open: boolean) => void",
+        "—",
+        "Called when the popover opens or closes.",
+      ),
+      prop("disabled", "boolean", "false", "Disables trigger and item interaction."),
+      prop("textValue", "string", "—", "Search/display text override on ComboboxItem."),
+      prop("keywords", "string[]", "—", "Additional search terms for an item."),
+    ],
+  },
+  "conversation-message": {
+    inheritedProps: "Div attributes such as className, data-*, aria-* props, and children.",
+    props: [
+      prop(
+        "variant",
+        "'user' | 'assistant' | 'system' | 'status'",
+        "'assistant'",
+        "Message role and bubble treatment.",
+      ),
+      prop("avatar", "ReactNode", "—", "Leading avatar or identity slot."),
+      prop("meta", "ReactNode", "—", "Timestamp, model, or status metadata."),
+      prop("actions", "ReactNode", "—", "Inline action slot for copy, retry, or menu controls."),
+      prop("bubbleClassName", "string", "—", "Classes applied to the message bubble."),
+      prop("contentClassName", "string", "—", "Classes applied to the message content region."),
+    ],
+  },
+  "data-table": {
+    inheritedProps:
+      "Div attributes on DataTable and slot-specific div/header/footer attributes on subcomponents.",
+    props: [
+      prop(
+        "children",
+        "ReactNode",
+        "—",
+        "Composed table header, toolbar, content, empty state, and footer slots.",
+      ),
+      prop("className", "string", "—", "Additional classes for the table frame or slot wrappers."),
+    ],
+  },
+  "detail-panel": {
+    inheritedProps:
+      "Div attributes on panel slots and native button attributes on DetailPanelCloseButton.",
+    props: [
+      prop("width", "number | string", "400", "Panel width; numbers are treated as pixel values."),
+      prop("srLabel", "string", "'Close panel'", "Screen-reader label for DetailPanelCloseButton."),
+      prop("className", "string", "—", "Additional classes for panel layout or slots."),
+    ],
+  },
+  "entity-card": {
+    inheritedProps:
+      "Card props except padding on EntityCard, plus HTML attributes on EntityCard slots.",
+    props: [
+      prop(
+        "interactive",
+        "boolean",
+        "false",
+        "Adds hover and cursor affordances when the card acts as a target.",
+      ),
+      prop("selected", "boolean", "false", "Applies selected-state border and surface styling."),
+      prop("alt", "string", "required", "Image alternative text for EntityCardMedia image usage."),
+      prop("className", "string", "—", "Additional classes for the card or slots."),
+    ],
+  },
+  "event-notice": {
+    inheritedProps: "Div attributes such as className, data-*, aria-* props, and children.",
+    props: [
+      prop("icon", "ReactNode", "—", "Leading decorative icon for the notice."),
+      prop(
+        "plain",
+        "boolean",
+        "false",
+        "Removes the side hairline treatment for simpler feed copy.",
+      ),
+      prop("children", "ReactNode", "—", "Notice text or composed inline content."),
+    ],
+  },
+  "file-attachment": {
+    inheritedProps: "Native button attributes such as type, onClick, disabled, and aria-* props.",
+    props: [
+      prop("name", "string", "required", "Visible file name."),
+      prop("meta", "ReactNode", "—", "Secondary metadata such as type, size, or upload state."),
+      prop(
+        "kind",
+        "'doc' | 'sheet' | 'archive' | 'code' | 'media' | 'generic'",
+        "'doc'",
+        "Chooses default icon and tile color.",
+      ),
+      prop("icon", "React.ElementType", "—", "Overrides the default file-kind icon."),
+      prop("trailing", "ReactNode", "—", "Trailing action or metadata slot."),
+      prop("type", "'button' | 'submit' | 'reset'", "'button'", "Native button type."),
+    ],
+  },
+  "image-attachment": {
+    inheritedProps:
+      "HTMLElement attributes on the figure/container, including className, data-*, and aria-* props.",
+    props: [
+      prop("src", "string", "required", "Image source URL."),
+      prop(
+        "alt",
+        "string",
+        "''",
+        "Image alternative text; keep empty only for decorative previews.",
+      ),
+      prop("width", "number", "360", "Preview width in pixels."),
+      prop("height", "number", "220", "Preview height in pixels."),
+      prop("caption", "ReactNode", "—", "Optional caption below the image."),
+      prop("onSelect", "() => void", "—", "Makes the preview selectable by click and keyboard."),
+      prop("imgClassName", "string", "—", "Classes applied to the inner img element."),
+    ],
+  },
+  "image-gallery": {
+    inheritedProps:
+      "Div attributes except onSelect, which is replaced by the gallery item callback.",
+    props: [
+      prop(
+        "images",
+        "ImageGalleryItem[]",
+        "required",
+        "Image thumbnails with src and optional alt text.",
+      ),
+      prop(
+        "maxVisible",
+        "number",
+        "6",
+        "Number of thumbnails shown before collapsing into a +N item.",
+      ),
+      prop(
+        "onSelect",
+        "(image: ImageGalleryItem, index: number) => void",
+        "—",
+        "Called when a thumbnail is selected.",
+      ),
+    ],
+  },
+  "interactive-row": {
+    inheritedProps: "Native button attributes such as type, onClick, disabled, and aria-* props.",
+    props: [
+      prop("selected", "boolean", "false", "Applies selected row styling."),
+      prop(
+        "tone",
+        "'default' | 'subtle'",
+        "'default'",
+        "Controls row background and hover treatment.",
+      ),
+      prop("type", "'button' | 'submit' | 'reset'", "'button'", "Native button type."),
+    ],
+  },
+  label: {
+    inheritedProps:
+      "Radix Label Root props, including htmlFor, className, data-*, and aria-* props.",
+    props: [
+      prop("htmlFor", "string", "—", "Associates the label with a form control id."),
+      prop("className", "string", "—", "Additional classes for label layout or typography."),
+    ],
+  },
+  logo: {
+    inheritedProps:
+      "Span attributes for logo wrappers, plus logo-specific provider/model/runtime/platform/brand identifiers.",
+    props: [
+      prop("size", "number", "16", "Rendered mark size in pixels."),
+      prop("title", "string", "—", "Accessible title for the rendered mark."),
+      prop(
+        "provider",
+        "ProviderName | string",
+        "required",
+        "Provider id for ProviderLogo or related model marks.",
+      ),
+      prop("model", "string", "required", "Model id for ModelLogo."),
+      prop("runtime", "RuntimeName | string", "required", "Runtime id for RuntimeLogo."),
+      prop(
+        "platform",
+        "'slack' | 'feishu' | 'discord' | 'telegram' | 'wechat' | 'whatsapp'",
+        "required",
+        "Platform id for PlatformLogo.",
+      ),
+      prop("brand", "'nexu' | 'github'", "required", "Brand id for BrandLogo."),
+    ],
+  },
+  "nav-item": {
+    inheritedProps:
+      "Native button attributes by default; asChild renders through Radix Slot for links.",
+    props: [
+      prop("asChild", "boolean", "false", "Renders through Slot for router link composition."),
+      prop("tone", "'default' | 'accent'", "'default'", "Color treatment for navigation emphasis."),
+      prop("size", "'default' | 'compact'", "'default'", "Padding and density preset."),
+      prop("selected", "boolean", "false", "Marks the item as selected/current."),
+      prop(
+        "type",
+        "'button' | 'submit' | 'reset'",
+        "'button'",
+        "Native button type when not using asChild.",
+      ),
+    ],
+  },
+  "panel-footer": {
+    inheritedProps: "Div attributes on PanelFooter, PanelFooterMeta, and PanelFooterActions.",
+    props: [
+      prop(
+        "align",
+        "'between' | 'end' | 'start'",
+        "'between'",
+        "Horizontal alignment of footer metadata and actions.",
+      ),
+    ],
+  },
+  "pricing-card": {
+    inheritedProps:
+      "Card props except children and padding, plus HTML and aria attributes accepted by Card.",
+    props: [
+      prop("name", "ReactNode", "required", "Plan name."),
+      prop("price", "ReactNode", "required", "Primary price or value display."),
+      prop("period", "ReactNode", "—", "Billing period or cadence label."),
+      prop("description", "ReactNode", "—", "Supporting plan description."),
+      prop("icon", "React.ElementType", "—", "Optional leading plan icon."),
+      prop("badge", "ReactNode", "—", "Top badge content such as Popular."),
+      prop("badgeVariant", "BadgeProps['variant']", "'accent'", "Badge visual style."),
+      prop("features", "ReactNode[]", "required", "Feature list rendered inside the card."),
+      prop("footer", "ReactNode", "—", "Bottom action or explanatory slot."),
+      prop("featured", "boolean", "false", "Applies highlighted featured-plan styling."),
+      prop("size", "'default' | 'compact'", "'default'", "Spacing and typography density."),
+    ],
+  },
+  progress: {
+    inheritedProps: "Div attributes such as className, style, data-*, and aria-* props.",
+    props: [
+      prop("value", "number | null", "0", "Current progress value."),
+      prop("max", "number", "100", "Maximum progress value."),
+      prop(
+        "variant",
+        "'default' | 'success' | 'warning' | 'accent'",
+        "'default'",
+        "Indicator color treatment.",
+      ),
+      prop("size", "'sm' | 'md' | 'lg'", "'md'", "Bar height preset."),
+      prop("indicatorClassName", "string", "—", "Classes applied to the inner progress indicator."),
+    ],
+  },
+  prose: {
+    inheritedProps: "Div attributes such as className, data-*, aria-* props, and children.",
+    props: [
+      prop("size", "'default' | 'compact'", "'default'", "Rich-text typography and spacing scale."),
+    ],
+  },
+  "radio-group": {
+    inheritedProps: "Radix RadioGroup Root and Item props on RadioGroup and RadioGroupItem.",
+    props: [
+      prop("value", "string", "—", "Controlled selected radio value."),
+      prop("defaultValue", "string", "—", "Initial uncontrolled selected value."),
+      prop("onValueChange", "(value: string) => void", "—", "Called when selection changes."),
+      prop("disabled", "boolean", "false", "Disables the group or item."),
+    ],
+  },
+  "scroll-area": {
+    inheritedProps:
+      "Radix ScrollArea Root, Viewport, Corner, and Scrollbar props on corresponding exports.",
+    props: [
+      prop(
+        "type",
+        "'auto' | 'always' | 'scroll' | 'hover'",
+        "Radix default",
+        "Scrollbar visibility behavior.",
+      ),
+      prop("orientation", "'horizontal' | 'vertical'", "'vertical'", "Axis for ScrollBar."),
+      prop("className", "string", "—", "Additional classes for the scroll root or scrollbar."),
+    ],
+  },
+  separator: {
+    inheritedProps:
+      "Radix Separator Root props including orientation, decorative, className, and aria-* props.",
+    props: [
+      prop("orientation", "'horizontal' | 'vertical'", "'horizontal'", "Separator axis."),
+      prop(
+        "decorative",
+        "boolean",
+        "true",
+        "Marks the separator as decorative when it does not convey structure.",
+      ),
+    ],
+  },
+  sheet: {
+    inheritedProps:
+      "Radix Dialog Root, Trigger, Close, Content, Title, and Description props on matching Sheet exports.",
+    props: [
+      prop("open", "boolean", "—", "Controlled open state on Sheet."),
+      prop("defaultOpen", "boolean", "false", "Initial uncontrolled open state."),
+      prop(
+        "onOpenChange",
+        "(open: boolean) => void",
+        "—",
+        "Called when the sheet opens or closes.",
+      ),
+      prop(
+        "side",
+        "'top' | 'bottom' | 'left' | 'right'",
+        "'right'",
+        "Viewport edge that SheetContent slides from.",
+      ),
+    ],
+  },
+  sidebar: {
+    inheritedProps: "Div and button attributes on Sidebar slots and navigation menu subcomponents.",
+    props: [
+      prop(
+        "asChild",
+        "boolean",
+        "false",
+        "Renders NavigationMenuButton through Slot for link composition.",
+      ),
+      prop(
+        "active",
+        "boolean",
+        "false",
+        "Marks NavigationMenuButton as current and sets active styling.",
+      ),
+      prop(
+        "className",
+        "string",
+        "—",
+        "Additional classes for sidebar regions or navigation slots.",
+      ),
+    ],
+  },
+  sonner: {
+    inheritedProps:
+      "ToasterProps from sonner; Nexu applies theme classes, colors, and toastOptions defaults.",
+    props: [
+      prop("position", "ToasterProps['position']", "sonner default", "Toast viewport position."),
+      prop(
+        "theme",
+        "ToasterProps['theme']",
+        "Nexu theme",
+        "Sonner theme setting; normally inherited from Nexu styling.",
+      ),
+      prop(
+        "toastOptions",
+        "ToasterProps['toastOptions']",
+        "Nexu defaults",
+        "Per-toast class and style overrides merged with Nexu defaults.",
+      ),
+    ],
+  },
+  "split-view": {
+    inheritedProps: "Div attributes on SplitView, ResizablePanel, and ResizableHandle.",
+    props: [
+      prop(
+        "orientation",
+        "'horizontal' | 'vertical'",
+        "'horizontal'",
+        "Layout direction or resize axis.",
+      ),
+      prop("size", "number | string", "—", "Fixed panel size; numbers are treated as pixels."),
+      prop("minSize", "number | string", "—", "Minimum panel size."),
+      prop("maxSize", "number | string", "—", "Maximum panel size."),
+      prop("collapsed", "boolean", "false", "Collapses a panel to zero size."),
+      prop("onResizeStart", "() => void", "—", "Called when handle dragging starts."),
+      prop("onResize", "(delta: number) => void", "—", "Called with drag delta while resizing."),
+      prop("onResizeEnd", "() => void", "—", "Called when handle dragging ends."),
+    ],
+  },
+  "stat-card": {
+    inheritedProps:
+      "Card props except children, including Card variant, padding, className, data-*, and aria-* props.",
+    props: [
+      prop("label", "ReactNode", "required", "Metric label."),
+      prop("value", "ReactNode", "required", "Primary metric value."),
+      prop("icon", "React.ElementType", "—", "Optional leading icon component."),
+      prop(
+        "tone",
+        "'default' | 'info' | 'accent' | 'success' | 'warning' | 'danger'",
+        "'default'",
+        "Icon background tone.",
+      ),
+      prop(
+        "trend",
+        "{ label: ReactNode; variant?: BadgeProps['variant'] }",
+        "—",
+        "Trend badge content and variant.",
+      ),
+      prop("meta", "ReactNode", "—", "Secondary text below the value."),
+      prop("progress", "number | null", "—", "Optional progress bar value."),
+      prop("progressVariant", "ProgressProps['variant']", "'default'", "Progress bar color."),
+      prop("progressMax", "number", "—", "Maximum progress value."),
+    ],
+  },
+  "stats-bar": {
+    inheritedProps:
+      "Div attributes on the bar; interactive items render buttons when onSelect is provided.",
+    props: [
+      prop("items", "StatsBarItem[]", "required", "Metric entries rendered across the bar."),
+      prop("items[].id", "string", "required", "Stable item key."),
+      prop("items[].label", "ReactNode", "required", "Item label."),
+      prop("items[].value", "ReactNode", "required", "Item value."),
+      prop(
+        "items[].tone",
+        "'default' | 'info' | 'accent' | 'success' | 'warning' | 'danger'",
+        "'default'",
+        "Value color tone.",
+      ),
+      prop("items[].selected", "boolean", "false", "Selected item styling."),
+      prop("items[].disabled", "boolean", "false", "Disables interactive item selection."),
+      prop("items[].onSelect", "() => void", "—", "Turns the item into a selectable button."),
+    ],
+  },
+  "status-dot": {
+    inheritedProps: "Span attributes such as className, title, data-*, and aria-* props.",
+    props: [
+      prop(
+        "status",
+        "'success' | 'warning' | 'error' | 'info' | 'neutral'",
+        "'neutral'",
+        "Semantic dot color.",
+      ),
+      prop("size", "'xs' | 'sm' | 'default' | 'lg'", "'default'", "Dot diameter preset."),
+      prop("pulse", "boolean", "false", "Adds a subtle animated pulse."),
+    ],
+  },
+  stepper: {
+    inheritedProps:
+      "Ordered list, list item, separator div, and aria attributes on Stepper exports.",
+    props: [
+      prop("orientation", "'horizontal' | 'vertical'", "'horizontal'", "Stepper layout direction."),
+      prop("status", "'pending' | 'current' | 'completed'", "'pending'", "State of a StepperItem."),
+      prop("step", "ReactNode", "—", "Step number or custom indicator content."),
+      prop("label", "ReactNode", "—", "Step label."),
+      prop("description", "ReactNode", "—", "Supporting text for the step."),
+      prop("icon", "ReactNode", "—", "Custom indicator icon."),
+      prop("trailing", "ReactNode", "—", "Trailing content in vertical layouts."),
+      prop("active", "boolean", "false", "Active connector state on StepperSeparator."),
+    ],
+  },
+  table: {
+    inheritedProps:
+      "Native table, section, row, cell, and caption attributes on matching Table exports.",
+    props: [
+      prop("density", "'default' | 'compact'", "'default'", "Table row spacing scale."),
+      prop("hoverable", "boolean", "true", "Enables row hover styling."),
+      prop("selected", "boolean", "false", "Selected state on TableRow."),
+      prop("className", "string", "—", "Additional classes for table slots."),
+    ],
+  },
+  "tag-group": {
+    inheritedProps: "Div attributes on TagGroup and BadgeProps on TagGroupItem.",
+    props: [
+      prop(
+        "variant",
+        "BadgeProps['variant']",
+        "Badge default",
+        "Badge color treatment for TagGroupItem.",
+      ),
+      prop("size", "BadgeProps['size']", "Badge default", "Badge size for TagGroupItem."),
+      prop("radius", "BadgeProps['radius']", "Badge default", "Badge radius for TagGroupItem."),
+      prop("className", "string", "—", "Additional classes for group layout or tag items."),
+    ],
+  },
+  "text-link": {
+    inheritedProps:
+      "Anchor attributes such as href, target, rel, onClick, and aria-* props; asChild renders through Slot.",
+    props: [
+      prop("variant", "'default' | 'muted'", "'default'", "Link color and emphasis treatment."),
+      prop("size", "'xs' | 'sm' | 'default' | 'lg' | 'inherit'", "'sm'", "Text size preset."),
+      prop(
+        "asChild",
+        "boolean",
+        "false",
+        "Renders through Slot for router links or custom anchors.",
+      ),
+      prop(
+        "showArrowUpRight",
+        "boolean",
+        "false",
+        "Appends the standard external/up-right arrow when not using asChild.",
+      ),
+    ],
+  },
+  textarea: {
+    inheritedProps:
+      "Native textarea attributes such as rows, value, onChange, placeholder, disabled, and aria-* props.",
+    props: [
+      prop(
+        "invalid",
+        "boolean",
+        "false",
+        "Applies error styling and sets aria-invalid on the textarea.",
+      ),
+    ],
+  },
+  "theme-root": {
+    inheritedProps: "Div attributes such as className, data-*, aria-* props, and children.",
+    props: [
+      prop(
+        "theme",
+        "'light' | 'dark' | 'system'",
+        "'system'",
+        "Theme mode scoped to the wrapped surface.",
+      ),
+    ],
+  },
+  toggle: {
+    inheritedProps:
+      "Radix Toggle Root, ToggleGroup Root, and ToggleGroup Item props on matching exports.",
+    props: [
+      prop(
+        "variant",
+        "'default' | 'outline' | 'compact' | 'pill' | 'underline'",
+        "'default'",
+        "Toggle or group visual treatment.",
+      ),
+      prop(
+        "size",
+        "'none' | 'sm' | 'default' | 'lg'",
+        "'default'",
+        "Toggle height and padding preset.",
+      ),
+      prop("pressed", "boolean", "—", "Controlled pressed state on Toggle."),
+      prop("defaultPressed", "boolean", "false", "Initial uncontrolled pressed state on Toggle."),
+      prop(
+        "onPressedChange",
+        "(pressed: boolean) => void",
+        "—",
+        "Called when Toggle pressed state changes.",
+      ),
+      prop(
+        "type",
+        "'single' | 'multiple'",
+        "required on ToggleGroup",
+        "Selection mode for ToggleGroup.",
+      ),
+      prop("value", "string | string[]", "—", "Controlled ToggleGroup selected value or values."),
+      prop(
+        "onValueChange",
+        "(value: string | string[]) => void",
+        "—",
+        "Called when ToggleGroup selection changes.",
+      ),
+    ],
+  },
+  "topic-card": {
+    inheritedProps: "Native button attributes such as type, onClick, disabled, and aria-* props.",
+    props: [
+      prop("title", "string", "required", "Topic title."),
+      prop("author", "string", "required", "Topic starter name."),
+      prop(
+        "status",
+        "'active' | 'needs-review' | 'blocked' | 'done' | 'archived'",
+        "'active'",
+        "Topic state.",
+      ),
+      prop("lastActivity", "string", "required", "Human-readable latest activity time."),
+      prop("replies", "number", "required", "Reply count."),
+      prop("participants", "string[]", "required", "Participant initials or labels."),
+      prop("preview", "ReactNode", "—", "Latest reply or summary preview."),
+      prop("assignee", "TopicAssignee", "—", "Optional owner/assignee metadata."),
+      prop("type", "'button' | 'submit' | 'reset'", "'button'", "Native button type."),
+    ],
+  },
+  "video-attachment": {
+    inheritedProps: "Native button attributes such as type, onClick, disabled, and aria-* props.",
+    props: [
+      prop("thumbnail", "string", "required", "Video thumbnail image URL."),
+      prop("duration", "string", "required", "Displayed duration label."),
+      prop("title", "string", "required", "Video title."),
+      prop("meta", "ReactNode", "—", "Secondary footer metadata."),
+      prop("thumbnailAlt", "string", "title", "Alternative text for the thumbnail image."),
+      prop("type", "'button' | 'submit' | 'reset'", "'button'", "Native button type."),
+    ],
+  },
+  "voice-message": {
+    inheritedProps: "Div attributes such as className, data-*, aria-* props, and children.",
+    props: [
+      prop("duration", "string", "required", "Duration label shown beside playback controls."),
+      prop("transcript", "ReactNode", "—", "Optional transcript content."),
+      prop("defaultTranscriptOpen", "boolean", "false", "Starts transcript content expanded."),
+      prop(
+        "transcriptToggleLabel",
+        "string",
+        "auto-generated",
+        "Accessible label for the transcript toggle.",
+      ),
+      prop("waveform", "number[]", "DEFAULT_WAVEFORM", "Waveform bar heights."),
+      prop("onPlay", "() => void", "—", "Called when the play button is pressed."),
+      prop("state", "'idle' | 'playing'", "'idle'", "Playback state for the play affordance."),
+    ],
+  },
+  "auth-shell": {
+    inheritedProps: "Div attributes such as className, data-*, aria-* props, and children.",
+    props: [
+      prop("rail", "ReactNode", "—", "Optional left rail content."),
+      prop("railClassName", "string", "—", "Classes for the rail container."),
+      prop("contentClassName", "string", "—", "Classes for the main content pane."),
+      prop("contentContainerClassName", "string", "—", "Classes for the centered content wrapper."),
+      prop("contentInnerClassName", "string", "—", "Classes for the inner content width wrapper."),
+      prop(
+        "contentBackdrop",
+        "ReactNode",
+        "—",
+        "Custom backdrop; otherwise the built-in grid backdrop is used.",
+      ),
+    ],
+  },
+  "brand-rail": {
+    inheritedProps:
+      "Aside attributes except native title, which is replaced by the React title prop.",
+    props: [
+      prop("logo", "ReactNode", "—", "Brand or product logo slot."),
+      prop("logoLabel", "string", "'Brand'", "Accessible label for the logo button."),
+      prop("onLogoClick", "() => void", "—", "Makes the logo area interactive."),
+      prop("topRight", "ReactNode", "—", "Top-right utility slot."),
+      prop("title", "ReactNode", "—", "Primary rail heading."),
+      prop("description", "ReactNode", "—", "Supporting rail description."),
+      prop("footer", "ReactNode", "—", "Footer slot."),
+      prop("background", "ReactNode", "—", "Custom background layer."),
+      prop("bodyClassName", "string", "—", "Classes for the main body stack."),
+      prop("tone", "'light' | 'dark'", "'dark'", "Rail color scheme."),
+    ],
+  },
+  "budget-popover": {
+    inheritedProps:
+      "Popover Root props plus trigger-as-child composition and PopoverContent alignment props.",
+    props: [
+      prop(
+        "trigger",
+        "ReactElement",
+        "required",
+        "Element rendered through PopoverTrigger asChild.",
+      ),
+      prop("title", "ReactNode", "required", "Popover heading."),
+      prop("description", "ReactNode", "—", "Supporting copy."),
+      prop("items", "BudgetPopoverItem[]", "[]", "Usage, limit, or budget detail rows."),
+      prop("summary", "ReactNode", "—", "Optional summary block."),
+      prop("footer", "ReactNode", "—", "Footer slot."),
+      prop("contentClassName", "string", "—", "Classes for popover content."),
+      prop("align", "PopoverContentProps['align']", "'end'", "Horizontal popover alignment."),
+      prop("sideOffset", "number", "8", "Distance from trigger."),
+      prop("open", "boolean", "—", "Controlled open state."),
+      prop("defaultOpen", "boolean", "—", "Initial uncontrolled open state."),
+      prop("onOpenChange", "(open: boolean) => void", "—", "Called when open state changes."),
+    ],
+  },
+  "confirm-dialog": {
+    inheritedProps:
+      "Dialog Root props via open/defaultOpen/onOpenChange; trigger is rendered asChild.",
+    props: [
+      prop("title", "ReactNode", "required", "Dialog title."),
+      prop("description", "ReactNode", "—", "Dialog description."),
+      prop("trigger", "ReactNode", "—", "Optional trigger element."),
+      prop("confirmLabel", "ReactNode", "'Confirm'", "Confirm button label."),
+      prop("cancelLabel", "ReactNode", "'Cancel'", "Cancel button label."),
+      prop(
+        "confirmVariant",
+        "ButtonProps['variant']",
+        "'destructive'",
+        "Confirm button visual style.",
+      ),
+      prop("open", "boolean", "—", "Controlled open state."),
+      prop("defaultOpen", "boolean", "—", "Initial uncontrolled open state."),
+      prop("onOpenChange", "(open: boolean) => void", "—", "Called when open state changes."),
+      prop(
+        "onConfirm",
+        "MouseEventHandler<HTMLButtonElement>",
+        "—",
+        "Called when users press confirm.",
+      ),
+    ],
+  },
+  "credits-capsule": {
+    inheritedProps: "Div attributes such as className, data-*, aria-* props, and children.",
+    props: [
+      prop("title", "ReactNode", "'Credits'", "Capsule heading."),
+      prop("badge", "ReactNode", "—", "Inline badge next to the heading."),
+      prop("value", "ReactNode", "required", "Primary credit value."),
+      prop("meta", "ReactNode", "—", "Secondary metadata."),
+      prop("hint", "ReactNode", "—", "Additional helper text."),
+      prop("action", "ReactNode", "—", "Action slot."),
+      prop("breakdown", "ReactNode", "—", "Detailed breakdown below progress."),
+      prop("footer", "ReactNode", "—", "Footer slot."),
+      prop("progress", "number | null", "—", "Optional progress value."),
+      prop("progressMax", "number", "—", "Maximum progress value."),
+      prop(
+        "progressVariant",
+        "'default' | 'success' | 'warning' | 'accent'",
+        "'accent'",
+        "Progress color.",
+      ),
+      prop(
+        "progressAriaLabel",
+        "string",
+        "'Credit usage progress'",
+        "Accessible label for the progress bar.",
+      ),
+    ],
+  },
+  "empty-state": {
+    inheritedProps:
+      "Div attributes except native title, which is replaced by the React title prop.",
+    props: [
+      prop("title", "ReactNode", "required", "Empty-state heading."),
+      prop("description", "ReactNode", "—", "Supporting copy."),
+      prop("icon", "ReactNode", "—", "Icon or illustration slot."),
+      prop("action", "ReactNode", "—", "Primary recovery or creation action."),
+    ],
+  },
+  "filter-pills": {
+    inheritedProps:
+      "Radix Tabs Root, List, Trigger, and Content props; list and trigger hard-code the default variant.",
+    props: [
+      prop("value", "string", "—", "Controlled active pill value."),
+      prop("defaultValue", "string", "—", "Initial uncontrolled active value."),
+      prop("onValueChange", "(value: string) => void", "—", "Called when users select a pill."),
+      prop("disabled", "boolean", "false", "Disables an individual FilterPillTrigger."),
+    ],
+  },
+  "follow-up-input": {
+    inheritedProps:
+      "Div attributes on the wrapper plus textareaProps and buttonProps passthrough with documented omissions.",
+    props: [
+      prop("placeholder", "string", "—", "Textarea placeholder."),
+      prop("value", "string", "—", "Controlled text value."),
+      prop("defaultValue", "string", "''", "Initial uncontrolled text value."),
+      prop("onValueChange", "(value: string) => void", "—", "Called when text changes."),
+      prop("onSend", "(value: string) => void", "—", "Called with trimmed text when users send."),
+      prop("sendLabel", "string", "'Send follow-up'", "Accessible label for the send button."),
+      prop("textareaClassName", "string", "—", "Classes for the textarea."),
+      prop("buttonClassName", "string", "—", "Classes for the send button."),
+      prop(
+        "textareaProps",
+        "TextareaHTMLAttributes<HTMLTextAreaElement>",
+        "—",
+        "Additional textarea attributes except value/defaultValue/onChange/placeholder.",
+      ),
+      prop(
+        "buttonProps",
+        "ButtonProps",
+        "—",
+        "Additional button props except type/onClick/children.",
+      ),
+    ],
+  },
+  "form-field": {
+    inheritedProps:
+      "Wrapper and helper props for label, control, description, and error composition.",
+    props: [
+      prop("label", "ReactNode", "—", "Field label."),
+      prop("description", "ReactNode", "—", "Supporting description."),
+      prop("error", "ReactNode", "—", "Validation error text."),
+      prop("required", "boolean", "false", "Shows required marker."),
+      prop("invalid", "boolean", "false", "Marks the field invalid and wires aria-invalid."),
+      prop(
+        "orientation",
+        "'vertical' | 'horizontal'",
+        "'vertical'",
+        "Label/control layout orientation.",
+      ),
+      prop("labelClassName", "string", "—", "Classes for the generated label."),
+      prop("children", "ReactNode", "—", "Field control and supporting slots."),
+    ],
+  },
+  "page-header": {
+    inheritedProps:
+      "Header element attributes except native title, which is replaced by the React title prop.",
+    props: [
+      prop("title", "ReactNode", "required", "Page heading."),
+      prop("description", "ReactNode", "—", "Optional subtitle or supporting context."),
+      prop("actions", "ReactNode", "—", "Right-aligned action slot."),
+      prop("density", "'default' | 'shell'", "'default'", "Spacing and type scale preset."),
+    ],
+  },
+  "page-shell": {
+    inheritedProps: "Div attributes such as className, data-*, aria-* props, and children.",
+    props: [
+      prop(
+        "className",
+        "string",
+        "—",
+        "Additional classes for page width, padding, or layout composition.",
+      ),
+    ],
+  },
+  "section-header": {
+    inheritedProps:
+      "Div attributes except native title, which is replaced by the React title prop.",
+    props: [
+      prop("title", "ReactNode", "required", "Section heading."),
+      prop("action", "ReactNode", "—", "Optional section-level action slot."),
+    ],
+  },
+  "skill-marketplace-card": {
+    inheritedProps: "Div attributes such as className, data-*, aria-* props, and children.",
+    props: [
+      prop("name", "string", "required", "Skill name."),
+      prop("description", "string", "required", "Skill description."),
+      prop("categoryLabel", "string | null", "—", "Optional category label."),
+      prop("logo", "string", "—", "Optional logo image URL."),
+      prop(
+        "icon",
+        "React.ElementType<{ size?: number; className?: string }>",
+        "—",
+        "Fallback icon component.",
+      ),
+      prop(
+        "dimmed",
+        "boolean",
+        "false",
+        "Reduces card emphasis for unavailable or secondary entries.",
+      ),
+      prop("footer", "ReactNode", "—", "Footer action or metadata slot."),
+    ],
+  },
+  "underline-tabs": {
+    inheritedProps:
+      "Radix Tabs Root, List, Trigger, and Content props; list and trigger hard-code the default variant.",
+    props: [
+      prop("value", "string", "—", "Controlled active tab value."),
+      prop("defaultValue", "string", "—", "Initial uncontrolled active value."),
+      prop("onValueChange", "(value: string) => void", "—", "Called when users activate a tab."),
+      prop("disabled", "boolean", "false", "Disables an individual UnderlineTabsTrigger."),
+    ],
+  },
+};
+
 export const componentMetadata: ComponentMetadata[] = publicComponentInventory
   .filter((inventoryItem) => inventoryItem.documentable && inventoryItem.docsSlug)
   .map((inventoryItem) => {
@@ -743,6 +1724,7 @@ function createGeneratedComponentDocDefinition(
   const kindLabel = inventoryItem.kind === "pattern" ? "pattern" : "primitive";
   const exportsList = inventoryItem.exports.join(", ");
   const description = getGeneratedComponentDescription(inventoryItem);
+  const generatedProps = generatedPropsById[inventoryItem.id];
 
   return {
     id: inventoryItem.id,
@@ -756,8 +1738,10 @@ function createGeneratedComponentDocDefinition(
       "Provide visible labels or aria-label values for icon-only and form-related controls.",
       "Keep keyboard focus, disabled, loading, and validation states discoverable and testable.",
     ],
-    inheritedProps: `documented exports from ${inventoryItem.sourcePath}: ${exportsList}.`,
-    props: [
+    inheritedProps:
+      generatedProps?.inheritedProps ??
+      `documented exports from ${inventoryItem.sourcePath}: ${exportsList}.`,
+    props: generatedProps?.props ?? [
       {
         name: "className",
         type: "string",
@@ -774,6 +1758,10 @@ function createGeneratedComponentDocDefinition(
       },
     ],
   };
+}
+
+function prop(name: string, type: string, defaultValue: string, description: string): PropMetadata {
+  return { name, type, defaultValue, description };
 }
 
 function getGeneratedComponentDescription(inventoryItem: PublicApiInventoryItem) {

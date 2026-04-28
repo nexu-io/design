@@ -15,6 +15,7 @@
       "**/release/**",
       "**/storybook-static/**",
       "**/*.tsbuildinfo",
+      "apps/docs/out/**",
       "apps/slark/out/**"
     ]
   },

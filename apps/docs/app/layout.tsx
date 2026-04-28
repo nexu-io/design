@@ -16,7 +16,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <RootProvider theme={{ storageKey: "nexu-docs-theme" }}>{children}</RootProvider>
+        <RootProvider search={{ enabled: false }} theme={{ storageKey: "nexu-docs-theme" }}>
+          {children}
+        </RootProvider>
       </body>
     </html>
   );

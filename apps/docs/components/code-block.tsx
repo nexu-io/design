@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { useId, useLayoutEffect, useRef, useState } from "react";
 
-import { Button } from "../../../packages/ui-web/src/primitives/button";
+import { Button } from "@nexu-design/ui-web";
 import { CopyButton } from "./copy-button";
 
 interface CodeBlockProps {

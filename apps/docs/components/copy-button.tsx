@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Copy } from "lucide-react";
 
-import { Button, type ButtonProps } from "../../../packages/ui-web/src/primitives/button";
+import { Button, type ButtonProps } from "@nexu-design/ui-web";
 
 interface CopyButtonProps {
   value: string;

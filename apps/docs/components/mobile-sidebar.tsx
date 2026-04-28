@@ -17,6 +17,8 @@ export function MobileSidebar({ sections, searchItems }: MobileSidebarProps) {
   const currentItem = sections
     .flatMap((section) => section.items)
     .find((item) => item.href === pathname);
+  const activeSection = getActiveSection(sections, pathname);
+  const visibleSections = activeSection ? [activeSection] : sections;
 
   return (
     <details
@@ -40,7 +42,7 @@ export function MobileSidebar({ sections, searchItems }: MobileSidebarProps) {
       </summary>
       <nav className="mt-3 grid gap-4" aria-label="Mobile documentation navigation">
         <MobileDocsSearch items={searchItems} onNavigate={() => setOpen(false)} />
-        {sections.map((section) => (
+        {visibleSections.map((section) => (
           <div key={section.title}>
             <p className="px-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
               {section.title}
@@ -53,12 +55,14 @@ export function MobileSidebar({ sections, searchItems }: MobileSidebarProps) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    aria-current={isActive ? "page" : undefined}
                     onClick={() => setOpen(false)}
-                    className={
+                    className={cn(
+                      "rounded-md px-2 py-2 text-sm transition-colors",
                       isActive
-                        ? "rounded-md bg-surface-3 px-2 py-2 text-sm font-semibold text-text-heading"
-                        : "rounded-md px-2 py-2 text-sm text-text-secondary hover:bg-surface-2 hover:text-text-heading"
-                    }
+                        ? "bg-surface-3 font-semibold text-text-heading"
+                        : "text-text-secondary hover:bg-surface-2 hover:text-text-heading",
+                    )}
                   >
                     {item.title}
                   </Link>
@@ -70,4 +74,24 @@ export function MobileSidebar({ sections, searchItems }: MobileSidebarProps) {
       </nav>
     </details>
   );
+}
+
+function getActiveSection(sections: DocsNavSection[], pathname: string) {
+  const exactSection = sections.find((section) =>
+    section.items.some((item) => item.href === pathname),
+  );
+
+  if (exactSection) {
+    return exactSection;
+  }
+
+  const segment = pathname.split("/").filter(Boolean)[0];
+
+  return sections.find((section) =>
+    section.items.some((item) => item.href.split("/").filter(Boolean)[0] === segment),
+  );
+}
+
+function cn(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
 }

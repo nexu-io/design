@@ -1154,9 +1154,7 @@ function ComponentDocsContent({ component }: { component: ComponentMetadata }) {
         ))}
       </ul>
       <h2 id="props">Props</h2>
-      <p>
-        Provisional prop coverage for Phase 1. This page also accepts {component.inheritedProps}
-      </p>
+      <p>This component also accepts {component.inheritedProps}</p>
       <PropsTable props={component.props} />
       <h2 id="storybook">Storybook</h2>
       <StorybookLink href={component.storybookPath} title={component.storybookTitle} />

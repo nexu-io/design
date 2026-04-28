@@ -26,6 +26,7 @@ const turbopackSourceAliases = {
 };
 
 const nextConfig: NextConfig = {
+  output: "export",
   transpilePackages: ["@nexu-design/tokens", "@nexu-design/ui-web"],
   turbopack: {
     resolveAlias: turbopackSourceAliases,

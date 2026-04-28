@@ -1,6 +1,8 @@
+"use client";
+
 import Link from "next/link";
 
-import { Button } from "../../../packages/ui-web/src/primitives/button";
+import { Button } from "@nexu-design/ui-web";
 
 interface StorybookLinkProps {
   href?: string;

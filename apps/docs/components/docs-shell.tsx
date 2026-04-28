@@ -1,7 +1,12 @@
 import Link from "next/link";
 
 import { DocsSearch } from "./docs-search";
-import { docsNavSections, docsSearchItems, type DocsHeading } from "../lib/docs";
+import {
+  docsNavSections,
+  docsSearchItems,
+  type DocsHeading,
+  type DocsNavSection,
+} from "../lib/docs";
 import { getStorybookHomeUrl } from "../lib/storybook";
 import { MobileSidebar } from "./mobile-sidebar";
 import { ThemeToggle } from "./theme-toggle";
@@ -10,16 +15,19 @@ interface DocsShellProps {
   title: string;
   description: string;
   headings: DocsHeading[];
+  pathname: string;
   children: React.ReactNode;
 }
 
-export function DocsShell({ title, description, headings, children }: DocsShellProps) {
+export function DocsShell({ title, description, headings, pathname, children }: DocsShellProps) {
+  const activeSection = getActiveSection(pathname);
+
   return (
     <div className="min-h-screen">
-      <DocsHeader />
+      <DocsHeader pathname={pathname} />
       <MobileSidebar sections={docsNavSections} searchItems={docsSearchItems} />
       <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[17rem_minmax(0,1fr)_13rem] lg:px-8">
-        <DocsSidebar />
+        <DocsSidebar activeSection={activeSection} pathname={pathname} />
         <main className="min-w-0">
           <div className="mb-10 border-b border-border-subtle pb-8">
             <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-brand-primary">
@@ -38,8 +46,10 @@ export function DocsShell({ title, description, headings, children }: DocsShellP
   );
 }
 
-export function DocsHeader() {
+export function DocsHeader({ pathname = "/" }: { pathname?: string }) {
   const storybookUrl = getStorybookHomeUrl();
+  const activeSection = getActiveSection(pathname);
+  const componentsActive = activeSection?.title === "Components";
 
   return (
     <header className="sticky top-0 z-40 border-b border-border-subtle bg-surface-0/85 backdrop-blur-xl">
@@ -54,15 +64,25 @@ export function DocsHeader() {
           </span>
         </Link>
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
-          {docsNavSections.map((section) => (
-            <Link
-              key={section.title}
-              href={section.items[0]?.href ?? "/"}
-              className="rounded-md px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-2 hover:text-text-heading"
-            >
-              {section.title}
-            </Link>
-          ))}
+          {docsNavSections.map((section) => {
+            const active = activeSection?.title === section.title;
+
+            return (
+              <Link
+                key={section.title}
+                href={section.items[0]?.href ?? "/"}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  active
+                    ? "bg-surface-3 text-text-heading"
+                    : "text-text-secondary hover:bg-surface-2 hover:text-text-heading",
+                )}
+              >
+                {section.title}
+              </Link>
+            );
+          })}
         </nav>
         <div className="hidden min-w-0 flex-1 justify-center lg:flex">
           <DocsSearch items={docsSearchItems} />
@@ -70,13 +90,19 @@ export function DocsHeader() {
         <div className="flex items-center gap-2">
           <Link
             href="/components/button"
-            className="hidden rounded-md px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-2 hover:text-text-heading sm:inline-flex"
+            aria-current={componentsActive ? "page" : undefined}
+            className={cn(
+              "hidden rounded-md px-3 py-2 text-sm font-medium transition-colors sm:inline-flex lg:hidden",
+              componentsActive
+                ? "bg-surface-3 text-text-heading"
+                : "text-text-secondary hover:bg-surface-2 hover:text-text-heading",
+            )}
           >
             Components
           </Link>
           <Link
             href={storybookUrl}
-            className="hidden rounded-md px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-2 hover:text-text-heading sm:inline-flex"
+            className="hidden rounded-md px-3 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-2 hover:text-text-heading sm:inline-flex"
           >
             Storybook
           </Link>
@@ -87,31 +113,69 @@ export function DocsHeader() {
   );
 }
 
-function DocsSidebar() {
+function DocsSidebar({
+  activeSection,
+  pathname,
+}: {
+  activeSection: DocsNavSection | undefined;
+  pathname: string;
+}) {
+  if (!activeSection) {
+    return null;
+  }
+
   return (
     <aside className="sticky top-20 hidden h-[calc(100vh-6rem)] overflow-y-auto pr-4 lg:block">
-      <nav className="grid gap-6" aria-label="Documentation sidebar">
-        {docsNavSections.map((section) => (
-          <div key={section.title}>
-            <h2 className="px-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
-              {section.title}
-            </h2>
-            <div className="mt-2 grid gap-1">
-              {section.items.map((item) => (
+      <nav className="grid gap-6" aria-label={`${activeSection.title} navigation`}>
+        <div>
+          <h2 className="px-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
+            {activeSection.title}
+          </h2>
+          <div className="mt-2 grid gap-1">
+            {activeSection.items.map((item) => {
+              const active = pathname === item.href;
+
+              return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-md px-2 py-2 text-sm text-text-secondary hover:bg-surface-2 hover:text-text-heading"
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "rounded-md px-2 py-2 text-sm transition-colors",
+                    active
+                      ? "bg-surface-3 font-semibold text-text-heading"
+                      : "text-text-secondary hover:bg-surface-2 hover:text-text-heading",
+                  )}
                 >
                   {item.title}
                 </Link>
-              ))}
-            </div>
+              );
+            })}
           </div>
-        ))}
+        </div>
       </nav>
     </aside>
   );
+}
+
+function getActiveSection(pathname: string) {
+  const exactSection = docsNavSections.find((section) =>
+    section.items.some((item) => item.href === pathname),
+  );
+
+  if (exactSection) {
+    return exactSection;
+  }
+
+  const segment = pathname.split("/").filter(Boolean)[0];
+
+  return docsNavSections.find((section) =>
+    section.items.some((item) => item.href.split("/").filter(Boolean)[0] === segment),
+  );
+}
+
+function cn(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
 }
 
 function TableOfContents({ headings }: { headings: DocsHeading[] }) {
