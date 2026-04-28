@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "sh -c 'pnpm --filter @nexu-design/storybook storybook & pnpm --filter @nexu-design/demo dev & wait'",
-    "dev:slark": "pnpm --filter slark dev",
+    "dev:slark": "pnpm --filter nexu dev",
     "dev:storybook": "pnpm --filter @nexu-design/storybook storybook",
     "dev:demo": "pnpm --filter @nexu-design/demo dev",
     "dev:demo:web": "pnpm --filter @nexu-design/demo dev:web",
