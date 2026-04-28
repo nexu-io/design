@@ -94,7 +94,7 @@ export async function getExample(args: GetExampleArgs = {}) {
     }
   }
 
-  if (component) {
+  if (component && !example) {
     const componentExamples = examples.filter(
       (item) => normalizeIdentifier(item.componentId) === component,
     );
