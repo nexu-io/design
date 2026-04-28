@@ -8,6 +8,7 @@
     "dev": "next dev",
     "build": "next build && pnpm pages-output",
     "build:pages": "next build && pnpm pages-output",
+    "build:storybook": "pnpm -w run build:storybook",
     "docs:build": "pnpm build",
     "pages-output": "rm -rf storybook-static ../../out ../../storybook-static ../storybook/storybook-static && mkdir -p ../storybook && cp -R out storybook-static && cp -R out ../../out && cp -R out ../../storybook-static && cp -R out ../storybook/storybook-static",
     "typecheck": "tsc --noEmit",
