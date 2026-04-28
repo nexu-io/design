@@ -7,6 +7,7 @@
     "dev": "next dev",
     "build": "next build && pnpm pages-output",
     "build:pages": "next build && pnpm pages-output",
+    "docs:build": "pnpm build",
     "pages-output": "rm -rf storybook-static && cp -R out storybook-static",
     "typecheck": "tsc --noEmit",
     "lint": "biome check ."
