@@ -1,6 +1,8 @@
 node_modules
 .next
 .source
+
+# TypeScript incremental build info
 *.tsbuildinfo
 dist
 storybook-static
