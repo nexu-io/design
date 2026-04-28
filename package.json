@@ -6,7 +6,7 @@
     "node": ">=22.16 <25"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["electron", "electron-winstaller", "esbuild"]
+    "onlyBuiltDependencies": ["esbuild"]
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
