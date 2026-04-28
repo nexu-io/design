@@ -70,7 +70,8 @@ export async function getExample(args: GetExampleArgs = {}) {
   const examples = examplesApi.examples;
   const component = normalizeIdentifier(args.component ?? "");
   const example = normalizeIdentifier(args.example ?? "");
-  const exactId = example && component ? `${component}/${example}` : example;
+  const exactId =
+    example && component && !example.includes("/") ? `${component}/${example}` : example;
 
   if (exactId) {
     const found = examples.find((item) => normalizeIdentifier(item.id) === exactId);

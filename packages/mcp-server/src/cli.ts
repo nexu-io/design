@@ -40,6 +40,13 @@ class MethodNotFoundError extends Error {
   }
 }
 
+class InvalidParamsError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "InvalidParamsError";
+  }
+}
+
 const tools = [
   {
     name: "search_components",
@@ -227,10 +234,11 @@ async function handleSingleMessage(message: unknown): Promise<JsonRpcResponse | 
     return buildResponse(request.id, result);
   } catch (error) {
     const isMethodNotFound = error instanceof MethodNotFoundError;
+    const isInvalidParams = error instanceof InvalidParamsError;
 
     return buildError(
       request.id,
-      isMethodNotFound ? -32601 : -32603,
+      isMethodNotFound ? -32601 : isInvalidParams ? -32602 : -32603,
       error instanceof Error ? error.message : "Internal error",
       error,
     );
@@ -279,7 +287,7 @@ async function callTool(params: unknown) {
   const { name, arguments: args = {} } = asRecord(params);
 
   if (typeof name !== "string" || !toolHandlers[name]) {
-    throw new Error(`Unknown Nexu Design MCP tool: ${String(name)}`);
+    throw new InvalidParamsError(`Unknown Nexu Design MCP tool: ${String(name)}`);
   }
 
   const result = await toolHandlers[name](asRecord(args));
@@ -348,7 +356,7 @@ function getRequiredString(args: Record<string, unknown>, key: string) {
   const value = args[key];
 
   if (typeof value !== "string" || value.trim().length === 0) {
-    throw new Error(`Tool argument ${key} must be a non-empty string.`);
+    throw new InvalidParamsError(`Tool argument ${key} must be a non-empty string.`);
   }
 
   return value;
