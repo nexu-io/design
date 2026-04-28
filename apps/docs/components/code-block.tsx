@@ -18,7 +18,6 @@ interface CodeBlockProps {
 export function CodeBlock({
   code,
   language = "tsx",
-  title,
   variant = "standalone",
   collapsible = false,
   defaultCollapsed = true,
@@ -56,13 +55,14 @@ export function CodeBlock({
           : "not-prose overflow-hidden rounded-xl border border-border-subtle bg-surface-1 shadow-rest"
       }
     >
-      <div className="flex items-center justify-between gap-3 border-b border-border-subtle bg-surface-2/70 px-4 py-3">
-        <p className="min-w-0 truncate text-xs font-semibold text-text-muted">
-          {title ?? language}
-        </p>
-        <CopyButton value={code} label="Copy code" className="h-7 w-24 shrink-0 px-2 text-xs" />
-      </div>
       <div className="relative">
+        <CopyButton
+          value={code}
+          label="Copy code"
+          variant="ghost"
+          size="icon-sm"
+          className="absolute right-3 top-3 z-10 size-8 border-none bg-transparent text-text-muted shadow-none hover:bg-transparent hover:text-text-heading"
+        />
         <pre
           ref={codeRef}
           id={codeId}
@@ -72,7 +72,7 @@ export function CodeBlock({
               : undefined
           }
           className={[
-            "m-0 overflow-x-auto bg-transparent p-4 text-sm leading-6 text-text-primary shadow-none",
+            "m-0 overflow-x-auto bg-transparent p-4 pr-14 text-sm leading-6 text-text-primary shadow-none",
             "transition-[max-height] duration-300 ease-out",
             codeCollapsed ? "overflow-hidden" : isCollapsible ? "pb-14" : "",
           ]

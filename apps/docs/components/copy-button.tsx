@@ -1,16 +1,25 @@
 "use client";
 
 import { useState } from "react";
+import { Copy } from "lucide-react";
 
-import { Button } from "../../../packages/ui-web/src/primitives/button";
+import { Button, type ButtonProps } from "../../../packages/ui-web/src/primitives/button";
 
 interface CopyButtonProps {
   value: string;
   label?: string;
   className?: string;
+  variant?: ButtonProps["variant"];
+  size?: ButtonProps["size"];
 }
 
-export function CopyButton({ value, label = "Copy", className }: CopyButtonProps) {
+export function CopyButton({
+  value,
+  label = "Copy",
+  className,
+  variant = "outline",
+  size = "sm",
+}: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -28,8 +37,16 @@ export function CopyButton({ value, label = "Copy", className }: CopyButtonProps
 
   return (
     <>
-      <Button type="button" size="sm" variant="outline" className={className} onClick={handleCopy}>
-        {copied ? "Copied" : failed ? "Retry" : label}
+      <Button
+        type="button"
+        size={size}
+        variant={variant}
+        className={className}
+        onClick={handleCopy}
+        aria-label={copied ? "Copied code" : failed ? "Retry copying code" : label}
+        title={copied ? "Copied" : failed ? "Retry" : label}
+      >
+        <Copy className="size-4" aria-hidden="true" />
       </Button>
       <span className="sr-only" aria-live="polite">
         {copied ? "Copied code to clipboard" : failed ? "Could not copy code" : ""}
