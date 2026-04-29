@@ -20,11 +20,7 @@ export function resetMetadataCache() {
 }
 
 export async function loadMetadata(): Promise<MetadataStore> {
-  metadataPromise ??= loadRemoteMetadata().catch(() => {
-    metadataPromise = undefined;
-
-    return fallbackMetadata;
-  });
+  metadataPromise ??= loadRemoteMetadata().catch(() => fallbackMetadata);
 
   return metadataPromise;
 }

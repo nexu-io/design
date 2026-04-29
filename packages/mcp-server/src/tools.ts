@@ -235,7 +235,7 @@ function normalizeDocsSlug(value: string) {
 }
 
 function normalizeSearchText(value: string) {
-  return normalizeIdentifier(value).replaceAll("/", " ").replaceAll("-", " ");
+  return normalizeIdentifier(value).replace(/[./-]/g, " ");
 }
 
 function normalizeLimit(value: number | undefined) {
