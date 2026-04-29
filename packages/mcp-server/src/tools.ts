@@ -166,6 +166,7 @@ function summarizeComponent(component: ComponentMetadataRecord) {
 
 function findComponent(components: ComponentMetadataRecord[], value: string) {
   const identifier = normalizeIdentifier(value);
+  const docsSlug = normalizeDocsSlug(value);
 
   return components.find((component) => {
     const aliases = [
@@ -174,8 +175,12 @@ function findComponent(components: ComponentMetadataRecord[], value: string) {
       component.docsUrl?.split("/").at(-1),
       ...(component.exports ?? []),
     ];
+    const docsAliases = [component.docsUrl];
 
-    return aliases.some((alias) => normalizeIdentifier(alias ?? "") === identifier);
+    return (
+      aliases.some((alias) => normalizeIdentifier(alias ?? "") === identifier) ||
+      docsAliases.some((alias) => normalizeDocsSlug(alias ?? "") === docsSlug)
+    );
   });
 }
 
@@ -223,6 +228,10 @@ function tokenMatches(token: TokenMetadataRecord, query: string) {
 
 function normalizeIdentifier(value: string) {
   return value.trim().toLowerCase().replace(/^--/, "").replaceAll("_", "-");
+}
+
+function normalizeDocsSlug(value: string) {
+  return normalizeIdentifier(value).replace(/^(?:\.\.\/|\.\/|\/)+/, "");
 }
 
 function normalizeSearchText(value: string) {
