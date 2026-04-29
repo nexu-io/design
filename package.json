@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "pnpm@10.16.1",
   "engines": {
-    "node": "24.15.0"
+    "node": ">=22.16 <25"
   },
   "pnpm": {
     "onlyBuiltDependencies": ["electron", "electron-winstaller", "esbuild"]
