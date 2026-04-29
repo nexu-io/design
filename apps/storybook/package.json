@@ -6,12 +6,14 @@
   "packageManager": "pnpm@10.16.1",
   "scripts": {
     "storybook": "STORYBOOK_DISABLE_TELEMETRY=1 storybook dev -p 6006",
-    "build": "STORYBOOK_DISABLE_TELEMETRY=1 storybook build && rm -rf out dist .vercel/output/static ../../out ../../dist ../../storybook-static ../../.vercel/output/static && mkdir -p .vercel/output ../../.vercel/output && cp -R storybook-static out && cp -R storybook-static dist && cp -R storybook-static .vercel/output/static && cp -R storybook-static ../../out && cp -R storybook-static ../../dist && cp -R storybook-static ../../storybook-static && cp -R storybook-static ../../.vercel/output/static",
+    "storybook:build": "STORYBOOK_DISABLE_TELEMETRY=1 storybook build",
+    "build": "pnpm storybook:build && pnpm pages-output",
     "pages:build": "pnpm build",
     "build:pages": "pnpm build",
     "build:storybook": "pnpm build",
+    "pages-output": "rm -rf out dist .vercel/output/static ../../out ../../dist ../../storybook-static ../../.vercel/output/static && mkdir -p .vercel/output ../../.vercel/output && cp -R storybook-static out && cp -R storybook-static dist && cp -R storybook-static .vercel/output/static && cp -R storybook-static ../../out && cp -R storybook-static ../../dist && cp -R storybook-static ../../storybook-static && cp -R storybook-static ../../.vercel/output/static",
     "docs:build": "pnpm -w run docs:build",
-    "build-storybook": "STORYBOOK_DISABLE_TELEMETRY=1 storybook build",
+    "build-storybook": "pnpm build",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },
