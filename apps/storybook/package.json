@@ -6,7 +6,7 @@
   "packageManager": "pnpm@10.16.1",
   "scripts": {
     "storybook": "STORYBOOK_DISABLE_TELEMETRY=1 storybook dev -p 6006",
-    "build": "STORYBOOK_DISABLE_TELEMETRY=1 storybook build && rm -rf ../../out ../../storybook-static && cp -R storybook-static ../../out && cp -R storybook-static ../../storybook-static",
+    "build": "STORYBOOK_DISABLE_TELEMETRY=1 storybook build && rm -rf out ../../out ../../storybook-static && cp -R storybook-static out && cp -R storybook-static ../../out && cp -R storybook-static ../../storybook-static",
     "pages:build": "pnpm build",
     "build:pages": "pnpm build",
     "build:storybook": "pnpm build",
