@@ -29,16 +29,16 @@ export async function searchComponents(args: SearchComponentsArgs = {}) {
   const { componentsApi } = await loadMetadata();
   const query = normalizeSearchText(args.query ?? "");
   const limit = normalizeLimit(args.limit);
+  const matches = componentsApi.components.filter((component) =>
+    query ? componentMatches(component, query) : true,
+  );
 
   return {
     schemaVersion: componentsApi.schemaVersion,
     source: componentsApi.generatedFrom,
     query: args.query ?? "",
-    count: componentsApi.components.length,
-    results: componentsApi.components
-      .filter((component) => (query ? componentMatches(component, query) : true))
-      .slice(0, limit)
-      .map(summarizeComponent),
+    count: matches.length,
+    results: matches.slice(0, limit).map(summarizeComponent),
   };
 }
 
@@ -124,17 +124,17 @@ export async function searchTokens(args: SearchTokensArgs = {}) {
   const query = normalizeSearchText(args.query ?? "");
   const category = normalizeIdentifier(args.category ?? "");
   const limit = normalizeLimit(args.limit);
+  const matches = tokensApi.tokens
+    .filter((token) => (query ? tokenMatches(token, query) : true))
+    .filter((token) => (category ? normalizeIdentifier(token.category ?? "") === category : true));
 
   return {
     schemaVersion: tokensApi.schemaVersion,
     source: tokensApi.generatedFrom,
     query: args.query ?? "",
     category: args.category,
-    count: tokensApi.tokens.length,
-    results: tokensApi.tokens
-      .filter((token) => (query ? tokenMatches(token, query) : true))
-      .filter((token) => (category ? normalizeIdentifier(token.category ?? "") === category : true))
-      .slice(0, limit),
+    count: matches.length,
+    results: matches.slice(0, limit),
   };
 }
 
@@ -239,7 +239,7 @@ function normalizeSearchText(value: string) {
 }
 
 function normalizeLimit(value: number | undefined) {
-  if (!value || !Number.isFinite(value)) return 20;
+  if (typeof value !== "number" || !Number.isFinite(value)) return 20;
 
   return Math.max(1, Math.min(100, Math.trunc(value)));
 }
