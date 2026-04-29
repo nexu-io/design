@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && pnpm pages-output",
+    "pages:build": "pnpm build",
+    "build:pages": "pnpm build",
+    "pages-output": "rm -rf out .vercel/output/static ../../out ../../.vercel/output/static && mkdir -p .vercel/output ../../.vercel/output && cp -R dist out && cp -R dist .vercel/output/static && cp -R dist ../../out && cp -R dist ../../.vercel/output/static",
     "preview": "vite preview",
     "typecheck": "tsc -b"
   },
