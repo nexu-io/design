@@ -149,14 +149,14 @@ const tools = [
   },
 ] as const;
 
-const toolHandlers: Record<string, ToolHandler> = {
+const toolHandlers = {
   search_components: searchComponents,
   get_component: (args) => getComponent({ name: getRequiredString(args, "name") }),
   get_component_props: (args) => getComponentProps({ name: getRequiredString(args, "name") }),
   get_example: getExample,
   search_tokens: searchTokens,
   get_token: (args) => getToken({ name: getRequiredString(args, "name") }),
-};
+} satisfies Record<string, ToolHandler>;
 
 let input = "";
 
@@ -295,7 +295,7 @@ async function handleRequest(request: JsonRpcRequest) {
 async function callTool(params: unknown) {
   const { name, arguments: args = {} } = asRecord(params);
 
-  if (typeof name !== "string" || !toolHandlers[name]) {
+  if (typeof name !== "string" || !isToolName(name)) {
     throw new InvalidParamsError(`Unknown Nexu Design MCP tool: ${String(name)}`);
   }
 
@@ -323,6 +323,10 @@ async function callTool(params: unknown) {
       },
     ],
   };
+}
+
+function isToolName(name: string): name is keyof typeof toolHandlers {
+  return Object.hasOwn(toolHandlers, name);
 }
 
 async function readResource(params: unknown) {

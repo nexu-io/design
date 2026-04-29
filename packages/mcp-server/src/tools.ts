@@ -188,7 +188,7 @@ function findToken(tokens: TokenMetadataRecord[], value: string) {
   const identifier = normalizeIdentifier(value);
 
   return tokens.find((token) => {
-    const aliases = [token.name, token.cssVar, token.resolvedValue];
+    const aliases = [token.name, token.cssVar];
     return aliases.some((alias) => normalizeIdentifier(String(alias ?? "")) === identifier);
   });
 }
