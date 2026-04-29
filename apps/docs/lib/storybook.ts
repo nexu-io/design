@@ -18,14 +18,16 @@ export const storybookLinks = {
 
 export type StorybookComponentId = keyof typeof storybookLinks;
 
+const defaultStorybookBaseUrl = "http://localhost:6006";
+
 function getStorybookBaseUrl() {
-  return process.env.NEXT_PUBLIC_STORYBOOK_URL?.replace(/\/$/, "");
+  return (process.env.NEXT_PUBLIC_STORYBOOK_URL ?? defaultStorybookBaseUrl).replace(/\/$/, "");
 }
 
 export function getStorybookHomeUrl() {
   const baseUrl = getStorybookBaseUrl();
 
-  return baseUrl ? `${baseUrl}/` : "/";
+  return `${baseUrl}/`;
 }
 
 export function getStorybookPathUrl(path: string): string;
@@ -35,10 +37,6 @@ export function getStorybookPathUrl(path?: string) {
   if (!path) return undefined;
 
   const baseUrl = getStorybookBaseUrl();
-
-  if (!baseUrl) {
-    return path;
-  }
 
   return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
 }

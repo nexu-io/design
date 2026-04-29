@@ -9,18 +9,19 @@ import {
   searchTokens,
 } from "./tools.js";
 
-type JsonRpcId = string | number | null;
+type JsonRpcRequestId = string | number;
+type JsonRpcResponseId = JsonRpcRequestId | null;
 
 interface JsonRpcRequest {
   jsonrpc: "2.0";
-  id?: JsonRpcId;
+  id?: JsonRpcRequestId;
   method: string;
   params?: unknown;
 }
 
 interface JsonRpcResponse {
   jsonrpc: "2.0";
-  id: JsonRpcId;
+  id: JsonRpcResponseId;
   result?: unknown;
   error?: {
     code: number;
@@ -256,7 +257,7 @@ async function handleSingleMessage(message: unknown): Promise<JsonRpcResponse | 
 async function handleNotification(request: JsonRpcRequest) {
   if (request.method === "notifications/initialized" || request.method.startsWith("$/")) return;
 
-  await handleRequest({ ...request, id: null });
+  await handleRequest(request);
 }
 
 async function handleRequest(request: JsonRpcRequest) {
@@ -412,18 +413,15 @@ function isJsonRpcRequest(value: unknown): value is JsonRpcRequest {
   return (
     request.jsonrpc === "2.0" &&
     typeof request.method === "string" &&
-    (request.id === undefined ||
-      request.id === null ||
-      typeof request.id === "string" ||
-      typeof request.id === "number")
+    (request.id === undefined || typeof request.id === "string" || typeof request.id === "number")
   );
 }
 
-function buildResponse(id: JsonRpcId, result: unknown): JsonRpcResponse {
+function buildResponse(id: JsonRpcRequestId, result: unknown): JsonRpcResponse {
   return { jsonrpc: "2.0", id, result };
 }
 
-function buildError(id: JsonRpcId, code: number, message: string, error?: unknown) {
+function buildError(id: JsonRpcResponseId, code: number, message: string, error?: unknown) {
   return {
     jsonrpc: "2.0" as const,
     id,
@@ -439,6 +437,6 @@ function writeMessage(message: JsonRpcResponse | JsonRpcResponse[]) {
   stdout.write(`${JSON.stringify(message)}\n`);
 }
 
-function writeError(id: JsonRpcId, code: number, message: string, error?: unknown) {
+function writeError(id: JsonRpcResponseId, code: number, message: string, error?: unknown) {
   writeMessage(buildError(id, code, message, error));
 }
