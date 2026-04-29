@@ -696,7 +696,7 @@ Paired rules:
 
 - Input placeholders drop to `dark:placeholder:text-muted-foreground/35` — `/50` is too hot on the deep-ish input background.
 - Avatars / icon tiles use `ring-black/5 dark:ring-white/10` so the edge stays visible on dark surfaces.
-- Low-emphasis buttons (`outline`, `secondary`) use a translucent tint of `foreground` rather than a hard `surface-2` fill so they borrow the parent's colour on tinted cards (warning / success / info / glass). Brand / CTA buttons (`default`, `brand`, `primary`, `destructive`) stay solid — emphasis is intentional.
+- Low-emphasis buttons (`outline`, `secondary`, `ghost`) use a translucent tint of `foreground` rather than a hard `surface-2` fill so they borrow the parent's colour on tinted cards (warning / success / info / glass) and remain visible on `surface-2` overlays. Brand / CTA buttons (`default`, `brand`, `primary`, `destructive`) stay solid — emphasis is intentional.
 - Light mode is intentionally left untouched. Every rule is a `dark:` override layered on top of the existing token.
 
 Do:

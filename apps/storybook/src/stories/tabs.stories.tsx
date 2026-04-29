@@ -3,6 +3,8 @@ import { Cpu, MessageCircle, Zap } from "lucide-react";
 
 import { Card, CardContent, Tabs, TabsContent, TabsList, TabsTrigger } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Tabs",
   component: Tabs,
@@ -10,8 +12,7 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Content panel switcher — each tab reveals a different content area. For in-place filtering without content panels use **Segmented**; for single on/off use **Toggle**.",
+        component: `Content panel switcher — each tab reveals a different content area. For in-place filtering without content panels use **Segmented**; for single on/off use **Toggle**.\n\n${docsDescription("/components/tabs")}`,
       },
     },
   },

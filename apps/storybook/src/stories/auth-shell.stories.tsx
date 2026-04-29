@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { ArrowRight, Globe2, Shield, Sparkles } from "lucide-react";
 
 import {
@@ -13,9 +14,18 @@ import {
   ThemeRoot,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Patterns/Auth Shell",
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/patterns/auth-shell"),
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

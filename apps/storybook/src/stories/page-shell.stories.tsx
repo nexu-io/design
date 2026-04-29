@@ -4,10 +4,19 @@ import { ArrowUpRight } from "lucide-react";
 
 import { Button, PageHeader, PageShell } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Patterns/PageShell",
   component: PageShell,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/patterns/page-shell"),
+      },
+    },
+  },
 } satisfies Meta<typeof PageShell>;
 
 export default meta;

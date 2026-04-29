@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { ImageGallery } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const mockImages = Array.from({ length: 9 }).map((_, i) => ({
   src: `https://picsum.photos/seed/gallery-${i}/200`,
   alt: `Screenshot ${i + 1}`,
@@ -17,8 +19,9 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Three-column thumbnail grid for multiple images. Overflow past `maxVisible` collapses into a `+N` overlay on the last tile.",
+        component: `Three-column thumbnail grid for multiple images. Overflow past \`maxVisible\` collapses into a \`+N\` overlay on the last tile.
+
+${docsDescription("/components/image-gallery")}`,
       },
     },
   },

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { ArrowUpRight } from "lucide-react";
 
 import {
@@ -17,10 +18,19 @@ import {
   TableRow,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/DataTable",
   component: DataTable,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/data-table"),
+      },
+    },
+  },
 } satisfies Meta<typeof DataTable>;
 
 export default meta;

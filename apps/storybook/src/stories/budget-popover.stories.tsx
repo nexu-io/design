@@ -1,12 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { Code2, Globe, Sparkles } from "lucide-react";
 
 import { BudgetPopover, Button } from "@nexu-design/ui-web";
+
+import { docsDescription } from "../storybook/docs-links";
 
 const meta = {
   title: "Patterns/BudgetPopover",
   component: BudgetPopover,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/patterns/budget-popover"),
+      },
+    },
+  },
 } satisfies Meta<typeof BudgetPopover>;
 
 export default meta;

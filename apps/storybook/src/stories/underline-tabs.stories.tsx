@@ -9,10 +9,19 @@ import {
   UnderlineTabsTrigger,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Patterns/UnderlineTabs",
   component: UnderlineTabs,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/patterns/underline-tabs"),
+      },
+    },
+  },
 } satisfies Meta<typeof UnderlineTabs>;
 
 export default meta;

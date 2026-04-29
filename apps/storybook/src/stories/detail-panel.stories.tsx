@@ -10,10 +10,19 @@ import {
   DetailPanelTitle,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/DetailPanel",
   component: DetailPanel,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/detail-panel"),
+      },
+    },
+  },
 } satisfies Meta<typeof DetailPanel>;
 
 export default meta;

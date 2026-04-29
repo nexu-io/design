@@ -12,6 +12,8 @@ import {
   Input,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Dialog",
   component: Dialog,
@@ -19,8 +21,7 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Centered modal with focus trap for forms and confirmations. For slide-over panels use **Sheet**; for simple confirm/cancel prompts use **ConfirmDialog**.",
+        component: `Centered modal with focus trap for forms and confirmations. For slide-over panels use **Sheet**; for simple confirm/cancel prompts use **ConfirmDialog**.\n\n${docsDescription("/components/dialog")}`,
       },
     },
   },

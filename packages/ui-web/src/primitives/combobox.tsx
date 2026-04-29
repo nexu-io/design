@@ -431,8 +431,8 @@ const ComboboxItem = React.forwardRef<HTMLButtonElement, ComboboxItemProps>(
         data-slot="combobox-item"
         disabled={disabled}
         className={cn(
-          "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-base text-foreground transition-colors outline-none hover:bg-surface-2 focus-visible:bg-surface-2 disabled:pointer-events-none disabled:opacity-50",
-          isActive && "bg-surface-2",
+          "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-base text-foreground transition-colors outline-none hover:bg-surface-3 focus-visible:bg-surface-3 disabled:pointer-events-none disabled:opacity-50",
+          isActive && "bg-surface-3",
           isSelected && "font-semibold text-foreground",
           className,
         )}

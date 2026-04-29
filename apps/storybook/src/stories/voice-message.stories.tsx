@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { VoiceMessage } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/VoiceMessage",
   component: VoiceMessage,
@@ -12,8 +14,9 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Voice-note attachment with a play button, stable waveform, duration, and optional transcript. The transcript is hidden by default to keep the feed compact — a captions toggle appears on hover and expands the text inline. Pass `defaultTranscriptOpen` to start expanded.",
+        component: `Voice-note attachment with a play button, stable waveform, duration, and optional transcript. The transcript is hidden by default to keep the feed compact — a captions toggle appears on hover and expands the text inline. Pass \`defaultTranscriptOpen\` to start expanded.
+
+${docsDescription("/components/voice-message")}`,
       },
     },
   },

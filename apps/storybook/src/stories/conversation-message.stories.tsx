@@ -1,12 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { ArrowUpRight, Bot, User } from "lucide-react";
 
 import { Avatar, AvatarFallback, Button, ConversationMessage } from "@nexu-design/ui-web";
+
+import { docsDescription } from "../storybook/docs-links";
 
 const meta = {
   title: "Primitives/ConversationMessage",
   component: ConversationMessage,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/conversation-message"),
+      },
+    },
+  },
 } satisfies Meta<typeof ConversationMessage>;
 
 export default meta;

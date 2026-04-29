@@ -3,6 +3,8 @@ import { ArrowUpRight } from "lucide-react";
 
 import { Button } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Button",
   component: Button,
@@ -11,6 +13,13 @@ const meta = {
     children: "Save changes",
     variant: "primary",
     size: "md",
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/button"),
+      },
+    },
   },
 } satisfies Meta<typeof Button>;
 

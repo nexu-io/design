@@ -24,7 +24,7 @@ const requiredPatterns = [
   { label: "relative utility", regex: /\.relative(?=[:\s.{[#])/ },
   { label: "absolute utility", regex: /\.absolute(?=[:\s.{[#])/ },
   { label: "right-2 utility", regex: /\.right-2(?=[:\s.{[#])/ },
-  { label: "focus:bg-surface-2 utility", regex: /\.focus\\:bg-surface-2(?=[:\s.{[#])/ },
+  { label: "focus:bg-surface-3 utility", regex: /\.focus\\:bg-surface-3(?=[:\s.{[#])/ },
 ];
 
 for (const { label, regex } of requiredPatterns) {

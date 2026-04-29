@@ -1,0 +1,39 @@
+{
+  "name": "@nexu-design/docs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.16.1",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && pnpm pages-output",
+    "pages:build": "pnpm build",
+    "build:pages": "next build && pnpm pages-output",
+    "build:storybook": "pnpm -w run build:storybook",
+    "docs:build": "pnpm build",
+    "pages-output": "rm -rf dist storybook-static .vercel/output/static ../../out ../../dist ../../storybook-static ../../.vercel/output/static ../storybook/out ../storybook/dist ../storybook/.vercel/output/static ../storybook/storybook-static && mkdir -p .vercel/output ../../.vercel/output ../storybook/.vercel/output && cp -R out dist && cp -R out storybook-static && cp -R out .vercel/output/static && cp -R out ../../out && cp -R out ../../dist && cp -R out ../../storybook-static && cp -R out ../../.vercel/output/static && cp -R out ../storybook/out && cp -R out ../storybook/dist && cp -R out ../storybook/.vercel/output/static && cp -R out ../storybook/storybook-static",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check ."
+  },
+  "dependencies": {
+    "@nexu-design/tokens": "workspace:*",
+    "@nexu-design/ui-web": "workspace:*",
+    "fumadocs-core": "^16.8.5",
+    "fumadocs-mdx": "^14.3.2",
+    "fumadocs-ui": "^16.8.5",
+    "lucide-react": "^1.11.0",
+    "next": "^16.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.0",
+    "@types/mdx": "^2.0.13",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "tailwindcss": "^4.2.0",
+    "typescript": "~5.9.3"
+  }
+}

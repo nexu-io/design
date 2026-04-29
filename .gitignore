@@ -1,13 +1,21 @@
 node_modules
+.next
+.source
+
+# TypeScript incremental build info
+*.tsbuildinfo
 dist
 storybook-static
 .turbo
+.vercel
 .DS_Store
 coverage
 debug-storybook.log
 .ralph/
 .opencode/
 apps/slark/out/
+apps/docs/out/
+out/
 
 # Local design notes / scratchpads (personal, not shipped)
 competitive-analysis.md

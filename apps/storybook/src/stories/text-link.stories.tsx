@@ -1,10 +1,20 @@
 import { TextLink } from "@nexu-design/ui-web";
+
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { docsDescription } from "../storybook/docs-links";
 
 const meta = {
   title: "Primitives/TextLink",
   component: TextLink,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/text-link"),
+      },
+    },
+  },
 } satisfies Meta<typeof TextLink>;
 
 export default meta;

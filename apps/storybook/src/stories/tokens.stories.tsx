@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import type { CSSProperties, ReactNode } from "react";
 
 import type { Meta, StoryContext, StoryObj } from "@storybook/react-vite";
@@ -25,6 +26,7 @@ import {
   typographyTokens,
   zIndexTokens,
 } from "@nexu-design/tokens";
+
 import {
   Badge,
   Button,
@@ -37,6 +39,8 @@ import {
   PageHeader,
   PageShell,
 } from "@nexu-design/ui-web";
+
+import { docsDescription } from "../storybook/docs-links";
 
 import {
   MOTION_PRESET_LABELS,
@@ -62,6 +66,11 @@ type TokensStoryArgs = {
 const meta = {
   title: "Foundations/Tokens",
   parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/foundations/colors"),
+      },
+    },
     layout: "fullscreen",
   },
   args: {

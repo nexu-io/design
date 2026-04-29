@@ -3,10 +3,19 @@ import { CheckCircle2, CircleAlert, Info, TriangleAlert } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Alert",
   component: Alert,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/alert"),
+      },
+    },
+  },
 } satisfies Meta<typeof Alert>;
 
 export default meta;

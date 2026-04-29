@@ -1,12 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { useState } from "react";
 
 import { StatsBar } from "@nexu-design/ui-web";
+
+import { docsDescription } from "../storybook/docs-links";
 
 const meta = {
   title: "Primitives/StatsBar",
   component: StatsBar,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/stats-bar"),
+      },
+    },
+  },
 } satisfies Meta<typeof StatsBar>;
 
 export default meta;

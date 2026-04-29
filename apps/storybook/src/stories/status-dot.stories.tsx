@@ -2,10 +2,19 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { StatusDot } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/StatusDot",
   component: StatusDot,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/status-dot"),
+      },
+    },
+  },
 } satisfies Meta<typeof StatusDot>;
 
 export default meta;

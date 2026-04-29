@@ -2,10 +2,19 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Badge, Button, CreditsCapsule } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Patterns/CreditsCapsule",
   component: CreditsCapsule,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/patterns/credits-capsule"),
+      },
+    },
+  },
 } satisfies Meta<typeof CreditsCapsule>;
 
 export default meta;

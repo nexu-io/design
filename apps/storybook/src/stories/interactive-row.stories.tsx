@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { Sparkles } from "lucide-react";
 
 import {
@@ -10,10 +11,19 @@ import {
   StatusDot,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/InteractiveRow",
   component: InteractiveRow,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/interactive-row"),
+      },
+    },
+  },
 } satisfies Meta<typeof InteractiveRow>;
 
 export default meta;

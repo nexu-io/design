@@ -47,9 +47,9 @@ jobs:
           ADDED_OR_MODIFIED="$(git diff --name-only --diff-filter=AM "$BASE"...HEAD)"
           CHANGESET_FILES="$(printf '%s\n' "$ADDED_OR_MODIFIED" | grep -E '^\.changeset/.+\.md$' | grep -Ev '^\.changeset/README\.md$' || true)"
 
-          if printf '%s\n' "$CHANGED_FILES" | grep -Eq '^packages/(tokens|ui-web)/'; then
+          if printf '%s\n' "$CHANGED_FILES" | grep -Eq '^packages/(tokens|ui-web|mcp-server)/'; then
             if [ -z "$CHANGESET_FILES" ]; then
-              echo "Changes to packages/tokens or packages/ui-web require a new or updated changeset entry."
+              echo "Changes to packages/tokens, packages/ui-web, or packages/mcp-server require a new or updated changeset entry."
               exit 1
             fi
           fi
@@ -65,6 +65,9 @@ jobs:
 
       - name: Run typecheck
         run: pnpm typecheck
+
+      - name: Run docs checks
+        run: pnpm check:docs
 
       - name: Run build
         run: pnpm build

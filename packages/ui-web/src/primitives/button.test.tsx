@@ -69,13 +69,14 @@ describe("Button", () => {
     expect(button).toHaveClass("hover:text-foreground");
   });
 
-  it("keeps ghost buttons on surface hover states", () => {
+  it("keeps ghost buttons visible on dark overlay hover states", () => {
     render(<Button variant="ghost">More</Button>);
 
     const button = screen.getByRole("button", { name: "More" });
 
     expect(button).toHaveClass("text-[var(--color-text-muted)]");
-    expect(button).toHaveClass("hover:bg-surface-2");
+    expect(button).toHaveClass("hover:bg-foreground/[0.06]");
+    expect(button).toHaveClass("dark:hover:bg-foreground/[0.1]");
     expect(button).toHaveClass("hover:text-[var(--color-text-secondary)]");
   });
 });

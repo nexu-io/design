@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Button, ConfirmDialog } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Patterns/ConfirmDialog",
   component: ConfirmDialog,
@@ -9,8 +11,9 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Pre-built confirm/cancel prompt for destructive or irreversible actions. For custom modal content use **Dialog** directly.",
+        component: `Pre-built confirm/cancel prompt for destructive or irreversible actions. For custom modal content use **Dialog** directly.
+
+${docsDescription("/patterns/confirm-dialog")}`,
       },
     },
   },

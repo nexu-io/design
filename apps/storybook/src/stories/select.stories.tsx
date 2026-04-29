@@ -11,6 +11,8 @@ import {
   SelectValue,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const modelOptions = {
   anthropic: [
     { label: "Claude Sonnet 4", value: "claude-sonnet-4" },
@@ -33,8 +35,7 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Form value picker for closed lists. Defaults are tuned for readability in dense pickers: 13px item text, ~36px rows, and 16px affordance icons. For action/command menus use **DropdownMenu**; for searchable lists use **Combobox**.",
+        component: `Form value picker for closed lists. Defaults are tuned for readability in dense pickers: 13px item text, ~36px rows, and 16px affordance icons. For action/command menus use **DropdownMenu**; for searchable lists use **Combobox**.\n\n${docsDescription("/components/select")}`,
       },
     },
   },

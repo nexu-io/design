@@ -3,7 +3,11 @@ import path from "node:path";
 
 const rootDir = new URL("..", import.meta.url);
 const workspaceDirs = ["apps", "packages"];
-const allowedPublicPackages = new Set(["@nexu-design/tokens", "@nexu-design/ui-web"]);
+const allowedPublicPackages = new Set([
+  "@nexu-design/tokens",
+  "@nexu-design/ui-web",
+  "@nexu-design/mcp",
+]);
 const expectedRepositoryUrl = "https://github.com/nexu-io/design";
 
 async function readWorkspacePackages() {

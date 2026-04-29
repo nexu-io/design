@@ -3,6 +3,8 @@ import { Archive, AtSign, LogIn, Pin } from "lucide-react";
 
 import { EventNotice } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/EventNotice",
   component: EventNotice,
@@ -14,8 +16,9 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component:
-          "Low-emphasis notice for meta events inside a feed — joins/leaves, mentions, pins, folded groups. Sits between messages as a quiet marker.",
+        component: `Low-emphasis notice for meta events inside a feed — joins/leaves, mentions, pins, folded groups. Sits between messages as a quiet marker.
+
+${docsDescription("/components/event-notice")}`,
       },
     },
   },

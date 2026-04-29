@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { Server, Zap } from "lucide-react";
 
 import {
@@ -15,10 +16,19 @@ import {
   EntityCardTitle,
 } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/EntityCard",
   component: EntityCard,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/entity-card"),
+      },
+    },
+  },
 } satisfies Meta<typeof EntityCard>;
 
 export default meta;

@@ -3,10 +3,19 @@ import { AlertCircle, CheckCircle2, CircleDot, Clock, Info } from "lucide-react"
 
 import { Badge } from "@nexu-design/ui-web";
 
+import { docsDescription } from "../storybook/docs-links";
+
 const meta = {
   title: "Primitives/Badge",
   component: Badge,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: docsDescription("/components/badge"),
+      },
+    },
+  },
 } satisfies Meta<typeof Badge>;
 
 export default meta;
