@@ -22,6 +22,8 @@ The target repository `nexu-io/design` does not currently share the same `apps/w
 
 Because of that, the app code patch should be treated as a reference implementation for the Open Design product surface, not as a blind apply-to-target patch. The canonical migration artifact for the target repository is this isolated `design/open-design/` directory.
 
+Migration note: cherry-picking `05d14bc feat: refresh Open Design product UI` into `nexu-io/design` was attempted and intentionally aborted because every `apps/web` file conflicted as modify/delete in the target repository. The implementation remains available as the patch below.
+
 ## Patch
 
 The source implementation patch is stored at:
