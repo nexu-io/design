@@ -15,6 +15,7 @@ The implementation patch was produced from the current Open Design app worktree 
 Source implementation commit:
 
 - `05d14bc feat: refresh Open Design product UI`
+- `587618e fix: polish Open Design workspace chrome`
 
 ## Target Repository Compatibility
 
