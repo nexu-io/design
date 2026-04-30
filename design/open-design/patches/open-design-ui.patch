@@ -2258,10 +2258,10 @@ index 3794296..7939801 100644
              {scenarioOptions.map((tag) => (
                <button
 diff --git a/apps/web/src/components/FileWorkspace.tsx b/apps/web/src/components/FileWorkspace.tsx
-index be67ceb..78199ff 100644
+index be67ceb..149d9ff 100644
 --- a/apps/web/src/components/FileWorkspace.tsx
 +++ b/apps/web/src/components/FileWorkspace.tsx
-@@ -346,12 +346,14 @@ export function FileWorkspace({
+@@ -346,7 +346,8 @@ export function FileWorkspace({
            return (
              <Tab
                key={name}
@@ -2271,13 +2271,7 @@ index be67ceb..78199ff 100644
                active={activeTab === name}
                onActivate={() =>
                  isPending ? activatePending(name) : setPersistedActive(name)
-               }
-               onClose={() => closeTab(name)}
-+              closable={kind !== 'html'}
-               kind={kind}
-             />
-           );
-@@ -438,6 +440,7 @@ export function FileWorkspace({
+@@ -438,6 +439,7 @@ export function FileWorkspace({
  
  function Tab({
    label,
@@ -2285,7 +2279,7 @@ index be67ceb..78199ff 100644
    active,
    onActivate,
    onClose,
-@@ -445,6 +448,7 @@ function Tab({
+@@ -445,6 +447,7 @@ function Tab({
    kind,
  }: {
    label: string;
@@ -2293,7 +2287,7 @@ index be67ceb..78199ff 100644
    active: boolean;
    onActivate: () => void;
    onClose?: () => void;
-@@ -455,7 +459,7 @@ function Tab({
+@@ -455,7 +458,7 @@ function Tab({
    const iconName = kindIconName(kind);
    return (
      <div
@@ -2302,7 +2296,7 @@ index be67ceb..78199ff 100644
        onClick={onActivate}
        onKeyDown={(e) => {
          if (e.key === 'Enter' || e.key === ' ') {
-@@ -466,8 +470,29 @@ function Tab({
+@@ -466,8 +469,29 @@ function Tab({
        role="tab"
        aria-selected={active}
        tabIndex={0}
@@ -2333,7 +2327,7 @@ index be67ceb..78199ff 100644
          <span className="tab-icon" aria-hidden>
            <Icon name={iconName} size={13} />
          </span>
-@@ -490,6 +515,13 @@ function Tab({
+@@ -490,6 +514,13 @@ function Tab({
    );
  }
  
@@ -3072,7 +3066,7 @@ index aeac83f..b3dcb1a 100644
    agentId: string | null,
    fallbackName?: string,
 diff --git a/apps/web/src/index.css b/apps/web/src/index.css
-index 6e55475..2018de5 100644
+index 6e55475..bdc0c3f 100644
 --- a/apps/web/src/index.css
 +++ b/apps/web/src/index.css
 @@ -2,32 +2,29 @@
@@ -3956,7 +3950,7 @@ index 6e55475..2018de5 100644
    .example-card { grid-template-columns: 1fr; }
    .example-preview { height: 240px; }
  }
-@@ -2173,26 +2546,64 @@ code {
+@@ -2173,26 +2546,78 @@ code {
    display: inline-flex;
    align-items: center;
    gap: 6px;
@@ -4002,7 +3996,7 @@ index 6e55475..2018de5 100644
 +.ws-tab.html-preview-tab.active {
 +  align-items: center;
 +  min-height: 32px;
-+  max-width: 160px;
++  max-width: 176px;
 +  padding: 6px 12px;
 +  gap: 8px;
 +  background: #f4f4f4;
@@ -4024,10 +4018,24 @@ index 6e55475..2018de5 100644
 +.ws-tab.html-preview-tab .ws-tab-label {
 +  max-width: 110px;
 +  line-height: 18px;
++}
++.ws-tab.html-preview-tab .ws-tab-close {
++  width: 16px;
++  height: 16px;
++  margin-left: 0;
++  opacity: 0;
++  pointer-events: none;
++  color: #6b7280;
++  transition: opacity 120ms ease, background 120ms ease, color 120ms ease;
++}
++.ws-tab.html-preview-tab:hover .ws-tab-close,
++.ws-tab.html-preview-tab:focus-within .ws-tab-close {
++  opacity: 1;
++  pointer-events: auto;
  }
  .ws-tab .tab-icon {
    font-size: 13px;
-@@ -2229,6 +2640,19 @@ code {
+@@ -2229,6 +2654,19 @@ code {
    color: var(--text);
  }
  
@@ -4047,7 +4055,7 @@ index 6e55475..2018de5 100644
  .ws-tabs-spacer { flex: 1; }
  .ws-tabs-actions { display: inline-flex; gap: 4px; align-items: center; }
  .ws-tab-action {
-@@ -2285,6 +2709,8 @@ code {
+@@ -2285,6 +2723,8 @@ code {
    position: sticky;
    top: 0;
    z-index: 3;
@@ -4056,7 +4064,7 @@ index 6e55475..2018de5 100644
  }
  .df-head .icon-only {
    width: 28px;
-@@ -2304,11 +2730,15 @@ code {
+@@ -2304,11 +2744,15 @@ code {
    color: var(--text);
    margin-left: 4px;
    font-weight: 500;
@@ -4072,7 +4080,7 @@ index 6e55475..2018de5 100644
  }
  .df-head .df-actions button {
    background: transparent;
-@@ -2320,6 +2750,8 @@ code {
+@@ -2320,6 +2764,8 @@ code {
    display: inline-flex;
    align-items: center;
    gap: 6px;
@@ -4081,7 +4089,7 @@ index 6e55475..2018de5 100644
  }
  .df-head .df-actions button:hover:not(:disabled) { background: var(--bg-subtle); color: var(--text); }
  
-@@ -2373,7 +2805,7 @@ code {
+@@ -2373,7 +2819,7 @@ code {
    position: relative;
  }
  .df-row-icon[data-kind="folder"] { background: var(--bg-muted); color: var(--text-soft); }
@@ -4090,7 +4098,7 @@ index 6e55475..2018de5 100644
  .df-row-icon[data-kind="image"] { background: var(--green-bg); color: var(--green); }
  .df-row-icon[data-kind="code"] { background: #fff7d8; color: #8c6700; }
  .df-row-icon[data-kind="text"] { background: var(--bg-subtle); color: var(--text-muted); }
-@@ -2564,9 +2996,25 @@ code {
+@@ -2564,9 +3010,25 @@ code {
    gap: 8px;
    height: 44px;
    flex-shrink: 0;
@@ -4118,7 +4126,7 @@ index 6e55475..2018de5 100644
  .viewer-toolbar .icon-only,
  .viewer-toolbar-actions .icon-only {
    width: 28px;
-@@ -2593,6 +3041,7 @@ code {
+@@ -2593,6 +3055,7 @@ code {
    border-radius: var(--radius-sm);
    color: var(--text-muted);
    font-size: 12.5px;
@@ -4126,7 +4134,7 @@ index 6e55475..2018de5 100644
  }
  .viewer-action:hover:not(:disabled) { background: var(--bg-subtle); color: var(--text); }
  .viewer-action.primary {
-@@ -2618,6 +3067,7 @@ code {
+@@ -2618,6 +3081,7 @@ code {
    color: var(--text-muted);
    padding: 4px 10px;
    border-radius: var(--radius-sm);
@@ -4134,7 +4142,7 @@ index 6e55475..2018de5 100644
  }
  .viewer-toggle .switch {
    position: relative;
-@@ -2641,7 +3091,11 @@ code {
+@@ -2641,7 +3105,11 @@ code {
  }
  .viewer-toggle.on .switch { background: var(--text); border-color: var(--text); }
  .viewer-toggle.on .switch::after { transform: translateX(12px); }
@@ -4147,7 +4155,7 @@ index 6e55475..2018de5 100644
  .viewer-tab {
    background: transparent;
    border: none;
-@@ -2649,6 +3103,7 @@ code {
+@@ -2649,6 +3117,7 @@ code {
    font-size: 12px;
    border-radius: var(--radius-sm);
    color: var(--text-muted);
@@ -4155,7 +4163,7 @@ index 6e55475..2018de5 100644
  }
  .viewer-tab:hover { background: var(--bg-subtle); color: var(--text); }
  .viewer-tab.active {
-@@ -2906,11 +3361,16 @@ code {
+@@ -2906,11 +3375,16 @@ code {
    height: 36px;
    flex-shrink: 0;
    border-radius: var(--radius-sm);
@@ -4175,7 +4183,7 @@ index 6e55475..2018de5 100644
  }
  .chat-example-body {
    position: relative;
-@@ -3834,7 +4294,7 @@ code {
+@@ -3834,7 +4308,7 @@ code {
    display: flex;
    flex-direction: column;
    gap: 14px;
@@ -4184,7 +4192,7 @@ index 6e55475..2018de5 100644
  }
  .qf-field { display: flex; flex-direction: column; gap: 6px; }
  .qf-label {
-@@ -3928,9 +4388,9 @@ code {
+@@ -3928,9 +4402,9 @@ code {
  .qf-card:hover { border-color: var(--border-strong); }
  .qf-card:active { transform: translateY(1px); }
  .qf-card-on {
@@ -4197,7 +4205,7 @@ index 6e55475..2018de5 100644
  }
  .qf-card-disabled { cursor: not-allowed; opacity: 0.6; }
  .qf-card-head {
-@@ -3952,7 +4412,7 @@ code {
+@@ -3952,7 +4426,7 @@ code {
    letter-spacing: 0.06em;
    text-transform: uppercase;
    padding: 2px 6px;
@@ -4206,7 +4214,7 @@ index 6e55475..2018de5 100644
    color: #fff;
    border-radius: 999px;
    flex-shrink: 0;
-@@ -4157,6 +4617,8 @@ code {
+@@ -4157,6 +4631,8 @@ code {
    font-weight: 500;
  }
  .filter-pill {
@@ -4215,7 +4223,7 @@ index 6e55475..2018de5 100644
    background: var(--bg-panel);
    border: 1px solid var(--border);
    border-radius: 999px;
-@@ -4167,11 +4629,12 @@ code {
+@@ -4167,11 +4643,12 @@ code {
    display: inline-flex;
    gap: 6px;
    align-items: center;
@@ -4230,7 +4238,7 @@ index 6e55475..2018de5 100644
    color: white;
  }
  .filter-pill-count {
-@@ -4183,6 +4646,7 @@ code {
+@@ -4183,6 +4660,7 @@ code {
    gap: 8px;
    align-items: center;
    flex-wrap: wrap;
@@ -4238,7 +4246,7 @@ index 6e55475..2018de5 100644
  }
  .example-tags {
    display: flex;
-@@ -4198,15 +4662,16 @@ code {
+@@ -4198,15 +4676,16 @@ code {
  /* Example preview hover affordance + click-through overlay */
  .example-preview {
    cursor: zoom-in;
@@ -4259,7 +4267,7 @@ index 6e55475..2018de5 100644
    box-shadow: 0 0 0 3px var(--accent-soft);
  }
  .example-preview-overlay {
-@@ -4294,25 +4759,45 @@ code {
+@@ -4294,25 +4773,45 @@ code {
       with sensible bounds enforced in JS. */
  }
  .entry-side {
@@ -4313,7 +4321,7 @@ index 6e55475..2018de5 100644
  body.entry-resizing { cursor: col-resize; user-select: none; }
  
  /* Branded header — title + research-preview pill on a single line, with
-@@ -4750,3 +5235,551 @@ body.entry-resizing { cursor: col-resize; user-select: none; }
+@@ -4750,3 +5249,551 @@ body.entry-resizing { cursor: col-resize; user-select: none; }
    background: var(--bg-panel);
    outline: none;
  }

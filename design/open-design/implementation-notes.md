@@ -16,6 +16,7 @@ Source implementation commit:
 
 - `05d14bc feat: refresh Open Design product UI`
 - `587618e fix: polish Open Design workspace chrome`
+- `9e72066 fix: show close affordance on Open Design tab hover`
 
 ## Target Repository Compatibility
 
