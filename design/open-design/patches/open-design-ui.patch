@@ -2258,9 +2258,33 @@ index 3794296..7939801 100644
              {scenarioOptions.map((tag) => (
                <button
 diff --git a/apps/web/src/components/FileWorkspace.tsx b/apps/web/src/components/FileWorkspace.tsx
-index be67ceb..149d9ff 100644
+index be67ceb..f507225 100644
 --- a/apps/web/src/components/FileWorkspace.tsx
 +++ b/apps/web/src/components/FileWorkspace.tsx
+@@ -320,7 +320,7 @@ export function FileWorkspace({
+ 
+   return (
+     <div className="workspace" data-testid="file-workspace">
+-      <div className="ws-tabs-bar" role="tablist" aria-label={t('workspace.designFiles')}>
++      <div className="ws-tabs-bar" role="tablist" aria-label="项目概览">
+         <button
+           type="button"
+           className={`ws-tab design-files-tab ${activeTab === DESIGN_FILES_TAB ? 'active' : ''}`}
+@@ -329,12 +329,12 @@ export function FileWorkspace({
+           tabIndex={0}
+           data-testid="design-files-tab"
+           onClick={() => setActiveTab(DESIGN_FILES_TAB)}
+-          title={t('workspace.designFiles')}
++          title="项目概览"
+         >
+           <span className="tab-icon" aria-hidden>
+             <Icon name="grid" size={13} />
+           </span>
+-          <span className="ws-tab-label">{t('workspace.designFiles')}</span>
++          <span className="ws-tab-label">项目概览</span>
+         </button>
+         {tabNames.map((name) => {
+           const sketchEntry = sketches[name];
 @@ -346,7 +346,8 @@ export function FileWorkspace({
            return (
              <Tab
@@ -3066,7 +3090,7 @@ index aeac83f..b3dcb1a 100644
    agentId: string | null,
    fallbackName?: string,
 diff --git a/apps/web/src/index.css b/apps/web/src/index.css
-index 6e55475..bdc0c3f 100644
+index 6e55475..d4304d7 100644
 --- a/apps/web/src/index.css
 +++ b/apps/web/src/index.css
 @@ -2,32 +2,29 @@
@@ -4035,15 +4059,18 @@ index 6e55475..bdc0c3f 100644
  }
  .ws-tab .tab-icon {
    font-size: 13px;
-@@ -2229,6 +2654,19 @@ code {
+@@ -2229,6 +2654,33 @@ code {
    color: var(--text);
  }
  
 +.ws-tab.design-files-tab,
 +.ws-tab.design-files-tab:hover,
 +.ws-tab.design-files-tab.active {
++  align-items: center;
 +  min-width: 0;
++  min-height: 32px;
 +  padding: 0 8px;
++  gap: 8px;
 +  background: transparent;
 +  border-color: transparent;
 +  border-radius: 0;
@@ -4051,11 +4078,22 @@ index 6e55475..bdc0c3f 100644
 +  cursor: default;
 +  color: var(--text);
 +}
++.ws-tab.design-files-tab .tab-icon {
++  width: 16px;
++  height: 16px;
++  display: inline-flex;
++  align-items: center;
++  justify-content: center;
++  color: currentColor;
++}
++.ws-tab.design-files-tab .ws-tab-label {
++  line-height: 16px;
++}
 +
  .ws-tabs-spacer { flex: 1; }
  .ws-tabs-actions { display: inline-flex; gap: 4px; align-items: center; }
  .ws-tab-action {
-@@ -2285,6 +2723,8 @@ code {
+@@ -2285,6 +2737,8 @@ code {
    position: sticky;
    top: 0;
    z-index: 3;
@@ -4064,7 +4102,7 @@ index 6e55475..bdc0c3f 100644
  }
  .df-head .icon-only {
    width: 28px;
-@@ -2304,11 +2744,15 @@ code {
+@@ -2304,11 +2758,15 @@ code {
    color: var(--text);
    margin-left: 4px;
    font-weight: 500;
@@ -4080,7 +4118,7 @@ index 6e55475..bdc0c3f 100644
  }
  .df-head .df-actions button {
    background: transparent;
-@@ -2320,6 +2764,8 @@ code {
+@@ -2320,6 +2778,8 @@ code {
    display: inline-flex;
    align-items: center;
    gap: 6px;
@@ -4089,7 +4127,7 @@ index 6e55475..bdc0c3f 100644
  }
  .df-head .df-actions button:hover:not(:disabled) { background: var(--bg-subtle); color: var(--text); }
  
-@@ -2373,7 +2819,7 @@ code {
+@@ -2373,7 +2833,7 @@ code {
    position: relative;
  }
  .df-row-icon[data-kind="folder"] { background: var(--bg-muted); color: var(--text-soft); }
@@ -4098,7 +4136,7 @@ index 6e55475..bdc0c3f 100644
  .df-row-icon[data-kind="image"] { background: var(--green-bg); color: var(--green); }
  .df-row-icon[data-kind="code"] { background: #fff7d8; color: #8c6700; }
  .df-row-icon[data-kind="text"] { background: var(--bg-subtle); color: var(--text-muted); }
-@@ -2564,9 +3010,25 @@ code {
+@@ -2564,9 +3024,25 @@ code {
    gap: 8px;
    height: 44px;
    flex-shrink: 0;
@@ -4126,7 +4164,7 @@ index 6e55475..bdc0c3f 100644
  .viewer-toolbar .icon-only,
  .viewer-toolbar-actions .icon-only {
    width: 28px;
-@@ -2593,6 +3055,7 @@ code {
+@@ -2593,6 +3069,7 @@ code {
    border-radius: var(--radius-sm);
    color: var(--text-muted);
    font-size: 12.5px;
@@ -4134,7 +4172,7 @@ index 6e55475..bdc0c3f 100644
  }
  .viewer-action:hover:not(:disabled) { background: var(--bg-subtle); color: var(--text); }
  .viewer-action.primary {
-@@ -2618,6 +3081,7 @@ code {
+@@ -2618,6 +3095,7 @@ code {
    color: var(--text-muted);
    padding: 4px 10px;
    border-radius: var(--radius-sm);
@@ -4142,7 +4180,7 @@ index 6e55475..bdc0c3f 100644
  }
  .viewer-toggle .switch {
    position: relative;
-@@ -2641,7 +3105,11 @@ code {
+@@ -2641,7 +3119,11 @@ code {
  }
  .viewer-toggle.on .switch { background: var(--text); border-color: var(--text); }
  .viewer-toggle.on .switch::after { transform: translateX(12px); }
@@ -4155,7 +4193,7 @@ index 6e55475..bdc0c3f 100644
  .viewer-tab {
    background: transparent;
    border: none;
-@@ -2649,6 +3117,7 @@ code {
+@@ -2649,6 +3131,7 @@ code {
    font-size: 12px;
    border-radius: var(--radius-sm);
    color: var(--text-muted);
@@ -4163,7 +4201,7 @@ index 6e55475..bdc0c3f 100644
  }
  .viewer-tab:hover { background: var(--bg-subtle); color: var(--text); }
  .viewer-tab.active {
-@@ -2906,11 +3375,16 @@ code {
+@@ -2906,11 +3389,16 @@ code {
    height: 36px;
    flex-shrink: 0;
    border-radius: var(--radius-sm);
@@ -4183,7 +4221,7 @@ index 6e55475..bdc0c3f 100644
  }
  .chat-example-body {
    position: relative;
-@@ -3834,7 +4308,7 @@ code {
+@@ -3834,7 +4322,7 @@ code {
    display: flex;
    flex-direction: column;
    gap: 14px;
@@ -4192,7 +4230,7 @@ index 6e55475..bdc0c3f 100644
  }
  .qf-field { display: flex; flex-direction: column; gap: 6px; }
  .qf-label {
-@@ -3928,9 +4402,9 @@ code {
+@@ -3928,9 +4416,9 @@ code {
  .qf-card:hover { border-color: var(--border-strong); }
  .qf-card:active { transform: translateY(1px); }
  .qf-card-on {
@@ -4205,7 +4243,7 @@ index 6e55475..bdc0c3f 100644
  }
  .qf-card-disabled { cursor: not-allowed; opacity: 0.6; }
  .qf-card-head {
-@@ -3952,7 +4426,7 @@ code {
+@@ -3952,7 +4440,7 @@ code {
    letter-spacing: 0.06em;
    text-transform: uppercase;
    padding: 2px 6px;
@@ -4214,7 +4252,7 @@ index 6e55475..bdc0c3f 100644
    color: #fff;
    border-radius: 999px;
    flex-shrink: 0;
-@@ -4157,6 +4631,8 @@ code {
+@@ -4157,6 +4645,8 @@ code {
    font-weight: 500;
  }
  .filter-pill {
@@ -4223,7 +4261,7 @@ index 6e55475..bdc0c3f 100644
    background: var(--bg-panel);
    border: 1px solid var(--border);
    border-radius: 999px;
-@@ -4167,11 +4643,12 @@ code {
+@@ -4167,11 +4657,12 @@ code {
    display: inline-flex;
    gap: 6px;
    align-items: center;
@@ -4238,7 +4276,7 @@ index 6e55475..bdc0c3f 100644
    color: white;
  }
  .filter-pill-count {
-@@ -4183,6 +4660,7 @@ code {
+@@ -4183,6 +4674,7 @@ code {
    gap: 8px;
    align-items: center;
    flex-wrap: wrap;
@@ -4246,7 +4284,7 @@ index 6e55475..bdc0c3f 100644
  }
  .example-tags {
    display: flex;
-@@ -4198,15 +4676,16 @@ code {
+@@ -4198,15 +4690,16 @@ code {
  /* Example preview hover affordance + click-through overlay */
  .example-preview {
    cursor: zoom-in;
@@ -4267,7 +4305,7 @@ index 6e55475..bdc0c3f 100644
    box-shadow: 0 0 0 3px var(--accent-soft);
  }
  .example-preview-overlay {
-@@ -4294,25 +4773,45 @@ code {
+@@ -4294,25 +4787,45 @@ code {
       with sensible bounds enforced in JS. */
  }
  .entry-side {
@@ -4321,7 +4359,7 @@ index 6e55475..bdc0c3f 100644
  body.entry-resizing { cursor: col-resize; user-select: none; }
  
  /* Branded header — title + research-preview pill on a single line, with
-@@ -4750,3 +5249,551 @@ body.entry-resizing { cursor: col-resize; user-select: none; }
+@@ -4750,3 +5263,551 @@ body.entry-resizing { cursor: col-resize; user-select: none; }
    background: var(--bg-panel);
    outline: none;
  }
